@@ -1,0 +1,303 @@
+.TH "md_backend_2node__modules_2gauge_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2gauge_2_r_e_a_d_m_e \- gauge 
+.PP
+A nearly stateless terminal based horizontal gauge / progress bar\&.
+.PP
+.PP
+.nf
+var Gauge = require("gauge")
+
+var gauge = new Gauge()
+
+gauge\&.show("working…", 0)
+setTimeout(() => { gauge\&.pulse(); gauge\&.show("working…", 0\&.25) }, 500)
+setTimeout(() => { gauge\&.pulse(); gauge\&.show("working…", 0\&.50) }, 1000)
+setTimeout(() => { gauge\&.pulse(); gauge\&.show("working…", 0\&.75) }, 1500)
+setTimeout(() => { gauge\&.pulse(); gauge\&.show("working…", 0\&.99) }, 2000)
+setTimeout(() => gauge\&.hide(), 2300)
+.fi
+.PP
+.PP
+See also the \fRdemos\fP:
+.PP
+.SS "CHANGES FROM 1\&.x"
+Gauge 2\&.x is breaking release, please see the \fBchangelog\fP for details on what's changed if you were previously a user of this module\&.
+.SS "THE GAUGE CLASS"
+This is the typical interface to the module– it provides a pretty fire-and-forget interface to displaying your status information\&.
+.PP
+.PP
+.nf
+var Gauge = require("gauge")
+
+var gauge = new Gauge([stream], [options])
+.fi
+.PP
+.PP
+.IP "\(bu" 2
+\fBstream\fP – *(optional, default STDERR)* A stream that progress bar updates are to be written to\&. Gauge honors backpressure and will pause most writing if it is indicated\&.
+.IP "\(bu" 2
+\fBoptions\fP – *(optional)* An option object\&.
+.PP
+.PP
+Constructs a new gauge\&. Gauges are drawn on a single line, and are not drawn if \fBstream\fP isn't a tty and a tty isn't explicitly provided\&.
+.PP
+If \fBstream\fP is a terminal or if you pass in \fBtty\fP to \fBoptions\fP then we will detect terminal resizes and redraw to fit\&. We do this by watching for \fRresize\fP events on the tty\&. (To work around a bug in versions of Node prior to 2\&.5\&.0, we watch for them on stdout if the tty is stderr\&.) Resizes to larger window sizes will be clean, but shrinking the window will always result in some cruft\&.
+.PP
+\fBIMPORTANT:\fP If you previously were passing in a non-tty stream but you still want output (for example, a stream wrapped by the \fRansi\fP module) then you need to pass in the \fBtty\fP option below, as \fRgauge\fP needs access to the underlying tty in order to do things like terminal resizes and terminal width detection\&.
+.PP
+The \fBoptions\fP object can have the following properties, all of which are optional:
+.PP
+.IP "\(bu" 2
+\fBupdateInterval\fP: How often gauge updates should be drawn, in milliseconds\&.
+.IP "\(bu" 2
+\fBfixedFramerate\fP: Defaults to false on node 0\&.8, true on everything else\&. When this is true a timer is created to trigger once every \fRupdateInterval\fP ms, when false, updates are printed as soon as they come in but updates more often than \fRupdateInterval\fP are ignored\&. The reason 0\&.8 doesn't have this set to true is that it can't \fRunref\fP its timer and so it would stop your program from exiting– if you want to use this feature with 0\&.8 just make sure you call \fRgauge\&.disable()\fP before you expect your program to exit\&.
+.IP "\(bu" 2
+\fBthemes\fP: A themeset to use when selecting the theme to use\&. Defaults to \fRgauge/themes\fP, see the \fBthemes\fP documentation for details\&.
+.IP "\(bu" 2
+\fBtheme\fP: Select a theme for use, it can be a:
+.IP "  \(bu" 4
+Theme object, in which case the \fBthemes\fP is not used\&.
+.IP "  \(bu" 4
+The name of a theme, which will be looked up in the current \fIthemes\fP object\&.
+.IP "  \(bu" 4
+A configuration object with any of \fRhasUnicode\fP, \fRhasColor\fP or \fRplatform\fP keys, which if will be used to override our guesses when making a default theme selection\&.
+.PP
+.PP
+If no theme is selected then a default is picked using a combination of our best guesses at your OS, color support and unicode support\&.
+.IP "\(bu" 2
+\fBtemplate\fP: Describes what you want your gauge to look like\&. The default is what npm uses\&. Detailed \fBdocumentation\fP is later in this document\&.
+.IP "\(bu" 2
+\fBhideCursor\fP: Defaults to true\&. If true, then the cursor will be hidden while the gauge is displayed\&.
+.IP "\(bu" 2
+\fBtty\fP: The tty that you're ultimately writing to\&. Defaults to the same as \fBstream\fP\&. This is used for detecting the width of the terminal and resizes\&. The width used is \fRtty\&.columns - 1\fP\&. If no tty is available then a width of \fR79\fP is assumed\&.
+.IP "\(bu" 2
+\fBenabled\fP: Defaults to true if \fRtty\fP is a TTY, false otherwise\&. If true the gauge starts enabled\&. If disabled then all update commands are ignored and no gauge will be printed until you call \fR\&.enable()\fP\&.
+.IP "\(bu" 2
+\fBPlumbing\fP: The class to use to actually generate the gauge for printing\&. This defaults to `require('gauge/plumbing')` and ordinarily you shouldn't need to override this\&.
+.IP "\(bu" 2
+\fBcleanupOnExit\fP: Defaults to true\&. Ordinarily we register an exit handler to make sure your cursor is turned back on and the progress bar erased when your process exits, even if you Ctrl-C out or otherwise exit unexpectedly\&. You can disable this and it won't register the exit handler\&.
+.PP
+.SS "\fRgauge\&.show(section | status, [completed])\fP"
+The first argument is either the section, the name of the current thing contributing to progress, or an object with keys like \fBsection\fP, \fBsubsection\fP & \fBcompleted\fP (or any others you have types for in a custom template)\&. If you don't want to update or set any of these you can pass \fRnull\fP and it will be ignored\&.
+.PP
+The second argument is the percent completed as a value between 0 and 1\&. Without it, completion is just not updated\&. You'll also note that completion can be passed in as part of a status object as the first argument\&. If both it and the completed argument are passed in, the completed argument wins\&.
+.SS "\fRgauge\&.hide([cb])\fP"
+Removes the gauge from the terminal\&. Optionally, callback \fRcb\fP after IO has had an opportunity to happen (currently this just means after \fRsetImmediate\fP has called back\&.)
+.PP
+It turns out this is important when you're pausing the progress bar on one filehandle and printing to another– otherwise (with a big enough print) node can end up printing the 'end progress bar' bits to the progress bar filehandle while other stuff is printing to another filehandle\&. These getting interleaved can cause corruption in some terminals\&.
+.SS "\fRgauge\&.pulse([subsection])\fP"
+.IP "\(bu" 2
+\fBsubsection\fP – *(optional)* The specific thing that triggered this pulse
+.PP
+.PP
+Spins the spinner in the gauge to show output\&. If \fBsubsection\fP is included then it will be combined with the last name passed to \fRgauge\&.show\fP\&.
+.SS "\fRgauge\&.disable()\fP"
+Hides the gauge and ignores further calls to \fRshow\fP or \fRpulse\fP\&.
+.SS "\fRgauge\&.enable()\fP"
+Shows the gauge and resumes updating when \fRshow\fP or \fRpulse\fP is called\&.
+.SS "\fRgauge\&.isEnabled()\fP"
+Returns true if the gauge is enabled\&.
+.SS "\fRgauge\&.setThemeset(themes)\fP"
+Change the themeset to select a theme from\&. The same as the \fRthemes\fP option used in the constructor\&. The theme will be reselected from this themeset\&.
+.SS "\fRgauge\&.setTheme(theme)\fP"
+Change the active theme, will be displayed with the next show or pulse\&. This can be:
+.PP
+.IP "\(bu" 2
+Theme object, in which case the \fBthemes\fP is not used\&.
+.IP "\(bu" 2
+The name of a theme, which will be looked up in the current \fIthemes\fP object\&.
+.IP "\(bu" 2
+A configuration object with any of \fRhasUnicode\fP, \fRhasColor\fP or \fRplatform\fP keys, which if will be used to override our guesses when making a default theme selection\&.
+.PP
+.PP
+If no theme is selected then a default is picked using a combination of our best guesses at your OS, color support and unicode support\&.
+.SS "\fRgauge\&.setTemplate(template)\fP"
+Change the active template, will be displayed with the next show or pulse
+.SS "Tracking Completion"
+If you have more than one thing going on that you want to track completion of, you may find the related \fRare-we-there-yet\fP helpful\&. It's \fRchange\fP event can be wired up to the \fRshow\fP method to get a more traditional progress bar interface\&.
+.SS "THEMES"
+.PP
+.nf
+var themes = require('gauge/themes')
+
+// fetch the default color unicode theme for this platform
+var ourTheme = themes({hasUnicode: true, hasColor: true})
+
+// fetch the default non\-color unicode theme for osx
+var ourTheme = themes({hasUnicode: true, hasColor: false, platform: 'darwin'})
+
+// create a new theme based on the color ascii theme for this platform
+// that brackets the progress bar with arrows
+var ourTheme = themes\&.newTheme(themes({hasUnicode: false, hasColor: true}), {
+  preProgressbar: '→',
+  postProgressbar: '←'
+})
+.fi
+.PP
+.PP
+The object returned by \fRgauge/themes\fP is an instance of the \fRThemeSet\fP class\&.
+.PP
+.PP
+.nf
+var ThemeSet = require('gauge/theme\-set')
+var themes = new ThemeSet()
+// or
+var themes = require('gauge/themes')
+var mythemes = themes\&.newThemeSet() // creates a new themeset based on the default themes
+.fi
+.PP
+.SS "themes(opts)"
+.SS "themes\&.getDefault(opts)"
+Theme objects are a function that fetches the default theme based on platform, unicode and color support\&.
+.PP
+Options is an object with the following properties:
+.PP
+.IP "\(bu" 2
+\fBhasUnicode\fP - If true, fetch a unicode theme, if no unicode theme is available then a non-unicode theme will be used\&.
+.IP "\(bu" 2
+\fBhasColor\fP - If true, fetch a color theme, if no color theme is available a non-color theme will be used\&.
+.IP "\(bu" 2
+\fBplatform\fP (optional) - Defaults to \fRprocess\&.platform\fP\&. If no platform match is available then \fRfallback\fP is used instead\&.
+.PP
+.PP
+If no compatible theme can be found then an error will be thrown with a \fRcode\fP of \fREMISSINGTHEME\fP\&.
+.SS "themes\&.addTheme(themeName, themeObj)"
+.SS "themes\&.addTheme(themeName, [parentTheme], newTheme)"
+Adds a named theme to the themeset\&. You can pass in either a theme object, as returned by \fRthemes\&.newTheme\fP or the arguments you'd pass to \fRthemes\&.newTheme\fP\&.
+.SS "themes\&.getThemeNames()"
+Return a list of all of the names of the themes in this themeset\&. Suitable for use in \fRthemes\&.getTheme(…)\fP\&.
+.SS "themes\&.getTheme(name)"
+Returns the theme object from this theme set named \fRname\fP\&.
+.PP
+If \fRname\fP does not exist in this themeset an error will be thrown with a \fRcode\fP of \fREMISSINGTHEME\fP\&.
+.SS "themes\&.setDefault([opts], themeName)"
+\fRopts\fP is an object with the following properties\&.
+.PP
+.IP "\(bu" 2
+\fBplatform\fP - Defaults to `'fallback'\fR\&. If your theme is platform specific, specify that here with the platform from\fPprocess\&.platform\fR, eg, \fPwin32\fR,\fPdarwin\fR, etc\&.\fP
+.IP "\(bu" 2
+\fR**hasUnicode** - Defaults to\fPfalse\fR\&. If your theme uses unicode you should set this to true\&.\fP
+.IP "\(bu" 2
+\fR**hasColor** - Defaults to\fPfalse`\&. If your theme uses color you should set this to true\&.
+.PP
+.PP
+\fRthemeName\fP is the name of the theme (as given to \fRaddTheme\fP) to use for this set of \fRopts\fP\&.
+.SS "themes\&.newTheme([parentTheme,] newTheme)"
+Create a new theme object based on \fRparentTheme\fP\&. If no \fRparentTheme\fP is provided then a minimal parentTheme that defines functions for rendering the activity indicator (spinner) and progress bar will be defined\&. (This fallback parent is defined in \fRgauge/base-theme\fP\&.)
+.PP
+newTheme should be a bare object– we'll start by discussing the properties defined by the default themes:
+.PP
+.IP "\(bu" 2
+\fBpreProgressbar\fP - displayed prior to the progress bar, if the progress bar is displayed\&.
+.IP "\(bu" 2
+\fBpostProgressbar\fP - displayed after the progress bar, if the progress bar is displayed\&.
+.IP "\(bu" 2
+\fBprogressBarTheme\fP - The subtheme passed through to the progress bar renderer, it's an object with \fRcomplete\fP and \fRremaining\fP properties that are the strings you want repeated for those sections of the progress bar\&.
+.IP "\(bu" 2
+\fBactivityIndicatorTheme\fP - The theme for the activity indicator (spinner), this can either be a string, in which each character is a different step, or an array of strings\&.
+.IP "\(bu" 2
+\fBpreSubsection\fP - Displayed as a separator between the \fRsection\fP and \fRsubsection\fP when the latter is printed\&.
+.PP
+.PP
+More generally, themes can have any value that would be a valid value when rendering templates\&. The properties in the theme are used when their name matches a type in the template\&. Their values can be:
+.PP
+.IP "\(bu" 2
+\fBstrings & numbers\fP - They'll be included as is
+.IP "\(bu" 2
+\fBfunction (values, theme, width)\fP - Should return what you want in your output\&. \fIvalues\fP is an object with values provided via \fRgauge\&.show\fP, \fItheme\fP is the theme specific to this item (see below) or this theme object, and \fIwidth\fP is the number of characters wide your result should be\&.
+.PP
+.PP
+There are a couple of special prefixes:
+.PP
+.IP "\(bu" 2
+\fBpre\fP - Is shown prior to the property, if its displayed\&.
+.IP "\(bu" 2
+\fBpost\fP - Is shown after the property, if its displayed\&.
+.PP
+.PP
+And one special suffix:
+.PP
+.IP "\(bu" 2
+\fBTheme\fP - Its value is passed to a function-type item as the theme\&.
+.PP
+.SS "themes\&.addToAllThemes(theme)"
+This \fImixes-in\fP \fRtheme\fP into all themes currently defined\&. It also adds it to the default parent theme for this themeset, so future themes added to this themeset will get the values from \fRtheme\fP by default\&.
+.SS "themes\&.newThemeSet()"
+Copy the current themeset into a new one\&. This allows you to easily inherit one themeset from another\&.
+.SS "TEMPLATES"
+A template is an array of objects and strings that, after being evaluated, will be turned into the gauge line\&. The default template is:
+.PP
+.PP
+.nf
+[
+    {type: 'progressbar', length: 20},
+    {type: 'activityIndicator', kerning: 1, length: 1},
+    {type: 'section', kerning: 1, default: ''},
+    {type: 'subsection', kerning: 1, default: ''}
+]
+.fi
+.PP
+.PP
+The various template elements can either be \fBplain strings\fP, in which case they will be be included verbatum in the output, or objects with the following properties:
+.PP
+.IP "\(bu" 2
+\fItype\fP can be any of the following plus any keys you pass into \fRgauge\&.show\fP plus any keys you have on a custom theme\&.
+.IP "  \(bu" 4
+\fRsection\fP – What big thing you're working on now\&.
+.IP "  \(bu" 4
+\fRsubsection\fP – What component of that thing is currently working\&.
+.IP "  \(bu" 4
+\fRactivityIndicator\fP – Shows a spinner using the \fRactivityIndicatorTheme\fP from your active theme\&.
+.IP "  \(bu" 4
+\fRprogressbar\fP – A progress bar representing your current \fRcompleted\fP using the \fRprogressbarTheme\fP from your active theme\&.
+.PP
+
+.IP "\(bu" 2
+\fIkerning\fP – Number of spaces that must be between this item and other items, if this item is displayed at all\&.
+.IP "\(bu" 2
+\fImaxLength\fP – The maximum length for this element\&. If its value is longer it will be truncated\&.
+.IP "\(bu" 2
+\fIminLength\fP – The minimum length for this element\&. If its value is shorter it will be padded according to the \fIalign\fP value\&.
+.IP "\(bu" 2
+\fIalign\fP – (Default: left) Possible values 'left', 'right' and 'center'\&. Works as you'd expect from word processors\&.
+.IP "\(bu" 2
+\fIlength\fP – Provides a single value for both \fIminLength\fP and \fImaxLength\fP\&. If both \fIlength\fP and \fIminLength or *maxLength\fP are specified then the latter take precedence\&.
+.IP "\(bu" 2
+\fIvalue\fP – A literal value to use for this template item\&.
+.IP "\(bu" 2
+\fIdefault\fP – A default value to use for this template item if a value wasn't otherwise passed in\&.
+.PP
+.SS "PLUMBING"
+This is the super simple, assume nothing, do no magic internals used by gauge to implement its ordinary interface\&.
+.PP
+.PP
+.nf
+var Plumbing = require('gauge/plumbing')
+var gauge = new Plumbing(theme, template, width)
+.fi
+.PP
+.PP
+.IP "\(bu" 2
+\fBtheme\fP: The theme to use\&.
+.IP "\(bu" 2
+\fBtemplate\fP: The template to use\&.
+.IP "\(bu" 2
+\fBwidth\fP: How wide your gauge should be
+.PP
+.SS "\fRgauge\&.setTheme(theme)\fP"
+Change the active theme\&.
+.SS "\fRgauge\&.setTemplate(template)\fP"
+Change the active template\&.
+.SS "\fRgauge\&.setWidth(width)\fP"
+Change the width to render at\&.
+.SS "\fRgauge\&.hide()\fP"
+Return the string necessary to hide the progress bar
+.SS "\fRgauge\&.hideCursor()\fP"
+Return a string to hide the cursor\&.
+.SS "\fRgauge\&.showCursor()\fP"
+Return a string to show the cursor\&.
+.SS "\fRgauge\&.show(status)\fP"
+Using \fRstatus\fP for values, render the provided template with the theme and return a string that is suitable for printing to update the gauge\&. 

@@ -1,0 +1,83 @@
+.TH "md_backend_2node__modules_2promise-retry_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2promise-retry_2_r_e_a_d_m_e \- node-promise-retry 
+.PP
+ \fR\fP \fR\fP \fR\fP \fR\fP \fR\fP \fR\fP
+.PP
+Retries a function that returns a promise, leveraging the power of the \fRretry\fP module to the promises world\&.
+.PP
+There's already some modules that are able to retry functions that return promises but they were rather difficult to use or do not offer an easy way to do conditional retries\&.
+.SH "Installation"
+.PP
+\fR$ npm install promise-retry\fP
+.SH "Usage"
+.PP
+.SS "promiseRetry(fn, [options])"
+Calls \fRfn\fP until the returned promise ends up fulfilled or rejected with an error different than a \fRretry\fP error\&. 
+.br
+ The \fRoptions\fP argument is an object which maps to the \fRretry\fP module options:
+.PP
+.IP "\(bu" 2
+\fRretries\fP: The maximum amount of times to retry the operation\&. Default is \fR10\fP\&.
+.IP "\(bu" 2
+\fRfactor\fP: The exponential factor to use\&. Default is \fR2\fP\&.
+.IP "\(bu" 2
+\fRminTimeout\fP: The number of milliseconds before starting the first retry\&. Default is \fR1000\fP\&.
+.IP "\(bu" 2
+\fRmaxTimeout\fP: The maximum number of milliseconds between two retries\&. Default is \fRInfinity\fP\&.
+.IP "\(bu" 2
+\fRrandomize\fP: Randomizes the timeouts by multiplying with a factor between \fR1\fP to \fR2\fP\&. Default is \fRfalse\fP\&.
+.PP
+.PP
+The \fRfn\fP function will receive a \fRretry\fP function as its first argument that should be called with an error whenever you want to retry \fRfn\fP\&. The \fRretry\fP function will always throw an error\&. 
+.br
+ If there are retries left, it will throw a special \fRretry\fP error that will be handled internally to call \fRfn\fP again\&. If there are no retries left, it will throw the actual error passed to it\&.
+.PP
+If you prefer, you can pass the options first using the alternative function signature \fRpromiseRetry([options], fn)\fP\&.
+.SH "Example"
+.PP
+.PP
+.nf
+var promiseRetry = require('promise\-retry');
+
+// Simple example
+promiseRetry(function (retry, number) {
+    console\&.log('attempt number', number);
+
+    return doSomething()
+    \&.catch(retry);
+})
+\&.then(function (value) {
+    // \&.\&.
+}, function (err) {
+    // \&.\&.
+});
+
+// Conditional example
+promiseRetry(function (retry, number) {
+    console\&.log('attempt number', number);
+
+    return doSomething()
+    \&.catch(function (err) {
+        if (err\&.code === 'ETIMEDOUT') {
+            retry(err);
+        }
+
+        throw err;
+    });
+})
+\&.then(function (value) {
+    // \&.\&.
+}, function (err) {
+    // \&.\&.
+});
+.fi
+.PP
+.SH "Tests"
+.PP
+\fR$ npm test\fP
+.SH "License"
+.PP
+Released under the \fRMIT License\fP\&. 

@@ -2,6 +2,14 @@
 
 Welcome to Zora, where data meets innovation! Zora is not just another database engine; it's a revolution in data management. Designed to be more, Zora introduces cutting-edge features and a futuristic approach to storing and accessing data.
 
+Are you new to zora? If so, here are some useful documents you can use to get started!
+
+* [Getting Started](./docs/getting-started.md)
+* [Configuration File Guide](./docs/configuration.md)
+* [Database Container Guide](./docs/containers-guide.md)
+* [Troubleshooting](./docs/troubleshooting.md)
+* [FAQ](./docs/faqs.md)
+
 ## ✨ Features That Sparkle
 
 - **DocuLayer Magic**: Say goodbye to traditional storage methods! Zora dazzles with its revolutionary Documentation Layering technique, ensuring lightning-fast data retrieval.

@@ -1,0 +1,391 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2glob_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>Glob</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Match<sp/>files<sp/>using<sp/>the<sp/>patterns<sp/>the<sp/>shell<sp/>uses,<sp/>like<sp/>stars<sp/>and<sp/>stuff.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![Build<sp/>Status](https://travis-ci.org/isaacs/node-glob.svg?branch=master)](https://travis-ci.org/isaacs/node-glob/)<sp/>[![Build<sp/>Status](https://ci.appveyor.com/api/projects/status/kd7f3yftf7unxlsx?svg=true)](https://ci.appveyor.com/project/isaacs/node-glob)<sp/>[![Coverage<sp/>Status](https://coveralls.io/repos/isaacs/node-glob/badge.svg?branch=master&amp;service=github)](https://coveralls.io/github/isaacs/node-glob?branch=master)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>a<sp/>glob<sp/>implementation<sp/>in<sp/>JavaScript.<sp/><sp/>It<sp/>uses<sp/>the<sp/>`minimatch`</highlight></codeline>
+<codeline><highlight class="normal">library<sp/>to<sp/>do<sp/>its<sp/>matching.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">![a<sp/>fun<sp/>cartoon<sp/>logo<sp/>made<sp/>of<sp/>glob<sp/>characters](logo/glob.png)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Usage</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Install<sp/>with<sp/>npm</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>i<sp/>glob</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>glob<sp/>=<sp/>require(&quot;glob&quot;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>options<sp/>is<sp/>optional</highlight></codeline>
+<codeline><highlight class="normal">glob(&quot;**/*.js&quot;,<sp/>options,<sp/>function<sp/>(er,<sp/>files)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>files<sp/>is<sp/>an<sp/>array<sp/>of<sp/>filenames.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>If<sp/>the<sp/>`nonull`<sp/>option<sp/>is<sp/>set,<sp/>and<sp/>nothing</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>was<sp/>found,<sp/>then<sp/>files<sp/>is<sp/>[&quot;**/*.js&quot;]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>er<sp/>is<sp/>an<sp/>error<sp/>object<sp/>or<sp/>null.</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Glob<sp/>Primer</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&quot;Globs&quot;<sp/>are<sp/>the<sp/>patterns<sp/>you<sp/>type<sp/>when<sp/>you<sp/>do<sp/>stuff<sp/>like<sp/>`ls<sp/>*.js`<sp/>on</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>command<sp/>line,<sp/>or<sp/>put<sp/>`build/*`<sp/>in<sp/>a<sp/>`.gitignore`<sp/>file.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Before<sp/>parsing<sp/>the<sp/>path<sp/>part<sp/>patterns,<sp/>braced<sp/>sections<sp/>are<sp/>expanded</highlight></codeline>
+<codeline><highlight class="normal">into<sp/>a<sp/>set.<sp/><sp/>Braced<sp/>sections<sp/>start<sp/>with<sp/>`{`<sp/>and<sp/>end<sp/>with<sp/>`}`,<sp/>with<sp/>any</highlight></codeline>
+<codeline><highlight class="normal">number<sp/>of<sp/>comma-delimited<sp/>sections<sp/>within.<sp/><sp/>Braced<sp/>sections<sp/>may<sp/>contain</highlight></codeline>
+<codeline><highlight class="normal">slash<sp/>characters,<sp/>so<sp/>`a{/b/c,bcd}`<sp/>would<sp/>expand<sp/>into<sp/>`a/b/c`<sp/>and<sp/>`abcd`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>following<sp/>characters<sp/>have<sp/>special<sp/>magic<sp/>meaning<sp/>when<sp/>used<sp/>in<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">path<sp/>portion:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`*`<sp/>Matches<sp/>0<sp/>or<sp/>more<sp/>characters<sp/>in<sp/>a<sp/>single<sp/>path<sp/>portion</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`?`<sp/>Matches<sp/>1<sp/>character</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`[...]`<sp/>Matches<sp/>a<sp/>range<sp/>of<sp/>characters,<sp/>similar<sp/>to<sp/>a<sp/>RegExp<sp/>range.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>If<sp/>the<sp/>first<sp/>character<sp/>of<sp/>the<sp/>range<sp/>is<sp/>`!`<sp/>or<sp/>`^`<sp/>then<sp/>it<sp/>matches</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>any<sp/>character<sp/>not<sp/>in<sp/>the<sp/>range.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`!(pattern|pattern|pattern)`<sp/>Matches<sp/>anything<sp/>that<sp/>does<sp/>not<sp/>match</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>any<sp/>of<sp/>the<sp/>patterns<sp/>provided.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`?(pattern|pattern|pattern)`<sp/>Matches<sp/>zero<sp/>or<sp/>one<sp/>occurrence<sp/>of<sp/>the</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>patterns<sp/>provided.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`+(pattern|pattern|pattern)`<sp/>Matches<sp/>one<sp/>or<sp/>more<sp/>occurrences<sp/>of<sp/>the</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>patterns<sp/>provided.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`*(a|b|c)`<sp/>Matches<sp/>zero<sp/>or<sp/>more<sp/>occurrences<sp/>of<sp/>the<sp/>patterns<sp/>provided</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`@(pattern|pat*|pat?erN)`<sp/>Matches<sp/>exactly<sp/>one<sp/>of<sp/>the<sp/>patterns</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>provided</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`**`<sp/>If<sp/>a<sp/>&quot;globstar&quot;<sp/>is<sp/>alone<sp/>in<sp/>a<sp/>path<sp/>portion,<sp/>then<sp/>it<sp/>matches</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>zero<sp/>or<sp/>more<sp/>directories<sp/>and<sp/>subdirectories<sp/>searching<sp/>for<sp/>matches.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>It<sp/>does<sp/>not<sp/>crawl<sp/>symlinked<sp/>directories.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Dots</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>a<sp/>file<sp/>or<sp/>directory<sp/>path<sp/>portion<sp/>has<sp/>a<sp/>`.`<sp/>as<sp/>the<sp/>first<sp/>character,</highlight></codeline>
+<codeline><highlight class="normal">then<sp/>it<sp/>will<sp/>not<sp/>match<sp/>any<sp/>glob<sp/>pattern<sp/>unless<sp/>that<sp/>pattern&apos;s</highlight></codeline>
+<codeline><highlight class="normal">corresponding<sp/>path<sp/>part<sp/>also<sp/>has<sp/>a<sp/>`.`<sp/>as<sp/>its<sp/>first<sp/>character.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>example,<sp/>the<sp/>pattern<sp/>`a/.*/c`<sp/>would<sp/>match<sp/>the<sp/>file<sp/>at<sp/>`a/.b/c`.</highlight></codeline>
+<codeline><highlight class="normal">However<sp/>the<sp/>pattern<sp/>`a/*/c`<sp/>would<sp/>not,<sp/>because<sp/>`*`<sp/>does<sp/>not<sp/>start<sp/>with</highlight></codeline>
+<codeline><highlight class="normal">a<sp/>dot<sp/>character.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>make<sp/>glob<sp/>treat<sp/>dots<sp/>as<sp/>normal<sp/>characters<sp/>by<sp/>setting</highlight></codeline>
+<codeline><highlight class="normal">`dot:true`<sp/>in<sp/>the<sp/>options.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Basename<sp/>Matching</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>set<sp/>`matchBase:true`<sp/>in<sp/>the<sp/>options,<sp/>and<sp/>the<sp/>pattern<sp/>has<sp/>no</highlight></codeline>
+<codeline><highlight class="normal">slashes<sp/>in<sp/>it,<sp/>then<sp/>it<sp/>will<sp/>seek<sp/>for<sp/>any<sp/>file<sp/>anywhere<sp/>in<sp/>the<sp/>tree</highlight></codeline>
+<codeline><highlight class="normal">with<sp/>a<sp/>matching<sp/>basename.<sp/><sp/>For<sp/>example,<sp/>`*.js`<sp/>would<sp/>match</highlight></codeline>
+<codeline><highlight class="normal">`test/simple/basic.js`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Empty<sp/>Sets</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>no<sp/>matching<sp/>files<sp/>are<sp/>found,<sp/>then<sp/>an<sp/>empty<sp/>array<sp/>is<sp/>returned.<sp/><sp/>This</highlight></codeline>
+<codeline><highlight class="normal">differs<sp/>from<sp/>the<sp/>shell,<sp/>where<sp/>the<sp/>pattern<sp/>itself<sp/>is<sp/>returned.<sp/><sp/>For</highlight></codeline>
+<codeline><highlight class="normal">example:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>$<sp/>echo<sp/>a*s*d*f</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>a*s*d*f</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>get<sp/>the<sp/>bash-style<sp/>behavior,<sp/>set<sp/>the<sp/>`nonull:true`<sp/>in<sp/>the<sp/>options.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>See<sp/>Also:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`man<sp/>sh`</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`man<sp/>bash`<sp/>(Search<sp/>for<sp/>&quot;Pattern<sp/>Matching&quot;)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`man<sp/>3<sp/>fnmatch`</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`man<sp/>5<sp/>gitignore`</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>[minimatch<sp/>documentation](https://github.com/isaacs/minimatch)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>glob.hasMagic(pattern,<sp/>[options])</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>`true`<sp/>if<sp/>there<sp/>are<sp/>any<sp/>special<sp/>characters<sp/>in<sp/>the<sp/>pattern,<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">`false`<sp/>otherwise.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note<sp/>that<sp/>the<sp/>options<sp/>affect<sp/>the<sp/>results.<sp/><sp/>If<sp/>`noext:true`<sp/>is<sp/>set<sp/>in</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>options<sp/>object,<sp/>then<sp/>`+(a|b)`<sp/>will<sp/>not<sp/>be<sp/>considered<sp/>a<sp/>magic</highlight></codeline>
+<codeline><highlight class="normal">pattern.<sp/><sp/>If<sp/>the<sp/>pattern<sp/>has<sp/>a<sp/>brace<sp/>expansion,<sp/>like<sp/>`a/{b/c,x/y}`</highlight></codeline>
+<codeline><highlight class="normal">then<sp/>that<sp/>is<sp/>considered<sp/>magical,<sp/>unless<sp/>`nobrace:true`<sp/>is<sp/>set<sp/>in<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">options.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>glob(pattern,<sp/>[options],<sp/>cb)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`pattern`<sp/>`{String}`<sp/>Pattern<sp/>to<sp/>be<sp/>matched</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`options`<sp/>`{Object}`</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`cb`<sp/>`{Function}`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`err`<sp/>`{Error<sp/>|<sp/>null}`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`matches`<sp/>`{Array&lt;String&gt;}`<sp/>filenames<sp/>found<sp/>matching<sp/>the<sp/>pattern</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Perform<sp/>an<sp/>asynchronous<sp/>glob<sp/>search.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>glob.sync(pattern,<sp/>[options])</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`pattern`<sp/>`{String}`<sp/>Pattern<sp/>to<sp/>be<sp/>matched</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`options`<sp/>`{Object}`</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>return:<sp/>`{Array&lt;String&gt;}`<sp/>filenames<sp/>found<sp/>matching<sp/>the<sp/>pattern</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Perform<sp/>a<sp/>synchronous<sp/>glob<sp/>search.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Class:<sp/>glob.Glob</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Create<sp/>a<sp/>Glob<sp/>object<sp/>by<sp/>instantiating<sp/>the<sp/>`glob.Glob`<sp/>class.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>Glob<sp/>=<sp/>require(&quot;glob&quot;).Glob</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>mg<sp/>=<sp/>new<sp/>Glob(pattern,<sp/>options,<sp/>cb)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It&apos;s<sp/>an<sp/>EventEmitter,<sp/>and<sp/>starts<sp/>walking<sp/>the<sp/>filesystem<sp/>to<sp/>find<sp/>matches</highlight></codeline>
+<codeline><highlight class="normal">immediately.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>new<sp/>glob.Glob(pattern,<sp/>[options],<sp/>[cb])</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`pattern`<sp/>`{String}`<sp/>pattern<sp/>to<sp/>search<sp/>for</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`options`<sp/>`{Object}`</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`cb`<sp/>`{Function}`<sp/>Called<sp/>when<sp/>an<sp/>error<sp/>occurs,<sp/>or<sp/>matches<sp/>are<sp/>found</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`err`<sp/>`{Error<sp/>|<sp/>null}`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`matches`<sp/>`{Array&lt;String&gt;}`<sp/>filenames<sp/>found<sp/>matching<sp/>the<sp/>pattern</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note<sp/>that<sp/>if<sp/>the<sp/>`sync`<sp/>flag<sp/>is<sp/>set<sp/>in<sp/>the<sp/>options,<sp/>then<sp/>matches<sp/>will</highlight></codeline>
+<codeline><highlight class="normal">be<sp/>immediately<sp/>available<sp/>on<sp/>the<sp/>`g.found`<sp/>member.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Properties</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`minimatch`<sp/>The<sp/>minimatch<sp/>object<sp/>that<sp/>the<sp/>glob<sp/>uses.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`options`<sp/>The<sp/>options<sp/>object<sp/>passed<sp/>in.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`aborted`<sp/>Boolean<sp/>which<sp/>is<sp/>set<sp/>to<sp/>true<sp/>when<sp/>calling<sp/>`abort()`.<sp/><sp/>There</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>is<sp/>no<sp/>way<sp/>at<sp/>this<sp/>time<sp/>to<sp/>continue<sp/>a<sp/>glob<sp/>search<sp/>after<sp/>aborting,<sp/>but</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>you<sp/>can<sp/>re-use<sp/>the<sp/>statCache<sp/>to<sp/>avoid<sp/>having<sp/>to<sp/>duplicate<sp/>syscalls.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`cache`<sp/>Convenience<sp/>object.<sp/><sp/>Each<sp/>field<sp/>has<sp/>the<sp/>following<sp/>possible</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>values:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`false`<sp/>-<sp/>Path<sp/>does<sp/>not<sp/>exist</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`true`<sp/>-<sp/>Path<sp/>exists</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`&apos;FILE&apos;`<sp/>-<sp/>Path<sp/>exists,<sp/>and<sp/>is<sp/>not<sp/>a<sp/>directory</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`&apos;DIR&apos;`<sp/>-<sp/>Path<sp/>exists,<sp/>and<sp/>is<sp/>a<sp/>directory</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`[file,<sp/>entries,<sp/>...]`<sp/>-<sp/>Path<sp/>exists,<sp/>is<sp/>a<sp/>directory,<sp/>and<sp/>the</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>array<sp/>value<sp/>is<sp/>the<sp/>results<sp/>of<sp/>`fs.readdir`</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`statCache`<sp/>Cache<sp/>of<sp/>`fs.stat`<sp/>results,<sp/>to<sp/>prevent<sp/>statting<sp/>the<sp/>same</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>path<sp/>multiple<sp/>times.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`symlinks`<sp/>A<sp/>record<sp/>of<sp/>which<sp/>paths<sp/>are<sp/>symbolic<sp/>links,<sp/>which<sp/>is</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>relevant<sp/>in<sp/>resolving<sp/>`**`<sp/>patterns.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`realpathCache`<sp/>An<sp/>optional<sp/>object<sp/>which<sp/>is<sp/>passed<sp/>to<sp/>`fs.realpath`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>to<sp/>minimize<sp/>unnecessary<sp/>syscalls.<sp/><sp/>It<sp/>is<sp/>stored<sp/>on<sp/>the<sp/>instantiated</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Glob<sp/>object,<sp/>and<sp/>may<sp/>be<sp/>re-used.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Events</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`end`<sp/>When<sp/>the<sp/>matching<sp/>is<sp/>finished,<sp/>this<sp/>is<sp/>emitted<sp/>with<sp/>all<sp/>the</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>matches<sp/>found.<sp/><sp/>If<sp/>the<sp/>`nonull`<sp/>option<sp/>is<sp/>set,<sp/>and<sp/>no<sp/>match<sp/>was<sp/>found,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>then<sp/>the<sp/>`matches`<sp/>list<sp/>contains<sp/>the<sp/>original<sp/>pattern.<sp/><sp/>The<sp/>matches</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>are<sp/>sorted,<sp/>unless<sp/>the<sp/>`nosort`<sp/>flag<sp/>is<sp/>set.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`match`<sp/>Every<sp/>time<sp/>a<sp/>match<sp/>is<sp/>found,<sp/>this<sp/>is<sp/>emitted<sp/>with<sp/>the<sp/>specific</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>thing<sp/>that<sp/>matched.<sp/>It<sp/>is<sp/>not<sp/>deduplicated<sp/>or<sp/>resolved<sp/>to<sp/>a<sp/>realpath.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`error`<sp/>Emitted<sp/>when<sp/>an<sp/>unexpected<sp/>error<sp/>is<sp/>encountered,<sp/>or<sp/>whenever</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>any<sp/>fs<sp/>error<sp/>occurs<sp/>if<sp/>`options.strict`<sp/>is<sp/>set.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`abort`<sp/>When<sp/>`abort()`<sp/>is<sp/>called,<sp/>this<sp/>event<sp/>is<sp/>raised.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Methods</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`pause`<sp/>Temporarily<sp/>stop<sp/>the<sp/>search</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`resume`<sp/>Resume<sp/>the<sp/>search</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`abort`<sp/>Stop<sp/>the<sp/>search<sp/>forever</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Options</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">All<sp/>the<sp/>options<sp/>that<sp/>can<sp/>be<sp/>passed<sp/>to<sp/>Minimatch<sp/>can<sp/>also<sp/>be<sp/>passed<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">Glob<sp/>to<sp/>change<sp/>pattern<sp/>matching<sp/>behavior.<sp/><sp/>Also,<sp/>some<sp/>have<sp/>been<sp/>added,</highlight></codeline>
+<codeline><highlight class="normal">or<sp/>have<sp/>glob-specific<sp/>ramifications.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">All<sp/>options<sp/>are<sp/>false<sp/>by<sp/>default,<sp/>unless<sp/>otherwise<sp/>noted.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">All<sp/>options<sp/>are<sp/>added<sp/>to<sp/>the<sp/>Glob<sp/>object,<sp/>as<sp/>well.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>are<sp/>running<sp/>many<sp/>`glob`<sp/>operations,<sp/>you<sp/>can<sp/>pass<sp/>a<sp/>Glob<sp/>object</highlight></codeline>
+<codeline><highlight class="normal">as<sp/>the<sp/>`options`<sp/>argument<sp/>to<sp/>a<sp/>subsequent<sp/>operation<sp/>to<sp/>shortcut<sp/>some</highlight></codeline>
+<codeline><highlight class="normal">`stat`<sp/>and<sp/>`readdir`<sp/>calls.<sp/><sp/>At<sp/>the<sp/>very<sp/>least,<sp/>you<sp/>may<sp/>pass<sp/>in<sp/>shared</highlight></codeline>
+<codeline><highlight class="normal">`symlinks`,<sp/>`statCache`,<sp/>`realpathCache`,<sp/>and<sp/>`cache`<sp/>options,<sp/>so<sp/>that</highlight></codeline>
+<codeline><highlight class="normal">parallel<sp/>glob<sp/>operations<sp/>will<sp/>be<sp/>sped<sp/>up<sp/>by<sp/>sharing<sp/>information<sp/>about</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>filesystem.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`cwd`<sp/>The<sp/>current<sp/>working<sp/>directory<sp/>in<sp/>which<sp/>to<sp/>search.<sp/><sp/>Defaults</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>to<sp/>`process.cwd()`.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`root`<sp/>The<sp/>place<sp/>where<sp/>patterns<sp/>starting<sp/>with<sp/>`/`<sp/>will<sp/>be<sp/>mounted</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>onto.<sp/><sp/>Defaults<sp/>to<sp/>`path.resolve(options.cwd,<sp/>&quot;/&quot;)`<sp/>(`/`<sp/>on<sp/>Unix</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>systems,<sp/>and<sp/>`C:\`<sp/>or<sp/>some<sp/>such<sp/>on<sp/>Windows.)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`dot`<sp/>Include<sp/>`.dot`<sp/>files<sp/>in<sp/>normal<sp/>matches<sp/>and<sp/>`globstar`<sp/>matches.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Note<sp/>that<sp/>an<sp/>explicit<sp/>dot<sp/>in<sp/>a<sp/>portion<sp/>of<sp/>the<sp/>pattern<sp/>will<sp/>always</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>match<sp/>dot<sp/>files.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`nomount`<sp/>By<sp/>default,<sp/>a<sp/>pattern<sp/>starting<sp/>with<sp/>a<sp/>forward-slash<sp/>will<sp/>be</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;mounted&quot;<sp/>onto<sp/>the<sp/>root<sp/>setting,<sp/>so<sp/>that<sp/>a<sp/>valid<sp/>filesystem<sp/>path<sp/>is</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>returned.<sp/><sp/>Set<sp/>this<sp/>flag<sp/>to<sp/>disable<sp/>that<sp/>behavior.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`mark`<sp/>Add<sp/>a<sp/>`/`<sp/>character<sp/>to<sp/>directory<sp/>matches.<sp/><sp/>Note<sp/>that<sp/>this</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>requires<sp/>additional<sp/>stat<sp/>calls.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`nosort`<sp/>Don&apos;t<sp/>sort<sp/>the<sp/>results.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`stat`<sp/>Set<sp/>to<sp/>true<sp/>to<sp/>stat<sp/>*all*<sp/>results.<sp/><sp/>This<sp/>reduces<sp/>performance</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>somewhat,<sp/>and<sp/>is<sp/>completely<sp/>unnecessary,<sp/>unless<sp/>`readdir`<sp/>is<sp/>presumed</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>to<sp/>be<sp/>an<sp/>untrustworthy<sp/>indicator<sp/>of<sp/>file<sp/>existence.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`silent`<sp/>When<sp/>an<sp/>unusual<sp/>error<sp/>is<sp/>encountered<sp/>when<sp/>attempting<sp/>to</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>read<sp/>a<sp/>directory,<sp/>a<sp/>warning<sp/>will<sp/>be<sp/>printed<sp/>to<sp/>stderr.<sp/><sp/>Set<sp/>the</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`silent`<sp/>option<sp/>to<sp/>true<sp/>to<sp/>suppress<sp/>these<sp/>warnings.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`strict`<sp/>When<sp/>an<sp/>unusual<sp/>error<sp/>is<sp/>encountered<sp/>when<sp/>attempting<sp/>to</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>read<sp/>a<sp/>directory,<sp/>the<sp/>process<sp/>will<sp/>just<sp/>continue<sp/>on<sp/>in<sp/>search<sp/>of</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>other<sp/>matches.<sp/><sp/>Set<sp/>the<sp/>`strict`<sp/>option<sp/>to<sp/>raise<sp/>an<sp/>error<sp/>in<sp/>these</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cases.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`cache`<sp/>See<sp/>`cache`<sp/>property<sp/>above.<sp/><sp/>Pass<sp/>in<sp/>a<sp/>previously<sp/>generated</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cache<sp/>object<sp/>to<sp/>save<sp/>some<sp/>fs<sp/>calls.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`statCache`<sp/>A<sp/>cache<sp/>of<sp/>results<sp/>of<sp/>filesystem<sp/>information,<sp/>to<sp/>prevent</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>unnecessary<sp/>stat<sp/>calls.<sp/><sp/>While<sp/>it<sp/>should<sp/>not<sp/>normally<sp/>be<sp/>necessary</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>to<sp/>set<sp/>this,<sp/>you<sp/>may<sp/>pass<sp/>the<sp/>statCache<sp/>from<sp/>one<sp/>glob()<sp/>call<sp/>to<sp/>the</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>options<sp/>object<sp/>of<sp/>another,<sp/>if<sp/>you<sp/>know<sp/>that<sp/>the<sp/>filesystem<sp/>will<sp/>not</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>change<sp/>between<sp/>calls.<sp/><sp/>(See<sp/>&quot;Race<sp/>Conditions&quot;<sp/>below.)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`symlinks`<sp/>A<sp/>cache<sp/>of<sp/>known<sp/>symbolic<sp/>links.<sp/><sp/>You<sp/>may<sp/>pass<sp/>in<sp/>a</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>previously<sp/>generated<sp/>`symlinks`<sp/>object<sp/>to<sp/>save<sp/>`lstat`<sp/>calls<sp/>when</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>resolving<sp/>`**`<sp/>matches.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`sync`<sp/>DEPRECATED:<sp/>use<sp/>`glob.sync(pattern,<sp/>opts)`<sp/>instead.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`nounique`<sp/>In<sp/>some<sp/>cases,<sp/>brace-expanded<sp/>patterns<sp/>can<sp/>result<sp/>in<sp/>the</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>same<sp/>file<sp/>showing<sp/>up<sp/>multiple<sp/>times<sp/>in<sp/>the<sp/>result<sp/>set.<sp/><sp/>By<sp/>default,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>this<sp/>implementation<sp/>prevents<sp/>duplicates<sp/>in<sp/>the<sp/>result<sp/>set.<sp/><sp/>Set<sp/>this</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>flag<sp/>to<sp/>disable<sp/>that<sp/>behavior.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`nonull`<sp/>Set<sp/>to<sp/>never<sp/>return<sp/>an<sp/>empty<sp/>set,<sp/>instead<sp/>returning<sp/>a<sp/>set</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>containing<sp/>the<sp/>pattern<sp/>itself.<sp/><sp/>This<sp/>is<sp/>the<sp/>default<sp/>in<sp/>glob(3).</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`debug`<sp/>Set<sp/>to<sp/>enable<sp/>debug<sp/>logging<sp/>in<sp/>minimatch<sp/>and<sp/>glob.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`nobrace`<sp/>Do<sp/>not<sp/>expand<sp/>`{a,b}`<sp/>and<sp/>`{1..3}`<sp/>brace<sp/>sets.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`noglobstar`<sp/>Do<sp/>not<sp/>match<sp/>`**`<sp/>against<sp/>multiple<sp/>filenames.<sp/><sp/>(Ie,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>treat<sp/>it<sp/>as<sp/>a<sp/>normal<sp/>`*`<sp/>instead.)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`noext`<sp/>Do<sp/>not<sp/>match<sp/>`+(a|b)`<sp/>&quot;extglob&quot;<sp/>patterns.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`nocase`<sp/>Perform<sp/>a<sp/>case-insensitive<sp/>match.<sp/><sp/>Note:<sp/>on</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>case-insensitive<sp/>filesystems,<sp/>non-magic<sp/>patterns<sp/>will<sp/>match<sp/>by</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>default,<sp/>since<sp/>`stat`<sp/>and<sp/>`readdir`<sp/>will<sp/>not<sp/>raise<sp/>errors.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`matchBase`<sp/>Perform<sp/>a<sp/>basename-only<sp/>match<sp/>if<sp/>the<sp/>pattern<sp/>does<sp/>not</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>contain<sp/>any<sp/>slash<sp/>characters.<sp/><sp/>That<sp/>is,<sp/>`*.js`<sp/>would<sp/>be<sp/>treated<sp/>as</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>equivalent<sp/>to<sp/>`**/*.js`,<sp/>matching<sp/>all<sp/>js<sp/>files<sp/>in<sp/>all<sp/>directories.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`nodir`<sp/>Do<sp/>not<sp/>match<sp/>directories,<sp/>only<sp/>files.<sp/><sp/>(Note:<sp/>to<sp/>match</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*only*<sp/>directories,<sp/>simply<sp/>put<sp/>a<sp/>`/`<sp/>at<sp/>the<sp/>end<sp/>of<sp/>the<sp/>pattern.)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`ignore`<sp/>Add<sp/>a<sp/>pattern<sp/>or<sp/>an<sp/>array<sp/>of<sp/>glob<sp/>patterns<sp/>to<sp/>exclude<sp/>matches.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Note:<sp/>`ignore`<sp/>patterns<sp/>are<sp/>*always*<sp/>in<sp/>`dot:true`<sp/>mode,<sp/>regardless</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>of<sp/>any<sp/>other<sp/>settings.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`follow`<sp/>Follow<sp/>symlinked<sp/>directories<sp/>when<sp/>expanding<sp/>`**`<sp/>patterns.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Note<sp/>that<sp/>this<sp/>can<sp/>result<sp/>in<sp/>a<sp/>lot<sp/>of<sp/>duplicate<sp/>references<sp/>in<sp/>the</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>presence<sp/>of<sp/>cyclic<sp/>links.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`realpath`<sp/>Set<sp/>to<sp/>true<sp/>to<sp/>call<sp/>`fs.realpath`<sp/>on<sp/>all<sp/>of<sp/>the<sp/>results.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>In<sp/>the<sp/>case<sp/>of<sp/>a<sp/>symlink<sp/>that<sp/>cannot<sp/>be<sp/>resolved,<sp/>the<sp/>full<sp/>absolute</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>path<sp/>to<sp/>the<sp/>matched<sp/>entry<sp/>is<sp/>returned<sp/>(though<sp/>it<sp/>will<sp/>usually<sp/>be<sp/>a</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>broken<sp/>symlink)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`absolute`<sp/>Set<sp/>to<sp/>true<sp/>to<sp/>always<sp/>receive<sp/>absolute<sp/>paths<sp/>for<sp/>matched</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>files.<sp/><sp/>Unlike<sp/>`realpath`,<sp/>this<sp/>also<sp/>affects<sp/>the<sp/>values<sp/>returned<sp/>in</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>the<sp/>`match`<sp/>event.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`fs`<sp/>File-system<sp/>object<sp/>with<sp/>Node&apos;s<sp/>`fs`<sp/>API.<sp/>By<sp/>default,<sp/>the<sp/>built-in</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`fs`<sp/>module<sp/>will<sp/>be<sp/>used.<sp/>Set<sp/>to<sp/>a<sp/>volume<sp/>provided<sp/>by<sp/>a<sp/>library<sp/>like</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`memfs`<sp/>to<sp/>avoid<sp/>using<sp/>the<sp/>&quot;real&quot;<sp/>file-system.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Comparisons<sp/>to<sp/>other<sp/>fnmatch/glob<sp/>implementations</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">While<sp/>strict<sp/>compliance<sp/>with<sp/>the<sp/>existing<sp/>standards<sp/>is<sp/>a<sp/>worthwhile</highlight></codeline>
+<codeline><highlight class="normal">goal,<sp/>some<sp/>discrepancies<sp/>exist<sp/>between<sp/>node-glob<sp/>and<sp/>other</highlight></codeline>
+<codeline><highlight class="normal">implementations,<sp/>and<sp/>are<sp/>intentional.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>double-star<sp/>character<sp/>`**`<sp/>is<sp/>supported<sp/>by<sp/>default,<sp/>unless<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">`noglobstar`<sp/>flag<sp/>is<sp/>set.<sp/><sp/>This<sp/>is<sp/>supported<sp/>in<sp/>the<sp/>manner<sp/>of<sp/>bsdglob</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>bash<sp/>4.3,<sp/>where<sp/>`**`<sp/>only<sp/>has<sp/>special<sp/>significance<sp/>if<sp/>it<sp/>is<sp/>the<sp/>only</highlight></codeline>
+<codeline><highlight class="normal">thing<sp/>in<sp/>a<sp/>path<sp/>part.<sp/><sp/>That<sp/>is,<sp/>`a/**/b`<sp/>will<sp/>match<sp/>`a/x/y/b`,<sp/>but</highlight></codeline>
+<codeline><highlight class="normal">`a/**b`<sp/>will<sp/>not.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note<sp/>that<sp/>symlinked<sp/>directories<sp/>are<sp/>not<sp/>crawled<sp/>as<sp/>part<sp/>of<sp/>a<sp/>`**`,</highlight></codeline>
+<codeline><highlight class="normal">though<sp/>their<sp/>contents<sp/>may<sp/>match<sp/>against<sp/>subsequent<sp/>portions<sp/>of<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">pattern.<sp/><sp/>This<sp/>prevents<sp/>infinite<sp/>loops<sp/>and<sp/>duplicates<sp/>and<sp/>the<sp/>like.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>an<sp/>escaped<sp/>pattern<sp/>has<sp/>no<sp/>matches,<sp/>and<sp/>the<sp/>`nonull`<sp/>flag<sp/>is<sp/>set,</highlight></codeline>
+<codeline><highlight class="normal">then<sp/>glob<sp/>returns<sp/>the<sp/>pattern<sp/>as-provided,<sp/>rather<sp/>than</highlight></codeline>
+<codeline><highlight class="normal">interpreting<sp/>the<sp/>character<sp/>escapes.<sp/><sp/>For<sp/>example,</highlight></codeline>
+<codeline><highlight class="normal">`glob.match([],<sp/>&quot;\\*a\\?&quot;)`<sp/>will<sp/>return<sp/>`&quot;\\*a\\?&quot;`<sp/>rather<sp/>than</highlight></codeline>
+<codeline><highlight class="normal">`&quot;*a?&quot;`.<sp/><sp/>This<sp/>is<sp/>akin<sp/>to<sp/>setting<sp/>the<sp/>`nullglob`<sp/>option<sp/>in<sp/>bash,<sp/>except</highlight></codeline>
+<codeline><highlight class="normal">that<sp/>it<sp/>does<sp/>not<sp/>resolve<sp/>escaped<sp/>pattern<sp/>characters.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>brace<sp/>expansion<sp/>is<sp/>not<sp/>disabled,<sp/>then<sp/>it<sp/>is<sp/>performed<sp/>before<sp/>any</highlight></codeline>
+<codeline><highlight class="normal">other<sp/>interpretation<sp/>of<sp/>the<sp/>glob<sp/>pattern.<sp/><sp/>Thus,<sp/>a<sp/>pattern<sp/>like</highlight></codeline>
+<codeline><highlight class="normal">`+(a|{b),c)}`,<sp/>which<sp/>would<sp/>not<sp/>be<sp/>valid<sp/>in<sp/>bash<sp/>or<sp/>zsh,<sp/>is<sp/>expanded</highlight></codeline>
+<codeline><highlight class="normal">**first**<sp/>into<sp/>the<sp/>set<sp/>of<sp/>`+(a|b)`<sp/>and<sp/>`+(a|c)`,<sp/>and<sp/>those<sp/>patterns<sp/>are</highlight></codeline>
+<codeline><highlight class="normal">checked<sp/>for<sp/>validity.<sp/><sp/>Since<sp/>those<sp/>two<sp/>are<sp/>valid,<sp/>matching<sp/>proceeds.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Comments<sp/>and<sp/>Negation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Previously,<sp/>this<sp/>module<sp/>let<sp/>you<sp/>mark<sp/>a<sp/>pattern<sp/>as<sp/>a<sp/>&quot;comment&quot;<sp/>if<sp/>it</highlight></codeline>
+<codeline><highlight class="normal">started<sp/>with<sp/>a<sp/>`#`<sp/>character,<sp/>or<sp/>a<sp/>&quot;negated&quot;<sp/>pattern<sp/>if<sp/>it<sp/>started</highlight></codeline>
+<codeline><highlight class="normal">with<sp/>a<sp/>`!`<sp/>character.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">These<sp/>options<sp/>were<sp/>deprecated<sp/>in<sp/>version<sp/>5,<sp/>and<sp/>removed<sp/>in<sp/>version<sp/>6.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>specify<sp/>things<sp/>that<sp/>should<sp/>not<sp/>match,<sp/>use<sp/>the<sp/>`ignore`<sp/>option.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Windows</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Please<sp/>only<sp/>use<sp/>forward-slashes<sp/>in<sp/>glob<sp/>expressions.**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Though<sp/>windows<sp/>uses<sp/>either<sp/>`/`<sp/>or<sp/>`\`<sp/>as<sp/>its<sp/>path<sp/>separator,<sp/>only<sp/>`/`</highlight></codeline>
+<codeline><highlight class="normal">characters<sp/>are<sp/>used<sp/>by<sp/>this<sp/>glob<sp/>implementation.<sp/><sp/>You<sp/>must<sp/>use</highlight></codeline>
+<codeline><highlight class="normal">forward-slashes<sp/>**only**<sp/>in<sp/>glob<sp/>expressions.<sp/><sp/>Back-slashes<sp/>will<sp/>always</highlight></codeline>
+<codeline><highlight class="normal">be<sp/>interpreted<sp/>as<sp/>escape<sp/>characters,<sp/>not<sp/>path<sp/>separators.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Results<sp/>from<sp/>absolute<sp/>patterns<sp/>such<sp/>as<sp/>`/foo/*`<sp/>are<sp/>mounted<sp/>onto<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">root<sp/>setting<sp/>using<sp/>`path.join`.<sp/><sp/>On<sp/>windows,<sp/>this<sp/>will<sp/>by<sp/>default<sp/>result</highlight></codeline>
+<codeline><highlight class="normal">in<sp/>`/foo/*`<sp/>matching<sp/>`C:\foo\bar.txt`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Race<sp/>Conditions</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Glob<sp/>searching,<sp/>by<sp/>its<sp/>very<sp/>nature,<sp/>is<sp/>susceptible<sp/>to<sp/>race<sp/>conditions,</highlight></codeline>
+<codeline><highlight class="normal">since<sp/>it<sp/>relies<sp/>on<sp/>directory<sp/>walking<sp/>and<sp/>such.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">As<sp/>a<sp/>result,<sp/>it<sp/>is<sp/>possible<sp/>that<sp/>a<sp/>file<sp/>that<sp/>exists<sp/>when<sp/>glob<sp/>looks<sp/>for</highlight></codeline>
+<codeline><highlight class="normal">it<sp/>may<sp/>have<sp/>been<sp/>deleted<sp/>or<sp/>modified<sp/>by<sp/>the<sp/>time<sp/>it<sp/>returns<sp/>the<sp/>result.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">As<sp/>part<sp/>of<sp/>its<sp/>internal<sp/>implementation,<sp/>this<sp/>program<sp/>caches<sp/>all<sp/>stat</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>readdir<sp/>calls<sp/>that<sp/>it<sp/>makes,<sp/>in<sp/>order<sp/>to<sp/>cut<sp/>down<sp/>on<sp/>system</highlight></codeline>
+<codeline><highlight class="normal">overhead.<sp/><sp/>However,<sp/>this<sp/>also<sp/>makes<sp/>it<sp/>even<sp/>more<sp/>susceptible<sp/>to<sp/>races,</highlight></codeline>
+<codeline><highlight class="normal">especially<sp/>if<sp/>the<sp/>cache<sp/>or<sp/>statCache<sp/>objects<sp/>are<sp/>reused<sp/>between<sp/>glob</highlight></codeline>
+<codeline><highlight class="normal">calls.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Users<sp/>are<sp/>thus<sp/>advised<sp/>not<sp/>to<sp/>use<sp/>a<sp/>glob<sp/>result<sp/>as<sp/>a<sp/>guarantee<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">filesystem<sp/>state<sp/>in<sp/>the<sp/>face<sp/>of<sp/>rapid<sp/>changes.<sp/><sp/>For<sp/>the<sp/>vast<sp/>majority</highlight></codeline>
+<codeline><highlight class="normal">of<sp/>operations,<sp/>this<sp/>is<sp/>never<sp/>a<sp/>problem.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Glob<sp/>Logo</highlight></codeline>
+<codeline><highlight class="normal">Glob&apos;s<sp/>logo<sp/>was<sp/>created<sp/>by<sp/>[Tanya<sp/>Brassie](http://tanyabrassie.com/).<sp/>Logo<sp/>files<sp/>can<sp/>be<sp/>found<sp/>[here](https://github.com/isaacs/node-glob/tree/master/logo).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>logo<sp/>is<sp/>licensed<sp/>under<sp/>a<sp/>[Creative<sp/>Commons<sp/>Attribution-ShareAlike<sp/>4.0<sp/>International<sp/>License](https://creativecommons.org/licenses/by-sa/4.0/).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Contributing</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Any<sp/>change<sp/>to<sp/>behavior<sp/>(including<sp/>bugfixes)<sp/>must<sp/>come<sp/>with<sp/>a<sp/>test.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Patches<sp/>that<sp/>fail<sp/>tests<sp/>or<sp/>reduce<sp/>performance<sp/>will<sp/>be<sp/>rejected.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>to<sp/>run<sp/>tests</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>test</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>to<sp/>re-generate<sp/>test<sp/>fixtures</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>run<sp/>test-regen</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>to<sp/>benchmark<sp/>against<sp/>bash/zsh</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>run<sp/>bench</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>to<sp/>profile<sp/>javascript</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>run<sp/>prof</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">![](oh-my-glob.gif)</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/glob/README.md"/>
+  </compounddef>
+</doxygen>

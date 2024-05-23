@@ -1,0 +1,81 @@
+.TH "md_backend_2node__modules_2content-type_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2content-type_2_r_e_a_d_m_e \- content-type 
+.PP
+ \fR\fP \fR\fP \fR\fP \fR\fP \fR\fP
+.PP
+Create and parse HTTP Content-Type header according to RFC 7231
+.SH "Installation"
+.PP
+.PP
+.nf
+$ npm install content\-type
+.fi
+.PP
+.SH "API"
+.PP
+.PP
+.nf
+var contentType = require('content\-type')
+.fi
+.PP
+.SS "contentType\&.parse(string)"
+.PP
+.nf
+var obj = contentType\&.parse('image/svg+xml; charset=utf\-8')
+.fi
+.PP
+.PP
+Parse a \fRContent-Type\fP header\&. This will return an object with the following properties (examples are shown for the string `'image/svg+xml; charset=utf-8'`):
+.PP
+.IP "\(bu" 2
+\fRtype\fP: The media type (the type and subtype, always lower case)\&. Example: `'image/svg+xml'`
+.IP "\(bu" 2
+\fRparameters\fP: An object of the parameters in the media type (name of parameter always lower case)\&. Example: `{charset: 'utf-8'}`
+.PP
+.PP
+Throws a \fRTypeError\fP if the string is missing or invalid\&.
+.SS "contentType\&.parse(req)"
+.PP
+.nf
+var obj = contentType\&.parse(req)
+.fi
+.PP
+.PP
+Parse the \fRContent-Type\fP header from the given \fRreq\fP\&. Short-cut for `contentType\&.parse(req\&.headers['content-type'])`\&.
+.PP
+Throws a \fRTypeError\fP if the \fRContent-Type\fP header is missing or invalid\&.
+.SS "contentType\&.parse(res)"
+.PP
+.nf
+var obj = contentType\&.parse(res)
+.fi
+.PP
+.PP
+Parse the \fRContent-Type\fP header set on the given \fRres\fP\&. Short-cut for `contentType\&.parse(res\&.getHeader('content-type'))`\&.
+.PP
+Throws a \fRTypeError\fP if the \fRContent-Type\fP header is missing or invalid\&.
+.SS "contentType\&.format(obj)"
+.PP
+.nf
+var str = contentType\&.format({
+  type: 'image/svg+xml',
+  parameters: { charset: 'utf\-8' }
+})
+.fi
+.PP
+.PP
+Format an object into a \fRContent-Type\fP header\&. This will return a string of the content type for the given object with the following properties (examples are shown that produce the string `'image/svg+xml; charset=utf-8'`):
+.PP
+.IP "\(bu" 2
+\fRtype\fP: The media type (will be lower-cased)\&. Example: `'image/svg+xml'`
+.IP "\(bu" 2
+\fRparameters\fP: An object of the parameters in the media type (name of the parameter will be lower-cased)\&. Example: `{charset: 'utf-8'}`
+.PP
+.PP
+Throws a \fRTypeError\fP if the object contains an invalid type or parameter names\&.
+.SH "License"
+.PP
+[MIT](LICENSE) 

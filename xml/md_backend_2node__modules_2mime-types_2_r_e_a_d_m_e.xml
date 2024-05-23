@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2mime-types_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2mime-types_2_r_e_a_d_m_e</compoundname>
+    <title>mime-types</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2mime-types_2_r_e_a_d_m_e_1autotoc_md1989"/> <ulink url="https://npmjs.org/package/mime-types"><image type="html" name="https://badgen.net/npm/v/mime-types" alt="NPM Version" inline="yes"></image>
+</ulink> <ulink url="https://npmjs.org/package/mime-types"><image type="html" name="https://badgen.net/npm/dm/mime-types" alt="NPM Downloads" inline="yes"></image>
+</ulink> <ulink url="https://nodejs.org/en/download"><image type="html" name="https://badgen.net/npm/node/mime-types" alt="Node.js Version" inline="yes"></image>
+</ulink> <ulink url="https://github.com/jshttp/mime-types/actions/workflows/ci.yml"><image type="html" name="https://badgen.net/github/checks/jshttp/mime-types/master?label=ci" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/r/jshttp/mime-types?branch=master"><image type="html" name="https://badgen.net/coveralls/c/github/jshttp/mime-types/master" alt="Test Coverage" inline="yes"></image>
+</ulink></para>
+<para>The ultimate javascript content-type utility.</para>
+<para>Similar to <ulink url="https://www.npmjs.com/package/mime">the <computeroutput>mime@1.x</computeroutput> module</ulink>, except:</para>
+<para><itemizedlist>
+<listitem><para><bold>No fallbacks.</bold> Instead of naively returning the first available type, <computeroutput>mime-types</computeroutput> simply returns <computeroutput>false</computeroutput>, so do <lsquo/>var type = mime.lookup(&apos;unrecognized<rsquo/>) || &apos;application/octet-stream&apos;<computeroutput>.</computeroutput></para>
+</listitem><listitem><para><computeroutput>No</computeroutput>new Mime()<computeroutput>business, so you could do</computeroutput>var lookup = require(&apos;mime-types&apos;).lookup<computeroutput>.</computeroutput></para>
+</listitem><listitem><para><computeroutput>No</computeroutput>.define()<computeroutput>functionality</computeroutput></para>
+</listitem><listitem><para><computeroutput>Bug fixes for</computeroutput>.lookup(path)`</para>
+</listitem></itemizedlist>
+</para>
+<para>Otherwise, the API is compatible with <computeroutput>mime</computeroutput> 1.x.</para>
+<sect1 id="md_backend_2node__modules_2mime-types_2_r_e_a_d_m_e_1autotoc_md1990">
+<title>Install</title><para>This is a <ulink url="https://nodejs.org/en/">Node.js</ulink> module available through the <ulink url="https://www.npmjs.com/">npm registry</ulink>. Installation is done using the <ulink url="https://docs.npmjs.com/getting-started/installing-npm-packages-locally"><computeroutput>npm install</computeroutput> command</ulink>:</para>
+<para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>mime-types</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2mime-types_2_r_e_a_d_m_e_1autotoc_md1991">
+<title>Adding Types</title><para>All mime types are based on <ulink url="https://www.npmjs.com/package/mime-db">mime-db</ulink>, so open a PR there if you&apos;d like to add mime types.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2mime-types_2_r_e_a_d_m_e_1autotoc_md1992">
+<title>API</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>mime<sp/>=<sp/>require(&apos;mime-types&apos;)</highlight></codeline>
+</programlisting></para>
+<para>All functions return <computeroutput>false</computeroutput> if input is invalid or not found.</para>
+<sect2 id="md_backend_2node__modules_2mime-types_2_r_e_a_d_m_e_1autotoc_md1993">
+<title>mime.lookup(path)</title><para>Lookup the content-type associated with a file.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">mime.lookup(&apos;json&apos;)<sp/>//<sp/>&apos;application/json&apos;</highlight></codeline>
+<codeline><highlight class="normal">mime.lookup(&apos;.md&apos;)<sp/>//<sp/>&apos;text/markdown&apos;</highlight></codeline>
+<codeline><highlight class="normal">mime.lookup(&apos;file.html&apos;)<sp/>//<sp/>&apos;text/html&apos;</highlight></codeline>
+<codeline><highlight class="normal">mime.lookup(&apos;folder/file.js&apos;)<sp/>//<sp/>&apos;application/javascript&apos;</highlight></codeline>
+<codeline><highlight class="normal">mime.lookup(&apos;folder/.htaccess&apos;)<sp/>//<sp/>false</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">mime.lookup(&apos;cats&apos;)<sp/>//<sp/>false</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2mime-types_2_r_e_a_d_m_e_1autotoc_md1994">
+<title>mime.contentType(type)</title><para>Create a full content-type header given a content-type or extension. When given an extension, <computeroutput>mime.lookup</computeroutput> is used to get the matching content-type, otherwise the given content-type is used. Then if the content-type does not already have a <computeroutput>charset</computeroutput> parameter, <computeroutput>mime.charset</computeroutput> is used to get the default charset and add to the returned content-type.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">mime.contentType(&apos;markdown&apos;)<sp/>//<sp/>&apos;text/x-markdown;<sp/>charset=utf-8&apos;</highlight></codeline>
+<codeline><highlight class="normal">mime.contentType(&apos;file.json&apos;)<sp/>//<sp/>&apos;application/json;<sp/>charset=utf-8&apos;</highlight></codeline>
+<codeline><highlight class="normal">mime.contentType(&apos;text/html&apos;)<sp/>//<sp/>&apos;text/html;<sp/>charset=utf-8&apos;</highlight></codeline>
+<codeline><highlight class="normal">mime.contentType(&apos;text/html;<sp/>charset=iso-8859-1&apos;)<sp/>//<sp/>&apos;text/html;<sp/>charset=iso-8859-1&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>from<sp/>a<sp/>full<sp/>path</highlight></codeline>
+<codeline><highlight class="normal">mime.contentType(path.extname(&apos;/path/to/file.json&apos;))<sp/>//<sp/>&apos;application/json;<sp/>charset=utf-8&apos;</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2mime-types_2_r_e_a_d_m_e_1autotoc_md1995">
+<title>mime.extension(type)</title><para>Get the default extension for a content-type.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">mime.extension(&apos;application/octet-stream&apos;)<sp/>//<sp/>&apos;bin&apos;</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2mime-types_2_r_e_a_d_m_e_1autotoc_md1996">
+<title>mime.charset(type)</title><para>Lookup the implied default charset of a content-type.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">mime.charset(&apos;text/markdown&apos;)<sp/>//<sp/>&apos;UTF-8&apos;</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2mime-types_2_r_e_a_d_m_e_1autotoc_md1997">
+<title>var type = mime.types[extension]</title><para>A map of content-types by extension.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2mime-types_2_r_e_a_d_m_e_1autotoc_md1998">
+<title>[extensions...] = mime.extensions[type]</title><para>A map of extensions by content-type.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2mime-types_2_r_e_a_d_m_e_1autotoc_md1999">
+<title>License</title><para>[MIT](LICENSE) </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/mime-types/README.md"/>
+  </compounddef>
+</doxygen>

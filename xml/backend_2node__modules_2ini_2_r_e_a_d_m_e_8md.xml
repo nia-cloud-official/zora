@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2ini_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">An<sp/>ini<sp/>format<sp/>parser<sp/>and<sp/>serializer<sp/>for<sp/>node.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Sections<sp/>are<sp/>treated<sp/>as<sp/>nested<sp/>objects.<sp/><sp/>Items<sp/>before<sp/>the<sp/>first</highlight></codeline>
+<codeline><highlight class="normal">heading<sp/>are<sp/>saved<sp/>on<sp/>the<sp/>object<sp/>directly.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Usage</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Consider<sp/>an<sp/>ini-file<sp/>`config.ini`<sp/>that<sp/>looks<sp/>like<sp/>this:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>;<sp/>this<sp/>comment<sp/>is<sp/>being<sp/>ignored</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>scope<sp/>=<sp/>global</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>[database]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>user<sp/>=<sp/>dbuser</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>password<sp/>=<sp/>dbpassword</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>database<sp/>=<sp/>use_this_database</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>[paths.default]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>datadir<sp/>=<sp/>/var/lib/data</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>array[]<sp/>=<sp/>first<sp/>value</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>array[]<sp/>=<sp/>second<sp/>value</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>array[]<sp/>=<sp/>third<sp/>value</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>read,<sp/>manipulate<sp/>and<sp/>write<sp/>the<sp/>ini-file<sp/>like<sp/>so:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>var<sp/>fs<sp/>=<sp/>require(&apos;fs&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>ini<sp/>=<sp/>require(&apos;ini&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>var<sp/>config<sp/>=<sp/>ini.parse(fs.readFileSync(&apos;./config.ini&apos;,<sp/>&apos;utf-8&apos;))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>config.scope<sp/>=<sp/>&apos;local&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>config.database.database<sp/>=<sp/>&apos;use_another_database&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>config.paths.default.tmpdir<sp/>=<sp/>&apos;/tmp&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>delete<sp/>config.paths.default.datadir</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>config.paths.default.array.push(&apos;fourth<sp/>value&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>fs.writeFileSync(&apos;./config_modified.ini&apos;,<sp/>ini.stringify(config,<sp/>{<sp/>section:<sp/>&apos;section&apos;<sp/>}))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>will<sp/>result<sp/>in<sp/>a<sp/>file<sp/>called<sp/>`config_modified.ini`<sp/>being<sp/>written</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>the<sp/>filesystem<sp/>with<sp/>the<sp/>following<sp/>content:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>[section]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>scope=local</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>[section.database]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>user=dbuser</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>password=dbpassword</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>database=use_another_database</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>[section.paths.default]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>tmpdir=/tmp</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>array[]=first<sp/>value</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>array[]=second<sp/>value</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>array[]=third<sp/>value</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>array[]=fourth<sp/>value</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>API</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>decode(inistring)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Decode<sp/>the<sp/>ini-style<sp/>formatted<sp/>`inistring`<sp/>into<sp/>a<sp/>nested<sp/>object.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>parse(inistring)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Alias<sp/>for<sp/>`decode(inistring)`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>encode(object,<sp/>[options])</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Encode<sp/>the<sp/>object<sp/>`object`<sp/>into<sp/>an<sp/>ini-style<sp/>formatted<sp/>string.<sp/>If<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">optional<sp/>parameter<sp/>`section`<sp/>is<sp/>given,<sp/>then<sp/>all<sp/>top-level<sp/>properties</highlight></codeline>
+<codeline><highlight class="normal">of<sp/>the<sp/>object<sp/>are<sp/>put<sp/>into<sp/>this<sp/>section<sp/>and<sp/>the<sp/>`section`-string<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">prepended<sp/>to<sp/>all<sp/>sub-sections,<sp/>see<sp/>the<sp/>usage<sp/>example<sp/>above.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`options`<sp/>object<sp/>may<sp/>contain<sp/>the<sp/>following:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`section`<sp/>A<sp/>string<sp/>which<sp/>will<sp/>be<sp/>the<sp/>first<sp/>`section`<sp/>in<sp/>the<sp/>encoded</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>ini<sp/>data.<sp/><sp/>Defaults<sp/>to<sp/>none.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`whitespace`<sp/>Boolean<sp/>to<sp/>specify<sp/>whether<sp/>to<sp/>put<sp/>whitespace<sp/>around<sp/>the</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`=`<sp/>character.<sp/><sp/>By<sp/>default,<sp/>whitespace<sp/>is<sp/>omitted,<sp/>to<sp/>be<sp/>friendly<sp/>to</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>some<sp/>persnickety<sp/>old<sp/>parsers<sp/>that<sp/>don&apos;t<sp/>tolerate<sp/>it<sp/>well.<sp/><sp/>But<sp/>some</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>find<sp/>that<sp/>it&apos;s<sp/>more<sp/>human-readable<sp/>and<sp/>pretty<sp/>with<sp/>the<sp/>whitespace.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>backwards<sp/>compatibility<sp/>reasons,<sp/>if<sp/>a<sp/>`string`<sp/>options<sp/>is<sp/>passed</highlight></codeline>
+<codeline><highlight class="normal">in,<sp/>then<sp/>it<sp/>is<sp/>assumed<sp/>to<sp/>be<sp/>the<sp/>`section`<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>stringify(object,<sp/>[options])</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Alias<sp/>for<sp/>`encode(object,<sp/>[options])`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>safe(val)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Escapes<sp/>the<sp/>string<sp/>`val`<sp/>such<sp/>that<sp/>it<sp/>is<sp/>safe<sp/>to<sp/>be<sp/>used<sp/>as<sp/>a<sp/>key<sp/>or</highlight></codeline>
+<codeline><highlight class="normal">value<sp/>in<sp/>an<sp/>ini-file.<sp/>Basically<sp/>escapes<sp/>quotes.<sp/>For<sp/>example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>ini.safe(&apos;&quot;unsafe<sp/>string&quot;&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">would<sp/>result<sp/>in</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;\&quot;unsafe<sp/>string\&quot;&quot;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>unsafe(val)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Unescapes<sp/>the<sp/>string<sp/>`val`</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/ini/README.md"/>
+  </compounddef>
+</doxygen>

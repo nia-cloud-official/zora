@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2socks_2docs_2migrating_from_v1" kind="page">
+    <compoundname>md_backend_2node__modules_2socks_2docs_2migrating_from_v1</compoundname>
+    <title>socks</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2socks_2docs_2migrating_from_v1_1autotoc_md3550"/> </para>
+<sect1 id="md_backend_2node__modules_2socks_2docs_2migrating_from_v1_1autotoc_md3551">
+<title>Migrating from v1</title><para>For the most part, migrating from v1 takes minimal effort as v2 still supports factory creation of proxy connections with callback support.</para>
+<sect2 id="md_backend_2node__modules_2socks_2docs_2migrating_from_v1_1autotoc_md3552">
+<title>Notable breaking changes</title><para><itemizedlist>
+<listitem><para>In an options object, the proxy &apos;command&apos; is now required and does not default to &apos;connect&apos;.</para>
+</listitem><listitem><para><bold>In an options object, &apos;target&apos; is now known as &apos;destination&apos;.</bold></para>
+</listitem><listitem><para>Sockets are no longer paused after a SOCKS connection is made, so socket.resume() is no longer required. (Please be sure to attach data handlers immediately to the Socket to avoid losing data).</para>
+</listitem><listitem><para>In v2, only the &apos;connect&apos; command is supported via the factory SocksClient.createConnection function. (BIND and ASSOCIATE must be used with a SocksClient instance via event handlers).</para>
+</listitem><listitem><para>In v2, the factory SocksClient.createConnection function callback is called with a single object rather than separate socket and info object.</para>
+</listitem><listitem><para>A SOCKS http/https agent is no longer bundled into the library.</para>
+</listitem></itemizedlist>
+</para>
+<para>For informational purposes, here is the original getting started example from v1 converted to work with v2.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2socks_2docs_2migrating_from_v1_1autotoc_md3553">
+<title>Before (v1)</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>Socks<sp/>=<sp/>require(&apos;socks&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>options<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>proxy:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ipaddress:<sp/>&quot;202.101.228.108&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>port:<sp/>1080,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>type:<sp/>5</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>target:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>host:<sp/>&quot;google.com&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>port:<sp/>80</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>command:<sp/>&apos;connect&apos;</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Socks.createConnection(options,<sp/>function(err,<sp/>socket,<sp/>info)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(err)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>console.log(err);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>socket.write(&quot;GET<sp/>/<sp/>HTTP/1.1\nHost:<sp/>google.com\n\n&quot;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>socket.on(&apos;data&apos;,<sp/>function(data)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>console.log(data.length);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>console.log(data);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>PLEASE<sp/>NOTE:<sp/>sockets<sp/>need<sp/>to<sp/>be<sp/>resumed<sp/>before<sp/>any<sp/>data<sp/>will<sp/>come<sp/>in<sp/>or<sp/>out<sp/>as<sp/>they<sp/>are<sp/>paused<sp/>right<sp/>before<sp/>this<sp/>callback<sp/>is<sp/>fired.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>socket.resume();</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>569</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>&lt;Buffer<sp/>48<sp/>54<sp/>54<sp/>50<sp/>2f<sp/>31<sp/>2e<sp/>31<sp/>20<sp/>33<sp/>30<sp/>31<sp/>20<sp/>4d<sp/>6f<sp/>76<sp/>65<sp/>64<sp/>20<sp/>50<sp/>65...</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2socks_2docs_2migrating_from_v1_1autotoc_md3554">
+<title>After (v2)</title><para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>SocksClient<sp/>=<sp/>require(&apos;socks&apos;).SocksClient;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">let<sp/>options<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>proxy:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ipaddress:<sp/>&quot;202.101.228.108&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>port:<sp/>1080,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>type:<sp/>5</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>destination:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>host:<sp/>&quot;google.com&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>port:<sp/>80</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>command:<sp/>&apos;connect&apos;</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">SocksClient.createConnection(options,<sp/>function(err,<sp/>result)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(err)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>console.log(err);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>result.socket.write(&quot;GET<sp/>/<sp/>HTTP/1.1\nHost:<sp/>google.com\n\n&quot;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>result.socket.on(&apos;data&apos;,<sp/>function(data)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>console.log(data.length);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>console.log(data);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>569</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>&lt;Buffer<sp/>48<sp/>54<sp/>54<sp/>50<sp/>2f<sp/>31<sp/>2e<sp/>31<sp/>20<sp/>33<sp/>30<sp/>31<sp/>20<sp/>4d<sp/>6f<sp/>76<sp/>65<sp/>64<sp/>20<sp/>50<sp/>65...</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+</programlisting> </para>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/socks/docs/migratingFromV1.md"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,44 @@
+\chapter{napi-\/build-\/utils}
+\hypertarget{md_backend_2node__modules_2napi-build-utils_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2napi-build-utils_2_r_e_a_d_m_e}\index{napi-\/build-\/utils@{napi-\/build-\/utils}}
+\label{md_backend_2node__modules_2napi-build-utils_2_r_e_a_d_m_e_autotoc_md2243}%
+\Hypertarget{md_backend_2node__modules_2napi-build-utils_2_r_e_a_d_m_e_autotoc_md2243}%
+ \href{https://www.npmjs.com/package/napi-build-utils}{\texttt{ }}  \href{https://travis-ci.org/inspiredware/napi-build-utils}{\texttt{ }} \href{http://standardjs.com/}{\texttt{ }} \href{https://opensource.org/licenses/MIT}{\texttt{ }}
+
+A set of utilities to assist developers of tools that build \href{https://nodejs.org/api/n-api.html\#n_api_n_api}{\texttt{ N-\/\+API}} native add-\/ons.\hypertarget{md_backend_2node__modules_2napi-build-utils_2_r_e_a_d_m_e_autotoc_md2244}{}\doxysection{\texorpdfstring{Background}{Background}}\label{md_backend_2node__modules_2napi-build-utils_2_r_e_a_d_m_e_autotoc_md2244}
+This module is targeted to developers creating tools that build N-\/\+API native add-\/ons.
+
+It implements a set of functions that aid in determining the N-\/\+API version supported by the currently running Node instance and the set of N-\/\+API versions against which the N-\/\+API native add-\/on is designed to be built. Other functions determine whether a particular N-\/\+API version can be built and can issue console warnings for unsupported N-\/\+API versions.
+
+Unlike the modules this code is designed to facilitate building, this module is written entirely in Java\+Script.\hypertarget{md_backend_2node__modules_2napi-build-utils_2_r_e_a_d_m_e_autotoc_md2245}{}\doxysection{\texorpdfstring{Quick start}{Quick start}}\label{md_backend_2node__modules_2napi-build-utils_2_r_e_a_d_m_e_autotoc_md2245}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ napi-\/build-\/utils}
+
+\end{DoxyCode}
+
+
+The module exports a set of functions documented \doxysectlink{md_backend_2node__modules_2napi-build-utils_2index}{here}{0}. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ napiBuildUtils\ =\ require('napi-\/build-\/utils');}
+\DoxyCodeLine{var\ napiVersion\ =\ napiBuildUtils.getNapiVersion();\ //\ N-\/API\ version\ supported\ by\ Node,\ or\ undefined.}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2napi-build-utils_2_r_e_a_d_m_e_autotoc_md2246}{}\doxysection{\texorpdfstring{Declaring supported N-\/\+API versions}{Declaring supported N-\/\+API versions}}\label{md_backend_2node__modules_2napi-build-utils_2_r_e_a_d_m_e_autotoc_md2246}
+Native modules that are designed to work with \href{https://nodejs.org/api/n-api.html\#n_api_n_api}{\texttt{ N-\/\+API}} must explicitly declare the N-\/\+API version(s) against which they are coded to build. This is accomplished by including a {\ttfamily binary.\+napi\+\_\+versions} property in the module\textquotesingle{}s {\ttfamily package.\+json} file. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{"{}binary"{}:\ \{}
+\DoxyCodeLine{\ \ "{}napi\_versions"{}:\ [2,3]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+In the absence of a need to compile against a specific N-\/\+API version, the value {\ttfamily 3} is a good choice as this is the N-\/\+API version that was supported when N-\/\+API left experimental status.
+
+Modules that are built against a specific N-\/\+API version will continue to operate indefinitely, even as later versions of N-\/\+API are introduced.\hypertarget{md_backend_2node__modules_2napi-build-utils_2_r_e_a_d_m_e_autotoc_md2247}{}\doxysection{\texorpdfstring{Support}{Support}}\label{md_backend_2node__modules_2napi-build-utils_2_r_e_a_d_m_e_autotoc_md2247}
+If you run into problems or limitations, please file an issue and we\textquotesingle{}ll take a look. Pull requests are also welcome. ~\newline
+ 

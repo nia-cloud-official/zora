@@ -1,0 +1,70 @@
+.TH "md_backend_2node__modules_2object-inspect_2readme" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2object-inspect_2readme \- object-inspect \*{\fR\fP\*}  
+.PP
+ string representations of objects in node and the browser
+.PP
+\fR\fP \fR\fP \fR\fP \fR\fP [][license-url] \fR\fP
+.PP
+\fR\fP.SH "example"
+.PP
+.SS "circular"
+.PP
+.nf
+ js
+var inspect = require('object\-inspect');
+var obj = { a: 1, b: [3,4] };
+obj\&.c = obj;
+console\&.log(inspect(obj));
+.fi
+.PP
+.SS "dom element"
+.PP
+.nf
+ js
+var inspect = require('object\-inspect');
+
+var d = document\&.createElement('div');
+d\&.setAttribute('id', 'beep');
+d\&.innerHTML = '<b>wooo</b><i>iiiii</i>';
+
+console\&.log(inspect([ d, { a: 3, b : 4, c: [5,6,[7,[8,[9]]]] } ]));
+.fi
+.PP
+.PP
+output:
+.PP
+.PP
+.nf
+[ <div id="beep">\&.\&.\&.</div>, { a: 3, b: 4, c: [ 5, 6, [ 7, [ 8, [ \&.\&.\&. ] ] ] ] } ]
+.fi
+.PP
+.SH "methods"
+.PP
+.PP
+.nf
+ js
+var inspect = require('object\-inspect')
+.fi
+.PP
+.SS "var s = inspect(obj, opts={})"
+Return a string \fRs\fP with the string representation of \fRobj\fP up to a depth of \fRopts\&.depth\fP\&.
+.PP
+Additional options:
+.IP "\(bu" 2
+\fRquoteStyle\fP: must be 'single' or 'double', if present\&. Default `'single'\fRfor strings,\fP'double'\fRfor HTML elements\&. -\fPmaxStringLength\fR: must be\fP0\fR, a positive integer,\fPInfinity\fR, or\fPnull\fR, if present\&. Default\fPInfinity\fR\&. -\fPcustomInspect\fR: When\fPtrue\fR, a custom inspect method function will be invoked (either undere the\fPutil\&.inspect\&.custom\fRsymbol, or the\fPinspect\fRproperty)\&. When the string\fP'symbol'\fR, only the symbol method will be invoked\&. Default\fPtrue\fR\&. -\fPindent\fR: must be '\\t',\fPnull\fR, or a positive integer\&. Default\fPnull\fR\&. -\fPnumericSeparator\fR: must be a boolean, if present\&. Default\fPfalse\fR\&. If\fPtrue\fR, all numbers will be printed with numeric separators (eg,\fP1234\&.5678\fRwill be printed as\fP'1_234\&.567_8'`)
+.PP
+.SH "install"
+.PP
+With \fRnpm\fP do:
+.PP
+.PP
+.nf
+npm install object\-inspect
+.fi
+.PP
+.SH "license"
+.PP
+MIT 

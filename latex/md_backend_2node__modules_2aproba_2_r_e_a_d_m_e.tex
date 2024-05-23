@@ -1,0 +1,86 @@
+\chapter{aproba}
+\hypertarget{md_backend_2node__modules_2aproba_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2aproba_2_r_e_a_d_m_e}\index{aproba@{aproba}}
+A ridiculously light-\/weight function argument validator
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ validate\ =\ require("{}aproba"{})}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ myfunc(a,\ b,\ c)\ \{}
+\DoxyCodeLine{\ \ //\ \`{}a`\ must\ be\ a\ string,\ \`{}b`\ a\ number,\ \`{}c`\ a\ function}
+\DoxyCodeLine{\ \ validate('SNF',\ arguments)\ //\ [a,b,c]\ is\ also\ valid}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{myfunc('test',\ 23,\ function\ ()\ \{\})\ //\ ok}
+\DoxyCodeLine{myfunc(123,\ 23,\ function\ ()\ \{\})\ //\ type\ error}
+\DoxyCodeLine{myfunc('test',\ 23)\ //\ missing\ arg\ error}
+\DoxyCodeLine{myfunc('test',\ 23,\ function\ ()\ \{\},\ true)\ //\ too\ many\ args\ error}
+
+\end{DoxyCode}
+
+
+Valid types are\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ type   }&\cellcolor{\tableheadbgcolor}\textbf{ description    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ type   }&\cellcolor{\tableheadbgcolor}\textbf{ description    }\\\cline{1-2}
+\endhead
+\PBS\centering \texorpdfstring{$\ast$}{*}   &matches any type    \\\cline{1-2}
+\PBS\centering A   &{\ttfamily Array.\+is\+Array} OR an {\ttfamily arguments} object    \\\cline{1-2}
+\PBS\centering S   &typeof == string    \\\cline{1-2}
+\PBS\centering N   &typeof == number    \\\cline{1-2}
+\PBS\centering F   &typeof == function    \\\cline{1-2}
+\PBS\centering O   &typeof == object and not type A and not type E    \\\cline{1-2}
+\PBS\centering B   &typeof == boolean    \\\cline{1-2}
+\PBS\centering E   &{\ttfamily instanceof Error} OR {\ttfamily null} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}(special\+: see below)\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}    \\\cline{1-2}
+\PBS\centering Z   &== {\ttfamily null}   \\\cline{1-2}
+\end{longtabu}
+
+
+Validation failures throw one of three exception types, distinguished by a {\ttfamily code} property of {\ttfamily EMISSINGARG}, {\ttfamily EINVALIDTYPE} or {\ttfamily ETOOMANYARGS}.
+
+If you pass in an invalid type then it will throw with a code of {\ttfamily EUNKNOWNTYPE}.
+
+If an {\bfseries{error}} argument is found and is not null then the remaining arguments are optional. That is, if you say {\ttfamily ESO} then that\textquotesingle{}s like using a non-\/magical {\ttfamily E} in\+: {\ttfamily E\texorpdfstring{$\vert$}{|}\+ESO\texorpdfstring{$\vert$}{|}\+ZSO}.\hypertarget{md_backend_2node__modules_2aproba_2_r_e_a_d_m_e_autotoc_md179}{}\doxysubsection{\texorpdfstring{But I have optional arguments?!}{But I have optional arguments?!}}\label{md_backend_2node__modules_2aproba_2_r_e_a_d_m_e_autotoc_md179}
+You can provide more than one signature by separating them with pipes {\ttfamily \texorpdfstring{$\vert$}{|}}. If any signature matches the arguments then they\textquotesingle{}ll be considered valid.
+
+So for example, say you wanted to write a signature for {\ttfamily fs.\+create\+Write\+Stream}. The docs for it describe it thusly\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{fs.createWriteStream(path[,\ options])}
+
+\end{DoxyCode}
+
+
+This would be a signature of {\ttfamily SO\texorpdfstring{$\vert$}{|}S}. That is, a string and and object, or just a string.
+
+Now, if you read the full {\ttfamily fs} docs, you\textquotesingle{}ll see that actually path can ALSO be a buffer. And options can be a string, that is\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{path\ <String>\ |\ <Buffer>}
+\DoxyCodeLine{options\ <String>\ |\ <Object>}
+
+\end{DoxyCode}
+
+
+To reproduce this you have to fully enumerate all of the possible combinations and that implies a signature of {\ttfamily SO\texorpdfstring{$\vert$}{|}\+SS\texorpdfstring{$\vert$}{|}\+OO\texorpdfstring{$\vert$}{|}\+OS\texorpdfstring{$\vert$}{|}\+S\texorpdfstring{$\vert$}{|}O}. The awkwardness is a feature\+: It reminds you of the complexity you\textquotesingle{}re adding to your API when you do this sort of thing.\hypertarget{md_backend_2node__modules_2aproba_2_r_e_a_d_m_e_autotoc_md180}{}\doxysubsection{\texorpdfstring{Browser support}{Browser support}}\label{md_backend_2node__modules_2aproba_2_r_e_a_d_m_e_autotoc_md180}
+This has no dependencies and should work in browsers, though you\textquotesingle{}ll have noisier stack traces.\hypertarget{md_backend_2node__modules_2aproba_2_r_e_a_d_m_e_autotoc_md181}{}\doxysubsection{\texorpdfstring{Why this exists}{Why this exists}}\label{md_backend_2node__modules_2aproba_2_r_e_a_d_m_e_autotoc_md181}
+I wanted a very simple argument validator. It needed to do two things\+:
+
+
+\begin{DoxyEnumerate}
+\item Be more concise and easier to use than assertions
+\item Not encourage an infinite bikeshed of DSLs
+\end{DoxyEnumerate}
+
+This is why types are specified by a single character and there\textquotesingle{}s no such thing as an optional argument.
+
+This is not intended to validate user data. This is specifically about asserting the interface of your functions.
+
+If you need greater validation, I encourage you to write them by hand or look elsewhere. 

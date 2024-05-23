@@ -1,0 +1,555 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="namespacegyp_1_1generator_1_1ninja" kind="namespace" language="Python">
+    <compoundname>gyp::generator::ninja</compoundname>
+    <innerclass refid="classgyp_1_1generator_1_1ninja_1_1_ninja_writer" prot="public">gyp::generator::ninja::NinjaWriter</innerclass>
+    <innerclass refid="classgyp_1_1generator_1_1ninja_1_1_target" prot="public">gyp::generator::ninja::Target</innerclass>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="namespacegyp_1_1generator_1_1ninja_1ac460e6ab1b781201e56480bbfc18a6f3" prot="public" static="no" mutable="no">
+        <type>dict</type>
+        <definition>dict gyp::generator::ninja.generator_default_variables</definition>
+        <argsstring></argsstring>
+        <name>generator_default_variables</name>
+        <qualifiedname>gyp.generator.ninja.generator_default_variables</qualifiedname>
+        <initializer>=  {
+    &quot;EXECUTABLE_PREFIX&quot;: &quot;&quot;,
+    &quot;EXECUTABLE_SUFFIX&quot;: &quot;&quot;,
+    &quot;STATIC_LIB_PREFIX&quot;: &quot;lib&quot;,
+    &quot;STATIC_LIB_SUFFIX&quot;: &quot;.a&quot;,
+    &quot;SHARED_LIB_PREFIX&quot;: &quot;lib&quot;,
+    # Gyp expects the following variables to be expandable by the build
+    # system to the appropriate locations.  Ninja prefers paths to be
+    # known at gyp time.  To resolve this, introduce special
+    # variables starting with $! and $| (which begin with a $ so gyp knows it
+    # should be treated specially, but is otherwise an invalid
+    # ninja/shell variable) that are passed to gyp here but expanded
+    # before writing out into the target .ninja files; see
+    # ExpandSpecial.
+    # $! is used for variables that represent a path and that can only appear at
+    # the start of a string, while $| is used for variables that can appear
+    # anywhere in a string.
+    &quot;INTERMEDIATE_DIR&quot;: &quot;$!INTERMEDIATE_DIR&quot;,
+    &quot;SHARED_INTERMEDIATE_DIR&quot;: &quot;$!PRODUCT_DIR/gen&quot;,
+    &quot;PRODUCT_DIR&quot;: &quot;$!PRODUCT_DIR&quot;,
+    &quot;CONFIGURATION_NAME&quot;: &quot;$|CONFIGURATION_NAME&quot;,
+    # Special variables that may be used by gyp &apos;rule&apos; targets.
+    # We generate definitions for these variables on the fly when processing a
+    # rule.
+    &quot;RULE_INPUT_ROOT&quot;: &quot;${root}&quot;,
+    &quot;RULE_INPUT_DIRNAME&quot;: &quot;${dirname}&quot;,
+    &quot;RULE_INPUT_PATH&quot;: &quot;${source}&quot;,
+    &quot;RULE_INPUT_EXT&quot;: &quot;${ext}&quot;,
+    &quot;RULE_INPUT_NAME&quot;: &quot;${name}&quot;,
+}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" line="27" column="1" bodyfile="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacegyp_1_1generator_1_1ninja_1ad5a340bfdf0f07eebc2435505a57b26d" prot="public" static="no" mutable="no">
+        <type>list</type>
+        <definition>list gyp::generator::ninja.generator_additional_non_configuration_keys</definition>
+        <argsstring></argsstring>
+        <name>generator_additional_non_configuration_keys</name>
+        <qualifiedname>gyp.generator.ninja.generator_additional_non_configuration_keys</qualifiedname>
+        <initializer>=  []</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" line="59" column="1" bodyfile="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacegyp_1_1generator_1_1ninja_1a1962853adab3f54633a27f7fde2ec473" prot="public" static="no" mutable="no">
+        <type>list</type>
+        <definition>list gyp::generator::ninja.generator_additional_path_sections</definition>
+        <argsstring></argsstring>
+        <name>generator_additional_path_sections</name>
+        <qualifiedname>gyp.generator.ninja.generator_additional_path_sections</qualifiedname>
+        <initializer>=  []</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" line="60" column="1" bodyfile="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacegyp_1_1generator_1_1ninja_1aed8fbce493c0603bb28adcdd2c9f7083" prot="public" static="no" mutable="no">
+        <type>list</type>
+        <definition>list gyp::generator::ninja.generator_extra_sources_for_rules</definition>
+        <argsstring></argsstring>
+        <name>generator_extra_sources_for_rules</name>
+        <qualifiedname>gyp.generator.ninja.generator_extra_sources_for_rules</qualifiedname>
+        <initializer>=  []</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" line="61" column="1" bodyfile="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" bodystart="61" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacegyp_1_1generator_1_1ninja_1a2c88ab0fbc0add758cb7930b2bcf71bf" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>gyp::generator::ninja.generator_filelist_paths</definition>
+        <argsstring></argsstring>
+        <name>generator_filelist_paths</name>
+        <qualifiedname>gyp.generator.ninja.generator_filelist_paths</qualifiedname>
+        <initializer>=  None</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" line="62" column="1" bodyfile="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacegyp_1_1generator_1_1ninja_1aa2a4612ae51e9a4092252a6168603cb5" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>gyp::generator::ninja.generator_supports_multiple_toolsets</definition>
+        <argsstring></argsstring>
+        <name>generator_supports_multiple_toolsets</name>
+        <qualifiedname>gyp.generator.ninja.generator_supports_multiple_toolsets</qualifiedname>
+        <initializer>=  <ref refid="namespacegyp_1_1common_1a640222462da2ef3272c47d05459eb35e" kindref="member">gyp.common.CrossCompileRequested</ref>()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" line="64" column="1" bodyfile="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" bodystart="64" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacegyp_1_1generator_1_1ninja_1a077fb57e7b20c9ab7fcd3d4ec962ad94" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>gyp.generator.ninja.StripPrefix</definition>
+        <argsstring>(arg, prefix)</argsstring>
+        <name>StripPrefix</name>
+        <qualifiedname>gyp.generator.ninja.StripPrefix</qualifiedname>
+        <param>
+          <type>arg</type>
+          <defname>arg</defname>
+        </param>
+        <param>
+          <type>prefix</type>
+          <defname>prefix</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" line="67" column="1" bodyfile="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" bodystart="67" bodyend="72"/>
+        <referencedby refid="classgyp_1_1generator_1_1ninja_1_1_ninja_writer_1a9b774181be237d9ced6c6bcd2e20cab5" compoundref="ninja_8py" startline="1791" endline="1844">gyp.generator.ninja.NinjaWriter.ComputeOutputFileName</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacegyp_1_1generator_1_1ninja_1aa997d1d8d8219f59a8eca516eab874b0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>gyp.generator.ninja.QuoteShellArgument</definition>
+        <argsstring>(arg, flavor)</argsstring>
+        <name>QuoteShellArgument</name>
+        <qualifiedname>gyp.generator.ninja.QuoteShellArgument</qualifiedname>
+        <param>
+          <type>arg</type>
+          <defname>arg</defname>
+        </param>
+        <param>
+          <type>flavor</type>
+          <defname>flavor</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>Quote a string such that it will be interpreted as a single argument
+by the shell.</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" line="73" column="1" bodyfile="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" bodystart="73" bodyend="84"/>
+        <references refid="namespacegyp_1_1msvs__emulation_1a9cc98f7aa879f4d396a2279f8c9b4a81" compoundref="msvs__emulation_8py" startline="23" endline="62">gyp.msvs_emulation.QuoteForRspFile</references>
+        <referencedby refid="namespacegyp_1_1generator_1_1ninja_1a63b6b82c8e1606325886eb7a5c98b8a9" compoundref="ninja_8py" startline="85" endline="94">gyp.generator.ninja.Define</referencedby>
+        <referencedby refid="namespacegyp_1_1generator_1_1ninja_1ae725b232455eaaa660dee42d4a8050dd" compoundref="ninja_8py" startline="2212" endline="2884">gyp.generator.ninja.GenerateOutputForConfig</referencedby>
+        <referencedby refid="classgyp_1_1generator_1_1ninja_1_1_ninja_writer_1a61f36cb3f2b25269e6bb305197493047" compoundref="ninja_8py" startline="1724" endline="1770">gyp.generator.ninja.NinjaWriter.GetPostbuildCommand</referencedby>
+        <referencedby refid="classgyp_1_1generator_1_1ninja_1_1_ninja_writer_1af3d9d233371727340c75d2767f79799c" compoundref="ninja_8py" startline="1351" endline="1571">gyp.generator.ninja.NinjaWriter.WriteLinkForArch</referencedby>
+        <referencedby refid="classgyp_1_1generator_1_1ninja_1_1_ninja_writer_1ab52416a6b9d952a205a3b1ba073f637e" compoundref="ninja_8py" startline="969" endline="1011">gyp.generator.ninja.NinjaWriter.WriteMacInfoPlist</referencedby>
+        <referencedby refid="classgyp_1_1generator_1_1ninja_1_1_ninja_writer_1a01ae52c3483a1b3ff32359c6c58cfe2c" compoundref="ninja_8py" startline="918" endline="968">gyp.generator.ninja.NinjaWriter.WriteMacXCassets</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacegyp_1_1generator_1_1ninja_1a63b6b82c8e1606325886eb7a5c98b8a9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>gyp.generator.ninja.Define</definition>
+        <argsstring>(d, flavor)</argsstring>
+        <name>Define</name>
+        <qualifiedname>gyp.generator.ninja.Define</qualifiedname>
+        <param>
+          <type>d</type>
+          <defname>d</defname>
+        </param>
+        <param>
+          <type>flavor</type>
+          <defname>flavor</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>Takes a preprocessor define and returns a -D parameter that&apos;s ninja- and
+shell-escaped.</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" line="85" column="1" bodyfile="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" bodystart="85" bodyend="94"/>
+        <references refid="namespacegyp_1_1generator_1_1ninja_1aa997d1d8d8219f59a8eca516eab874b0" compoundref="ninja_8py" startline="73" endline="84">gyp.generator.ninja.QuoteShellArgument</references>
+        <referencedby refid="classgyp_1_1generator_1_1ninja_1_1_ninja_writer_1ab52416a6b9d952a205a3b1ba073f637e" compoundref="ninja_8py" startline="969" endline="1011">gyp.generator.ninja.NinjaWriter.WriteMacInfoPlist</referencedby>
+        <referencedby refid="classgyp_1_1generator_1_1ninja_1_1_ninja_writer_1af94dc6252a90fca9ab34205a8cc2c734" compoundref="ninja_8py" startline="1067" endline="1284">gyp.generator.ninja.NinjaWriter.WriteSourcesForArch</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacegyp_1_1generator_1_1ninja_1a5ca28e466b74dd6596e81c1066a74bc3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>gyp.generator.ninja.AddArch</definition>
+        <argsstring>(output, arch)</argsstring>
+        <name>AddArch</name>
+        <qualifiedname>gyp.generator.ninja.AddArch</qualifiedname>
+        <param>
+          <type>output</type>
+          <defname>output</defname>
+        </param>
+        <param>
+          <type>arch</type>
+          <defname>arch</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>Adds an arch string to an output path.</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" line="95" column="1" bodyfile="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" bodystart="95" bodyend="100"/>
+        <referencedby refid="classgyp_1_1generator_1_1ninja_1_1_ninja_writer_1a4e891252d51c6157865f8a6fd2666a23" compoundref="ninja_8py" startline="1845" endline="1894">gyp.generator.ninja.NinjaWriter.ComputeOutput</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacegyp_1_1generator_1_1ninja_1aab39b9a58a8eaac20b277114c061df1f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>gyp.generator.ninja.CalculateVariables</definition>
+        <argsstring>(default_variables, params)</argsstring>
+        <name>CalculateVariables</name>
+        <qualifiedname>gyp.generator.ninja.CalculateVariables</qualifiedname>
+        <param>
+          <type>default_variables</type>
+          <defname>default_variables</defname>
+        </param>
+        <param>
+          <type>params</type>
+          <defname>params</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>Calculate additional variables for use in the build (called by gyp).</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" line="1985" column="1" bodyfile="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" bodystart="1985" bodyend="2046"/>
+        <references refid="namespacegyp_1_1msvs__emulation_1a2316a951538835fe54c73af2cc38f12a" compoundref="msvs__emulation_8py" startline="1255" endline="1272">gyp.msvs_emulation.CalculateCommonVariables</references>
+        <references refid="namespacegyp_1_1common_1aeb48ab17a03cd7c40f5ad72fac713486" compoundref="common_8py" startline="433" endline="460">gyp.common.GetFlavor</references>
+        <referencedby refid="classgyp_1_1generator_1_1ninja_1_1_ninja_writer_1a9b774181be237d9ced6c6bcd2e20cab5" compoundref="ninja_8py" startline="1791" endline="1844">gyp.generator.ninja.NinjaWriter.ComputeOutputFileName</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacegyp_1_1generator_1_1ninja_1a7c1f50d1b8493a9c6b2f7ce07ef4bb2b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>gyp.generator.ninja.ComputeOutputDir</definition>
+        <argsstring>(params)</argsstring>
+        <name>ComputeOutputDir</name>
+        <qualifiedname>gyp.generator.ninja.ComputeOutputDir</qualifiedname>
+        <param>
+          <type>params</type>
+          <defname>params</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>Returns the path from the toplevel_dir to the build output directory.</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" line="2047" column="1" bodyfile="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" bodystart="2047" bodyend="2059"/>
+        <referencedby refid="namespacegyp_1_1xcode__ninja_1ab1430fbd4d4ee7b4f1216f82bdb1b8ea" compoundref="xcode__ninja_8py" startline="58" endline="136">gyp.xcode_ninja._TargetFromSpec</referencedby>
+        <referencedby refid="namespacegyp_1_1generator_1_1ninja_1a993e473eb4c2bfc6dbf2f650fdf790ef" compoundref="ninja_8py" startline="2060" endline="2074">gyp.generator.ninja.CalculateGeneratorInputInfo</referencedby>
+        <referencedby refid="namespacegyp_1_1generator_1_1ninja_1ae725b232455eaaa660dee42d4a8050dd" compoundref="ninja_8py" startline="2212" endline="2884">gyp.generator.ninja.GenerateOutputForConfig</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacegyp_1_1generator_1_1ninja_1a993e473eb4c2bfc6dbf2f650fdf790ef" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>gyp.generator.ninja.CalculateGeneratorInputInfo</definition>
+        <argsstring>(params)</argsstring>
+        <name>CalculateGeneratorInputInfo</name>
+        <qualifiedname>gyp.generator.ninja.CalculateGeneratorInputInfo</qualifiedname>
+        <param>
+          <type>params</type>
+          <defname>params</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>Called by __init__ to initialize generator values based on params.</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" line="2060" column="1" bodyfile="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" bodystart="2060" bodyend="2074"/>
+        <references refid="namespacegyp_1_1generator_1_1ninja_1a7c1f50d1b8493a9c6b2f7ce07ef4bb2b" compoundref="ninja_8py" startline="2047" endline="2059">gyp.generator.ninja.ComputeOutputDir</references>
+      </memberdef>
+      <memberdef kind="function" id="namespacegyp_1_1generator_1_1ninja_1a92eeb5cfd026631615c5678afa54d162" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>gyp.generator.ninja.OpenOutput</definition>
+        <argsstring>(path, mode=&quot;w&quot;)</argsstring>
+        <name>OpenOutput</name>
+        <qualifiedname>gyp.generator.ninja.OpenOutput</qualifiedname>
+        <param>
+          <type>path</type>
+          <defname>path</defname>
+        </param>
+        <param>
+          <type>mode</type>
+          <defname>mode</defname>
+          <defval>&quot;w&quot;</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>Open |path| for writing, creating directories if necessary.</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" line="2075" column="1" bodyfile="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" bodystart="2075" bodyend="2080"/>
+        <references refid="namespacegyp_1_1common_1a62411b7ed9f7220bb951ea26e91e4e15" compoundref="common_8py" startline="425" endline="432">gyp.common.EnsureDirExists</references>
+        <referencedby refid="namespacegyp_1_1generator_1_1ninja_1ae725b232455eaaa660dee42d4a8050dd" compoundref="ninja_8py" startline="2212" endline="2884">gyp.generator.ninja.GenerateOutputForConfig</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacegyp_1_1generator_1_1ninja_1a8870939cd395f1926ee40a197e379b00" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>gyp.generator.ninja.CommandWithWrapper</definition>
+        <argsstring>(cmd, wrappers, prog)</argsstring>
+        <name>CommandWithWrapper</name>
+        <qualifiedname>gyp.generator.ninja.CommandWithWrapper</qualifiedname>
+        <param>
+          <type>cmd</type>
+          <defname>cmd</defname>
+        </param>
+        <param>
+          <type>wrappers</type>
+          <defname>wrappers</defname>
+        </param>
+        <param>
+          <type>prog</type>
+          <defname>prog</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" line="2081" column="1" bodyfile="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" bodystart="2081" bodyend="2087"/>
+        <referencedby refid="namespacegyp_1_1generator_1_1ninja_1ae725b232455eaaa660dee42d4a8050dd" compoundref="ninja_8py" startline="2212" endline="2884">gyp.generator.ninja.GenerateOutputForConfig</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacegyp_1_1generator_1_1ninja_1aadef163d1bd093dd5b10fc0ea9cc4941" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>gyp.generator.ninja.GetDefaultConcurrentLinks</definition>
+        <argsstring>()</argsstring>
+        <name>GetDefaultConcurrentLinks</name>
+        <qualifiedname>gyp.generator.ninja.GetDefaultConcurrentLinks</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>Returns a best-guess for a number of concurrent links.</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" line="2088" column="1" bodyfile="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" bodystart="2088" bodyend="2142"/>
+        <referencedby refid="namespacegyp_1_1generator_1_1ninja_1ae725b232455eaaa660dee42d4a8050dd" compoundref="ninja_8py" startline="2212" endline="2884">gyp.generator.ninja.GenerateOutputForConfig</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacegyp_1_1generator_1_1ninja_1ab1c232b7ca3caf129bd5653555e65a69" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>gyp.generator.ninja._GetWinLinkRuleNameSuffix</definition>
+        <argsstring>(embed_manifest)</argsstring>
+        <name>_GetWinLinkRuleNameSuffix</name>
+        <qualifiedname>gyp.generator.ninja._GetWinLinkRuleNameSuffix</qualifiedname>
+        <param>
+          <type>embed_manifest</type>
+          <defname>embed_manifest</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>Returns the suffix used to select an appropriate linking rule depending on
+whether the manifest embedding is enabled.</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" line="2143" column="1" bodyfile="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" bodystart="2143" bodyend="2148"/>
+        <referencedby refid="namespacegyp_1_1generator_1_1ninja_1a0863c37b45278a14886fffe9c08892b6" compoundref="ninja_8py" startline="2149" endline="2211">gyp.generator.ninja._AddWinLinkRules</referencedby>
+        <referencedby refid="classgyp_1_1generator_1_1ninja_1_1_ninja_writer_1af3d9d233371727340c75d2767f79799c" compoundref="ninja_8py" startline="1351" endline="1571">gyp.generator.ninja.NinjaWriter.WriteLinkForArch</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacegyp_1_1generator_1_1ninja_1a0863c37b45278a14886fffe9c08892b6" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>gyp.generator.ninja._AddWinLinkRules</definition>
+        <argsstring>(master_ninja, embed_manifest)</argsstring>
+        <name>_AddWinLinkRules</name>
+        <qualifiedname>gyp.generator.ninja._AddWinLinkRules</qualifiedname>
+        <param>
+          <type>master_ninja</type>
+          <defname>master_ninja</defname>
+        </param>
+        <param>
+          <type>embed_manifest</type>
+          <defname>embed_manifest</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>Adds link rules for Windows platform to |master_ninja|.</verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" line="2149" column="1" bodyfile="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" bodystart="2149" bodyend="2211"/>
+        <references refid="namespacegyp_1_1generator_1_1ninja_1ab1c232b7ca3caf129bd5653555e65a69" compoundref="ninja_8py" startline="2143" endline="2148">gyp.generator.ninja._GetWinLinkRuleNameSuffix</references>
+        <referencedby refid="namespacegyp_1_1generator_1_1ninja_1ae725b232455eaaa660dee42d4a8050dd" compoundref="ninja_8py" startline="2212" endline="2884">gyp.generator.ninja.GenerateOutputForConfig</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacegyp_1_1generator_1_1ninja_1ae725b232455eaaa660dee42d4a8050dd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>gyp.generator.ninja.GenerateOutputForConfig</definition>
+        <argsstring>(target_list, target_dicts, data, params, config_name)</argsstring>
+        <name>GenerateOutputForConfig</name>
+        <qualifiedname>gyp.generator.ninja.GenerateOutputForConfig</qualifiedname>
+        <param>
+          <type>target_list</type>
+          <defname>target_list</defname>
+        </param>
+        <param>
+          <type>target_dicts</type>
+          <defname>target_dicts</defname>
+        </param>
+        <param>
+          <type>data</type>
+          <defname>data</defname>
+        </param>
+        <param>
+          <type>params</type>
+          <defname>params</defname>
+        </param>
+        <param>
+          <type>config_name</type>
+          <defname>config_name</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" line="2212" column="1" bodyfile="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" bodystart="2212" bodyend="2884"/>
+        <references refid="namespacegyp_1_1generator_1_1ninja_1a0863c37b45278a14886fffe9c08892b6" compoundref="ninja_8py" startline="2149" endline="2211">gyp.generator.ninja._AddWinLinkRules</references>
+        <references refid="namespacegyp_1_1common_1ae29bb9a2368860059458248dd76adeaa" compoundref="common_8py" startline="328" endline="335">gyp.common.AllTargets</references>
+        <references refid="namespacegyp_1_1generator_1_1ninja_1a8870939cd395f1926ee40a197e379b00" compoundref="ninja_8py" startline="2081" endline="2087">gyp.generator.ninja.CommandWithWrapper</references>
+        <references refid="namespacegyp_1_1generator_1_1ninja_1a7c1f50d1b8493a9c6b2f7ce07ef4bb2b" compoundref="ninja_8py" startline="2047" endline="2059">gyp.generator.ninja.ComputeOutputDir</references>
+        <references refid="namespacegyp_1_1common_1ab963414d748556424295353bddbca815" compoundref="common_8py" startline="461" endline="500">gyp.common.CopyTool</references>
+        <references refid="namespacegyp_1_1msvs__emulation_1a4fa9ef3ebfd68a0722d883416b897015" compoundref="msvs__emulation_8py" startline="172" endline="199">gyp.msvs_emulation.ExtractSharedMSVSSystemIncludes</references>
+        <references refid="namespacegyp_1_1msvs__emulation_1a28e813ee1be02285cdc5437040e76444" compoundref="msvs__emulation_8py" startline="1178" endline="1235">gyp.msvs_emulation.GenerateEnvironmentFiles</references>
+        <references refid="namespacegyp_1_1generator_1_1ninja_1aadef163d1bd093dd5b10fc0ea9cc4941" compoundref="ninja_8py" startline="2088" endline="2142">gyp.generator.ninja.GetDefaultConcurrentLinks</references>
+        <references refid="namespacegyp_1_1common_1aeb48ab17a03cd7c40f5ad72fac713486" compoundref="common_8py" startline="433" endline="460">gyp.common.GetFlavor</references>
+        <references refid="namespacegyp_1_1common_1a444243e74701615d1cdb73c45ab80575" compoundref="common_8py" startline="184" endline="196">gyp.common.InvertRelativePath</references>
+        <references refid="namespacegyp_1_1xcode__emulation_1a96f95b2f8275df1b0ce296a4559cbe32" compoundref="xcode__emulation_8py" startline="1578" endline="1593">gyp.xcode_emulation.MergeGlobalXcodeSettingsToSpec</references>
+        <references refid="namespacegyp_1_1generator_1_1ninja_1a92eeb5cfd026631615c5678afa54d162" compoundref="ninja_8py" startline="2075" endline="2080">gyp.generator.ninja.OpenOutput</references>
+        <references refid="namespacegyp_1_1common_1a51180f038e57ff79c30f6231d1d7958f" compoundref="common_8py" startline="58" endline="76">gyp.common.ParseQualifiedTarget</references>
+        <references refid="namespacegyp_1_1common_1a24688c0cf90537af3efa42115befe64b" compoundref="common_8py" startline="126" endline="136">gyp.common.QualifiedTarget</references>
+        <references refid="namespacegyp_1_1generator_1_1ninja_1aa997d1d8d8219f59a8eca516eab874b0" compoundref="ninja_8py" startline="73" endline="84">gyp.generator.ninja.QuoteShellArgument</references>
+        <references refid="namespacegyp_1_1common_1a8533ebdd9774c22ee7f7450c54239796" compoundref="common_8py" startline="137" endline="183">gyp.common.RelativePath</references>
+        <referencedby refid="namespacegyp_1_1generator_1_1ninja_1af507181e3cec515e9d31e4744a614af2" compoundref="ninja_8py" startline="2894" endline="2902">gyp.generator.ninja.CallGenerateOutputForConfig</referencedby>
+        <referencedby refid="namespacegyp_1_1generator_1_1ninja_1aaaff503be15aaede183a37e4681ef7ca" compoundref="ninja_8py" startline="2903" endline="2937">gyp.generator.ninja.GenerateOutput</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacegyp_1_1generator_1_1ninja_1af477cd6918a226053da6b9220d3dcfc7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>gyp.generator.ninja.PerformBuild</definition>
+        <argsstring>(data, configurations, params)</argsstring>
+        <name>PerformBuild</name>
+        <qualifiedname>gyp.generator.ninja.PerformBuild</qualifiedname>
+        <param>
+          <type>data</type>
+          <defname>data</defname>
+        </param>
+        <param>
+          <type>configurations</type>
+          <defname>configurations</defname>
+        </param>
+        <param>
+          <type>params</type>
+          <defname>params</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" line="2885" column="1" bodyfile="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" bodystart="2885" bodyend="2893"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacegyp_1_1generator_1_1ninja_1af507181e3cec515e9d31e4744a614af2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>gyp.generator.ninja.CallGenerateOutputForConfig</definition>
+        <argsstring>(arglist)</argsstring>
+        <name>CallGenerateOutputForConfig</name>
+        <qualifiedname>gyp.generator.ninja.CallGenerateOutputForConfig</qualifiedname>
+        <param>
+          <type>arglist</type>
+          <defname>arglist</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" line="2894" column="1" bodyfile="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" bodystart="2894" bodyend="2902"/>
+        <references refid="namespacegyp_1_1generator_1_1ninja_1ae725b232455eaaa660dee42d4a8050dd" compoundref="ninja_8py" startline="2212" endline="2884">gyp.generator.ninja.GenerateOutputForConfig</references>
+      </memberdef>
+      <memberdef kind="function" id="namespacegyp_1_1generator_1_1ninja_1aaaff503be15aaede183a37e4681ef7ca" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>gyp.generator.ninja.GenerateOutput</definition>
+        <argsstring>(target_list, target_dicts, data, params)</argsstring>
+        <name>GenerateOutput</name>
+        <qualifiedname>gyp.generator.ninja.GenerateOutput</qualifiedname>
+        <param>
+          <type>target_list</type>
+          <defname>target_list</defname>
+        </param>
+        <param>
+          <type>target_dicts</type>
+          <defname>target_dicts</defname>
+        </param>
+        <param>
+          <type>data</type>
+          <defname>data</defname>
+        </param>
+        <param>
+          <type>params</type>
+          <defname>params</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" line="2903" column="1" bodyfile="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" bodystart="2903" bodyend="2937"/>
+        <references refid="namespacegyp_1_1xcode__emulation_1a7a3227c86f786f63f737bae6823fadd2" compoundref="xcode__emulation_8py" startline="1934" endline="1940">gyp.xcode_emulation.CloneConfigurationForDeviceAndEmulator</references>
+        <references refid="namespacegyp_1_1generator_1_1ninja_1ae725b232455eaaa660dee42d4a8050dd" compoundref="ninja_8py" startline="2212" endline="2884">gyp.generator.ninja.GenerateOutputForConfig</references>
+        <references refid="namespacegyp_1_1common_1aeb48ab17a03cd7c40f5ad72fac713486" compoundref="common_8py" startline="433" endline="460">gyp.common.GetFlavor</references>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/generator/ninja.py" line="1" column="1"/>
+  </compounddef>
+</doxygen>

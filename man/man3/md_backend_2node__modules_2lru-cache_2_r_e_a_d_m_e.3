@@ -1,0 +1,135 @@
+.TH "md_backend_2node__modules_2lru-cache_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2lru-cache_2_r_e_a_d_m_e \- lru cache 
+.PP
+ A cache object that deletes the least-recently-used items\&.
+.PP
+\fR\fP \fR\fP
+.SH "Installation:"
+.PP
+.PP
+.nf
+npm install lru\-cache \-\-save
+.fi
+.PP
+.SH "Usage:"
+.PP
+.PP
+.nf
+var LRU = require("lru\-cache")
+  , options = { max: 500
+              , length: function (n, key) { return n * 2 + key\&.length }
+              , dispose: function (key, n) { n\&.close() }
+              , maxAge: 1000 * 60 * 60 }
+  , cache = new LRU(options)
+  , otherCache = new LRU(50) // sets just the max size
+
+cache\&.set("key", "value")
+cache\&.get("key") // "value"
+
+// non\-string keys ARE fully supported
+// but note that it must be THE SAME object, not
+// just a JSON\-equivalent object\&.
+var someObject = { a: 1 }
+cache\&.set(someObject, 'a value')
+// Object keys are not toString()\-ed
+cache\&.set('[object Object]', 'a different value')
+assert\&.equal(cache\&.get(someObject), 'a value')
+// A similar object with same keys/values won't work,
+// because it's a different object identity
+assert\&.equal(cache\&.get({ a: 1 }), undefined)
+
+cache\&.reset()    // empty the cache
+.fi
+.PP
+.PP
+If you put more stuff in it, then items will fall out\&.
+.PP
+If you try to put an oversized thing in it, then it'll fall out right away\&.
+.SH "Options"
+.PP
+.IP "\(bu" 2
+\fRmax\fP The maximum size of the cache, checked by applying the length function to all values in the cache\&. Not setting this is kind of silly, since that's the whole purpose of this lib, but it defaults to \fRInfinity\fP\&. Setting it to a non-number or negative number will throw a \fRTypeError\fP\&. Setting it to 0 makes it be \fRInfinity\fP\&.
+.IP "\(bu" 2
+\fRmaxAge\fP Maximum age in ms\&. Items are not pro-actively pruned out as they age, but if you try to get an item that is too old, it'll drop it and return undefined instead of giving it to you\&. Setting this to a negative value will make everything seem old! Setting it to a non-number will throw a \fRTypeError\fP\&.
+.IP "\(bu" 2
+\fRlength\fP Function that is used to calculate the length of stored items\&. If you're storing strings or buffers, then you probably want to do something like \fRfunction(n, key){return n\&.length}\fP\&. The default is \fRfunction(){return 1}\fP, which is fine if you want to store \fRmax\fP like-sized things\&. The item is passed as the first argument, and the key is passed as the second argumnet\&.
+.IP "\(bu" 2
+\fRdispose\fP Function that is called on items when they are dropped from the cache\&. This can be handy if you want to close file descriptors or do other cleanup tasks when items are no longer accessible\&. Called with \fRkey, value\fP\&. It's called \fIbefore\fP actually removing the item from the internal cache, so if you want to immediately put it back in, you'll have to do that in a \fRnextTick\fP or \fRsetTimeout\fP callback or it won't do anything\&.
+.IP "\(bu" 2
+\fRstale\fP By default, if you set a \fRmaxAge\fP, it'll only actually pull stale items out of the cache when you \fRget(key)\fP\&. (That is, it's not pre-emptively doing a \fRsetTimeout\fP or anything\&.) If you set \fRstale:true\fP, it'll return the stale value before deleting it\&. If you don't set this, then it'll return \fRundefined\fP when you try to get a stale entry, as if it had already been deleted\&.
+.IP "\(bu" 2
+\fRnoDisposeOnSet\fP By default, if you set a \fRdispose()\fP method, then it'll be called whenever a \fRset()\fP operation overwrites an existing key\&. If you set this option, \fRdispose()\fP will only be called when a key falls out of the cache, not when it is overwritten\&.
+.IP "\(bu" 2
+\fRupdateAgeOnGet\fP When using time-expiring entries with \fRmaxAge\fP, setting this to \fRtrue\fP will make each item's effective time update to the current time whenever it is retrieved from cache, causing it to not expire\&. (It can still fall out of cache based on recency of use, of course\&.)
+.PP
+.SH "API"
+.PP
+.IP "\(bu" 2
+\fRset(key, value, maxAge)\fP
+.IP "\(bu" 2
+\fRget(key) => value\fP
+.PP
+Both of these will update the 'recently used'-ness of the key\&. They do what you think\&. \fRmaxAge\fP is optional and overrides the cache \fRmaxAge\fP option if provided\&.
+.PP
+If the key is not found, \fRget()\fP will return \fRundefined\fP\&.
+.PP
+The key and val can be any value\&.
+.IP "\(bu" 2
+\fRpeek(key)\fP
+.PP
+Returns the key value (or \fRundefined\fP if not found) without updating the 'recently used'-ness of the key\&.
+.PP
+(If you find yourself using this a lot, you \fImight\fP be using the wrong sort of data structure, but there are some use cases where it's handy\&.)
+.IP "\(bu" 2
+\fRdel(key)\fP
+.PP
+Deletes a key out of the cache\&.
+.IP "\(bu" 2
+\fRreset()\fP
+.PP
+Clear the cache entirely, throwing away all values\&.
+.IP "\(bu" 2
+\fRhas(key)\fP
+.PP
+Check if a key is in the cache, without updating the recent-ness or deleting it for being stale\&.
+.IP "\(bu" 2
+\fRforEach(function(value,key,cache), [thisp])\fP
+.PP
+Just like \fRArray\&.prototype\&.forEach\fP\&. Iterates over all the keys in the cache, in order of recent-ness\&. (Ie, more recently used items are iterated over first\&.)
+.IP "\(bu" 2
+\fRrforEach(function(value,key,cache), [thisp])\fP
+.PP
+The same as \fRcache\&.forEach(\&.\&.\&.)\fP but items are iterated over in reverse order\&. (ie, less recently used items are iterated over first\&.)
+.IP "\(bu" 2
+\fRkeys()\fP
+.PP
+Return an array of the keys in the cache\&.
+.IP "\(bu" 2
+\fRvalues()\fP
+.PP
+Return an array of the values in the cache\&.
+.IP "\(bu" 2
+\fRlength\fP
+.PP
+Return total length of objects in cache taking into account \fRlength\fP options function\&.
+.IP "\(bu" 2
+\fRitemCount\fP
+.PP
+Return total quantity of objects currently in cache\&. Note, that \fRstale\fP (see options) items are returned as part of this item count\&.
+.IP "\(bu" 2
+\fRdump()\fP
+.PP
+Return an array of the cache entries ready for serialization and usage with 'destinationCache\&.load(arr)`\&.
+.IP "\(bu" 2
+\fRload(cacheEntriesArray)\fP
+.PP
+Loads another cache entries array, obtained with \fRsourceCache\&.dump()\fP, into the cache\&. The destination cache is reset before loading new entries
+.IP "\(bu" 2
+\fRprune()\fP
+.PP
+Manually iterates over the entire cache proactively pruning old entries 
+.PP
+

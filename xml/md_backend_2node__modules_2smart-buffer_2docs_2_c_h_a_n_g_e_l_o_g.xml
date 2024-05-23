@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2smart-buffer_2docs_2_c_h_a_n_g_e_l_o_g" kind="page">
+    <compoundname>md_backend_2node__modules_2smart-buffer_2docs_2_c_h_a_n_g_e_l_o_g</compoundname>
+    <title>Change Log</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2smart-buffer_2docs_2_c_h_a_n_g_e_l_o_g_1autotoc_md3325"/></para>
+<sect1 id="md_backend_2node__modules_2smart-buffer_2docs_2_c_h_a_n_g_e_l_o_g_1autotoc_md3326">
+<title>4.1.0</title><para><blockquote><para><zwj/>Released 07/24/2019 </para>
+</blockquote></para>
+<para>* Adds int64 support for node v12+<itemizedlist>
+<listitem><para>Drops support for node v4</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2smart-buffer_2docs_2_c_h_a_n_g_e_l_o_g_1autotoc_md3327">
+<title>4.0</title><para><blockquote><para><zwj/>Released 10/21/2017 </para>
+</blockquote></para>
+<para>* Major breaking changes arriving in v4.</para>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2docs_2_c_h_a_n_g_e_l_o_g_1autotoc_md3328">
+<title>New Features</title><para><itemizedlist>
+<listitem><para>Ability to read data from a specific offset. ex: readInt8(5)</para>
+</listitem><listitem><para>Ability to write over data when an offset is given (see breaking changes) ex: writeInt8(5, 0);</para>
+</listitem><listitem><para>Ability to set internal read and write offsets.</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2docs_2_c_h_a_n_g_e_l_o_g_1autotoc_md3329">
+<title>Breaking Changes</title><para><itemizedlist>
+<listitem><para>Old constructor patterns have been completely removed. It&apos;s now required to use the SmartBuffer.fromXXX() factory constructors. Read more on the v4 docs.</para>
+</listitem><listitem><para>rewind(), skip(), moveTo() have been removed.</para>
+</listitem><listitem><para>Internal private properties are now prefixed with underscores (_).</para>
+</listitem><listitem><para><bold>All</bold> writeXXX() methods that are given an offset will now <bold>overwrite data</bold> instead of insert</para>
+</listitem><listitem><para>insertXXX() methods have been added for when you want to insert data at a specific offset (this replaces the old behavior of writeXXX() when an offset was provided)</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2docs_2_c_h_a_n_g_e_l_o_g_1autotoc_md3330">
+<title>Other Changes</title><para><itemizedlist>
+<listitem><para>Standardizd error messaging</para>
+</listitem><listitem><para>Standardized offset/length bounds and sanity checking</para>
+</listitem><listitem><para>General overall cleanup of code.</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2smart-buffer_2docs_2_c_h_a_n_g_e_l_o_g_1autotoc_md3331">
+<title>3.0.3</title><para><blockquote><para><zwj/>Released 02/19/2017 </para>
+</blockquote></para>
+<para>* Adds missing type definitions for some internal functions.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2smart-buffer_2docs_2_c_h_a_n_g_e_l_o_g_1autotoc_md3332">
+<title>3.0.2</title><para><blockquote><para><zwj/>Released 02/17/2017 </para>
+</blockquote></para>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2docs_2_c_h_a_n_g_e_l_o_g_1autotoc_md3333">
+<title>Bug Fixes</title><para><itemizedlist>
+<listitem><para>Fixes a bug where using readString with a length of zero resulted in reading the remaining data instead of returning an empty string. (Fixed by Seldszar)</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2smart-buffer_2docs_2_c_h_a_n_g_e_l_o_g_1autotoc_md3334">
+<title>3.0.1</title><para><blockquote><para><zwj/>Released 02/15/2017 </para>
+</blockquote></para>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2docs_2_c_h_a_n_g_e_l_o_g_1autotoc_md3335">
+<title>Bug Fixes</title><para><itemizedlist>
+<listitem><para>Fixes a bug leftover from the TypeScript refactor where .readIntXXX() resulted in .readUIntXXX() being called by mistake.</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2smart-buffer_2docs_2_c_h_a_n_g_e_l_o_g_1autotoc_md3336">
+<title>3.0</title><para><blockquote><para><zwj/>Released 02/12/2017 </para>
+</blockquote></para>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2docs_2_c_h_a_n_g_e_l_o_g_1autotoc_md3337">
+<title>Bug Fixes</title><para><itemizedlist>
+<listitem><para>readUIntXXXX() methods will now throw an exception if they attempt to read beyond the bounds of the valid buffer data available.<itemizedlist>
+<listitem><para><bold>Note</bold> This is technically a breaking change, so version is bumped to 3.x.</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2smart-buffer_2docs_2_c_h_a_n_g_e_l_o_g_1autotoc_md3338">
+<title>2.0</title><para><blockquote><para><zwj/>Relased 01/30/2017 </para>
+</blockquote></para>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2docs_2_c_h_a_n_g_e_l_o_g_1autotoc_md3339">
+<title>New Features:</title><para><itemizedlist>
+<listitem><para>Entire package re-written in TypeScript (2.1)</para>
+</listitem><listitem><para>Backwards compatibility is preserved for now</para>
+</listitem><listitem><para>New factory methods for creating SmartBuffer instances<itemizedlist>
+<listitem><para>SmartBuffer.fromSize()</para>
+</listitem><listitem><para>SmartBuffer.fromBuffer()</para>
+</listitem><listitem><para>SmartBuffer.fromOptions()</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para>New SmartBufferOptions constructor options</para>
+</listitem><listitem><para>Added additional tests</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2docs_2_c_h_a_n_g_e_l_o_g_1autotoc_md3340">
+<title>Bug Fixes:</title><para><itemizedlist>
+<listitem><para>Fixes a bug where reading null terminated strings may result in an exception. </para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/smart-buffer/docs/CHANGELOG.md"/>
+  </compounddef>
+</doxygen>

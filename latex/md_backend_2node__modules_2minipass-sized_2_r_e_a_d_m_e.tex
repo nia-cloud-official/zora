@@ -1,0 +1,25 @@
+\chapter{minipass-\/sized}
+\hypertarget{md_backend_2node__modules_2minipass-sized_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2minipass-sized_2_r_e_a_d_m_e}\index{minipass-\/sized@{minipass-\/sized}}
+\label{md_backend_2node__modules_2minipass-sized_2_r_e_a_d_m_e_autotoc_md2168}%
+\Hypertarget{md_backend_2node__modules_2minipass-sized_2_r_e_a_d_m_e_autotoc_md2168}%
+ A Minipass stream that raises an error if you get a different number of bytes than expected.\hypertarget{md_backend_2node__modules_2minipass-sized_2_r_e_a_d_m_e_autotoc_md2169}{}\doxysection{\texorpdfstring{USAGE}{USAGE}}\label{md_backend_2node__modules_2minipass-sized_2_r_e_a_d_m_e_autotoc_md2169}
+Use just like any old \href{http://npm.im/minipass}{\texttt{ minipass}} stream, but provide a {\ttfamily size} option to the constructor.
+
+The {\ttfamily size} option must be a positive integer, smaller than {\ttfamily Number.\+MAX\+\_\+\+SAFE\+\_\+\+INTEGER}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ MinipassSized\ =\ require('minipass-\/sized')}
+\DoxyCodeLine{//\ figure\ out\ how\ much\ data\ you\ expect\ to\ get}
+\DoxyCodeLine{const\ expectedSize\ =\ +headers['content-\/length']}
+\DoxyCodeLine{const\ stream\ =\ new\ MinipassSized(\{\ size:\ expectedSize\ \})}
+\DoxyCodeLine{stream.on('error',\ er\ =>\ \{}
+\DoxyCodeLine{\ \ //\ if\ it's\ the\ wrong\ size,\ then\ this\ will\ raise\ an\ error\ with}
+\DoxyCodeLine{\ \ //\ \{\ found:\ <number>,\ expect:\ <number>,\ code:\ 'EBADSIZE'\ \}}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{response.pipe(stream)}
+
+\end{DoxyCode}
+
+
+Caveats\+: this does not work with {\ttfamily object\+Mode} streams, and will throw a {\ttfamily Type\+Error} from the constructor if the size argument is missing or invalid. 

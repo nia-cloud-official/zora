@@ -1,0 +1,181 @@
+.TH "md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e \- serve-static 
+.PP
+ \fR\fP \fR\fP \fR\fP \fR\fP \fR\fP
+.SH "Install"
+.PP
+This is a \fRNode\&.js\fP module available through the \fRnpm registry\fP\&. Installation is done using the \fR\fRnpm install\fP command\fP:
+.PP
+.PP
+.nf
+$ npm install serve\-static
+.fi
+.PP
+.SH "API"
+.PP
+.PP
+.nf
+var serveStatic = require('serve\-static')
+.fi
+.PP
+.SS "serveStatic(root, options)"
+Create a new middleware function to serve files from within a given root directory\&. The file to serve will be determined by combining \fRreq\&.url\fP with the provided root directory\&. When a file is not found, instead of sending a 404 response, this module will instead call \fRnext()\fP to move on to the next middleware, allowing for stacking and fall-backs\&.
+.SS "Options"
+.SS "acceptRanges"
+Enable or disable accepting ranged requests, defaults to true\&. Disabling this will not send \fRAccept-Ranges\fP and ignore the contents of the \fRRange\fP request header\&.
+.SS "cacheControl"
+Enable or disable setting \fRCache-Control\fP response header, defaults to true\&. Disabling this will ignore the \fRimmutable\fP and \fRmaxAge\fP options\&.
+.SS "dotfiles"
+Set how 'dotfiles' are treated when encountered\&. A dotfile is a file or directory that begins with a dot ('\&.')\&. Note this check is done on the path itself without checking if the path actually exists on the disk\&. If \fRroot\fP is specified, only the dotfiles above the root are checked (i\&.e\&. the root itself can be within a dotfile when set to 'deny')\&.
+.PP
+.IP "\(bu" 2
+`'allow'\fRNo special treatment for dotfiles\&. -\fP'deny'\fRDeny a request for a dotfile and 403/\fPnext()\fR\&. -\fP'ignore'\fRPretend like the dotfile does not exist and 404/\fPnext()`\&.
+.PP
+.PP
+The default value is similar to `'ignore'`, with the exception that this default will not ignore the files within a directory that begins with a dot\&.
+.SS "etag"
+Enable or disable etag generation, defaults to true\&.
+.SS "extensions"
+Set file extension fallbacks\&. When set, if a file is not found, the given extensions will be added to the file name and search for\&. The first that exists will be served\&. Example: `['html', 'htm']`\&.
+.PP
+The default value is \fRfalse\fP\&.
+.SS "fallthrough"
+Set the middleware to have client errors fall-through as just unhandled requests, otherwise forward a client error\&. The difference is that client errors like a bad request or a request to a non-existent file will cause this middleware to simply \fRnext()\fP to your next middleware when this value is \fRtrue\fP\&. When this value is \fRfalse\fP, these errors (even 404s), will invoke \fRnext(err)\fP\&.
+.PP
+Typically \fRtrue\fP is desired such that multiple physical directories can be mapped to the same web address or for routes to fill in non-existent files\&.
+.PP
+The value \fRfalse\fP can be used if this middleware is mounted at a path that is designed to be strictly a single file system directory, which allows for short-circuiting 404s for less overhead\&. This middleware will also reply to all methods\&.
+.PP
+The default value is \fRtrue\fP\&.
+.SS "immutable"
+Enable or disable the \fRimmutable\fP directive in the \fRCache-Control\fP response header, defaults to \fRfalse\fP\&. If set to \fRtrue\fP, the \fRmaxAge\fP option should also be specified to enable caching\&. The \fRimmutable\fP directive will prevent supported clients from making conditional requests during the life of the \fRmaxAge\fP option to check if the file has changed\&.
+.SS "index"
+By default this module will send 'index\&.html' files in response to a request on a directory\&. To disable this set \fRfalse\fP or to supply a new index pass a string or an array in preferred order\&.
+.SS "lastModified"
+Enable or disable \fRLast-Modified\fP header, defaults to true\&. Uses the file system's last modified value\&.
+.SS "maxAge"
+Provide a max-age in milliseconds for http caching, defaults to 0\&. This can also be a string accepted by the \fRms\fP module\&.
+.SS "redirect"
+Redirect to trailing '/' when the pathname is a dir\&. Defaults to \fRtrue\fP\&.
+.SS "setHeaders"
+Function to set custom headers on response\&. Alterations to the headers need to occur synchronously\&. The function is called as \fRfn(res, path, stat)\fP, where the arguments are:
+.PP
+.IP "\(bu" 2
+\fRres\fP the response object
+.IP "\(bu" 2
+\fRpath\fP the file path that is being sent
+.IP "\(bu" 2
+\fRstat\fP the stat object of the file that is being sent
+.PP
+.SH "Examples"
+.PP
+.SS "Serve files with vanilla node\&.js http server"
+.PP
+.nf
+var finalhandler = require('finalhandler')
+var http = require('http')
+var serveStatic = require('serve\-static')
+
+// Serve up public/ftp folder
+var serve = serveStatic('public/ftp', { index: ['index\&.html', 'index\&.htm'] })
+
+// Create server
+var server = http\&.createServer(function onRequest (req, res) {
+  serve(req, res, finalhandler(req, res))
+})
+
+// Listen
+server\&.listen(3000)
+.fi
+.PP
+.SS "Serve all files as downloads"
+.PP
+.nf
+var contentDisposition = require('content\-disposition')
+var finalhandler = require('finalhandler')
+var http = require('http')
+var serveStatic = require('serve\-static')
+
+// Serve up public/ftp folder
+var serve = serveStatic('public/ftp', {
+  index: false,
+  setHeaders: setHeaders
+})
+
+// Set header to force download
+function setHeaders (res, path) {
+  res\&.setHeader('Content\-Disposition', contentDisposition(path))
+}
+
+// Create server
+var server = http\&.createServer(function onRequest (req, res) {
+  serve(req, res, finalhandler(req, res))
+})
+
+// Listen
+server\&.listen(3000)
+.fi
+.PP
+.SS "Serving using express"
+.SS "Simple"
+This is a simple example of using Express\&.
+.PP
+.PP
+.nf
+var express = require('express')
+var serveStatic = require('serve\-static')
+
+var app = express()
+
+app\&.use(serveStatic('public/ftp', { index: ['default\&.html', 'default\&.htm'] }))
+app\&.listen(3000)
+.fi
+.PP
+.SS "Multiple roots"
+This example shows a simple way to search through multiple directories\&. Files are searched for in \fRpublic-optimized/\fP first, then \fRpublic/\fP second as a fallback\&.
+.PP
+.PP
+.nf
+var express = require('express')
+var path = require('path')
+var serveStatic = require('serve\-static')
+
+var app = express()
+
+app\&.use(serveStatic(path\&.join(__dirname, 'public\-optimized')))
+app\&.use(serveStatic(path\&.join(__dirname, 'public')))
+app\&.listen(3000)
+.fi
+.PP
+.SS "Different settings for paths"
+This example shows how to set a different max age depending on the served file type\&. In this example, HTML files are not cached, while everything else is for 1 day\&.
+.PP
+.PP
+.nf
+var express = require('express')
+var path = require('path')
+var serveStatic = require('serve\-static')
+
+var app = express()
+
+app\&.use(serveStatic(path\&.join(__dirname, 'public'), {
+  maxAge: '1d',
+  setHeaders: setCustomCacheControl
+}))
+
+app\&.listen(3000)
+
+function setCustomCacheControl (res, path) {
+  if (serveStatic\&.mime\&.lookup(path) === 'text/html') {
+    // Custom Cache\-Control for HTML files
+    res\&.setHeader('Cache\-Control', 'public, max\-age=0')
+  }
+}
+.fi
+.PP
+.SH "License"
+.PP
+[MIT](LICENSE) 

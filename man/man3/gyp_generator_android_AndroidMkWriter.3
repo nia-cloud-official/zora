@@ -1,0 +1,502 @@
+.TH "gyp.generator.android.AndroidMkWriter" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gyp.generator.android.AndroidMkWriter
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fB__init__\fP (self, \fBandroid_top_dir\fP)"
+.br
+.ti -1c
+.RI "\fBWrite\fP (self, \fBqualified_target\fP, \fBrelative_target\fP, base_path, output_filename, spec, configs, part_of_all, write_alias_target, sdk_version)"
+.br
+.ti -1c
+.RI "\fBWriteActions\fP (self, actions, extra_sources, extra_outputs)"
+.br
+.ti -1c
+.RI "\fBWriteRules\fP (self, rules, extra_sources, extra_outputs)"
+.br
+.ti -1c
+.RI "\fBWriteCopies\fP (self, copies, extra_outputs)"
+.br
+.ti -1c
+.RI "\fBWriteSourceFlags\fP (self, spec, configs)"
+.br
+.ti -1c
+.RI "\fBWriteSources\fP (self, spec, configs, extra_sources)"
+.br
+.ti -1c
+.RI "\fBComputeAndroidModule\fP (self, spec)"
+.br
+.ti -1c
+.RI "\fBComputeOutputParts\fP (self, spec)"
+.br
+.ti -1c
+.RI "\fBComputeOutputBasename\fP (self, spec)"
+.br
+.ti -1c
+.RI "\fBComputeOutput\fP (self, spec)"
+.br
+.ti -1c
+.RI "\fBNormalizeIncludePaths\fP (self, include_paths)"
+.br
+.ti -1c
+.RI "\fBExtractIncludesFromCFlags\fP (self, cflags)"
+.br
+.ti -1c
+.RI "\fBFilterLibraries\fP (self, libraries)"
+.br
+.ti -1c
+.RI "\fBComputeDeps\fP (self, spec)"
+.br
+.ti -1c
+.RI "\fBWriteTargetFlags\fP (self, spec, configs, link_deps)"
+.br
+.ti -1c
+.RI "\fBWriteTarget\fP (self, spec, configs, deps, link_deps, part_of_all, write_alias_target)"
+.br
+.ti -1c
+.RI "\fBWriteList\fP (self, value_list, variable=None, prefix='', quoter=\fBmake\&.QuoteIfNecessary\fP, local_pathify=False)"
+.br
+.ti -1c
+.RI "\fBWriteLn\fP (self, text='')"
+.br
+.ti -1c
+.RI "\fBLocalPathify\fP (self, \fBpath\fP)"
+.br
+.ti -1c
+.RI "\fBExpandInputRoot\fP (self, template, expansion, dirname)"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBandroid_top_dir\fP"
+.br
+.ti -1c
+.RI "\fBfp\fP"
+.br
+.ti -1c
+.RI "\fBqualified_target\fP"
+.br
+.ti -1c
+.RI "\fBrelative_target\fP"
+.br
+.ti -1c
+.RI "\fBpath\fP"
+.br
+.ti -1c
+.RI "\fBtarget\fP"
+.br
+.ti -1c
+.RI "\fBtype\fP"
+.br
+.ti -1c
+.RI "\fBtoolset\fP"
+.br
+.ti -1c
+.RI "\fBandroid_class\fP"
+.br
+.ti -1c
+.RI "\fBandroid_module\fP"
+.br
+.ti -1c
+.RI "\fBandroid_stem\fP"
+.br
+.ti -1c
+.RI "\fBandroid_suffix\fP"
+.br
+.ti -1c
+.RI "\fBoutput\fP"
+.br
+.ti -1c
+.RI "\fBLocalPathify\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.PP
+.nf
+AndroidMkWriter packages up the writing of one target-specific Android\&.mk\&.
+
+Its only real entry point is Write(), and is mostly used for namespacing\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB102\fP of file \fBandroid\&.py\fP\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.__init__ ( self,  android_top_dir)"
+
+.PP
+Definition at line \fB108\fP of file \fBandroid\&.py\fP\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.ComputeAndroidModule ( self,  spec)"
+
+.PP
+.nf
+Return the Android module name used for a gyp spec\&.
+
+We use the complete qualified target name to avoid collisions between
+duplicate targets in different directories\&. We also add a suffix to
+distinguish gyp-generated module names\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB639\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.ComputeDeps ( self,  spec)"
+
+.PP
+.nf
+Compute the dependencies of a gyp spec\&.
+
+Returns a tuple (deps, link_deps), where each is a list of
+filenames that will need to be put in front of make for either
+building (deps) or linking (link_deps)\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB822\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.ComputeOutput ( self,  spec)"
+
+.PP
+.nf
+Return the 'output' (full output path) of a gyp spec\&.
+
+E\&.g\&., the loadable module 'foobar' in directory 'baz' will produce
+  '$(obj)/baz/libfoobar\&.so'
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB718\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.ComputeOutputBasename ( self,  spec)"
+
+.PP
+.nf
+Return the 'output basename' of a gyp spec\&.
+
+E\&.g\&., the loadable module 'foobar' in directory 'baz' will produce
+  'libfoobar\&.so'
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB710\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.ComputeOutputParts ( self,  spec)"
+
+.PP
+.nf
+Return the 'output basename' of a gyp spec, split into filename + ext\&.
+
+Android libraries must be named the same thing as their module name,
+otherwise the linker can't find them, so product_name and so on must be
+ignored if we are building a library, and the 'lib' prepending is
+not done for Android\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB670\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.ExpandInputRoot ( self,  template,  expansion,  dirname)"
+
+.PP
+Definition at line \fB1011\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.ExtractIncludesFromCFlags ( self,  cflags)"
+
+.PP
+.nf
+Extract includes '-I\&.\&.\&.' out from cflags
+
+Args:
+  cflags: A list of compiler flags, which may be mixed with '-I\&.\&.'
+Returns:
+  A tuple of lists: (clean_clfags, include_paths)\&. '-I\&.\&.' is trimmed\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB766\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.FilterLibraries ( self,  libraries)"
+
+.PP
+.nf
+Filter the 'libraries' key to separate things that shouldn't be ldflags\&.
+
+Library entries that look like filenames should be converted to android
+module names instead of being passed to the linker as flags\&.
+
+Args:
+  libraries: the value of spec\&.get('libraries')
+Returns:
+  A tuple (static_lib_modules, dynamic_lib_modules, ldflags)
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB784\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.LocalPathify ( self,  path)"
+
+.PP
+.nf
+Convert a subdirectory-relative path into a normalized path which starts
+with the make variable $(LOCAL_PATH) (i\&.e\&. the top of the project tree)\&.
+Absolute paths, or paths that contain variables, are just normalized\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB992\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.NormalizeIncludePaths ( self,  include_paths)"
+
+.PP
+.nf
+Normalize include_paths\&.
+Convert absolute paths to relative to the Android top directory\&.
+
+Args:
+  include_paths: A list of unprocessed include paths\&.
+Returns:
+  A list of normalized include paths\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB750\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.Write ( self,  qualified_target,  relative_target,  base_path,  output_filename,  spec,  configs,  part_of_all,  write_alias_target,  sdk_version)"
+
+.PP
+.nf
+The main entry point: writes a \&.mk file for a single target\&.
+
+Arguments:
+  qualified_target: target we're generating
+  relative_target: qualified target name relative to the root
+  base_path: path relative to source root we're building in, used to resolve
+             target-relative paths
+  output_filename: output \&.mk file name to write
+  spec, configs: gyp info
+  part_of_all: flag indicating this target is part of 'all'
+  write_alias_target: flag indicating whether to create short aliases for
+                      this target
+  sdk_version: what to emit for LOCAL_SDK_VERSION in output
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB111\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.WriteActions ( self,  actions,  extra_sources,  extra_outputs)"
+
+.PP
+.nf
+Write Makefile code for any 'actions' from the gyp input\&.
+
+extra_sources: a list that will be filled in with newly generated source
+               files, if any
+extra_outputs: a list that will be filled in with any outputs of these
+               actions (used to make other pieces dependent on these
+               actions)
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB253\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.WriteCopies ( self,  copies,  extra_outputs)"
+
+.PP
+.nf
+Write Makefile code for any 'copies' from the gyp input\&.
+
+extra_outputs: a list that will be filled in with any outputs of this action
+               (used to make other pieces dependent on this action)
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB459\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.WriteList ( self,  value_list,  variable = \fRNone\fP,  prefix = \fR''\fP,  quoter = \fR\fBmake\&.QuoteIfNecessary\fP\fP,  local_pathify = \fRFalse\fP)"
+
+.PP
+.nf
+Write a variable definition that is a list of values\&.
+
+E\&.g\&. WriteList(['a','b'], 'foo', prefix='blah') writes out
+     foo = blaha blahb
+but in a pretty-printed style\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB967\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.WriteLn ( self,  text = \fR''\fP)"
+
+.PP
+Definition at line \fB989\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.WriteRules ( self,  rules,  extra_sources,  extra_outputs)"
+
+.PP
+.nf
+Write Makefile code for any 'rules' from the gyp input\&.
+
+extra_sources: a list that will be filled in with newly generated source
+               files, if any
+extra_outputs: a list that will be filled in with any outputs of these
+               rules (used to make other pieces dependent on these rules)
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB359\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.WriteSourceFlags ( self,  spec,  configs)"
+
+.PP
+.nf
+Write out the flags and include paths used to compile source files for
+the current target\&.
+
+Args:
+  spec, configs: input from gyp\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB501\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.WriteSources ( self,  spec,  configs,  extra_sources)"
+
+.PP
+.nf
+Write Makefile code for any 'sources' from the gyp input\&.
+These are source files necessary to build the current target\&.
+We need to handle shared_intermediate directory source files as
+a special case by copying them to the intermediate directory and
+treating them as a generated sources\&. Otherwise the Android build
+rules won't pick them up\&.
+
+Args:
+  spec, configs: input from gyp\&.
+  extra_sources: Sources generated from Actions or Rules\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB554\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.WriteTarget ( self,  spec,  configs,  deps,  link_deps,  part_of_all,  write_alias_target)"
+
+.PP
+.nf
+Write Makefile code to produce the final target of the gyp spec\&.
+
+spec, configs: input from gyp\&.
+deps, link_deps: dependency lists; see ComputeDeps()
+part_of_all: flag indicating this target is part of 'all'
+write_alias_target: flag indicating whether to create short aliases for this
+                    target
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB888\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.WriteTargetFlags ( self,  spec,  configs,  link_deps)"
+
+.PP
+.nf
+Write Makefile code to specify the link flags and library dependencies\&.
+
+spec, configs: input from gyp\&.
+link_deps: link dependency list; see ComputeDeps()
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB845\fP of file \fBandroid\&.py\fP\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.android_class"
+
+.PP
+Definition at line \fB158\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.android_module"
+
+.PP
+Definition at line \fB159\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.android_stem"
+
+.PP
+Definition at line \fB160\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.android_suffix"
+
+.PP
+Definition at line \fB160\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.android_top_dir"
+
+.PP
+Definition at line \fB109\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.fp"
+
+.PP
+Definition at line \fB139\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.LocalPathify"
+
+.PP
+Definition at line \fB345\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.output"
+
+.PP
+Definition at line \fB161\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.path"
+
+.PP
+Definition at line \fB145\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.qualified_target"
+
+.PP
+Definition at line \fB143\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.relative_target"
+
+.PP
+Definition at line \fB144\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.target"
+
+.PP
+Definition at line \fB146\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.toolset"
+
+.PP
+Definition at line \fB148\fP of file \fBandroid\&.py\fP\&.
+.SS "gyp\&.generator\&.android\&.AndroidMkWriter\&.type"
+
+.PP
+Definition at line \fB147\fP of file \fBandroid\&.py\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

@@ -1,0 +1,258 @@
+\chapter{\texorpdfstring{$<$}{<}tt\texorpdfstring{$>$}{>}node-\/gyp\texorpdfstring{$<$}{<}/tt\texorpdfstring{$>$}{>} -\/ Node.\+js native addon build tool}
+\hypertarget{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e}\index{$<$tt$>$node-\/gyp$<$/tt$>$ -\/ Node.js native addon build tool@{$<$tt$>$node-\/gyp$<$/tt$>$ -\/ Node.js native addon build tool}}
+\label{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2464}%
+\Hypertarget{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2464}%
+ \href{https://github.com/nodejs/node-gyp/actions?query=workflow\%3ATests+branch\%3Amaster}{\texttt{ }} 
+
+{\ttfamily node-\/gyp} is a cross-\/platform command-\/line tool written in Node.\+js for compiling native addon modules for Node.\+js. It contains a vendored copy of the \href{https://github.com/nodejs/gyp-next}{\texttt{ gyp-\/next}} project that was previously used by the Chromium team, extended to support the development of Node.\+js native addons.
+
+Note that {\ttfamily node-\/gyp} is {\itshape not} used to build Node.\+js itself.
+
+Multiple target versions of Node.\+js are supported (i.\+e. {\ttfamily 0.\+8}, ..., {\ttfamily 4}, {\ttfamily 5}, {\ttfamily 6}, etc.), regardless of what version of Node.\+js is actually installed on your system ({\ttfamily node-\/gyp} downloads the necessary development files or headers for the target version).\hypertarget{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2465}{}\doxysection{\texorpdfstring{Features}{Features}}\label{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2465}
+
+\begin{DoxyItemize}
+\item The same build commands work on any of the supported platforms
+\item Supports the targeting of different versions of Node.\+js
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2466}{}\doxysection{\texorpdfstring{Installation}{Installation}}\label{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2466}
+You can install {\ttfamily node-\/gyp} using {\ttfamily npm}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ bash}
+\DoxyCodeLine{npm\ install\ -\/g\ node-\/gyp}
+
+\end{DoxyCode}
+
+
+Depending on your operating system, you will need to install\+:\hypertarget{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2467}{}\doxysubsection{\texorpdfstring{On Unix}{On Unix}}\label{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2467}
+
+\begin{DoxyItemize}
+\item Python v3.\+6, v3.\+7, v3.\+8, or v3.\+9
+\item {\ttfamily make}
+\item A proper C/\+C++ compiler toolchain, like \href{https://gcc.gnu.org}{\texttt{ GCC}}
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2468}{}\doxysubsection{\texorpdfstring{On mac\+OS}{On mac\+OS}}\label{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2468}
+{\bfseries{ATTENTION}}\+: If your Mac has been {\itshape upgraded} to mac\+OS Catalina (10.\+15), please read \doxysectlink{md_backend_2node__modules_2node-gyp_2mac_o_s___catalina}{mac\+OS\+\_\+\+Catalina.md}{0}.
+
+
+\begin{DoxyItemize}
+\item Python v3.\+6, v3.\+7, v3.\+8, or v3.\+9
+\item \href{https://developer.apple.com/xcode/download/}{\texttt{ Xcode}}
+\begin{DoxyItemize}
+\item You also need to install the {\ttfamily XCode Command Line Tools} by running {\ttfamily xcode-\/select -\/-\/install}. Alternatively, if you already have the full Xcode installed, you can find them under the menu {\ttfamily Xcode -\/\texorpdfstring{$>$}{>} Open Developer Tool -\/\texorpdfstring{$>$}{>} More Developer Tools...}. This step will install {\ttfamily clang}, {\ttfamily clang++}, and {\ttfamily make}.
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2469}{}\doxysubsection{\texorpdfstring{On Windows}{On Windows}}\label{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2469}
+Install the current version of Python from the \href{https://docs.python.org/3/using/windows.html\#the-microsoft-store-package}{\texttt{ Microsoft Store package}}.
+
+Install tools and configuration manually\+:
+\begin{DoxyItemize}
+\item Install Visual C++ Build Environment\+: \href{https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools}{\texttt{ Visual Studio Build Tools}} (using "{}\+Visual C++ build tools"{} workload) or \href{https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community}{\texttt{ Visual Studio Community}} (using the "{}\+Desktop development with C++"{} workload)
+\item Launch cmd, {\ttfamily npm config set msvs\+\_\+version 2017}
+\end{DoxyItemize}
+
+If the above steps didn\textquotesingle{}t work for you, please visit \href{https://github.com/Microsoft/nodejs-guidelines/blob/master/windows-environment.md\#compiling-native-addon-modules}{\texttt{ Microsoft\textquotesingle{}s Node.\+js Guidelines for Windows}} for additional tips.
+
+To target native ARM64 Node.\+js on Windows 10 on ARM, add the components "{}\+Visual C++ compilers and libraries for ARM64"{} and "{}\+Visual C++ ATL for ARM64"{}.\hypertarget{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2470}{}\doxysubsection{\texorpdfstring{Configuring Python Dependency}{Configuring Python Dependency}}\label{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2470}
+{\ttfamily node-\/gyp} requires that you have installed a compatible version of Python, one of\+: v3.\+6, v3.\+7, v3.\+8, or v3.\+9. If you have multiple Python versions installed, you can identify which Python version {\ttfamily node-\/gyp} should use in one of the following ways\+:
+
+
+\begin{DoxyEnumerate}
+\item by setting the {\ttfamily -\/-\/python} command-\/line option, e.\+g.\+:
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ bash}
+\DoxyCodeLine{node-\/gyp\ <command>\ -\/-\/python\ /path/to/executable/python}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item If {\ttfamily node-\/gyp} is called by way of {\ttfamily npm}, {\itshape and} you have multiple versions of Python installed, then you can set {\ttfamily npm}\textquotesingle{}s \textquotesingle{}python\textquotesingle{} config key to the appropriate value\+:
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ bash}
+\DoxyCodeLine{npm\ config\ set\ python\ /path/to/executable/python}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item If the {\ttfamily PYTHON} environment variable is set to the path of a Python executable, then that version will be used, if it is a compatible version.
+\item If the {\ttfamily NODE\+\_\+\+GYP\+\_\+\+FORCE\+\_\+\+PYTHON} environment variable is set to the path of a Python executable, it will be used instead of any of the other configured or builtin Python search paths. If it\textquotesingle{}s not a compatible version, no further searching will be done.
+\end{DoxyEnumerate}\hypertarget{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2471}{}\doxysubsection{\texorpdfstring{Build for Third Party Node.\+js Runtimes}{Build for Third Party Node.\+js Runtimes}}\label{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2471}
+When building modules for thid party Node.\+js runtimes like Electron, which have different build configurations from the official Node.\+js distribution, you should use {\ttfamily -\/-\/dist-\/url} or {\ttfamily -\/-\/nodedir} flags to specify the headers of the runtime to build for.
+
+Also when {\ttfamily -\/-\/dist-\/url} or {\ttfamily -\/-\/nodedir} flags are passed, node-\/gyp will use the {\ttfamily config.\+gypi} shipped in the headers distribution to generate build configurations, which is different from the default mode that would use the {\ttfamily process.\+config} object of the running Node.\+js instance.
+
+Some old versions of Electron shipped malformed {\ttfamily config.\+gypi} in their headers distributions, and you might need to pass {\ttfamily -\/-\/force-\/process-\/config} to node-\/gyp to work around configuration errors.\hypertarget{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2472}{}\doxysection{\texorpdfstring{How to Use}{How to Use}}\label{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2472}
+To compile your native addon, first go to its root directory\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ bash}
+\DoxyCodeLine{cd\ my\_node\_addon}
+
+\end{DoxyCode}
+
+
+The next step is to generate the appropriate project build files for the current platform. Use {\ttfamily configure} for that\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ bash}
+\DoxyCodeLine{node-\/gyp\ configure}
+
+\end{DoxyCode}
+
+
+Auto-\/detection fails for Visual C++ Build Tools 2015, so {\ttfamily -\/-\/msvs\+\_\+version=2015} needs to be added (not needed when run by npm as configured above)\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ bash}
+\DoxyCodeLine{node-\/gyp\ configure\ -\/-\/msvs\_version=2015}
+
+\end{DoxyCode}
+
+
+{\bfseries{Note}}\+: The {\ttfamily configure} step looks for a {\ttfamily binding.\+gyp} file in the current directory to process. See below for instructions on creating a {\ttfamily binding.\+gyp} file.
+
+Now you will have either a {\ttfamily Makefile} (on Unix platforms) or a {\ttfamily vcxproj} file (on Windows) in the {\ttfamily build/} directory. Next, invoke the {\ttfamily build} command\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ bash}
+\DoxyCodeLine{node-\/gyp\ build}
+
+\end{DoxyCode}
+
+
+Now you have your compiled {\ttfamily .node} bindings file! The compiled bindings end up in {\ttfamily build/\+Debug/} or {\ttfamily build/\+Release/}, depending on the build mode. At this point, you can require the {\ttfamily .node} file with Node.\+js and run your tests!
+
+{\bfseries{Note\+:}} To create a {\itshape Debug} build of the bindings file, pass the {\ttfamily -\/-\/debug} (or {\ttfamily -\/d}) switch when running either the {\ttfamily configure}, {\ttfamily build} or {\ttfamily rebuild} commands.\hypertarget{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2473}{}\doxysection{\texorpdfstring{The {\ttfamily binding.\+gyp} file}{The {\ttfamily binding.\+gyp} file}}\label{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2473}
+A {\ttfamily binding.\+gyp} file describes the configuration to build your module, in a JSON-\/like format. This file gets placed in the root of your package, alongside {\ttfamily package.\+json}.
+
+A barebones {\ttfamily gyp} file appropriate for building a Node.\+js addon could look like\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \textcolor{stringliteral}{"{}targets"{}}:\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \textcolor{stringliteral}{"{}target\_name"{}}:\ \textcolor{stringliteral}{"{}binding"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \textcolor{stringliteral}{"{}sources"{}}:\ [\ \textcolor{stringliteral}{"{}src/binding.cc"{}}\ ]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2474}{}\doxysection{\texorpdfstring{Further reading}{Further reading}}\label{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2474}
+The {\bfseries{\href{./docs/}{\texttt{ docs}}}} directory contains additional documentation on specific node-\/gyp topics that may be useful if you are experiencing problems installing or building addons using node-\/gyp.
+
+Some additional resources for Node.\+js native addons and writing {\ttfamily gyp} configuration files\+:
+
+
+\begin{DoxyItemize}
+\item \href{http://nodeschool.io/\#goingnative}{\texttt{ "{}\+Going Native"{} a nodeschool.\+io tutorial}}
+\item \href{https://github.com/nodejs/node/tree/master/test/addons/hello-world}{\texttt{ "{}\+Hello World"{} node addon example}}
+\item \href{https://gyp.gsrc.io/docs/UserDocumentation.md}{\texttt{ gyp user documentation}}
+\item \href{https://gyp.gsrc.io/docs/InputFormatReference.md}{\texttt{ gyp input format reference}}
+\item \doxysectlink{md_backend_2node__modules_2node-gyp_2docs_2binding_8gyp-files-in-the-wild}{{\itshape "{}binding.gyp"{} files out in the wild} wiki page}{0}
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2475}{}\doxysection{\texorpdfstring{Commands}{Commands}}\label{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2475}
+{\ttfamily node-\/gyp} responds to the following commands\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Command}}   }&\cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Description}}    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Command}}   }&\cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Description}}    }\\\cline{1-2}
+\endhead
+{\ttfamily help}   &Shows the help dialog    \\\cline{1-2}
+{\ttfamily build}   &Invokes {\ttfamily make}/{\ttfamily msbuild.\+exe} and builds the native addon    \\\cline{1-2}
+{\ttfamily clean}   &Removes the {\ttfamily build} directory if it exists    \\\cline{1-2}
+{\ttfamily configure}   &Generates project build files for the current platform    \\\cline{1-2}
+{\ttfamily rebuild}   &Runs {\ttfamily clean}, {\ttfamily configure} and {\ttfamily build} all in a row    \\\cline{1-2}
+{\ttfamily install}   &Installs Node.\+js header files for the given version    \\\cline{1-2}
+{\ttfamily list}   &Lists the currently installed Node.\+js header versions    \\\cline{1-2}
+{\ttfamily remove}   &Removes the Node.\+js header files for the given version   \\\cline{1-2}
+\end{longtabu}
+\hypertarget{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2476}{}\doxysection{\texorpdfstring{Command Options}{Command Options}}\label{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2476}
+{\ttfamily node-\/gyp} accepts the following command options\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Command}}   }&\cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Description}}    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Command}}   }&\cellcolor{\tableheadbgcolor}\textbf{ {\bfseries{Description}}    }\\\cline{1-2}
+\endhead
+{\ttfamily -\/j n}, {\ttfamily -\/-\/jobs n}   &Run {\ttfamily make} in parallel. The value {\ttfamily max} will use all available CPU cores    \\\cline{1-2}
+{\ttfamily -\/-\/target=v6.\+2.\+1}   &Node.\+js version to build for (default is {\ttfamily process.\+version})    \\\cline{1-2}
+{\ttfamily -\/-\/silly}, {\ttfamily -\/-\/loglevel=silly}   &Log all progress to console    \\\cline{1-2}
+{\ttfamily -\/-\/verbose}, {\ttfamily -\/-\/loglevel=verbose}   &Log most progress to console    \\\cline{1-2}
+{\ttfamily -\/-\/silent}, {\ttfamily -\/-\/loglevel=silent}   &Don\textquotesingle{}t log anything to console    \\\cline{1-2}
+{\ttfamily debug}, {\ttfamily -\/-\/debug}   &Make Debug build (default is {\ttfamily Release})    \\\cline{1-2}
+{\ttfamily -\/-\/release}, {\ttfamily -\/-\/no-\/debug}   &Make Release build    \\\cline{1-2}
+{\ttfamily -\/C \$dir}, {\ttfamily -\/-\/directory=\$dir}   &Run command in different directory    \\\cline{1-2}
+{\ttfamily -\/-\/make=\$make}   &Override {\ttfamily make} command (e.\+g. {\ttfamily gmake})    \\\cline{1-2}
+{\ttfamily -\/-\/thin=yes}   &Enable thin static libraries    \\\cline{1-2}
+{\ttfamily -\/-\/arch=\$arch}   &Set target architecture (e.\+g. ia32)    \\\cline{1-2}
+{\ttfamily -\/-\/tarball=\$path}   &Get headers from a local tarball    \\\cline{1-2}
+{\ttfamily -\/-\/devdir=\$path}   &SDK download directory (default is OS cache directory)    \\\cline{1-2}
+{\ttfamily -\/-\/ensure}   &Don\textquotesingle{}t reinstall headers if already present    \\\cline{1-2}
+{\ttfamily -\/-\/dist-\/url=\$url}   &Download header tarball from custom URL    \\\cline{1-2}
+{\ttfamily -\/-\/proxy=\$url}   &Set HTTP(\+S) proxy for downloading header tarball    \\\cline{1-2}
+{\ttfamily -\/-\/noproxy=\$urls}   &Set urls to ignore proxies when downloading header tarball    \\\cline{1-2}
+{\ttfamily -\/-\/cafile=\$cafile}   &Override default CA chain (to download tarball)    \\\cline{1-2}
+{\ttfamily -\/-\/nodedir=\$path}   &Set the path to the node source code    \\\cline{1-2}
+{\ttfamily -\/-\/python=\$path}   &Set path to the Python binary    \\\cline{1-2}
+{\ttfamily -\/-\/msvs\+\_\+version=\$version}   &Set Visual Studio version (Windows only)    \\\cline{1-2}
+{\ttfamily -\/-\/solution=\$solution}   &Set Visual Studio Solution version (Windows only)    \\\cline{1-2}
+{\ttfamily -\/-\/force-\/process-\/config}   &Force using runtime\textquotesingle{}s {\ttfamily process.\+config} object to generate {\ttfamily config.\+gypi} file   \\\cline{1-2}
+\end{longtabu}
+\hypertarget{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2477}{}\doxysection{\texorpdfstring{Configuration}{Configuration}}\label{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2477}
+\hypertarget{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2478}{}\doxysubsection{\texorpdfstring{Environment variables}{Environment variables}}\label{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2478}
+Use the form {\ttfamily npm\+\_\+config\+\_\+\+OPTION\+\_\+\+NAME} for any of the command options listed above (dashes in option names should be replaced by underscores).
+
+For example, to set {\ttfamily devdir} equal to {\ttfamily /tmp/.gyp}, you would\+:
+
+Run this on Unix\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ npm\_config\_devdir=/tmp/.gyp}
+
+\end{DoxyCode}
+
+
+Or this on Windows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{set\ npm\_config\_devdir=c:\(\backslash\)temp\(\backslash\).gyp}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2479}{}\doxysubsection{\texorpdfstring{{\ttfamily npm} configuration}{{\ttfamily npm} configuration}}\label{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2479}
+Use the form {\ttfamily OPTION\+\_\+\+NAME} for any of the command options listed above.
+
+For example, to set {\ttfamily devdir} equal to {\ttfamily /tmp/.gyp}, you would run\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ config\ set\ [-\/-\/global]\ devdir\ /tmp/.gyp}
+
+\end{DoxyCode}
+
+
+{\bfseries{Note\+:}} Configuration set via {\ttfamily npm} will only be used when {\ttfamily node-\/gyp} is run via {\ttfamily npm}, not when {\ttfamily node-\/gyp} is run directly.\hypertarget{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2480}{}\doxysection{\texorpdfstring{License}{License}}\label{md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_autotoc_md2480}
+{\ttfamily node-\/gyp} is available under the MIT license. See the \mbox{[}LICENSE file\mbox{]}(LICENSE) for details. 

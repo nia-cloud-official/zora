@@ -1,0 +1,165 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2socks-proxy-agent_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">socks-proxy-agent</highlight></codeline>
+<codeline><highlight class="normal">================</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>A<sp/>SOCKS<sp/>proxy<sp/>`http.Agent`<sp/>implementation<sp/>for<sp/>HTTP<sp/>and<sp/>HTTPS</highlight></codeline>
+<codeline><highlight class="normal">[![Build<sp/>Status](https://github.com/TooTallNate/node-socks-proxy-agent/workflows/Node%20CI/badge.svg)](https://github.com/TooTallNate/node-socks-proxy-agent/actions?workflow=Node+CI)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>module<sp/>provides<sp/>an<sp/>`http.Agent`<sp/>implementation<sp/>that<sp/>connects<sp/>to<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">specified<sp/>SOCKS<sp/>proxy<sp/>server,<sp/>and<sp/>can<sp/>be<sp/>used<sp/>with<sp/>the<sp/>built-in<sp/>`http`</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>`https`<sp/>modules.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It<sp/>can<sp/>also<sp/>be<sp/>used<sp/>in<sp/>conjunction<sp/>with<sp/>the<sp/>`ws`<sp/>module<sp/>to<sp/>establish<sp/>a<sp/>WebSocket</highlight></codeline>
+<codeline><highlight class="normal">connection<sp/>over<sp/>a<sp/>SOCKS<sp/>proxy.<sp/>See<sp/>the<sp/>&quot;Examples&quot;<sp/>section<sp/>below.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Installation</highlight></codeline>
+<codeline><highlight class="normal">------------</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Install<sp/>with<sp/>`npm`:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>bash</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>install<sp/>socks-proxy-agent</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Examples</highlight></codeline>
+<codeline><highlight class="normal">--------</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>TypeScript<sp/>example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```ts</highlight></codeline>
+<codeline><highlight class="normal">import<sp/>https<sp/>from<sp/>&apos;https&apos;;</highlight></codeline>
+<codeline><highlight class="normal">import<sp/>{<sp/>SocksProxyAgent<sp/>}<sp/>from<sp/>&apos;socks-proxy-agent&apos;;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>info<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>hostname:<sp/>&apos;br41.nordvpn.com&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>userId:<sp/>&apos;your-name@gmail.com&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>password:<sp/>&apos;abcdef12345124&apos;</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>agent<sp/>=<sp/>new<sp/>SocksProxyAgent(info);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">https.get(&apos;https://ipinfo.io&apos;,<sp/>{<sp/>agent<sp/>},<sp/>(res)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(res.headers);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.pipe(process.stdout);</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>`http`<sp/>module<sp/>example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>url<sp/>=<sp/>require(&apos;url&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>{<sp/>SocksProxyAgent<sp/>}<sp/>=<sp/>require(&apos;socks-proxy-agent&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>SOCKS<sp/>proxy<sp/>to<sp/>connect<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>proxy<sp/>=<sp/>process.env.socks_proxy<sp/>||<sp/>&apos;socks://127.0.0.1:1080&apos;;</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;using<sp/>proxy<sp/>server<sp/>%j&apos;,<sp/>proxy);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>HTTP<sp/>endpoint<sp/>for<sp/>the<sp/>proxy<sp/>to<sp/>connect<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>endpoint<sp/>=<sp/>process.argv[2]<sp/>||<sp/>&apos;http://nodejs.org/api/&apos;;</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;attempting<sp/>to<sp/>GET<sp/>%j&apos;,<sp/>endpoint);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>opts<sp/>=<sp/>url.parse(endpoint);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>create<sp/>an<sp/>instance<sp/>of<sp/>the<sp/>`SocksProxyAgent`<sp/>class<sp/>with<sp/>the<sp/>proxy<sp/>server<sp/>information</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>agent<sp/>=<sp/>new<sp/>SocksProxyAgent(proxy);</highlight></codeline>
+<codeline><highlight class="normal">opts.agent<sp/>=<sp/>agent;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">http.get(opts,<sp/>function<sp/>(res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(&apos;&quot;response&quot;<sp/>event!&apos;,<sp/>res.headers);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.pipe(process.stdout);</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>`https`<sp/>module<sp/>example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>url<sp/>=<sp/>require(&apos;url&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>https<sp/>=<sp/>require(&apos;https&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>{<sp/>SocksProxyAgent<sp/>}<sp/>=<sp/>require(&apos;socks-proxy-agent&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>SOCKS<sp/>proxy<sp/>to<sp/>connect<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>proxy<sp/>=<sp/>process.env.socks_proxy<sp/>||<sp/>&apos;socks://127.0.0.1:1080&apos;;</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;using<sp/>proxy<sp/>server<sp/>%j&apos;,<sp/>proxy);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>HTTP<sp/>endpoint<sp/>for<sp/>the<sp/>proxy<sp/>to<sp/>connect<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>endpoint<sp/>=<sp/>process.argv[2]<sp/>||<sp/>&apos;https://encrypted.google.com/&apos;;</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;attempting<sp/>to<sp/>GET<sp/>%j&apos;,<sp/>endpoint);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>opts<sp/>=<sp/>url.parse(endpoint);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>create<sp/>an<sp/>instance<sp/>of<sp/>the<sp/>`SocksProxyAgent`<sp/>class<sp/>with<sp/>the<sp/>proxy<sp/>server<sp/>information</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>agent<sp/>=<sp/>new<sp/>SocksProxyAgent(proxy);</highlight></codeline>
+<codeline><highlight class="normal">opts.agent<sp/>=<sp/>agent;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">https.get(opts,<sp/>function<sp/>(res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(&apos;&quot;response&quot;<sp/>event!&apos;,<sp/>res.headers);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.pipe(process.stdout);</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>`ws`<sp/>WebSocket<sp/>connection<sp/>example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>WebSocket<sp/>=<sp/>require(&apos;ws&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>{<sp/>SocksProxyAgent<sp/>}<sp/>=<sp/>require(&apos;socks-proxy-agent&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>SOCKS<sp/>proxy<sp/>to<sp/>connect<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>proxy<sp/>=<sp/>process.env.socks_proxy<sp/>||<sp/>&apos;socks://127.0.0.1:1080&apos;;</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;using<sp/>proxy<sp/>server<sp/>%j&apos;,<sp/>proxy);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>WebSocket<sp/>endpoint<sp/>for<sp/>the<sp/>proxy<sp/>to<sp/>connect<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>endpoint<sp/>=<sp/>process.argv[2]<sp/>||<sp/>&apos;ws://echo.websocket.org&apos;;</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;attempting<sp/>to<sp/>connect<sp/>to<sp/>WebSocket<sp/>%j&apos;,<sp/>endpoint);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>create<sp/>an<sp/>instance<sp/>of<sp/>the<sp/>`SocksProxyAgent`<sp/>class<sp/>with<sp/>the<sp/>proxy<sp/>server<sp/>information</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>agent<sp/>=<sp/>new<sp/>SocksProxyAgent(proxy);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>initiate<sp/>the<sp/>WebSocket<sp/>connection</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>socket<sp/>=<sp/>new<sp/>WebSocket(endpoint,<sp/>{<sp/>agent:<sp/>agent<sp/>});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">socket.on(&apos;open&apos;,<sp/>function<sp/>()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(&apos;&quot;open&quot;<sp/>event!&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>socket.send(&apos;hello<sp/>world&apos;);</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">socket.on(&apos;message&apos;,<sp/>function<sp/>(data,<sp/>flags)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(&apos;&quot;message&quot;<sp/>event!<sp/>%j<sp/>%j&apos;,<sp/>data,<sp/>flags);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>socket.close();</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">License</highlight></codeline>
+<codeline><highlight class="normal">-------</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">(The<sp/>MIT<sp/>License)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Copyright<sp/>(c)<sp/>2013<sp/>Nathan<sp/>Rajlich<sp/>&amp;lt;nathan@tootallnate.net&amp;gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Permission<sp/>is<sp/>hereby<sp/>granted,<sp/>free<sp/>of<sp/>charge,<sp/>to<sp/>any<sp/>person<sp/>obtaining</highlight></codeline>
+<codeline><highlight class="normal">a<sp/>copy<sp/>of<sp/>this<sp/>software<sp/>and<sp/>associated<sp/>documentation<sp/>files<sp/>(the</highlight></codeline>
+<codeline><highlight class="normal">&apos;Software&apos;),<sp/>to<sp/>deal<sp/>in<sp/>the<sp/>Software<sp/>without<sp/>restriction,<sp/>including</highlight></codeline>
+<codeline><highlight class="normal">without<sp/>limitation<sp/>the<sp/>rights<sp/>to<sp/>use,<sp/>copy,<sp/>modify,<sp/>merge,<sp/>publish,</highlight></codeline>
+<codeline><highlight class="normal">distribute,<sp/>sublicense,<sp/>and/or<sp/>sell<sp/>copies<sp/>of<sp/>the<sp/>Software,<sp/>and<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">permit<sp/>persons<sp/>to<sp/>whom<sp/>the<sp/>Software<sp/>is<sp/>furnished<sp/>to<sp/>do<sp/>so,<sp/>subject<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>following<sp/>conditions:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>above<sp/>copyright<sp/>notice<sp/>and<sp/>this<sp/>permission<sp/>notice<sp/>shall<sp/>be</highlight></codeline>
+<codeline><highlight class="normal">included<sp/>in<sp/>all<sp/>copies<sp/>or<sp/>substantial<sp/>portions<sp/>of<sp/>the<sp/>Software.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">THE<sp/>SOFTWARE<sp/>IS<sp/>PROVIDED<sp/>&apos;AS<sp/>IS&apos;,<sp/>WITHOUT<sp/>WARRANTY<sp/>OF<sp/>ANY<sp/>KIND,</highlight></codeline>
+<codeline><highlight class="normal">EXPRESS<sp/>OR<sp/>IMPLIED,<sp/>INCLUDING<sp/>BUT<sp/>NOT<sp/>LIMITED<sp/>TO<sp/>THE<sp/>WARRANTIES<sp/>OF</highlight></codeline>
+<codeline><highlight class="normal">MERCHANTABILITY,<sp/>FITNESS<sp/>FOR<sp/>A<sp/>PARTICULAR<sp/>PURPOSE<sp/>AND<sp/>NONINFRINGEMENT.</highlight></codeline>
+<codeline><highlight class="normal">IN<sp/>NO<sp/>EVENT<sp/>SHALL<sp/>THE<sp/>AUTHORS<sp/>OR<sp/>COPYRIGHT<sp/>HOLDERS<sp/>BE<sp/>LIABLE<sp/>FOR<sp/>ANY</highlight></codeline>
+<codeline><highlight class="normal">CLAIM,<sp/>DAMAGES<sp/>OR<sp/>OTHER<sp/>LIABILITY,<sp/>WHETHER<sp/>IN<sp/>AN<sp/>ACTION<sp/>OF<sp/>CONTRACT,</highlight></codeline>
+<codeline><highlight class="normal">TORT<sp/>OR<sp/>OTHERWISE,<sp/>ARISING<sp/>FROM,<sp/>OUT<sp/>OF<sp/>OR<sp/>IN<sp/>CONNECTION<sp/>WITH<sp/>THE</highlight></codeline>
+<codeline><highlight class="normal">SOFTWARE<sp/>OR<sp/>THE<sp/>USE<sp/>OR<sp/>OTHER<sp/>DEALINGS<sp/>IN<sp/>THE<sp/>SOFTWARE.</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/socks-proxy-agent/README.md"/>
+  </compounddef>
+</doxygen>

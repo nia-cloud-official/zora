@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2fs-minipass_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>fs-minipass</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Filesystem<sp/>streams<sp/>based<sp/>on<sp/>[minipass](http://npm.im/minipass).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">4<sp/>classes<sp/>are<sp/>exported:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>ReadStream</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>ReadStreamSync</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>WriteStream</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>WriteStreamSync</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>using<sp/>`ReadStreamSync`,<sp/>all<sp/>of<sp/>the<sp/>data<sp/>is<sp/>made<sp/>available</highlight></codeline>
+<codeline><highlight class="normal">immediately<sp/>upon<sp/>consuming<sp/>the<sp/>stream.<sp/><sp/>Nothing<sp/>is<sp/>buffered<sp/>in<sp/>memory</highlight></codeline>
+<codeline><highlight class="normal">when<sp/>the<sp/>stream<sp/>is<sp/>constructed.<sp/><sp/>If<sp/>the<sp/>stream<sp/>is<sp/>piped<sp/>to<sp/>a<sp/>writer,</highlight></codeline>
+<codeline><highlight class="normal">then<sp/>it<sp/>will<sp/>synchronously<sp/>`read()`<sp/>and<sp/>emit<sp/>data<sp/>into<sp/>the<sp/>writer<sp/>as</highlight></codeline>
+<codeline><highlight class="normal">fast<sp/>as<sp/>the<sp/>writer<sp/>can<sp/>consume<sp/>it.<sp/><sp/>(That<sp/>is,<sp/>it<sp/>will<sp/>respect</highlight></codeline>
+<codeline><highlight class="normal">backpressure.)<sp/><sp/>If<sp/>you<sp/>call<sp/>`stream.read()`<sp/>then<sp/>it<sp/>will<sp/>read<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">entire<sp/>file<sp/>and<sp/>return<sp/>the<sp/>contents.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>using<sp/>`WriteStreamSync`,<sp/>every<sp/>write<sp/>is<sp/>flushed<sp/>to<sp/>the<sp/>file</highlight></codeline>
+<codeline><highlight class="normal">synchronously.<sp/><sp/>If<sp/>your<sp/>writes<sp/>all<sp/>come<sp/>in<sp/>a<sp/>single<sp/>tick,<sp/>then<sp/>it&apos;ll</highlight></codeline>
+<codeline><highlight class="normal">write<sp/>it<sp/>all<sp/>out<sp/>in<sp/>a<sp/>single<sp/>tick.<sp/><sp/>It&apos;s<sp/>as<sp/>synchronous<sp/>as<sp/>you<sp/>are.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>async<sp/>versions<sp/>work<sp/>much<sp/>like<sp/>their<sp/>node<sp/>builtin<sp/>counterparts,</highlight></codeline>
+<codeline><highlight class="normal">with<sp/>the<sp/>exception<sp/>of<sp/>introducing<sp/>significantly<sp/>less<sp/>Stream<sp/>machinery</highlight></codeline>
+<codeline><highlight class="normal">overhead.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>USAGE</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It&apos;s<sp/>just<sp/>streams,<sp/>you<sp/>pipe<sp/>them<sp/>or<sp/>read()<sp/>them<sp/>or<sp/>write()<sp/>to<sp/>them.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>fsm<sp/>=<sp/>require(&apos;fs-minipass&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>readStream<sp/>=<sp/>new<sp/>fsm.ReadStream(&apos;file.txt&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>writeStream<sp/>=<sp/>new<sp/>fsm.WriteStream(&apos;output.txt&apos;)</highlight></codeline>
+<codeline><highlight class="normal">writeStream.write(&apos;some<sp/>file<sp/>header<sp/>or<sp/>whatever\n&apos;)</highlight></codeline>
+<codeline><highlight class="normal">readStream.pipe(writeStream)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>ReadStream(path,<sp/>options)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Path<sp/>string<sp/>is<sp/>required,<sp/>but<sp/>somewhat<sp/>irrelevant<sp/>if<sp/>an<sp/>open<sp/>file</highlight></codeline>
+<codeline><highlight class="normal">descriptor<sp/>is<sp/>passed<sp/>in<sp/>as<sp/>an<sp/>option.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Options:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>`fd`<sp/>Pass<sp/>in<sp/>a<sp/>numeric<sp/>file<sp/>descriptor,<sp/>if<sp/>the<sp/>file<sp/>is<sp/>already<sp/>open.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`readSize`<sp/>The<sp/>size<sp/>of<sp/>reads<sp/>to<sp/>do,<sp/>defaults<sp/>to<sp/>16MB</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`size`<sp/>The<sp/>size<sp/>of<sp/>the<sp/>file,<sp/>if<sp/>known.<sp/><sp/>Prevents<sp/>zero-byte<sp/>read()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>call<sp/>at<sp/>the<sp/>end.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`autoClose`<sp/>Set<sp/>to<sp/>`false`<sp/>to<sp/>prevent<sp/>the<sp/>file<sp/>descriptor<sp/>from<sp/>being</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>closed<sp/>when<sp/>the<sp/>file<sp/>is<sp/>done<sp/>being<sp/>read.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>WriteStream(path,<sp/>options)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Path<sp/>string<sp/>is<sp/>required,<sp/>but<sp/>somewhat<sp/>irrelevant<sp/>if<sp/>an<sp/>open<sp/>file</highlight></codeline>
+<codeline><highlight class="normal">descriptor<sp/>is<sp/>passed<sp/>in<sp/>as<sp/>an<sp/>option.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Options:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>`fd`<sp/>Pass<sp/>in<sp/>a<sp/>numeric<sp/>file<sp/>descriptor,<sp/>if<sp/>the<sp/>file<sp/>is<sp/>already<sp/>open.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`mode`<sp/>The<sp/>mode<sp/>to<sp/>create<sp/>the<sp/>file<sp/>with.<sp/>Defaults<sp/>to<sp/>`0o666`.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`start`<sp/>The<sp/>position<sp/>in<sp/>the<sp/>file<sp/>to<sp/>start<sp/>reading.<sp/><sp/>If<sp/>not</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>specified,<sp/>then<sp/>the<sp/>file<sp/>will<sp/>start<sp/>writing<sp/>at<sp/>position<sp/>zero,<sp/>and<sp/>be</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>truncated<sp/>by<sp/>default.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`autoClose`<sp/>Set<sp/>to<sp/>`false`<sp/>to<sp/>prevent<sp/>the<sp/>file<sp/>descriptor<sp/>from<sp/>being</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>closed<sp/>when<sp/>the<sp/>stream<sp/>is<sp/>ended.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`flags`<sp/>Flags<sp/>to<sp/>use<sp/>when<sp/>opening<sp/>the<sp/>file.<sp/><sp/>Irrelevant<sp/>if<sp/>`fd`<sp/>is</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>passed<sp/>in,<sp/>since<sp/>file<sp/>won&apos;t<sp/>be<sp/>opened<sp/>in<sp/>that<sp/>case.<sp/><sp/>Defaults<sp/>to</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`&apos;a&apos;`<sp/>if<sp/>a<sp/>`pos`<sp/>is<sp/>specified,<sp/>or<sp/>`&apos;w&apos;`<sp/>otherwise.</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/fs-minipass/README.md"/>
+  </compounddef>
+</doxygen>

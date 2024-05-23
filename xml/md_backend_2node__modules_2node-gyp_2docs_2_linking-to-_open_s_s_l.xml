@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2node-gyp_2docs_2_linking-to-_open_s_s_l" kind="page">
+    <compoundname>md_backend_2node__modules_2node-gyp_2docs_2_linking-to-_open_s_s_l</compoundname>
+    <title>Linking-to-OpenSSL</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>A handful of native addons require linking to OpenSSL in one way or another. This introduces a small challenge since node will sometimes bundle OpenSSL statically (the default for node &gt;= v0.8.x), or sometimes dynamically link to the system OpenSSL (default for node &lt;= v0.6.x).</para>
+<para>Good native addons should account for both scenarios. It&apos;s recommended that you use the <computeroutput>binding.gyp</computeroutput> file provided below as a starting-point for any addon that needs to use OpenSSL:</para>
+<para><programlisting><codeline><highlight class="normal"><sp/>python</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&apos;variables&apos;:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>#<sp/>node<sp/>v0.6.x<sp/>doesn&apos;t<sp/>give<sp/>us<sp/>its<sp/>build<sp/>variables,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>#<sp/>but<sp/>on<sp/>Unix<sp/>it<sp/>was<sp/>only<sp/>possible<sp/>to<sp/>use<sp/>the<sp/>system<sp/>OpenSSL<sp/>library,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>#<sp/>so<sp/>default<sp/>the<sp/>variable<sp/>to<sp/>&quot;true&quot;,<sp/>v0.8.x<sp/>node<sp/>and<sp/>up<sp/>will<sp/>overwrite<sp/>it.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&apos;node_shared_openssl%&apos;:<sp/>&apos;true&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&apos;targets&apos;:<sp/>[</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>&apos;target_name&apos;:<sp/>&apos;binding&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>&apos;sources&apos;:<sp/>[</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;src/binding.cc&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>&apos;conditions&apos;:<sp/>[</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[&apos;node_shared_openssl==&quot;false&quot;&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#<sp/>so<sp/>when<sp/>&quot;node_shared_openssl&quot;<sp/>is<sp/>&quot;false&quot;,<sp/>then<sp/>OpenSSL<sp/>has<sp/>been</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#<sp/>bundled<sp/>into<sp/>the<sp/>node<sp/>executable.<sp/>So<sp/>we<sp/>need<sp/>to<sp/>include<sp/>the<sp/>same</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#<sp/>header<sp/>files<sp/>that<sp/>were<sp/>used<sp/>when<sp/>building<sp/>node.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;include_dirs&apos;:<sp/>[</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;&lt;(node_root_dir)/deps/openssl/openssl/include&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;conditions&quot;<sp/>:<sp/>[</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[&quot;target_arch==&apos;ia32&apos;&quot;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;include_dirs&quot;:<sp/>[<sp/>&quot;&lt;(node_root_dir)/deps/openssl/config/piii&quot;<sp/>]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[&quot;target_arch==&apos;x64&apos;&quot;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;include_dirs&quot;:<sp/>[<sp/>&quot;&lt;(node_root_dir)/deps/openssl/config/k8&quot;<sp/>]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[&quot;target_arch==&apos;arm&apos;&quot;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;include_dirs&quot;:<sp/>[<sp/>&quot;&lt;(node_root_dir)/deps/openssl/config/arm&quot;<sp/>]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>]</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+<para>This ensures that when OpenSSL is statically linked into <computeroutput>node</computeroutput> then, the bundled OpenSSL headers are included, but when the system OpenSSL is in use, then only those headers will be used.</para>
+<sect2 id="md_backend_2node__modules_2node-gyp_2docs_2_linking-to-_open_s_s_l_1autotoc_md2397">
+<title>Windows?</title><para>As you can see this baseline <computeroutput>binding.gyp</computeroutput> file only accounts for the Unix scenario. Currently on Windows the situation is a little less ideal. On Windows, OpenSSL is <emphasis>always</emphasis> statically compiled into the <computeroutput>node</computeroutput> executable, so ideally it would be possible to use that copy of OpenSSL when building native addons.</para>
+<para>Unfortunately it doesn&apos;t seem like that is possible at the moment, as there would need to be tweaks made to the generated <computeroutput>node.lib</computeroutput> file to include the openssl glue functions, or a new <computeroutput>openssl.lib</computeroutput> file would need to be created during the node build. I&apos;m not sure which is the easiest/most feasible.</para>
+<para>In the meantime, one possible solution is using another copy of OpenSSL, which is what <ulink url="https://github.com/ncb000gt/node.bcrypt.js"><computeroutput>node-bcrypt</computeroutput></ulink> currently does. Adding something like this to your <computeroutput>binding.gyp</computeroutput> file&apos;s <computeroutput>&quot;conditions&quot;</computeroutput> block would enable this:</para>
+<para><programlisting><codeline><highlight class="normal">python</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>[<sp/>&apos;OS==&quot;win&quot;&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>&apos;conditions&apos;:<sp/>[</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#<sp/>&quot;openssl_root&quot;<sp/>is<sp/>the<sp/>directory<sp/>on<sp/>Windows<sp/>of<sp/>the<sp/>OpenSSL<sp/>files.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#<sp/>Check<sp/>the<sp/>&quot;target_arch&quot;<sp/>variable<sp/>to<sp/>set<sp/>good<sp/>default<sp/>values<sp/>for</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#<sp/>both<sp/>64-bit<sp/>and<sp/>32-bit<sp/>builds<sp/>of<sp/>the<sp/>module.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[&apos;target_arch==&quot;x64&quot;&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;variables&apos;:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;openssl_root%&apos;:<sp/>&apos;C:/OpenSSL-Win64&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/>},<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;variables&apos;:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;openssl_root%&apos;:<sp/>&apos;C:/OpenSSL-Win32&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>&apos;libraries&apos;:<sp/>[<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;-l&lt;(openssl_root)/lib/libeay32.lib&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>&apos;include_dirs&apos;:<sp/>[</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;&lt;(openssl_root)/include&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>}]</highlight></codeline>
+</programlisting></para>
+<para>Now you can direct your users to install OpenSSL on Windows from here (be sure to tell them to install the 64-bit version if they&apos;re compiling against a 64-bit version of node): <ulink url="http://slproweb.com/products/Win32OpenSSL.html">http://slproweb.com/products/Win32OpenSSL.html</ulink></para>
+<para>Also note that both <computeroutput>node-gyp</computeroutput> and <computeroutput>npm</computeroutput> allow you to overwrite that default <computeroutput>openssl_root</computeroutput> variable on the command line:</para>
+<para><programlisting><codeline><highlight class="normal"><sp/>bash</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>node-gyp<sp/>rebuild<sp/>--openssl-root=&quot;C:\Users\Nathan\Desktop\openssl&quot;</highlight></codeline>
+</programlisting> </para>
+</sect2>
+    </detaileddescription>
+    <location file="backend/node_modules/node-gyp/docs/Linking-to-OpenSSL.md"/>
+  </compounddef>
+</doxygen>

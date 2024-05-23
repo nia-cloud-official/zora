@@ -1,0 +1,70 @@
+\chapter{delegates}
+\hypertarget{md_backend_2node__modules_2delegates_2_readme}{}\label{md_backend_2node__modules_2delegates_2_readme}\index{delegates@{delegates}}
+\label{md_backend_2node__modules_2delegates_2_readme_autotoc_md742}%
+\Hypertarget{md_backend_2node__modules_2delegates_2_readme_autotoc_md742}%
+ Node method and accessor delegation utilty.\hypertarget{md_backend_2node__modules_2delegates_2_readme_autotoc_md743}{}\doxysection{\texorpdfstring{Installation}{Installation}}\label{md_backend_2node__modules_2delegates_2_readme_autotoc_md743}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ delegates}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2delegates_2_readme_autotoc_md744}{}\doxysection{\texorpdfstring{Example}{Example}}\label{md_backend_2node__modules_2delegates_2_readme_autotoc_md744}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ delegate\ =\ require('delegates');}
+\DoxyCodeLine{}
+\DoxyCodeLine{...}
+\DoxyCodeLine{}
+\DoxyCodeLine{delegate(proto,\ 'request')}
+\DoxyCodeLine{\ \ .method('acceptsLanguages')}
+\DoxyCodeLine{\ \ .method('acceptsEncodings')}
+\DoxyCodeLine{\ \ .method('acceptsCharsets')}
+\DoxyCodeLine{\ \ .method('accepts')}
+\DoxyCodeLine{\ \ .method('is')}
+\DoxyCodeLine{\ \ .access('querystring')}
+\DoxyCodeLine{\ \ .access('idempotent')}
+\DoxyCodeLine{\ \ .access('socket')}
+\DoxyCodeLine{\ \ .access('length')}
+\DoxyCodeLine{\ \ .access('query')}
+\DoxyCodeLine{\ \ .access('search')}
+\DoxyCodeLine{\ \ .access('status')}
+\DoxyCodeLine{\ \ .access('method')}
+\DoxyCodeLine{\ \ .access('path')}
+\DoxyCodeLine{\ \ .access('body')}
+\DoxyCodeLine{\ \ .access('host')}
+\DoxyCodeLine{\ \ .access('url')}
+\DoxyCodeLine{\ \ .getter('subdomains')}
+\DoxyCodeLine{\ \ .getter('protocol')}
+\DoxyCodeLine{\ \ .getter('header')}
+\DoxyCodeLine{\ \ .getter('stale')}
+\DoxyCodeLine{\ \ .getter('fresh')}
+\DoxyCodeLine{\ \ .getter('secure')}
+\DoxyCodeLine{\ \ .getter('ips')}
+\DoxyCodeLine{\ \ .getter('ip')}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2delegates_2_readme_autotoc_md745}{}\doxysection{\texorpdfstring{API}{API}}\label{md_backend_2node__modules_2delegates_2_readme_autotoc_md745}
+\hypertarget{md_backend_2node__modules_2delegates_2_readme_autotoc_md746}{}\doxysubsection{\texorpdfstring{Delegate(proto, prop)}{Delegate(proto, prop)}}\label{md_backend_2node__modules_2delegates_2_readme_autotoc_md746}
+Creates a delegator instance used to configure using the {\ttfamily prop} on the given {\ttfamily proto} object. (which is usually a prototype)\hypertarget{md_backend_2node__modules_2delegates_2_readme_autotoc_md747}{}\doxysubsection{\texorpdfstring{Delegate\+::method(name)}{Delegate\+::method(name)}}\label{md_backend_2node__modules_2delegates_2_readme_autotoc_md747}
+Allows the given method {\ttfamily name} to be accessed on the host.\hypertarget{md_backend_2node__modules_2delegates_2_readme_autotoc_md748}{}\doxysubsection{\texorpdfstring{Delegate\+::getter(name)}{Delegate\+::getter(name)}}\label{md_backend_2node__modules_2delegates_2_readme_autotoc_md748}
+Creates a "{}getter"{} for the property with the given {\ttfamily name} on the delegated object.\hypertarget{md_backend_2node__modules_2delegates_2_readme_autotoc_md749}{}\doxysubsection{\texorpdfstring{Delegate\+::setter(name)}{Delegate\+::setter(name)}}\label{md_backend_2node__modules_2delegates_2_readme_autotoc_md749}
+Creates a "{}setter"{} for the property with the given {\ttfamily name} on the delegated object.\hypertarget{md_backend_2node__modules_2delegates_2_readme_autotoc_md750}{}\doxysubsection{\texorpdfstring{Delegate\+::access(name)}{Delegate\+::access(name)}}\label{md_backend_2node__modules_2delegates_2_readme_autotoc_md750}
+Creates an "{}accessor"{} (ie\+: both getter {\itshape and} setter) for the property with the given {\ttfamily name} on the delegated object.\hypertarget{md_backend_2node__modules_2delegates_2_readme_autotoc_md751}{}\doxysubsection{\texorpdfstring{Delegate\+::fluent(name)}{Delegate\+::fluent(name)}}\label{md_backend_2node__modules_2delegates_2_readme_autotoc_md751}
+A unique type of "{}accessor"{} that works for a "{}fluent"{} API. When called as a getter, the method returns the expected value. However, if the method is called with a value, it will return itself so it can be chained. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{delegate(proto,\ 'request')}
+\DoxyCodeLine{\ \ .fluent('query')}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ getter}
+\DoxyCodeLine{var\ q\ =\ request.query();}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ setter\ (chainable)}
+\DoxyCodeLine{request}
+\DoxyCodeLine{\ \ .query(\{\ a:\ 1\ \})}
+\DoxyCodeLine{\ \ .query(\{\ b:\ 2\ \});}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2delegates_2_readme_autotoc_md752}{}\doxysection{\texorpdfstring{License}{License}}\label{md_backend_2node__modules_2delegates_2_readme_autotoc_md752}
+MIT 

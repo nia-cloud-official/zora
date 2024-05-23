@@ -1,0 +1,233 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2glob_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2glob_2_r_e_a_d_m_e</compoundname>
+    <title>Glob</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2glob_2_r_e_a_d_m_e_1autotoc_md1415"/> Match files using the patterns the shell uses, like stars and stuff.</para>
+<para><ulink url="https://travis-ci.org/isaacs/node-glob/"><image type="html" name="https://travis-ci.org/isaacs/node-glob.svg?branch=master" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://ci.appveyor.com/project/isaacs/node-glob"><image type="html" name="https://ci.appveyor.com/api/projects/status/kd7f3yftf7unxlsx?svg=true" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/github/isaacs/node-glob?branch=master"><image type="html" name="https://coveralls.io/repos/isaacs/node-glob/badge.svg?branch=master&amp;service=github" alt="Coverage Status" inline="yes"></image>
+</ulink></para>
+<para>This is a glob implementation in JavaScript. It uses the <computeroutput>minimatch</computeroutput> library to do its matching.</para>
+<para><image type="html" name="logo/glob.png" alt="a fun cartoon logo made of glob characters" inline="yes"></image>
+</para>
+<sect1 id="md_backend_2node__modules_2glob_2_r_e_a_d_m_e_1autotoc_md1416">
+<title>Usage</title><para>Install with npm</para>
+<para><programlisting><codeline><highlight class="normal">npm<sp/>i<sp/>glob</highlight></codeline>
+</programlisting></para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>glob<sp/>=<sp/>require(&quot;glob&quot;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>options<sp/>is<sp/>optional</highlight></codeline>
+<codeline><highlight class="normal">glob(&quot;**/*.js&quot;,<sp/>options,<sp/>function<sp/>(er,<sp/>files)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>files<sp/>is<sp/>an<sp/>array<sp/>of<sp/>filenames.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>If<sp/>the<sp/>`nonull`<sp/>option<sp/>is<sp/>set,<sp/>and<sp/>nothing</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>was<sp/>found,<sp/>then<sp/>files<sp/>is<sp/>[&quot;**/*.js&quot;]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>er<sp/>is<sp/>an<sp/>error<sp/>object<sp/>or<sp/>null.</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2glob_2_r_e_a_d_m_e_1autotoc_md1417">
+<title>Glob Primer</title><para>&quot;Globs&quot; are the patterns you type when you do stuff like <computeroutput>ls *.js</computeroutput> on the command line, or put <computeroutput>build/*</computeroutput> in a <computeroutput>.gitignore</computeroutput> file.</para>
+<para>Before parsing the path part patterns, braced sections are expanded into a set. Braced sections start with <computeroutput>{</computeroutput> and end with <computeroutput>}</computeroutput>, with any number of comma-delimited sections within. Braced sections may contain slash characters, so <computeroutput>a{/b/c,bcd}</computeroutput> would expand into <computeroutput>a/b/c</computeroutput> and <computeroutput>abcd</computeroutput>.</para>
+<para>The following characters have special magic meaning when used in a path portion:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>*</computeroutput> Matches 0 or more characters in a single path portion</para>
+</listitem><listitem><para><computeroutput>?</computeroutput> Matches 1 character</para>
+</listitem><listitem><para><computeroutput>[...]</computeroutput> Matches a range of characters, similar to a RegExp range. If the first character of the range is <computeroutput>!</computeroutput> or <computeroutput>^</computeroutput> then it matches any character not in the range.</para>
+</listitem><listitem><para><computeroutput>!(pattern|pattern|pattern)</computeroutput> Matches anything that does not match any of the patterns provided.</para>
+</listitem><listitem><para><computeroutput>?(pattern|pattern|pattern)</computeroutput> Matches zero or one occurrence of the patterns provided.</para>
+</listitem><listitem><para><computeroutput>+(pattern|pattern|pattern)</computeroutput> Matches one or more occurrences of the patterns provided.</para>
+</listitem><listitem><para><computeroutput>*(a|b|c)</computeroutput> Matches zero or more occurrences of the patterns provided</para>
+</listitem><listitem><para><computeroutput>@(pattern|pat*|pat?erN)</computeroutput> Matches exactly one of the patterns provided</para>
+</listitem><listitem><para><computeroutput>**</computeroutput> If a &quot;globstar&quot; is alone in a path portion, then it matches zero or more directories and subdirectories searching for matches. It does not crawl symlinked directories.</para>
+</listitem></itemizedlist>
+</para>
+<sect2 id="md_backend_2node__modules_2glob_2_r_e_a_d_m_e_1autotoc_md1418">
+<title>Dots</title><para>If a file or directory path portion has a <computeroutput>.</computeroutput> as the first character, then it will not match any glob pattern unless that pattern&apos;s corresponding path part also has a <computeroutput>.</computeroutput> as its first character.</para>
+<para>For example, the pattern <computeroutput>a/.*/c</computeroutput> would match the file at <computeroutput>a/.b/c</computeroutput>. However the pattern <computeroutput>a/*/c</computeroutput> would not, because <computeroutput>*</computeroutput> does not start with a dot character.</para>
+<para>You can make glob treat dots as normal characters by setting <computeroutput>dot:true</computeroutput> in the options.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2glob_2_r_e_a_d_m_e_1autotoc_md1419">
+<title>Basename Matching</title><para>If you set <computeroutput>matchBase:true</computeroutput> in the options, and the pattern has no slashes in it, then it will seek for any file anywhere in the tree with a matching basename. For example, <computeroutput>*.js</computeroutput> would match <computeroutput>test/simple/basic.js</computeroutput>.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2glob_2_r_e_a_d_m_e_1autotoc_md1420">
+<title>Empty Sets</title><para>If no matching files are found, then an empty array is returned. This differs from the shell, where the pattern itself is returned. For example: <verbatim>$ echo a*s*d*f
+a*s*d*f
+</verbatim> To get the bash-style behavior, set the <computeroutput>nonull:true</computeroutput> in the options.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2glob_2_r_e_a_d_m_e_1autotoc_md1421">
+<title>See Also:</title><para><itemizedlist>
+<listitem><para><computeroutput>man sh</computeroutput></para>
+</listitem><listitem><para><computeroutput>man bash</computeroutput> (Search for &quot;Pattern Matching&quot;)</para>
+</listitem><listitem><para><computeroutput>man 3 fnmatch</computeroutput></para>
+</listitem><listitem><para><computeroutput>man 5 gitignore</computeroutput></para>
+</listitem><listitem><para><ulink url="https://github.com/isaacs/minimatch">minimatch documentation</ulink></para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2glob_2_r_e_a_d_m_e_1autotoc_md1422">
+<title>glob.hasMagic(pattern, [options])</title><para>Returns <computeroutput>true</computeroutput> if there are any special characters in the pattern, and <computeroutput>false</computeroutput> otherwise.</para>
+<para>Note that the options affect the results. If <computeroutput>noext:true</computeroutput> is set in the options object, then <computeroutput>+(a|b)</computeroutput> will not be considered a magic pattern. If the pattern has a brace expansion, like <computeroutput>a/{b/c,x/y}</computeroutput> then that is considered magical, unless <computeroutput>nobrace:true</computeroutput> is set in the options.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2glob_2_r_e_a_d_m_e_1autotoc_md1423">
+<title>glob(pattern, [options], cb)</title><para><itemizedlist>
+<listitem><para><computeroutput>pattern</computeroutput> <computeroutput>{String}</computeroutput> Pattern to be matched</para>
+</listitem><listitem><para><computeroutput>options</computeroutput> <computeroutput>{Object}</computeroutput></para>
+</listitem><listitem><para><computeroutput>cb</computeroutput> <computeroutput>{Function}</computeroutput><itemizedlist>
+<listitem><para><computeroutput>err</computeroutput> <computeroutput>{Error | null}</computeroutput></para>
+</listitem><listitem><para><computeroutput>matches</computeroutput> <computeroutput>{Array&lt;String&gt;}</computeroutput> filenames found matching the pattern</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+<para>Perform an asynchronous glob search.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2glob_2_r_e_a_d_m_e_1autotoc_md1424">
+<title>glob.sync(pattern, [options])</title><para><itemizedlist>
+<listitem><para><computeroutput>pattern</computeroutput> <computeroutput>{String}</computeroutput> Pattern to be matched</para>
+</listitem><listitem><para><computeroutput>options</computeroutput> <computeroutput>{Object}</computeroutput></para>
+</listitem><listitem><para>return: <computeroutput>{Array&lt;String&gt;}</computeroutput> filenames found matching the pattern</para>
+</listitem></itemizedlist>
+</para>
+<para>Perform a synchronous glob search.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2glob_2_r_e_a_d_m_e_1autotoc_md1425">
+<title>Class: glob.Glob</title><para>Create a Glob object by instantiating the <computeroutput>glob.Glob</computeroutput> class.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>Glob<sp/>=<sp/>require(&quot;glob&quot;).Glob</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>mg<sp/>=<sp/>new<sp/>Glob(pattern,<sp/>options,<sp/>cb)</highlight></codeline>
+</programlisting></para>
+<para>It&apos;s an EventEmitter, and starts walking the filesystem to find matches immediately.</para>
+<sect2 id="md_backend_2node__modules_2glob_2_r_e_a_d_m_e_1autotoc_md1426">
+<title>new glob.Glob(pattern, [options], [cb])</title><para><itemizedlist>
+<listitem><para><computeroutput>pattern</computeroutput> <computeroutput>{String}</computeroutput> pattern to search for</para>
+</listitem><listitem><para><computeroutput>options</computeroutput> <computeroutput>{Object}</computeroutput></para>
+</listitem><listitem><para><computeroutput>cb</computeroutput> <computeroutput>{Function}</computeroutput> Called when an error occurs, or matches are found<itemizedlist>
+<listitem><para><computeroutput>err</computeroutput> <computeroutput>{Error | null}</computeroutput></para>
+</listitem><listitem><para><computeroutput>matches</computeroutput> <computeroutput>{Array&lt;String&gt;}</computeroutput> filenames found matching the pattern</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+<para>Note that if the <computeroutput>sync</computeroutput> flag is set in the options, then matches will be immediately available on the <computeroutput>g.found</computeroutput> member.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2glob_2_r_e_a_d_m_e_1autotoc_md1427">
+<title>Properties</title><para><itemizedlist>
+<listitem><para><computeroutput>minimatch</computeroutput> The minimatch object that the glob uses.</para>
+</listitem><listitem><para><computeroutput>options</computeroutput> The options object passed in.</para>
+</listitem><listitem><para><computeroutput>aborted</computeroutput> Boolean which is set to true when calling <computeroutput>abort()</computeroutput>. There is no way at this time to continue a glob search after aborting, but you can re-use the statCache to avoid having to duplicate syscalls.</para>
+</listitem><listitem><para><computeroutput>cache</computeroutput> Convenience object. Each field has the following possible values:<itemizedlist>
+<listitem><para><computeroutput>false</computeroutput> - Path does not exist</para>
+</listitem><listitem><para><computeroutput>true</computeroutput> - Path exists</para>
+</listitem><listitem><para><lsquo/>&apos;FILE<rsquo/><computeroutput>- Path exists, and is not a directory *</computeroutput>&apos;DIR&apos;<computeroutput>- Path exists, and is a directory *</computeroutput>[file, entries, ...]<computeroutput>- Path exists, is a directory, and the array value is the results of</computeroutput>fs.readdir<computeroutput> *</computeroutput>statCache<computeroutput>Cache of</computeroutput>fs.stat<computeroutput>results, to prevent statting the same path multiple times. *</computeroutput>symlinks<computeroutput>A record of which paths are symbolic links, which is relevant in resolving</computeroutput>**<computeroutput>patterns. *</computeroutput>realpathCache<computeroutput>An optional object which is passed to</computeroutput>fs.realpath` to minimize unnecessary syscalls. It is stored on the instantiated Glob object, and may be re-used.</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2glob_2_r_e_a_d_m_e_1autotoc_md1428">
+<title>Events</title><para><itemizedlist>
+<listitem><para><computeroutput>end</computeroutput> When the matching is finished, this is emitted with all the matches found. If the <computeroutput>nonull</computeroutput> option is set, and no match was found, then the <computeroutput>matches</computeroutput> list contains the original pattern. The matches are sorted, unless the <computeroutput>nosort</computeroutput> flag is set.</para>
+</listitem><listitem><para><computeroutput>match</computeroutput> Every time a match is found, this is emitted with the specific thing that matched. It is not deduplicated or resolved to a realpath.</para>
+</listitem><listitem><para><computeroutput>error</computeroutput> Emitted when an unexpected error is encountered, or whenever any fs error occurs if <computeroutput>options.strict</computeroutput> is set.</para>
+</listitem><listitem><para><computeroutput>abort</computeroutput> When <computeroutput>abort()</computeroutput> is called, this event is raised.</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2glob_2_r_e_a_d_m_e_1autotoc_md1429">
+<title>Methods</title><para><itemizedlist>
+<listitem><para><computeroutput>pause</computeroutput> Temporarily stop the search</para>
+</listitem><listitem><para><computeroutput>resume</computeroutput> Resume the search</para>
+</listitem><listitem><para><computeroutput>abort</computeroutput> Stop the search forever</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2glob_2_r_e_a_d_m_e_1autotoc_md1430">
+<title>Options</title><para>All the options that can be passed to Minimatch can also be passed to Glob to change pattern matching behavior. Also, some have been added, or have glob-specific ramifications.</para>
+<para>All options are false by default, unless otherwise noted.</para>
+<para>All options are added to the Glob object, as well.</para>
+<para>If you are running many <computeroutput>glob</computeroutput> operations, you can pass a Glob object as the <computeroutput>options</computeroutput> argument to a subsequent operation to shortcut some <computeroutput>stat</computeroutput> and <computeroutput>readdir</computeroutput> calls. At the very least, you may pass in shared <computeroutput>symlinks</computeroutput>, <computeroutput>statCache</computeroutput>, <computeroutput>realpathCache</computeroutput>, and <computeroutput>cache</computeroutput> options, so that parallel glob operations will be sped up by sharing information about the filesystem.</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>cwd</computeroutput> The current working directory in which to search. Defaults to <computeroutput>process.cwd()</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>root</computeroutput> The place where patterns starting with <computeroutput>/</computeroutput> will be mounted onto. Defaults to <computeroutput>path.resolve(options.cwd, &quot;/&quot;)</computeroutput> (<computeroutput>/</computeroutput> on Unix systems, and <computeroutput>C:\</computeroutput> or some such on Windows.)</para>
+</listitem><listitem><para><computeroutput>dot</computeroutput> Include <computeroutput>.dot</computeroutput> files in normal matches and <computeroutput>globstar</computeroutput> matches. Note that an explicit dot in a portion of the pattern will always match dot files.</para>
+</listitem><listitem><para><computeroutput>nomount</computeroutput> By default, a pattern starting with a forward-slash will be &quot;mounted&quot; onto the root setting, so that a valid filesystem path is returned. Set this flag to disable that behavior.</para>
+</listitem><listitem><para><computeroutput>mark</computeroutput> Add a <computeroutput>/</computeroutput> character to directory matches. Note that this requires additional stat calls.</para>
+</listitem><listitem><para><computeroutput>nosort</computeroutput> Don&apos;t sort the results.</para>
+</listitem><listitem><para><computeroutput>stat</computeroutput> Set to true to stat <emphasis>all</emphasis> results. This reduces performance somewhat, and is completely unnecessary, unless <computeroutput>readdir</computeroutput> is presumed to be an untrustworthy indicator of file existence.</para>
+</listitem><listitem><para><computeroutput>silent</computeroutput> When an unusual error is encountered when attempting to read a directory, a warning will be printed to stderr. Set the <computeroutput>silent</computeroutput> option to true to suppress these warnings.</para>
+</listitem><listitem><para><computeroutput>strict</computeroutput> When an unusual error is encountered when attempting to read a directory, the process will just continue on in search of other matches. Set the <computeroutput>strict</computeroutput> option to raise an error in these cases.</para>
+</listitem><listitem><para><computeroutput>cache</computeroutput> See <computeroutput>cache</computeroutput> property above. Pass in a previously generated cache object to save some fs calls.</para>
+</listitem><listitem><para><computeroutput>statCache</computeroutput> A cache of results of filesystem information, to prevent unnecessary stat calls. While it should not normally be necessary to set this, you may pass the statCache from one glob() call to the options object of another, if you know that the filesystem will not change between calls. (See &quot;Race Conditions&quot; below.)</para>
+</listitem><listitem><para><computeroutput>symlinks</computeroutput> A cache of known symbolic links. You may pass in a previously generated <computeroutput>symlinks</computeroutput> object to save <computeroutput>lstat</computeroutput> calls when resolving <computeroutput>**</computeroutput> matches.</para>
+</listitem><listitem><para><computeroutput>sync</computeroutput> DEPRECATED: use <computeroutput>glob.sync(pattern, opts)</computeroutput> instead.</para>
+</listitem><listitem><para><computeroutput>nounique</computeroutput> In some cases, brace-expanded patterns can result in the same file showing up multiple times in the result set. By default, this implementation prevents duplicates in the result set. Set this flag to disable that behavior.</para>
+</listitem><listitem><para><computeroutput>nonull</computeroutput> Set to never return an empty set, instead returning a set containing the pattern itself. This is the default in glob(3).</para>
+</listitem><listitem><para><computeroutput>debug</computeroutput> Set to enable debug logging in minimatch and glob.</para>
+</listitem><listitem><para><computeroutput>nobrace</computeroutput> Do not expand <computeroutput>{a,b}</computeroutput> and <computeroutput>{1..3}</computeroutput> brace sets.</para>
+</listitem><listitem><para><computeroutput>noglobstar</computeroutput> Do not match <computeroutput>**</computeroutput> against multiple filenames. (Ie, treat it as a normal <computeroutput>*</computeroutput> instead.)</para>
+</listitem><listitem><para><computeroutput>noext</computeroutput> Do not match <computeroutput>+(a|b)</computeroutput> &quot;extglob&quot; patterns.</para>
+</listitem><listitem><para><computeroutput>nocase</computeroutput> Perform a case-insensitive match. Note: on case-insensitive filesystems, non-magic patterns will match by default, since <computeroutput>stat</computeroutput> and <computeroutput>readdir</computeroutput> will not raise errors.</para>
+</listitem><listitem><para><computeroutput>matchBase</computeroutput> Perform a basename-only match if the pattern does not contain any slash characters. That is, <computeroutput>*.js</computeroutput> would be treated as equivalent to <computeroutput>**/*.js</computeroutput>, matching all js files in all directories.</para>
+</listitem><listitem><para><computeroutput>nodir</computeroutput> Do not match directories, only files. (Note: to match <emphasis>only</emphasis> directories, simply put a <computeroutput>/</computeroutput> at the end of the pattern.)</para>
+</listitem><listitem><para><computeroutput>ignore</computeroutput> Add a pattern or an array of glob patterns to exclude matches. Note: <computeroutput>ignore</computeroutput> patterns are <emphasis>always</emphasis> in <computeroutput>dot:true</computeroutput> mode, regardless of any other settings.</para>
+</listitem><listitem><para><computeroutput>follow</computeroutput> Follow symlinked directories when expanding <computeroutput>**</computeroutput> patterns. Note that this can result in a lot of duplicate references in the presence of cyclic links.</para>
+</listitem><listitem><para><computeroutput>realpath</computeroutput> Set to true to call <computeroutput>fs.realpath</computeroutput> on all of the results. In the case of a symlink that cannot be resolved, the full absolute path to the matched entry is returned (though it will usually be a broken symlink)</para>
+</listitem><listitem><para><computeroutput>absolute</computeroutput> Set to true to always receive absolute paths for matched files. Unlike <computeroutput>realpath</computeroutput>, this also affects the values returned in the <computeroutput>match</computeroutput> event.</para>
+</listitem><listitem><para><computeroutput>fs</computeroutput> File-system object with Node&apos;s <computeroutput>fs</computeroutput> API. By default, the built-in <computeroutput>fs</computeroutput> module will be used. Set to a volume provided by a library like <computeroutput>memfs</computeroutput> to avoid using the &quot;real&quot; file-system.</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2glob_2_r_e_a_d_m_e_1autotoc_md1431">
+<title>Comparisons to other fnmatch/glob implementations</title><para>While strict compliance with the existing standards is a worthwhile goal, some discrepancies exist between node-glob and other implementations, and are intentional.</para>
+<para>The double-star character <computeroutput>**</computeroutput> is supported by default, unless the <computeroutput>noglobstar</computeroutput> flag is set. This is supported in the manner of bsdglob and bash 4.3, where <computeroutput>**</computeroutput> only has special significance if it is the only thing in a path part. That is, <computeroutput>a/**/b</computeroutput> will match <computeroutput>a/x/y/b</computeroutput>, but <computeroutput>a/**b</computeroutput> will not.</para>
+<para>Note that symlinked directories are not crawled as part of a <computeroutput>**</computeroutput>, though their contents may match against subsequent portions of the pattern. This prevents infinite loops and duplicates and the like.</para>
+<para>If an escaped pattern has no matches, and the <computeroutput>nonull</computeroutput> flag is set, then glob returns the pattern as-provided, rather than interpreting the character escapes. For example, <computeroutput>glob.match([], &quot;\\*a\\?&quot;)</computeroutput> will return <computeroutput>&quot;\\*a\\?&quot;</computeroutput> rather than <computeroutput>&quot;*a?&quot;</computeroutput>. This is akin to setting the <computeroutput>nullglob</computeroutput> option in bash, except that it does not resolve escaped pattern characters.</para>
+<para>If brace expansion is not disabled, then it is performed before any other interpretation of the glob pattern. Thus, a pattern like <computeroutput>+(a|{b),c)}</computeroutput>, which would not be valid in bash or zsh, is expanded <bold>first</bold> into the set of <computeroutput>+(a|b)</computeroutput> and <computeroutput>+(a|c)</computeroutput>, and those patterns are checked for validity. Since those two are valid, matching proceeds.</para>
+<sect2 id="md_backend_2node__modules_2glob_2_r_e_a_d_m_e_1autotoc_md1432">
+<title>Comments and Negation</title><para>Previously, this module let you mark a pattern as a &quot;comment&quot; if it started with a <computeroutput>#</computeroutput> character, or a &quot;negated&quot; pattern if it started with a <computeroutput>!</computeroutput> character.</para>
+<para>These options were deprecated in version 5, and removed in version 6.</para>
+<para>To specify things that should not match, use the <computeroutput>ignore</computeroutput> option.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2glob_2_r_e_a_d_m_e_1autotoc_md1433">
+<title>Windows</title><para><bold>Please only use forward-slashes in glob expressions.</bold></para>
+<para>Though windows uses either <computeroutput>/</computeroutput> or <computeroutput>\</computeroutput> as its path separator, only <computeroutput>/</computeroutput> characters are used by this glob implementation. You must use forward-slashes <bold>only</bold> in glob expressions. Back-slashes will always be interpreted as escape characters, not path separators.</para>
+<para>Results from absolute patterns such as <computeroutput>/foo/*</computeroutput> are mounted onto the root setting using <computeroutput>path.join</computeroutput>. On windows, this will by default result in <computeroutput>/foo/*</computeroutput> matching <computeroutput>C:\foo\bar.txt</computeroutput>.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2glob_2_r_e_a_d_m_e_1autotoc_md1434">
+<title>Race Conditions</title><para>Glob searching, by its very nature, is susceptible to race conditions, since it relies on directory walking and such.</para>
+<para>As a result, it is possible that a file that exists when glob looks for it may have been deleted or modified by the time it returns the result.</para>
+<para>As part of its internal implementation, this program caches all stat and readdir calls that it makes, in order to cut down on system overhead. However, this also makes it even more susceptible to races, especially if the cache or statCache objects are reused between glob calls.</para>
+<para>Users are thus advised not to use a glob result as a guarantee of filesystem state in the face of rapid changes. For the vast majority of operations, this is never a problem.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2glob_2_r_e_a_d_m_e_1autotoc_md1435">
+<title>Glob Logo</title><para>Glob&apos;s logo was created by <ulink url="http://tanyabrassie.com/">Tanya Brassie</ulink>. Logo files can be found <ulink url="https://github.com/isaacs/node-glob/tree/master/logo">here</ulink>.</para>
+<para>The logo is licensed under a <ulink url="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</ulink>.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2glob_2_r_e_a_d_m_e_1autotoc_md1436">
+<title>Contributing</title><para>Any change to behavior (including bugfixes) must come with a test.</para>
+<para>Patches that fail tests or reduce performance will be rejected.</para>
+<para><programlisting><codeline><highlight class="normal">#<sp/>to<sp/>run<sp/>tests</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>test</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>to<sp/>re-generate<sp/>test<sp/>fixtures</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>run<sp/>test-regen</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>to<sp/>benchmark<sp/>against<sp/>bash/zsh</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>run<sp/>bench</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>to<sp/>profile<sp/>javascript</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>run<sp/>prof</highlight></codeline>
+</programlisting></para>
+<para><image type="html" name="oh-my-glob.gif" inline="yes"></image>
+ </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/glob/README.md"/>
+  </compounddef>
+</doxygen>

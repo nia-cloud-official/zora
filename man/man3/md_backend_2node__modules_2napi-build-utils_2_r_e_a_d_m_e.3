@@ -1,0 +1,52 @@
+.TH "md_backend_2node__modules_2napi-build-utils_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2napi-build-utils_2_r_e_a_d_m_e \- napi-build-utils 
+.PP
+ \fR\fP  \fR\fP \fR\fP \fR\fP
+.PP
+A set of utilities to assist developers of tools that build \fRN-API\fP native add-ons\&.
+.SH "Background"
+.PP
+This module is targeted to developers creating tools that build N-API native add-ons\&.
+.PP
+It implements a set of functions that aid in determining the N-API version supported by the currently running Node instance and the set of N-API versions against which the N-API native add-on is designed to be built\&. Other functions determine whether a particular N-API version can be built and can issue console warnings for unsupported N-API versions\&.
+.PP
+Unlike the modules this code is designed to facilitate building, this module is written entirely in JavaScript\&.
+.SH "Quick start"
+.PP
+.PP
+.nf
+$ npm install napi\-build\-utils
+.fi
+.PP
+.PP
+The module exports a set of functions documented \fBhere\fP\&. For example:
+.PP
+.PP
+.nf
+var napiBuildUtils = require('napi\-build\-utils');
+var napiVersion = napiBuildUtils\&.getNapiVersion(); // N\-API version supported by Node, or undefined\&.
+.fi
+.PP
+.SH "Declaring supported N-API versions"
+.PP
+Native modules that are designed to work with \fRN-API\fP must explicitly declare the N-API version(s) against which they are coded to build\&. This is accomplished by including a \fRbinary\&.napi_versions\fP property in the module's \fRpackage\&.json\fP file\&. For example:
+.PP
+.PP
+.nf
+"binary": {
+  "napi_versions": [2,3]
+}
+.fi
+.PP
+.PP
+In the absence of a need to compile against a specific N-API version, the value \fR3\fP is a good choice as this is the N-API version that was supported when N-API left experimental status\&.
+.PP
+Modules that are built against a specific N-API version will continue to operate indefinitely, even as later versions of N-API are introduced\&.
+.SH "Support"
+.PP
+If you run into problems or limitations, please file an issue and we'll take a look\&. Pull requests are also welcome\&. 
+.br
+ 

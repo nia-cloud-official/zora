@@ -1,0 +1,92 @@
+\chapter{yallist}
+\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e}\index{yallist@{yallist}}
+\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md3993}%
+\Hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md3993}%
+ Yet Another Linked List
+
+There are many doubly-\/linked list implementations like it, but this one is mine.
+
+For when an array would be too big, and a Map can\textquotesingle{}t be iterated in reverse order.
+
+\href{https://travis-ci.org/isaacs/yallist}{\texttt{ }} \href{https://coveralls.io/github/isaacs/yallist}{\texttt{ }}\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md3994}{}\doxysection{\texorpdfstring{basic usage}{basic usage}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md3994}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ yallist\ =\ require('yallist')}
+\DoxyCodeLine{var\ myList\ =\ yallist.create([1,\ 2,\ 3])}
+\DoxyCodeLine{myList.push('foo')}
+\DoxyCodeLine{myList.unshift('bar')}
+\DoxyCodeLine{//\ of\ course\ pop()\ and\ shift()\ are\ there,\ too}
+\DoxyCodeLine{console.log(myList.toArray())\ //\ ['bar',\ 1,\ 2,\ 3,\ 'foo']}
+\DoxyCodeLine{myList.forEach(function\ (k)\ \{}
+\DoxyCodeLine{\ \ //\ walk\ the\ list\ head\ to\ tail}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{myList.forEachReverse(function\ (k,\ index,\ list)\ \{}
+\DoxyCodeLine{\ \ //\ walk\ the\ list\ tail\ to\ head}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{var\ myDoubledList\ =\ myList.map(function\ (k)\ \{}
+\DoxyCodeLine{\ \ return\ k\ +\ k}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{//\ now\ myDoubledList\ contains\ ['barbar',\ 2,\ 4,\ 6,\ 'foofoo']}
+\DoxyCodeLine{//\ mapReverse\ is\ also\ a\ thing}
+\DoxyCodeLine{var\ myDoubledListReverse\ =\ myList.mapReverse(function\ (k)\ \{}
+\DoxyCodeLine{\ \ return\ k\ +\ k}
+\DoxyCodeLine{\})\ //\ ['foofoo',\ 6,\ 4,\ 2,\ 'barbar']}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ reduced\ =\ myList.reduce(function\ (set,\ entry)\ \{}
+\DoxyCodeLine{\ \ set\ +=\ entry}
+\DoxyCodeLine{\ \ return\ set}
+\DoxyCodeLine{\},\ 'start')}
+\DoxyCodeLine{console.log(reduced)\ //\ 'startfoo123bar'}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md3995}{}\doxysection{\texorpdfstring{api}{api}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md3995}
+The whole API is considered "{}public"{}.
+
+Functions with the same name as an Array method work more or less the same way.
+
+There\textquotesingle{}s reverse versions of most things because that\textquotesingle{}s the point.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md3996}{}\doxysubsection{\texorpdfstring{Yallist}{Yallist}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md3996}
+Default export, the class that holds and manages a list.
+
+Call it with either a for\+Each-\/able (like an array) or a set of arguments, to initialize the list.
+
+The Array-\/ish methods all act like you\textquotesingle{}d expect. No magic length, though, so if you change that it won\textquotesingle{}t automatically prune or add empty spots.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md3997}{}\doxysubsection{\texorpdfstring{Yallist.\+create(..)}{Yallist.\+create(..)}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md3997}
+Alias for Yallist function. Some people like factories.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md3998}{}\doxysubsubsection{\texorpdfstring{yallist.\+head}{yallist.\+head}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md3998}
+The first node in the list\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md3999}{}\doxysubsubsection{\texorpdfstring{yallist.\+tail}{yallist.\+tail}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md3999}
+The last node in the list\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4000}{}\doxysubsubsection{\texorpdfstring{yallist.\+length}{yallist.\+length}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4000}
+The number of nodes in the list. (Change this at your peril. It is not magic like Array length.)\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4001}{}\doxysubsubsection{\texorpdfstring{yallist.\+to\+Array()}{yallist.\+to\+Array()}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4001}
+Convert the list to an array.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4002}{}\doxysubsubsection{\texorpdfstring{yallist.\+for\+Each(fn, \mbox{[}thisp\mbox{]})}{yallist.\+for\+Each(fn, \mbox{[}thisp\mbox{]})}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4002}
+Call a function on each item in the list.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4003}{}\doxysubsubsection{\texorpdfstring{yallist.\+for\+Each\+Reverse(fn, \mbox{[}thisp\mbox{]})}{yallist.\+for\+Each\+Reverse(fn, \mbox{[}thisp\mbox{]})}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4003}
+Call a function on each item in the list, in reverse order.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4004}{}\doxysubsubsection{\texorpdfstring{yallist.\+get(n)}{yallist.\+get(n)}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4004}
+Get the data at position {\ttfamily n} in the list. If you use this a lot, probably better off just using an Array.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4005}{}\doxysubsubsection{\texorpdfstring{yallist.\+get\+Reverse(n)}{yallist.\+get\+Reverse(n)}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4005}
+Get the data at position {\ttfamily n}, counting from the tail.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4006}{}\doxysubsubsection{\texorpdfstring{yallist.\+map(fn, thisp)}{yallist.\+map(fn, thisp)}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4006}
+Create a new Yallist with the result of calling the function on each item.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4007}{}\doxysubsubsection{\texorpdfstring{yallist.\+map\+Reverse(fn, thisp)}{yallist.\+map\+Reverse(fn, thisp)}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4007}
+Same as {\ttfamily map}, but in reverse.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4008}{}\doxysubsubsection{\texorpdfstring{yallist.\+pop()}{yallist.\+pop()}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4008}
+Get the data from the list tail, and remove the tail from the list.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4009}{}\doxysubsubsection{\texorpdfstring{yallist.\+push(item, ...)}{yallist.\+push(item, ...)}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4009}
+Insert one or more items to the tail of the list.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4010}{}\doxysubsubsection{\texorpdfstring{yallist.\+reduce(fn, initial\+Value)}{yallist.\+reduce(fn, initial\+Value)}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4010}
+Like Array.\+reduce.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4011}{}\doxysubsubsection{\texorpdfstring{yallist.\+reduce\+Reverse}{yallist.\+reduce\+Reverse}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4011}
+Like Array.\+reduce, but in reverse.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4012}{}\doxysubsubsection{\texorpdfstring{yallist.\+reverse}{yallist.\+reverse}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4012}
+Reverse the list in place.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4013}{}\doxysubsubsection{\texorpdfstring{yallist.\+shift()}{yallist.\+shift()}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4013}
+Get the data from the list head, and remove the head from the list.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4014}{}\doxysubsubsection{\texorpdfstring{yallist.\+slice(\mbox{[}from\mbox{]}, \mbox{[}to\mbox{]})}{yallist.\+slice(\mbox{[}from\mbox{]}, \mbox{[}to\mbox{]})}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4014}
+Just like Array.\+slice, but returns a new Yallist.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4015}{}\doxysubsubsection{\texorpdfstring{yallist.\+slice\+Reverse(\mbox{[}from\mbox{]}, \mbox{[}to\mbox{]})}{yallist.\+slice\+Reverse(\mbox{[}from\mbox{]}, \mbox{[}to\mbox{]})}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4015}
+Just like yallist.\+slice, but the result is returned in reverse.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4016}{}\doxysubsubsection{\texorpdfstring{yallist.\+to\+Array()}{yallist.\+to\+Array()}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4016}
+Create an array representation of the list.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4017}{}\doxysubsubsection{\texorpdfstring{yallist.\+to\+Array\+Reverse()}{yallist.\+to\+Array\+Reverse()}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4017}
+Create a reversed array representation of the list.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4018}{}\doxysubsubsection{\texorpdfstring{yallist.\+unshift(item, ...)}{yallist.\+unshift(item, ...)}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4018}
+Insert one or more items to the head of the list.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4019}{}\doxysubsubsection{\texorpdfstring{yallist.\+unshift\+Node(node)}{yallist.\+unshift\+Node(node)}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4019}
+Move a Node object to the front of the list. (That is, pull it out of wherever it lives, and make it the new head.)
+
+If the node belongs to a different list, then that list will remove it first.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4020}{}\doxysubsubsection{\texorpdfstring{yallist.\+push\+Node(node)}{yallist.\+push\+Node(node)}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4020}
+Move a Node object to the end of the list. (That is, pull it out of wherever it lives, and make it the new tail.)
+
+If the node belongs to a list already, then that list will remove it first.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4021}{}\doxysubsubsection{\texorpdfstring{yallist.\+remove\+Node(node)}{yallist.\+remove\+Node(node)}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4021}
+Remove a node from the list, preserving referential integrity of head and tail and other nodes.
+
+Will throw an error if you try to have a list remove a node that doesn\textquotesingle{}t belong to it.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4022}{}\doxysubsection{\texorpdfstring{Yallist.\+Node}{Yallist.\+Node}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4022}
+The class that holds the data and is actually the list.
+
+Call with {\ttfamily var n = new Node(value, previous\+Node, next\+Node)}
+
+Note that if you do direct operations on Nodes themselves, it\textquotesingle{}s very easy to get into weird states where the list is broken. Be careful \+:)\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4023}{}\doxysubsubsection{\texorpdfstring{node.\+next}{node.\+next}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4023}
+The next node in the list.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4024}{}\doxysubsubsection{\texorpdfstring{node.\+prev}{node.\+prev}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4024}
+The previous node in the list.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4025}{}\doxysubsubsection{\texorpdfstring{node.\+value}{node.\+value}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4025}
+The data the node contains.\hypertarget{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4026}{}\doxysubsubsection{\texorpdfstring{node.\+list}{node.\+list}}\label{md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_autotoc_md4026}
+The list to which this node belongs. (Null if it does not belong to any list.) 

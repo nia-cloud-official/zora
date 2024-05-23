@@ -1,0 +1,27 @@
+\chapter{has-\/unicode}
+\hypertarget{md_backend_2node__modules_2has-unicode_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2has-unicode_2_r_e_a_d_m_e}\index{has-\/unicode@{has-\/unicode}}
+Try to guess if your terminal supports unicode
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ hasUnicode\ =\ require("{}has-\/unicode"{})}
+\DoxyCodeLine{}
+\DoxyCodeLine{if\ (hasUnicode())\ \{}
+\DoxyCodeLine{\ \ //\ the\ terminal\ probably\ has\ unicode\ support}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ hasUnicode\ =\ require("{}has-\/unicode"{}).tryHarder}
+\DoxyCodeLine{hasUnicode(function(unicodeSupported)\ \{}
+\DoxyCodeLine{\ \ if\ (unicodeSupported)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ the\ terminal\ probably\ has\ unicode\ support}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2has-unicode_2_r_e_a_d_m_e_autotoc_md1492}{}\doxysection{\texorpdfstring{Detecting Unicode}{Detecting Unicode}}\label{md_backend_2node__modules_2has-unicode_2_r_e_a_d_m_e_autotoc_md1492}
+What we actually detect is UTF-\/8 support, as that\textquotesingle{}s what Node itself supports. If you have a UTF-\/16 locale then you won\textquotesingle{}t be detected as unicode capable.\hypertarget{md_backend_2node__modules_2has-unicode_2_r_e_a_d_m_e_autotoc_md1493}{}\doxysubsection{\texorpdfstring{Windows}{Windows}}\label{md_backend_2node__modules_2has-unicode_2_r_e_a_d_m_e_autotoc_md1493}
+Since at least Windows 7, {\ttfamily cmd} and {\ttfamily powershell} have been unicode capable, but unfortunately even then it\textquotesingle{}s not guaranteed. In many localizations it still uses legacy code pages and there\textquotesingle{}s no facility short of running programs or linking C++ that will let us detect this. As such, we report any Windows installation as NOT unicode capable, and recommend that you encourage your users to override this via config.\hypertarget{md_backend_2node__modules_2has-unicode_2_r_e_a_d_m_e_autotoc_md1494}{}\doxysubsection{\texorpdfstring{Unix Like Operating Systems}{Unix Like Operating Systems}}\label{md_backend_2node__modules_2has-unicode_2_r_e_a_d_m_e_autotoc_md1494}
+We look at the environment variables {\ttfamily LC\+\_\+\+ALL}, {\ttfamily LC\+\_\+\+CTYPE}, and {\ttfamily LANG} in that order. For {\ttfamily LC\+\_\+\+ALL} and {\ttfamily LANG}, it looks for {\ttfamily .UTF-\/8} in the value. For {\ttfamily LC\+\_\+\+CTYPE} it looks to see if the value is {\ttfamily UTF-\/8}. This is sufficient for most POSIX systems. While locale data can be put in {\ttfamily /etc/locale.conf} as well, AFAIK it\textquotesingle{}s always copied into the environment. 

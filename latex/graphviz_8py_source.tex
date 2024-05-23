@@ -1,0 +1,108 @@
+\doxysection{graphviz.\+py}
+\hypertarget{graphviz_8py_source}{}\label{graphviz_8py_source}\index{backend/node\_modules/node-\/gyp/gyp/tools/graphviz.py@{backend/node\_modules/node-\/gyp/gyp/tools/graphviz.py}}
+\mbox{\hyperlink{graphviz_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00001}\mbox{\hyperlink{namespacegraphviz}{00001}}\ \textcolor{comment}{\#!/usr/bin/env\ python3}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00003}00003\ \textcolor{comment}{\#\ Copyright\ (c)\ 2011\ Google\ Inc.\ All\ rights\ reserved.}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00004}00004\ \textcolor{comment}{\#\ Use\ of\ this\ source\ code\ is\ governed\ by\ a\ BSD-\/style\ license\ that\ can\ be}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00005}00005\ \textcolor{comment}{\#\ found\ in\ the\ LICENSE\ file.}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00007}00007\ \textcolor{stringliteral}{"{}"{}"{}Using\ the\ JSON\ dumped\ by\ the\ dump-\/dependency-\/json\ generator,}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00008}00008\ \textcolor{stringliteral}{generate\ input\ suitable\ for\ graphviz\ to\ render\ a\ dependency\ graph\ of}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00009}00009\ \textcolor{stringliteral}{targets."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00012}00012\ \textcolor{keyword}{import}\ collections}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00013}00013\ \textcolor{keyword}{import}\ json}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00014}00014\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00017}\mbox{\hyperlink{namespacegraphviz_a1d3fb644f75be6a33f57903a59e2d11e}{00017}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegraphviz_a1d3fb644f75be6a33f57903a59e2d11e}{ParseTarget}}(target):}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00018}00018\ \ \ \ \ target,\ \_,\ suffix\ =\ target.partition(\textcolor{stringliteral}{"{}\#"{}})}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00019}00019\ \ \ \ \ filename,\ \_,\ target\ =\ target.partition(\textcolor{stringliteral}{"{}:"{}})}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00020}00020\ \ \ \ \ \textcolor{keywordflow}{return}\ filename,\ target,\ suffix}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00023}\mbox{\hyperlink{namespacegraphviz_a1d335ef40f5ccd4902d85cc679eb55c0}{00023}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegraphviz_a1d335ef40f5ccd4902d85cc679eb55c0}{LoadEdges}}(filename,\ targets):}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00024}00024\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Load\ the\ edges\ map\ from\ the\ dump\ file,\ and\ filter\ it\ to\ only}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00025}00025\ \textcolor{stringliteral}{\ \ show\ targets\ in\ |targets|\ and\ their\ depedendents."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00027}00027\ \ \ \ \ file\ =\ open(\textcolor{stringliteral}{"{}dump.json"{}})}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00028}00028\ \ \ \ \ edges\ =\ json.load(file)}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00029}00029\ \ \ \ \ file.close()}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00031}00031\ \ \ \ \ \textcolor{comment}{\#\ Copy\ out\ only\ the\ edges\ we're\ interested\ in\ from\ the\ full\ edge\ list.}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00032}00032\ \ \ \ \ target\_edges\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00033}00033\ \ \ \ \ to\_visit\ =\ targets[:]}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00034}00034\ \ \ \ \ \textcolor{keywordflow}{while}\ to\_visit:}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00035}00035\ \ \ \ \ \ \ \ \ src\ =\ to\_visit.pop()}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00036}00036\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ src\ \textcolor{keywordflow}{in}\ target\_edges:}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00037}00037\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ target\_edges[src]\ =\ edges[src]}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ to\_visit.extend(edges[src])}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00041}00041\ \ \ \ \ \textcolor{keywordflow}{return}\ target\_edges}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00044}\mbox{\hyperlink{namespacegraphviz_a92a1eb6420d3729198dd4e039101a358}{00044}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegraphviz_a92a1eb6420d3729198dd4e039101a358}{WriteGraph}}(edges):}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00045}00045\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Print\ a\ graphviz\ graph\ to\ stdout.}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00046}00046\ \textcolor{stringliteral}{\ \ |edges|\ is\ a\ map\ of\ target\ to\ a\ list\ of\ other\ targets\ it\ depends\ on."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00048}00048\ \ \ \ \ \textcolor{comment}{\#\ Bucket\ targets\ by\ file.}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00049}00049\ \ \ \ \ files\ =\ collections.defaultdict(list)}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00050}00050\ \ \ \ \ \textcolor{keywordflow}{for}\ src,\ dst\ \textcolor{keywordflow}{in}\ edges.items():}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ build\_file,\ target\_name,\ toolset\ =\ \mbox{\hyperlink{namespacegraphviz_a1d3fb644f75be6a33f57903a59e2d11e}{ParseTarget}}(src)}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ files[build\_file].append(src)}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00054}00054\ \ \ \ \ print(\textcolor{stringliteral}{"{}digraph\ D\ \{"{}})}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00055}00055\ \ \ \ \ print(\textcolor{stringliteral}{"{}\ \ fontsize=8"{}})\ \ \textcolor{comment}{\#\ Used\ by\ subgraphs.}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00056}00056\ \ \ \ \ print(\textcolor{stringliteral}{"{}\ \ node\ [fontsize=8]"{}})}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00058}00058\ \ \ \ \ \textcolor{comment}{\#\ Output\ nodes\ by\ file.\ \ We\ must\ first\ write\ out\ each\ node\ within}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00059}00059\ \ \ \ \ \textcolor{comment}{\#\ its\ file\ grouping\ before\ writing\ out\ any\ edges\ that\ may\ refer}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00060}00060\ \ \ \ \ \textcolor{comment}{\#\ to\ those\ nodes.}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00061}00061\ \ \ \ \ \textcolor{keywordflow}{for}\ filename,\ targets\ \textcolor{keywordflow}{in}\ files.items():}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ len(targets)\ ==\ 1:}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ there's\ only\ one\ node\ for\ this\ file,\ simplify}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ the\ display\ by\ making\ it\ a\ box\ without\ an\ internal\ node.}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ target\ =\ targets[0]}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ build\_file,\ target\_name,\ toolset\ =\ \mbox{\hyperlink{namespacegraphviz_a1d3fb644f75be6a33f57903a59e2d11e}{ParseTarget}}(target)}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ print(}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{'\ \ "{}\{target\}"{}\ [shape=box,\ label="{}\{filename\}\(\backslash\)\(\backslash\)n\{target\_name\}"{}]'}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Group\ multiple\ nodes\ together\ in\ a\ subgraph.}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ print(\textcolor{stringliteral}{'\ \ subgraph\ "{}cluster\_\%s"{}\ \{'}\ \%\ filename)}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ print(\textcolor{stringliteral}{'\ \ \ \ label\ =\ "{}\%s"{}'}\ \%\ filename)}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ target\ \textcolor{keywordflow}{in}\ targets:}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ build\_file,\ target\_name,\ toolset\ =\ \mbox{\hyperlink{namespacegraphviz_a1d3fb644f75be6a33f57903a59e2d11e}{ParseTarget}}(target)}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ print(f\textcolor{stringliteral}{'\ \ \ \ "{}\{target\}"{}\ [label="{}\{target\_name\}"{}]'})}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ print(\textcolor{stringliteral}{"{}\ \ \}"{}})}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00079}00079\ \ \ \ \ \textcolor{comment}{\#\ Now\ that\ we've\ placed\ all\ the\ nodes\ within\ subgraphs,\ output\ all}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00080}00080\ \ \ \ \ \textcolor{comment}{\#\ the\ edges\ between\ nodes.}}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00081}00081\ \ \ \ \ \textcolor{keywordflow}{for}\ src,\ dsts\ \textcolor{keywordflow}{in}\ edges.items():}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ dst\ \textcolor{keywordflow}{in}\ dsts:}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ print(f\textcolor{stringliteral}{'\ \ "{}\{src\}"{}\ -\/>\ "{}\{dst\}"{}'})}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00085}00085\ \ \ \ \ print(\textcolor{stringliteral}{"{}\}"{}})}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00087}00087\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00088}\mbox{\hyperlink{namespacegraphviz_a863171c262da3705a10ff441eb19fd5c}{00088}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegraphviz_a863171c262da3705a10ff441eb19fd5c}{main}}():}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00089}00089\ \ \ \ \ \textcolor{keywordflow}{if}\ len(sys.argv)\ <\ 2:}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ print(\_\_doc\_\_,\ file=sys.stderr)}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ print(file=sys.stderr)}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ print(\textcolor{stringliteral}{"{}usage:\ \%s\ target1\ target2..."{}}\ \%\ (sys.argv[0]),\ file=sys.stderr)}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00095}00095\ \ \ \ \ edges\ =\ \mbox{\hyperlink{namespacegraphviz_a1d335ef40f5ccd4902d85cc679eb55c0}{LoadEdges}}(\textcolor{stringliteral}{"{}dump.json"{}},\ sys.argv[1:])}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00097}00097\ \ \ \ \ \mbox{\hyperlink{namespacegraphviz_a92a1eb6420d3729198dd4e039101a358}{WriteGraph}}(edges)}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00098}00098\ \ \ \ \ \textcolor{keywordflow}{return}\ 0}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00101}00101\ \textcolor{keywordflow}{if}\ \_\_name\_\_\ ==\ \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
+\DoxyCodeLine{\Hypertarget{graphviz_8py_source_l00102}00102\ \ \ \ \ sys.exit(\mbox{\hyperlink{namespacegraphviz_a863171c262da3705a10ff441eb19fd5c}{main}}())}
+
+\end{DoxyCode}

@@ -1,0 +1,447 @@
+.TH "md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3 \- smart-buffer \fR\fP \fR\fP 
+.PP
+smart-buffer is a light Buffer wrapper that takes away the need to keep track of what position to read and write data to and from the underlying Buffer\&. It also adds null terminating string operations and \fBgrows\fP as you add more data\&.
+.PP
+.SS "What it's useful for:"
+I created smart-buffer because I wanted to simplify the process of using Buffer for building and reading network packets to send over a socket\&. Rather than having to keep track of which position I need to write a UInt16 to after adding a string of variable length, I simply don't have to\&.
+.PP
+Key Features:
+.IP "\(bu" 2
+Proxies all of the Buffer write and read functions\&.
+.IP "\(bu" 2
+Keeps track of read and write positions for you\&.
+.IP "\(bu" 2
+Grows the internal Buffer as you add data to it\&.
+.IP "\(bu" 2
+Useful string operations\&. (Null terminating strings)
+.IP "\(bu" 2
+Allows for inserting values at specific points in the internal Buffer\&.
+.IP "\(bu" 2
+Built in TypeScript
+.IP "\(bu" 2
+Type Definitions Provided
+.PP
+.PP
+Requirements:
+.IP "\(bu" 2
+Node v4\&.0+ is supported at this time\&. (Versions prior to 2\&.0 will work on node 0\&.10)
+.PP
+.SS "Note:"
+smart-buffer can be used for writing to an underlying buffer as well as reading from it\&. It however does not function correctly if you're mixing both read and write operations with each other\&.
+.SH "Breaking Changes with 2\&.0"
+.PP
+The latest version (2\&.0+) is written in TypeScript, and are compiled to ES6 Javascript\&. This means the earliest Node\&.js it supports will be 4\&.x (in strict mode\&.) If you're using version 6 and above it will work without any issues\&. From an API standpoint, 2\&.0 is backwards compatible\&. The only difference is SmartBuffer is not exported directly as the root module\&.
+.SH "Breaking Changes with 3\&.0"
+.PP
+Starting with 3\&.0, if any of the readIntXXXX() methods are called and the requested data is larger than the bounds of the internally managed valid buffer data, an exception will now be thrown\&.
+.SH "Installing:"
+.PP
+\fRnpm install smart-buffer\fP
+.PP
+or
+.PP
+\fRyarn add smart-buffer\fP
+.PP
+Note: The published NPM package includes the built javascript library\&. If you cloned this repo and wish to build the library manually use:
+.PP
+\fRtsc -p \&./\fP
+.SH "Using smart-buffer"
+.PP
+.SS "Example"
+Say you were building a packet that had to conform to the following protocol:
+.PP
+\fR[PacketType:2][PacketLength:2][Data:XX]\fP
+.PP
+To build this packet using the vanilla Buffer class, you would have to count up the length of the data payload beforehand\&. You would also need to keep track of the current 'cursor' position in your Buffer so you write everything in the right places\&. With smart-buffer you don't have to do either of those things\&.
+.PP
+.PP
+.nf
+// 1\&.x (javascript)
+var SmartBuffer = require('smart\-buffer');
+
+// 1\&.x (typescript)
+import SmartBuffer = require('smart\-buffer');
+
+// 2\&.x+ (javascript)
+const SmartBuffer = require('smart\-buffer')\&.SmartBuffer;
+
+// 2\&.x+ (typescript)
+import { SmartBuffer, SmartBufferOptions} from 'smart\-buffer';
+
+function createLoginPacket(username, password, age, country) {
+    let packet = new SmartBuffer();
+    packet\&.writeUInt16LE(0x0060); // Login Packet Type/ID
+    packet\&.writeStringNT(username);
+    packet\&.writeStringNT(password);
+    packet\&.writeUInt8(age);
+    packet\&.writeStringNT(country);
+    packet\&.writeUInt16LE(packet\&.length \- 2, 2);
+    
+    return packet\&.toBuffer();
+}
+.fi
+.PP
+ With the above function, you now can do this: 
+.PP
+.nf
+let login = createLoginPacket("Josh", "secret123", 22, "United States");
+
+// <Buffer 60 00 1e 00 4a 6f 73 68 00 73 65 63 72 65 74 31 32 33 00 16 55 6e 69 74 65 64 20 53 74 61 74 65 73 00>
+
+.fi
+.PP
+ Notice that the \fR[PacketLength:2]\fP part of the packet was inserted after we had added everything else, and as shown in the Buffer dump above, is in the correct location along with everything else\&.
+.PP
+Reading back the packet we created above is just as easy: 
+.PP
+.nf
+let reader = SmartBuffer\&.fromBuffer(login);
+
+let logininfo = {
+    packetType: reader\&.readUInt16LE(),
+    packetLength: reader\&.readUInt16LE(),
+    username: reader\&.readStringNT(),
+    password: reader\&.readStringNT(),
+    age: reader\&.readUInt8(),
+    country: reader\&.readStringNT()
+};
+
+/*
+{ 
+    packetType: 96, (0x0060)
+    packetLength: 30,
+    username: 'Josh',
+    password: 'secret123',
+    age: 22,
+    country: 'United States' 
+};
+*/
+
+.fi
+.PP
+.SH "Api Reference:"
+.PP
+.SS "Constructing a smart-buffer"
+smart-buffer has a few different ways to construct an instance\&. Starting with version 2\&.0, the following factory methods are preffered\&.
+.PP
+.PP
+.nf
+let SmartBuffer = require('smart\-buffer');
+
+// Creating SmartBuffer from existing Buffer
+let buff = SmartBuffer\&.fromBuffer(buffer); // Creates instance from buffer\&. (Uses default utf8 encoding)
+let buff = SmartBuffer\&.fromBuffer(buffer, 'ascii'); // Creates instance from buffer with ascii encoding for Strings\&. 
+
+// Creating SmartBuffer with specified internal Buffer size\&.
+let buff = SmartBuffer\&.fromSize(1024); // Creates instance with internal Buffer size of 1024\&.
+let buff = SmartBuffer\&.fromSize(1024, 'utf8'); // Creates instance with intenral Buffer size of 1024, and utf8 encoding\&. 
+
+// Creating SmartBuffer with options object\&. This one specifies size and encoding\&.
+let buff = SmartBuffer\&.fromOptions({
+    size: 1024,
+    encoding: 'ascii'
+});
+
+// Creating SmartBuffer with options object\&. This one specified an existing Buffer\&.
+let buff = SmartBuffer\&.fromOptions({
+    buff: buffer
+});
+
+// Just want a regular SmartBuffer with all default options?
+let buff = new SmartBuffer();
+.fi
+.PP
+.SS "Backwards Compatibility:"
+All constructors used prior to 2\&.0 still are supported\&. However it's not recommended to use these\&.
+.PP
+.PP
+.nf
+let writer = new SmartBuffer();               // Defaults to utf8, 4096 length internal Buffer\&.
+let writer = new SmartBuffer(1024);           // Defaults to utf8, 1024 length internal Buffer\&.
+let writer = new SmartBuffer('ascii');         // Sets to ascii encoding, 4096 length internal buffer\&.
+let writer = new SmartBuffer(1024, 'ascii');  // Sets to ascii encoding, 1024 length internal buffer\&.
+.fi
+.PP
+.SS "Reading Data"
+smart-buffer supports all of the common read functions you will find in the vanilla Buffer class\&. The only difference is, you do not need to specify which location to start reading from\&. This is possible because as you read data out of a smart-buffer, it automatically progresses an internal read offset/position to know where to pick up from on the next read\&.
+.SS "Reading Numeric Values"
+When numeric values, you simply need to call the function you want, and the data is returned\&.
+.PP
+Supported Operations:
+.IP "\(bu" 2
+readInt8
+.IP "\(bu" 2
+readInt16BE
+.IP "\(bu" 2
+readInt16LE
+.IP "\(bu" 2
+readInt32BE
+.IP "\(bu" 2
+readInt32LE
+.IP "\(bu" 2
+readBigInt64LE
+.IP "\(bu" 2
+readBigInt64BE
+.IP "\(bu" 2
+readUInt8
+.IP "\(bu" 2
+readUInt16BE
+.IP "\(bu" 2
+readUInt16LE
+.IP "\(bu" 2
+readUInt32BE
+.IP "\(bu" 2
+readUInt32LE
+.IP "\(bu" 2
+readBigUInt64LE
+.IP "\(bu" 2
+readBigUInt64BE
+.IP "\(bu" 2
+readFloatBE
+.IP "\(bu" 2
+readFloatLE
+.IP "\(bu" 2
+readDoubleBE
+.IP "\(bu" 2
+readDoubleLE
+.PP
+.PP
+.PP
+.nf
+let reader = new SmartBuffer(somebuffer);
+let num = reader\&.readInt8();
+.fi
+.PP
+.SS "Reading String Values"
+When reading String values, you can either choose to read a null terminated string, or a string of a specified length\&.
+.SS "SmartBuffer\&.readStringNT( [encoding] )"
+.RS 4
+\fRString\fP \fBString encoding to use\fP - Defaults to the encoding set in the constructor\&. 
+.RE
+.PP
+.PP
+returns \fRString\fP
+.PP
+.RS 4
+Note: When readStringNT is called and there is no null character found, smart-buffer will read to the end of the internal Buffer\&. 
+.RE
+.PP
+.SS "SmartBuffer\&.readString( [length] )"
+.SS "SmartBuffer\&.readString( [encoding] )"
+.SS "SmartBuffer\&.readString( [length], [encoding] )"
+.RS 4
+\fRNumber\fP \fBLength of the string to read\fP 
+.RE
+.PP
+.PP
+.RS 4
+\fRString\fP \fBString encoding to use\fP - Defaults to the encoding set in the constructor, or utf8\&. 
+.RE
+.PP
+.PP
+returns \fRString\fP
+.PP
+.RS 4
+Note: When readString is called without a specified length, smart-buffer will read to the end of the internal Buffer\&. 
+.RE
+.PP
+.SS "Reading Buffer Values"
+.SS "SmartBuffer\&.readBuffer( length )"
+.RS 4
+\fRNumber\fP \fBLength of data to read into a Buffer\fP 
+.RE
+.PP
+.PP
+returns \fRBuffer\fP
+.PP
+.RS 4
+Note: This function uses \fRslice\fP to retrieve the Buffer\&. 
+.RE
+.PP
+.SS "SmartBuffer\&.readBufferNT()"
+returns \fRBuffer\fP
+.PP
+.RS 4
+Note: This reads the next sequence of bytes in the buffer until a null (0x00) value is found\&. (Null terminated buffer) Note: This function uses \fRslice\fP to retrieve the Buffer\&. 
+.RE
+.PP
+.SS "Writing Data"
+smart-buffer supports all of the common write functions you will find in the vanilla Buffer class\&. The only difference is, you do not need to specify which location to write to in your Buffer by default\&. You do however have the option of \fBinserting\fP a piece of data into your smart-buffer at a given location\&.
+.SS "Writing Numeric Values"
+For numeric values, you simply need to call the function you want, and the data is written at the end of the internal Buffer's current write position\&. You can specify a offset/position to \fBinsert\fP the given value at, but keep in mind this does not override data at the given position\&. This feature also does not work properly when inserting a value beyond the current internal length of the smart-buffer (length being the \&.length property of the smart-buffer instance you're writing to)
+.PP
+Supported Operations:
+.IP "\(bu" 2
+writeInt8
+.IP "\(bu" 2
+writeInt16BE
+.IP "\(bu" 2
+writeInt16LE
+.IP "\(bu" 2
+writeInt32BE
+.IP "\(bu" 2
+writeInt32LE
+.IP "\(bu" 2
+writeBigInt64BE
+.IP "\(bu" 2
+writeBigInt64LE
+.IP "\(bu" 2
+writeUInt8
+.IP "\(bu" 2
+writeUInt16BE
+.IP "\(bu" 2
+writeUInt16LE
+.IP "\(bu" 2
+writeUInt32BE
+.IP "\(bu" 2
+writeUInt32LE
+.IP "\(bu" 2
+writeBigUInt64BE
+.IP "\(bu" 2
+writeBigUInt64LE
+.IP "\(bu" 2
+writeFloatBE
+.IP "\(bu" 2
+writeFloatLE
+.IP "\(bu" 2
+writeDoubleBE
+.IP "\(bu" 2
+writeDoubleLE
+.PP
+.PP
+The following signature is the same for all the above functions:
+.SS "SmartBuffer\&.writeInt8( value, [offset] )"
+.RS 4
+\fRNumber\fP \fBA valid Int8 number\fP 
+.RE
+.PP
+.PP
+.RS 4
+\fRNumber\fP \fBThe position to insert this value at\fP 
+.RE
+.PP
+.PP
+returns this
+.PP
+.RS 4
+Note: All write operations return \fRthis\fP to allow for chaining\&. 
+.RE
+.PP
+.SS "Writing String Values"
+When reading String values, you can either choose to write a null terminated string, or a non null terminated string\&.
+.SS "SmartBuffer\&.writeStringNT( value, [offset], [encoding] )"
+.SS "SmartBuffer\&.writeStringNT( value, [offset] )"
+.SS "SmartBuffer\&.writeStringNT( value, [encoding] )"
+.RS 4
+\fRString\fP \fBString value to write\fP 
+.RE
+.PP
+.PP
+.RS 4
+\fRNumber\fP \fBThe position to insert this String at\fP 
+.RE
+.PP
+.PP
+.RS 4
+\fRString\fP \fBThe String encoding to use\&.\fP - Defaults to the encoding set in the constructor, or utf8\&. 
+.RE
+.PP
+.PP
+returns this
+.SS "SmartBuffer\&.writeString( value, [offset], [encoding] )"
+.SS "SmartBuffer\&.writeString( value, [offset] )"
+.SS "SmartBuffer\&.writeString( value, [encoding] )"
+.RS 4
+\fRString\fP \fBString value to write\fP 
+.RE
+.PP
+.PP
+.RS 4
+\fRNumber\fP \fBThe position to insert this String at\fP 
+.RE
+.PP
+.PP
+.RS 4
+\fRString\fP \fBThe String encoding to use\fP - Defaults to the encoding set in the constructor, or utf8\&. 
+.RE
+.PP
+.PP
+returns this
+.SS "Writing Buffer Values"
+.SS "SmartBuffer\&.writeBuffer( value, [offset] )"
+.RS 4
+\fRBuffer\fP \fBBuffer value to write\fP 
+.RE
+.PP
+.PP
+.RS 4
+\fRNumber\fP \fBThe position to insert this Buffer's content at\fP 
+.RE
+.PP
+.PP
+returns this
+.SS "SmartBuffer\&.writeBufferNT( value, [offset] )"
+.RS 4
+\fRBuffer\fP \fBBuffer value to write\fP 
+.RE
+.PP
+.PP
+.RS 4
+\fRNumber\fP \fBThe position to insert this Buffer's content at\fP 
+.RE
+.PP
+.PP
+returns this
+.SS "Utility Functions"
+.SS "SmartBuffer\&.clear()"
+Resets the SmartBuffer to its default state where it can be reused for reading or writing\&.
+.SS "SmartBuffer\&.remaining()"
+returns \fRNumber\fP The amount of data left to read based on the current read Position\&.
+.SS "SmartBuffer\&.skip( value )"
+.RS 4
+\fRNumber\fP \fBThe amount of bytes to skip ahead\fP 
+.RE
+.PP
+.PP
+Skips the read position ahead by the given value\&.
+.PP
+returns this
+.SS "SmartBuffer\&.rewind( value )"
+.RS 4
+\fRNumber\fP \fBThe amount of bytes to reward backwards\fP 
+.RE
+.PP
+.PP
+Rewinds the read position backwards by the given value\&.
+.PP
+returns this
+.SS "SmartBuffer\&.moveTo( position )"
+.RS 4
+\fRNumber\fP \fBThe point to skip the read position to\fP 
+.RE
+.PP
+.PP
+Moves the read position to the given point\&. returns this
+.SS "SmartBuffer\&.toBuffer()"
+returns \fRBuffer\fP A Buffer containing the contents of the internal Buffer\&.
+.PP
+.RS 4
+Note: This uses the slice function\&. 
+.RE
+.PP
+.SS "SmartBuffer\&.toString( [encoding] )"
+.RS 4
+\fRString\fP \fBThe String encoding to use\fP - Defaults to the encoding set in the constructor, or utf8\&. 
+.RE
+.PP
+.PP
+returns \fRString\fP The internal Buffer in String representation\&.
+.SS "Properties"
+.SS "SmartBuffer\&.length"
+returns \fRNumber\fP \fBThe length of the data that is being tracked in the internal Buffer\fP - Does NOT return the absolute length of the internal Buffer being written to\&.
+.SS "License"
+This work is licensed under the \fRMIT license\fP\&. 

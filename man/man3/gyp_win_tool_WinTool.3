@@ -1,0 +1,243 @@
+.TH "gyp.win_tool.WinTool" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gyp.win_tool.WinTool
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBDispatch\fP (self, args)"
+.br
+.ti -1c
+.RI "\fBExecStamp\fP (self, path)"
+.br
+.ti -1c
+.RI "\fBExecRecursiveMirror\fP (self, source, dest)"
+.br
+.ti -1c
+.RI "\fBExecLinkWrapper\fP (self, arch, use_separate_mspdbsrv, *args)"
+.br
+.ti -1c
+.RI "\fBExecLinkWithManifests\fP (self, arch, embed_manifest, out, ldcmd, resname, mt, rc, intermediate_manifest, *manifests)"
+.br
+.ti -1c
+.RI "\fBExecManifestWrapper\fP (self, arch, *args)"
+.br
+.ti -1c
+.RI "\fBExecManifestToRc\fP (self, arch, *args)"
+.br
+.ti -1c
+.RI "\fBExecMidlWrapper\fP (self, arch, outdir, tlb, h, dlldata, iid, proxy, idl, *flags)"
+.br
+.ti -1c
+.RI "\fBExecAsmWrapper\fP (self, arch, *args)"
+.br
+.ti -1c
+.RI "\fBExecRcWrapper\fP (self, arch, *args)"
+.br
+.ti -1c
+.RI "\fBExecActionWrapper\fP (self, arch, rspfile, *dir)"
+.br
+.ti -1c
+.RI "\fBExecClCompile\fP (self, project_dir, selected_files)"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fB_UseSeparateMspdbsrv\fP (self, env, args)"
+.br
+.ti -1c
+.RI "\fB_CommandifyName\fP (self, name_string)"
+.br
+.ti -1c
+.RI "\fB_GetEnv\fP (self, arch)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.PP
+.nf
+This class performs all the Windows tooling steps\&. The methods can either
+be executed directly, or dispatched from an argument list\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB35\fP of file \fBwin_tool\&.py\fP\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "gyp\&.win_tool\&.WinTool\&._CommandifyName ( self,  name_string)\fR [protected]\fP"
+
+.PP
+.nf
+Transforms a tool name like recursive-mirror to RecursiveMirror\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB75\fP of file \fBwin_tool\&.py\fP\&.
+.SS "gyp\&.win_tool\&.WinTool\&._GetEnv ( self,  arch)\fR [protected]\fP"
+
+.PP
+.nf
+Gets the saved environment from a file for a given architecture\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB79\fP of file \fBwin_tool\&.py\fP\&.
+.SS "gyp\&.win_tool\&.WinTool\&._UseSeparateMspdbsrv ( self,  env,  args)\fR [protected]\fP"
+
+.PP
+.nf
+Allows to use a unique instance of mspdbsrv\&.exe per linker instead of a
+shared one\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB39\fP of file \fBwin_tool\&.py\fP\&.
+.SS "gyp\&.win_tool\&.WinTool\&.Dispatch ( self,  args)"
+
+.PP
+.nf
+Dispatches a string command to a method\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB67\fP of file \fBwin_tool\&.py\fP\&.
+.SS "gyp\&.win_tool\&.WinTool\&.ExecActionWrapper ( self,  arch,  rspfile, * dir)"
+
+.PP
+.nf
+Runs an action command line from a response file using the environment
+for |arch|\&. If |dir| is supplied, use that as the working directory\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB347\fP of file \fBwin_tool\&.py\fP\&.
+.SS "gyp\&.win_tool\&.WinTool\&.ExecAsmWrapper ( self,  arch, * args)"
+
+.PP
+.nf
+Filter logo banner from invocations of asm\&.exe\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB313\fP of file \fBwin_tool\&.py\fP\&.
+.SS "gyp\&.win_tool\&.WinTool\&.ExecClCompile ( self,  project_dir,  selected_files)"
+
+.PP
+.nf
+Executed by msvs-ninja projects when the 'ClCompile' target is used to
+build selected C/C++ files\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB360\fP of file \fBwin_tool\&.py\fP\&.
+.SS "gyp\&.win_tool\&.WinTool\&.ExecLinkWithManifests ( self,  arch,  embed_manifest,  out,  ldcmd,  resname,  mt,  rc,  intermediate_manifest, * manifests)"
+
+.PP
+.nf
+A wrapper for handling creating a manifest resource and then executing
+a link command\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB152\fP of file \fBwin_tool\&.py\fP\&.
+.SS "gyp\&.win_tool\&.WinTool\&.ExecLinkWrapper ( self,  arch,  use_separate_mspdbsrv, * args)"
+
+.PP
+.nf
+Filter diagnostic output from link that looks like:
+'   Creating library ui\&.dll\&.lib and object ui\&.dll\&.exp'
+This happens when there are exports from the dll or exe\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB116\fP of file \fBwin_tool\&.py\fP\&.
+.SS "gyp\&.win_tool\&.WinTool\&.ExecManifestToRc ( self,  arch, * args)"
+
+.PP
+.nf
+Creates a resource file pointing a SxS assembly manifest\&.
+|args| is tuple containing path to resource file, path to manifest file
+and resource name which can be '1' (for executables) or '2' (for DLLs)\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB262\fP of file \fBwin_tool\&.py\fP\&.
+.SS "gyp\&.win_tool\&.WinTool\&.ExecManifestWrapper ( self,  arch, * args)"
+
+.PP
+.nf
+Run manifest tool with environment set\&. Strip out undesirable warning
+(some XML blocks are recognized by the OS loader, but not the manifest
+tool)\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB248\fP of file \fBwin_tool\&.py\fP\&.
+.SS "gyp\&.win_tool\&.WinTool\&.ExecMidlWrapper ( self,  arch,  outdir,  tlb,  h,  dlldata,  iid,  proxy,  idl, * flags)"
+
+.PP
+.nf
+Filter noisy filenames output from MIDL compile step that isn't
+quietable via command line flags\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB273\fP of file \fBwin_tool\&.py\fP\&.
+.SS "gyp\&.win_tool\&.WinTool\&.ExecRcWrapper ( self,  arch, * args)"
+
+.PP
+.nf
+Filter logo banner from invocations of rc\&.exe\&. Older versions of RC
+don't support the /nologo flag\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB330\fP of file \fBwin_tool\&.py\fP\&.
+.SS "gyp\&.win_tool\&.WinTool\&.ExecRecursiveMirror ( self,  source,  dest)"
+
+.PP
+.nf
+Emulation of rm -rf out && cp -af in out\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB92\fP of file \fBwin_tool\&.py\fP\&.
+.SS "gyp\&.win_tool\&.WinTool\&.ExecStamp ( self,  path)"
+
+.PP
+.nf
+Simple stamp command\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB88\fP of file \fBwin_tool\&.py\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

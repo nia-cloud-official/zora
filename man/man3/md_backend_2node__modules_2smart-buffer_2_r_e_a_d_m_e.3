@@ -1,0 +1,774 @@
+.TH "md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e \- smart-buffer \fR\fP \fR\fP 
+.PP
+smart-buffer is a Buffer wrapper that adds automatic read & write offset tracking, string operations, data insertions, and more\&.
+.PP
+.PP
+\fBKey Features\fP:
+.IP "\(bu" 2
+Proxies all of the Buffer write and read functions
+.IP "\(bu" 2
+Keeps track of read and write offsets automatically
+.IP "\(bu" 2
+Grows the internal Buffer as needed
+.IP "\(bu" 2
+Useful string operations\&. (Null terminating strings)
+.IP "\(bu" 2
+Allows for inserting values at specific points in the Buffer
+.IP "\(bu" 2
+Built in TypeScript
+.IP "\(bu" 2
+Type Definitions Provided
+.IP "\(bu" 2
+Browser Support (using Webpack/Browserify)
+.IP "\(bu" 2
+Full test coverage
+.PP
+.PP
+\fBRequirements\fP:
+.IP "\(bu" 2
+Node v4\&.0+ is supported at this time\&. (Versions prior to 2\&.0 will work on node 0\&.10)
+.PP
+.SH "Breaking Changes in v4\&.0"
+.PP
+.IP "\(bu" 2
+Old constructor patterns have been completely removed\&. It's now required to use the SmartBuffer\&.fromXXX() factory constructors\&.
+.IP "\(bu" 2
+rewind(), skip(), moveTo() have been removed\&. (see \fBoffsets\fP)
+.IP "\(bu" 2
+Internal private properties are now prefixed with underscores (_)
+.IP "\(bu" 2
+\fBAll\fP writeXXX() methods that are given an offset will now \fBoverwrite data\fP instead of insert\&. (see \fBwrite vs insert\fP)
+.IP "\(bu" 2
+insertXXX() methods have been added for when you want to insert data at a specific offset (this replaces the old behavior of writeXXX() when an offset was provided)
+.PP
+.SH "Looking for v3 docs?"
+.PP
+Legacy documentation for version 3 and prior can be found \fRhere\fP\&.
+.SH "Installing:"
+.PP
+\fRyarn add smart-buffer\fP
+.PP
+or
+.PP
+\fRnpm install smart-buffer\fP
+.PP
+Note: The published NPM package includes the built javascript library\&. If you cloned this repo and wish to build the library manually use:
+.PP
+\fRnpm run build\fP
+.SH "Using smart-buffer"
+.PP
+.PP
+.nf
+// Javascript
+const SmartBuffer = require('smart\-buffer')\&.SmartBuffer;
+
+// Typescript
+import { SmartBuffer, SmartBufferOptions} from 'smart\-buffer';
+.fi
+.PP
+.SS "Simple Example"
+Building a packet that uses the following protocol specification:
+.PP
+\fR[PacketType:2][PacketLength:2][Data:XX]\fP
+.PP
+To build this packet using the vanilla Buffer class, you would have to count up the length of the data payload beforehand\&. You would also need to keep track of the current 'cursor' position in your Buffer so you write everything in the right places\&. With smart-buffer you don't have to do either of those things\&.
+.PP
+.PP
+.nf
+function createLoginPacket(username, password, age, country) {
+    const packet = new SmartBuffer();
+    packet\&.writeUInt16LE(0x0060); // Some packet type
+    packet\&.writeStringNT(username);
+    packet\&.writeStringNT(password);
+    packet\&.writeUInt8(age);
+    packet\&.writeStringNT(country);
+    packet\&.insertUInt16LE(packet\&.length \- 2, 2);
+
+    return packet\&.toBuffer();
+}
+.fi
+.PP
+ With the above function, you now can do this: 
+.PP
+.nf
+const login = createLoginPacket("Josh", "secret123", 22, "United States");
+
+// <Buffer 60 00 1e 00 4a 6f 73 68 00 73 65 63 72 65 74 31 32 33 00 16 55 6e 69 74 65 64 20 53 74 61 74 65 73 00>
+
+.fi
+.PP
+ Notice that the \fR[PacketLength:2]\fP value (1e 00) was inserted at position 2\&.
+.PP
+Reading back the packet we created above is just as easy: 
+.PP
+.nf
+const reader = SmartBuffer\&.fromBuffer(login);
+
+const logininfo = {
+    packetType: reader\&.readUInt16LE(),
+    packetLength: reader\&.readUInt16LE(),
+    username: reader\&.readStringNT(),
+    password: reader\&.readStringNT(),
+    age: reader\&.readUInt8(),
+    country: reader\&.readStringNT()
+};
+
+/*
+{
+    packetType: 96, (0x0060)
+    packetLength: 30,
+    username: 'Josh',
+    password: 'secret123',
+    age: 22,
+    country: 'United States'
+}
+*/
+
+.fi
+.PP
+.SH "Write vs Insert"
+.PP
+In prior versions of SmartBuffer, \&.writeXXX(value, offset) calls would insert data when an offset was provided\&. In version 4, this will now overwrite the data at the offset position\&. To insert data there are now corresponding \&.insertXXX(value, offset) methods\&.
+.PP
+\fBSmartBuffer v3\fP: 
+.PP
+.nf
+const buff = SmartBuffer\&.fromBuffer(new Buffer([1,2,3,4,5,6]));
+buff\&.writeInt8(7, 2);
+console\&.log(buff\&.toBuffer())
+
+// <Buffer 01 02 07 03 04 05 06>
+
+.fi
+.PP
+.PP
+\fBSmartBuffer v4\fP: 
+.PP
+.nf
+const buff = SmartBuffer\&.fromBuffer(new Buffer([1,2,3,4,5,6]));
+buff\&.writeInt8(7, 2);
+console\&.log(buff\&.toBuffer());
+
+// <Buffer 01 02 07 04 05 06>
+
+.fi
+.PP
+.PP
+To insert you instead should use: 
+.PP
+.nf
+const buff = SmartBuffer\&.fromBuffer(new Buffer([1,2,3,4,5,6]));
+buff\&.insertInt8(7, 2);
+console\&.log(buff\&.toBuffer());
+
+// <Buffer 01 02 07 03 04 05 06>
+
+.fi
+.PP
+.PP
+\fBNote:\fP Insert/Writing to a position beyond the currently tracked internal Buffer will zero pad to your offset\&.
+.SH "Constructing a smart-buffer"
+.PP
+There are a few different ways to construct a SmartBuffer instance\&.
+.PP
+.PP
+.nf
+// Creating SmartBuffer from existing Buffer
+const buff = SmartBuffer\&.fromBuffer(buffer); // Creates instance from buffer\&. (Uses default utf8 encoding)
+const buff = SmartBuffer\&.fromBuffer(buffer, 'ascii'); // Creates instance from buffer with ascii encoding for strings\&.
+
+// Creating SmartBuffer with specified internal Buffer size\&. (Note: this is not a hard cap, the internal buffer will grow as needed)\&.
+const buff = SmartBuffer\&.fromSize(1024); // Creates instance with internal Buffer size of 1024\&.
+const buff = SmartBuffer\&.fromSize(1024, 'utf8'); // Creates instance with internal Buffer size of 1024, and utf8 encoding for strings\&.
+
+// Creating SmartBuffer with options object\&. This one specifies size and encoding\&.
+const buff = SmartBuffer\&.fromOptions({
+    size: 1024,
+    encoding: 'ascii'
+});
+
+// Creating SmartBuffer with options object\&. This one specified an existing Buffer\&.
+const buff = SmartBuffer\&.fromOptions({
+    buff: buffer
+});
+
+// Creating SmartBuffer from a string\&.
+const buff = SmartBuffer\&.fromBuffer(Buffer\&.from('some string', 'utf8'));
+
+// Just want a regular SmartBuffer with all default options?
+const buff = new SmartBuffer();
+.fi
+.PP
+.SH "Api Reference:"
+.PP
+\fBNote:\fP SmartBuffer is fully documented with Typescript definitions as well as jsdocs so your favorite editor/IDE will have intellisense\&.
+.PP
+\fBTable of Contents\fP
+.PP
+.IP "1." 4
+\fBConstructing\fP
+.IP "2." 4
+\fBNumbers\fP
+.IP "  1." 6
+\fBIntegers\fP
+.IP "  2." 6
+\fBFloating Points\fP
+.PP
+
+.IP "3." 4
+\fBStrings\fP
+.IP "  1." 6
+\fBStrings\fP
+.IP "  2." 6
+\fBNull Terminated Strings\fP
+.PP
+
+.IP "4." 4
+\fBBuffers\fP
+.IP "5." 4
+\fBOffsets\fP
+.IP "6." 4
+\fBOther\fP
+.PP
+.SS "Constructing"
+.SS "constructor()"
+.SS "constructor([options])"
+.IP "\(bu" 2
+\fRoptions\fP *{SmartBufferOptions}* An optional options object to construct a SmartBuffer with\&.
+.PP
+.PP
+Examples: 
+.PP
+.nf
+const buff = new SmartBuffer();
+const buff = new SmartBuffer({
+    size: 1024,
+    encoding: 'ascii'
+});
+
+.fi
+.PP
+.SS "Class Method: fromBuffer(buffer[, encoding])"
+.IP "\(bu" 2
+\fRbuffer\fP *{Buffer}* The Buffer instance to wrap\&.
+.IP "\(bu" 2
+\fRencoding\fP *{string}* The string encoding to use\&. \fRDefault: 'utf8'\fP
+.PP
+.PP
+Examples: 
+.PP
+.nf
+const someBuffer = Buffer\&.from('some string');
+const buff = SmartBuffer\&.fromBuffer(someBuffer); // Defaults to utf8
+const buff = SmartBuffer\&.fromBuffer(someBuffer, 'ascii');
+
+.fi
+.PP
+.SS "Class Method: fromSize(size[, encoding])"
+.IP "\(bu" 2
+\fRsize\fP *{number}* The size to initialize the internal Buffer\&.
+.IP "\(bu" 2
+\fRencoding\fP *{string}* The string encoding to use\&. \fRDefault: 'utf8'\fP
+.PP
+.PP
+Examples: 
+.PP
+.nf
+const buff = SmartBuffer\&.fromSize(1024); // Defaults to utf8
+const buff = SmartBuffer\&.fromSize(1024, 'ascii');
+
+.fi
+.PP
+.SS "Class Method: fromOptions(options)"
+.IP "\(bu" 2
+\fRoptions\fP *{SmartBufferOptions}* The Buffer instance to wrap\&.
+.PP
+.PP
+.PP
+.nf
+interface SmartBufferOptions {
+    encoding?: BufferEncoding; // Defaults to utf8
+    size?: number; // Defaults to 4096
+    buff?: Buffer;
+}
+.fi
+.PP
+.PP
+Examples: 
+.PP
+.nf
+const buff = SmartBuffer\&.fromOptions({
+    size: 1024
+};
+const buff = SmartBuffer\&.fromOptions({
+    size: 1024,
+    encoding: 'utf8'
+});
+const buff = SmartBuffer\&.fromOptions({
+    encoding: 'utf8'
+});
+
+const someBuff = Buffer\&.from('some string', 'utf8');
+const buff = SmartBuffer\&.fromOptions({
+    buffer: someBuff,
+    encoding: 'utf8'
+});
+
+.fi
+.PP
+.SS "Integers"
+.SS "buff\&.readInt8([offset])"
+.SS "buff\&.readUInt8([offset])"
+.IP "\(bu" 2
+\fRoffset\fP *{number}* Optional position to start reading data from\&. \fBDefault\fP: \fRAuto managed offset\fP
+.IP "\(bu" 2
+Returns *{number}*
+.PP
+.PP
+Read a Int8 value\&.
+.SS "buff\&.readInt16BE([offset])"
+.SS "buff\&.readInt16LE([offset])"
+.SS "buff\&.readUInt16BE([offset])"
+.SS "buff\&.readUInt16LE([offset])"
+.IP "\(bu" 2
+\fRoffset\fP *{number}* Optional position to start reading data from\&. \fBDefault\fP: \fRAuto managed offset\fP
+.IP "\(bu" 2
+Returns *{number}*
+.PP
+.PP
+Read a 16 bit integer value\&.
+.SS "buff\&.readInt32BE([offset])"
+.SS "buff\&.readInt32LE([offset])"
+.SS "buff\&.readUInt32BE([offset])"
+.SS "buff\&.readUInt32LE([offset])"
+.IP "\(bu" 2
+\fRoffset\fP *{number}* Optional position to start reading data from\&. \fBDefault\fP: \fRAuto managed offset\fP
+.IP "\(bu" 2
+Returns *{number}*
+.PP
+.PP
+Read a 32 bit integer value\&.
+.SS "buff\&.writeInt8(value[, offset])"
+.SS "buff\&.writeUInt8(value[, offset])"
+.IP "\(bu" 2
+\fRvalue\fP *{number}* The value to write\&.
+.IP "\(bu" 2
+\fRoffset\fP *{number}* An optional offset to write this value to\&. \fBDefault:\fP \fRAuto managed offset\fP
+.IP "\(bu" 2
+Returns *{this}*
+.PP
+.PP
+Write a Int8 value\&.
+.SS "buff\&.insertInt8(value, offset)"
+.SS "buff\&.insertUInt8(value, offset)"
+.IP "\(bu" 2
+\fRvalue\fP *{number}* The value to insert\&.
+.IP "\(bu" 2
+\fRoffset\fP *{number}* The offset to insert this data at\&.
+.IP "\(bu" 2
+Returns *{this}*
+.PP
+.PP
+Insert a Int8 value\&.
+.SS "buff\&.writeInt16BE(value[, offset])"
+.SS "buff\&.writeInt16LE(value[, offset])"
+.SS "buff\&.writeUInt16BE(value[, offset])"
+.SS "buff\&.writeUInt16LE(value[, offset])"
+.IP "\(bu" 2
+\fRvalue\fP *{number}* The value to write\&.
+.IP "\(bu" 2
+\fRoffset\fP *{number}* An optional offset to write this value to\&. \fBDefault:\fP \fRAuto managed offset\fP
+.IP "\(bu" 2
+Returns *{this}*
+.PP
+.PP
+Write a 16 bit integer value\&.
+.SS "buff\&.insertInt16BE(value, offset)"
+.SS "buff\&.insertInt16LE(value, offset)"
+.SS "buff\&.insertUInt16BE(value, offset)"
+.SS "buff\&.insertUInt16LE(value, offset)"
+.IP "\(bu" 2
+\fRvalue\fP *{number}* The value to insert\&.
+.IP "\(bu" 2
+\fRoffset\fP *{number}* The offset to insert this data at\&.
+.IP "\(bu" 2
+Returns *{this}*
+.PP
+.PP
+Insert a 16 bit integer value\&.
+.SS "buff\&.writeInt32BE(value[, offset])"
+.SS "buff\&.writeInt32LE(value[, offset])"
+.SS "buff\&.writeUInt32BE(value[, offset])"
+.SS "buff\&.writeUInt32LE(value[, offset])"
+.IP "\(bu" 2
+\fRvalue\fP *{number}* The value to write\&.
+.IP "\(bu" 2
+\fRoffset\fP *{number}* An optional offset to write this value to\&. \fBDefault:\fP \fRAuto managed offset\fP
+.IP "\(bu" 2
+Returns *{this}*
+.PP
+.PP
+Write a 32 bit integer value\&.
+.SS "buff\&.insertInt32BE(value, offset)"
+.SS "buff\&.insertInt32LE(value, offset)"
+.SS "buff\&.insertUInt32BE(value, offset)"
+.SS "buff\&.nsertUInt32LE(value, offset)"
+.IP "\(bu" 2
+\fRvalue\fP *{number}* The value to insert\&.
+.IP "\(bu" 2
+\fRoffset\fP *{number}* The offset to insert this data at\&.
+.IP "\(bu" 2
+Returns *{this}*
+.PP
+.PP
+Insert a 32 bit integer value\&.
+.SS "Floating Point Numbers"
+.SS "buff\&.readFloatBE([offset])"
+.SS "buff\&.readFloatLE([offset])"
+.IP "\(bu" 2
+\fRoffset\fP *{number}* Optional position to start reading data from\&. \fBDefault\fP: \fRAuto managed offset\fP
+.IP "\(bu" 2
+Returns *{number}*
+.PP
+.PP
+Read a Float value\&.
+.SS "buff\&.readDoubleBE([offset])"
+.SS "buff\&.readDoubleLE([offset])"
+.IP "\(bu" 2
+\fRoffset\fP *{number}* Optional position to start reading data from\&. \fBDefault\fP: \fRAuto managed offset\fP
+.IP "\(bu" 2
+Returns *{number}*
+.PP
+.PP
+Read a Double value\&.
+.SS "buff\&.writeFloatBE(value[, offset])"
+.SS "buff\&.writeFloatLE(value[, offset])"
+.IP "\(bu" 2
+\fRvalue\fP *{number}* The value to write\&.
+.IP "\(bu" 2
+\fRoffset\fP *{number}* An optional offset to write this value to\&. \fBDefault:\fP \fRAuto managed offset\fP
+.IP "\(bu" 2
+Returns *{this}*
+.PP
+.PP
+Write a Float value\&.
+.SS "buff\&.insertFloatBE(value, offset)"
+.SS "buff\&.insertFloatLE(value, offset)"
+.IP "\(bu" 2
+\fRvalue\fP *{number}* The value to insert\&.
+.IP "\(bu" 2
+\fRoffset\fP *{number}* The offset to insert this data at\&.
+.IP "\(bu" 2
+Returns *{this}*
+.PP
+.PP
+Insert a Float value\&.
+.SS "buff\&.writeDoubleBE(value[, offset])"
+.SS "buff\&.writeDoubleLE(value[, offset])"
+.IP "\(bu" 2
+\fRvalue\fP *{number}* The value to write\&.
+.IP "\(bu" 2
+\fRoffset\fP *{number}* An optional offset to write this value to\&. \fBDefault:\fP \fRAuto managed offset\fP
+.IP "\(bu" 2
+Returns *{this}*
+.PP
+.PP
+Write a Double value\&.
+.SS "buff\&.insertDoubleBE(value, offset)"
+.SS "buff\&.insertDoubleLE(value, offset)"
+.IP "\(bu" 2
+\fRvalue\fP *{number}* The value to insert\&.
+.IP "\(bu" 2
+\fRoffset\fP *{number}* The offset to insert this data at\&.
+.IP "\(bu" 2
+Returns *{this}*
+.PP
+.PP
+Insert a Double value\&.
+.SS "Strings"
+.SS "buff\&.readString()"
+.SS "buff\&.readString(size[, encoding])"
+.SS "buff\&.readString(encoding)"
+.IP "\(bu" 2
+\fRsize\fP *{number}* The number of bytes to read\&. \fBDefault:\fP \fRReads to the end of the Buffer\&.\fP
+.IP "\(bu" 2
+\fRencoding\fP *{string}* The string encoding to use\&. \fBDefault:\fP \fRutf8\fP\&.
+.PP
+.PP
+Read a string value\&.
+.PP
+Examples: 
+.PP
+.nf
+const buff = SmartBuffer\&.fromBuffer(Buffer\&.from('hello there', 'utf8'));
+buff\&.readString(); // 'hello there'
+buff\&.readString(2); // 'he'
+buff\&.readString(2, 'utf8'); // 'he'
+buff\&.readString('utf8'); // 'hello there'
+
+.fi
+.PP
+.SS "buff\&.writeString(value)"
+.SS "buff\&.writeString(value[, offset])"
+.SS "buff\&.writeString(value[, encoding])"
+.SS "buff\&.writeString(value[, offset[, encoding]])"
+.IP "\(bu" 2
+\fRvalue\fP *{string}* The string value to write\&.
+.IP "\(bu" 2
+\fRoffset\fP *{number}* The offset to write this value to\&. \fBDefault:\fP \fRAuto managed offset\fP
+.IP "\(bu" 2
+\fRencoding\fP *{string}* An optional string encoding to use\&. \fBDefault:\fP \fRutf8\fP
+.PP
+.PP
+Write a string value\&.
+.PP
+Examples: 
+.PP
+.nf
+buff\&.writeString('hello'); // Auto managed offset
+buff\&.writeString('hello', 2);
+buff\&.writeString('hello', 'utf8') // Auto managed offset
+buff\&.writeString('hello', 2, 'utf8');
+
+.fi
+.PP
+.SS "buff\&.insertString(value, offset[, encoding])"
+.IP "\(bu" 2
+\fRvalue\fP *{string}* The string value to write\&.
+.IP "\(bu" 2
+\fRoffset\fP *{number}* The offset to write this value to\&.
+.IP "\(bu" 2
+\fRencoding\fP *{string}* An optional string encoding to use\&. \fBDefault:\fP \fRutf8\fP
+.PP
+.PP
+Insert a string value\&.
+.PP
+Examples: 
+.PP
+.nf
+buff\&.insertString('hello', 2);
+buff\&.insertString('hello', 2, 'utf8');
+
+.fi
+.PP
+.SS "Null Terminated Strings"
+.SS "buff\&.readStringNT()"
+.SS "buff\&.readStringNT(encoding)"
+.IP "\(bu" 2
+\fRencoding\fP *{string}* The string encoding to use\&. \fBDefault:\fP \fRutf8\fP\&.
+.PP
+.PP
+Read a null terminated string value\&. (If a null is not found, it will read to the end of the Buffer)\&.
+.PP
+Examples: 
+.PP
+.nf
+const buff = SmartBuffer\&.fromBuffer(Buffer\&.from('hello\\0 there', 'utf8'));
+buff\&.readStringNT(); // 'hello'
+
+// If we called this again:
+buff\&.readStringNT(); // ' there'
+
+.fi
+.PP
+.SS "buff\&.writeStringNT(value)"
+.SS "buff\&.writeStringNT(value[, offset])"
+.SS "buff\&.writeStringNT(value[, encoding])"
+.SS "buff\&.writeStringNT(value[, offset[, encoding]])"
+.IP "\(bu" 2
+\fRvalue\fP *{string}* The string value to write\&.
+.IP "\(bu" 2
+\fRoffset\fP *{number}* The offset to write this value to\&. \fBDefault:\fP \fRAuto managed offset\fP
+.IP "\(bu" 2
+\fRencoding\fP *{string}* An optional string encoding to use\&. \fBDefault:\fP \fRutf8\fP
+.PP
+.PP
+Write a null terminated string value\&.
+.PP
+Examples: 
+.PP
+.nf
+buff\&.writeStringNT('hello'); // Auto managed offset   <Buffer 68 65 6c 6c 6f 00>
+buff\&.writeStringNT('hello', 2); // <Buffer 00 00 68 65 6c 6c 6f 00>
+buff\&.writeStringNT('hello', 'utf8') // Auto managed offset
+buff\&.writeStringNT('hello', 2, 'utf8');
+
+.fi
+.PP
+.SS "buff\&.insertStringNT(value, offset[, encoding])"
+.IP "\(bu" 2
+\fRvalue\fP *{string}* The string value to write\&.
+.IP "\(bu" 2
+\fRoffset\fP *{number}* The offset to write this value to\&.
+.IP "\(bu" 2
+\fRencoding\fP *{string}* An optional string encoding to use\&. \fBDefault:\fP \fRutf8\fP
+.PP
+.PP
+Insert a null terminated string value\&.
+.PP
+Examples: 
+.PP
+.nf
+buff\&.insertStringNT('hello', 2);
+buff\&.insertStringNT('hello', 2, 'utf8');
+
+.fi
+.PP
+.SS "Buffers"
+.SS "buff\&.readBuffer([length])"
+.IP "\(bu" 2
+\fRlength\fP *{number}* The number of bytes to read into a Buffer\&. \fBDefault:\fP \fRReads to the end of the Buffer\fP
+.PP
+.PP
+Read a Buffer of a specified size\&.
+.SS "buff\&.writeBuffer(value[, offset])"
+.IP "\(bu" 2
+\fRvalue\fP *{Buffer}* The buffer value to write\&.
+.IP "\(bu" 2
+\fRoffset\fP *{number}* An optional offset to write the value to\&. \fBDefault:\fP \fRAuto managed offset\fP
+.PP
+.SS "buff\&.insertBuffer(value, offset)"
+.IP "\(bu" 2
+\fRvalue\fP *{Buffer}* The buffer value to write\&.
+.IP "\(bu" 2
+\fRoffset\fP *{number}* The offset to write the value to\&.
+.PP
+.SS "buff\&.readBufferNT()"
+Read a null terminated Buffer\&.
+.SS "buff\&.writeBufferNT(value[, offset])"
+.IP "\(bu" 2
+\fRvalue\fP *{Buffer}* The buffer value to write\&.
+.IP "\(bu" 2
+\fRoffset\fP *{number}* An optional offset to write the value to\&. \fBDefault:\fP \fRAuto managed offset\fP
+.PP
+.PP
+Write a null terminated Buffer\&.
+.SS "buff\&.insertBufferNT(value, offset)"
+.IP "\(bu" 2
+\fRvalue\fP *{Buffer}* The buffer value to write\&.
+.IP "\(bu" 2
+\fRoffset\fP *{number}* The offset to write the value to\&.
+.PP
+.PP
+Insert a null terminated Buffer\&.
+.SS "Offsets"
+.SS "buff\&.readOffset"
+.SS "buff\&.readOffset(offset)"
+.IP "\(bu" 2
+\fRoffset\fP *{number}* The new read offset value to set\&.
+.IP "\(bu" 2
+Returns: \fRThe current read offset\fP
+.PP
+.PP
+Gets or sets the current read offset\&.
+.PP
+Examples: 
+.PP
+.nf
+const currentOffset = buff\&.readOffset; // 5
+
+buff\&.readOffset = 10;
+
+console\&.log(buff\&.readOffset) // 10
+
+.fi
+.PP
+.SS "buff\&.writeOffset"
+.SS "buff\&.writeOffset(offset)"
+.IP "\(bu" 2
+\fRoffset\fP *{number}* The new write offset value to set\&.
+.IP "\(bu" 2
+Returns: \fRThe current write offset\fP
+.PP
+.PP
+Gets or sets the current write offset\&.
+.PP
+Examples: 
+.PP
+.nf
+const currentOffset = buff\&.writeOffset; // 5
+
+buff\&.writeOffset = 10;
+
+console\&.log(buff\&.writeOffset) // 10
+
+.fi
+.PP
+.SS "buff\&.encoding"
+.SS "buff\&.encoding(encoding)"
+.IP "\(bu" 2
+\fRencoding\fP *{string}* The new string encoding to set\&.
+.IP "\(bu" 2
+Returns: \fRThe current string encoding\fP
+.PP
+.PP
+Gets or sets the current string encoding\&.
+.PP
+Examples: 
+.PP
+.nf
+const currentEncoding = buff\&.encoding; // 'utf8'
+
+buff\&.encoding = 'ascii';
+
+console\&.log(buff\&.encoding) // 'ascii'
+
+.fi
+.PP
+.SS "Other"
+.SS "buff\&.clear()"
+Clear and resets the SmartBuffer instance\&.
+.SS "buff\&.remaining()"
+.IP "\(bu" 2
+Returns \fRRemaining data left to be read\fP
+.PP
+.PP
+Gets the number of remaining bytes to be read\&.
+.SS "buff\&.internalBuffer"
+.IP "\(bu" 2
+Returns: *{Buffer}*
+.PP
+.PP
+Gets the internally managed Buffer (Includes unmanaged data)\&.
+.PP
+Examples: 
+.PP
+.nf
+const buff = SmartBuffer\&.fromSize(16);
+buff\&.writeString('hello');
+console\&.log(buff\&.InternalBuffer); // <Buffer 68 65 6c 6c 6f 00 00 00 00 00 00 00 00 00 00 00>
+
+.fi
+.PP
+.SS "buff\&.toBuffer()"
+.IP "\(bu" 2
+Returns: *{Buffer}*
+.PP
+.PP
+Gets a sliced Buffer instance of the internally managed Buffer\&. (Only includes managed data)
+.PP
+Examples: 
+.PP
+.nf
+const buff = SmartBuffer\&.fromSize(16);
+buff\&.writeString('hello');
+console\&.log(buff\&.toBuffer()); // <Buffer 68 65 6c 6c 6f>
+
+.fi
+.PP
+.SS "buff\&.toString([encoding])"
+.IP "\(bu" 2
+\fRencoding\fP *{string}* The string encoding to use when converting to a string\&. \fBDefault:\fP \fRutf8\fP
+.IP "\(bu" 2
+Returns *{string}*
+.PP
+.PP
+Gets a string representation of all data in the SmartBuffer\&.
+.SS "buff\&.destroy()"
+Destroys the SmartBuffer instance\&.
+.SS "License"
+This work is licensed under the \fRMIT license\fP\&. 

@@ -1,0 +1,216 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2http-cache-semantics_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>Can<sp/>I<sp/>cache<sp/>this?<sp/>[![Build<sp/>Status](https://travis-ci.org/kornelski/http-cache-semantics.svg?branch=master)](https://travis-ci.org/kornelski/http-cache-semantics)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`CachePolicy`<sp/>tells<sp/>when<sp/>responses<sp/>can<sp/>be<sp/>reused<sp/>from<sp/>a<sp/>cache,<sp/>taking<sp/>into<sp/>account<sp/>[HTTP<sp/>RFC<sp/>7234](http://httpwg.org/specs/rfc7234.html)<sp/>rules<sp/>for<sp/>user<sp/>agents<sp/>and<sp/>shared<sp/>caches.</highlight></codeline>
+<codeline><highlight class="normal">It<sp/>also<sp/>implements<sp/>[RFC<sp/>5861](https://tools.ietf.org/html/rfc5861),<sp/>implementing<sp/>`stale-if-error`<sp/>and<sp/>`stale-while-revalidate`.</highlight></codeline>
+<codeline><highlight class="normal">It&apos;s<sp/>aware<sp/>of<sp/>many<sp/>tricky<sp/>details<sp/>such<sp/>as<sp/>the<sp/>`Vary`<sp/>header,<sp/>proxy<sp/>revalidation,<sp/>and<sp/>authenticated<sp/>responses.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Usage</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Cacheability<sp/>of<sp/>an<sp/>HTTP<sp/>response<sp/>depends<sp/>on<sp/>how<sp/>it<sp/>was<sp/>requested,<sp/>so<sp/>both<sp/>`request`<sp/>and<sp/>`response`<sp/>are<sp/>required<sp/>to<sp/>create<sp/>the<sp/>policy.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>policy<sp/>=<sp/>new<sp/>CachePolicy(request,<sp/>response,<sp/>options);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">if<sp/>(!policy.storable())<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>throw<sp/>the<sp/>response<sp/>away,<sp/>it&apos;s<sp/>not<sp/>usable<sp/>at<sp/>all</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Cache<sp/>the<sp/>data<sp/>AND<sp/>the<sp/>policy<sp/>object<sp/>in<sp/>your<sp/>cache</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>(this<sp/>is<sp/>pseudocode,<sp/>roll<sp/>your<sp/>own<sp/>cache<sp/>(lru-cache<sp/>package<sp/>works))</highlight></codeline>
+<codeline><highlight class="normal">letsPretendThisIsSomeCache.set(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>request.url,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>policy,<sp/>response<sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>policy.timeToLive()</highlight></codeline>
+<codeline><highlight class="normal">);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>And<sp/>later,<sp/>when<sp/>you<sp/>receive<sp/>a<sp/>new<sp/>request:</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>policy,<sp/>response<sp/>}<sp/>=<sp/>letsPretendThisIsSomeCache.get(newRequest.url);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>It&apos;s<sp/>not<sp/>enough<sp/>that<sp/>it<sp/>exists<sp/>in<sp/>the<sp/>cache,<sp/>it<sp/>has<sp/>to<sp/>match<sp/>the<sp/>new<sp/>request,<sp/>too:</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>(policy<sp/>&amp;&amp;<sp/>policy.satisfiesWithoutRevalidation(newRequest))<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>OK,<sp/>the<sp/>previous<sp/>response<sp/>can<sp/>be<sp/>used<sp/>to<sp/>respond<sp/>to<sp/>the<sp/>`newRequest`.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Response<sp/>headers<sp/>have<sp/>to<sp/>be<sp/>updated,<sp/>e.g.<sp/>to<sp/>add<sp/>Age<sp/>and<sp/>remove<sp/>uncacheable<sp/>headers.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>response.headers<sp/>=<sp/>policy.responseHeaders();</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>response;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It<sp/>may<sp/>be<sp/>surprising,<sp/>but<sp/>it&apos;s<sp/>not<sp/>enough<sp/>for<sp/>an<sp/>HTTP<sp/>response<sp/>to<sp/>be<sp/>[fresh](#yo-fresh)<sp/>to<sp/>satisfy<sp/>a<sp/>request.<sp/>It<sp/>may<sp/>need<sp/>to<sp/>match<sp/>request<sp/>headers<sp/>specified<sp/>in<sp/>`Vary`.<sp/>Even<sp/>a<sp/>matching<sp/>fresh<sp/>response<sp/>may<sp/>still<sp/>not<sp/>be<sp/>usable<sp/>if<sp/>the<sp/>new<sp/>request<sp/>restricted<sp/>cacheability,<sp/>etc.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>key<sp/>method<sp/>is<sp/>`satisfiesWithoutRevalidation(newRequest)`,<sp/>which<sp/>checks<sp/>whether<sp/>the<sp/>`newRequest`<sp/>is<sp/>compatible<sp/>with<sp/>the<sp/>original<sp/>request<sp/>and<sp/>whether<sp/>all<sp/>caching<sp/>conditions<sp/>are<sp/>met.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Constructor<sp/>options</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Request<sp/>and<sp/>response<sp/>must<sp/>have<sp/>a<sp/>`headers`<sp/>property<sp/>with<sp/>all<sp/>header<sp/>names<sp/>in<sp/>lower<sp/>case.<sp/>`url`,<sp/>`status`<sp/>and<sp/>`method`<sp/>are<sp/>optional<sp/>(defaults<sp/>are<sp/>any<sp/>URL,<sp/>status<sp/>`200`,<sp/>and<sp/>`GET`<sp/>method).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>request<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>url:<sp/>&apos;/&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>method:<sp/>&apos;GET&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>headers:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>accept:<sp/>&apos;*/*&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>response<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>status:<sp/>200,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>headers:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;cache-control&apos;:<sp/>&apos;public,<sp/>max-age=7234&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>options<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>shared:<sp/>true,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>cacheHeuristic:<sp/>0.1,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>immutableMinTimeToLive:<sp/>24<sp/>*<sp/>3600<sp/>*<sp/>1000,<sp/>//<sp/>24h</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>ignoreCargoCult:<sp/>false,</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`options.shared`<sp/>is<sp/>`true`<sp/>(default),<sp/>then<sp/>the<sp/>response<sp/>is<sp/>evaluated<sp/>from<sp/>a<sp/>perspective<sp/>of<sp/>a<sp/>shared<sp/>cache<sp/>(i.e.<sp/>`private`<sp/>is<sp/>not<sp/>cacheable<sp/>and<sp/>`s-maxage`<sp/>is<sp/>respected).<sp/>If<sp/>`options.shared`<sp/>is<sp/>`false`,<sp/>then<sp/>the<sp/>response<sp/>is<sp/>evaluated<sp/>from<sp/>a<sp/>perspective<sp/>of<sp/>a<sp/>single-user<sp/>cache<sp/>(i.e.<sp/>`private`<sp/>is<sp/>cacheable<sp/>and<sp/>`s-maxage`<sp/>is<sp/>ignored).<sp/>`shared:<sp/>true`<sp/>is<sp/>recommended<sp/>for<sp/>HTTP<sp/>clients.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`options.cacheHeuristic`<sp/>is<sp/>a<sp/>fraction<sp/>of<sp/>response&apos;s<sp/>age<sp/>that<sp/>is<sp/>used<sp/>as<sp/>a<sp/>fallback<sp/>cache<sp/>duration.<sp/>The<sp/>default<sp/>is<sp/>0.1<sp/>(10%),<sp/>e.g.<sp/>if<sp/>a<sp/>file<sp/>hasn&apos;t<sp/>been<sp/>modified<sp/>for<sp/>100<sp/>days,<sp/>it&apos;ll<sp/>be<sp/>cached<sp/>for<sp/>100\*0.1<sp/>=<sp/>10<sp/>days.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`options.immutableMinTimeToLive`<sp/>is<sp/>a<sp/>number<sp/>of<sp/>milliseconds<sp/>to<sp/>assume<sp/>as<sp/>the<sp/>default<sp/>time<sp/>to<sp/>cache<sp/>responses<sp/>with<sp/>`Cache-Control:<sp/>immutable`.<sp/>Note<sp/>that<sp/>[per<sp/>RFC](http://httpwg.org/http-extensions/immutable.html)<sp/>these<sp/>can<sp/>become<sp/>stale,<sp/>so<sp/>`max-age`<sp/>still<sp/>overrides<sp/>the<sp/>default.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`options.ignoreCargoCult`<sp/>is<sp/>true,<sp/>common<sp/>anti-cache<sp/>directives<sp/>will<sp/>be<sp/>completely<sp/>ignored<sp/>if<sp/>the<sp/>non-standard<sp/>`pre-check`<sp/>and<sp/>`post-check`<sp/>directives<sp/>are<sp/>present.<sp/>These<sp/>two<sp/>useless<sp/>directives<sp/>are<sp/>most<sp/>commonly<sp/>found<sp/>in<sp/>bad<sp/>StackOverflow<sp/>answers<sp/>and<sp/>PHP&apos;s<sp/>&quot;session<sp/>limiter&quot;<sp/>defaults.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>`storable()`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>`true`<sp/>if<sp/>the<sp/>response<sp/>can<sp/>be<sp/>stored<sp/>in<sp/>a<sp/>cache.<sp/>If<sp/>it&apos;s<sp/>`false`<sp/>then<sp/>you<sp/>MUST<sp/>NOT<sp/>store<sp/>either<sp/>the<sp/>request<sp/>or<sp/>the<sp/>response.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>`satisfiesWithoutRevalidation(newRequest)`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>the<sp/>most<sp/>important<sp/>method.<sp/>Use<sp/>this<sp/>method<sp/>to<sp/>check<sp/>whether<sp/>the<sp/>cached<sp/>response<sp/>is<sp/>still<sp/>fresh<sp/>in<sp/>the<sp/>context<sp/>of<sp/>the<sp/>new<sp/>request.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>it<sp/>returns<sp/>`true`,<sp/>then<sp/>the<sp/>given<sp/>`request`<sp/>matches<sp/>the<sp/>original<sp/>response<sp/>this<sp/>cache<sp/>policy<sp/>has<sp/>been<sp/>created<sp/>with,<sp/>and<sp/>the<sp/>response<sp/>can<sp/>be<sp/>reused<sp/>without<sp/>contacting<sp/>the<sp/>server.<sp/>Note<sp/>that<sp/>the<sp/>old<sp/>response<sp/>can&apos;t<sp/>be<sp/>returned<sp/>without<sp/>being<sp/>updated,<sp/>see<sp/>`responseHeaders()`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>it<sp/>returns<sp/>`false`,<sp/>then<sp/>the<sp/>response<sp/>may<sp/>not<sp/>be<sp/>matching<sp/>at<sp/>all<sp/>(e.g.<sp/>it&apos;s<sp/>for<sp/>a<sp/>different<sp/>URL<sp/>or<sp/>method),<sp/>or<sp/>may<sp/>require<sp/>to<sp/>be<sp/>refreshed<sp/>first<sp/>(see<sp/>`revalidationHeaders()`).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>`responseHeaders()`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>updated,<sp/>filtered<sp/>set<sp/>of<sp/>response<sp/>headers<sp/>to<sp/>return<sp/>to<sp/>clients<sp/>receiving<sp/>the<sp/>cached<sp/>response.<sp/>This<sp/>function<sp/>is<sp/>necessary,<sp/>because<sp/>proxies<sp/>MUST<sp/>always<sp/>remove<sp/>hop-by-hop<sp/>headers<sp/>(such<sp/>as<sp/>`TE`<sp/>and<sp/>`Connection`)<sp/>and<sp/>update<sp/>response&apos;s<sp/>`Age`<sp/>to<sp/>avoid<sp/>doubling<sp/>cache<sp/>time.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">cachedResponse.headers<sp/>=<sp/>cachePolicy.responseHeaders(cachedResponse);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>`timeToLive()`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>approximate<sp/>time<sp/>in<sp/>_milliseconds_<sp/>until<sp/>the<sp/>response<sp/>becomes<sp/>stale<sp/>(i.e.<sp/>not<sp/>fresh).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">After<sp/>that<sp/>time<sp/>(when<sp/>`timeToLive()<sp/>&lt;=<sp/>0`)<sp/>the<sp/>response<sp/>might<sp/>not<sp/>be<sp/>usable<sp/>without<sp/>revalidation.<sp/>However,<sp/>there<sp/>are<sp/>exceptions,<sp/>e.g.<sp/>a<sp/>client<sp/>can<sp/>explicitly<sp/>allow<sp/>stale<sp/>responses,<sp/>so<sp/>always<sp/>check<sp/>with<sp/>`satisfiesWithoutRevalidation()`.</highlight></codeline>
+<codeline><highlight class="normal">`stale-if-error`<sp/>and<sp/>`stale-while-revalidate`<sp/>extend<sp/>the<sp/>time<sp/>to<sp/>live<sp/>of<sp/>the<sp/>cache,<sp/>that<sp/>can<sp/>still<sp/>be<sp/>used<sp/>if<sp/>stale.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>`toObject()`/`fromObject(json)`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Chances<sp/>are<sp/>you&apos;ll<sp/>want<sp/>to<sp/>store<sp/>the<sp/>`CachePolicy`<sp/>object<sp/>along<sp/>with<sp/>the<sp/>cached<sp/>response.<sp/>`obj<sp/>=<sp/>policy.toObject()`<sp/>gives<sp/>a<sp/>plain<sp/>JSON-serializable<sp/>object.<sp/>`policy<sp/>=<sp/>CachePolicy.fromObject(obj)`<sp/>creates<sp/>an<sp/>instance<sp/>from<sp/>it.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Refreshing<sp/>stale<sp/>cache<sp/>(revalidation)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>a<sp/>cached<sp/>response<sp/>has<sp/>expired,<sp/>it<sp/>can<sp/>be<sp/>made<sp/>fresh<sp/>again<sp/>by<sp/>making<sp/>a<sp/>request<sp/>to<sp/>the<sp/>origin<sp/>server.<sp/>The<sp/>server<sp/>may<sp/>respond<sp/>with<sp/>status<sp/>304<sp/>(Not<sp/>Modified)<sp/>without<sp/>sending<sp/>the<sp/>response<sp/>body<sp/>again,<sp/>saving<sp/>bandwidth.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>following<sp/>methods<sp/>help<sp/>perform<sp/>the<sp/>update<sp/>efficiently<sp/>and<sp/>correctly.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>`revalidationHeaders(newRequest)`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>updated,<sp/>filtered<sp/>set<sp/>of<sp/>request<sp/>headers<sp/>to<sp/>send<sp/>to<sp/>the<sp/>origin<sp/>server<sp/>to<sp/>check<sp/>if<sp/>the<sp/>cached<sp/>response<sp/>can<sp/>be<sp/>reused.<sp/>These<sp/>headers<sp/>allow<sp/>the<sp/>origin<sp/>server<sp/>to<sp/>return<sp/>status<sp/>304<sp/>indicating<sp/>the<sp/>response<sp/>is<sp/>still<sp/>fresh.<sp/>All<sp/>headers<sp/>unrelated<sp/>to<sp/>caching<sp/>are<sp/>passed<sp/>through<sp/>as-is.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Use<sp/>this<sp/>method<sp/>when<sp/>updating<sp/>cache<sp/>from<sp/>the<sp/>origin<sp/>server.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">updateRequest.headers<sp/>=<sp/>cachePolicy.revalidationHeaders(updateRequest);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>`revalidatedPolicy(revalidationRequest,<sp/>revalidationResponse)`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Use<sp/>this<sp/>method<sp/>to<sp/>update<sp/>the<sp/>cache<sp/>after<sp/>receiving<sp/>a<sp/>new<sp/>response<sp/>from<sp/>the<sp/>origin<sp/>server.<sp/>It<sp/>returns<sp/>an<sp/>object<sp/>with<sp/>two<sp/>keys:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/><sp/><sp/>`policy`<sp/>—<sp/>A<sp/>new<sp/>`CachePolicy`<sp/>with<sp/>HTTP<sp/>headers<sp/>updated<sp/>from<sp/>`revalidationResponse`.<sp/>You<sp/>can<sp/>always<sp/>replace<sp/>the<sp/>old<sp/>cached<sp/>`CachePolicy`<sp/>with<sp/>the<sp/>new<sp/>one.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/><sp/><sp/>`modified`<sp/>—<sp/>Boolean<sp/>indicating<sp/>whether<sp/>the<sp/>response<sp/>body<sp/>has<sp/>changed.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/><sp/><sp/>If<sp/>`false`,<sp/>then<sp/>a<sp/>valid<sp/>304<sp/>Not<sp/>Modified<sp/>response<sp/>has<sp/>been<sp/>received,<sp/>and<sp/>you<sp/>can<sp/>reuse<sp/>the<sp/>old<sp/>cached<sp/>response<sp/>body.<sp/>This<sp/>is<sp/>also<sp/>affected<sp/>by<sp/>`stale-if-error`.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/><sp/><sp/>If<sp/>`true`,<sp/>you<sp/>should<sp/>use<sp/>new<sp/>response&apos;s<sp/>body<sp/>(if<sp/>present),<sp/>or<sp/>make<sp/>another<sp/>request<sp/>to<sp/>the<sp/>origin<sp/>server<sp/>without<sp/>any<sp/>conditional<sp/>headers<sp/>(i.e.<sp/>don&apos;t<sp/>use<sp/>`revalidationHeaders()`<sp/>this<sp/>time)<sp/>to<sp/>get<sp/>the<sp/>new<sp/>resource.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>When<sp/>serving<sp/>requests<sp/>from<sp/>cache:</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>oldPolicy,<sp/>oldResponse<sp/>}<sp/>=<sp/>letsPretendThisIsSomeCache.get(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>newRequest.url</highlight></codeline>
+<codeline><highlight class="normal">);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">if<sp/>(!oldPolicy.satisfiesWithoutRevalidation(newRequest))<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Change<sp/>the<sp/>request<sp/>to<sp/>ask<sp/>the<sp/>origin<sp/>server<sp/>if<sp/>the<sp/>cached<sp/>response<sp/>can<sp/>be<sp/>used</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>newRequest.headers<sp/>=<sp/>oldPolicy.revalidationHeaders(newRequest);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Send<sp/>request<sp/>to<sp/>the<sp/>origin<sp/>server.<sp/>The<sp/>server<sp/>may<sp/>respond<sp/>with<sp/>status<sp/>304</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>const<sp/>newResponse<sp/>=<sp/>await<sp/>makeRequest(newRequest);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Create<sp/>updated<sp/>policy<sp/>and<sp/>combined<sp/>response<sp/>from<sp/>the<sp/>old<sp/>and<sp/>new<sp/>data</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>const<sp/>{<sp/>policy,<sp/>modified<sp/>}<sp/>=<sp/>oldPolicy.revalidatedPolicy(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>newRequest,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>newResponse</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>const<sp/>response<sp/>=<sp/>modified<sp/>?<sp/>newResponse<sp/>:<sp/>oldResponse;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Update<sp/>the<sp/>cache<sp/>with<sp/>the<sp/>newer/fresher<sp/>response</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>letsPretendThisIsSomeCache.set(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>newRequest.url,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<sp/>policy,<sp/>response<sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>policy.timeToLive()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>And<sp/>proceed<sp/>returning<sp/>cached<sp/>response<sp/>as<sp/>usual</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>response.headers<sp/>=<sp/>policy.responseHeaders();</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>response;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Yo,<sp/>FRESH</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">![satisfiesWithoutRevalidation](fresh.jpg)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Used<sp/>by</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/><sp/><sp/>[ImageOptim<sp/>API](https://imageoptim.com/api),<sp/>[make-fetch-happen](https://github.com/zkat/make-fetch-happen),<sp/>[cacheable-request](https://www.npmjs.com/package/cacheable-request)<sp/>([got](https://www.npmjs.com/package/got)),<sp/>[npm/registry-fetch](https://github.com/npm/registry-fetch),<sp/>[etc.](https://github.com/kornelski/http-cache-semantics/network/dependents)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Implemented</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/><sp/><sp/>`Cache-Control`<sp/>response<sp/>header<sp/>with<sp/>all<sp/>the<sp/>quirks.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/><sp/><sp/>`Expires`<sp/>with<sp/>check<sp/>for<sp/>bad<sp/>clocks.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/><sp/><sp/>`Pragma`<sp/>response<sp/>header.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/><sp/><sp/>`Age`<sp/>response<sp/>header.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/><sp/><sp/>`Vary`<sp/>response<sp/>header.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/><sp/><sp/>Default<sp/>cacheability<sp/>of<sp/>statuses<sp/>and<sp/>methods.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/><sp/><sp/>Requests<sp/>for<sp/>stale<sp/>data.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/><sp/><sp/>Filtering<sp/>of<sp/>hop-by-hop<sp/>headers.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/><sp/><sp/>Basic<sp/>revalidation<sp/>request</highlight></codeline>
+<codeline><highlight class="normal">-<sp/><sp/><sp/>`stale-if-error`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Unimplemented</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/><sp/><sp/>Merging<sp/>of<sp/>range<sp/>requests,<sp/>`If-Range`<sp/>(but<sp/>correctly<sp/>supports<sp/>them<sp/>as<sp/>non-cacheable)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/><sp/><sp/>Revalidation<sp/>of<sp/>multiple<sp/>representations</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Trusting<sp/>server<sp/>`Date`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Per<sp/>the<sp/>RFC,<sp/>the<sp/>cache<sp/>should<sp/>take<sp/>into<sp/>account<sp/>the<sp/>time<sp/>between<sp/>server-supplied<sp/>`Date`<sp/>and<sp/>the<sp/>time<sp/>it<sp/>received<sp/>the<sp/>response.<sp/>The<sp/>RFC-mandated<sp/>behavior<sp/>creates<sp/>two<sp/>problems:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>Servers<sp/>with<sp/>incorrectly<sp/>set<sp/>timezone<sp/>may<sp/>add<sp/>several<sp/>hours<sp/>to<sp/>cache<sp/>age<sp/>(or<sp/>more,<sp/>if<sp/>the<sp/>clock<sp/>is<sp/>completely<sp/>wrong).</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>Even<sp/>reasonably<sp/>correct<sp/>clocks<sp/>may<sp/>be<sp/>off<sp/>by<sp/>a<sp/>couple<sp/>of<sp/>seconds,<sp/>breaking<sp/>`max-age=1`<sp/>trick<sp/>(which<sp/>is<sp/>useful<sp/>for<sp/>reverse<sp/>proxies<sp/>on<sp/>high-traffic<sp/>servers).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Previous<sp/>versions<sp/>of<sp/>this<sp/>library<sp/>had<sp/>an<sp/>option<sp/>to<sp/>ignore<sp/>the<sp/>server<sp/>date<sp/>if<sp/>it<sp/>was<sp/>&quot;too<sp/>inaccurate&quot;.<sp/>To<sp/>support<sp/>the<sp/>`max-age=1`<sp/>trick<sp/>the<sp/>library<sp/>also<sp/>has<sp/>to<sp/>ignore<sp/>dates<sp/>that<sp/>pretty<sp/>accurate.<sp/>There&apos;s<sp/>no<sp/>point<sp/>of<sp/>having<sp/>an<sp/>option<sp/>to<sp/>trust<sp/>dates<sp/>that<sp/>are<sp/>only<sp/>a<sp/>bit<sp/>inaccurate,<sp/>so<sp/>this<sp/>library<sp/>won&apos;t<sp/>trust<sp/>any<sp/>server<sp/>dates.<sp/>`max-age`<sp/>will<sp/>be<sp/>interpreted<sp/>from<sp/>the<sp/>time<sp/>the<sp/>response<sp/>has<sp/>been<sp/>received,<sp/>not<sp/>from<sp/>when<sp/>it<sp/>has<sp/>been<sp/>sent.<sp/>This<sp/>will<sp/>affect<sp/>only<sp/>[RFC<sp/>1149<sp/>networks](https://tools.ietf.org/html/rfc1149).</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/http-cache-semantics/README.md"/>
+  </compounddef>
+</doxygen>

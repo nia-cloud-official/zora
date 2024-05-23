@@ -1,0 +1,195 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2mkdirp_2readme" kind="page">
+    <compoundname>md_backend_2node__modules_2mkdirp_2readme</compoundname>
+    <title>mkdirp</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2mkdirp_2readme_1autotoc_md2208"/> Like <computeroutput>mkdir -p</computeroutput>, but in Node.js!</para>
+<para>Now with a modern API and no* bugs!</para>
+<para><small>* may contain some bugs</small></para>
+<sect1 id="md_backend_2node__modules_2mkdirp_2readme_1autotoc_md2209">
+<title>example</title><sect2 id="md_backend_2node__modules_2mkdirp_2readme_1autotoc_md2210">
+<title>pow.js</title><para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>mkdirp<sp/>=<sp/>require(&apos;mkdirp&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>return<sp/>value<sp/>is<sp/>a<sp/>Promise<sp/>resolving<sp/>to<sp/>the<sp/>first<sp/>directory<sp/>created</highlight></codeline>
+<codeline><highlight class="normal">mkdirp(&apos;/tmp/foo/bar/baz&apos;).then(made<sp/>=&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(`made<sp/>directories,<sp/>starting<sp/>with<sp/>${made}`))</highlight></codeline>
+</programlisting></para>
+<para>Output (where <computeroutput>/tmp/foo</computeroutput> already exists)</para>
+<para><programlisting><codeline><highlight class="normal">made<sp/>directories,<sp/>starting<sp/>with<sp/>/tmp/foo/bar</highlight></codeline>
+</programlisting></para>
+<para>Or, if you don&apos;t have time to wait around for promises:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>mkdirp<sp/>=<sp/>require(&apos;mkdirp&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>return<sp/>value<sp/>is<sp/>the<sp/>first<sp/>directory<sp/>created</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>made<sp/>=<sp/>mkdirp.sync(&apos;/tmp/foo/bar/baz&apos;)</highlight></codeline>
+<codeline><highlight class="normal">console.log(`made<sp/>directories,<sp/>starting<sp/>with<sp/>${made}`)</highlight></codeline>
+</programlisting></para>
+<para>And now /tmp/foo/bar/baz exists, huzzah!</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2mkdirp_2readme_1autotoc_md2211">
+<title>methods</title><para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>mkdirp<sp/>=<sp/>require(&apos;mkdirp&apos;)</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2mkdirp_2readme_1autotoc_md2212">
+<title>mkdirp(dir, [opts]) -&gt; Promise&lt;String | undefined&gt;</title><para>Create a new directory and any necessary subdirectories at <computeroutput>dir</computeroutput> with octal permission string <computeroutput>opts.mode</computeroutput>. If <computeroutput>opts</computeroutput> is a string or number, it will be treated as the <computeroutput>opts.mode</computeroutput>.</para>
+<para>If <computeroutput>opts.mode</computeroutput> isn&apos;t specified, it defaults to <computeroutput>0o777 &amp; (~process.umask())</computeroutput>.</para>
+<para>Promise resolves to first directory <computeroutput>made</computeroutput> that had to be created, or <computeroutput>undefined</computeroutput> if everything already exists. Promise rejects if any errors are encountered. Note that, in the case of promise rejection, some directories <emphasis>may</emphasis> have been created, as recursive directory creation is not an atomic operation.</para>
+<para>You can optionally pass in an alternate <computeroutput>fs</computeroutput> implementation by passing in <computeroutput>opts.fs</computeroutput>. Your implementation should have <computeroutput>opts.fs.mkdir(path, opts, cb)</computeroutput> and <computeroutput>opts.fs.stat(path, cb)</computeroutput>.</para>
+<para>You can also override just one or the other of <computeroutput>mkdir</computeroutput> and <computeroutput>stat</computeroutput> by passing in <computeroutput>opts.stat</computeroutput> or <computeroutput>opts.mkdir</computeroutput>, or providing an <computeroutput>fs</computeroutput> option that only overrides one of these.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2mkdirp_2readme_1autotoc_md2213">
+<title>mkdirp.sync(dir, opts) -&gt; String|null</title><para>Synchronously create a new directory and any necessary subdirectories at <computeroutput>dir</computeroutput> with octal permission string <computeroutput>opts.mode</computeroutput>. If <computeroutput>opts</computeroutput> is a string or number, it will be treated as the <computeroutput>opts.mode</computeroutput>.</para>
+<para>If <computeroutput>opts.mode</computeroutput> isn&apos;t specified, it defaults to <computeroutput>0o777 &amp; (~process.umask())</computeroutput>.</para>
+<para>Returns the first directory that had to be created, or undefined if everything already exists.</para>
+<para>You can optionally pass in an alternate <computeroutput>fs</computeroutput> implementation by passing in <computeroutput>opts.fs</computeroutput>. Your implementation should have <computeroutput>opts.fs.mkdirSync(path, mode)</computeroutput> and <computeroutput>opts.fs.statSync(path)</computeroutput>.</para>
+<para>You can also override just one or the other of <computeroutput>mkdirSync</computeroutput> and <computeroutput>statSync</computeroutput> by passing in <computeroutput>opts.statSync</computeroutput> or <computeroutput>opts.mkdirSync</computeroutput>, or providing an <computeroutput>fs</computeroutput> option that only overrides one of these.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2mkdirp_2readme_1autotoc_md2214">
+<title>mkdirp.manual, mkdirp.manualSync</title><para>Use the manual implementation (not the native one). This is the default when the native implementation is not available or the stat/mkdir implementation is overridden.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2mkdirp_2readme_1autotoc_md2215">
+<title>mkdirp.native, mkdirp.nativeSync</title><para>Use the native implementation (not the manual one). This is the default when the native implementation is available and stat/mkdir are not overridden.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2mkdirp_2readme_1autotoc_md2216">
+<title>implementation</title><para>On Node.js v10.12.0 and above, use the native <computeroutput>fs.mkdir(p, {recursive:true})</computeroutput> option, unless <computeroutput>fs.mkdir</computeroutput>/<computeroutput>fs.mkdirSync</computeroutput> has been overridden by an option.</para>
+<sect2 id="md_backend_2node__modules_2mkdirp_2readme_1autotoc_md2217">
+<title>native implementation</title><para><itemizedlist>
+<listitem><para>If the path is a root directory, then pass it to the underlying implementation and return the result/error. (In this case, it&apos;ll either succeed or fail, but we aren&apos;t actually creating any dirs.)</para>
+</listitem><listitem><para>Walk up the path statting each directory, to find the first path that will be created, <computeroutput>made</computeroutput>.</para>
+</listitem><listitem><para>Call <computeroutput>fs.mkdir(path, { recursive: true })</computeroutput> (or <computeroutput>fs.mkdirSync</computeroutput>)</para>
+</listitem><listitem><para>If error, raise it to the caller.</para>
+</listitem><listitem><para>Return <computeroutput>made</computeroutput>.</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2mkdirp_2readme_1autotoc_md2218">
+<title>manual implementation</title><para><itemizedlist>
+<listitem><para>Call underlying <computeroutput>fs.mkdir</computeroutput> implementation, with <computeroutput>recursive: false</computeroutput></para>
+</listitem><listitem><para>If error:<itemizedlist>
+<listitem><para>If path is a root directory, raise to the caller and do not handle it</para>
+</listitem><listitem><para>If ENOENT, mkdirp parent dir, store result as <computeroutput>made</computeroutput></para>
+</listitem><listitem><para>stat(path)<itemizedlist>
+<listitem><para>If error, raise original <computeroutput>mkdir</computeroutput> error</para>
+</listitem><listitem><para>If directory, return <computeroutput>made</computeroutput></para>
+</listitem><listitem><para>Else, raise original <computeroutput>mkdir</computeroutput> error</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para>else<itemizedlist>
+<listitem><para>return <computeroutput>undefined</computeroutput> if a root dir, or <computeroutput>made</computeroutput> if set, or <computeroutput>path</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2mkdirp_2readme_1autotoc_md2219">
+<title>windows vs unix caveat</title><para>On Windows file systems, attempts to create a root directory (ie, a drive letter or root UNC path) will fail. If the root directory exists, then it will fail with <computeroutput>EPERM</computeroutput>. If the root directory does not exist, then it will fail with <computeroutput>ENOENT</computeroutput>.</para>
+<para>On posix file systems, attempts to create a root directory (in recursive mode) will succeed silently, as it is treated like just another directory that already exists. (In non-recursive mode, of course, it fails with <computeroutput>EEXIST</computeroutput>.)</para>
+<para>In order to preserve this system-specific behavior (and because it&apos;s not as if we can create the parent of a root directory anyway), attempts to create a root directory are passed directly to the <computeroutput>fs</computeroutput> implementation, and any errors encountered are not handled.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2mkdirp_2readme_1autotoc_md2220">
+<title>native error caveat</title><para>The native implementation (as of at least Node.js v13.4.0) does not provide appropriate errors in some cases (see <ulink url="https://github.com/nodejs/node/issues/31481">nodejs/node#31481</ulink> and <ulink url="https://github.com/nodejs/node/issues/28015">nodejs/node#28015</ulink>).</para>
+<para>In order to work around this issue, the native implementation will fall back to the manual implementation if an <computeroutput>ENOENT</computeroutput> error is encountered.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2mkdirp_2readme_1autotoc_md2221">
+<title>choosing a recursive mkdir implementation</title><para>There are a few to choose from! Use the one that suits your needs best :D</para>
+<sect2 id="md_backend_2node__modules_2mkdirp_2readme_1autotoc_md2222">
+<title>use <computeroutput>fs.mkdir(path, {recursive: true}, cb)</computeroutput> if:</title><para><itemizedlist>
+<listitem><para>You wish to optimize performance even at the expense of other factors.</para>
+</listitem><listitem><para>You don&apos;t need to know the first dir created.</para>
+</listitem><listitem><para>You are ok with getting <computeroutput>ENOENT</computeroutput> as the error when some other problem is the actual cause.</para>
+</listitem><listitem><para>You can limit your platforms to Node.js v10.12 and above.</para>
+</listitem><listitem><para>You&apos;re ok with using callbacks instead of promises.</para>
+</listitem><listitem><para>You don&apos;t need/want a CLI.</para>
+</listitem><listitem><para>You don&apos;t need to override the <computeroutput>fs</computeroutput> methods in use.</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2mkdirp_2readme_1autotoc_md2223">
+<title>use this module (mkdirp 1.x) if:</title><para><itemizedlist>
+<listitem><para>You need to know the first directory that was created.</para>
+</listitem><listitem><para>You wish to use the native implementation if available, but fall back when it&apos;s not.</para>
+</listitem><listitem><para>You prefer promise-returning APIs to callback-taking APIs.</para>
+</listitem><listitem><para>You want more useful error messages than the native recursive mkdir provides (at least as of Node.js v13.4), and are ok with re-trying on <computeroutput>ENOENT</computeroutput> to achieve this.</para>
+</listitem><listitem><para>You need (or at least, are ok with) a CLI.</para>
+</listitem><listitem><para>You need to override the <computeroutput>fs</computeroutput> methods in use.</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2mkdirp_2readme_1autotoc_md2224">
+<title>use <ulink url="http://npm.im/make-dir"><computeroutput>make-dir</computeroutput></ulink> if:</title><para><itemizedlist>
+<listitem><para>You do not need to know the first dir created (and wish to save a few <computeroutput>stat</computeroutput> calls when using the native implementation for this reason).</para>
+</listitem><listitem><para>You wish to use the native implementation if available, but fall back when it&apos;s not.</para>
+</listitem><listitem><para>You prefer promise-returning APIs to callback-taking APIs.</para>
+</listitem><listitem><para>You are ok with occasionally getting <computeroutput>ENOENT</computeroutput> errors for failures that are actually related to something other than a missing file system entry.</para>
+</listitem><listitem><para>You don&apos;t need/want a CLI.</para>
+</listitem><listitem><para>You need to override the <computeroutput>fs</computeroutput> methods in use.</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2mkdirp_2readme_1autotoc_md2225">
+<title>use mkdirp 0.x if:</title><para><itemizedlist>
+<listitem><para>You need to know the first directory that was created.</para>
+</listitem><listitem><para>You need (or at least, are ok with) a CLI.</para>
+</listitem><listitem><para>You need to override the <computeroutput>fs</computeroutput> methods in use.</para>
+</listitem><listitem><para>You&apos;re ok with using callbacks instead of promises.</para>
+</listitem><listitem><para>You are not running on Windows, where the root-level ENOENT errors can lead to infinite regress.</para>
+</listitem><listitem><para>You think vinyl just sounds warmer and richer for some weird reason.</para>
+</listitem><listitem><para>You are supporting truly ancient Node.js versions, before even the advent of a <computeroutput>Promise</computeroutput> language primitive. (Please don&apos;t. You deserve better.)</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2mkdirp_2readme_1autotoc_md2226">
+<title>cli</title><para>This package also ships with a <computeroutput>mkdirp</computeroutput> command.</para>
+<para><programlisting><codeline><highlight class="normal">$<sp/>mkdirp<sp/>-h</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">usage:<sp/>mkdirp<sp/>[DIR1,DIR2..]<sp/>{OPTIONS}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Create<sp/>each<sp/>supplied<sp/>directory<sp/>including<sp/>any<sp/>necessary<sp/>parent<sp/>directories</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>that<sp/>don&apos;t<sp/>yet<sp/>exist.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>If<sp/>the<sp/>directory<sp/>already<sp/>exists,<sp/>do<sp/>nothing.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">OPTIONS<sp/>are:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-m&lt;mode&gt;<sp/><sp/><sp/><sp/><sp/><sp/><sp/>If<sp/>a<sp/>directory<sp/>needs<sp/>to<sp/>be<sp/>created,<sp/>set<sp/>the<sp/>mode<sp/>as<sp/>an<sp/>octal</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--mode=&lt;mode&gt;<sp/><sp/>permission<sp/>string.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-v<sp/>--version<sp/><sp/><sp/>Print<sp/>the<sp/>mkdirp<sp/>version<sp/>number</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-h<sp/>--help<sp/><sp/><sp/><sp/><sp/><sp/>Print<sp/>this<sp/>helpful<sp/>banner</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-p<sp/>--print<sp/><sp/><sp/><sp/><sp/>Print<sp/>the<sp/>first<sp/>directories<sp/>created<sp/>for<sp/>each<sp/>path<sp/>provided</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--manual<sp/><sp/><sp/><sp/><sp/><sp/><sp/>Use<sp/>manual<sp/>implementation,<sp/>even<sp/>if<sp/>native<sp/>is<sp/>available</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2mkdirp_2readme_1autotoc_md2227">
+<title>install</title><para>With <ulink url="http://npmjs.org">npm</ulink> do:</para>
+<para><programlisting><codeline><highlight class="normal">npm<sp/>install<sp/>mkdirp</highlight></codeline>
+</programlisting></para>
+<para>to get the library locally, or</para>
+<para><programlisting><codeline><highlight class="normal">npm<sp/>install<sp/>-g<sp/>mkdirp</highlight></codeline>
+</programlisting></para>
+<para>to get the command everywhere, or</para>
+<para><programlisting><codeline><highlight class="normal">npx<sp/>mkdirp<sp/>...</highlight></codeline>
+</programlisting></para>
+<para>to run the command without installing it globally.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2mkdirp_2readme_1autotoc_md2228">
+<title>platform support</title><para>This module works on node v8, but only v10 and above are officially supported, as Node v8 reached its LTS end of life 2020-01-01, which is in the past, as of this writing.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2mkdirp_2readme_1autotoc_md2229">
+<title>license</title><para>MIT </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/mkdirp/readme.markdown"/>
+  </compounddef>
+</doxygen>

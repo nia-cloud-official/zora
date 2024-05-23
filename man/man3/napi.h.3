@@ -1,0 +1,400 @@
+.TH "backend/node_modules/node-addon-api/napi.h" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+backend/node_modules/node-addon-api/napi.h
+.SH SYNOPSIS
+.br
+.PP
+\fR#include <node_api\&.h>\fP
+.br
+\fR#include <functional>\fP
+.br
+\fR#include <initializer_list>\fP
+.br
+\fR#include <memory>\fP
+.br
+\fR#include <mutex>\fP
+.br
+\fR#include <string>\fP
+.br
+\fR#include <vector>\fP
+.br
+\fR#include 'napi\-inl\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBNapi::Maybe< T >\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::Env\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::Value\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::Boolean\fP"
+.br
+.RI "A JavaScript boolean value\&. "
+.ti -1c
+.RI "class \fBNapi::Number\fP"
+.br
+.RI "A JavaScript number value\&. "
+.ti -1c
+.RI "class \fBNapi::Name\fP"
+.br
+.RI "A JavaScript string or symbol value (that can be used as a property name)\&. "
+.ti -1c
+.RI "class \fBNapi::String\fP"
+.br
+.RI "A JavaScript string value\&. "
+.ti -1c
+.RI "class \fBNapi::Symbol\fP"
+.br
+.RI "A JavaScript symbol value\&. "
+.ti -1c
+.RI "class \fBNapi::TypeTaggable\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::Object\fP"
+.br
+.RI "A JavaScript object value\&. "
+.ti -1c
+.RI "class \fBNapi::Object::PropertyLValue< Key >\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::External< T >\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::Array\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::ArrayBuffer\fP"
+.br
+.RI "A JavaScript array buffer value\&. "
+.ti -1c
+.RI "class \fBNapi::TypedArray\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::TypedArrayOf< T >\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::DataView\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::Function\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::Promise\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::Promise::Deferred\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::Buffer< T >\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::Reference< T >\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::ObjectReference\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::FunctionReference\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::Error\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::TypeError\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::RangeError\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::CallbackInfo\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::PropertyDescriptor\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::ClassPropertyDescriptor< T >\fP"
+.br
+.ti -1c
+.RI "struct \fBNapi::MethodCallbackData< T, TCallback >\fP"
+.br
+.ti -1c
+.RI "struct \fBNapi::AccessorCallbackData< T, TGetterCallback, TSetterCallback >\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::InstanceWrap< T >\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::ObjectWrap< T >\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::HandleScope\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::EscapableHandleScope\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::AsyncContext\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::AsyncWorker\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::MemoryManagement\fP"
+.br
+.ti -1c
+.RI "class \fBNapi::VersionManagement\fP"
+.br
+.in -1c
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI "namespace \fBNapi\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBNAPI_HAS_THREADS\fP   1"
+.br
+.ti -1c
+.RI "#define \fBNAPI_HAS_CONSTEXPR\fP   1"
+.br
+.ti -1c
+.RI "#define \fBNAPI_WIDE_TEXT\fP(x)   u##x"
+.br
+.ti -1c
+.RI "#define \fBNAPI_NOEXCEPT\fP   noexcept"
+.br
+.ti -1c
+.RI "#define \fBNAPI_THROW\fP(e, \&.\&.\&.)"
+.br
+.ti -1c
+.RI "#define \fBNAPI_THROW_VOID\fP(e)"
+.br
+.ti -1c
+.RI "#define \fBNAPI_THROW_IF_FAILED\fP(env,  status, \&.\&.\&.)"
+.br
+.ti -1c
+.RI "#define \fBNAPI_THROW_IF_FAILED_VOID\fP(env,  status)"
+.br
+.ti -1c
+.RI "#define \fBNAPI_MAYBE_THROW_IF_FAILED\fP(env,  status,  type)     \fBNAPI_THROW_IF_FAILED\fP(env, status, type())"
+.br
+.ti -1c
+.RI "#define \fBNAPI_RETURN_OR_THROW_IF_FAILED\fP(env,  status,  result,  type)"
+.br
+.ti -1c
+.RI "#define \fBNAPI_DISALLOW_ASSIGN\fP(CLASS)   void operator=(const CLASS&) = delete;"
+.br
+.ti -1c
+.RI "#define \fBNAPI_DISALLOW_COPY\fP(CLASS)   CLASS(const CLASS&) = delete;"
+.br
+.ti -1c
+.RI "#define \fBNAPI_DISALLOW_ASSIGN_COPY\fP(CLASS)"
+.br
+.ti -1c
+.RI "#define \fBNAPI_CHECK\fP(condition,  location,  message)"
+.br
+.ti -1c
+.RI "#define \fBNAPI_FATAL_IF_FAILED\fP(status,  location,  message)     \fBNAPI_CHECK\fP((status) == napi_ok, location, message)"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "using \fBNapi::Int8Array\fP"
+.br
+.RI "Typed-array of signed 8-bit integers\&. "
+.ti -1c
+.RI "using \fBNapi::Uint8Array\fP"
+.br
+.RI "Typed-array of unsigned 8-bit integers\&. "
+.ti -1c
+.RI "using \fBNapi::Int16Array\fP"
+.br
+.RI "Typed-array of signed 16-bit integers\&. "
+.ti -1c
+.RI "using \fBNapi::Uint16Array\fP"
+.br
+.RI "Typed-array of unsigned 16-bit integers\&. "
+.ti -1c
+.RI "using \fBNapi::Int32Array\fP"
+.br
+.RI "Typed-array of signed 32-bit integers\&. "
+.ti -1c
+.RI "using \fBNapi::Uint32Array\fP"
+.br
+.RI "Typed-array of unsigned 32-bit integers\&. "
+.ti -1c
+.RI "using \fBNapi::Float32Array\fP"
+.br
+.RI "Typed-array of 32-bit floating-point values\&. "
+.ti -1c
+.RI "using \fBNapi::Float64Array\fP"
+.br
+.RI "Typed-array of 64-bit floating-point values\&. "
+.ti -1c
+.RI "using \fBNapi::ModuleRegisterCallback\fP = \fBObject\fP (*)(\fBEnv\fP env, \fBObject\fP exports)"
+.br
+.ti -1c
+.RI "template<typename T > using \fBNapi::MaybeOrValue\fP = T"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "template<class T > \fBMaybe\fP< T > \fBNapi::Nothing\fP ()"
+.br
+.ti -1c
+.RI "template<class T > \fBMaybe\fP< T > \fBNapi::Just\fP (const T &t)"
+.br
+.ti -1c
+.RI "template<typename T > \fBReference\fP< T > \fBNapi::Weak\fP (T value)"
+.br
+.ti -1c
+.RI "\fBObjectReference\fP \fBNapi::Weak\fP (\fBObject\fP value)"
+.br
+.ti -1c
+.RI "\fBFunctionReference\fP \fBNapi::Weak\fP (\fBFunction\fP value)"
+.br
+.ti -1c
+.RI "template<typename T > \fBReference\fP< T > \fBNapi::Persistent\fP (T value)"
+.br
+.ti -1c
+.RI "\fBObjectReference\fP \fBNapi::Persistent\fP (\fBObject\fP value)"
+.br
+.ti -1c
+.RI "\fBFunctionReference\fP \fBNapi::Persistent\fP (\fBFunction\fP value)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define NAPI_CHECK( condition,  location,  message)"
+\fBValue:\fP
+.nf
+  do {                                                                         \\
+    if (!(condition)) {                                                        \\
+      Napi::Error::Fatal((location), (message));                               \\
+    }                                                                          \\
+  } while (0)
+.PP
+.fi
+
+.PP
+Definition at line \fB138\fP of file \fBnapi\&.h\fP\&.
+.SS "#define NAPI_DISALLOW_ASSIGN( CLASS)   void operator=(const CLASS&) = delete;"
+
+.PP
+Definition at line \fB131\fP of file \fBnapi\&.h\fP\&.
+.SS "#define NAPI_DISALLOW_ASSIGN_COPY( CLASS)"
+\fBValue:\fP
+.nf
+  NAPI_DISALLOW_ASSIGN(CLASS)                                                  \\
+  NAPI_DISALLOW_COPY(CLASS)
+.PP
+.fi
+
+.PP
+Definition at line \fB134\fP of file \fBnapi\&.h\fP\&.
+.SS "#define NAPI_DISALLOW_COPY( CLASS)   CLASS(const CLASS&) = delete;"
+
+.PP
+Definition at line \fB132\fP of file \fBnapi\&.h\fP\&.
+.SS "#define NAPI_FATAL_IF_FAILED( status,  location,  message)     \fBNAPI_CHECK\fP((status) == napi_ok, location, message)"
+
+.PP
+Definition at line \fB145\fP of file \fBnapi\&.h\fP\&.
+.SS "#define NAPI_HAS_CONSTEXPR   1"
+
+.PP
+Definition at line \fB26\fP of file \fBnapi\&.h\fP\&.
+.SS "#define NAPI_HAS_THREADS   1"
+
+.PP
+Definition at line \fB7\fP of file \fBnapi\&.h\fP\&.
+.SS "#define NAPI_MAYBE_THROW_IF_FAILED( env,  status,  type)     \fBNAPI_THROW_IF_FAILED\fP(env, status, type())"
+
+.PP
+Definition at line \fB123\fP of file \fBnapi\&.h\fP\&.
+.SS "#define NAPI_NOEXCEPT   noexcept"
+
+.PP
+Definition at line \fB61\fP of file \fBnapi\&.h\fP\&.
+.SS "#define NAPI_RETURN_OR_THROW_IF_FAILED( env,  status,  result,  type)"
+\fBValue:\fP
+.nf
+  NAPI_MAYBE_THROW_IF_FAILED(env, status, type);                               \\
+  return result;
+.PP
+.fi
+
+.PP
+Definition at line \fB126\fP of file \fBnapi\&.h\fP\&.
+.SS "#define NAPI_THROW( e,  \&.\&.\&.)"
+\fBValue:\fP
+.nf
+  do {                                                                         \\
+    (e)\&.ThrowAsJavaScriptException();                                          \\
+    return __VA_ARGS__;                                                        \\
+  } while (0)
+.PP
+.fi
+
+.PP
+Definition at line \fB89\fP of file \fBnapi\&.h\fP\&.
+.SS "#define NAPI_THROW_IF_FAILED( env,  status,  \&.\&.\&.)"
+\fBValue:\fP
+.nf
+  if ((status) != napi_ok) {                                                   \\
+    Napi::Error::New(env)\&.ThrowAsJavaScriptException();                        \\
+    return __VA_ARGS__;                                                        \\
+  }
+.PP
+.fi
+
+.PP
+Definition at line \fB101\fP of file \fBnapi\&.h\fP\&.
+.SS "#define NAPI_THROW_IF_FAILED_VOID( env,  status)"
+\fBValue:\fP
+.nf
+  if ((status) != napi_ok) {                                                   \\
+    Napi::Error::New(env)\&.ThrowAsJavaScriptException();                        \\
+    return;                                                                    \\
+  }
+.PP
+.fi
+
+.PP
+Definition at line \fB107\fP of file \fBnapi\&.h\fP\&.
+.SS "#define NAPI_THROW_VOID( e)"
+\fBValue:\fP
+.nf
+  do {                                                                         \\
+    (e)\&.ThrowAsJavaScriptException();                                          \\
+    return;                                                                    \\
+  } while (0)
+.PP
+.fi
+
+.PP
+Definition at line \fB95\fP of file \fBnapi\&.h\fP\&.
+.SS "#define NAPI_WIDE_TEXT( x)   u##x"
+
+.PP
+Definition at line \fB37\fP of file \fBnapi\&.h\fP\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

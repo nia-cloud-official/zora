@@ -1,0 +1,205 @@
+\chapter{mkdirp}
+\hypertarget{md_backend_2node__modules_2mkdirp_2readme}{}\label{md_backend_2node__modules_2mkdirp_2readme}\index{mkdirp@{mkdirp}}
+\label{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2208}%
+\Hypertarget{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2208}%
+ Like {\ttfamily mkdir -\/p}, but in Node.\+js!
+
+Now with a modern API and no\texorpdfstring{$\ast$}{*} bugs!
+
+
+\footnotesize \texorpdfstring{$\ast$}{*} may contain some bugs
+\normalsize \hypertarget{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2209}{}\doxysection{\texorpdfstring{example}{example}}\label{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2209}
+\hypertarget{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2210}{}\doxysubsection{\texorpdfstring{pow.\+js}{pow.\+js}}\label{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2210}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ mkdirp\ =\ require('mkdirp')}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ return\ value\ is\ a\ Promise\ resolving\ to\ the\ first\ directory\ created}
+\DoxyCodeLine{mkdirp('/tmp/foo/bar/baz').then(made\ =>}
+\DoxyCodeLine{\ \ console.log(`made\ directories,\ starting\ with\ \$\{made\}`))}
+
+\end{DoxyCode}
+
+
+Output (where {\ttfamily /tmp/foo} already exists)
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{made\ directories,\ starting\ with\ /tmp/foo/bar}
+
+\end{DoxyCode}
+
+
+Or, if you don\textquotesingle{}t have time to wait around for promises\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ mkdirp\ =\ require('mkdirp')}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ return\ value\ is\ the\ first\ directory\ created}
+\DoxyCodeLine{const\ made\ =\ mkdirp.sync('/tmp/foo/bar/baz')}
+\DoxyCodeLine{console.log(`made\ directories,\ starting\ with\ \$\{made\}`)}
+
+\end{DoxyCode}
+
+
+And now /tmp/foo/bar/baz exists, huzzah!\hypertarget{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2211}{}\doxysection{\texorpdfstring{methods}{methods}}\label{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2211}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ mkdirp\ =\ require('mkdirp')}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2212}{}\doxysubsection{\texorpdfstring{mkdirp(dir, \mbox{[}opts\mbox{]}) -\/\texorpdfstring{$>$}{>} Promise\texorpdfstring{$<$}{<}String \texorpdfstring{$\vert$}{|} undefined\texorpdfstring{$>$}{>}}{mkdirp(dir, \mbox{[}opts\mbox{]}) -\/\texorpdfstring{$>$}{>} Promise\texorpdfstring{$<$}{<}String \texorpdfstring{$\vert$}{|} undefined\texorpdfstring{$>$}{>}}}\label{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2212}
+Create a new directory and any necessary subdirectories at {\ttfamily dir} with octal permission string {\ttfamily opts.\+mode}. If {\ttfamily opts} is a string or number, it will be treated as the {\ttfamily opts.\+mode}.
+
+If {\ttfamily opts.\+mode} isn\textquotesingle{}t specified, it defaults to {\ttfamily 0o777 \& (\texorpdfstring{$\sim$}{\string~}process.umask())}.
+
+Promise resolves to first directory {\ttfamily made} that had to be created, or {\ttfamily undefined} if everything already exists. Promise rejects if any errors are encountered. Note that, in the case of promise rejection, some directories {\itshape may} have been created, as recursive directory creation is not an atomic operation.
+
+You can optionally pass in an alternate {\ttfamily fs} implementation by passing in {\ttfamily opts.\+fs}. Your implementation should have {\ttfamily opts.\+fs.\+mkdir(path, opts, cb)} and {\ttfamily opts.\+fs.\+stat(path, cb)}.
+
+You can also override just one or the other of {\ttfamily mkdir} and {\ttfamily stat} by passing in {\ttfamily opts.\+stat} or {\ttfamily opts.\+mkdir}, or providing an {\ttfamily fs} option that only overrides one of these.\hypertarget{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2213}{}\doxysubsection{\texorpdfstring{mkdirp.\+sync(dir, opts) -\/\texorpdfstring{$>$}{>} String\texorpdfstring{$\vert$}{|}null}{mkdirp.\+sync(dir, opts) -\/\texorpdfstring{$>$}{>} String\texorpdfstring{$\vert$}{|}null}}\label{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2213}
+Synchronously create a new directory and any necessary subdirectories at {\ttfamily dir} with octal permission string {\ttfamily opts.\+mode}. If {\ttfamily opts} is a string or number, it will be treated as the {\ttfamily opts.\+mode}.
+
+If {\ttfamily opts.\+mode} isn\textquotesingle{}t specified, it defaults to {\ttfamily 0o777 \& (\texorpdfstring{$\sim$}{\string~}process.umask())}.
+
+Returns the first directory that had to be created, or undefined if everything already exists.
+
+You can optionally pass in an alternate {\ttfamily fs} implementation by passing in {\ttfamily opts.\+fs}. Your implementation should have {\ttfamily opts.\+fs.\+mkdir\+Sync(path, mode)} and {\ttfamily opts.\+fs.\+stat\+Sync(path)}.
+
+You can also override just one or the other of {\ttfamily mkdir\+Sync} and {\ttfamily stat\+Sync} by passing in {\ttfamily opts.\+stat\+Sync} or {\ttfamily opts.\+mkdir\+Sync}, or providing an {\ttfamily fs} option that only overrides one of these.\hypertarget{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2214}{}\doxysubsection{\texorpdfstring{mkdirp.\+manual, mkdirp.\+manual\+Sync}{mkdirp.\+manual, mkdirp.\+manual\+Sync}}\label{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2214}
+Use the manual implementation (not the native one). This is the default when the native implementation is not available or the stat/mkdir implementation is overridden.\hypertarget{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2215}{}\doxysubsection{\texorpdfstring{mkdirp.\+native, mkdirp.\+native\+Sync}{mkdirp.\+native, mkdirp.\+native\+Sync}}\label{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2215}
+Use the native implementation (not the manual one). This is the default when the native implementation is available and stat/mkdir are not overridden.\hypertarget{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2216}{}\doxysection{\texorpdfstring{implementation}{implementation}}\label{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2216}
+On Node.\+js v10.\+12.\+0 and above, use the native {\ttfamily fs.\+mkdir(p, \{recursive\+:true\})} option, unless {\ttfamily fs.\+mkdir}/{\ttfamily fs.\+mkdir\+Sync} has been overridden by an option.\hypertarget{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2217}{}\doxysubsection{\texorpdfstring{native implementation}{native implementation}}\label{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2217}
+
+\begin{DoxyItemize}
+\item If the path is a root directory, then pass it to the underlying implementation and return the result/error. (In this case, it\textquotesingle{}ll either succeed or fail, but we aren\textquotesingle{}t actually creating any dirs.)
+\item Walk up the path statting each directory, to find the first path that will be created, {\ttfamily made}.
+\item Call {\ttfamily fs.\+mkdir(path, \{ recursive\+: true \})} (or {\ttfamily fs.\+mkdir\+Sync})
+\item If error, raise it to the caller.
+\item Return {\ttfamily made}.
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2218}{}\doxysubsection{\texorpdfstring{manual implementation}{manual implementation}}\label{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2218}
+
+\begin{DoxyItemize}
+\item Call underlying {\ttfamily fs.\+mkdir} implementation, with {\ttfamily recursive\+: false}
+\item If error\+:
+\begin{DoxyItemize}
+\item If path is a root directory, raise to the caller and do not handle it
+\item If ENOENT, mkdirp parent dir, store result as {\ttfamily made}
+\item stat(path)
+\begin{DoxyItemize}
+\item If error, raise original {\ttfamily mkdir} error
+\item If directory, return {\ttfamily made}
+\item Else, raise original {\ttfamily mkdir} error
+\end{DoxyItemize}
+\end{DoxyItemize}
+\item else
+\begin{DoxyItemize}
+\item return {\ttfamily undefined} if a root dir, or {\ttfamily made} if set, or {\ttfamily path}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2219}{}\doxysubsection{\texorpdfstring{windows vs unix caveat}{windows vs unix caveat}}\label{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2219}
+On Windows file systems, attempts to create a root directory (ie, a drive letter or root UNC path) will fail. If the root directory exists, then it will fail with {\ttfamily EPERM}. If the root directory does not exist, then it will fail with {\ttfamily ENOENT}.
+
+On posix file systems, attempts to create a root directory (in recursive mode) will succeed silently, as it is treated like just another directory that already exists. (In non-\/recursive mode, of course, it fails with {\ttfamily EEXIST}.)
+
+In order to preserve this system-\/specific behavior (and because it\textquotesingle{}s not as if we can create the parent of a root directory anyway), attempts to create a root directory are passed directly to the {\ttfamily fs} implementation, and any errors encountered are not handled.\hypertarget{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2220}{}\doxysubsection{\texorpdfstring{native error caveat}{native error caveat}}\label{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2220}
+The native implementation (as of at least Node.\+js v13.\+4.\+0) does not provide appropriate errors in some cases (see \href{https://github.com/nodejs/node/issues/31481}{\texttt{ nodejs/node\#31481}} and \href{https://github.com/nodejs/node/issues/28015}{\texttt{ nodejs/node\#28015}}).
+
+In order to work around this issue, the native implementation will fall back to the manual implementation if an {\ttfamily ENOENT} error is encountered.\hypertarget{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2221}{}\doxysection{\texorpdfstring{choosing a recursive mkdir implementation}{choosing a recursive mkdir implementation}}\label{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2221}
+There are a few to choose from! Use the one that suits your needs best \+:D\hypertarget{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2222}{}\doxysubsection{\texorpdfstring{use {\ttfamily fs.\+mkdir(path, \{recursive\+: true\}, cb)} if\+:}{use {\ttfamily fs.\+mkdir(path, \{recursive\+: true\}, cb)} if\+:}}\label{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2222}
+
+\begin{DoxyItemize}
+\item You wish to optimize performance even at the expense of other factors.
+\item You don\textquotesingle{}t need to know the first dir created.
+\item You are ok with getting {\ttfamily ENOENT} as the error when some other problem is the actual cause.
+\item You can limit your platforms to Node.\+js v10.\+12 and above.
+\item You\textquotesingle{}re ok with using callbacks instead of promises.
+\item You don\textquotesingle{}t need/want a CLI.
+\item You don\textquotesingle{}t need to override the {\ttfamily fs} methods in use.
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2223}{}\doxysubsection{\texorpdfstring{use this module (mkdirp 1.\+x) if\+:}{use this module (mkdirp 1.\+x) if\+:}}\label{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2223}
+
+\begin{DoxyItemize}
+\item You need to know the first directory that was created.
+\item You wish to use the native implementation if available, but fall back when it\textquotesingle{}s not.
+\item You prefer promise-\/returning APIs to callback-\/taking APIs.
+\item You want more useful error messages than the native recursive mkdir provides (at least as of Node.\+js v13.\+4), and are ok with re-\/trying on {\ttfamily ENOENT} to achieve this.
+\item You need (or at least, are ok with) a CLI.
+\item You need to override the {\ttfamily fs} methods in use.
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2224}{}\doxysubsection{\texorpdfstring{use \href{http://npm.im/make-dir}{\texttt{ {\ttfamily make-\/dir}}} if\+:}{use \href{http://npm.im/make-dir}{\texttt{ {\ttfamily make-\/dir}}} if\+:}}\label{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2224}
+
+\begin{DoxyItemize}
+\item You do not need to know the first dir created (and wish to save a few {\ttfamily stat} calls when using the native implementation for this reason).
+\item You wish to use the native implementation if available, but fall back when it\textquotesingle{}s not.
+\item You prefer promise-\/returning APIs to callback-\/taking APIs.
+\item You are ok with occasionally getting {\ttfamily ENOENT} errors for failures that are actually related to something other than a missing file system entry.
+\item You don\textquotesingle{}t need/want a CLI.
+\item You need to override the {\ttfamily fs} methods in use.
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2225}{}\doxysubsection{\texorpdfstring{use mkdirp 0.\+x if\+:}{use mkdirp 0.\+x if\+:}}\label{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2225}
+
+\begin{DoxyItemize}
+\item You need to know the first directory that was created.
+\item You need (or at least, are ok with) a CLI.
+\item You need to override the {\ttfamily fs} methods in use.
+\item You\textquotesingle{}re ok with using callbacks instead of promises.
+\item You are not running on Windows, where the root-\/level ENOENT errors can lead to infinite regress.
+\item You think vinyl just sounds warmer and richer for some weird reason.
+\item You are supporting truly ancient Node.\+js versions, before even the advent of a {\ttfamily Promise} language primitive. (Please don\textquotesingle{}t. You deserve better.)
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2226}{}\doxysection{\texorpdfstring{cli}{cli}}\label{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2226}
+This package also ships with a {\ttfamily mkdirp} command.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ mkdirp\ -\/h}
+\DoxyCodeLine{}
+\DoxyCodeLine{usage:\ mkdirp\ [DIR1,DIR2..]\ \{OPTIONS\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ Create\ each\ supplied\ directory\ including\ any\ necessary\ parent\ directories}
+\DoxyCodeLine{\ \ that\ don't\ yet\ exist.}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ If\ the\ directory\ already\ exists,\ do\ nothing.}
+\DoxyCodeLine{}
+\DoxyCodeLine{OPTIONS\ are:}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ -\/m<mode>\ \ \ \ \ \ \ If\ a\ directory\ needs\ to\ be\ created,\ set\ the\ mode\ as\ an\ octal}
+\DoxyCodeLine{\ \ -\/-\/mode=<mode>\ \ permission\ string.}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ -\/v\ -\/-\/version\ \ \ Print\ the\ mkdirp\ version\ number}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ -\/h\ -\/-\/help\ \ \ \ \ \ Print\ this\ helpful\ banner}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ -\/p\ -\/-\/print\ \ \ \ \ Print\ the\ first\ directories\ created\ for\ each\ path\ provided}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ -\/-\/manual\ \ \ \ \ \ \ Use\ manual\ implementation,\ even\ if\ native\ is\ available}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2227}{}\doxysection{\texorpdfstring{install}{install}}\label{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2227}
+With \href{http://npmjs.org}{\texttt{ npm}} do\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ mkdirp}
+
+\end{DoxyCode}
+
+
+to get the library locally, or
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/g\ mkdirp}
+
+\end{DoxyCode}
+
+
+to get the command everywhere, or
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npx\ mkdirp\ ...}
+
+\end{DoxyCode}
+
+
+to run the command without installing it globally.\hypertarget{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2228}{}\doxysection{\texorpdfstring{platform support}{platform support}}\label{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2228}
+This module works on node v8, but only v10 and above are officially supported, as Node v8 reached its LTS end of life 2020-\/01-\/01, which is in the past, as of this writing.\hypertarget{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2229}{}\doxysection{\texorpdfstring{license}{license}}\label{md_backend_2node__modules_2mkdirp_2readme_autotoc_md2229}
+MIT 

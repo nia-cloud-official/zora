@@ -1,0 +1,333 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3" kind="page">
+    <compoundname>md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3</compoundname>
+    <title>smart-buffer  &lt;a href=&quot;https://travis-ci.org/JoshGlazebrook/smart-buffer&quot; &gt;&lt;img src=&quot;https://travis-ci.org/JoshGlazebrook/smart-buffer.svg?branch=master&quot; alt=&quot;Build Status&quot;/&gt;&lt;/a&gt;  &lt;a href=&quot;https://coveralls.io/github/JoshGlazebrook/smart-buffer?branch=master&quot; &gt;&lt;img src=&quot;https://coveralls.io/repos/github/JoshGlazebrook/smart-buffer/badge.svg?branch=master&quot; alt=&quot;Coverage Status&quot;/&gt;&lt;/a&gt;</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>smart-buffer is a light Buffer wrapper that takes away the need to keep track of what position to read and write data to and from the underlying Buffer. It also adds null terminating string operations and <bold>grows</bold> as you add more data.</para>
+<para><image type="html" name="https://nodei.co/npm/smart-buffer.png?downloads=true&amp;downloadRank=true&amp;stars=true" alt="stats" inline="yes"></image>
+</para>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3341">
+<title>What it&apos;s useful for:</title><para>I created smart-buffer because I wanted to simplify the process of using Buffer for building and reading network packets to send over a socket. Rather than having to keep track of which position I need to write a UInt16 to after adding a string of variable length, I simply don&apos;t have to.</para>
+<para>Key Features:<itemizedlist>
+<listitem><para>Proxies all of the Buffer write and read functions.</para>
+</listitem><listitem><para>Keeps track of read and write positions for you.</para>
+</listitem><listitem><para>Grows the internal Buffer as you add data to it.</para>
+</listitem><listitem><para>Useful string operations. (Null terminating strings)</para>
+</listitem><listitem><para>Allows for inserting values at specific points in the internal Buffer.</para>
+</listitem><listitem><para>Built in TypeScript</para>
+</listitem><listitem><para>Type Definitions Provided</para>
+</listitem></itemizedlist>
+</para>
+<para>Requirements:<itemizedlist>
+<listitem><para>Node v4.0+ is supported at this time. (Versions prior to 2.0 will work on node 0.10)</para>
+</listitem></itemizedlist>
+</para>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3342">
+<title>Note:</title><para>smart-buffer can be used for writing to an underlying buffer as well as reading from it. It however does not function correctly if you&apos;re mixing both read and write operations with each other.</para>
+</sect3>
+</sect2>
+<sect1 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3343">
+<title>Breaking Changes with 2.0</title><para>The latest version (2.0+) is written in TypeScript, and are compiled to ES6 Javascript. This means the earliest Node.js it supports will be 4.x (in strict mode.) If you&apos;re using version 6 and above it will work without any issues. From an API standpoint, 2.0 is backwards compatible. The only difference is SmartBuffer is not exported directly as the root module.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3344">
+<title>Breaking Changes with 3.0</title><para>Starting with 3.0, if any of the readIntXXXX() methods are called and the requested data is larger than the bounds of the internally managed valid buffer data, an exception will now be thrown.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3345">
+<title>Installing:</title><para><computeroutput>npm install smart-buffer</computeroutput></para>
+<para>or</para>
+<para><computeroutput>yarn add smart-buffer</computeroutput></para>
+<para>Note: The published NPM package includes the built javascript library. If you cloned this repo and wish to build the library manually use:</para>
+<para><computeroutput>tsc -p ./</computeroutput></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3346">
+<title>Using smart-buffer</title><sect2 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3347">
+<title>Example</title><para>Say you were building a packet that had to conform to the following protocol:</para>
+<para><computeroutput>[PacketType:2][PacketLength:2][Data:XX]</computeroutput></para>
+<para>To build this packet using the vanilla Buffer class, you would have to count up the length of the data payload beforehand. You would also need to keep track of the current &quot;cursor&quot; position in your Buffer so you write everything in the right places. With smart-buffer you don&apos;t have to do either of those things.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>1.x<sp/>(javascript)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>SmartBuffer<sp/>=<sp/>require(&apos;smart-buffer&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>1.x<sp/>(typescript)</highlight></codeline>
+<codeline><highlight class="normal">import<sp/>SmartBuffer<sp/>=<sp/>require(&apos;smart-buffer&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>2.x+<sp/>(javascript)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>SmartBuffer<sp/>=<sp/>require(&apos;smart-buffer&apos;).SmartBuffer;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>2.x+<sp/>(typescript)</highlight></codeline>
+<codeline><highlight class="normal">import<sp/>{<sp/>SmartBuffer,<sp/>SmartBufferOptions}<sp/>from<sp/>&apos;smart-buffer&apos;;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>createLoginPacket(username,<sp/>password,<sp/>age,<sp/>country)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>let<sp/>packet<sp/>=<sp/>new<sp/>SmartBuffer();</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.writeUInt16LE(0x0060);<sp/>//<sp/>Login<sp/>Packet<sp/>Type/ID</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.writeStringNT(username);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.writeStringNT(password);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.writeUInt8(age);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.writeStringNT(country);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.writeUInt16LE(packet.length<sp/>-<sp/>2,<sp/>2);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>packet.toBuffer();</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> With the above function, you now can do this: <programlisting filename=".js"><codeline><highlight class="normal">let<sp/>login<sp/>=<sp/>createLoginPacket(&quot;Josh&quot;,<sp/>&quot;secret123&quot;,<sp/>22,<sp/>&quot;United<sp/>States&quot;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>&lt;Buffer<sp/>60<sp/>00<sp/>1e<sp/>00<sp/>4a<sp/>6f<sp/>73<sp/>68<sp/>00<sp/>73<sp/>65<sp/>63<sp/>72<sp/>65<sp/>74<sp/>31<sp/>32<sp/>33<sp/>00<sp/>16<sp/>55<sp/>6e<sp/>69<sp/>74<sp/>65<sp/>64<sp/>20<sp/>53<sp/>74<sp/>61<sp/>74<sp/>65<sp/>73<sp/>00&gt;</highlight></codeline>
+</programlisting> Notice that the <computeroutput>[PacketLength:2]</computeroutput> part of the packet was inserted after we had added everything else, and as shown in the Buffer dump above, is in the correct location along with everything else.</para>
+<para>Reading back the packet we created above is just as easy: <programlisting filename=".js"><codeline><highlight class="normal">let<sp/>reader<sp/>=<sp/>SmartBuffer.fromBuffer(login);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">let<sp/>logininfo<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packetType:<sp/>reader.readUInt16LE(),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packetLength:<sp/>reader.readUInt16LE(),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>username:<sp/>reader.readStringNT(),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>password:<sp/>reader.readStringNT(),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>age:<sp/>reader.readUInt8(),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>country:<sp/>reader.readStringNT()</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">/*</highlight></codeline>
+<codeline><highlight class="normal">{<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packetType:<sp/>96,<sp/>(0x0060)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packetLength:<sp/>30,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>username:<sp/>&apos;Josh&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>password:<sp/>&apos;secret123&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>age:<sp/>22,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>country:<sp/>&apos;United<sp/>States&apos;<sp/></highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline><highlight class="normal">*/</highlight></codeline>
+</programlisting></para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3348">
+<title>Api Reference:</title><sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3349">
+<title>Constructing a smart-buffer</title><para>smart-buffer has a few different ways to construct an instance. Starting with version 2.0, the following factory methods are preffered.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">let<sp/>SmartBuffer<sp/>=<sp/>require(&apos;smart-buffer&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Creating<sp/>SmartBuffer<sp/>from<sp/>existing<sp/>Buffer</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(buffer);<sp/>//<sp/>Creates<sp/>instance<sp/>from<sp/>buffer.<sp/>(Uses<sp/>default<sp/>utf8<sp/>encoding)</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(buffer,<sp/>&apos;ascii&apos;);<sp/>//<sp/>Creates<sp/>instance<sp/>from<sp/>buffer<sp/>with<sp/>ascii<sp/>encoding<sp/>for<sp/>Strings.<sp/></highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Creating<sp/>SmartBuffer<sp/>with<sp/>specified<sp/>internal<sp/>Buffer<sp/>size.</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>buff<sp/>=<sp/>SmartBuffer.fromSize(1024);<sp/>//<sp/>Creates<sp/>instance<sp/>with<sp/>internal<sp/>Buffer<sp/>size<sp/>of<sp/>1024.</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>buff<sp/>=<sp/>SmartBuffer.fromSize(1024,<sp/>&apos;utf8&apos;);<sp/>//<sp/>Creates<sp/>instance<sp/>with<sp/>intenral<sp/>Buffer<sp/>size<sp/>of<sp/>1024,<sp/>and<sp/>utf8<sp/>encoding.<sp/></highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Creating<sp/>SmartBuffer<sp/>with<sp/>options<sp/>object.<sp/>This<sp/>one<sp/>specifies<sp/>size<sp/>and<sp/>encoding.</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>buff<sp/>=<sp/>SmartBuffer.fromOptions({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>size:<sp/>1024,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>encoding:<sp/>&apos;ascii&apos;</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Creating<sp/>SmartBuffer<sp/>with<sp/>options<sp/>object.<sp/>This<sp/>one<sp/>specified<sp/>an<sp/>existing<sp/>Buffer.</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>buff<sp/>=<sp/>SmartBuffer.fromOptions({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>buff:<sp/>buffer</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Just<sp/>want<sp/>a<sp/>regular<sp/>SmartBuffer<sp/>with<sp/>all<sp/>default<sp/>options?</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>buff<sp/>=<sp/>new<sp/>SmartBuffer();</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3350">
+<title>Backwards Compatibility:</title><para>All constructors used prior to 2.0 still are supported. However it&apos;s not recommended to use these.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">let<sp/>writer<sp/>=<sp/>new<sp/>SmartBuffer();<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>Defaults<sp/>to<sp/>utf8,<sp/>4096<sp/>length<sp/>internal<sp/>Buffer.</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>writer<sp/>=<sp/>new<sp/>SmartBuffer(1024);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>Defaults<sp/>to<sp/>utf8,<sp/>1024<sp/>length<sp/>internal<sp/>Buffer.</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>writer<sp/>=<sp/>new<sp/>SmartBuffer(&apos;ascii&apos;);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>Sets<sp/>to<sp/>ascii<sp/>encoding,<sp/>4096<sp/>length<sp/>internal<sp/>buffer.</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>writer<sp/>=<sp/>new<sp/>SmartBuffer(1024,<sp/>&apos;ascii&apos;);<sp/><sp/>//<sp/>Sets<sp/>to<sp/>ascii<sp/>encoding,<sp/>1024<sp/>length<sp/>internal<sp/>buffer.</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3351">
+<title>Reading Data</title><para>smart-buffer supports all of the common read functions you will find in the vanilla Buffer class. The only difference is, you do not need to specify which location to start reading from. This is possible because as you read data out of a smart-buffer, it automatically progresses an internal read offset/position to know where to pick up from on the next read.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3352">
+<title>Reading Numeric Values</title><para>When numeric values, you simply need to call the function you want, and the data is returned.</para>
+<para>Supported Operations:<itemizedlist>
+<listitem><para>readInt8</para>
+</listitem><listitem><para>readInt16BE</para>
+</listitem><listitem><para>readInt16LE</para>
+</listitem><listitem><para>readInt32BE</para>
+</listitem><listitem><para>readInt32LE</para>
+</listitem><listitem><para>readBigInt64LE</para>
+</listitem><listitem><para>readBigInt64BE</para>
+</listitem><listitem><para>readUInt8</para>
+</listitem><listitem><para>readUInt16BE</para>
+</listitem><listitem><para>readUInt16LE</para>
+</listitem><listitem><para>readUInt32BE</para>
+</listitem><listitem><para>readUInt32LE</para>
+</listitem><listitem><para>readBigUInt64LE</para>
+</listitem><listitem><para>readBigUInt64BE</para>
+</listitem><listitem><para>readFloatBE</para>
+</listitem><listitem><para>readFloatLE</para>
+</listitem><listitem><para>readDoubleBE</para>
+</listitem><listitem><para>readDoubleLE</para>
+</listitem></itemizedlist>
+</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">let<sp/>reader<sp/>=<sp/>new<sp/>SmartBuffer(somebuffer);</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>num<sp/>=<sp/>reader.readInt8();</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3353">
+<title>Reading String Values</title><para>When reading String values, you can either choose to read a null terminated string, or a string of a specified length.</para>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3354">
+<title>SmartBuffer.readStringNT( [encoding] )</title><para><blockquote><para><zwj/><computeroutput>String</computeroutput> <bold>String encoding to use</bold> - Defaults to the encoding set in the constructor. </para>
+</blockquote></para>
+<para>returns <computeroutput>String</computeroutput></para>
+<para><blockquote><para><zwj/>Note: When readStringNT is called and there is no null character found, smart-buffer will read to the end of the internal Buffer. </para>
+</blockquote></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3355">
+<title>SmartBuffer.readString( [length] )</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3356">
+<title>SmartBuffer.readString( [encoding] )</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3357">
+<title>SmartBuffer.readString( [length], [encoding] )</title><para><blockquote><para><zwj/><computeroutput>Number</computeroutput> <bold>Length of the string to read</bold> </para>
+</blockquote></para>
+<para><blockquote><para><zwj/><computeroutput>String</computeroutput> <bold>String encoding to use</bold> - Defaults to the encoding set in the constructor, or utf8. </para>
+</blockquote></para>
+<para>returns <computeroutput>String</computeroutput></para>
+<para><blockquote><para><zwj/>Note: When readString is called without a specified length, smart-buffer will read to the end of the internal Buffer. </para>
+</blockquote></para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3358">
+<title>Reading Buffer Values</title><sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3359">
+<title>SmartBuffer.readBuffer( length )</title><para><blockquote><para><zwj/><computeroutput>Number</computeroutput> <bold>Length of data to read into a Buffer</bold> </para>
+</blockquote></para>
+<para>returns <computeroutput>Buffer</computeroutput></para>
+<para><blockquote><para><zwj/>Note: This function uses <computeroutput>slice</computeroutput> to retrieve the Buffer. </para>
+</blockquote></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3360">
+<title>SmartBuffer.readBufferNT()</title><para>returns <computeroutput>Buffer</computeroutput></para>
+<para><blockquote><para><zwj/>Note: This reads the next sequence of bytes in the buffer until a null (0x00) value is found. (Null terminated buffer) Note: This function uses <computeroutput>slice</computeroutput> to retrieve the Buffer. </para>
+</blockquote></para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3361">
+<title>Writing Data</title><para>smart-buffer supports all of the common write functions you will find in the vanilla Buffer class. The only difference is, you do not need to specify which location to write to in your Buffer by default. You do however have the option of <bold>inserting</bold> a piece of data into your smart-buffer at a given location.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3362">
+<title>Writing Numeric Values</title><para>For numeric values, you simply need to call the function you want, and the data is written at the end of the internal Buffer&apos;s current write position. You can specify a offset/position to <bold>insert</bold> the given value at, but keep in mind this does not override data at the given position. This feature also does not work properly when inserting a value beyond the current internal length of the smart-buffer (length being the .length property of the smart-buffer instance you&apos;re writing to)</para>
+<para>Supported Operations:<itemizedlist>
+<listitem><para>writeInt8</para>
+</listitem><listitem><para>writeInt16BE</para>
+</listitem><listitem><para>writeInt16LE</para>
+</listitem><listitem><para>writeInt32BE</para>
+</listitem><listitem><para>writeInt32LE</para>
+</listitem><listitem><para>writeBigInt64BE</para>
+</listitem><listitem><para>writeBigInt64LE</para>
+</listitem><listitem><para>writeUInt8</para>
+</listitem><listitem><para>writeUInt16BE</para>
+</listitem><listitem><para>writeUInt16LE</para>
+</listitem><listitem><para>writeUInt32BE</para>
+</listitem><listitem><para>writeUInt32LE</para>
+</listitem><listitem><para>writeBigUInt64BE</para>
+</listitem><listitem><para>writeBigUInt64LE</para>
+</listitem><listitem><para>writeFloatBE</para>
+</listitem><listitem><para>writeFloatLE</para>
+</listitem><listitem><para>writeDoubleBE</para>
+</listitem><listitem><para>writeDoubleLE</para>
+</listitem></itemizedlist>
+</para>
+<para>The following signature is the same for all the above functions:</para>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3363">
+<title>SmartBuffer.writeInt8( value, [offset] )</title><para><blockquote><para><zwj/><computeroutput>Number</computeroutput> <bold>A valid Int8 number</bold> </para>
+</blockquote></para>
+<para><blockquote><para><zwj/><computeroutput>Number</computeroutput> <bold>The position to insert this value at</bold> </para>
+</blockquote></para>
+<para>returns this</para>
+<para><blockquote><para><zwj/>Note: All write operations return <computeroutput>this</computeroutput> to allow for chaining. </para>
+</blockquote></para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3364">
+<title>Writing String Values</title><para>When reading String values, you can either choose to write a null terminated string, or a non null terminated string.</para>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3365">
+<title>SmartBuffer.writeStringNT( value, [offset], [encoding] )</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3366">
+<title>SmartBuffer.writeStringNT( value, [offset] )</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3367">
+<title>SmartBuffer.writeStringNT( value, [encoding] )</title><para><blockquote><para><zwj/><computeroutput>String</computeroutput> <bold>String value to write</bold> </para>
+</blockquote></para>
+<para><blockquote><para><zwj/><computeroutput>Number</computeroutput> <bold>The position to insert this String at</bold> </para>
+</blockquote></para>
+<para><blockquote><para><zwj/><computeroutput>String</computeroutput> <bold>The String encoding to use.</bold> - Defaults to the encoding set in the constructor, or utf8. </para>
+</blockquote></para>
+<para>returns this</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3368">
+<title>SmartBuffer.writeString( value, [offset], [encoding] )</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3369">
+<title>SmartBuffer.writeString( value, [offset] )</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3370">
+<title>SmartBuffer.writeString( value, [encoding] )</title><para><blockquote><para><zwj/><computeroutput>String</computeroutput> <bold>String value to write</bold> </para>
+</blockquote></para>
+<para><blockquote><para><zwj/><computeroutput>Number</computeroutput> <bold>The position to insert this String at</bold> </para>
+</blockquote></para>
+<para><blockquote><para><zwj/><computeroutput>String</computeroutput> <bold>The String encoding to use</bold> - Defaults to the encoding set in the constructor, or utf8. </para>
+</blockquote></para>
+<para>returns this</para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3371">
+<title>Writing Buffer Values</title><sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3372">
+<title>SmartBuffer.writeBuffer( value, [offset] )</title><para><blockquote><para><zwj/><computeroutput>Buffer</computeroutput> <bold>Buffer value to write</bold> </para>
+</blockquote></para>
+<para><blockquote><para><zwj/><computeroutput>Number</computeroutput> <bold>The position to insert this Buffer&apos;s content at</bold> </para>
+</blockquote></para>
+<para>returns this</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3373">
+<title>SmartBuffer.writeBufferNT( value, [offset] )</title><para><blockquote><para><zwj/><computeroutput>Buffer</computeroutput> <bold>Buffer value to write</bold> </para>
+</blockquote></para>
+<para><blockquote><para><zwj/><computeroutput>Number</computeroutput> <bold>The position to insert this Buffer&apos;s content at</bold> </para>
+</blockquote></para>
+<para>returns this</para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3374">
+<title>Utility Functions</title><sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3375">
+<title>SmartBuffer.clear()</title><para>Resets the SmartBuffer to its default state where it can be reused for reading or writing.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3376">
+<title>SmartBuffer.remaining()</title><para>returns <computeroutput>Number</computeroutput> The amount of data left to read based on the current read Position.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3377">
+<title>SmartBuffer.skip( value )</title><para><blockquote><para><zwj/><computeroutput>Number</computeroutput> <bold>The amount of bytes to skip ahead</bold> </para>
+</blockquote></para>
+<para>Skips the read position ahead by the given value.</para>
+<para>returns this</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3378">
+<title>SmartBuffer.rewind( value )</title><para><blockquote><para><zwj/><computeroutput>Number</computeroutput> <bold>The amount of bytes to reward backwards</bold> </para>
+</blockquote></para>
+<para>Rewinds the read position backwards by the given value.</para>
+<para>returns this</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3379">
+<title>SmartBuffer.moveTo( position )</title><para><blockquote><para><zwj/><computeroutput>Number</computeroutput> <bold>The point to skip the read position to</bold> </para>
+</blockquote></para>
+<para>Moves the read position to the given point. returns this</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3380">
+<title>SmartBuffer.toBuffer()</title><para>returns <computeroutput>Buffer</computeroutput> A Buffer containing the contents of the internal Buffer.</para>
+<para><blockquote><para><zwj/>Note: This uses the slice function. </para>
+</blockquote></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3381">
+<title>SmartBuffer.toString( [encoding] )</title><para><blockquote><para><zwj/><computeroutput>String</computeroutput> <bold>The String encoding to use</bold> - Defaults to the encoding set in the constructor, or utf8. </para>
+</blockquote></para>
+<para>returns <computeroutput>String</computeroutput> The internal Buffer in String representation.</para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3382">
+<title>Properties</title><sect3 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3383">
+<title>SmartBuffer.length</title><para>returns <computeroutput>Number</computeroutput> <bold>The length of the data that is being tracked in the internal Buffer</bold> - Does NOT return the absolute length of the internal Buffer being written to.</para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_1autotoc_md3384">
+<title>License</title><para>This work is licensed under the <ulink url="http://en.wikipedia.org/wiki/MIT_License">MIT license</ulink>. </para>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/smart-buffer/docs/README_v3.md"/>
+  </compounddef>
+</doxygen>

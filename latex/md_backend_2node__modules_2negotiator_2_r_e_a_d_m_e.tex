@@ -1,0 +1,126 @@
+\chapter{negotiator}
+\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e}\index{negotiator@{negotiator}}
+\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2265}%
+\Hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2265}%
+ \href{https://npmjs.org/package/negotiator}{\texttt{ }} \href{https://npmjs.org/package/negotiator}{\texttt{ }} \href{https://nodejs.org/en/download/}{\texttt{ }} \href{https://github.com/jshttp/negotiator/actions/workflows/ci.yml}{\texttt{ }} \href{https://coveralls.io/r/jshttp/negotiator?branch=master}{\texttt{ }}
+
+An HTTP content negotiator for Node.\+js\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2266}{}\doxysection{\texorpdfstring{Installation}{Installation}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2266}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ negotiator}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2267}{}\doxysection{\texorpdfstring{API}{API}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2267}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ Negotiator\ =\ require('negotiator')}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2268}{}\doxysubsection{\texorpdfstring{Accept Negotiation}{Accept Negotiation}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2268}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{availableMediaTypes\ =\ ['text/html',\ 'text/plain',\ 'application/json']}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ The\ negotiator\ constructor\ receives\ a\ request\ object}
+\DoxyCodeLine{negotiator\ =\ new\ Negotiator(request)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Let's\ say\ Accept\ header\ is\ 'text/html,\ application/*;q=0.2,\ image/jpeg;q=0.8'}
+\DoxyCodeLine{}
+\DoxyCodeLine{negotiator.mediaTypes()}
+\DoxyCodeLine{//\ -\/>\ ['text/html',\ 'image/jpeg',\ 'application/*']}
+\DoxyCodeLine{}
+\DoxyCodeLine{negotiator.mediaTypes(availableMediaTypes)}
+\DoxyCodeLine{//\ -\/>\ ['text/html',\ 'application/json']}
+\DoxyCodeLine{}
+\DoxyCodeLine{negotiator.mediaType(availableMediaTypes)}
+\DoxyCodeLine{//\ -\/>\ 'text/html'}
+
+\end{DoxyCode}
+
+
+You can check a working example at {\ttfamily examples/accept.\+js}.\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2269}{}\doxysubsubsection{\texorpdfstring{Methods}{Methods}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2269}
+\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2270}{}\doxysubsubsubsection{\texorpdfstring{media\+Type()}{media\+Type()}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2270}
+Returns the most preferred media type from the client.\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2271}{}\doxysubsubsubsection{\texorpdfstring{media\+Type(available\+Media\+Type)}{media\+Type(available\+Media\+Type)}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2271}
+Returns the most preferred media type from a list of available media types.\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2272}{}\doxysubsubsubsection{\texorpdfstring{media\+Types()}{media\+Types()}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2272}
+Returns an array of preferred media types ordered by the client preference.\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2273}{}\doxysubsubsubsection{\texorpdfstring{media\+Types(available\+Media\+Types)}{media\+Types(available\+Media\+Types)}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2273}
+Returns an array of preferred media types ordered by priority from a list of available media types.\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2274}{}\doxysubsection{\texorpdfstring{Accept-\/\+Language Negotiation}{Accept-\/\+Language Negotiation}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2274}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{negotiator\ =\ new\ Negotiator(request)}
+\DoxyCodeLine{}
+\DoxyCodeLine{availableLanguages\ =\ ['en',\ 'es',\ 'fr']}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Let's\ say\ Accept-\/Language\ header\ is\ 'en;q=0.8,\ es,\ pt'}
+\DoxyCodeLine{}
+\DoxyCodeLine{negotiator.languages()}
+\DoxyCodeLine{//\ -\/>\ ['es',\ 'pt',\ 'en']}
+\DoxyCodeLine{}
+\DoxyCodeLine{negotiator.languages(availableLanguages)}
+\DoxyCodeLine{//\ -\/>\ ['es',\ 'en']}
+\DoxyCodeLine{}
+\DoxyCodeLine{language\ =\ negotiator.language(availableLanguages)}
+\DoxyCodeLine{//\ -\/>\ 'es'}
+
+\end{DoxyCode}
+
+
+You can check a working example at {\ttfamily examples/language.\+js}.\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2275}{}\doxysubsubsection{\texorpdfstring{Methods}{Methods}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2275}
+\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2276}{}\doxysubsubsubsection{\texorpdfstring{language()}{language()}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2276}
+Returns the most preferred language from the client.\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2277}{}\doxysubsubsubsection{\texorpdfstring{language(available\+Languages)}{language(available\+Languages)}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2277}
+Returns the most preferred language from a list of available languages.\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2278}{}\doxysubsubsubsection{\texorpdfstring{languages()}{languages()}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2278}
+Returns an array of preferred languages ordered by the client preference.\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2279}{}\doxysubsubsubsection{\texorpdfstring{languages(available\+Languages)}{languages(available\+Languages)}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2279}
+Returns an array of preferred languages ordered by priority from a list of available languages.\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2280}{}\doxysubsection{\texorpdfstring{Accept-\/\+Charset Negotiation}{Accept-\/\+Charset Negotiation}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2280}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{availableCharsets\ =\ ['utf-\/8',\ 'iso-\/8859-\/1',\ 'iso-\/8859-\/5']}
+\DoxyCodeLine{}
+\DoxyCodeLine{negotiator\ =\ new\ Negotiator(request)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Let's\ say\ Accept-\/Charset\ header\ is\ 'utf-\/8,\ iso-\/8859-\/1;q=0.8,\ utf-\/7;q=0.2'}
+\DoxyCodeLine{}
+\DoxyCodeLine{negotiator.charsets()}
+\DoxyCodeLine{//\ -\/>\ ['utf-\/8',\ 'iso-\/8859-\/1',\ 'utf-\/7']}
+\DoxyCodeLine{}
+\DoxyCodeLine{negotiator.charsets(availableCharsets)}
+\DoxyCodeLine{//\ -\/>\ ['utf-\/8',\ 'iso-\/8859-\/1']}
+\DoxyCodeLine{}
+\DoxyCodeLine{negotiator.charset(availableCharsets)}
+\DoxyCodeLine{//\ -\/>\ 'utf-\/8'}
+
+\end{DoxyCode}
+
+
+You can check a working example at {\ttfamily examples/charset.\+js}.\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2281}{}\doxysubsubsection{\texorpdfstring{Methods}{Methods}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2281}
+\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2282}{}\doxysubsubsubsection{\texorpdfstring{charset()}{charset()}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2282}
+Returns the most preferred charset from the client.\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2283}{}\doxysubsubsubsection{\texorpdfstring{charset(available\+Charsets)}{charset(available\+Charsets)}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2283}
+Returns the most preferred charset from a list of available charsets.\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2284}{}\doxysubsubsubsection{\texorpdfstring{charsets()}{charsets()}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2284}
+Returns an array of preferred charsets ordered by the client preference.\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2285}{}\doxysubsubsubsection{\texorpdfstring{charsets(available\+Charsets)}{charsets(available\+Charsets)}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2285}
+Returns an array of preferred charsets ordered by priority from a list of available charsets.\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2286}{}\doxysubsection{\texorpdfstring{Accept-\/\+Encoding Negotiation}{Accept-\/\+Encoding Negotiation}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2286}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{availableEncodings\ =\ ['identity',\ 'gzip']}
+\DoxyCodeLine{}
+\DoxyCodeLine{negotiator\ =\ new\ Negotiator(request)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Let's\ say\ Accept-\/Encoding\ header\ is\ 'gzip,\ compress;q=0.2,\ identity;q=0.5'}
+\DoxyCodeLine{}
+\DoxyCodeLine{negotiator.encodings()}
+\DoxyCodeLine{//\ -\/>\ ['gzip',\ 'identity',\ 'compress']}
+\DoxyCodeLine{}
+\DoxyCodeLine{negotiator.encodings(availableEncodings)}
+\DoxyCodeLine{//\ -\/>\ ['gzip',\ 'identity']}
+\DoxyCodeLine{}
+\DoxyCodeLine{negotiator.encoding(availableEncodings)}
+\DoxyCodeLine{//\ -\/>\ 'gzip'}
+
+\end{DoxyCode}
+
+
+You can check a working example at {\ttfamily examples/encoding.\+js}.\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2287}{}\doxysubsubsection{\texorpdfstring{Methods}{Methods}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2287}
+\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2288}{}\doxysubsubsubsection{\texorpdfstring{encoding()}{encoding()}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2288}
+Returns the most preferred encoding from the client.\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2289}{}\doxysubsubsubsection{\texorpdfstring{encoding(available\+Encodings)}{encoding(available\+Encodings)}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2289}
+Returns the most preferred encoding from a list of available encodings.\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2290}{}\doxysubsubsubsection{\texorpdfstring{encodings()}{encodings()}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2290}
+Returns an array of preferred encodings ordered by the client preference.\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2291}{}\doxysubsubsubsection{\texorpdfstring{encodings(available\+Encodings)}{encodings(available\+Encodings)}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2291}
+Returns an array of preferred encodings ordered by priority from a list of available encodings.\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2292}{}\doxysection{\texorpdfstring{See Also}{See Also}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2292}
+The \href{https://npmjs.org/package/accepts\#readme}{\texttt{ accepts}} module builds on this module and provides an alternative interface, mime type validation, and more.\hypertarget{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2293}{}\doxysection{\texorpdfstring{License}{License}}\label{md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_autotoc_md2293}
+\mbox{[}MIT\mbox{]}(LICENSE) 

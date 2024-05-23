@@ -1,0 +1,298 @@
+\chapter{agentkeepalive}
+\hypertarget{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e}\index{agentkeepalive@{agentkeepalive}}
+\label{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md149}%
+\Hypertarget{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md149}%
+ \href{https://npmjs.org/package/agentkeepalive}{\texttt{ }} \href{https://snyk.io/test/npm/agentkeepalive}{\texttt{ }} \href{https://github.com/node-modules/agentkeepalive/actions/workflows/nodejs.yml}{\texttt{ }} \href{https://npmjs.org/package/agentkeepalive}{\texttt{ }}
+
+The enhancement features {\ttfamily keep alive} {\ttfamily http.\+Agent}. Support {\ttfamily http} and {\ttfamily https}.\hypertarget{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md150}{}\doxysection{\texorpdfstring{What\textquotesingle{}s different from original {\ttfamily http.\+Agent}?}{What\textquotesingle{}s different from original {\ttfamily http.\+Agent}?}}\label{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md150}
+
+\begin{DoxyItemize}
+\item {\ttfamily keep\+Alive=true} by default
+\item Disable Nagle\textquotesingle{}s algorithm\+: {\ttfamily socket.\+set\+No\+Delay(true)}
+\item Add free socket timeout\+: avoid long time inactivity socket leak in the free-\/sockets queue.
+\item Add active socket timeout\+: avoid long time inactivity socket leak in the active-\/sockets queue.
+\item TTL for active socket.
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md151}{}\doxysection{\texorpdfstring{Node.\+js version required}{Node.\+js version required}}\label{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md151}
+Support Node.\+js \texorpdfstring{$>$}{>}= {\ttfamily 8.\+0.\+0}\hypertarget{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md152}{}\doxysection{\texorpdfstring{Install}{Install}}\label{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md152}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ agentkeepalive\ -\/-\/save}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md153}{}\doxysection{\texorpdfstring{new Agent(\mbox{[}options\mbox{]})}{new Agent(\mbox{[}options\mbox{]})}}\label{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md153}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} \{Object\} Set of configurable options to set on the agent. Can have the following fields\+:
+\begin{DoxyItemize}
+\item {\ttfamily keep\+Alive} \{Boolean\} Keep sockets around in a pool to be used by other requests in the future. Default = {\ttfamily true}.
+\item {\ttfamily keep\+Alive\+Msecs} \{Number\} When using the keep\+Alive option, specifies the initial delay for TCP Keep-\/\+Alive packets. Ignored when the keep\+Alive option is false or undefined. Defaults to 1000. Default = {\ttfamily 1000}. Only relevant if {\ttfamily keep\+Alive} is set to {\ttfamily true}.
+\item {\ttfamily free\+Socket\+Timeout}\+: \{Number\} Sets the free socket to timeout after {\ttfamily free\+Socket\+Timeout} milliseconds of inactivity on the free socket. The default \href{https://nodejs.org/api/http.html\#serverkeepalivetimeout}{\texttt{ server-\/side timeout}} is 5000 milliseconds, to \href{https://medium.com/ssense-tech/reduce-networking-errors-in-nodejs-23b4eb9f2d83}{\texttt{ avoid ECONNRESET exceptions}}, we set the default value to {\ttfamily 4000} milliseconds. Only relevant if {\ttfamily keep\+Alive} is set to {\ttfamily true}.
+\item {\ttfamily timeout}\+: \{Number\} Sets the working socket to timeout after {\ttfamily timeout} milliseconds of inactivity on the working socket. Default is {\ttfamily free\+Socket\+Timeout \texorpdfstring{$\ast$}{*} 2} so long as that value is greater than or equal to 8 seconds, otherwise the default is 8 seconds.
+\item {\ttfamily max\+Sockets} \{Number\} Maximum number of sockets to allow per host. Default = {\ttfamily Infinity}.
+\item {\ttfamily max\+Free\+Sockets} \{Number\} Maximum number of sockets (per host) to leave open in a free state. Only relevant if {\ttfamily keep\+Alive} is set to {\ttfamily true}. Default = {\ttfamily 256}.
+\item {\ttfamily socket\+Active\+TTL} \{Number\} Sets the socket active time to live, even if it\textquotesingle{}s in use. If not set, the behaviour keeps the same (the socket will be released only when free) Default = {\ttfamily null}.
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md154}{}\doxysection{\texorpdfstring{Usage}{Usage}}\label{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md154}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ http\ =\ require('http');}
+\DoxyCodeLine{const\ Agent\ =\ require('agentkeepalive');}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ keepaliveAgent\ =\ new\ Agent(\{}
+\DoxyCodeLine{\ \ maxSockets:\ 100,}
+\DoxyCodeLine{\ \ maxFreeSockets:\ 10,}
+\DoxyCodeLine{\ \ timeout:\ 60000,\ //\ active\ socket\ keepalive\ for\ 60\ seconds}
+\DoxyCodeLine{\ \ freeSocketTimeout:\ 30000,\ //\ free\ socket\ keepalive\ for\ 30\ seconds}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ options\ =\ \{}
+\DoxyCodeLine{\ \ host:\ 'cnodejs.org',}
+\DoxyCodeLine{\ \ port:\ 80,}
+\DoxyCodeLine{\ \ path:\ '/',}
+\DoxyCodeLine{\ \ method:\ 'GET',}
+\DoxyCodeLine{\ \ agent:\ keepaliveAgent,}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ req\ =\ http.request(options,\ res\ =>\ \{}
+\DoxyCodeLine{\ \ console.log('STATUS:\ '\ +\ res.statusCode);}
+\DoxyCodeLine{\ \ console.log('HEADERS:\ '\ +\ JSON.stringify(res.headers));}
+\DoxyCodeLine{\ \ res.setEncoding('utf8');}
+\DoxyCodeLine{\ \ res.on('data',\ function\ (chunk)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log('BODY:\ '\ +\ chunk);}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{req.on('error',\ e\ =>\ \{}
+\DoxyCodeLine{\ \ console.log('problem\ with\ request:\ '\ +\ e.message);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{req.end();}
+\DoxyCodeLine{}
+\DoxyCodeLine{setTimeout(()\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (keepaliveAgent.statusChanged)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log('[\%s]\ agent\ status\ changed:\ \%j',\ Date(),\ keepaliveAgent.getCurrentStatus());}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\},\ 2000);}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md155}{}\doxysubsection{\texorpdfstring{{\ttfamily getter agent.\+status\+Changed}}{{\ttfamily getter agent.\+status\+Changed}}}\label{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md155}
+counters have change or not after last checkpoint.\hypertarget{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md156}{}\doxysubsection{\texorpdfstring{{\ttfamily agent.\+get\+Current\+Status()}}{{\ttfamily agent.\+get\+Current\+Status()}}}\label{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md156}
+{\ttfamily agent.\+get\+Current\+Status()} will return a object to show the status of this agent\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ createSocketCount:\ 10,}
+\DoxyCodeLine{\ \ closeSocketCount:\ 5,}
+\DoxyCodeLine{\ \ timeoutSocketCount:\ 0,}
+\DoxyCodeLine{\ \ requestCount:\ 5,}
+\DoxyCodeLine{\ \ freeSockets:\ \{\ 'localhost:57479:':\ 3\ \},}
+\DoxyCodeLine{\ \ sockets:\ \{\ 'localhost:57479:':\ 5\ \},}
+\DoxyCodeLine{\ \ requests:\ \{\}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md157}{}\doxysubsection{\texorpdfstring{Support {\ttfamily https}}{Support {\ttfamily https}}}\label{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md157}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ https\ =\ require('https');}
+\DoxyCodeLine{const\ HttpsAgent\ =\ require('agentkeepalive').HttpsAgent;}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ keepaliveAgent\ =\ new\ HttpsAgent();}
+\DoxyCodeLine{//\ https://www.google.com/search?q=nodejs\&sugexp=chrome,mod=12\&sourceid=chrome\&ie=UTF-\/8}
+\DoxyCodeLine{const\ options\ =\ \{}
+\DoxyCodeLine{\ \ host:\ 'www.google.com',}
+\DoxyCodeLine{\ \ port:\ 443,}
+\DoxyCodeLine{\ \ path:\ '/search?q=nodejs\&sugexp=chrome,mod=12\&sourceid=chrome\&ie=UTF-\/8',}
+\DoxyCodeLine{\ \ method:\ 'GET',}
+\DoxyCodeLine{\ \ agent:\ keepaliveAgent,}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ req\ =\ https.request(options,\ res\ =>\ \{}
+\DoxyCodeLine{\ \ console.log('STATUS:\ '\ +\ res.statusCode);}
+\DoxyCodeLine{\ \ console.log('HEADERS:\ '\ +\ JSON.stringify(res.headers));}
+\DoxyCodeLine{\ \ res.setEncoding('utf8');}
+\DoxyCodeLine{\ \ res.on('data',\ chunk\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log('BODY:\ '\ +\ chunk);}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{req.on('error',\ e\ =>\ \{}
+\DoxyCodeLine{\ \ console.log('problem\ with\ request:\ '\ +\ e.message);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{req.end();}
+\DoxyCodeLine{}
+\DoxyCodeLine{setTimeout(()\ =>\ \{}
+\DoxyCodeLine{\ \ console.log('agent\ status:\ \%j',\ keepaliveAgent.getCurrentStatus());}
+\DoxyCodeLine{\},\ 2000);}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md158}{}\doxysubsection{\texorpdfstring{Support {\ttfamily req.\+reused\+Socket}}{Support {\ttfamily req.\+reused\+Socket}}}\label{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md158}
+This agent implements the {\ttfamily req.\+reused\+Socket} to determine whether a request is send through a reused socket.
+
+When server closes connection at unfortunate time (\href{https://code-examples.net/en/q/28a8069}{\texttt{ keep-\/alive race}}), the http client will throw a {\ttfamily ECONNRESET} error. Under this circumstance, {\ttfamily req.\+reused\+Socket} is useful when we want to retry the request automatically.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ http\ =\ require('http');}
+\DoxyCodeLine{const\ Agent\ =\ require('agentkeepalive');}
+\DoxyCodeLine{const\ agent\ =\ new\ Agent();}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ req\ =\ http}
+\DoxyCodeLine{\ \ .get('http://localhost:3000',\ \{\ agent\ \},\ (res)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ ...}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\ \ .on('error',\ (err)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (req.reusedSocket\ \&\&\ err.code\ ===\ 'ECONNRESET')\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ retry\ the\ request\ or\ anything\ else...}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \})}
+
+\end{DoxyCode}
+
+
+This behavior is consistent with Node.\+js core. But through {\ttfamily agentkeepalive}, you can use this feature in older Node.\+js version.\hypertarget{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md159}{}\doxysection{\texorpdfstring{\href{https://github.com/node-modules/agentkeepalive/tree/master/benchmark}{\texttt{ Benchmark}}}{\href{https://github.com/node-modules/agentkeepalive/tree/master/benchmark}{\texttt{ Benchmark}}}}\label{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md159}
+run the benchmark\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cd\ benchmark}
+\DoxyCodeLine{sh\ start.sh}
+
+\end{DoxyCode}
+
+
+Intel(\+R) Core(\+TM)2 Duo CPU P8600 @ 2.\+40\+GHz
+
+node@v0.8.\+9
+
+50 max\+Sockets, 60 concurrent, 1000 requests per concurrent, 5ms delay
+
+Keep alive agent (30 seconds)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Transactions:\ \ \ \ \ \ \ \ \ \ 60000\ hits}
+\DoxyCodeLine{Availability:\ \ \ \ \ \ \ \ \ 100.00\ \%}
+\DoxyCodeLine{Elapsed\ time:\ \ \ \ \ \ \ \ \ \ 29.70\ secs}
+\DoxyCodeLine{Data\ transferred:\ \ \ \ \ \ \ \ 14.88\ MB}
+\DoxyCodeLine{Response\ time:\ \ \ \ \ \ \ \ \ \ \ \ 0.03\ secs}
+\DoxyCodeLine{Transaction\ rate:\ \ \ \ \ \ 2020.20\ trans/sec}
+\DoxyCodeLine{Throughput:\ \ \ \ \ \ \ \ \ \ \ 0.50\ MB/sec}
+\DoxyCodeLine{Concurrency:\ \ \ \ \ \ \ \ \ \ \ 59.84}
+\DoxyCodeLine{Successful\ transactions:\ \ \ \ \ \ \ 60000}
+\DoxyCodeLine{Failed\ transactions:\ \ \ \ \ \ \ \ \ \ \ \ \ 0}
+\DoxyCodeLine{Longest\ transaction:\ \ \ \ \ \ \ \ \ \ 0.15}
+\DoxyCodeLine{Shortest\ transaction:\ \ \ \ \ \ \ \ \ 0.01}
+
+\end{DoxyCode}
+
+
+Normal agent\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Transactions:\ \ \ \ \ \ \ \ \ \ 60000\ hits}
+\DoxyCodeLine{Availability:\ \ \ \ \ \ \ \ \ 100.00\ \%}
+\DoxyCodeLine{Elapsed\ time:\ \ \ \ \ \ \ \ \ \ 46.53\ secs}
+\DoxyCodeLine{Data\ transferred:\ \ \ \ \ \ \ \ 14.88\ MB}
+\DoxyCodeLine{Response\ time:\ \ \ \ \ \ \ \ \ \ \ \ 0.05\ secs}
+\DoxyCodeLine{Transaction\ rate:\ \ \ \ \ \ 1289.49\ trans/sec}
+\DoxyCodeLine{Throughput:\ \ \ \ \ \ \ \ \ \ \ 0.32\ MB/sec}
+\DoxyCodeLine{Concurrency:\ \ \ \ \ \ \ \ \ \ \ 59.81}
+\DoxyCodeLine{Successful\ transactions:\ \ \ \ \ \ \ 60000}
+\DoxyCodeLine{Failed\ transactions:\ \ \ \ \ \ \ \ \ \ \ \ \ 0}
+\DoxyCodeLine{Longest\ transaction:\ \ \ \ \ \ \ \ \ \ 0.45}
+\DoxyCodeLine{Shortest\ transaction:\ \ \ \ \ \ \ \ \ 0.00}
+
+\end{DoxyCode}
+
+
+Socket created\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[proxy.js:120000]\ keepalive,\ 50\ created,\ 60000\ requestFinished,\ 1200\ req/socket,\ 0\ requests,\ 0\ sockets,\ 0\ unusedSockets,\ 50\ timeout}
+\DoxyCodeLine{\{"{}\ <10ms"{}:662,"{}\ <15ms"{}:17825,"{}\ <20ms"{}:20552,"{}\ <30ms"{}:17646,"{}\ <40ms"{}:2315,"{}\ <50ms"{}:567,"{}\ <100ms"{}:377,"{}\ <150ms"{}:56,"{}\ <200ms"{}:0,"{}\ >=200ms+"{}:0\}}
+\DoxyCodeLine{-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}
+\DoxyCodeLine{[proxy.js:120000]\ normal\ \ \ ,\ 53866\ created,\ 84260\ requestFinished,\ 1.56\ req/socket,\ 0\ requests,\ 0\ sockets}
+\DoxyCodeLine{\{"{}\ <10ms"{}:75,"{}\ <15ms"{}:1112,"{}\ <20ms"{}:10947,"{}\ <30ms"{}:32130,"{}\ <40ms"{}:8228,"{}\ <50ms"{}:3002,"{}\ <100ms"{}:4274,"{}\ <150ms"{}:181,"{}\ <200ms"{}:18,"{}\ >=200ms+"{}:33\}}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md160}{}\doxysection{\texorpdfstring{License}{License}}\label{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md160}
+\mbox{[}MIT\mbox{]}(LICENSE)\hypertarget{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md161}{}\doxysection{\texorpdfstring{Contributors}{Contributors}}\label{md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_autotoc_md161}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{6}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ \href{https://github.com/fengmk2}{\texttt{ ~\newline
+\textsubscript{{\bfseries{fengmk2}}}}}~\newline
+   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ \href{https://github.com/dead-horse}{\texttt{ ~\newline
+\textsubscript{{\bfseries{dead-\/horse}}}}}~\newline
+   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ \href{https://github.com/AndrewLeedham}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Andrew\+Leedham}}}}}~\newline
+   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ \href{https://github.com/ngot}{\texttt{ ~\newline
+\textsubscript{{\bfseries{ngot}}}}}~\newline
+   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ \href{https://github.com/wrynearson}{\texttt{ ~\newline
+\textsubscript{{\bfseries{wrynearson}}}}}~\newline
+   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ \href{https://github.com/aaronArinder}{\texttt{ ~\newline
+\textsubscript{{\bfseries{aaron\+Arinder}}}}}~\newline
+    }\\\cline{1-6}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ \href{https://github.com/fengmk2}{\texttt{ ~\newline
+\textsubscript{{\bfseries{fengmk2}}}}}~\newline
+   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ \href{https://github.com/dead-horse}{\texttt{ ~\newline
+\textsubscript{{\bfseries{dead-\/horse}}}}}~\newline
+   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ \href{https://github.com/AndrewLeedham}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Andrew\+Leedham}}}}}~\newline
+   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ \href{https://github.com/ngot}{\texttt{ ~\newline
+\textsubscript{{\bfseries{ngot}}}}}~\newline
+   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ \href{https://github.com/wrynearson}{\texttt{ ~\newline
+\textsubscript{{\bfseries{wrynearson}}}}}~\newline
+   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ \href{https://github.com/aaronArinder}{\texttt{ ~\newline
+\textsubscript{{\bfseries{aaron\+Arinder}}}}}~\newline
+    }\\\cline{1-6}
+\endhead
+\PBS\centering \href{https://github.com/alexpenev-s}{\texttt{ ~\newline
+\textsubscript{{\bfseries{alexpenev-\/s}}}}}~\newline
+   &\PBS\centering \href{https://github.com/blemoine}{\texttt{ ~\newline
+\textsubscript{{\bfseries{blemoine}}}}}~\newline
+   &\PBS\centering \href{https://github.com/bdehamer}{\texttt{ ~\newline
+\textsubscript{{\bfseries{bdehamer}}}}}~\newline
+   &\PBS\centering \href{https://github.com/DylanPiercey}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Dylan\+Piercey}}}}}~\newline
+   &\PBS\centering \href{https://github.com/cixel}{\texttt{ ~\newline
+\textsubscript{{\bfseries{cixel}}}}}~\newline
+   &\PBS\centering \href{https://github.com/HerringtonDarkholme}{\texttt{ ~\newline
+\textsubscript{{\bfseries{Herrington\+Darkholme}}}}}~\newline
+    \\\cline{1-6}
+\PBS\centering \href{https://github.com/denghongcai}{\texttt{ ~\newline
+\textsubscript{{\bfseries{denghongcai}}}}}~\newline
+   &\PBS\centering \href{https://github.com/kibertoad}{\texttt{ ~\newline
+\textsubscript{{\bfseries{kibertoad}}}}}~\newline
+   &\PBS\centering \href{https://github.com/pangorgo}{\texttt{ ~\newline
+\textsubscript{{\bfseries{pangorgo}}}}}~\newline
+   &\PBS\centering \href{https://github.com/mattiash}{\texttt{ ~\newline
+\textsubscript{{\bfseries{mattiash}}}}}~\newline
+   &\PBS\centering \href{https://github.com/nabeelbukhari}{\texttt{ ~\newline
+\textsubscript{{\bfseries{nabeelbukhari}}}}}~\newline
+   &\PBS\centering \href{https://github.com/pmalouin}{\texttt{ ~\newline
+\textsubscript{{\bfseries{pmalouin}}}}}~\newline
+    \\\cline{1-6}
+\PBS\centering \href{https://github.com/SimenB}{\texttt{ ~\newline
+\textsubscript{{\bfseries{SimenB}}}}}~\newline
+   &\PBS\centering \href{https://github.com/vinaybedre}{\texttt{ ~\newline
+\textsubscript{{\bfseries{vinaybedre}}}}}~\newline
+   &\PBS\centering \href{https://github.com/starkwang}{\texttt{ ~\newline
+\textsubscript{{\bfseries{starkwang}}}}}~\newline
+   &\PBS\centering \href{https://github.com/killagu}{\texttt{ ~\newline
+\textsubscript{{\bfseries{killagu}}}}}~\newline
+   &\PBS\centering \href{https://github.com/tony-gutierrez}{\texttt{ ~\newline
+\textsubscript{{\bfseries{tony-\/gutierrez}}}}}~\newline
+   &\PBS\centering \href{https://github.com/whxaxes}{\texttt{ ~\newline
+\textsubscript{{\bfseries{whxaxes}}}}}~\newline
+   \\\cline{1-6}
+\end{longtabu}
+
+
+This project follows the git-\/contributor \href{https://github.com/xudafeng/git-contributor}{\texttt{ spec}}, auto updated at {\ttfamily Sat Aug 05 2023 02\+:36\+:31 GMT+0800}. 

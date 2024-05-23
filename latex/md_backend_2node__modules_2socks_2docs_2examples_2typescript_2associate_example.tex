@@ -1,0 +1,100 @@
+\chapter{socks examples}
+\hypertarget{md_backend_2node__modules_2socks_2docs_2examples_2typescript_2associate_example}{}\label{md_backend_2node__modules_2socks_2docs_2examples_2typescript_2associate_example}\index{socks examples@{socks examples}}
+\label{md_backend_2node__modules_2socks_2docs_2examples_2typescript_2associate_example_autotoc_md3537}%
+\Hypertarget{md_backend_2node__modules_2socks_2docs_2examples_2typescript_2associate_example_autotoc_md3537}%
+ \hypertarget{md_backend_2node__modules_2socks_2docs_2examples_2typescript_2associate_example_autotoc_md3538}{}\doxysection{\texorpdfstring{Example for SOCKS \textquotesingle{}associate\textquotesingle{} command}{Example for SOCKS \textquotesingle{}associate\textquotesingle{} command}}\label{md_backend_2node__modules_2socks_2docs_2examples_2typescript_2associate_example_autotoc_md3538}
+The associate command tells the SOCKS proxy server to establish a UDP relay. The server binds to a new UDP port and communicates the newly opened port back to the origin client. From here, any SOCKS UDP frame packets sent to this special UDP port on the Proxy server will be forwarded to the desired destination, and any responses will be forwarded back to the origin client (you).
+
+This can be used for things such as DNS queries, and other UDP communicates.
+
+{\bfseries{Connection Steps}}
+
+
+\begin{DoxyEnumerate}
+\item Client -\/(associate)-\/\texorpdfstring{$>$}{>} Proxy (Tells the proxy to create a UDP relay and bind on a new port)
+\item Client \texorpdfstring{$<$}{<}-\/(port)-\/ Proxy (Tells the origin client which port it opened and is accepting UDP frame packets on)
+\end{DoxyEnumerate}
+
+At this point the proxy is accepting UDP frames on the specified port.
+
+
+\begin{DoxyEnumerate}
+\item Client --(udp frame) -\/\texorpdfstring{$>$}{>} Proxy -\/\texorpdfstring{$>$}{>} Destination (The origin client sends a UDP frame to the proxy on the UDP port, and the proxy then forwards it to the destination specified in the UDP frame.)
+\item Client \texorpdfstring{$<$}{<}--(udp frame) \texorpdfstring{$<$}{<}-- Proxy \texorpdfstring{$<$}{<}-- Destination (The destination client responds to the udp packet sent in \#3)
+\end{DoxyEnumerate}\hypertarget{md_backend_2node__modules_2socks_2docs_2examples_2typescript_2associate_example_autotoc_md3539}{}\doxysection{\texorpdfstring{Usage}{Usage}}\label{md_backend_2node__modules_2socks_2docs_2examples_2typescript_2associate_example_autotoc_md3539}
+The \textquotesingle{}associate\textquotesingle{} command can only be used by creating a new Socks\+Client instance and listening for the \textquotesingle{}established\textquotesingle{} event.
+
+{\bfseries{Note\+:}} UDP packets relayed through the proxy servers are packaged in a special Socks UDP frame format. Socks\+Client.\+create\+UDPFrame() and Socks\+Client.\+parse\+UDPFrame() create and parse these special UDP packets.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ *\ as\ dgram\ from\ 'dgram';}
+\DoxyCodeLine{import\ \{\ SocksClient,\ SocksClientOptions\ \}\ from\ 'socks';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Create\ a\ local\ UDP\ socket\ for\ sending/receiving\ packets\ to/from\ the\ proxy.}
+\DoxyCodeLine{const\ udpSocket\ =\ dgram.createSocket('udp4');}
+\DoxyCodeLine{udpSocket.bind();}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Listen\ for\ incoming\ UDP\ packets\ from\ the\ proxy\ server.}
+\DoxyCodeLine{udpSocket.on('message',\ (message,\ rinfo)\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(SocksClient.parseUDPFrame(message));}
+\DoxyCodeLine{\ \ /*}
+\DoxyCodeLine{\ \ \{\ frameNumber:\ 0,}
+\DoxyCodeLine{\ \ \ \ remoteHost:\ \{\ host:\ '8.8.8.8',\ port:\ 53\ \},\ //\ The\ remote\ host\ that\ replied\ with\ a\ UDP\ packet}
+\DoxyCodeLine{\ \ \ \ data:\ <Buffer\ 74\ 65\ 73\ 74\ 0a>\ //\ The\ data}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ */}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ options:\ SocksClientOptions\ =\ \{}
+\DoxyCodeLine{\ \ proxy:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ '104.131.124.203',}
+\DoxyCodeLine{\ \ \ \ port:\ 1081,}
+\DoxyCodeLine{\ \ \ \ type:\ 5}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ This\ should\ be\ the\ ip\ and\ port\ of\ the\ expected\ client\ that\ will\ be\ sending\ UDP\ frames\ to\ the\ newly\ opened\ UDP\ port\ on\ the\ server.}
+\DoxyCodeLine{\ \ //\ Most\ SOCKS\ servers\ accept\ 0.0.0.0\ as\ a\ wildcard\ address\ to\ accept\ UDP\ frames\ from\ any\ source.}
+\DoxyCodeLine{\ \ destination:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ '0.0.0.0',}
+\DoxyCodeLine{\ \ \ \ port:\ 0}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ command:\ 'associate'}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ client\ =\ new\ SocksClient(options);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ This\ event\ is\ fired\ when\ the\ SOCKS\ server\ has\ started\ listening\ on\ a\ new\ UDP\ port\ for\ UDP\ relaying.}
+\DoxyCodeLine{client.on('established',\ info\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(info);}
+\DoxyCodeLine{\ \ /*}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ socket:\ <Socket\ ...>,}
+\DoxyCodeLine{\ \ \ \ remoteHost:\ \{\ //\ This\ is\ the\ remote\ port\ on\ the\ SOCKS\ proxy\ server\ to\ send\ UDP\ frame\ packets\ to.}
+\DoxyCodeLine{\ \ \ \ \ \ host:\ '104.131.124.203',}
+\DoxyCodeLine{\ \ \ \ \ \ port:\ 58232}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ */}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Send\ a\ udp\ frame\ to\ 8.8.8.8\ on\ port\ 53\ through\ the\ proxy.}
+\DoxyCodeLine{\ \ const\ packet\ =\ SocksClient.createUDPFrame(\{}
+\DoxyCodeLine{\ \ \ \ remoteHost:\ \{\ host:\ '8.8.8.8',\ port:\ 53\ \},}
+\DoxyCodeLine{\ \ \ \ data:\ Buffer.from('hello')\ //\ A\ DNS\ lookup\ in\ the\ real\ world.}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Send\ packet.}
+\DoxyCodeLine{\ \ udpSocket.send(packet,\ info.remoteHost.port,\ info.remoteHost.host);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ SOCKS\ proxy\ failed\ to\ bind.}
+\DoxyCodeLine{client.on('error',\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ //\ Handle\ errors}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Start\ connection}
+\DoxyCodeLine{client.connect();}
+
+\end{DoxyCode}
+ 

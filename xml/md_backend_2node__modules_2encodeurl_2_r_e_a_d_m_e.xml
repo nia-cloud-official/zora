@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2encodeurl_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2encodeurl_2_r_e_a_d_m_e</compoundname>
+    <title>encodeurl</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2encodeurl_2_r_e_a_d_m_e_1autotoc_md812"/> <ulink url="https://npmjs.org/package/encodeurl"><image type="html" name="https://img.shields.io/npm/v/encodeurl.svg" alt="NPM Version" inline="yes"></image>
+</ulink> <ulink url="https://npmjs.org/package/encodeurl"><image type="html" name="https://img.shields.io/npm/dm/encodeurl.svg" alt="NPM Downloads" inline="yes"></image>
+</ulink> <ulink url="https://nodejs.org/en/download"><image type="html" name="https://img.shields.io/node/v/encodeurl.svg" alt="Node.js Version" inline="yes"></image>
+</ulink> <ulink url="https://travis-ci.org/pillarjs/encodeurl"><image type="html" name="https://img.shields.io/travis/pillarjs/encodeurl.svg" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/r/pillarjs/encodeurl?branch=master"><image type="html" name="https://img.shields.io/coveralls/pillarjs/encodeurl.svg" alt="Test Coverage" inline="yes"></image>
+</ulink></para>
+<para>Encode a URL to a percent-encoded form, excluding already-encoded sequences</para>
+<sect1 id="md_backend_2node__modules_2encodeurl_2_r_e_a_d_m_e_1autotoc_md813">
+<title>Installation</title><para>This is a <ulink url="https://nodejs.org/en/">Node.js</ulink> module available through the <ulink url="https://www.npmjs.com/">npm registry</ulink>. Installation is done using the <ulink url="https://docs.npmjs.com/getting-started/installing-npm-packages-locally"><computeroutput>npm install</computeroutput> command</ulink>:</para>
+<para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>encodeurl</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2encodeurl_2_r_e_a_d_m_e_1autotoc_md814">
+<title>API</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>encodeUrl<sp/>=<sp/>require(&apos;encodeurl&apos;)</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2encodeurl_2_r_e_a_d_m_e_1autotoc_md815">
+<title>encodeUrl(url)</title><para>Encode a URL to a percent-encoded form, excluding already-encoded sequences.</para>
+<para>This function will take an already-encoded URL and encode all the non-URL code points (as UTF-8 byte sequences). This function will not encode the &quot;%&quot; character unless it is not part of a valid sequence (<computeroutput>%20</computeroutput> will be left as-is, but <computeroutput>foo</computeroutput> will be encoded as <computeroutput>%25foo</computeroutput>).</para>
+<para>This encode is meant to be &quot;safe&quot; and does not throw errors. It will try as hard as it can to properly encode the given URL, including replacing any raw, unpaired surrogate pairs with the Unicode replacement character prior to encoding.</para>
+<para>This function is <emphasis>similar</emphasis> to the intrinsic function <computeroutput>encodeURI</computeroutput>, except it will not encode the <computeroutput>%</computeroutput> character if that is part of a valid sequence, will not encode <computeroutput>[</computeroutput> and <computeroutput>]</computeroutput> (for IPv6 hostnames) and will replace raw, unpaired surrogate pairs with the Unicode replacement character (instead of throwing).</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2encodeurl_2_r_e_a_d_m_e_1autotoc_md816">
+<title>Examples</title><sect2 id="md_backend_2node__modules_2encodeurl_2_r_e_a_d_m_e_1autotoc_md817">
+<title>Encode a URL containing user-controled data</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>encodeUrl<sp/>=<sp/>require(&apos;encodeurl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>escapeHtml<sp/>=<sp/>require(&apos;escape-html&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">http.createServer(function<sp/>onRequest<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>get<sp/>encoded<sp/>form<sp/>of<sp/>inbound<sp/>url</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>url<sp/>=<sp/>encodeUrl(req.url)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>create<sp/>html<sp/>message</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>body<sp/>=<sp/>&apos;&lt;p&gt;Location<sp/>&apos;<sp/>+<sp/>escapeHtml(url)<sp/>+<sp/>&apos;<sp/>not<sp/>found&lt;/p&gt;&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>send<sp/>a<sp/>404</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.statusCode<sp/>=<sp/>404</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.setHeader(&apos;Content-Type&apos;,<sp/>&apos;text/html;<sp/>charset=UTF-8&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.setHeader(&apos;Content-Length&apos;,<sp/>String(Buffer.byteLength(body,<sp/>&apos;utf-8&apos;)))</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.end(body,<sp/>&apos;utf-8&apos;)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2encodeurl_2_r_e_a_d_m_e_1autotoc_md818">
+<title>Encode a URL for use in a header field</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>encodeUrl<sp/>=<sp/>require(&apos;encodeurl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>escapeHtml<sp/>=<sp/>require(&apos;escape-html&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>url<sp/>=<sp/>require(&apos;url&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">http.createServer(function<sp/>onRequest<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>parse<sp/>inbound<sp/>url</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>href<sp/>=<sp/>url.parse(req)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>set<sp/>new<sp/>host<sp/>for<sp/>redirect</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>href.host<sp/>=<sp/>&apos;localhost&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>href.protocol<sp/>=<sp/>&apos;https:&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>href.slashes<sp/>=<sp/>true</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>create<sp/>location<sp/>header</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>location<sp/>=<sp/>encodeUrl(url.format(href))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>create<sp/>html<sp/>message</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>body<sp/>=<sp/>&apos;&lt;p&gt;Redirecting<sp/>to<sp/>new<sp/>site:<sp/>&apos;<sp/>+<sp/>escapeHtml(location)<sp/>+<sp/>&apos;&lt;/p&gt;&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>send<sp/>a<sp/>301</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.statusCode<sp/>=<sp/>301</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.setHeader(&apos;Content-Type&apos;,<sp/>&apos;text/html;<sp/>charset=UTF-8&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.setHeader(&apos;Content-Length&apos;,<sp/>String(Buffer.byteLength(body,<sp/>&apos;utf-8&apos;)))</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.setHeader(&apos;Location&apos;,<sp/>location)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.end(body,<sp/>&apos;utf-8&apos;)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2encodeurl_2_r_e_a_d_m_e_1autotoc_md819">
+<title>Testing</title><para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>npm<sp/>test</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>run<sp/>lint</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2encodeurl_2_r_e_a_d_m_e_1autotoc_md820">
+<title>References</title><para><itemizedlist>
+<listitem><para><ulink url="https://tools.ietf.org/html/rfc3986">RFC 3986: Uniform Resource Identifier (URI): Generic Syntax</ulink></para>
+</listitem><listitem><para><ulink url="https://url.spec.whatwg.org/">WHATWG URL Living Standard</ulink></para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2encodeurl_2_r_e_a_d_m_e_1autotoc_md821">
+<title>License</title><para>[MIT](LICENSE) </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/encodeurl/README.md"/>
+  </compounddef>
+</doxygen>

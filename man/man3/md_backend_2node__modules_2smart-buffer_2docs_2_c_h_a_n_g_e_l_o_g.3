@@ -1,0 +1,127 @@
+.TH "md_backend_2node__modules_2smart-buffer_2docs_2_c_h_a_n_g_e_l_o_g" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2smart-buffer_2docs_2_c_h_a_n_g_e_l_o_g \- Change Log 
+.PP
+
+.SH "4\&.1\&.0"
+.PP
+.RS 4
+Released 07/24/2019 
+.RE
+.PP
+.PP
+* Adds int64 support for node v12+
+.IP "\(bu" 2
+Drops support for node v4
+.PP
+.SH "4\&.0"
+.PP
+.RS 4
+Released 10/21/2017 
+.RE
+.PP
+.PP
+* Major breaking changes arriving in v4\&.
+.SS "New Features"
+.IP "\(bu" 2
+Ability to read data from a specific offset\&. ex: readInt8(5)
+.IP "\(bu" 2
+Ability to write over data when an offset is given (see breaking changes) ex: writeInt8(5, 0);
+.IP "\(bu" 2
+Ability to set internal read and write offsets\&.
+.PP
+.SS "Breaking Changes"
+.IP "\(bu" 2
+Old constructor patterns have been completely removed\&. It's now required to use the SmartBuffer\&.fromXXX() factory constructors\&. Read more on the v4 docs\&.
+.IP "\(bu" 2
+rewind(), skip(), moveTo() have been removed\&.
+.IP "\(bu" 2
+Internal private properties are now prefixed with underscores (_)\&.
+.IP "\(bu" 2
+\fBAll\fP writeXXX() methods that are given an offset will now \fBoverwrite data\fP instead of insert
+.IP "\(bu" 2
+insertXXX() methods have been added for when you want to insert data at a specific offset (this replaces the old behavior of writeXXX() when an offset was provided)
+.PP
+.SS "Other Changes"
+.IP "\(bu" 2
+Standardizd error messaging
+.IP "\(bu" 2
+Standardized offset/length bounds and sanity checking
+.IP "\(bu" 2
+General overall cleanup of code\&.
+.PP
+.SH "3\&.0\&.3"
+.PP
+.RS 4
+Released 02/19/2017 
+.RE
+.PP
+.PP
+* Adds missing type definitions for some internal functions\&.
+.SH "3\&.0\&.2"
+.PP
+.RS 4
+Released 02/17/2017 
+.RE
+.PP
+.SS "Bug Fixes"
+.IP "\(bu" 2
+Fixes a bug where using readString with a length of zero resulted in reading the remaining data instead of returning an empty string\&. (Fixed by Seldszar)
+.PP
+.SH "3\&.0\&.1"
+.PP
+.RS 4
+Released 02/15/2017 
+.RE
+.PP
+.SS "Bug Fixes"
+.IP "\(bu" 2
+Fixes a bug leftover from the TypeScript refactor where \&.readIntXXX() resulted in \&.readUIntXXX() being called by mistake\&.
+.PP
+.SH "3\&.0"
+.PP
+.RS 4
+Released 02/12/2017 
+.RE
+.PP
+.SS "Bug Fixes"
+.IP "\(bu" 2
+readUIntXXXX() methods will now throw an exception if they attempt to read beyond the bounds of the valid buffer data available\&.
+.IP "  \(bu" 4
+\fBNote\fP This is technically a breaking change, so version is bumped to 3\&.x\&.
+.PP
+
+.PP
+.SH "2\&.0"
+.PP
+.RS 4
+Relased 01/30/2017 
+.RE
+.PP
+.SS "New Features:"
+.IP "\(bu" 2
+Entire package re-written in TypeScript (2\&.1)
+.IP "\(bu" 2
+Backwards compatibility is preserved for now
+.IP "\(bu" 2
+New factory methods for creating SmartBuffer instances
+.IP "  \(bu" 4
+SmartBuffer\&.fromSize()
+.IP "  \(bu" 4
+SmartBuffer\&.fromBuffer()
+.IP "  \(bu" 4
+SmartBuffer\&.fromOptions()
+.PP
+
+.IP "\(bu" 2
+New SmartBufferOptions constructor options
+.IP "\(bu" 2
+Added additional tests
+.PP
+.SS "Bug Fixes:"
+.IP "\(bu" 2
+Fixes a bug where reading null terminated strings may result in an exception\&. 
+.PP
+

@@ -1,0 +1,263 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2buffer_2_r_e_a_d_m_e</compoundname>
+    <title>buffer &lt;a href=&quot;https://travis-ci.org/feross/buffer&quot; &gt;&lt;img src=&quot;https://img.shields.io/travis/feross/buffer/master.svg&quot; alt=&quot;travis&quot;/&gt;&lt;/a&gt; &lt;a href=&quot;https://npmjs.org/package/buffer&quot; &gt;&lt;img src=&quot;https://img.shields.io/npm/v/buffer.svg&quot; alt=&quot;npm&quot;/&gt;&lt;/a&gt; &lt;a href=&quot;https://npmjs.org/package/buffer&quot; &gt;&lt;img src=&quot;https://img.shields.io/npm/dm/buffer.svg&quot; alt=&quot;downloads&quot;/&gt;&lt;/a&gt; &lt;a href=&quot;https://standardjs.com&quot; &gt;&lt;img src=&quot;https://img.shields.io/badge/code_style-standard-brightgreen.svg&quot; alt=&quot;javascript style guide&quot;/&gt;&lt;/a&gt;</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md372"/></para>
+<sect3 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md373">
+<title>The buffer module from <ulink url="https://nodejs.org/">node.js</ulink>, for the browser.</title><para><ulink url="https://saucelabs.com/u/buffer"><image type="html" name="https://saucelabs.com/browser-matrix/buffer.svg" alt="saucelabs" inline="yes"></image>
+</ulink></para>
+<para>With <ulink url="http://browserify.org">browserify</ulink>, simply <lsquo/>require(&apos;buffer<rsquo/>)<computeroutput>or use the</computeroutput>Buffer` global and you will get this module.</para>
+<para>The goal is to provide an API that is 100% identical to <ulink url="https://nodejs.org/api/buffer.html">node&apos;s Buffer API</ulink>. Read the <ulink url="https://nodejs.org/api/buffer.html">official docs</ulink> for the full list of properties, instance methods, and class methods that are supported.</para>
+</sect3>
+<sect1 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md374">
+<title>features</title><para><itemizedlist>
+<listitem><para>Manipulate binary data like a boss, in all browsers!</para>
+</listitem><listitem><para>Super fast. Backed by Typed Arrays (<computeroutput>Uint8Array</computeroutput>/<computeroutput>ArrayBuffer</computeroutput>, not <computeroutput>Object</computeroutput>)</para>
+</listitem><listitem><para>Extremely small bundle size (<bold>6.75KB minified + gzipped</bold>, 51.9KB with comments)</para>
+</listitem><listitem><para>Excellent browser support (Chrome, Firefox, Edge, Safari 9+, IE 11, iOS 9+, Android, etc.)</para>
+</listitem><listitem><para>Preserves Node API exactly, with one minor difference (see below)</para>
+</listitem><listitem><para>Square-bracket <computeroutput>buf[4]</computeroutput> notation works!</para>
+</listitem><listitem><para>Does not modify any browser prototypes or put anything on <computeroutput>window</computeroutput></para>
+</listitem><listitem><para>Comprehensive test suite (including all buffer tests from node.js core)</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md375">
+<title>install</title><para>To use this module directly (without browserify), install it:</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">npm<sp/>install<sp/>buffer</highlight></codeline>
+</programlisting></para>
+<para>This module was previously called <bold>native-buffer-browserify</bold>, but please use <bold>buffer</bold> from now on.</para>
+<para>If you do not use a bundler, you can use the <ulink url="https://bundle.run/buffer">standalone script</ulink>.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md376">
+<title>usage</title><para>The module&apos;s API is identical to node&apos;s <computeroutput>Buffer</computeroutput> API. Read the <ulink url="https://nodejs.org/api/buffer.html">official docs</ulink> for the full list of properties, instance methods, and class methods that are supported.</para>
+<para>As mentioned above, <lsquo/>require(&apos;buffer<rsquo/>)<computeroutput>or use the</computeroutput>Buffer<computeroutput>global with [browserify](<ulink url="http://browserify.org">http://browserify.org</ulink>) and this module will automatically be included in your bundle. Almost any npm module will work in the browser, even if it assumes that the node</computeroutput>Buffer` API will be available.</para>
+<para>To depend on this module explicitly (without browserify), require it like this:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>Buffer<sp/>=<sp/>require(&apos;buffer/&apos;).Buffer<sp/><sp/>//<sp/>note:<sp/>the<sp/>trailing<sp/>slash<sp/>is<sp/>important!</highlight></codeline>
+</programlisting></para>
+<para>To require this module explicitly, use <lsquo/>require(&apos;buffer/<rsquo/>)<computeroutput>which tells the node.js module lookup algorithm (also used by browserify) to use the **npm module** named</computeroutput>buffer<computeroutput> instead of the **node.js core** module named</computeroutput>buffer`!</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md377">
+<title>how does it work?</title><para>The Buffer constructor returns instances of <computeroutput>Uint8Array</computeroutput> that have their prototype changed to <computeroutput>Buffer.prototype</computeroutput>. Furthermore, <computeroutput>Buffer</computeroutput> is a subclass of <computeroutput>Uint8Array</computeroutput>, so the returned instances will have all the node <computeroutput>Buffer</computeroutput> methods and the <computeroutput>Uint8Array</computeroutput> methods. Square bracket notation works as expected <ndash/> it returns a single octet.</para>
+<para>The <computeroutput>Uint8Array</computeroutput> prototype remains unmodified.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md378">
+<title>tracking the latest node api</title><para>This module tracks the Buffer API in the latest (unstable) version of node.js. The Buffer API is considered <bold>stable</bold> in the <ulink url="https://nodejs.org/docs/latest/api/documentation.html#documentation_stability_index">node stability index</ulink>, so it is unlikely that there will ever be breaking changes. Nonetheless, when/if the Buffer API changes in node, this module&apos;s API will change accordingly.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md379">
+<title>related packages</title><para><itemizedlist>
+<listitem><para><ulink url="https://www.npmjs.com/package/buffer-reverse"><computeroutput>buffer-reverse</computeroutput></ulink> - Reverse a buffer</para>
+</listitem><listitem><para><ulink url="https://www.npmjs.com/package/buffer-xor"><computeroutput>buffer-xor</computeroutput></ulink> - Bitwise xor a buffer</para>
+</listitem><listitem><para><ulink url="https://www.npmjs.com/package/is-buffer"><computeroutput>is-buffer</computeroutput></ulink> - Determine if an object is a Buffer without including the whole <computeroutput>Buffer</computeroutput> package</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md380">
+<title>conversion packages</title><sect2 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md381">
+<title>convert typed array to buffer</title><para>Use <ulink url="https://www.npmjs.com/package/typedarray-to-buffer"><computeroutput>typedarray-to-buffer</computeroutput></ulink> to convert any kind of typed array to a <computeroutput>Buffer</computeroutput>. Does not perform a copy, so it&apos;s super fast.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md382">
+<title>convert buffer to typed array</title><para><computeroutput>Buffer</computeroutput> is a subclass of <computeroutput>Uint8Array</computeroutput> (which is a typed array). So there is no need to explicitly convert to typed array. Just use the buffer as a <computeroutput>Uint8Array</computeroutput>.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md383">
+<title>convert blob to buffer</title><para>Use <ulink url="https://www.npmjs.com/package/blob-to-buffer"><computeroutput>blob-to-buffer</computeroutput></ulink> to convert a <computeroutput>Blob</computeroutput> to a <computeroutput>Buffer</computeroutput>.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md384">
+<title>convert buffer to blob</title><para>To convert a <computeroutput>Buffer</computeroutput> to a <computeroutput>Blob</computeroutput>, use the <computeroutput>Blob</computeroutput> constructor:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>blob<sp/>=<sp/>new<sp/>Blob([<sp/>buffer<sp/>])</highlight></codeline>
+</programlisting></para>
+<para>Optionally, specify a mimetype:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>blob<sp/>=<sp/>new<sp/>Blob([<sp/>buffer<sp/>],<sp/>{<sp/>type:<sp/>&apos;text/html&apos;<sp/>})</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md385">
+<title>convert arraybuffer to buffer</title><para>To convert an <computeroutput>ArrayBuffer</computeroutput> to a <computeroutput>Buffer</computeroutput>, use the <computeroutput>Buffer.from</computeroutput> function. Does not perform a copy, so it&apos;s super fast.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>buffer<sp/>=<sp/>Buffer.from(arrayBuffer)</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md386">
+<title>convert buffer to arraybuffer</title><para>To convert a <computeroutput>Buffer</computeroutput> to an <computeroutput>ArrayBuffer</computeroutput>, use the <computeroutput>.buffer</computeroutput> property (which is present on all <computeroutput>Uint8Array</computeroutput> objects):</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>arrayBuffer<sp/>=<sp/>buffer.buffer.slice(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>buffer.byteOffset,<sp/>buffer.byteOffset<sp/>+<sp/>buffer.byteLength</highlight></codeline>
+<codeline><highlight class="normal">)</highlight></codeline>
+</programlisting></para>
+<para>Alternatively, use the <ulink url="https://www.npmjs.com/package/to-arraybuffer"><computeroutput>to-arraybuffer</computeroutput></ulink> module.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md387">
+<title>performance</title><para>See perf tests in <computeroutput>/perf</computeroutput>.</para>
+<para><computeroutput>BrowserBuffer</computeroutput> is the browser <computeroutput>buffer</computeroutput> module (this repo). <computeroutput>Uint8Array</computeroutput> is included as a sanity check (since <computeroutput>BrowserBuffer</computeroutput> uses <computeroutput>Uint8Array</computeroutput> under the hood, <computeroutput>Uint8Array</computeroutput> will always be at least a bit faster). Finally, <computeroutput>NodeBuffer</computeroutput> is the node.js buffer module, which is included to compare against.</para>
+<para>NOTE: Performance has improved since these benchmarks were taken. PR welcome to update the README.</para>
+<sect2 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md388">
+<title>Chrome 38</title><para><table rows="3" cols="5"><row>
+<entry thead="yes" align='left'><para>Method   </para>
+</entry><entry thead="yes" align='left'><para>Operations   </para>
+</entry><entry thead="yes" align='left'><para>Accuracy   </para>
+</entry><entry thead="yes" align='left'><para>Sampled   </para>
+</entry><entry thead="yes" align='center'><para>Fastest    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para>BrowserBuffer::bracket-notation   </para>
+</entry><entry thead="no" align='left'><para>11,457,464 ops/sec   </para>
+</entry><entry thead="no" align='left'><para>±0.86%   </para>
+</entry><entry thead="no" align='left'><para>66   </para>
+</entry><entry thead="no" align='center'><para>✓    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para>Uint8Array::bracket-notation   </para>
+</entry><entry thead="no" align='left'><para>10,824,332 ops/sec   </para>
+</entry><entry thead="no" align='left'><para>±0.74%   </para>
+</entry><entry thead="no" align='left'><para>65   </para>
+</entry><entry thead="no" align='center'><para></para>
+</entry></row>
+</table>
+| | | | | | BrowserBuffer::concat | 450,532 ops/sec | ±0.76% | 68 | | | Uint8Array::concat | 1,368,911 ops/sec | ±1.50% | 62 | ✓ | | | | | | | BrowserBuffer::copy(16000) | 903,001 ops/sec | ±0.96% | 67 | | | Uint8Array::copy(16000) | 1,422,441 ops/sec | ±1.04% | 66 | ✓ | | | | | | | BrowserBuffer::copy(16) | 11,431,358 ops/sec | ±0.46% | 69 | | | Uint8Array::copy(16) | 13,944,163 ops/sec | ±1.12% | 68 | ✓ | | | | | | | BrowserBuffer::new(16000) | 106,329 ops/sec | ±6.70% | 44 | | | Uint8Array::new(16000) | 131,001 ops/sec | ±2.85% | 31 | ✓ | | | | | | | BrowserBuffer::new(16) | 1,554,491 ops/sec | ±1.60% | 65 | | | Uint8Array::new(16) | 6,623,930 ops/sec | ±1.66% | 65 | ✓ | | | | | | | BrowserBuffer::readDoubleBE | 112,830 ops/sec | ±0.51% | 69 | ✓ | | DataView::getFloat64 | 93,500 ops/sec | ±0.57% | 68 | | | | | | | | BrowserBuffer::readFloatBE | 146,678 ops/sec | ±0.95% | 68 | ✓ | | DataView::getFloat32 | 99,311 ops/sec | ±0.41% | 67 | | | | | | | | BrowserBuffer::readUInt32LE | 843,214 ops/sec | ±0.70% | 69 | ✓ | | DataView::getUint32 | 103,024 ops/sec | ±0.64% | 67 | | | | | | | | BrowserBuffer::slice | 1,013,941 ops/sec | ±0.75% | 67 | | | Uint8Array::subarray | 1,903,928 ops/sec | ±0.53% | 67 | ✓ | | | | | | | BrowserBuffer::writeFloatBE | 61,387 ops/sec | ±0.90% | 67 | | | DataView::setFloat32 | 141,249 ops/sec | ±0.40% | 66 | ✓ |</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md389">
+<title>Firefox 33</title><para><table rows="3" cols="5"><row>
+<entry thead="yes" align='left'><para>Method   </para>
+</entry><entry thead="yes" align='left'><para>Operations   </para>
+</entry><entry thead="yes" align='left'><para>Accuracy   </para>
+</entry><entry thead="yes" align='left'><para>Sampled   </para>
+</entry><entry thead="yes" align='center'><para>Fastest    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para>BrowserBuffer::bracket-notation   </para>
+</entry><entry thead="no" align='left'><para>20,800,421 ops/sec   </para>
+</entry><entry thead="no" align='left'><para>±1.84%   </para>
+</entry><entry thead="no" align='left'><para>60   </para>
+</entry><entry thead="no" align='center'><para></para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para>Uint8Array::bracket-notation   </para>
+</entry><entry thead="no" align='left'><para>20,826,235 ops/sec   </para>
+</entry><entry thead="no" align='left'><para>±2.02%   </para>
+</entry><entry thead="no" align='left'><para>61   </para>
+</entry><entry thead="no" align='center'><para>✓   </para>
+</entry></row>
+</table>
+| | | | | | BrowserBuffer::concat | 153,076 ops/sec | ±2.32% | 61 | | | Uint8Array::concat | 1,255,674 ops/sec | ±8.65% | 52 | ✓ | | | | | | | BrowserBuffer::copy(16000) | 1,105,312 ops/sec | ±1.16% | 63 | | | Uint8Array::copy(16000) | 1,615,911 ops/sec | ±0.55% | 66 | ✓ | | | | | | | BrowserBuffer::copy(16) | 16,357,599 ops/sec | ±0.73% | 68 | | | Uint8Array::copy(16) | 31,436,281 ops/sec | ±1.05% | 68 | ✓ | | | | | | | BrowserBuffer::new(16000) | 52,995 ops/sec | ±6.01% | 35 | | | Uint8Array::new(16000) | 87,686 ops/sec | ±5.68% | 45 | ✓ | | | | | | | BrowserBuffer::new(16) | 252,031 ops/sec | ±1.61% | 66 | | | Uint8Array::new(16) | 8,477,026 ops/sec | ±0.49% | 68 | ✓ | | | | | | | BrowserBuffer::readDoubleBE | 99,871 ops/sec | ±0.41% | 69 | | | DataView::getFloat64 | 285,663 ops/sec | ±0.70% | 68 | ✓ | | | | | | | BrowserBuffer::readFloatBE | 115,540 ops/sec | ±0.42% | 69 | | | DataView::getFloat32 | 288,722 ops/sec | ±0.82% | 68 | ✓ | | | | | | | BrowserBuffer::readUInt32LE | 633,926 ops/sec | ±1.08% | 67 | ✓ | | DataView::getUint32 | 294,808 ops/sec | ±0.79% | 64 | | | | | | | | BrowserBuffer::slice | 349,425 ops/sec | ±0.46% | 69 | | | Uint8Array::subarray | 5,965,819 ops/sec | ±0.60% | 65 | ✓ | | | | | | | BrowserBuffer::writeFloatBE | 59,980 ops/sec | ±0.41% | 67 | | | DataView::setFloat32 | 317,634 ops/sec | ±0.63% | 68 | ✓ |</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md390">
+<title>Safari 8</title><para><table rows="3" cols="5"><row>
+<entry thead="yes" align='left'><para>Method   </para>
+</entry><entry thead="yes" align='left'><para>Operations   </para>
+</entry><entry thead="yes" align='left'><para>Accuracy   </para>
+</entry><entry thead="yes" align='left'><para>Sampled   </para>
+</entry><entry thead="yes" align='center'><para>Fastest    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para>BrowserBuffer::bracket-notation   </para>
+</entry><entry thead="no" align='left'><para>10,279,729 ops/sec   </para>
+</entry><entry thead="no" align='left'><para>±2.25%   </para>
+</entry><entry thead="no" align='left'><para>56   </para>
+</entry><entry thead="no" align='center'><para>✓    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para>Uint8Array::bracket-notation   </para>
+</entry><entry thead="no" align='left'><para>10,030,767 ops/sec   </para>
+</entry><entry thead="no" align='left'><para>±2.23%   </para>
+</entry><entry thead="no" align='left'><para>59   </para>
+</entry><entry thead="no" align='center'><para></para>
+</entry></row>
+</table>
+| | | | | | BrowserBuffer::concat | 144,138 ops/sec | ±1.38% | 65 | | | Uint8Array::concat | 4,950,764 ops/sec | ±1.70% | 63 | ✓ | | | | | | | BrowserBuffer::copy(16000) | 1,058,548 ops/sec | ±1.51% | 64 | | | Uint8Array::copy(16000) | 1,409,666 ops/sec | ±1.17% | 65 | ✓ | | | | | | | BrowserBuffer::copy(16) | 6,282,529 ops/sec | ±1.88% | 58 | | | Uint8Array::copy(16) | 11,907,128 ops/sec | ±2.87% | 58 | ✓ | | | | | | | BrowserBuffer::new(16000) | 101,663 ops/sec | ±3.89% | 57 | | | Uint8Array::new(16000) | 22,050,818 ops/sec | ±6.51% | 46 | ✓ | | | | | | | BrowserBuffer::new(16) | 176,072 ops/sec | ±2.13% | 64 | | | Uint8Array::new(16) | 24,385,731 ops/sec | ±5.01% | 51 | ✓ | | | | | | | BrowserBuffer::readDoubleBE | 41,341 ops/sec | ±1.06% | 67 | | | DataView::getFloat64 | 322,280 ops/sec | ±0.84% | 68 | ✓ | | | | | | | BrowserBuffer::readFloatBE | 46,141 ops/sec | ±1.06% | 65 | | | DataView::getFloat32 | 337,025 ops/sec | ±0.43% | 69 | ✓ | | | | | | | BrowserBuffer::readUInt32LE | 151,551 ops/sec | ±1.02% | 66 | | | DataView::getUint32 | 308,278 ops/sec | ±0.94% | 67 | ✓ | | | | | | | BrowserBuffer::slice | 197,365 ops/sec | ±0.95% | 66 | | | Uint8Array::subarray | 9,558,024 ops/sec | ±3.08% | 58 | ✓ | | | | | | | BrowserBuffer::writeFloatBE | 17,518 ops/sec | ±1.03% | 63 | | | DataView::setFloat32 | 319,751 ops/sec | ±0.48% | 68 | ✓ |</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md391">
+<title>Node 0.11.14</title><para><table rows="4" cols="5"><row>
+<entry thead="yes" align='left'><para>Method   </para>
+</entry><entry thead="yes" align='left'><para>Operations   </para>
+</entry><entry thead="yes" align='left'><para>Accuracy   </para>
+</entry><entry thead="yes" align='left'><para>Sampled   </para>
+</entry><entry thead="yes" align='center'><para>Fastest    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para>BrowserBuffer::bracket-notation   </para>
+</entry><entry thead="no" align='left'><para>10,489,828 ops/sec   </para>
+</entry><entry thead="no" align='left'><para>±3.25%   </para>
+</entry><entry thead="no" align='left'><para>90   </para>
+</entry><entry thead="no" align='center'><para></para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para>Uint8Array::bracket-notation   </para>
+</entry><entry thead="no" align='left'><para>10,534,884 ops/sec   </para>
+</entry><entry thead="no" align='left'><para>±0.81%   </para>
+</entry><entry thead="no" align='left'><para>92   </para>
+</entry><entry thead="no" align='center'><para>✓    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para>NodeBuffer::bracket-notation   </para>
+</entry><entry thead="no" align='left'><para>10,389,910 ops/sec   </para>
+</entry><entry thead="no" align='left'><para>±0.97%   </para>
+</entry><entry thead="no" align='left'><para>87   </para>
+</entry><entry thead="no" align='center'><para></para>
+</entry></row>
+</table>
+| | | | | | BrowserBuffer::concat | 487,830 ops/sec | ±2.58% | 88 | | | Uint8Array::concat | 1,814,327 ops/sec | ±1.28% | 88 | ✓ | | NodeBuffer::concat | 1,636,523 ops/sec | ±1.88% | 73 | | | | | | | | BrowserBuffer::copy(16000) | 1,073,665 ops/sec | ±0.77% | 90 | | | Uint8Array::copy(16000) | 1,348,517 ops/sec | ±0.84% | 89 | ✓ | | NodeBuffer::copy(16000) | 1,289,533 ops/sec | ±0.82% | 93 | | | | | | | | BrowserBuffer::copy(16) | 12,782,706 ops/sec | ±0.74% | 85 | | | Uint8Array::copy(16) | 14,180,427 ops/sec | ±0.93% | 92 | ✓ | | NodeBuffer::copy(16) | 11,083,134 ops/sec | ±1.06% | 89 | | | | | | | | BrowserBuffer::new(16000) | 141,678 ops/sec | ±3.30% | 67 | | | Uint8Array::new(16000) | 161,491 ops/sec | ±2.96% | 60 | | | NodeBuffer::new(16000) | 292,699 ops/sec | ±3.20% | 55 | ✓ | | | | | | | BrowserBuffer::new(16) | 1,655,466 ops/sec | ±2.41% | 82 | | | Uint8Array::new(16) | 14,399,926 ops/sec | ±0.91% | 94 | ✓ | | NodeBuffer::new(16) | 3,894,696 ops/sec | ±0.88% | 92 | | | | | | | | BrowserBuffer::readDoubleBE | 109,582 ops/sec | ±0.75% | 93 | ✓ | | DataView::getFloat64 | 91,235 ops/sec | ±0.81% | 90 | | | NodeBuffer::readDoubleBE | 88,593 ops/sec | ±0.96% | 81 | | | | | | | | BrowserBuffer::readFloatBE | 139,854 ops/sec | ±1.03% | 85 | ✓ | | DataView::getFloat32 | 98,744 ops/sec | ±0.80% | 89 | | | NodeBuffer::readFloatBE | 92,769 ops/sec | ±0.94% | 93 | | | | | | | | BrowserBuffer::readUInt32LE | 710,861 ops/sec | ±0.82% | 92 | | | DataView::getUint32 | 117,893 ops/sec | ±0.84% | 91 | | | NodeBuffer::readUInt32LE | 851,412 ops/sec | ±0.72% | 93 | ✓ | | | | | | | BrowserBuffer::slice | 1,673,877 ops/sec | ±0.73% | 94 | | | Uint8Array::subarray | 6,919,243 ops/sec | ±0.67% | 90 | ✓ | | NodeBuffer::slice | 4,617,604 ops/sec | ±0.79% | 93 | | | | | | | | BrowserBuffer::writeFloatBE | 66,011 ops/sec | ±0.75% | 93 | | | DataView::setFloat32 | 127,760 ops/sec | ±0.72% | 93 | ✓ | | NodeBuffer::writeFloatBE | 103,352 ops/sec | ±0.83% | 93 | |</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md392">
+<title>iojs 1.8.1</title><para><table rows="4" cols="5"><row>
+<entry thead="yes" align='left'><para>Method   </para>
+</entry><entry thead="yes" align='left'><para>Operations   </para>
+</entry><entry thead="yes" align='left'><para>Accuracy   </para>
+</entry><entry thead="yes" align='left'><para>Sampled   </para>
+</entry><entry thead="yes" align='center'><para>Fastest    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para>BrowserBuffer::bracket-notation   </para>
+</entry><entry thead="no" align='left'><para>10,990,488 ops/sec   </para>
+</entry><entry thead="no" align='left'><para>±1.11%   </para>
+</entry><entry thead="no" align='left'><para>91   </para>
+</entry><entry thead="no" align='center'><para></para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para>Uint8Array::bracket-notation   </para>
+</entry><entry thead="no" align='left'><para>11,268,757 ops/sec   </para>
+</entry><entry thead="no" align='left'><para>±0.65%   </para>
+</entry><entry thead="no" align='left'><para>97   </para>
+</entry><entry thead="no" align='center'><para></para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para>NodeBuffer::bracket-notation   </para>
+</entry><entry thead="no" align='left'><para>11,353,260 ops/sec   </para>
+</entry><entry thead="no" align='left'><para>±0.83%   </para>
+</entry><entry thead="no" align='left'><para>94   </para>
+</entry><entry thead="no" align='center'><para>✓   </para>
+</entry></row>
+</table>
+| | | | | | BrowserBuffer::concat | 378,954 ops/sec | ±0.74% | 94 | | | Uint8Array::concat | 1,358,288 ops/sec | ±0.97% | 87 | | | NodeBuffer::concat | 1,934,050 ops/sec | ±1.11% | 78 | ✓ | | | | | | | BrowserBuffer::copy(16000) | 894,538 ops/sec | ±0.56% | 84 | | | Uint8Array::copy(16000) | 1,442,656 ops/sec | ±0.71% | 96 | | | NodeBuffer::copy(16000) | 1,457,898 ops/sec | ±0.53% | 92 | ✓ | | | | | | | BrowserBuffer::copy(16) | 12,870,457 ops/sec | ±0.67% | 95 | | | Uint8Array::copy(16) | 16,643,989 ops/sec | ±0.61% | 93 | ✓ | | NodeBuffer::copy(16) | 14,885,848 ops/sec | ±0.74% | 94 | | | | | | | | BrowserBuffer::new(16000) | 109,264 ops/sec | ±4.21% | 63 | | | Uint8Array::new(16000) | 138,916 ops/sec | ±1.87% | 61 | | | NodeBuffer::new(16000) | 281,449 ops/sec | ±3.58% | 51 | ✓ | | | | | | | BrowserBuffer::new(16) | 1,362,935 ops/sec | ±0.56% | 99 | | | Uint8Array::new(16) | 6,193,090 ops/sec | ±0.64% | 95 | ✓ | | NodeBuffer::new(16) | 4,745,425 ops/sec | ±1.56% | 90 | | | | | | | | BrowserBuffer::readDoubleBE | 118,127 ops/sec | ±0.59% | 93 | ✓ | | DataView::getFloat64 | 107,332 ops/sec | ±0.65% | 91 | | | NodeBuffer::readDoubleBE | 116,274 ops/sec | ±0.94% | 95 | | | | | | | | BrowserBuffer::readFloatBE | 150,326 ops/sec | ±0.58% | 95 | ✓ | | DataView::getFloat32 | 110,541 ops/sec | ±0.57% | 98 | | | NodeBuffer::readFloatBE | 121,599 ops/sec | ±0.60% | 87 | | | | | | | | BrowserBuffer::readUInt32LE | 814,147 ops/sec | ±0.62% | 93 | | | DataView::getUint32 | 137,592 ops/sec | ±0.64% | 90 | | | NodeBuffer::readUInt32LE | 931,650 ops/sec | ±0.71% | 96 | ✓ | | | | | | | BrowserBuffer::slice | 878,590 ops/sec | ±0.68% | 93 | | | Uint8Array::subarray | 2,843,308 ops/sec | ±1.02% | 90 | | | NodeBuffer::slice | 4,998,316 ops/sec | ±0.68% | 90 | ✓ | | | | | | | BrowserBuffer::writeFloatBE | 65,927 ops/sec | ±0.74% | 93 | | | DataView::setFloat32 | 139,823 ops/sec | ±0.97% | 89 | ✓ | | NodeBuffer::writeFloatBE | 135,763 ops/sec | ±0.65% | 96 | | | | | | |</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md393">
+<title>Testing the project</title><para>First, install the project: <verbatim>npm install
+</verbatim> Then, to run tests in Node.js, run: <verbatim>npm run test-node
+</verbatim> To test locally in a browser, you can run: <verbatim>npm run test-browser-es5-local # For ES5 browsers that don&apos;t support ES6
+npm run test-browser-es6-local # For ES6 compliant browsers
+</verbatim> This will print out a URL that you can then open in a browser to run the tests, using <ulink url="https://www.npmjs.com/package/airtap">airtap</ulink>.</para>
+<para>To run automated browser tests using Saucelabs, ensure that your <computeroutput>SAUCE_USERNAME</computeroutput> and <computeroutput>SAUCE_ACCESS_KEY</computeroutput> environment variables are set, then run: <verbatim>npm test
+</verbatim> This is what&apos;s run in Travis, to check against various browsers. The list of browsers is kept in the <computeroutput>bin/airtap-es5.yml</computeroutput> and <computeroutput>bin/airtap-es6.yml</computeroutput> files.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md394">
+<title>JavaScript Standard Style</title><para>This module uses <ulink url="https://github.com/feross/standard">JavaScript Standard Style</ulink>.</para>
+<para><ulink url="https://github.com/feross/standard"><image type="html" name="https://cdn.rawgit.com/feross/standard/master/badge.svg" alt="JavaScript Style Guide" inline="yes"></image>
+</ulink></para>
+<para>To test that the code conforms to the style, <computeroutput>npm install</computeroutput> and run: <verbatim>./node_modules/.bin/standard
+</verbatim> </para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md395">
+<title>credit</title><para>This was originally forked from <ulink url="https://github.com/toots/buffer-browserify">buffer-browserify</ulink>.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md396">
+<title>Security Policies and Procedures</title><para>The <computeroutput>buffer</computeroutput> team and community take all security bugs in <computeroutput>buffer</computeroutput> seriously. Please see our <ulink url="https://github.com/feross/security">security policies and procedures</ulink> document to learn how to report issues.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2buffer_2_r_e_a_d_m_e_1autotoc_md397">
+<title>license</title><para>MIT. Copyright (C) <ulink url="http://feross.org">Feross Aboukhadijeh</ulink>, and other contributors. Originally forked from an MIT-licensed module by Romain Beauxis. </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/buffer/README.md"/>
+  </compounddef>
+</doxygen>

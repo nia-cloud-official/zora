@@ -1,0 +1,470 @@
+\doxysection{eclipse.\+py}
+\hypertarget{eclipse_8py_source}{}\label{eclipse_8py_source}\index{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/generator/eclipse.py@{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/generator/eclipse.py}}
+\mbox{\hyperlink{eclipse_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00001}\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse}{00001}}\ \textcolor{comment}{\#\ Copyright\ (c)\ 2012\ Google\ Inc.\ All\ rights\ reserved.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00002}00002\ \textcolor{comment}{\#\ Use\ of\ this\ source\ code\ is\ governed\ by\ a\ BSD-\/style\ license\ that\ can\ be}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00003}00003\ \textcolor{comment}{\#\ found\ in\ the\ LICENSE\ file.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00005}00005\ \textcolor{stringliteral}{"{}"{}"{}GYP\ backend\ that\ generates\ Eclipse\ CDT\ settings\ files.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00006}00006\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00007}00007\ \textcolor{stringliteral}{This\ backend\ DOES\ NOT\ generate\ Eclipse\ CDT\ projects.\ Instead,\ it\ generates\ XML}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00008}00008\ \textcolor{stringliteral}{files\ that\ can\ be\ imported\ into\ an\ Eclipse\ CDT\ project.\ The\ XML\ file\ contains\ a}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00009}00009\ \textcolor{stringliteral}{list\ of\ include\ paths\ and\ symbols\ (i.e.\ defines).}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00010}00010\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00011}00011\ \textcolor{stringliteral}{Because\ a\ full\ .cproject\ definition\ is\ not\ created\ by\ this\ generator,\ it's\ not}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00012}00012\ \textcolor{stringliteral}{possible\ to\ properly\ define\ the\ include\ dirs\ and\ symbols\ for\ each\ file}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00013}00013\ \textcolor{stringliteral}{individually.\ \ Instead,\ one\ set\ of\ includes/symbols\ is\ generated\ for\ the\ entire}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00014}00014\ \textcolor{stringliteral}{project.\ \ This\ works\ fairly\ well\ (and\ is\ a\ vast\ improvement\ in\ general),\ but\ may}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00015}00015\ \textcolor{stringliteral}{still\ result\ in\ a\ few\ indexer\ issues\ here\ and\ there.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00016}00016\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00017}00017\ \textcolor{stringliteral}{This\ generator\ has\ no\ automated\ tests,\ so\ expect\ it\ to\ be\ broken.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00018}00018\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00020}00020\ \textcolor{keyword}{from}\ xml.sax.saxutils\ \textcolor{keyword}{import}\ escape}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00021}00021\ \textcolor{keyword}{import}\ os.path}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00022}00022\ \textcolor{keyword}{import}\ subprocess}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00023}00023\ \textcolor{keyword}{import}\ gyp}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00024}00024\ \textcolor{keyword}{import}\ \mbox{\hyperlink{namespacegyp_1_1common}{gyp.common}}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00025}00025\ \textcolor{keyword}{import}\ \mbox{\hyperlink{namespacegyp_1_1msvs__emulation}{gyp.msvs\_emulation}}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00026}00026\ \textcolor{keyword}{import}\ shlex}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00027}00027\ \textcolor{keyword}{import}\ xml.etree.cElementTree\ \textcolor{keyword}{as}\ ET}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00029}\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_a63972f3bcd19ac640ab2c876f8bd2a80}{00029}}\ generator\_wants\_static\_library\_dependencies\_adjusted\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00031}\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_a01ade88d296c702f259d7b3f22033f54}{00031}}\ generator\_default\_variables\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00033}00033\ \textcolor{keywordflow}{for}\ dirname\ \textcolor{keywordflow}{in}\ [\textcolor{stringliteral}{"{}INTERMEDIATE\_DIR"{}},\ \textcolor{stringliteral}{"{}PRODUCT\_DIR"{}},\ \textcolor{stringliteral}{"{}LIB\_DIR"{}},\ \textcolor{stringliteral}{"{}SHARED\_LIB\_DIR"{}}]:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00034}00034\ \ \ \ \ \textcolor{comment}{\#\ Some\ gyp\ steps\ fail\ if\ these\ are\ empty(!),\ so\ we\ convert\ them\ to\ variables}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00035}00035\ \ \ \ \ generator\_default\_variables[dirname]\ =\ \textcolor{stringliteral}{"{}\$"{}}\ +\ dirname}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00037}00037\ \textcolor{keywordflow}{for}\ unused\ \textcolor{keywordflow}{in}\ [}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00038}00038\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_PATH"{}},}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00039}00039\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_ROOT"{}},}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00040}00040\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_NAME"{}},}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00041}00041\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_DIRNAME"{}},}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00042}00042\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_EXT"{}},}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00043}00043\ \ \ \ \ \textcolor{stringliteral}{"{}EXECUTABLE\_PREFIX"{}},}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00044}00044\ \ \ \ \ \textcolor{stringliteral}{"{}EXECUTABLE\_SUFFIX"{}},}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00045}00045\ \ \ \ \ \textcolor{stringliteral}{"{}STATIC\_LIB\_PREFIX"{}},}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00046}00046\ \ \ \ \ \textcolor{stringliteral}{"{}STATIC\_LIB\_SUFFIX"{}},}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00047}00047\ \ \ \ \ \textcolor{stringliteral}{"{}SHARED\_LIB\_PREFIX"{}},}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00048}00048\ \ \ \ \ \textcolor{stringliteral}{"{}SHARED\_LIB\_SUFFIX"{}},}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00049}00049\ \ \ \ \ \textcolor{stringliteral}{"{}CONFIGURATION\_NAME"{}},}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00050}00050\ ]:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00051}00051\ \ \ \ \ generator\_default\_variables[unused]\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00053}00053\ \textcolor{comment}{\#\ Include\ dirs\ will\ occasionally\ use\ the\ SHARED\_INTERMEDIATE\_DIR\ variable\ as}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00054}00054\ \textcolor{comment}{\#\ part\ of\ the\ path\ when\ dealing\ with\ generated\ headers.\ \ This\ value\ will\ be}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00055}00055\ \textcolor{comment}{\#\ replaced\ dynamically\ for\ each\ configuration.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00056}00056\ generator\_default\_variables[\textcolor{stringliteral}{"{}SHARED\_INTERMEDIATE\_DIR"{}}]\ =\ \textcolor{stringliteral}{"{}\$SHARED\_INTERMEDIATE\_DIR"{}}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00059}\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_a9186e0af7ce53e5311a1490712f638c8}{00059}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_a9186e0af7ce53e5311a1490712f638c8}{CalculateVariables}}(default\_variables,\ params):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00060}00060\ \ \ \ \ generator\_flags\ =\ params.get(\textcolor{stringliteral}{"{}generator\_flags"{}},\ \{\})}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00061}00061\ \ \ \ \ \textcolor{keywordflow}{for}\ key,\ val\ \textcolor{keywordflow}{in}\ generator\_flags.items():}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ default\_variables.setdefault(key,\ val)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00063}00063\ \ \ \ \ flavor\ =\ \mbox{\hyperlink{namespacegyp_1_1common_aeb48ab17a03cd7c40f5ad72fac713486}{gyp.common.GetFlavor}}(params)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00064}00064\ \ \ \ \ default\_variables.setdefault(\textcolor{stringliteral}{"{}OS"{}},\ flavor)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00065}00065\ \ \ \ \ \textcolor{keywordflow}{if}\ flavor\ ==\ \textcolor{stringliteral}{"{}win"{}}:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1msvs__emulation_a2316a951538835fe54c73af2cc38f12a}{gyp.msvs\_emulation.CalculateCommonVariables}}(default\_variables,\ params)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00069}\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_ab755683d49e9db1717564636abbf2b2d}{00069}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_ab755683d49e9db1717564636abbf2b2d}{CalculateGeneratorInputInfo}}(params):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00070}00070\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Calculate\ the\ generator\ specific\ info\ that\ gets\ fed\ to\ input\ (called\ by}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00071}00071\ \textcolor{stringliteral}{\ \ gyp)."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00072}00072\ \ \ \ \ generator\_flags\ =\ params.get(\textcolor{stringliteral}{"{}generator\_flags"{}},\ \{\})}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00073}00073\ \ \ \ \ \textcolor{keywordflow}{if}\ generator\_flags.get(\textcolor{stringliteral}{"{}adjust\_static\_libraries"{}},\ \textcolor{keyword}{False}):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ \textcolor{keyword}{global}\ generator\_wants\_static\_library\_dependencies\_adjusted}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ generator\_wants\_static\_library\_dependencies\_adjusted\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00078}\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_a95058588f83594d0f80df49fe454bd98}{00078}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_a95058588f83594d0f80df49fe454bd98}{GetAllIncludeDirectories}}(}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00079}00079\ \ \ \ \ target\_list,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00080}00080\ \ \ \ \ target\_dicts,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00081}00081\ \ \ \ \ shared\_intermediate\_dirs,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00082}00082\ \ \ \ \ config\_name,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00083}00083\ \ \ \ \ params,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00084}00084\ \ \ \ \ compiler\_path,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00085}00085\ ):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00086}00086\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Calculate\ the\ set\ of\ include\ directories\ to\ be\ used.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00087}00087\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00088}00088\ \textcolor{stringliteral}{\ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00089}00089\ \textcolor{stringliteral}{\ \ \ \ A\ list\ including\ all\ the\ include\_dir's\ specified\ for\ every\ target\ followed}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00090}00090\ \textcolor{stringliteral}{\ \ \ \ by\ any\ include\ directories\ that\ were\ added\ as\ cflag\ compiler\ options.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00091}00091\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00092}00092\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00093}00093\ \ \ \ \ gyp\_includes\_set\ =\ set()}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00094}00094\ \ \ \ \ compiler\_includes\_list\ =\ []}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00096}00096\ \ \ \ \ \textcolor{comment}{\#\ Find\ compiler's\ default\ include\ dirs.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00097}00097\ \ \ \ \ \textcolor{keywordflow}{if}\ compiler\_path:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ command\ =\ shlex.split(compiler\_path)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ command.extend([\textcolor{stringliteral}{"{}-\/E"{}},\ \textcolor{stringliteral}{"{}-\/xc++"{}},\ \textcolor{stringliteral}{"{}-\/v"{}},\ \textcolor{stringliteral}{"{}-\/"{}}])}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ proc\ =\ subprocess.Popen(}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ args=command,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ stdin=subprocess.PIPE,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ stdout=subprocess.PIPE,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ stderr=subprocess.PIPE,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ output\ =\ proc.communicate()[1].decode(\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Extract\ the\ list\ of\ include\ dirs\ from\ the\ output,\ which\ has\ this\ format:}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ ...}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \#include\ "{}..."{}\ search\ starts\ here:}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \#include\ <...>\ search\ starts\ here:}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ /usr/include/c++/4.6}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00112}00112\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ /usr/local/include}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ End\ of\ search\ list.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00114}00114\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ ...}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ in\_include\_list\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ line\ \textcolor{keywordflow}{in}\ output.splitlines():}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ line.startswith(\textcolor{stringliteral}{"{}\#include"{}}):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in\_include\_list\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ line.startswith(\textcolor{stringliteral}{"{}End\ of\ search\ list."{}}):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ in\_include\_list:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ include\_dir\ =\ line.strip()}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ include\_dir\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ compiler\_includes\_list:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ compiler\_includes\_list.append(include\_dir)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00126}00126\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00127}00127\ \ \ \ \ flavor\ =\ \mbox{\hyperlink{namespacegyp_1_1common_aeb48ab17a03cd7c40f5ad72fac713486}{gyp.common.GetFlavor}}(params)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00128}00128\ \ \ \ \ \textcolor{keywordflow}{if}\ flavor\ ==\ \textcolor{stringliteral}{"{}win"{}}:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ generator\_flags\ =\ params.get(\textcolor{stringliteral}{"{}generator\_flags"{}},\ \{\})}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00130}00130\ \ \ \ \ \textcolor{keywordflow}{for}\ target\_name\ \textcolor{keywordflow}{in}\ target\_list:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ target\ =\ target\_dicts[target\_name]}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ config\_name\ \textcolor{keywordflow}{in}\ target[\textcolor{stringliteral}{"{}configurations"{}}]:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ config\ =\ target[\textcolor{stringliteral}{"{}configurations"{}}][config\_name]}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00134}00134\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Look\ for\ any\ include\ dirs\ that\ were\ explicitly\ added\ via\ cflags.\ This}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ may\ be\ done\ in\ gyp\ files\ to\ force\ certain\ includes\ to\ come\ at\ the\ end.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ TODO(jgreenwald):\ Change\ the\ gyp\ files\ to\ not\ abuse\ cflags\ for\ this,\ and}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ remove\ this.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ flavor\ ==\ \textcolor{stringliteral}{"{}win"{}}:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ msvs\_settings\ =\ \mbox{\hyperlink{classgyp_1_1msvs__emulation_1_1_msvs_settings}{gyp.msvs\_emulation.MsvsSettings}}(target,\ generator\_flags)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cflags\ =\ msvs\_settings.GetCflags(config\_name)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cflags\ =\ config[\textcolor{stringliteral}{"{}cflags"{}}]}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ cflag\ \textcolor{keywordflow}{in}\ cflags:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ cflag.startswith(\textcolor{stringliteral}{"{}-\/I"{}}):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ include\_dir\ =\ cflag[2:]}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ include\_dir\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ compiler\_includes\_list:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ compiler\_includes\_list.append(include\_dir)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00149}00149\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Find\ standard\ gyp\ include\ dirs.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}include\_dirs"{}}\ \textcolor{keywordflow}{in}\ config:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ include\_dirs\ =\ config[\textcolor{stringliteral}{"{}include\_dirs"{}}]}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ shared\_intermediate\_dir\ \textcolor{keywordflow}{in}\ shared\_intermediate\_dirs:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ include\_dir\ \textcolor{keywordflow}{in}\ include\_dirs:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ include\_dir\ =\ include\_dir.replace(}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\$SHARED\_INTERMEDIATE\_DIR"{}},\ shared\_intermediate\_dir}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00157}00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00158}00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ os.path.isabs(include\_dir):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ base\_dir\ =\ os.path.dirname(target\_name)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00160}00160\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ include\_dir\ =\ base\_dir\ +\ \textcolor{stringliteral}{"{}/"{}}\ +\ include\_dir}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ include\_dir\ =\ os.path.abspath(include\_dir)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00163}00163\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ gyp\_includes\_set.add(include\_dir)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00165}00165\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00166}00166\ \ \ \ \ \textcolor{comment}{\#\ Generate\ a\ list\ that\ has\ all\ the\ include\ dirs.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00167}00167\ \ \ \ \ all\_includes\_list\ =\ list(gyp\_includes\_set)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00168}00168\ \ \ \ \ all\_includes\_list.sort()}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00169}00169\ \ \ \ \ \textcolor{keywordflow}{for}\ compiler\_include\ \textcolor{keywordflow}{in}\ compiler\_includes\_list:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00170}00170\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ compiler\_include\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ gyp\_includes\_set:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ all\_includes\_list.append(compiler\_include)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00173}00173\ \ \ \ \ \textcolor{comment}{\#\ All\ done.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00174}00174\ \ \ \ \ \textcolor{keywordflow}{return}\ all\_includes\_list}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00175}00175\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00176}00176\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00177}\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_a392aa9e94ee7db5f6a8382e412cc2479}{00177}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_a392aa9e94ee7db5f6a8382e412cc2479}{GetCompilerPath}}(target\_list,\ data,\ options):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00178}00178\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Determine\ a\ command\ that\ can\ be\ used\ to\ invoke\ the\ compiler.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00179}00179\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00180}00180\ \textcolor{stringliteral}{\ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00181}00181\ \textcolor{stringliteral}{\ \ \ \ If\ this\ is\ a\ gyp\ project\ that\ has\ explicit\ make\ settings,\ try\ to\ determine}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00182}00182\ \textcolor{stringliteral}{\ \ \ \ the\ compiler\ from\ that.\ \ Otherwise,\ see\ if\ a\ compiler\ was\ specified\ via\ the}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00183}00183\ \textcolor{stringliteral}{\ \ \ \ CC\_target\ environment\ variable.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00184}00184\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00185}00185\ \ \ \ \ \textcolor{comment}{\#\ First,\ see\ if\ the\ compiler\ is\ configured\ in\ make's\ settings.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00186}00186\ \ \ \ \ build\_file,\ \_,\ \_\ =\ \mbox{\hyperlink{namespacegyp_1_1common_a51180f038e57ff79c30f6231d1d7958f}{gyp.common.ParseQualifiedTarget}}(target\_list[0])}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00187}00187\ \ \ \ \ make\_global\_settings\_dict\ =\ data[build\_file].get(\textcolor{stringliteral}{"{}make\_global\_settings"{}},\ \{\})}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00188}00188\ \ \ \ \ \textcolor{keywordflow}{for}\ key,\ value\ \textcolor{keywordflow}{in}\ make\_global\_settings\_dict:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00189}00189\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ key\ \textcolor{keywordflow}{in}\ [\textcolor{stringliteral}{"{}CC"{}},\ \textcolor{stringliteral}{"{}CXX"{}}]:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.join(options.toplevel\_dir,\ value)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00191}00191\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00192}00192\ \ \ \ \ \textcolor{comment}{\#\ Check\ to\ see\ if\ the\ compiler\ was\ specified\ as\ an\ environment\ variable.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00193}00193\ \ \ \ \ \textcolor{keywordflow}{for}\ key\ \textcolor{keywordflow}{in}\ [\textcolor{stringliteral}{"{}CC\_target"{}},\ \textcolor{stringliteral}{"{}CC"{}},\ \textcolor{stringliteral}{"{}CXX"{}}]:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00194}00194\ \ \ \ \ \ \ \ \ compiler\ =\ os.environ.get(key)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00195}00195\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ compiler:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ compiler}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00197}00197\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00198}00198\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}gcc"{}}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00199}00199\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00200}00200\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00201}\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_ac9f9422b2429dd65a5fc0c470a0c2085}{00201}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_ac9f9422b2429dd65a5fc0c470a0c2085}{GetAllDefines}}(target\_list,\ target\_dicts,\ data,\ config\_name,\ params,\ compiler\_path):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00202}00202\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Calculate\ the\ defines\ for\ a\ project.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00203}00203\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00204}00204\ \textcolor{stringliteral}{\ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00205}00205\ \textcolor{stringliteral}{\ \ \ \ A\ dict\ that\ includes\ explicit\ defines\ declared\ in\ gyp\ files\ along\ with\ all}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00206}00206\ \textcolor{stringliteral}{\ \ \ \ of\ the\ default\ defines\ that\ the\ compiler\ uses.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00207}00207\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00208}00208\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00209}00209\ \ \ \ \ \textcolor{comment}{\#\ Get\ defines\ declared\ in\ the\ gyp\ files.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00210}00210\ \ \ \ \ all\_defines\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00211}00211\ \ \ \ \ flavor\ =\ \mbox{\hyperlink{namespacegyp_1_1common_aeb48ab17a03cd7c40f5ad72fac713486}{gyp.common.GetFlavor}}(params)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00212}00212\ \ \ \ \ \textcolor{keywordflow}{if}\ flavor\ ==\ \textcolor{stringliteral}{"{}win"{}}:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00213}00213\ \ \ \ \ \ \ \ \ generator\_flags\ =\ params.get(\textcolor{stringliteral}{"{}generator\_flags"{}},\ \{\})}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00214}00214\ \ \ \ \ \textcolor{keywordflow}{for}\ target\_name\ \textcolor{keywordflow}{in}\ target\_list:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00215}00215\ \ \ \ \ \ \ \ \ target\ =\ target\_dicts[target\_name]}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00216}00216\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00217}00217\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ flavor\ ==\ \textcolor{stringliteral}{"{}win"{}}:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \ \ msvs\_settings\ =\ \mbox{\hyperlink{classgyp_1_1msvs__emulation_1_1_msvs_settings}{gyp.msvs\_emulation.MsvsSettings}}(target,\ generator\_flags)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ extra\_defines\ =\ msvs\_settings.GetComputedDefines(config\_name)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00220}00220\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ extra\_defines\ =\ []}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00222}00222\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ config\_name\ \textcolor{keywordflow}{in}\ target[\textcolor{stringliteral}{"{}configurations"{}}]:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ config\ =\ target[\textcolor{stringliteral}{"{}configurations"{}}][config\_name]}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ target\_defines\ =\ config[\textcolor{stringliteral}{"{}defines"{}}]}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00225}00225\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00226}00226\ \ \ \ \ \ \ \ \ \ \ \ \ target\_defines\ =\ []}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00227}00227\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ define\ \textcolor{keywordflow}{in}\ target\_defines\ +\ extra\_defines:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ split\_define\ =\ define.split(\textcolor{stringliteral}{"{}="{}},\ 1)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ len(split\_define)\ ==\ 1:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00230}00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ split\_define.append(\textcolor{stringliteral}{"{}1"{}})}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ split\_define[0].strip()\ \textcolor{keywordflow}{in}\ all\_defines:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Already\ defined}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00233}00233\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00234}00234\ \ \ \ \ \ \ \ \ \ \ \ \ all\_defines[split\_define[0].strip()]\ =\ split\_define[1].strip()}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00235}00235\ \ \ \ \ \textcolor{comment}{\#\ Get\ default\ compiler\ defines\ (if\ possible).}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00236}00236\ \ \ \ \ \textcolor{keywordflow}{if}\ flavor\ ==\ \textcolor{stringliteral}{"{}win"{}}:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00237}00237\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ all\_defines\ \ \textcolor{comment}{\#\ Default\ defines\ already\ processed\ in\ the\ loop\ above.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00238}00238\ \ \ \ \ \textcolor{keywordflow}{if}\ compiler\_path:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00239}00239\ \ \ \ \ \ \ \ \ command\ =\ shlex.split(compiler\_path)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00240}00240\ \ \ \ \ \ \ \ \ command.extend([\textcolor{stringliteral}{"{}-\/E"{}},\ \textcolor{stringliteral}{"{}-\/dM"{}},\ \textcolor{stringliteral}{"{}-\/"{}}])}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00241}00241\ \ \ \ \ \ \ \ \ cpp\_proc\ =\ subprocess.Popen(}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00242}00242\ \ \ \ \ \ \ \ \ \ \ \ \ args=command,\ cwd=\textcolor{stringliteral}{"{}."{}},\ stdin=subprocess.PIPE,\ stdout=subprocess.PIPE}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00243}00243\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00244}00244\ \ \ \ \ \ \ \ \ cpp\_output\ =\ cpp\_proc.communicate()[0].decode(\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00245}00245\ \ \ \ \ \ \ \ \ cpp\_lines\ =\ cpp\_output.split(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00246}00246\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ cpp\_line\ \textcolor{keywordflow}{in}\ cpp\_lines:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00247}00247\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ cpp\_line.strip():}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00248}00248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00249}00249\ \ \ \ \ \ \ \ \ \ \ \ \ cpp\_line\_parts\ =\ cpp\_line.split(\textcolor{stringliteral}{"{}\ "{}},\ 2)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00250}00250\ \ \ \ \ \ \ \ \ \ \ \ \ key\ =\ cpp\_line\_parts[1]}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00251}00251\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ len(cpp\_line\_parts)\ >=\ 3:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00252}00252\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ val\ =\ cpp\_line\_parts[2]}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00253}00253\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00254}00254\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ val\ =\ \textcolor{stringliteral}{"{}1"{}}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00255}00255\ \ \ \ \ \ \ \ \ \ \ \ \ all\_defines[key]\ =\ val}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00256}00256\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00257}00257\ \ \ \ \ \textcolor{keywordflow}{return}\ all\_defines}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00258}00258\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00259}00259\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00260}\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_ae33bc6d69cbfa80d05cf10f47f02a9a2}{00260}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_ae33bc6d69cbfa80d05cf10f47f02a9a2}{WriteIncludePaths}}(out,\ eclipse\_langs,\ include\_dirs):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00261}00261\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Write\ the\ includes\ section\ of\ a\ CDT\ settings\ export\ file."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00262}00262\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00263}00263\ \ \ \ \ out.write(}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00264}00264\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'\ \ <section\ name="{}org.eclipse.cdt.internal.ui.wizards.'}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00265}00265\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'settingswizards.IncludePaths"{}>\(\backslash\)n'}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00266}00266\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00267}00267\ \ \ \ \ out.write(\textcolor{stringliteral}{'\ \ \ \ <language\ name="{}holder\ for\ library\ settings"{}></language>\(\backslash\)n'})}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00268}00268\ \ \ \ \ \textcolor{keywordflow}{for}\ lang\ \textcolor{keywordflow}{in}\ eclipse\_langs:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00269}00269\ \ \ \ \ \ \ \ \ out.write(\textcolor{stringliteral}{'\ \ \ \ <language\ name="{}\%s"{}>\(\backslash\)n'}\ \%\ lang)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00270}00270\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ include\_dir\ \textcolor{keywordflow}{in}\ include\_dirs:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00271}00271\ \ \ \ \ \ \ \ \ \ \ \ \ out.write(}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'\ \ \ \ \ \ <includepath\ workspace\_path="{}false"{}>\%s</includepath>\(\backslash\)n'}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \%\ include\_dir}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00274}00274\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00275}00275\ \ \ \ \ \ \ \ \ out.write(\textcolor{stringliteral}{"{}\ \ \ \ </language>\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00276}00276\ \ \ \ \ out.write(\textcolor{stringliteral}{"{}\ \ </section>\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00277}00277\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00278}00278\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00279}\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_ab46c8f49795c69103fdc6764f9f1eff9}{00279}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_ab46c8f49795c69103fdc6764f9f1eff9}{WriteMacros}}(out,\ eclipse\_langs,\ defines):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00280}00280\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Write\ the\ macros\ section\ of\ a\ CDT\ settings\ export\ file."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00281}00281\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00282}00282\ \ \ \ \ out.write(}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00283}00283\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'\ \ <section\ name="{}org.eclipse.cdt.internal.ui.wizards.'}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00284}00284\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'settingswizards.Macros"{}>\(\backslash\)n'}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00285}00285\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00286}00286\ \ \ \ \ out.write(\textcolor{stringliteral}{'\ \ \ \ <language\ name="{}holder\ for\ library\ settings"{}></language>\(\backslash\)n'})}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00287}00287\ \ \ \ \ \textcolor{keywordflow}{for}\ lang\ \textcolor{keywordflow}{in}\ eclipse\_langs:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00288}00288\ \ \ \ \ \ \ \ \ out.write(\textcolor{stringliteral}{'\ \ \ \ <language\ name="{}\%s"{}>\(\backslash\)n'}\ \%\ lang)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00289}00289\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ key\ \textcolor{keywordflow}{in}\ sorted(defines):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00290}00290\ \ \ \ \ \ \ \ \ \ \ \ \ out.write(}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00291}00291\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\ \ \ \ \ \ <macro><name>\%s</name><value>\%s</value></macro>\(\backslash\)n"{}}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00292}00292\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \%\ (escape(key),\ escape(defines[key]))}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00293}00293\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00294}00294\ \ \ \ \ \ \ \ \ out.write(\textcolor{stringliteral}{"{}\ \ \ \ </language>\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00295}00295\ \ \ \ \ out.write(\textcolor{stringliteral}{"{}\ \ </section>\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00296}00296\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00297}00297\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00298}\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_a95a945d403e410c59893f9b22b4255f2}{00298}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_a95a945d403e410c59893f9b22b4255f2}{GenerateOutputForConfig}}(target\_list,\ target\_dicts,\ data,\ params,\ config\_name):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00299}00299\ \ \ \ \ options\ =\ params[\textcolor{stringliteral}{"{}options"{}}]}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00300}00300\ \ \ \ \ generator\_flags\ =\ params.get(\textcolor{stringliteral}{"{}generator\_flags"{}},\ \{\})}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00301}00301\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00302}00302\ \ \ \ \ \textcolor{comment}{\#\ build\_dir:\ relative\ path\ from\ source\ root\ to\ our\ output\ files.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00303}00303\ \ \ \ \ \textcolor{comment}{\#\ e.g.\ "{}out/Debug"{}}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00304}00304\ \ \ \ \ build\_dir\ =\ os.path.join(generator\_flags.get(\textcolor{stringliteral}{"{}output\_dir"{}},\ \textcolor{stringliteral}{"{}out"{}}),\ config\_name)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00305}00305\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00306}00306\ \ \ \ \ toplevel\_build\ =\ os.path.join(options.toplevel\_dir,\ build\_dir)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00307}00307\ \ \ \ \ \textcolor{comment}{\#\ Ninja\ uses\ out/Debug/gen\ while\ make\ uses\ out/Debug/obj/gen\ as\ the}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00308}00308\ \ \ \ \ \textcolor{comment}{\#\ SHARED\_INTERMEDIATE\_DIR.\ Include\ both\ possible\ locations.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00309}00309\ \ \ \ \ shared\_intermediate\_dirs\ =\ [}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00310}00310\ \ \ \ \ \ \ \ \ os.path.join(toplevel\_build,\ \textcolor{stringliteral}{"{}obj"{}},\ \textcolor{stringliteral}{"{}gen"{}}),}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00311}00311\ \ \ \ \ \ \ \ \ os.path.join(toplevel\_build,\ \textcolor{stringliteral}{"{}gen"{}}),}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00312}00312\ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00313}00313\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00314}00314\ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_a816601ea9ef13db7098f189a8ec8ba1f}{GenerateCdtSettingsFile}}(}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00315}00315\ \ \ \ \ \ \ \ \ target\_list,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00316}00316\ \ \ \ \ \ \ \ \ target\_dicts,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00317}00317\ \ \ \ \ \ \ \ \ data,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00318}00318\ \ \ \ \ \ \ \ \ params,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00319}00319\ \ \ \ \ \ \ \ \ config\_name,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00320}00320\ \ \ \ \ \ \ \ \ os.path.join(toplevel\_build,\ \textcolor{stringliteral}{"{}eclipse-\/cdt-\/settings.xml"{}}),}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00321}00321\ \ \ \ \ \ \ \ \ options,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00322}00322\ \ \ \ \ \ \ \ \ shared\_intermediate\_dirs,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00323}00323\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00324}00324\ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_af3dc5b6cb98116253e3a2f219e3b0143}{GenerateClasspathFile}}(}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00325}00325\ \ \ \ \ \ \ \ \ target\_list,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00326}00326\ \ \ \ \ \ \ \ \ target\_dicts,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00327}00327\ \ \ \ \ \ \ \ \ options.toplevel\_dir,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00328}00328\ \ \ \ \ \ \ \ \ toplevel\_build,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00329}00329\ \ \ \ \ \ \ \ \ os.path.join(toplevel\_build,\ \textcolor{stringliteral}{"{}eclipse-\/classpath.xml"{}}),}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00330}00330\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00331}00331\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00332}00332\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00333}\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_a816601ea9ef13db7098f189a8ec8ba1f}{00333}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_a816601ea9ef13db7098f189a8ec8ba1f}{GenerateCdtSettingsFile}}(}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00334}00334\ \ \ \ \ target\_list,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00335}00335\ \ \ \ \ target\_dicts,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00336}00336\ \ \ \ \ data,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00337}00337\ \ \ \ \ params,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00338}00338\ \ \ \ \ config\_name,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00339}00339\ \ \ \ \ out\_name,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00340}00340\ \ \ \ \ options,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00341}00341\ \ \ \ \ shared\_intermediate\_dirs,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00342}00342\ ):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00343}00343\ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1common_a62411b7ed9f7220bb951ea26e91e4e15}{gyp.common.EnsureDirExists}}(out\_name)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00344}00344\ \ \ \ \ \textcolor{keyword}{with}\ open(out\_name,\ \textcolor{stringliteral}{"{}w"{}})\ \textcolor{keyword}{as}\ out:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00345}00345\ \ \ \ \ \ \ \ \ out.write(\textcolor{stringliteral}{'<?xml\ version="{}1.0"{}\ encoding="{}UTF-\/8"{}?>\(\backslash\)n'})}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00346}00346\ \ \ \ \ \ \ \ \ out.write(\textcolor{stringliteral}{"{}<cdtprojectproperties>\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00347}00347\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00348}00348\ \ \ \ \ \ \ \ \ eclipse\_langs\ =\ [}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00349}00349\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}C++\ Source\ File"{}},}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00350}00350\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}C\ Source\ File"{}},}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00351}00351\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Assembly\ Source\ File"{}},}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00352}00352\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}GNU\ C++"{}},}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}GNU\ C"{}},}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Assembly"{}},}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00355}00355\ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00356}00356\ \ \ \ \ \ \ \ \ compiler\_path\ =\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_a392aa9e94ee7db5f6a8382e412cc2479}{GetCompilerPath}}(target\_list,\ data,\ options)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00357}00357\ \ \ \ \ \ \ \ \ include\_dirs\ =\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_a95058588f83594d0f80df49fe454bd98}{GetAllIncludeDirectories}}(}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00358}00358\ \ \ \ \ \ \ \ \ \ \ \ \ target\_list,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00359}00359\ \ \ \ \ \ \ \ \ \ \ \ \ target\_dicts,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00360}00360\ \ \ \ \ \ \ \ \ \ \ \ \ shared\_intermediate\_dirs,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00361}00361\ \ \ \ \ \ \ \ \ \ \ \ \ config\_name,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00362}00362\ \ \ \ \ \ \ \ \ \ \ \ \ params,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00363}00363\ \ \ \ \ \ \ \ \ \ \ \ \ compiler\_path,}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00364}00364\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00365}00365\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_ae33bc6d69cbfa80d05cf10f47f02a9a2}{WriteIncludePaths}}(out,\ eclipse\_langs,\ include\_dirs)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00366}00366\ \ \ \ \ \ \ \ \ defines\ =\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_ac9f9422b2429dd65a5fc0c470a0c2085}{GetAllDefines}}(}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00367}00367\ \ \ \ \ \ \ \ \ \ \ \ \ target\_list,\ target\_dicts,\ data,\ config\_name,\ params,\ compiler\_path}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00368}00368\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00369}00369\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_ab46c8f49795c69103fdc6764f9f1eff9}{WriteMacros}}(out,\ eclipse\_langs,\ defines)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00370}00370\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00371}00371\ \ \ \ \ \ \ \ \ out.write(\textcolor{stringliteral}{"{}</cdtprojectproperties>\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00372}00372\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00373}00373\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00374}\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_af3dc5b6cb98116253e3a2f219e3b0143}{00374}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_af3dc5b6cb98116253e3a2f219e3b0143}{GenerateClasspathFile}}(}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00375}00375\ \ \ \ \ target\_list,\ target\_dicts,\ toplevel\_dir,\ toplevel\_build,\ out\_name}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00376}00376\ ):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00377}00377\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Generates\ a\ classpath\ file\ suitable\ for\ symbol\ navigation\ and\ code}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00378}00378\ \textcolor{stringliteral}{\ \ completion\ of\ Java\ code\ (such\ as\ in\ Android\ projects)\ by\ finding\ all}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00379}00379\ \textcolor{stringliteral}{\ \ .java\ and\ .jar\ files\ used\ as\ action\ inputs."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00380}00380\ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1common_a62411b7ed9f7220bb951ea26e91e4e15}{gyp.common.EnsureDirExists}}(out\_name)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00381}00381\ \ \ \ \ result\ =\ ET.Element(\textcolor{stringliteral}{"{}classpath"{}})}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00382}00382\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00383}00383\ \ \ \ \ \textcolor{keyword}{def\ }AddElements(kind,\ paths):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00384}00384\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ First,\ we\ need\ to\ normalize\ the\ paths\ so\ they\ are\ all\ relative\ to\ the}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00385}00385\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ toplevel\ dir.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00386}00386\ \ \ \ \ \ \ \ \ rel\_paths\ =\ set()}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00387}00387\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ path\ \textcolor{keywordflow}{in}\ paths:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00388}00388\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ os.path.isabs(path):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00389}00389\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rel\_paths.add(os.path.relpath(path,\ toplevel\_dir))}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00390}00390\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00391}00391\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rel\_paths.add(path)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00392}00392\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00393}00393\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ path\ \textcolor{keywordflow}{in}\ sorted(rel\_paths):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00394}00394\ \ \ \ \ \ \ \ \ \ \ \ \ entry\_element\ =\ ET.SubElement(result,\ \textcolor{stringliteral}{"{}classpathentry"{}})}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00395}00395\ \ \ \ \ \ \ \ \ \ \ \ \ entry\_element.set(\textcolor{stringliteral}{"{}kind"{}},\ kind)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00396}00396\ \ \ \ \ \ \ \ \ \ \ \ \ entry\_element.set(\textcolor{stringliteral}{"{}path"{}},\ path)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00397}00397\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00398}00398\ \ \ \ \ AddElements(\textcolor{stringliteral}{"{}lib"{}},\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_a8bc425b7c6aa446194d62bd4ef93cb16}{GetJavaJars}}(target\_list,\ target\_dicts,\ toplevel\_dir))}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00399}00399\ \ \ \ \ AddElements(\textcolor{stringliteral}{"{}src"{}},\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_acaf71ffe6cd530dffb5e0731352b1c77}{GetJavaSourceDirs}}(target\_list,\ target\_dicts,\ toplevel\_dir))}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00400}00400\ \ \ \ \ \textcolor{comment}{\#\ Include\ the\ standard\ JRE\ container\ and\ a\ dummy\ out\ folder}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00401}00401\ \ \ \ \ AddElements(\textcolor{stringliteral}{"{}con"{}},\ [\textcolor{stringliteral}{"{}org.eclipse.jdt.launching.JRE\_CONTAINER"{}}])}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00402}00402\ \ \ \ \ \textcolor{comment}{\#\ Include\ a\ dummy\ out\ folder\ so\ that\ Eclipse\ doesn't\ use\ the\ default\ /bin}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00403}00403\ \ \ \ \ \textcolor{comment}{\#\ folder\ in\ the\ root\ of\ the\ project.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00404}00404\ \ \ \ \ AddElements(\textcolor{stringliteral}{"{}output"{}},\ [os.path.join(toplevel\_build,\ \textcolor{stringliteral}{"{}.eclipse-\/java-\/build"{}})])}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00405}00405\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00406}00406\ \ \ \ \ ET.ElementTree(result).write(out\_name)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00407}00407\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00408}00408\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00409}\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_a8bc425b7c6aa446194d62bd4ef93cb16}{00409}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_a8bc425b7c6aa446194d62bd4ef93cb16}{GetJavaJars}}(target\_list,\ target\_dicts,\ toplevel\_dir):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00410}00410\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Generates\ a\ sequence\ of\ all\ .jars\ used\ as\ inputs."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00411}00411\ \ \ \ \ \textcolor{keywordflow}{for}\ target\_name\ \textcolor{keywordflow}{in}\ target\_list:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00412}00412\ \ \ \ \ \ \ \ \ target\ =\ target\_dicts[target\_name]}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00413}00413\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ action\ \textcolor{keywordflow}{in}\ target.get(\textcolor{stringliteral}{"{}actions"{}},\ []):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00414}00414\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ input\_\ \textcolor{keywordflow}{in}\ action[\textcolor{stringliteral}{"{}inputs"{}}]:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00415}00415\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ os.path.splitext(input\_)[1]\ ==\ \textcolor{stringliteral}{"{}.jar"{}}\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ input\_.startswith(\textcolor{stringliteral}{"{}\$"{}}):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00416}00416\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ os.path.isabs(input\_):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00417}00417\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ input\_}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00418}00418\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00419}00419\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ os.path.join(os.path.dirname(target\_name),\ input\_)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00420}00420\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00421}00421\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00422}\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_acaf71ffe6cd530dffb5e0731352b1c77}{00422}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_acaf71ffe6cd530dffb5e0731352b1c77}{GetJavaSourceDirs}}(target\_list,\ target\_dicts,\ toplevel\_dir):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00423}00423\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Generates\ a\ sequence\ of\ all\ likely\ java\ package\ root\ directories."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00424}00424\ \ \ \ \ \textcolor{keywordflow}{for}\ target\_name\ \textcolor{keywordflow}{in}\ target\_list:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00425}00425\ \ \ \ \ \ \ \ \ target\ =\ target\_dicts[target\_name]}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00426}00426\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ action\ \textcolor{keywordflow}{in}\ target.get(\textcolor{stringliteral}{"{}actions"{}},\ []):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00427}00427\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ input\_\ \textcolor{keywordflow}{in}\ action[\textcolor{stringliteral}{"{}inputs"{}}]:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00428}00428\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ os.path.splitext(input\_)[1]\ ==\ \textcolor{stringliteral}{"{}.java"{}}\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ input\_.startswith(}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00429}00429\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\$"{}}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00430}00430\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00431}00431\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dir\_\ =\ os.path.dirname(}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00432}00432\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os.path.join(os.path.dirname(target\_name),\ input\_)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00433}00433\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00434}00434\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ there\ is\ a\ parent\ 'src'\ or\ 'java'\ folder,\ navigate\ up\ to\ it\ -\/}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00435}00435\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ these\ are\ canonical\ package\ root\ names\ in\ Chromium.\ \ This\ will}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00436}00436\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ break\ if\ 'src'\ or\ 'java'\ exists\ in\ the\ package\ structure.\ This}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00437}00437\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ could\ be\ further\ improved\ by\ inspecting\ the\ java\ file\ for\ the}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00438}00438\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ package\ name\ if\ this\ proves\ to\ be\ too\ fragile\ in\ practice.}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00439}00439\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parent\_search\ =\ dir\_}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00440}00440\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ os.path.basename(parent\_search)\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ [\textcolor{stringliteral}{"{}src"{}},\ \textcolor{stringliteral}{"{}java"{}}]:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00441}00441\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parent\_search,\ \_\ =\ os.path.split(parent\_search)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00442}00442\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ parent\_search\ \textcolor{keywordflow}{or}\ parent\_search\ ==\ toplevel\_dir:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00443}00443\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Didn't\ find\ a\ known\ root,\ just\ return\ the\ original\ path}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00444}00444\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ dir\_}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00445}00445\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00446}00446\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00447}00447\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{yield}\ parent\_search}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00448}00448\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00449}00449\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00450}\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_a3aea6ead55d354cce2b82f3244cd3e8a}{00450}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_a3aea6ead55d354cce2b82f3244cd3e8a}{GenerateOutput}}(target\_list,\ target\_dicts,\ data,\ params):}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00451}00451\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Generate\ an\ XML\ settings\ file\ that\ can\ be\ imported\ into\ a\ CDT\ project."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00452}00452\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00453}00453\ \ \ \ \ \textcolor{keywordflow}{if}\ params[\textcolor{stringliteral}{"{}options"{}}].generator\_output:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00454}00454\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ NotImplementedError(\textcolor{stringliteral}{"{}-\/-\/generator\_output\ not\ implemented\ for\ eclipse"{}})}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00455}00455\ }
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00456}00456\ \ \ \ \ user\_config\ =\ params.get(\textcolor{stringliteral}{"{}generator\_flags"{}},\ \{\}).get(\textcolor{stringliteral}{"{}config"{}},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00457}00457\ \ \ \ \ \textcolor{keywordflow}{if}\ user\_config:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00458}00458\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_a95a945d403e410c59893f9b22b4255f2}{GenerateOutputForConfig}}(target\_list,\ target\_dicts,\ data,\ params,\ user\_config)}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00459}00459\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00460}00460\ \ \ \ \ \ \ \ \ config\_names\ =\ target\_dicts[target\_list[0]][\textcolor{stringliteral}{"{}configurations"{}}]}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00461}00461\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ config\_name\ \textcolor{keywordflow}{in}\ config\_names:}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00462}00462\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1eclipse_a95a945d403e410c59893f9b22b4255f2}{GenerateOutputForConfig}}(}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00463}00463\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ target\_list,\ target\_dicts,\ data,\ params,\ config\_name}
+\DoxyCodeLine{\Hypertarget{eclipse_8py_source_l00464}00464\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+
+\end{DoxyCode}

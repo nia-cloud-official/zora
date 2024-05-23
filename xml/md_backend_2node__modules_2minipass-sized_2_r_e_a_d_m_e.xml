@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2minipass-sized_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2minipass-sized_2_r_e_a_d_m_e</compoundname>
+    <title>minipass-sized</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2minipass-sized_2_r_e_a_d_m_e_1autotoc_md2168"/> A Minipass stream that raises an error if you get a different number of bytes than expected.</para>
+<sect1 id="md_backend_2node__modules_2minipass-sized_2_r_e_a_d_m_e_1autotoc_md2169">
+<title>USAGE</title><para>Use just like any old <ulink url="http://npm.im/minipass">minipass</ulink> stream, but provide a <computeroutput>size</computeroutput> option to the constructor.</para>
+<para>The <computeroutput>size</computeroutput> option must be a positive integer, smaller than <computeroutput>Number.MAX_SAFE_INTEGER</computeroutput>.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>MinipassSized<sp/>=<sp/>require(&apos;minipass-sized&apos;)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>figure<sp/>out<sp/>how<sp/>much<sp/>data<sp/>you<sp/>expect<sp/>to<sp/>get</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>expectedSize<sp/>=<sp/>+headers[&apos;content-length&apos;]</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>stream<sp/>=<sp/>new<sp/>MinipassSized({<sp/>size:<sp/>expectedSize<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">stream.on(&apos;error&apos;,<sp/>er<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>if<sp/>it&apos;s<sp/>the<sp/>wrong<sp/>size,<sp/>then<sp/>this<sp/>will<sp/>raise<sp/>an<sp/>error<sp/>with</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>{<sp/>found:<sp/>&lt;number&gt;,<sp/>expect:<sp/>&lt;number&gt;,<sp/>code:<sp/>&apos;EBADSIZE&apos;<sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">response.pipe(stream)</highlight></codeline>
+</programlisting></para>
+<para>Caveats: this does not work with <computeroutput>objectMode</computeroutput> streams, and will throw a <computeroutput>TypeError</computeroutput> from the constructor if the size argument is missing or invalid. </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/minipass-sized/README.md"/>
+  </compounddef>
+</doxygen>

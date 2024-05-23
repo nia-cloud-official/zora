@@ -1,0 +1,82 @@
+\doxysection{async.\+h}
+\hypertarget{async_8h_source}{}\label{async_8h_source}\index{backend/node\_modules/sqlite3/src/async.h@{backend/node\_modules/sqlite3/src/async.h}}
+\mbox{\hyperlink{async_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00001}00001\ \textcolor{preprocessor}{\#ifndef\ NODE\_SQLITE3\_SRC\_ASYNC\_H}}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00002}00002\ \textcolor{preprocessor}{\#define\ NODE\_SQLITE3\_SRC\_ASYNC\_H}}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00004}00004\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{napi_8h}{napi.h}}>}}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00005}00005\ \textcolor{preprocessor}{\#include\ <uv.h>}}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{threading_8h}{threading.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00009}00009\ \textcolor{comment}{//\ Generic\ uv\_async\ handler.}}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00010}\mbox{\hyperlink{class_async}{00010}}\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Item,\ \textcolor{keyword}{class}\ Parent>\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_async}{Async}}\ \{}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00011}00011\ \ \ \ \ \textcolor{keyword}{typedef}\ void\ (*Callback)(Parent*\ \mbox{\hyperlink{class_async_ade999ea9fa557398dad103992f324d58}{parent}},\ Item*\ item);}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00013}00013\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00014}\mbox{\hyperlink{class_async_ac960baceea0e7404ae02d1e755c49ab4}{00014}}\ \ \ \ \ uv\_async\_t\ \mbox{\hyperlink{class_async_ac960baceea0e7404ae02d1e755c49ab4}{watcher}};}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00015}00015\ \ \ \ \ \mbox{\hyperlink{threading_8h_a682b086863ab0b7d7953819b4d4abfaa}{NODE\_SQLITE3\_MUTEX\_t}}}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00016}\mbox{\hyperlink{class_async_a7052934bbe05a507aebcb9422c816be3}{00016}}\ \ \ \ \ std::vector<Item*>\ \mbox{\hyperlink{class_async_a7052934bbe05a507aebcb9422c816be3}{data}};}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00017}\mbox{\hyperlink{class_async_aa75fe8344735041b57f3906bc8e746ca}{00017}}\ \ \ \ \ Callback\ \mbox{\hyperlink{class_async_aa75fe8344735041b57f3906bc8e746ca}{callback}};}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00018}00018\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00019}\mbox{\hyperlink{class_async_ade999ea9fa557398dad103992f324d58}{00019}}\ \ \ \ \ Parent*\ \mbox{\hyperlink{class_async_ade999ea9fa557398dad103992f324d58}{parent}};}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00021}00021\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00022}\mbox{\hyperlink{class_async_adc08aee7166a776ebcf3235d9f92c376}{00022}}\ \ \ \ \ \mbox{\hyperlink{class_async_adc08aee7166a776ebcf3235d9f92c376}{Async}}(Parent*\ parent\_,\ Callback\ cb\_)}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00023}00023\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{class_async_aa75fe8344735041b57f3906bc8e746ca}{callback}}(cb\_),\ \mbox{\hyperlink{class_async_ade999ea9fa557398dad103992f324d58}{parent}}(parent\_)\ \{}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00024}00024\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_async_ac960baceea0e7404ae02d1e755c49ab4}{watcher}}.data\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00025}00025\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{threading_8h_a2abd1d9442a45d2bc00ade7c3046c693}{NODE\_SQLITE3\_MUTEX\_INIT}}}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00026}00026\ \ \ \ \ \ \ \ \ uv\_loop\_t\ *loop;}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00027}00027\ \ \ \ \ \ \ \ \ napi\_get\_uv\_event\_loop(parent\_-\/>Env(),\ \&loop);}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00028}00028\ \ \ \ \ \ \ \ \ uv\_async\_init(loop,\ \&\mbox{\hyperlink{class_async_ac960baceea0e7404ae02d1e755c49ab4}{watcher}},\ \textcolor{keyword}{reinterpret\_cast<}uv\_async\_cb\textcolor{keyword}{>}(\mbox{\hyperlink{class_async_a85e06ec1e6a73ee0ed58f1e1ccb52b04}{listener}}));}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00029}00029\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00031}\mbox{\hyperlink{class_async_a85e06ec1e6a73ee0ed58f1e1ccb52b04}{00031}}\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_async_a85e06ec1e6a73ee0ed58f1e1ccb52b04}{listener}}(uv\_async\_t*\ handle)\ \{}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00032}00032\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}*\ async\ =\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{class_async}{Async}}*\textcolor{keyword}{>}(handle-\/>data);}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00033}00033\ \ \ \ \ \ \ \ \ std::vector<Item*>\ rows;}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00034}00034\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{threading_8h_a373d70119d7e38056f381220da609ad0}{NODE\_SQLITE3\_MUTEX\_LOCK}}(\&async-\/>mutex)}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00035}00035\ \ \ \ \ \ \ \ \ rows.swap(async-\/>data);}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00036}00036\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{threading_8h_ac466d044e1fce6081aa2f74a28d956cf}{NODE\_SQLITE3\_MUTEX\_UNLOCK}}(\&async-\/>mutex)}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00037}00037\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\ row\ :\ rows)}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00038}00038\ \ \ \ \ \ \ \ \ \ \ \ \ async-\/>\mbox{\hyperlink{class_async_aa75fe8344735041b57f3906bc8e746ca}{callback}}(async-\/>parent,\ row);}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00039}00039\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00041}\mbox{\hyperlink{class_async_a820713df3caf5f8182dfc540b6152496}{00041}}\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_async_a820713df3caf5f8182dfc540b6152496}{close}}(uv\_handle\_t*\ handle)\ \{}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00042}00042\ \ \ \ \ \ \ \ \ assert(handle\ !=\ NULL);}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00043}00043\ \ \ \ \ \ \ \ \ assert(handle-\/>data\ !=\ NULL);}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00044}00044\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}*\ async\ =\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{class_async}{Async}}*\textcolor{keyword}{>}(handle-\/>data);}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00045}00045\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ async;}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00046}00046\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00048}\mbox{\hyperlink{class_async_a49d312d265f7601ed213ded041e53e91}{00048}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_async_a49d312d265f7601ed213ded041e53e91}{finish}}()\ \{}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00049}00049\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Need\ to\ call\ the\ listener\ again\ to\ ensure\ all\ items\ have\ been}}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00050}00050\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ processed.\ Is\ this\ a\ bug\ in\ uv\_async?\ Feels\ like\ uv\_close}}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00051}00051\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ should\ handle\ that.}}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00052}00052\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_async_a85e06ec1e6a73ee0ed58f1e1ccb52b04}{listener}}(\&\mbox{\hyperlink{class_async_ac960baceea0e7404ae02d1e755c49ab4}{watcher}});}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00053}00053\ \ \ \ \ \ \ \ \ uv\_close((uv\_handle\_t*)\&\mbox{\hyperlink{class_async_ac960baceea0e7404ae02d1e755c49ab4}{watcher}},\ \mbox{\hyperlink{class_async_a820713df3caf5f8182dfc540b6152496}{close}});}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00054}00054\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00056}\mbox{\hyperlink{class_async_af6c287d37250ced723db8db033903af8}{00056}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_async_af6c287d37250ced723db8db033903af8}{add}}(Item*\ item)\ \{}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00057}00057\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{threading_8h_a373d70119d7e38056f381220da609ad0}{NODE\_SQLITE3\_MUTEX\_LOCK}}(\&mutex);}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00058}00058\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_async_a7052934bbe05a507aebcb9422c816be3}{data}}.emplace\_back(item);}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00059}00059\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{threading_8h_ac466d044e1fce6081aa2f74a28d956cf}{NODE\_SQLITE3\_MUTEX\_UNLOCK}}(\&mutex)}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00060}00060\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00062}\mbox{\hyperlink{class_async_a590950da0b5310810dbca8222293f3ae}{00062}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_async_a590950da0b5310810dbca8222293f3ae}{send}}()\ \{}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00063}00063\ \ \ \ \ \ \ \ \ uv\_async\_send(\&\mbox{\hyperlink{class_async_ac960baceea0e7404ae02d1e755c49ab4}{watcher}});}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00064}00064\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00066}\mbox{\hyperlink{class_async_a23207a4eece0ba0f64faf4191e3708ec}{00066}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_async_a23207a4eece0ba0f64faf4191e3708ec}{send}}(Item*\ item)\ \{}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00067}00067\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_async_af6c287d37250ced723db8db033903af8}{add}}(item);}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00068}00068\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_async_a590950da0b5310810dbca8222293f3ae}{send}}();}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00069}00069\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00070}00070\ }
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00071}\mbox{\hyperlink{class_async_a0900cd24b6c713242e4d9648ffc59047}{00071}}\ \ \ \ \ \mbox{\hyperlink{class_async_a0900cd24b6c713242e4d9648ffc59047}{\string~Async}}()\ \{}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00072}00072\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{threading_8h_a90d25bdd9cbc276085f5ebdf8e3d6465}{NODE\_SQLITE3\_MUTEX\_DESTROY}}}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00073}00073\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00074}00074\ \};}
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{async_8h_source_l00076}00076\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

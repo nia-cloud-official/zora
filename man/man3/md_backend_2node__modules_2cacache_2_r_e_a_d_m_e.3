@@ -1,0 +1,608 @@
+.TH "md_backend_2node__modules_2cacache_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2cacache_2_r_e_a_d_m_e \- cacache \fR\fP \fR\fP \fR\fP \fR\fP \fR\fP 
+.PP
+ \fR\fRcacache\fP\fP is a Node\&.js library for managing local key and content address caches\&. It's really fast, really good at concurrency, and it will never give you corrupted data, even if cache files get corrupted or manipulated\&.
+.PP
+On systems that support user and group settings on files, cacache will match the \fRuid\fP and \fRgid\fP values to the folder where the cache lives, even when running as \fRroot\fP\&.
+.PP
+It was written to be used as \fRnpm\fP's local cache, but can just as easily be used on its own\&.
+.SH "Install"
+.PP
+\fR$ npm install --save cacache\fP
+.SH "Table of Contents"
+.PP
+.IP "\(bu" 2
+\fBExample\fP
+.IP "\(bu" 2
+\fBFeatures\fP
+.IP "\(bu" 2
+\fBContributing\fP
+.IP "\(bu" 2
+\fBAPI\fP
+.IP "  \(bu" 4
+\fBUsing localized APIs\fP
+.IP "  \(bu" 4
+Reading
+.IP "    \(bu" 6
+\fB`ls`\fP
+.IP "    \(bu" 6
+\fB`ls\&.stream`\fP
+.IP "    \(bu" 6
+\fB`get`\fP
+.IP "    \(bu" 6
+\fB`get\&.stream`\fP
+.IP "    \(bu" 6
+\fB`get\&.info`\fP
+.IP "    \(bu" 6
+\fB`get\&.hasContent`\fP
+.PP
+
+.IP "  \(bu" 4
+Writing
+.IP "    \(bu" 6
+\fB`put`\fP
+.IP "    \(bu" 6
+\fB`put\&.stream`\fP
+.IP "    \(bu" 6
+\fB`rm\&.all`\fP
+.IP "    \(bu" 6
+\fB`rm\&.entry`\fP
+.IP "    \(bu" 6
+\fB`rm\&.content`\fP
+.IP "    \(bu" 6
+\fB`index\&.compact`\fP
+.IP "    \(bu" 6
+\fB`index\&.insert`\fP
+.PP
+
+.IP "  \(bu" 4
+Utilities
+.IP "    \(bu" 6
+\fB`clearMemoized`\fP
+.IP "    \(bu" 6
+\fB`tmp\&.mkdir`\fP
+.IP "    \(bu" 6
+\fB`tmp\&.withTmp`\fP
+.PP
+
+.IP "  \(bu" 4
+Integrity
+.IP "    \(bu" 6
+\fBSubresource Integrity\fP
+.IP "    \(bu" 6
+\fB`verify`\fP
+.IP "    \(bu" 6
+\fB`verify\&.lastRun`\fP
+.PP
+
+.PP
+
+.PP
+.SS "Example"
+.PP
+.nf
+const cacache = require('cacache')
+const fs = require('fs')
+
+const tarball = '/path/to/mytar\&.tgz'
+const cachePath = '/tmp/my\-toy\-cache'
+const key = 'my\-unique\-key\-1234'
+
+// Cache it! Use `cachePath` as the root of the content cache
+cacache\&.put(cachePath, key, '10293801983029384')\&.then(integrity => {
+  console\&.log(`Saved content to ${cachePath}\&.`)
+})
+
+const destination = '/tmp/mytar\&.tgz'
+
+// Copy the contents out of the cache and into their destination!
+// But this time, use stream instead!
+cacache\&.get\&.stream(
+  cachePath, key
+)\&.pipe(
+  fs\&.createWriteStream(destination)
+)\&.on('finish', () => {
+  console\&.log('done extracting!')
+})
+
+// The same thing, but skip the key index\&.
+cacache\&.get\&.byDigest(cachePath, integrityHash)\&.then(data => {
+  fs\&.writeFile(destination, data, err => {
+    console\&.log('tarball data fetched based on its sha512sum and written out!')
+  })
+})
+.fi
+.PP
+.SS "Features"
+.IP "\(bu" 2
+Extraction by key or by content address (shasum, etc)
+.IP "\(bu" 2
+\fBSubresource Integrity\fP web standard support
+.IP "\(bu" 2
+Multi-hash support - safely host sha1, sha512, etc, in a single cache
+.IP "\(bu" 2
+Automatic content deduplication
+.IP "\(bu" 2
+Fault tolerance (immune to corruption, partial writes, process races, etc)
+.IP "\(bu" 2
+Consistency guarantees on read and write (full data verification)
+.IP "\(bu" 2
+Lockless, high-concurrency cache access
+.IP "\(bu" 2
+Streaming support
+.IP "\(bu" 2
+Promise support
+.IP "\(bu" 2
+Fast -- sub-millisecond reads and writes including verification
+.IP "\(bu" 2
+Arbitrary metadata storage
+.IP "\(bu" 2
+Garbage collection and additional offline verification
+.IP "\(bu" 2
+Thorough test coverage
+.IP "\(bu" 2
+There's probably a bloom filter in there somewhere\&. Those are cool, right? 🤔
+.PP
+.SS "Contributing"
+The cacache team enthusiastically welcomes contributions and project participation! There's a bunch of things you can do if you want to contribute! The \fBContributor Guide\fP has all the information you need for everything from reporting bugs to contributing entire new features\&. Please don't hesitate to jump in if you'd like to, or even ask us questions if something isn't clear\&.
+.PP
+All participants and maintainers in this project are expected to follow \fBCode of Conduct\fP, and just generally be excellent to each other\&.
+.PP
+Please refer to the \fBChangelog\fP for project history details, too\&.
+.PP
+Happy hacking!
+.SS "API"
+.SS " \fR> cacache\&.ls(cache) -> Promise<Object>\fP"
+Lists info for all entries currently in the cache as a single large object\&. Each entry in the object will be keyed by the unique index key, with corresponding \fB`get\&.info`\fP objects as the values\&.
+.SS "Example"
+.PP
+.nf
+cacache\&.ls(cachePath)\&.then(console\&.log)
+// Output
+{
+  'my\-thing': {
+    key: 'my\-thing',
+    integrity: 'sha512\-BaSe64/EnCoDED+HAsh=='
+    path: '\&.testcache/content/deadbeef', // joined with `cachePath`
+    time: 12345698490,
+    size: 4023948,
+    metadata: {
+      name: 'blah',
+      version: '1\&.2\&.3',
+      description: 'this was once a package but now it is my\-thing'
+    }
+  },
+  'other\-thing': {
+    key: 'other\-thing',
+    integrity: 'sha1\-ANothER+hasH=',
+    path: '\&.testcache/content/bada55',
+    time: 11992309289,
+    size: 111112
+  }
+}
+.fi
+.PP
+.SS " \fR> cacache\&.ls\&.stream(cache) -> Readable\fP"
+Lists info for all entries currently in the cache as a single large object\&.
+.PP
+This works just like \fB`ls`\fP, except \fB`get\&.info`\fP entries are returned as `'data'` events on the returned stream\&.
+.SS "Example"
+.PP
+.nf
+cacache\&.ls\&.stream(cachePath)\&.on('data', console\&.log)
+// Output
+{
+  key: 'my\-thing',
+  integrity: 'sha512\-BaSe64HaSh',
+  path: '\&.testcache/content/deadbeef', // joined with `cachePath`
+  time: 12345698490,
+  size: 13423,
+  metadata: {
+    name: 'blah',
+    version: '1\&.2\&.3',
+    description: 'this was once a package but now it is my\-thing'
+  }
+}
+
+{
+  key: 'other\-thing',
+  integrity: 'whirlpool\-WoWSoMuchSupport',
+  path: '\&.testcache/content/bada55',
+  time: 11992309289,
+  size: 498023984029
+}
+
+{
+  \&.\&.\&.
+}
+.fi
+.PP
+.SS " \fR> cacache\&.get(cache, key, [opts]) -> Promise({data, metadata, integrity})\fP"
+Returns an object with the cached data, digest, and metadata identified by \fRkey\fP\&. The \fRdata\fP property of this object will be a \fRBuffer\fP instance that presumably holds some data that means something to you\&. I'm sure you know what to do with it! cacache just won't care\&.
+.PP
+\fRintegrity\fP is a \fBSubresource Integrity\fP string\&. That is, a string that can be used to verify \fRdata\fP, which looks like \fR<hash-algorithm>-<base64-integrity-hash>\fP\&.
+.PP
+If there is no content identified by \fRkey\fP, or if the locally-stored data does not pass the validity checksum, the promise will be rejected\&.
+.PP
+A sub-function, \fRget\&.byDigest\fP may be used for identical behavior, except lookup will happen by integrity hash, bypassing the index entirely\&. This version of the function \fIonly\fP returns \fRdata\fP itself, without any wrapper\&.
+.PP
+See: \fBoptions\fP
+.SS "Note"
+This function loads the entire cache entry into memory before returning it\&. If you're dealing with Very Large data, consider using \fB`get\&.stream`\fP instead\&.
+.SS "Example"
+.PP
+.nf
+// Look up by key
+cache\&.get(cachePath, 'my\-thing')\&.then(console\&.log)
+// Output:
+{
+  metadata: {
+    thingName: 'my'
+  },
+  integrity: 'sha512\-BaSe64HaSh',
+  data: Buffer#<deadbeef>,
+  size: 9320
+}
+
+// Look up by digest
+cache\&.get\&.byDigest(cachePath, 'sha512\-BaSe64HaSh')\&.then(console\&.log)
+// Output:
+Buffer#<deadbeef>
+.fi
+.PP
+.SS " \fR> cacache\&.get\&.stream(cache, key, [opts]) -> Readable\fP"
+Returns a \fRReadable Stream\fP of the cached data identified by \fRkey\fP\&.
+.PP
+If there is no content identified by \fRkey\fP, or if the locally-stored data does not pass the validity checksum, an error will be emitted\&.
+.PP
+\fRmetadata\fP and \fRintegrity\fP events will be emitted before the stream closes, if you need to collect that extra data about the cached entry\&.
+.PP
+A sub-function, \fRget\&.stream\&.byDigest\fP may be used for identical behavior, except lookup will happen by integrity hash, bypassing the index entirely\&. This version does not emit the \fRmetadata\fP and \fRintegrity\fP events at all\&.
+.PP
+See: \fBoptions\fP
+.SS "Example"
+.PP
+.nf
+// Look up by key
+cache\&.get\&.stream(
+  cachePath, 'my\-thing'
+)\&.on('metadata', metadata => {
+  console\&.log('metadata:', metadata)
+})\&.on('integrity', integrity => {
+  console\&.log('integrity:', integrity)
+})\&.pipe(
+  fs\&.createWriteStream('\&./x\&.tgz')
+)
+// Outputs:
+metadata: { \&.\&.\&. }
+integrity: 'sha512\-SoMeDIGest+64=='
+
+// Look up by digest
+cache\&.get\&.stream\&.byDigest(
+  cachePath, 'sha512\-SoMeDIGest+64=='
+)\&.pipe(
+  fs\&.createWriteStream('\&./x\&.tgz')
+)
+.fi
+.PP
+.SS " \fR> cacache\&.get\&.info(cache, key) -> Promise\fP"
+Looks up \fRkey\fP in the cache index, returning information about the entry if one exists\&.
+.SS "Fields"
+.IP "\(bu" 2
+\fRkey\fP - Key the entry was looked up under\&. Matches the \fRkey\fP argument\&.
+.IP "\(bu" 2
+\fRintegrity\fP - \fBSubresource Integrity hash\fP for the content this entry refers to\&.
+.IP "\(bu" 2
+\fRpath\fP - Filesystem path where content is stored, joined with \fRcache\fP argument\&.
+.IP "\(bu" 2
+\fRtime\fP - Timestamp the entry was first added on\&.
+.IP "\(bu" 2
+\fRmetadata\fP - User-assigned metadata associated with the entry/content\&.
+.PP
+.SS "Example"
+.PP
+.nf
+cacache\&.get\&.info(cachePath, 'my\-thing')\&.then(console\&.log)
+
+// Output
+{
+  key: 'my\-thing',
+  integrity: 'sha256\-MUSTVERIFY+ALL/THINGS=='
+  path: '\&.testcache/content/deadbeef',
+  time: 12345698490,
+  size: 849234,
+  metadata: {
+    name: 'blah',
+    version: '1\&.2\&.3',
+    description: 'this was once a package but now it is my\-thing'
+  }
+}
+.fi
+.PP
+.SS " \fR> cacache\&.get\&.hasContent(cache, integrity) -> Promise\fP"
+Looks up a \fBSubresource Integrity hash\fP in the cache\&. If content exists for this \fRintegrity\fP, it will return an object, with the specific single integrity hash that was found in \fRsri\fP key, and the size of the found content as \fRsize\fP\&. If no content exists for this integrity, it will return \fRfalse\fP\&.
+.SS "Example"
+.PP
+.nf
+cacache\&.get\&.hasContent(cachePath, 'sha256\-MUSTVERIFY+ALL/THINGS==')\&.then(console\&.log)
+
+// Output
+{
+  sri: {
+    source: 'sha256\-MUSTVERIFY+ALL/THINGS==',
+    algorithm: 'sha256',
+    digest: 'MUSTVERIFY+ALL/THINGS==',
+    options: []
+  },
+  size: 9001
+}
+
+cacache\&.get\&.hasContent(cachePath, 'sha521\-NOT+IN/CACHE==')\&.then(console\&.log)
+
+// Output
+false
+.fi
+.PP
+.SS " Options"
+.SS "\fRopts\&.integrity\fP"
+If present, the pre-calculated digest for the inserted content\&. If this option is provided and does not match the post-insertion digest, insertion will fail with an \fREINTEGRITY\fP error\&.
+.SS "\fRopts\&.memoize\fP"
+Default: null
+.PP
+If explicitly truthy, cacache will read from memory and memoize data on bulk read\&. If \fRfalse\fP, cacache will read from disk data\&. Reader functions by default read from in-memory cache\&.
+.SS "\fRopts\&.size\fP"
+If provided, the data stream will be verified to check that enough data was passed through\&. If there's more or less data than expected, insertion will fail with an \fREBADSIZE\fP error\&.
+.SS " \fR> cacache\&.put(cache, key, data, [opts]) -> Promise\fP"
+Inserts data passed to it into the cache\&. The returned Promise resolves with a digest (generated according to \fB`opts\&.algorithms`\fP) after the cache entry has been successfully written\&.
+.PP
+See: \fBoptions\fP
+.SS "Example"
+.PP
+.nf
+fetch(
+  'https://registry\&.npmjs\&.org/cacache/\-/cacache\-1\&.0\&.0\&.tgz'
+)\&.then(data => {
+  return cacache\&.put(cachePath, 'registry\&.npmjs\&.org|cacache@1\&.0\&.0', data)
+})\&.then(integrity => {
+  console\&.log('integrity hash is', integrity)
+})
+.fi
+.PP
+.SS " \fR> cacache\&.put\&.stream(cache, key, [opts]) -> Writable\fP"
+Returns a \fRWritable Stream\fP that inserts data written to it into the cache\&. Emits an \fRintegrity\fP event with the digest of written contents when it succeeds\&.
+.PP
+See: \fBoptions\fP
+.SS "Example"
+.PP
+.nf
+request\&.get(
+  'https://registry\&.npmjs\&.org/cacache/\-/cacache\-1\&.0\&.0\&.tgz'
+)\&.pipe(
+  cacache\&.put\&.stream(
+    cachePath, 'registry\&.npmjs\&.org|cacache@1\&.0\&.0'
+  )\&.on('integrity', d => console\&.log(`integrity digest is ${d}`))
+)
+.fi
+.PP
+.SS " Options"
+.SS "\fRopts\&.metadata\fP"
+Arbitrary metadata to be attached to the inserted key\&.
+.SS "\fRopts\&.size\fP"
+If provided, the data stream will be verified to check that enough data was passed through\&. If there's more or less data than expected, insertion will fail with an \fREBADSIZE\fP error\&.
+.SS "\fRopts\&.integrity\fP"
+If present, the pre-calculated digest for the inserted content\&. If this option is provided and does not match the post-insertion digest, insertion will fail with an \fREINTEGRITY\fP error\&.
+.PP
+\fRalgorithms\fP has no effect if this option is present\&.
+.SS "\fRopts\&.algorithms\fP"
+Default: ['sha512']
+.PP
+Hashing algorithms to use when calculating the \fBsubresource integrity digest\fP for inserted data\&. Can use any algorithm listed in \fRcrypto\&.getHashes()\fP or `'omakase'\fR/\fP'お任せします'\fRto pick a random hash algorithm on each insertion\&. You may also use any anagram of\fP'modnar'` to use this feature\&.
+.PP
+Currently only supports one algorithm at a time (i\&.e\&., an array length of exactly \fR1\fP)\&. Has no effect if \fRopts\&.integrity\fP is present\&.
+.SS "\fRopts\&.memoize\fP"
+Default: null
+.PP
+If provided, cacache will memoize the given cache insertion in memory, bypassing any filesystem checks for that key or digest in future cache fetches\&. Nothing will be written to the in-memory cache unless this option is explicitly truthy\&.
+.PP
+If \fRopts\&.memoize\fP is an object or a \fRMap\fP-like (that is, an object with \fRget\fP and \fRset\fP methods), it will be written to instead of the global memoization cache\&.
+.PP
+Reading from disk data can be forced by explicitly passing \fRmemoize: false\fP to the reader functions, but their default will be to read from memory\&.
+.SS "\fRopts\&.tmpPrefix\fP"
+Default: null
+.PP
+Prefix to append on the temporary directory name inside the cache's tmp dir\&.
+.SS " \fR> cacache\&.rm\&.all(cache) -> Promise\fP"
+Clears the entire cache\&. Mainly by blowing away the cache directory itself\&.
+.SS "Example"
+.PP
+.nf
+cacache\&.rm\&.all(cachePath)\&.then(() => {
+  console\&.log('THE APOCALYPSE IS UPON US 😱')
+})
+.fi
+.PP
+.SS " \fR> cacache\&.rm\&.entry(cache, key, [opts]) -> Promise\fP"
+Alias: \fRcacache\&.rm\fP
+.PP
+Removes the index entry for \fRkey\fP\&. Content will still be accessible if requested directly by content address (\fB`get\&.stream\&.byDigest`\fP)\&.
+.PP
+By default, this appends a new entry to the index with an integrity of \fRnull\fP\&. If \fRopts\&.removeFully\fP is set to \fRtrue\fP then the index file itself will be physically deleted rather than appending a \fRnull\fP\&.
+.PP
+To remove the content itself (which might still be used by other entries), use \fB`rm\&.content`\fP\&. Or, to safely vacuum any unused content, use \fB`verify`\fP\&.
+.SS "Example"
+.PP
+.nf
+cacache\&.rm\&.entry(cachePath, 'my\-thing')\&.then(() => {
+  console\&.log('I did not like it anyway')
+})
+.fi
+.PP
+.SS " \fR> cacache\&.rm\&.content(cache, integrity) -> Promise\fP"
+Removes the content identified by \fRintegrity\fP\&. Any index entries referring to it will not be usable again until the content is re-added to the cache with an identical digest\&.
+.SS "Example"
+.PP
+.nf
+cacache\&.rm\&.content(cachePath, 'sha512\-SoMeDIGest/IN+BaSE64==')\&.then(() => {
+  console\&.log('data for my\-thing is gone!')
+})
+.fi
+.PP
+.SS " \fR> cacache\&.index\&.compact(cache, key, matchFn, [opts]) -> Promise\fP"
+Uses \fRmatchFn\fP, which must be a synchronous function that accepts two entries and returns a boolean indicating whether or not the two entries match, to deduplicate all entries in the cache for the given \fRkey\fP\&.
+.PP
+If \fRopts\&.validateEntry\fP is provided, it will be called as a function with the only parameter being a single index entry\&. The function must return a Boolean, if it returns \fRtrue\fP the entry is considered valid and will be kept in the index, if it returns \fRfalse\fP the entry will be removed from the index\&.
+.PP
+If \fRopts\&.validateEntry\fP is not provided, however, every entry in the index will be deduplicated and kept until the first \fRnull\fP integrity is reached, removing all entries that were written before the \fRnull\fP\&.
+.PP
+The deduplicated list of entries is both written to the index, replacing the existing content, and returned in the Promise\&.
+.SS " \fR> cacache\&.index\&.insert(cache, key, integrity, opts) -> Promise\fP"
+Writes an index entry to the cache for the given \fRkey\fP without writing content\&.
+.PP
+It is assumed if you are using this method, you have already stored the content some other way and you only wish to add a new index to that content\&. The \fRmetadata\fP and \fRsize\fP properties are read from \fRopts\fP and used as part of the index entry\&.
+.PP
+Returns a Promise resolving to the newly added entry\&.
+.SS " \fR> cacache\&.clearMemoized()\fP"
+Completely resets the in-memory entry cache\&.
+.SS " \fR> tmp\&.mkdir(cache, opts) -> Promise<Path>\fP"
+Returns a unique temporary directory inside the cache's \fRtmp\fP dir\&. This directory will use the same safe user assignment that all the other stuff use\&.
+.PP
+Once the directory is made, it's the user's responsibility that all files within are given the appropriate \fRgid\fP/\fRuid\fP ownership settings to match the rest of the cache\&. If not, you can ask cacache to do it for you by calling \fB`tmp\&.fix()`\fP, which will fix all tmp directory permissions\&.
+.PP
+If you want automatic cleanup of this directory, use \fB`tmp\&.withTmp()`\fP
+.PP
+See: \fBoptions\fP
+.SS "Example"
+.PP
+.nf
+cacache\&.tmp\&.mkdir(cache)\&.then(dir => {
+  fs\&.writeFile(path\&.join(dir, 'blablabla'), Buffer#<1234>, \&.\&.\&.)
+})
+.fi
+.PP
+.SS " \fR> tmp\&.fix(cache) -> Promise\fP"
+Sets the \fRuid\fP and \fRgid\fP properties on all files and folders within the tmp folder to match the rest of the cache\&.
+.PP
+Use this after manually writing files into \fB`tmp\&.mkdir`\fP or \fB`tmp\&.withTmp`\fP\&.
+.SS "Example"
+.PP
+.nf
+cacache\&.tmp\&.mkdir(cache)\&.then(dir => {
+  writeFile(path\&.join(dir, 'file'), someData)\&.then(() => {
+    // make sure we didn't just put a root\-owned file in the cache
+    cacache\&.tmp\&.fix()\&.then(() => {
+      // all uids and gids match now
+    })
+  })
+})
+.fi
+.PP
+.SS " \fR> tmp\&.withTmp(cache, opts, cb) -> Promise\fP"
+Creates a temporary directory with \fB`tmp\&.mkdir()`\fP and calls \fRcb\fP with it\&. The created temporary directory will be removed when the return value of \fRcb()\fP resolves, the tmp directory will be automatically deleted once that promise completes\&.
+.PP
+The same caveats apply when it comes to managing permissions for the tmp dir's contents\&.
+.PP
+See: \fBoptions\fP
+.SS "Example"
+.PP
+.nf
+cacache\&.tmp\&.withTmp(cache, dir => {
+  return fs\&.writeFileAsync(path\&.join(dir, 'blablabla'), Buffer#<1234>, \&.\&.\&.)
+})\&.then(() => {
+  // `dir` no longer exists
+})
+.fi
+.PP
+.SS " Options"
+.SS "\fRopts\&.tmpPrefix\fP"
+Default: null
+.PP
+Prefix to append on the temporary directory name inside the cache's tmp dir\&.
+.SS " Subresource Integrity Digests"
+For content verification and addressing, cacache uses strings following the \fRSubresource Integrity spec\fP\&. That is, any time cacache expects an \fRintegrity\fP argument or option, it should be in the format \fR<hashAlgorithm>-<base64-hash>\fP\&.
+.PP
+One deviation from the current spec is that cacache will support any hash algorithms supported by the underlying Node\&.js process\&. You can use \fRcrypto\&.getHashes()\fP to see which ones you can use\&.
+.SS "Generating Digests Yourself"
+If you have an existing content shasum, they are generally formatted as a hexadecimal string (that is, a sha1 would look like: \fR5f5513f8822fdbe5145af33b64d8d970dcf95c6e\fP)\&. In order to be compatible with cacache, you'll need to convert this to an equivalent subresource integrity string\&. For this example, the corresponding hash would be: \fRsha1-X1UT+IIv2+UUWvM7ZNjZcNz5XG4=\fP\&.
+.PP
+If you want to generate an integrity string yourself for existing data, you can use something like this:
+.PP
+.PP
+.nf
+const crypto = require('crypto')
+const hashAlgorithm = 'sha512'
+const data = 'foobarbaz'
+
+const integrity = (
+  hashAlgorithm +
+  '\-' +
+  crypto\&.createHash(hashAlgorithm)\&.update(data)\&.digest('base64')
+)
+.fi
+.PP
+.PP
+You can also use \fR\fRssri\fP\fP to have a richer set of functionality around SRI strings, including generation, parsing, and translating from existing hex-formatted strings\&.
+.SS " \fR> cacache\&.verify(cache, opts) -> Promise\fP"
+Checks out and fixes up your cache:
+.PP
+.IP "\(bu" 2
+Cleans up corrupted or invalid index entries\&.
+.IP "\(bu" 2
+Custom entry filtering options\&.
+.IP "\(bu" 2
+Garbage collects any content entries not referenced by the index\&.
+.IP "\(bu" 2
+Checks integrity for all content entries and removes invalid content\&.
+.IP "\(bu" 2
+Fixes cache ownership\&.
+.IP "\(bu" 2
+Removes the \fRtmp\fP directory in the cache and all its contents\&.
+.PP
+.PP
+When it's done, it'll return an object with various stats about the verification process, including amount of storage reclaimed, number of valid entries, number of entries removed, etc\&.
+.SS " Options"
+.SS "\fRopts\&.concurrency\fP"
+Default: 20
+.PP
+Number of concurrently read files in the filesystem while doing clean up\&.
+.SS "\fRopts\&.filter\fP"
+Receives a formatted entry\&. Return false to remove it\&. Note: might be called more than once on the same entry\&.
+.SS "\fRopts\&.log\fP"
+Custom logger function: 
+.PP
+.nf
+log: { silly () {} }
+log\&.silly('verify', 'verifying cache at', cache)
+
+.fi
+.PP
+.SS "Example"
+.PP
+.nf
+echo somegarbage >> $CACHEPATH/content/deadbeef
+.fi
+.PP
+.PP
+.PP
+.nf
+cacache\&.verify(cachePath)\&.then(stats => {
+  // deadbeef collected, because of invalid checksum\&.
+  console\&.log('cache is much nicer now! stats:', stats)
+})
+.fi
+.PP
+.SS " \fR> cacache\&.verify\&.lastRun(cache) -> Promise\fP"
+Returns a \fRDate\fP representing the last time \fRcacache\&.verify\fP was run on \fRcache\fP\&.
+.SS "Example"
+.PP
+.nf
+cacache\&.verify(cachePath)\&.then(() => {
+  cacache\&.verify\&.lastRun(cachePath)\&.then(lastTime => {
+    console\&.log('cacache\&.verify was last called on' + lastTime)
+  })
+})
+.fi
+.PP
+ 

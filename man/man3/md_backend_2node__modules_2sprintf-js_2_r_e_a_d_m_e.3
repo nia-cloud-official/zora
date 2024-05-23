@@ -1,0 +1,149 @@
+.TH "md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e \- sprintf-js 
+.PP
+ \fR\fP \fR\fP \fR\fP \fR\fP
+.PP
+\fBsprintf-js\fP is a complete open source JavaScript \fRsprintf\fP implementation for the \fBbrowser\fP and \fBNode\&.js\fP\&.
+.PP
+\fBNote: as of v1\&.1\&.1 you might need some polyfills for older environments\&. See \fBSupport\fP section below\&.\fP
+.SH "Usage"
+.PP
+.PP
+.nf
+var sprintf = require('sprintf-js')\&.sprintf,
+    vsprintf = require('sprintf-js')\&.vsprintf
+
+sprintf('%2$s %3$s a %1$s', 'cracker', 'Polly', 'wants')
+vsprintf('The first 4 letters of the english alphabet are: %s, %s, %s and %s', ['a', 'b', 'c', 'd'])
+.fi
+.PP
+ 
+.SH "Installation"
+.PP
+.SS "NPM"
+.PP
+.nf
+npm install sprintf-js
+.fi
+.PP
+ 
+.SS "Bower"
+.PP
+.nf
+bower install sprintf
+.fi
+.PP
+ 
+.SH "API"
+.PP
+.SS "\fRsprintf\fP"
+Returns a formatted string: 
+.PP
+.nf
+string sprintf(string format, mixed arg1?, mixed arg2?, \&.\&.\&.)
+
+.fi
+.PP
+ 
+.SS "\fRvsprintf\fP"
+Same as \fRsprintf\fP except it takes an array of arguments, rather than a variable number of arguments: 
+.PP
+.nf
+string vsprintf(string format, array arguments?)
+
+.fi
+.PP
+ 
+.SH "Format specification"
+.PP
+The placeholders in the format string are marked by \fR%\fP and are followed by one or more of these elements, in this order:
+.PP
+.IP "\(bu" 2
+An optional number followed by a \fR$\fP sign that selects which argument index to use for the value\&. If not specified, arguments will be placed in the same order as the placeholders in the input string\&.
+.IP "\(bu" 2
+An optional \fR+\fP sign that forces to precede the result with a plus or minus sign on numeric values\&. By default, only the \fR-\fP sign is used on negative numbers\&.
+.IP "\(bu" 2
+An optional padding specifier that says what character to use for padding (if specified)\&. Possible values are \fR0\fP or any other character preceded by a `'\fR(single quote)\&. The default is to pad with *spaces*\&.\fP
+.IP "\(bu" 2
+\fRAn optional\fP-\fRsign, that causes\fPsprintf\fRto left-align the result of this placeholder\&. The default is to right-align the result\&.\fP
+.IP "\(bu" 2
+\fRAn optional number, that says how many characters the result should have\&. If the value to be returned is shorter than this number, the result will be padded\&. When used with the\fPj<tt>(JSON) type specifier, the padding length specifies the tab size used for indentation\&.
+.IP "\(bu" 2
+An optional precision modifier, consisting of a
+.PP
+\&.\fR(dot) followed by a number, that says how many digits should be displayed for floating point numbers\&. When used with the\fPg\fRtype specifier, it specifies the number of significant digits\&. When used on a string, it causes the result to be truncated\&.
+.IP "\(bu" 2
+A type specifier that can be any of: *
+.PP
+\fP%\fR— yields a literal\fP%\fRcharacter *\fPb\fR— yields an integer as a binary number *\fPc\fR— yields an integer as the character with that ASCII value *\fPd\fRor\fPi\fR— yields an integer as a signed decimal number *\fPe\fR— yields a float using scientific notation *\fPu\fR— yields an integer as an unsigned decimal number *\fPf\fR— yields a float as is; see notes on precision above *\fPg\fR— yields a float as is; see notes on precision above *\fPo\fR— yields an integer as an octal number *\fPs\fR— yields a string as is *\fPt\fR— yields\fPtrue\fRor\fPfalse\fR *\fPT\fR— yields the type of the argument<sup><a href='#fn-1' name='fn-ref-1'>1</a></sup> *\fPv\fR— yields the primitive value of the specified argument *\fPx\fR— yields an integer as a hexadecimal number (lower-case) *\fPX\fR— yields an integer as a hexadecimal number (upper-case) *\fPj` — yields a JavaScript object or array as a JSON encoded string
+.SH "Features"
+.PP
+.SS "Argument swapping"
+You can also swap the arguments\&. That is, the order of the placeholders doesn't have to match the order of the arguments\&. You can do that by simply indicating in the format string which arguments the placeholders refer to: 
+.PP
+.nf
+sprintf('%2$s %3$s a %1$s', 'cracker', 'Polly', 'wants')
+
+.fi
+.PP
+ And, of course, you can repeat the placeholders without having to increase the number of arguments\&.
+.SS "Named arguments"
+Format strings may contain replacement fields rather than positional placeholders\&. Instead of referring to a certain argument, you can now refer to a certain key within an object\&. Replacement fields are surrounded by rounded parentheses - \fR(\fP and \fR)\fP - and begin with a keyword that refers to a key: 
+.PP
+.nf
+var user = {
+    name: 'Dolly',
+}
+sprintf('Hello %(name)s', user) // Hello Dolly
+
+.fi
+.PP
+ Keywords in replacement fields can be optionally followed by any number of keywords or indexes: 
+.PP
+.nf
+var users = [
+    {name: 'Dolly'},
+    {name: 'Molly'},
+    {name: 'Polly'},
+]
+sprintf('Hello %(users[0]\&.name)s, %(users[1]\&.name)s and %(users[2]\&.name)s', {users: users}) // Hello Dolly, Molly and Polly
+
+.fi
+.PP
+ Note: mixing positional and named placeholders is not (yet) supported
+.SS "Computed values"
+You can pass in a function as a dynamic value and it will be invoked (with no arguments) in order to compute the value on the fly\&. 
+.PP
+.nf
+sprintf('Current date and time: %s', function() { return new Date()\&.toString() })
+
+.fi
+.PP
+ 
+.SS "AngularJS"
+You can use \fRsprintf\fP and \fRvsprintf\fP (also aliased as \fRfmt\fP and \fRvfmt\fP respectively) in your AngularJS projects\&. See \fRdemo/\fP\&.
+.SH "Support"
+.PP
+.SS "Node\&.js"
+\fRsprintf-js\fP runs in all active Node versions (4\&.x+)\&.
+.SS "Browser"
+\fRsprintf-js\fP should work in all modern browsers\&. As of v1\&.1\&.1, you might need polyfills for the following:
+.PP
+.IP "\(bu" 2
+\fRString\&.prototype\&.repeat()\fP (any IE)
+.IP "\(bu" 2
+\fRArray\&.isArray()\fP (IE < 9)
+.IP "\(bu" 2
+\fRObject\&.create()\fP (IE < 9)
+.PP
+.PP
+YMMV
+.SH "License"
+.PP
+\fBsprintf-js\fP is licensed under the terms of the BSD 3-Clause License\&.
+.SH "Notes"
+.PP
+\*{1\*}  \fRsprintf\fP doesn't use the \fRtypeof\fP operator\&. As such, the value \fRnull\fP is a \fRnull\fP, an array is an \fRarray\fP (not an \fRobject\fP), a date value is a \fRdate\fP etc\&. 

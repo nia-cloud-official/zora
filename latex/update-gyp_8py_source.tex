@@ -1,0 +1,52 @@
+\doxysection{update-\/gyp.py}
+\hypertarget{update-gyp_8py_source}{}\label{update-gyp_8py_source}\index{backend/node\_modules/node-\/gyp/update-\/gyp.py@{backend/node\_modules/node-\/gyp/update-\/gyp.py}}
+\mbox{\hyperlink{update-gyp_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00001}\mbox{\hyperlink{namespaceupdate-gyp}{00001}}\ \textcolor{comment}{\#!/usr/bin/env\ python3}}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00003}00003\ \textcolor{keyword}{import}\ argparse}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00004}00004\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00005}00005\ \textcolor{keyword}{import}\ shutil}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00006}00006\ \textcolor{keyword}{import}\ subprocess}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00007}00007\ \textcolor{keyword}{import}\ tarfile}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00008}00008\ \textcolor{keyword}{import}\ tempfile}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00009}00009\ \textcolor{keyword}{import}\ urllib.request}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00011}\mbox{\hyperlink{namespaceupdate-gyp_ad2ecd548040937f45583efe18b28113e}{00011}}\ BASE\_URL\ =\ \textcolor{stringliteral}{"{}https://github.com/nodejs/gyp-\/next/archive/"{}}}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00012}\mbox{\hyperlink{namespaceupdate-gyp_a9980780c6976fd321f5a6c1abc5d6208}{00012}}\ CHECKOUT\_PATH\ =\ os.path.dirname(os.path.realpath(\_\_file\_\_))}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00013}\mbox{\hyperlink{namespaceupdate-gyp_aef51dd8049967775aed825101c1294bd}{00013}}\ CHECKOUT\_GYP\_PATH\ =\ os.path.join(CHECKOUT\_PATH,\ \textcolor{stringliteral}{"{}gyp"{}})}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00015}\mbox{\hyperlink{namespaceupdate-gyp_a73e96ddd455240365dc59ad1c1f01a2d}{00015}}\ parser\ =\ argparse.ArgumentParser()}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00016}\mbox{\hyperlink{namespaceupdate-gyp_a1870bb9fc9674e9b64956dffa76f15e8}{00016}}\ parser.add\_argument(\textcolor{stringliteral}{"{}tag"{}},\ help=\textcolor{stringliteral}{"{}gyp\ tag\ to\ update\ to"{}})}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00017}\mbox{\hyperlink{namespaceupdate-gyp_a3fd4f4f0e66ccc4096224ad28868f294}{00017}}\ args\ =\ parser.parse\_args()}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00019}\mbox{\hyperlink{namespaceupdate-gyp_a9804e36cfed1e387489d9d2ab863e45b}{00019}}\ tar\_url\ =\ BASE\_URL\ +\ args.tag\ +\ \textcolor{stringliteral}{"{}.tar.gz"{}}}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00021}\mbox{\hyperlink{namespaceupdate-gyp_a69b5695d0a60de657b4a3e6b11072a31}{00021}}\ changed\_files\ =\ subprocess.check\_output([\textcolor{stringliteral}{"{}git"{}},\ \textcolor{stringliteral}{"{}diff"{}},\ \textcolor{stringliteral}{"{}-\/-\/name-\/only"{}}]).strip()}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00022}00022\ \textcolor{keywordflow}{if}\ changed\_files:}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00023}00023\ \ \ \ \ \textcolor{keywordflow}{raise}\ Exception(\textcolor{stringliteral}{"{}Can't\ update\ gyp\ while\ you\ have\ uncommitted\ changes\ in\ node-\/gyp"{}})}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00025}00025\ \textcolor{keyword}{with}\ tempfile.TemporaryDirectory()\ \textcolor{keyword}{as}\ tmp\_dir:}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00026}\mbox{\hyperlink{namespaceupdate-gyp_a4abca497be2e9bb5050796221a98ae61}{00026}}\ \ \ \ \ tar\_file\ =\ os.path.join(tmp\_dir,\ \textcolor{stringliteral}{"{}gyp.tar.gz"{}})}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00027}\mbox{\hyperlink{namespaceupdate-gyp_ad1c2ad735414da397e7710f312d59105}{00027}}\ \ \ \ \ unzip\_target\ =\ os.path.join(tmp\_dir,\ \textcolor{stringliteral}{"{}gyp"{}})}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00028}00028\ \ \ \ \ \textcolor{keyword}{with}\ open(tar\_file,\ \textcolor{stringliteral}{"{}wb"{}})\ \textcolor{keyword}{as}\ f:}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00029}00029\ \ \ \ \ \ \ \ \ print(\textcolor{stringliteral}{"{}Downloading\ gyp-\/next@"{}}\ +\ args.tag\ +\ \textcolor{stringliteral}{"{}\ into\ temporary\ directory..."{}})}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00030}00030\ \ \ \ \ \ \ \ \ print(\textcolor{stringliteral}{"{}From:\ "{}}\ +\ tar\_url)}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00031}00031\ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ urllib.request.urlopen(tar\_url)\ \textcolor{keyword}{as}\ in\_file:}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00032}00032\ \ \ \ \ \ \ \ \ \ \ \ \ f.write(in\_file.read())}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00034}00034\ \ \ \ \ \ \ \ \ print(\textcolor{stringliteral}{"{}Unzipping..."{}})}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00035}00035\ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ tarfile.open(tar\_file,\ \textcolor{stringliteral}{"{}r:gz"{}})\ \textcolor{keyword}{as}\ tar\_ref:}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00036}00036\ \ \ \ \ \ \ \ \ \ \ \ \ tar\_ref.extractall(unzip\_target)}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ print(\textcolor{stringliteral}{"{}Moving\ to\ current\ checkout\ ("{}}\ +\ CHECKOUT\_PATH\ +\ \textcolor{stringliteral}{"{})..."{}})}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ os.path.exists(CHECKOUT\_GYP\_PATH):}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ shutil.rmtree(CHECKOUT\_GYP\_PATH)}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ shutil.move(}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ \ \ \ \ os.path.join(unzip\_target,\ os.listdir(unzip\_target)[0]),\ CHECKOUT\_GYP\_PATH}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00045}\mbox{\hyperlink{namespaceupdate-gyp_a353f325a85a850b0456a7cbaff8fc43b}{00045}}\ subprocess.check\_output([\textcolor{stringliteral}{"{}git"{}},\ \textcolor{stringliteral}{"{}add"{}},\ \textcolor{stringliteral}{"{}gyp"{}}],\ cwd=CHECKOUT\_PATH)}
+\DoxyCodeLine{\Hypertarget{update-gyp_8py_source_l00046}00046\ subprocess.check\_output([\textcolor{stringliteral}{"{}git"{}},\ \textcolor{stringliteral}{"{}commit"{}},\ \textcolor{stringliteral}{"{}-\/m"{}},\ \textcolor{stringliteral}{"{}feat(gyp):\ update\ gyp\ to\ "{}}\ +\ args.tag])}
+
+\end{DoxyCode}

@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e</compoundname>
+    <title>on-finished</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_1autotoc_md2626"/> <ulink url="https://npmjs.org/package/on-finished"><image type="html" name="https://badgen.net/npm/v/on-finished" alt="NPM Version" inline="yes"></image>
+</ulink> <ulink url="https://npmjs.org/package/on-finished"><image type="html" name="https://badgen.net/npm/dm/on-finished" alt="NPM Downloads" inline="yes"></image>
+</ulink> <ulink url="https://nodejs.org/en/download"><image type="html" name="https://badgen.net/npm/node/on-finished" alt="Node.js Version" inline="yes"></image>
+</ulink> <ulink url="https://github.com/jshttp/on-finished/actions/workflows/ci.yml"><image type="html" name="https://badgen.net/github/checks/jshttp/on-finished/master?label=ci" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/r/jshttp/on-finished?branch=master"><image type="html" name="https://badgen.net/coveralls/c/github/jshttp/on-finished/master" alt="Coverage Status" inline="yes"></image>
+</ulink></para>
+<para>Execute a callback when a HTTP request closes, finishes, or errors.</para>
+<sect1 id="md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_1autotoc_md2627">
+<title>Install</title><para>This is a <ulink url="https://nodejs.org/en/">Node.js</ulink> module available through the <ulink url="https://www.npmjs.com/">npm registry</ulink>. Installation is done using the <ulink url="https://docs.npmjs.com/getting-started/installing-npm-packages-locally"><computeroutput>npm install</computeroutput> command</ulink>:</para>
+<para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>on-finished</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_1autotoc_md2628">
+<title>API</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>onFinished<sp/>=<sp/>require(&apos;on-finished&apos;)</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_1autotoc_md2629">
+<title>onFinished(res, listener)</title><para>Attach a listener to listen for the response to finish. The listener will be invoked only once when the response finished. If the response finished to an error, the first argument will contain the error. If the response has already finished, the listener will be invoked.</para>
+<para>Listening to the end of a response would be used to close things associated with the response, like open files.</para>
+<para>Listener is invoked as <computeroutput>listener(err, res)</computeroutput>.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">onFinished(res,<sp/>function<sp/>(err,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>clean<sp/>up<sp/>open<sp/>fds,<sp/>etc.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>err<sp/>contains<sp/>the<sp/>error<sp/>if<sp/>request<sp/>error&apos;d</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_1autotoc_md2630">
+<title>onFinished(req, listener)</title><para>Attach a listener to listen for the request to finish. The listener will be invoked only once when the request finished. If the request finished to an error, the first argument will contain the error. If the request has already finished, the listener will be invoked.</para>
+<para>Listening to the end of a request would be used to know when to continue after reading the data.</para>
+<para>Listener is invoked as <computeroutput>listener(err, req)</computeroutput>.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>data<sp/>=<sp/>&apos;&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">req.setEncoding(&apos;utf8&apos;)</highlight></codeline>
+<codeline><highlight class="normal">req.on(&apos;data&apos;,<sp/>function<sp/>(str)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>data<sp/>+=<sp/>str</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">onFinished(req,<sp/>function<sp/>(err,<sp/>req)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>data<sp/>is<sp/>read<sp/>unless<sp/>there<sp/>is<sp/>err</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_1autotoc_md2631">
+<title>onFinished.isFinished(res)</title><para>Determine if <computeroutput>res</computeroutput> is already finished. This would be useful to check and not even start certain operations if the response has already finished.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_1autotoc_md2632">
+<title>onFinished.isFinished(req)</title><para>Determine if <computeroutput>req</computeroutput> is already finished. This would be useful to check and not even start certain operations if the request has already finished.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_1autotoc_md2633">
+<title>Special Node.js requests</title><sect2 id="md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_1autotoc_md2634">
+<title>HTTP CONNECT method</title><para>The meaning of the <computeroutput>CONNECT</computeroutput> method from RFC 7231, section 4.3.6:</para>
+<para><blockquote><para><zwj/>The CONNECT method requests that the recipient establish a tunnel to the destination origin server identified by the request-target and, if successful, thereafter restrict its behavior to blind forwarding of packets, in both directions, until the tunnel is closed. Tunnels are commonly used to create an end-to-end virtual connection, through one or more proxies, which can then be secured using TLS (Transport Layer Security, [RFC5246]). </para>
+</blockquote></para>
+<para>In Node.js, these request objects come from the <lsquo/>&apos;connect<rsquo/>` event on the HTTP server.</para>
+<para>When this module is used on a HTTP <computeroutput>CONNECT</computeroutput> request, the request is considered &quot;finished&quot; immediately, <bold>due to limitations in the Node.js interface</bold>. This means if the <computeroutput>CONNECT</computeroutput> request contains a request entity, the request will be considered &quot;finished&quot; even before it has been read.</para>
+<para>There is no such thing as a response object to a <computeroutput>CONNECT</computeroutput> request in Node.js, so there is no support for one.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_1autotoc_md2635">
+<title>HTTP Upgrade request</title><para>The meaning of the <computeroutput>Upgrade</computeroutput> header from RFC 7230, section 6.1:</para>
+<para><blockquote><para><zwj/>The &quot;Upgrade&quot; header field is intended to provide a simple mechanism for transitioning from HTTP/1.1 to some other protocol on the same connection. </para>
+</blockquote></para>
+<para>In Node.js, these request objects come from the <lsquo/>&apos;upgrade<rsquo/>` event on the HTTP server.</para>
+<para>When this module is used on a HTTP request with an <computeroutput>Upgrade</computeroutput> header, the request is considered &quot;finished&quot; immediately, <bold>due to limitations in the Node.js interface</bold>. This means if the <computeroutput>Upgrade</computeroutput> request contains a request entity, the request will be considered &quot;finished&quot; even before it has been read.</para>
+<para>There is no such thing as a response object to a <computeroutput>Upgrade</computeroutput> request in Node.js, so there is no support for one.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_1autotoc_md2636">
+<title>Example</title><para>The following code ensures that file descriptors are always closed once the response finishes.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>destroy<sp/>=<sp/>require(&apos;destroy&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>fs<sp/>=<sp/>require(&apos;fs&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>onFinished<sp/>=<sp/>require(&apos;on-finished&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">http.createServer(function<sp/>onRequest<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>stream<sp/>=<sp/>fs.createReadStream(&apos;package.json&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>stream.pipe(res)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>onFinished(res,<sp/>function<sp/>()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>destroy(stream)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_1autotoc_md2637">
+<title>License</title><para>[MIT](LICENSE) </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/on-finished/README.md"/>
+  </compounddef>
+</doxygen>

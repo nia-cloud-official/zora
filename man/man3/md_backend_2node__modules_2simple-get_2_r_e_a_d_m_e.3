@@ -1,0 +1,327 @@
+.TH "md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e \- simple-get \fR\fP \fR\fP \fR\fP \fR\fP 
+.PP
+
+.SS "Simplest way to make http get requests"
+.SH "features"
+.PP
+This module is the lightest possible wrapper on top of node\&.js \fRhttp\fP, but supporting these essential features:
+.PP
+.IP "\(bu" 2
+follows redirects
+.IP "\(bu" 2
+automatically handles gzip/deflate responses
+.IP "\(bu" 2
+supports HTTPS
+.IP "\(bu" 2
+supports specifying a timeout
+.IP "\(bu" 2
+supports convenience \fRurl\fP key so there's no need to use \fRurl\&.parse\fP on the url when specifying options
+.IP "\(bu" 2
+composes well with npm packages for features like cookies, proxies, form data, & OAuth
+.PP
+.PP
+All this in < 100 lines of code\&.
+.SH "install"
+.PP
+.PP
+.nf
+npm install simple\-get
+.fi
+.PP
+.SH "usage"
+.PP
+Note, all these examples also work in the browser with \fRbrowserify\fP\&.
+.SS "simple GET request"
+Doesn't get easier than this:
+.PP
+.PP
+.nf
+const get = require('simple\-get')
+
+get('http://example\&.com', function (err, res) {
+  if (err) throw err
+  console\&.log(res\&.statusCode) // 200
+  res\&.pipe(process\&.stdout) // `res` is a stream
+})
+.fi
+.PP
+.SS "even simpler GET request"
+If you just want the data, and don't want to deal with streams:
+.PP
+.PP
+.nf
+const get = require('simple\-get')
+
+get\&.concat('http://example\&.com', function (err, res, data) {
+  if (err) throw err
+  console\&.log(res\&.statusCode) // 200
+  console\&.log(data) // Buffer('this is the server response')
+})
+.fi
+.PP
+.SS "POST, PUT, PATCH, HEAD, DELETE support"
+For \fRPOST\fP, call \fRget\&.post\fP or use option `{ method: 'POST' }`\&.
+.PP
+.PP
+.nf
+const get = require('simple\-get')
+
+const opts = {
+  url: 'http://example\&.com',
+  body: 'this is the POST body'
+}
+get\&.post(opts, function (err, res) {
+  if (err) throw err
+  res\&.pipe(process\&.stdout) // `res` is a stream
+})
+.fi
+.PP
+.SS "A more complex example:"
+.PP
+.nf
+const get = require('simple\-get')
+
+get({
+  url: 'http://example\&.com',
+  method: 'POST',
+  body: 'this is the POST body',
+
+  // simple\-get accepts all options that node\&.js `http` accepts
+  // See: http://nodejs\&.org/api/http\&.html#http_http_request_options_callback
+  headers: {
+    'user\-agent': 'my cool app'
+  }
+}, function (err, res) {
+  if (err) throw err
+
+  // All properties/methods from http\&.IncomingResponse are available,
+  // even if a gunzip/inflate transform stream was returned\&.
+  // See: http://nodejs\&.org/api/http\&.html#http_http_incomingmessage
+  res\&.setTimeout(10000)
+  console\&.log(res\&.headers)
+
+  res\&.on('data', function (chunk) {
+    // `chunk` is the decoded response, after it's been gunzipped or inflated
+    // (if applicable)
+    console\&.log('got a chunk of the response: ' + chunk)
+  }))
+
+})
+.fi
+.PP
+.SS "JSON"
+You can serialize/deserialize request and response with JSON:
+.PP
+.PP
+.nf
+const get = require('simple\-get')
+
+const opts = {
+  method: 'POST',
+  url: 'http://example\&.com',
+  body: {
+    key: 'value'
+  },
+  json: true
+}
+get\&.concat(opts, function (err, res, data) {
+  if (err) throw err
+  console\&.log(data\&.key) // `data` is an object
+})
+.fi
+.PP
+.SS "Timeout"
+You can set a timeout (in milliseconds) on the request with the \fRtimeout\fP option\&. If the request takes longer than \fRtimeout\fP to complete, then the entire request will fail with an \fRError\fP\&.
+.PP
+.PP
+.nf
+const get = require('simple\-get')
+
+const opts = {
+  url: 'http://example\&.com',
+  timeout: 2000 // 2 second timeout
+}
+
+get(opts, function (err, res) {})
+.fi
+.PP
+.SS "One Quick Tip"
+It's a good idea to set the `'user-agent'` header so the provider can more easily see how their resource is used\&.
+.PP
+.PP
+.nf
+const get = require('simple\-get')
+const pkg = require('\&./package\&.json')
+
+get('http://example\&.com', {
+  headers: {
+    'user\-agent': `my\-module/${pkg\&.version} (https://github\&.com/username/my\-module)`
+  }
+})
+.fi
+.PP
+.SS "Proxies"
+You can use the \fR\fRtunnel\fP\fP module with the \fRagent\fP option to work with proxies:
+.PP
+.PP
+.nf
+const get = require('simple\-get')
+const tunnel = require('tunnel')
+
+const opts = {
+  url: 'http://example\&.com',
+  agent: tunnel\&.httpOverHttp({
+    proxy: {
+      host: 'localhost'
+    }
+  })
+}
+
+get(opts, function (err, res) {})
+.fi
+.PP
+.SS "Cookies"
+You can use the \fR\fRcookie\fP\fP module to include cookies in a request:
+.PP
+.PP
+.nf
+const get = require('simple\-get')
+const cookie = require('cookie')
+
+const opts = {
+  url: 'http://example\&.com',
+  headers: {
+    cookie: cookie\&.serialize('foo', 'bar')
+  }
+}
+
+get(opts, function (err, res) {})
+.fi
+.PP
+.SS "Form data"
+You can use the \fR\fRform-data\fP\fP module to create POST request with form data:
+.PP
+.PP
+.nf
+const fs = require('fs')
+const get = require('simple\-get')
+const FormData = require('form\-data')
+const form = new FormData()
+
+form\&.append('my_file', fs\&.createReadStream('/foo/bar\&.jpg'))
+
+const opts = {
+  url: 'http://example\&.com',
+  body: form
+}
+
+get\&.post(opts, function (err, res) {})
+.fi
+.PP
+.SS "Or, include \fRapplication/x-www-form-urlencoded\fP form data manually:"
+.PP
+.nf
+const get = require('simple\-get')
+
+const opts = {
+  url: 'http://example\&.com',
+  form: {
+    key: 'value'
+  }
+}
+get\&.post(opts, function (err, res) {})
+.fi
+.PP
+.SS "Specifically disallowing redirects"
+.PP
+.nf
+const get = require('simple\-get')
+
+const opts = {
+  url: 'http://example\&.com/will\-redirect\-elsewhere',
+  followRedirects: false
+}
+// res\&.statusCode will be 301, no error thrown
+get(opts, function (err, res) {})
+.fi
+.PP
+.SS "Basic Auth"
+.PP
+.nf
+const user = 'someuser'
+const pass = 'pa$$word'
+const encodedAuth = Buffer\&.from(`${user}:${pass}`)\&.toString('base64')
+
+get('http://example\&.com', {
+  headers: {
+    authorization: `Basic ${encodedAuth}`
+  }
+})
+.fi
+.PP
+.SS "OAuth"
+You can use the \fR\fRoauth-1\&.0a\fP\fP module to create a signed OAuth request:
+.PP
+.PP
+.nf
+const get = require('simple\-get')
+const crypto  = require('crypto')
+const OAuth = require('oauth\-1\&.0a')
+
+const oauth = OAuth({
+  consumer: {
+    key: process\&.env\&.CONSUMER_KEY,
+    secret: process\&.env\&.CONSUMER_SECRET
+  },
+  signature_method: 'HMAC\-SHA1',
+  hash_function: (baseString, key) => crypto\&.createHmac('sha1', key)\&.update(baseString)\&.digest('base64')
+})
+
+const token = {
+  key: process\&.env\&.ACCESS_TOKEN,
+  secret: process\&.env\&.ACCESS_TOKEN_SECRET
+}
+
+const url = 'https://api\&.twitter\&.com/1\&.1/statuses/home_timeline\&.json'
+
+const opts = {
+  url: url,
+  headers: oauth\&.toHeader(oauth\&.authorize({url, method: 'GET'}, token)),
+  json: true
+}
+
+get(opts, function (err, res) {})
+.fi
+.PP
+.SS "Throttle requests"
+You can use \fRlimiter\fP to throttle requests\&. This is useful when calling an API that is rate limited\&.
+.PP
+.PP
+.nf
+const simpleGet = require('simple\-get')
+const RateLimiter = require('limiter')\&.RateLimiter
+const limiter = new RateLimiter(1, 'second')
+
+const get = (opts, cb) => limiter\&.removeTokens(1, () => simpleGet(opts, cb))
+get\&.concat = (opts, cb) => limiter\&.removeTokens(1, () => simpleGet\&.concat(opts, cb))
+
+var opts = {
+  url: 'http://example\&.com'
+}
+
+get\&.concat(opts, processResult)
+get\&.concat(opts, processResult)
+
+function processResult (err, res, data) {
+  if (err) throw err
+  console\&.log(data\&.toString())
+}
+.fi
+.PP
+.SH "license"
+.PP
+MIT\&. Copyright (c) \fRFeross Aboukhadijeh\fP\&. 

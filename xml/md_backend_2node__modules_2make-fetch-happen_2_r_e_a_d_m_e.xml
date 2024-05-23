@@ -1,0 +1,361 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e</compoundname>
+    <title>make-fetch-happen</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1809"/><ulink url="https://npm.im/make-fetch-happen"><image type="html" name="https://img.shields.io/npm/v/make-fetch-happen.svg" alt="npm version" inline="yes"></image>
+</ulink> <ulink url="https://npm.im/make-fetch-happen"><image type="html" name="https://img.shields.io/npm/l/make-fetch-happen.svg" alt="license" inline="yes"></image>
+</ulink> <ulink url="https://travis-ci.org/npm/make-fetch-happen"><image type="html" name="https://img.shields.io/travis/npm/make-fetch-happen.svg" alt="Travis" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/github/npm/make-fetch-happen?branch=latest"><image type="html" name="https://coveralls.io/repos/github/npm/make-fetch-happen/badge.svg?branch=latest" alt="Coverage Status" inline="yes"></image>
+</ulink></para>
+<para><ulink url="https://github.com/npm/make-fetch-happen"><computeroutput>make-fetch-happen</computeroutput></ulink> is a Node.js library that wraps <ulink url="https://github.com/npm/minipass-fetch"><computeroutput>minipass-fetch</computeroutput></ulink> with additional features <ulink url="https://github.com/npm/minipass-fetch"><computeroutput>minipass-fetch</computeroutput></ulink> doesn&apos;t intend to include, including HTTP Cache support, request pooling, proxies, retries, and more!</para>
+<sect1 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1810">
+<title>Install</title><para><computeroutput>$ npm install --save make-fetch-happen</computeroutput></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1811">
+<title>Table of Contents</title><para><itemizedlist>
+<listitem><para>Example</para>
+</listitem><listitem><para>Features</para>
+</listitem><listitem><para>Contributing</para>
+</listitem><listitem><para><ref refid="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1api" kindref="member">API</ref><itemizedlist>
+<listitem><para>`fetch`</para>
+</listitem><listitem><para>`fetch.defaults`</para>
+</listitem><listitem><para>`minipass-fetch` options</para>
+</listitem><listitem><para>`make-fetch-happen` options<itemizedlist>
+<listitem><para>`opts.cachePath`</para>
+</listitem><listitem><para>`opts.cache`</para>
+</listitem><listitem><para>`opts.proxy`</para>
+</listitem><listitem><para>`opts.noProxy`</para>
+</listitem><listitem><para>`opts.ca, opts.cert, opts.key`</para>
+</listitem><listitem><para>`opts.maxSockets`</para>
+</listitem><listitem><para>`opts.retry`</para>
+</listitem><listitem><para>`opts.onRetry`</para>
+</listitem><listitem><para>`opts.integrity`</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para>Message From Our Sponsors</para>
+</listitem></itemizedlist>
+</para>
+<sect2 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1812">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>fetch<sp/>=<sp/>require(&apos;make-fetch-happen&apos;).defaults({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cachePath:<sp/>&apos;./my-cache&apos;<sp/>//<sp/>path<sp/>where<sp/>cache<sp/>will<sp/>be<sp/>written<sp/>(and<sp/>read)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">fetch(&apos;https://registry.npmjs.org/make-fetch-happen&apos;).then(res<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>res.json()<sp/>//<sp/>download<sp/>the<sp/>body<sp/>as<sp/>JSON</highlight></codeline>
+<codeline><highlight class="normal">}).then(body<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(`got<sp/>${body.name}<sp/>from<sp/>web`)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>fetch(&apos;https://registry.npmjs.org/make-fetch-happen&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>cache:<sp/>&apos;no-cache&apos;<sp/>//<sp/>forces<sp/>a<sp/>conditional<sp/>request</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">}).then(res<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(res.status)<sp/>//<sp/>304!<sp/>cache<sp/>validated!</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>res.json().then(body<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(`got<sp/>${body.name}<sp/>from<sp/>cache`)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1813">
+<title>Features</title><para><itemizedlist>
+<listitem><para>Builds around <ulink url="https://npm.im/minipass-fetch"><computeroutput>minipass-fetch</computeroutput></ulink> for the core <ulink url="https://fetch.spec.whatwg.org"><computeroutput>fetch</computeroutput> API</ulink> implementation</para>
+</listitem><listitem><para>Request pooling out of the box</para>
+</listitem><listitem><para>Quite fast, really</para>
+</listitem><listitem><para>Automatic HTTP-semantics-aware request retries</para>
+</listitem><listitem><para>Cache-fallback automatic &quot;offline mode&quot;</para>
+</listitem><listitem><para>Proxy support (http, https, socks, socks4, socks5)</para>
+</listitem><listitem><para>Built-in request caching following full HTTP caching rules (<computeroutput>Cache-Control</computeroutput>, <computeroutput>ETag</computeroutput>, <computeroutput>304</computeroutput>s, cache fallback on error, etc).</para>
+</listitem><listitem><para>Customize cache storage with any <ulink url="https://developer.mozilla.org/en-US/docs/Web/API/Cache">Cache API</ulink>-compliant <computeroutput>Cache</computeroutput> instance. Cache to Redis!</para>
+</listitem><listitem><para>Node.js Stream support</para>
+</listitem><listitem><para>Transparent gzip and deflate support</para>
+</listitem><listitem><para><ulink url="https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity">Subresource Integrity</ulink> support</para>
+</listitem><listitem><para>Literally punches nazis</para>
+</listitem><listitem><para>(PENDING) Range request caching and resuming</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1814">
+<title>Contributing</title><para>The make-fetch-happen team enthusiastically welcomes contributions and project participation! There&apos;s a bunch of things you can do if you want to contribute! The <ulink url="https://github.com/npm/cli/blob/latest/CONTRIBUTING.md">Contributor Guide</ulink> outlines the process for community interaction and contribution. Please don&apos;t hesitate to jump in if you&apos;d like to, or even ask us questions if something isn&apos;t clear.</para>
+<para>All participants and maintainers in this project are expected to follow the <ulink url="https://www.npmjs.com/policies/conduct">npm Code of Conduct</ulink>, and just generally be excellent to each other.</para>
+<para>Please refer to the <ref refid="which_2_c_h_a_n_g_e_l_o_g_8md" kindref="compound">Changelog</ref> for project history details, too.</para>
+<para>Happy hacking!</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1815">
+<title>API</title><sect3 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1816">
+<title><anchor id="_1fetch"/> <computeroutput>&gt; fetch(uriOrRequest, [opts]) -&gt; Promise&lt;Response&gt;</computeroutput></title><para>This function implements most of the <ulink url="https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch"><computeroutput>fetch</computeroutput> API</ulink>: given a <computeroutput>uri</computeroutput> string or a <computeroutput>Request</computeroutput> instance, it will fire off an http request and return a Promise containing the relevant response.</para>
+<para>If <computeroutput>opts</computeroutput> is provided, the `minipass-fetch`-specific options will be passed to that library. There are also additional options specific to make-fetch-happen that add various features, such as HTTP caching, integrity verification, proxy support, and more.</para>
+<sect4 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1817">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">fetch(&apos;https://google.com&apos;).then(res<sp/>=&gt;<sp/>res.buffer())</highlight></codeline>
+</programlisting></para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1818">
+<title><anchor id="_1fetch-defaults"/> <computeroutput>&gt; fetch.defaults([defaultUrl], [defaultOpts])</computeroutput></title><para>Returns a new <computeroutput>fetch</computeroutput> function that will call <computeroutput>make-fetch-happen</computeroutput> using <computeroutput>defaultUrl</computeroutput> and <computeroutput>defaultOpts</computeroutput> as default values to any calls.</para>
+<para>A defaulted <computeroutput>fetch</computeroutput> will also have a <computeroutput>.defaults()</computeroutput> method, so they can be chained.</para>
+<sect4 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1819">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>fetch<sp/>=<sp/>require(&apos;make-fetch-happen&apos;).defaults({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cachePath:<sp/>&apos;./my-local-cache&apos;</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">fetch(&apos;https://registry.npmjs.org/make-fetch-happen&apos;)<sp/>//<sp/>will<sp/>always<sp/>use<sp/>the<sp/>cache</highlight></codeline>
+</programlisting></para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1820">
+<title><anchor id="_1minipass-fetch-options"/> <computeroutput>&gt; minipass-fetch options</computeroutput></title><para>The following options for <computeroutput>minipass-fetch</computeroutput> are used as-is:</para>
+<para><itemizedlist>
+<listitem><para>method</para>
+</listitem><listitem><para>body</para>
+</listitem><listitem><para>redirect</para>
+</listitem><listitem><para>follow</para>
+</listitem><listitem><para>timeout</para>
+</listitem><listitem><para>compress</para>
+</listitem><listitem><para>size</para>
+</listitem></itemizedlist>
+</para>
+<para>These other options are modified or augmented by make-fetch-happen:</para>
+<para><itemizedlist>
+<listitem><para>headers - Default <computeroutput>User-Agent</computeroutput> set to make-fetch happen. <computeroutput>Connection</computeroutput> is set to <computeroutput>keep-alive</computeroutput> or <computeroutput>close</computeroutput> automatically depending on <computeroutput>opts.agent</computeroutput>.</para>
+</listitem><listitem><para>agent<itemizedlist>
+<listitem><para>If agent is null, an http or https Agent will be automatically used. By default, these will be <computeroutput>http.globalAgent</computeroutput> and <computeroutput>https.globalAgent</computeroutput>.</para>
+</listitem><listitem><para>If `opts.proxy` is provided and <computeroutput>opts.agent</computeroutput> is null, the agent will be set to an appropriate proxy-handling agent.</para>
+</listitem><listitem><para>If <computeroutput>opts.agent</computeroutput> is an object, it will be used as the request-pooling agent argument for this request.</para>
+</listitem><listitem><para>If <computeroutput>opts.agent</computeroutput> is <computeroutput>false</computeroutput>, it will be passed as-is to the underlying request library. This causes a new Agent to be spawned for every request.</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+<para>For more details, see <ulink url="https://github.com/npm/minipass-fetch#options">the documentation for <computeroutput>minipass-fetch</computeroutput> itself</ulink>.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1821">
+<title><anchor id="_1extra-options"/> <computeroutput>&gt; make-fetch-happen options</computeroutput></title><para>make-fetch-happen augments the <computeroutput>minipass-fetch</computeroutput> API with additional features available through extra options. The following extra options are available:</para>
+<para><itemizedlist>
+<listitem><para>`opts.cachePath` - Cache target to read/write</para>
+</listitem><listitem><para>`opts.cache` - <computeroutput>fetch</computeroutput> cache mode. Controls cache <emphasis>behavior</emphasis>.</para>
+</listitem><listitem><para>`opts.proxy` - Proxy agent</para>
+</listitem><listitem><para>`opts.noProxy` - Domain segments to disable proxying for.</para>
+</listitem><listitem><para>`opts.ca, opts.cert, opts.key, opts.strictSSL`</para>
+</listitem><listitem><para>`opts.localAddress`</para>
+</listitem><listitem><para>`opts.maxSockets`</para>
+</listitem><listitem><para>`opts.retry` - Request retry settings</para>
+</listitem><listitem><para>`opts.onRetry` - a function called whenever a retry is attempted</para>
+</listitem><listitem><para>`opts.integrity` - <ulink url="https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity">Subresource Integrity</ulink> metadata.</para>
+</listitem></itemizedlist>
+</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1822">
+<title><anchor id="_1opts-cache-path"/> <computeroutput>&gt; opts.cachePath</computeroutput></title><para>A string <computeroutput>Path</computeroutput> to be used as the cache root for <ulink url="https://npm.im/cacache"><computeroutput>cacache</computeroutput></ulink>.</para>
+<para><bold>NOTE</bold>: Requests will not be cached unless their response bodies are consumed. You will need to use one of the <computeroutput>res.json()</computeroutput>, <computeroutput>res.buffer()</computeroutput>, etc methods on the response, or drain the <computeroutput>res.body</computeroutput> stream, in order for it to be written.</para>
+<para>The default cache manager also adds the following headers to cached responses:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>X-Local-Cache</computeroutput>: Path to the cache the content was found in</para>
+</listitem><listitem><para><computeroutput>X-Local-Cache-Key</computeroutput>: Unique cache entry key for this response</para>
+</listitem><listitem><para><computeroutput>X-Local-Cache-Mode</computeroutput>: Either <computeroutput>stream</computeroutput> or <computeroutput>buffer</computeroutput> to indicate how the response was read from cacache</para>
+</listitem><listitem><para><computeroutput>X-Local-Cache-Hash</computeroutput>: Specific integrity hash for the cached entry</para>
+</listitem><listitem><para><computeroutput>X-Local-Cache-Status</computeroutput>: One of <computeroutput>miss</computeroutput>, <computeroutput>hit</computeroutput>, <computeroutput>stale</computeroutput>, <computeroutput>revalidated</computeroutput>, <computeroutput>updated</computeroutput>, or <computeroutput>skip</computeroutput> to signal how the response was created</para>
+</listitem><listitem><para><computeroutput>X-Local-Cache-Time</computeroutput>: UTCString of the cache insertion time for the entry</para>
+</listitem></itemizedlist>
+</para>
+<para>Using <ulink url="https://npm.im/cacache"><computeroutput>cacache</computeroutput></ulink>, a call like this may be used to manually fetch the cached entry:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>h<sp/>=<sp/>response.headers</highlight></codeline>
+<codeline><highlight class="normal">cacache.get(h.get(&apos;x-local-cache&apos;),<sp/>h.get(&apos;x-local-cache-key&apos;))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>grab<sp/>content<sp/>only,<sp/>directly:</highlight></codeline>
+<codeline><highlight class="normal">cacache.get.byDigest(h.get(&apos;x-local-cache&apos;),<sp/>h.get(&apos;x-local-cache-hash&apos;))</highlight></codeline>
+</programlisting></para>
+<sect4 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1823">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">fetch(&apos;https://registry.npmjs.org/make-fetch-happen&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cachePath:<sp/>&apos;./my-local-cache&apos;</highlight></codeline>
+<codeline><highlight class="normal">})<sp/>//<sp/>-&gt;<sp/>200-level<sp/>response<sp/>will<sp/>be<sp/>written<sp/>to<sp/>disk</highlight></codeline>
+</programlisting></para>
+<para>A possible (minimal) implementation for <computeroutput>MyCustomRedisCache</computeroutput>:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>bluebird<sp/>=<sp/>require(&apos;bluebird&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>redis<sp/>=<sp/>require(&quot;redis&quot;)</highlight></codeline>
+<codeline><highlight class="normal">bluebird.promisifyAll(redis.RedisClient.prototype)</highlight></codeline>
+<codeline><highlight class="normal">class<sp/>MyCustomRedisCache<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>constructor<sp/>(opts)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>this.redis<sp/>=<sp/>redis.createClient(opts)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>match<sp/>(req)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>this.redis.getAsync(req.url).then(res<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>if<sp/>(res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>const<sp/>parsed<sp/>=<sp/>JSON.parse(res)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>new<sp/>fetch.Response(parsed.body,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>url:<sp/>req.url,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>headers:<sp/>parsed.headers,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>status:<sp/>200</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>put<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>res.buffer().then(body<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>this.redis.setAsync(req.url,<sp/>JSON.stringify({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>body:<sp/>body,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>headers:<sp/>res.headers.raw()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}))</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}).then(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>return<sp/>the<sp/>response<sp/>itself</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>res</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&apos;delete&apos;<sp/>(req)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>this.redis.unlinkAsync(req.url)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1824">
+<title><anchor id="_1opts-cache"/> <computeroutput>&gt; opts.cache</computeroutput></title><para>This option follows the standard <computeroutput>fetch</computeroutput> API cache option. This option will do nothing if `opts.cachePath` is null. The following values are accepted (as strings):</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>default</computeroutput> - Fetch will inspect the HTTP cache on the way to the network. If there is a fresh response it will be used. If there is a stale response a conditional request will be created, and a normal request otherwise. It then updates the HTTP cache with the response. If the revalidation request fails (for example, on a 500 or if you&apos;re offline), the stale response will be returned.</para>
+</listitem><listitem><para><computeroutput>no-store</computeroutput> - Fetch behaves as if there is no HTTP cache at all.</para>
+</listitem><listitem><para><computeroutput>reload</computeroutput> - Fetch behaves as if there is no HTTP cache on the way to the network. Ergo, it creates a normal request and updates the HTTP cache with the response.</para>
+</listitem><listitem><para><computeroutput>no-cache</computeroutput> - Fetch creates a conditional request if there is a response in the HTTP cache and a normal request otherwise. It then updates the HTTP cache with the response.</para>
+</listitem><listitem><para><computeroutput>force-cache</computeroutput> - Fetch uses any response in the HTTP cache matching the request, not paying attention to staleness. If there was no response, it creates a normal request and updates the HTTP cache with the response.</para>
+</listitem><listitem><para><computeroutput>only-if-cached</computeroutput> - Fetch uses any response in the HTTP cache matching the request, not paying attention to staleness. If there was no response, it returns a network error. (Can only be used when request’s mode is &quot;same-origin&quot;. Any cached redirects will be followed assuming request’s redirect mode is &quot;follow&quot; and the redirects do not violate request’s mode.)</para>
+</listitem></itemizedlist>
+</para>
+<para>(Note: option descriptions are taken from <ulink url="https://fetch.spec.whatwg.org/#http-network-or-cache-fetch">https://fetch.spec.whatwg.org/#http-network-or-cache-fetch</ulink>)</para>
+<sect4 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1825">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>fetch<sp/>=<sp/>require(&apos;make-fetch-happen&apos;).defaults({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cachePath:<sp/>&apos;./my-cache&apos;</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Will<sp/>error<sp/>with<sp/>ENOTCACHED<sp/>if<sp/>we<sp/>haven&apos;t<sp/>already<sp/>cached<sp/>this<sp/>url</highlight></codeline>
+<codeline><highlight class="normal">fetch(&apos;https://registry.npmjs.org/make-fetch-happen&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cache:<sp/>&apos;only-if-cached&apos;</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Will<sp/>refresh<sp/>any<sp/>local<sp/>content<sp/>and<sp/>cache<sp/>the<sp/>new<sp/>response</highlight></codeline>
+<codeline><highlight class="normal">fetch(&apos;https://registry.npmjs.org/make-fetch-happen&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cache:<sp/>&apos;reload&apos;</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Will<sp/>use<sp/>any<sp/>local<sp/>data,<sp/>even<sp/>if<sp/>stale.<sp/>Otherwise,<sp/>will<sp/>hit<sp/>network.</highlight></codeline>
+<codeline><highlight class="normal">fetch(&apos;https://registry.npmjs.org/make-fetch-happen&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cache:<sp/>&apos;force-cache&apos;</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1826">
+<title><anchor id="_1opts-proxy"/> <computeroutput>&gt; opts.proxy</computeroutput></title><para>A string or <computeroutput>new url.URL()</computeroutput>-d URI to proxy through. Different Proxy handlers will be used depending on the proxy&apos;s protocol.</para>
+<para>Additionally, <computeroutput>process.env.HTTP_PROXY</computeroutput>, <computeroutput>process.env.HTTPS_PROXY</computeroutput>, and <computeroutput>process.env.PROXY</computeroutput> are used if present and no <computeroutput>opts.proxy</computeroutput> value is provided.</para>
+<para>(Pending) <computeroutput>process.env.NO_PROXY</computeroutput> may also be configured to skip proxying requests for all, or specific domains.</para>
+<sect4 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1827">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">fetch(&apos;https://registry.npmjs.org/make-fetch-happen&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>proxy:<sp/>&apos;https://corporate.yourcompany.proxy:4445&apos;</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">fetch(&apos;https://registry.npmjs.org/make-fetch-happen&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>proxy:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>protocol:<sp/>&apos;https:&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>hostname:<sp/>&apos;corporate.yourcompany.proxy&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>4445</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1828">
+<title><anchor id="_1opts-no-proxy"/> <computeroutput>&gt; opts.noProxy</computeroutput></title><para>If present, should be a comma-separated string or an array of domain extensions that a proxy should <emphasis>not</emphasis> be used for.</para>
+<para>This option may also be provided through <computeroutput>process.env.NO_PROXY</computeroutput>.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1829">
+<title><anchor id="_1https-opts"/> <computeroutput>&gt; opts.ca, opts.cert, opts.key, opts.strictSSL</computeroutput></title><para>These values are passed in directly to the HTTPS agent and will be used for both proxied and unproxied outgoing HTTPS requests. They mostly correspond to the same options the <computeroutput>https</computeroutput> module accepts, which will be themselves passed to <computeroutput>tls.connect()</computeroutput>. <computeroutput>opts.strictSSL</computeroutput> corresponds to <computeroutput>rejectUnauthorized</computeroutput>.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1830">
+<title><anchor id="_1opts-local-address"/> <computeroutput>&gt; opts.localAddress</computeroutput></title><para>Passed directly to <computeroutput>http</computeroutput> and <computeroutput>https</computeroutput> request calls. Determines the local address to bind to.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1831">
+<title><anchor id="_1opts-max-sockets"/> <computeroutput>&gt; opts.maxSockets</computeroutput></title><para>Default: 15</para>
+<para>Maximum number of active concurrent sockets to use for the underlying Http/Https/Proxy agents. This setting applies once per spawned agent.</para>
+<para>15 is probably a <emphasis>pretty good value</emphasis> for most use-cases, and balances speed with, uh, not knocking out people&apos;s routers. 🤓</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1832">
+<title><anchor id="_1opts-retry"/> <computeroutput>&gt; opts.retry</computeroutput></title><para>An object that can be used to tune request retry settings. Retries will only be attempted on the following conditions:</para>
+<para><itemizedlist>
+<listitem><para>Request method is NOT <computeroutput>POST</computeroutput> AND</para>
+</listitem><listitem><para>Request status is one of: <computeroutput>408</computeroutput>, <computeroutput>420</computeroutput>, <computeroutput>429</computeroutput>, or any status in the 500-range. OR</para>
+</listitem><listitem><para>Request errored with <computeroutput>ECONNRESET</computeroutput>, <computeroutput>ECONNREFUSED</computeroutput>, <computeroutput>EADDRINUSE</computeroutput>, <computeroutput>ETIMEDOUT</computeroutput>, or the <computeroutput>fetch</computeroutput> error <computeroutput>request-timeout</computeroutput>.</para>
+</listitem></itemizedlist>
+</para>
+<para>The following are worth noting as explicitly not retried:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>getaddrinfo ENOTFOUND</computeroutput> and will be assumed to be either an unreachable domain or the user will be assumed offline. If a response is cached, it will be returned immediately.</para>
+</listitem></itemizedlist>
+</para>
+<para>If <computeroutput>opts.retry</computeroutput> is <computeroutput>false</computeroutput>, it is equivalent to <computeroutput>{retries: 0}</computeroutput></para>
+<para>If <computeroutput>opts.retry</computeroutput> is a number, it is equivalent to <computeroutput>{retries: num}</computeroutput></para>
+<para>The following retry options are available if you want more control over it:</para>
+<para><itemizedlist>
+<listitem><para>retries</para>
+</listitem><listitem><para>factor</para>
+</listitem><listitem><para>minTimeout</para>
+</listitem><listitem><para>maxTimeout</para>
+</listitem><listitem><para>randomize</para>
+</listitem></itemizedlist>
+</para>
+<para>For details on what each of these do, refer to the <ulink url="https://npm.im/retry"><computeroutput>retry</computeroutput></ulink> documentation.</para>
+<sect4 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1833">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">fetch(&apos;https://flaky.site.com&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>retry:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>retries:<sp/>10,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>randomize:<sp/>true</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">fetch(&apos;http://reliable.site.com&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>retry:<sp/>false</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">fetch(&apos;http://one-more.site.com&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>retry:<sp/>3</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1834">
+<title><anchor id="_1opts-onretry"/> <computeroutput>&gt; opts.onRetry</computeroutput></title><para>A function called whenever a retry is attempted.</para>
+<sect4 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1835">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">fetch(&apos;https://flaky.site.com&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>onRetry()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(&apos;we<sp/>will<sp/>retry!&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1836">
+<title><anchor id="_1opts-integrity"/> <computeroutput>&gt; opts.integrity</computeroutput></title><para>Matches the response body against the given <ulink url="https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity">Subresource Integrity</ulink> metadata. If verification fails, the request will fail with an <computeroutput>EINTEGRITY</computeroutput> error.</para>
+<para><computeroutput>integrity</computeroutput> may either be a string or an <ulink url="https://npm.im/ssri"><computeroutput>ssri</computeroutput></ulink> <computeroutput>Integrity</computeroutput>-like.</para>
+<sect4 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1837">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">fetch(&apos;https://registry.npmjs.org/make-fetch-happen/-/make-fetch-happen-1.0.0.tgz&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>integrity:<sp/>&apos;sha1-o47j7zAYnedYFn1dF/fR9OV3z8Q=&apos;</highlight></codeline>
+<codeline><highlight class="normal">})<sp/>//<sp/>-&gt;<sp/>ok</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">fetch(&apos;https://malicious-registry.org/make-fetch-happen/-/make-fetch-happen-1.0.0.tgz&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>integrity:<sp/>&apos;sha1-o47j7zAYnedYFn1dF/fR9OV3z8Q=&apos;</highlight></codeline>
+<codeline><highlight class="normal">})<sp/>//<sp/>Error:<sp/>EINTEGRITY</highlight></codeline>
+</programlisting></para>
+</sect4>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_1autotoc_md1838">
+<title><anchor id="_1wow"/> Message From Our Sponsors</title><para><image type="html" name="stop.gif" inline="yes"></image>
+</para>
+<para><image type="html" name="happening.gif" inline="yes"></image>
+ </para>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/make-fetch-happen/README.md"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,186 @@
+\chapter{tar-\/fs}
+\hypertarget{md_backend_2node__modules_2tar-fs_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2tar-fs_2_r_e_a_d_m_e}\index{tar-\/fs@{tar-\/fs}}
+\label{md_backend_2node__modules_2tar-fs_2_r_e_a_d_m_e_autotoc_md3776}%
+\Hypertarget{md_backend_2node__modules_2tar-fs_2_r_e_a_d_m_e_autotoc_md3776}%
+ filesystem bindings for \href{https://github.com/mafintosh/tar-stream}{\texttt{ tar-\/stream}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ tar-\/fs}
+
+\end{DoxyCode}
+
+
+\href{http://travis-ci.org/mafintosh/tar-fs}{\texttt{ }}\hypertarget{md_backend_2node__modules_2tar-fs_2_r_e_a_d_m_e_autotoc_md3777}{}\doxysection{\texorpdfstring{Usage}{Usage}}\label{md_backend_2node__modules_2tar-fs_2_r_e_a_d_m_e_autotoc_md3777}
+tar-\/fs allows you to pack directories into tarballs and extract tarballs into directories.
+
+It doesn\textquotesingle{}t gunzip for you, so if you want to extract a {\ttfamily .tar.\+gz} with this you\textquotesingle{}ll need to use something like \href{https://github.com/mafintosh/gunzip-maybe}{\texttt{ gunzip-\/maybe}} in addition to this.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ tar\ =\ require('tar-\/fs')}
+\DoxyCodeLine{var\ fs\ =\ require('fs')}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ packing\ a\ directory}
+\DoxyCodeLine{tar.pack('./my-\/directory').pipe(fs.createWriteStream('my-\/tarball.tar'))}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ extracting\ a\ directory}
+\DoxyCodeLine{fs.createReadStream('my-\/other-\/tarball.tar').pipe(tar.extract('./my-\/other-\/directory'))}
+
+\end{DoxyCode}
+
+
+To ignore various files when packing or extracting add a ignore function to the options. {\ttfamily ignore} is also an alias for {\ttfamily filter}. Additionally you get {\ttfamily header} if you use ignore while extracting. That way you could also filter by metadata.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ pack\ =\ tar.pack('./my-\/directory',\ \{}
+\DoxyCodeLine{\ \ ignore:\ function(name)\ \{}
+\DoxyCodeLine{\ \ \ \ return\ path.extname(name)\ ===\ '.bin'\ //\ ignore\ .bin\ files\ when\ packing}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ extract\ =\ tar.extract('./my-\/other-\/directory',\ \{}
+\DoxyCodeLine{\ \ ignore:\ function(name)\ \{}
+\DoxyCodeLine{\ \ \ \ return\ path.extname(name)\ ===\ '.bin'\ //\ ignore\ .bin\ files\ inside\ the\ tarball\ when\ extracing}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ extractFilesDirs\ =\ tar.extract('./my-\/other-\/other-\/directory',\ \{}
+\DoxyCodeLine{\ \ ignore:\ function(\_,\ header)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ pass\ files\ \&\ directories,\ ignore\ e.g.\ symlinks}
+\DoxyCodeLine{\ \ \ \ return\ header.type\ !==\ 'file'\ \&\&\ header.type\ !==\ 'directory'}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+You can also specify which entries to pack using the {\ttfamily entries} option
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ pack\ =\ tar.pack('./my-\/directory',\ \{}
+\DoxyCodeLine{\ \ entries:\ ['file1',\ 'subdir/file2']\ //\ only\ the\ specific\ entries\ will\ be\ packed}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+If you want to modify the headers when packing/extracting add a map function to the options
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ pack\ =\ tar.pack('./my-\/directory',\ \{}
+\DoxyCodeLine{\ \ map:\ function(header)\ \{}
+\DoxyCodeLine{\ \ \ \ header.name\ =\ 'prefixed/'+header.name}
+\DoxyCodeLine{\ \ \ \ return\ header}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ extract\ =\ tar.extract('./my-\/directory',\ \{}
+\DoxyCodeLine{\ \ map:\ function(header)\ \{}
+\DoxyCodeLine{\ \ \ \ header.name\ =\ 'another-\/prefix/'+header.name}
+\DoxyCodeLine{\ \ \ \ return\ header}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+Similarly you can use {\ttfamily map\+Stream} incase you wanna modify the input/output file streams
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ pack\ =\ tar.pack('./my-\/directory',\ \{}
+\DoxyCodeLine{\ \ mapStream:\ function(fileStream,\ header)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ NOTE:\ the\ returned\ stream\ HAS\ to\ have\ the\ same\ length\ as\ the\ input\ stream.}
+\DoxyCodeLine{\ \ \ \ //\ If\ not\ make\ sure\ to\ update\ the\ size\ in\ the\ header\ passed\ in\ here.}
+\DoxyCodeLine{\ \ \ \ if\ (path.extname(header.name)\ ===\ '.js')\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ fileStream.pipe(someTransform)}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ return\ fileStream;}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ extract\ =\ tar.extract('./my-\/directory',\ \{}
+\DoxyCodeLine{\ \ mapStream:\ function(fileStream,\ header)\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (path.extname(header.name)\ ===\ '.js')\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ fileStream.pipe(someTransform)}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ return\ fileStream;}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+Set {\ttfamily options.\+fmode} and {\ttfamily options.\+dmode} to ensure that files/directories extracted have the corresponding modes
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ extract\ =\ tar.extract('./my-\/directory',\ \{}
+\DoxyCodeLine{\ \ dmode:\ parseInt(555,\ 8),\ //\ all\ dirs\ should\ be\ readable}
+\DoxyCodeLine{\ \ fmode:\ parseInt(444,\ 8)\ //\ all\ files\ should\ be\ readable}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+It can be useful to use {\ttfamily dmode} and {\ttfamily fmode} if you are packing/unpacking tarballs between \texorpdfstring{$\ast$}{*}nix/windows to ensure that all files/directories unpacked are readable.
+
+Alternatively you can set {\ttfamily options.\+readable} and/or {\ttfamily options.\+writable} to set the dmode and fmode to readable/writable.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ extract\ =\ tar.extract('./my-\/directory',\ \{}
+\DoxyCodeLine{\ \ readable:\ true,\ //\ all\ dirs\ and\ files\ should\ be\ readable}
+\DoxyCodeLine{\ \ writable:\ true,\ //\ all\ dirs\ and\ files\ should\ be\ writable}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+Set {\ttfamily options.\+strict} to {\ttfamily false} if you want to ignore errors due to unsupported entry types (like device files)
+
+To dereference symlinks (pack the contents of the symlink instead of the link itself) set {\ttfamily options.\+dereference} to {\ttfamily true}.\hypertarget{md_backend_2node__modules_2tar-fs_2_r_e_a_d_m_e_autotoc_md3778}{}\doxysection{\texorpdfstring{Copy a directory}{Copy a directory}}\label{md_backend_2node__modules_2tar-fs_2_r_e_a_d_m_e_autotoc_md3778}
+Copying a directory with permissions and mtime intact is as simple as
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{tar.pack('source-\/directory').pipe(tar.extract('dest-\/directory'))}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2tar-fs_2_r_e_a_d_m_e_autotoc_md3779}{}\doxysection{\texorpdfstring{Interaction with \href{https://github.com/mafintosh/tar-stream}{\texttt{ {\ttfamily tar-\/stream}}}}{Interaction with \href{https://github.com/mafintosh/tar-stream}{\texttt{ {\ttfamily tar-\/stream}}}}}\label{md_backend_2node__modules_2tar-fs_2_r_e_a_d_m_e_autotoc_md3779}
+Use {\ttfamily finalize\+: false} and the {\ttfamily finish} hook to leave the pack stream open for further entries (see \href{https://github.com/mafintosh/tar-stream\#packing}{\texttt{ {\ttfamily tar-\/stream\#pack}}}), and use {\ttfamily pack} to pass an existing pack stream.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ mypack\ =\ tar.pack('./my-\/directory',\ \{}
+\DoxyCodeLine{\ \ finalize:\ false,}
+\DoxyCodeLine{\ \ finish:\ function(sameAsMypack)\ \{}
+\DoxyCodeLine{\ \ \ \ mypack.entry(\{name:\ 'generated-\/file.txt'\},\ "{}hello"{})}
+\DoxyCodeLine{\ \ \ \ tar.pack('./other-\/directory',\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ pack:\ sameAsMypack}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2tar-fs_2_r_e_a_d_m_e_autotoc_md3780}{}\doxysection{\texorpdfstring{Performance}{Performance}}\label{md_backend_2node__modules_2tar-fs_2_r_e_a_d_m_e_autotoc_md3780}
+Packing and extracting a 6.\+1 GB with 2496 directories and 2398 files yields the following results on my Macbook Air. \href{https://gist.github.com/mafintosh/8102201}{\texttt{ See the benchmark here}}
+
+
+\begin{DoxyItemize}
+\item tar-\/fs\+: 34.\+261 seconds
+\item \href{https://github.com/isaacs/node-tar}{\texttt{ node-\/tar}}\+: 366.\+123 seconds (or 10x slower)
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2tar-fs_2_r_e_a_d_m_e_autotoc_md3781}{}\doxysection{\texorpdfstring{License}{License}}\label{md_backend_2node__modules_2tar-fs_2_r_e_a_d_m_e_autotoc_md3781}
+MIT 

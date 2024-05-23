@@ -1,0 +1,194 @@
+.TH "md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e \- npmlog 
+.PP
+ The logger util that npm uses\&.
+.PP
+This logger is very basic\&. It does the logging for npm\&. It supports custom levels and colored output\&.
+.PP
+By default, logs are written to stderr\&. If you want to send log messages to outputs other than streams, then you can change the \fRlog\&.stream\fP member, or you can just listen to the events that it emits, and do whatever you want with them\&.
+.SH "Installation"
+.PP
+.PP
+.nf
+npm install npmlog \-\-save
+.fi
+.PP
+.SH "Basic Usage"
+.PP
+.PP
+.nf
+var log = require('npmlog')
+
+// additional stuff \-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-+
+// message \-\-\-\-\-\-\-\-\-\-+                         |
+// prefix \-\-\-\-+      |                         |
+// level \-+   |      |                         |
+//        v   v      v                         v
+    log\&.info('fyi', 'I have a kitty cat: %j', myKittyCat)
+.fi
+.PP
+.SS "log\&.level"
+.IP "\(bu" 2
+{String}
+.PP
+.PP
+The level to display logs at\&. Any logs at or above this level will be displayed\&. The special level \fRsilent\fP will prevent anything from being displayed ever\&.
+.SS "log\&.record"
+.IP "\(bu" 2
+{Array}
+.PP
+.PP
+An array of all the log messages that have been entered\&.
+.SS "log\&.maxRecordSize"
+.IP "\(bu" 2
+{Number}
+.PP
+.PP
+The maximum number of records to keep\&. If log\&.record gets bigger than 10% over this value, then it is sliced down to 90% of this value\&.
+.PP
+The reason for the 10% window is so that it doesn't have to resize a large array on every log entry\&.
+.SS "log\&.prefixStyle"
+.IP "\(bu" 2
+{Object}
+.PP
+.PP
+A style object that specifies how prefixes are styled\&. (See below)
+.SS "log\&.headingStyle"
+.IP "\(bu" 2
+{Object}
+.PP
+.PP
+A style object that specifies how the heading is styled\&. (See below)
+.SS "log\&.heading"
+.IP "\(bu" 2
+{String} Default: ''
+.PP
+.PP
+If set, a heading that is printed at the start of every line\&.
+.SS "log\&.stream"
+.IP "\(bu" 2
+{Stream} Default: \fRprocess\&.stderr\fP
+.PP
+.PP
+The stream where output is written\&.
+.SS "log\&.enableColor()"
+Force colors to be used on all messages, regardless of the output stream\&.
+.SS "log\&.disableColor()"
+Disable colors on all messages\&.
+.SS "log\&.enableProgress()"
+Enable the display of log activity spinner and progress bar
+.SS "log\&.disableProgress()"
+Disable the display of a progress bar
+.SS "log\&.enableUnicode()"
+Force the unicode theme to be used for the progress bar\&.
+.SS "log\&.disableUnicode()"
+Disable the use of unicode in the progress bar\&.
+.SS "log\&.setGaugeTemplate(template)"
+Set a template for outputting the progress bar\&. See the \fRgauge documentation\fP for details\&.
+.SS "log\&.setGaugeThemeset(themes)"
+Select a themeset to pick themes from for the progress bar\&. See the \fRgauge documentation\fP for details\&.
+.SS "log\&.pause()"
+Stop emitting messages to the stream, but do not drop them\&.
+.SS "log\&.resume()"
+Emit all buffered messages that were written while paused\&.
+.SS "log\&.log(level, prefix, message, \&.\&.\&.)"
+.IP "\(bu" 2
+\fRlevel\fP {String} The level to emit the message at
+.IP "\(bu" 2
+\fRprefix\fP {String} A string prefix\&. Set to '' to skip\&.
+.IP "\(bu" 2
+\fRmessage\&.\&.\&.\fP Arguments to \fRutil\&.format\fP
+.PP
+.PP
+Emit a log message at the specified level\&.
+.SS "log[level](prefix, message, \&.\&.\&.)"
+For example,
+.PP
+.IP "\(bu" 2
+log\&.silly(prefix, message, \&.\&.\&.)
+.IP "\(bu" 2
+log\&.verbose(prefix, message, \&.\&.\&.)
+.IP "\(bu" 2
+log\&.info(prefix, message, \&.\&.\&.)
+.IP "\(bu" 2
+log\&.http(prefix, message, \&.\&.\&.)
+.IP "\(bu" 2
+log\&.warn(prefix, message, \&.\&.\&.)
+.IP "\(bu" 2
+log\&.error(prefix, message, \&.\&.\&.)
+.PP
+.PP
+Like \fRlog\&.log(level, prefix, message, \&.\&.\&.)\fP\&. In this way, each level is given a shorthand, so you can do \fRlog\&.info(prefix, message)\fP\&.
+.SS "log\&.addLevel(level, n, style, disp)"
+.IP "\(bu" 2
+\fRlevel\fP {String} Level indicator
+.IP "\(bu" 2
+\fRn\fP {Number} The numeric level
+.IP "\(bu" 2
+\fRstyle\fP {Object} Object with fg, bg, inverse, etc\&.
+.IP "\(bu" 2
+\fRdisp\fP {String} Optional replacement for \fRlevel\fP in the output\&.
+.PP
+.PP
+Sets up a new level with a shorthand function and so forth\&.
+.PP
+Note that if the number is \fRInfinity\fP, then setting the level to that will cause all log messages to be suppressed\&. If the number is \fR-Infinity\fP, then the only way to show it is to enable all log messages\&.
+.SS "log\&.newItem(name, todo, weight)"
+.IP "\(bu" 2
+\fRname\fP {String} Optional; progress item name\&.
+.IP "\(bu" 2
+\fRtodo\fP {Number} Optional; total amount of work to be done\&. Default 0\&.
+.IP "\(bu" 2
+\fRweight\fP {Number} Optional; the weight of this item relative to others\&. Default 1\&.
+.PP
+.PP
+This adds a new \fRare-we-there-yet\fP item tracker to the progress tracker\&. The object returned has the \fRlog[level]\fP methods but is otherwise an \fRare-we-there-yet\fP \fRTracker\fP object\&.
+.SS "log\&.newStream(name, todo, weight)"
+This adds a new \fRare-we-there-yet\fP stream tracker to the progress tracker\&. The object returned has the \fRlog[level]\fP methods but is otherwise an \fRare-we-there-yet\fP \fRTrackerStream\fP object\&.
+.SS "log\&.newGroup(name, weight)"
+This adds a new \fRare-we-there-yet\fP tracker group to the progress tracker\&. The object returned has the \fRlog[level]\fP methods but is otherwise an \fRare-we-there-yet\fP \fRTrackerGroup\fP object\&.
+.SH "Events"
+.PP
+Events are all emitted with the message object\&.
+.PP
+.IP "\(bu" 2
+\fRlog\fP Emitted for all messages
+.IP "\(bu" 2
+\fRlog\&.<level>\fP Emitted for all messages with the \fR<level>\fP level\&.
+.IP "\(bu" 2
+\fR<prefix>\fP Messages with prefixes also emit their prefix as an event\&.
+.PP
+.SH "Style Objects"
+.PP
+Style objects can have the following fields:
+.PP
+.IP "\(bu" 2
+\fRfg\fP {String} Color for the foreground text
+.IP "\(bu" 2
+\fRbg\fP {String} Color for the background
+.IP "\(bu" 2
+\fRbold\fP, \fRinverse\fP, \fRunderline\fP {Boolean} Set the associated property
+.IP "\(bu" 2
+\fRbell\fP {Boolean} Make a noise (This is pretty annoying, probably\&.)
+.PP
+.SH "Message Objects"
+.PP
+Every log event is emitted with a message object, and the \fRlog\&.record\fP list contains all of them that have been created\&. They have the following fields:
+.PP
+.IP "\(bu" 2
+\fRid\fP {Number}
+.IP "\(bu" 2
+\fRlevel\fP {String}
+.IP "\(bu" 2
+\fRprefix\fP {String}
+.IP "\(bu" 2
+\fRmessage\fP {String} Result of \fRutil\&.format()\fP
+.IP "\(bu" 2
+\fRmessageRaw\fP {Array} Arguments to \fRutil\&.format()\fP
+.PP
+.SH "Blocking TTYs"
+.PP
+We use \fR\fRset-blocking\fP\fP to set stderr and stdout blocking if they are tty's and have the setBlocking call\&. This is a work around for an issue in early versions of Node\&.js 6\&.x, which made stderr and stdout non-blocking on OSX\&. (They are always blocking Windows and were never blocking on Linux\&.) \fRnpmlog\fP needs them to be blocking so that it can allow output to stdout and stderr to be interlaced\&. 

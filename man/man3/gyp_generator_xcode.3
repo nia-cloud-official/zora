@@ -1,0 +1,262 @@
+.TH "gyp.generator.xcode" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gyp.generator.xcode
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBXcodeProject\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBCreateXCConfigurationList\fP (configuration_names)"
+.br
+.ti -1c
+.RI "\fBAddSourceToTarget\fP (source, type, pbxp, xct)"
+.br
+.ti -1c
+.RI "\fBAddResourceToTarget\fP (resource, pbxp, xct)"
+.br
+.ti -1c
+.RI "\fBAddHeaderToTarget\fP (header, pbxp, xct, is_public)"
+.br
+.ti -1c
+.RI "\fBExpandXcodeVariables\fP (string, expansions)"
+.br
+.ti -1c
+.RI "\fBEscapeXcodeDefine\fP (s)"
+.br
+.ti -1c
+.RI "\fBPerformBuild\fP (data, configurations, params)"
+.br
+.ti -1c
+.RI "\fBCalculateGeneratorInputInfo\fP (params)"
+.br
+.ti -1c
+.RI "\fBGenerateOutput\fP (target_list, target_dicts, data, params)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "str \fB_intermediate_var\fP = 'INTERMEDIATE_DIR'"
+.br
+.ti -1c
+.RI "str \fB_shared_intermediate_var\fP = 'SHARED_INTERMEDIATE_DIR'"
+.br
+.ti -1c
+.RI "str \fB_library_search_paths_var\fP = 'LIBRARY_SEARCH_PATHS'"
+.br
+.ti -1c
+.RI "dict \fBgenerator_default_variables\fP"
+.br
+.ti -1c
+.RI "list \fBgenerator_additional_path_sections\fP"
+.br
+.ti -1c
+.RI "list \fBgenerator_additional_non_configuration_keys\fP"
+.br
+.ti -1c
+.RI "list \fBgenerator_extra_sources_for_rules\fP"
+.br
+.ti -1c
+.RI "\fBgenerator_filelist_paths\fP = None"
+.br
+.ti -1c
+.RI "\fBxcode_standard_library_dirs\fP"
+.br
+.ti -1c
+.RI "\fB_xcode_variable_re\fP = re\&.compile(r'(\\$\\((\&.*?)\\))')"
+.br
+.ti -1c
+.RI "\fB_xcode_define_re\fP = re\&.compile(r'([\\\\\\'\\' ])')"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "gyp\&.generator\&.xcode\&.AddHeaderToTarget ( header,  pbxp,  xct,  is_public)"
+
+.PP
+Definition at line \fB554\fP of file \fBxcode\&.py\fP\&.
+.SS "gyp\&.generator\&.xcode\&.AddResourceToTarget ( resource,  pbxp,  xct)"
+
+.PP
+Definition at line \fB548\fP of file \fBxcode\&.py\fP\&.
+.SS "gyp\&.generator\&.xcode\&.AddSourceToTarget ( source,  type,  pbxp,  xct)"
+
+.PP
+Definition at line \fB522\fP of file \fBxcode\&.py\fP\&.
+.SS "gyp\&.generator\&.xcode\&.CalculateGeneratorInputInfo ( params)"
+
+.PP
+Definition at line \fB619\fP of file \fBxcode\&.py\fP\&.
+.SS "gyp\&.generator\&.xcode\&.CreateXCConfigurationList ( configuration_names)"
+
+.PP
+Definition at line \fB101\fP of file \fBxcode\&.py\fP\&.
+.SS "gyp\&.generator\&.xcode\&.EscapeXcodeDefine ( s)"
+
+.PP
+.nf
+We must escape the defines that we give to XCode so that it knows not to
+ split on spaces and to respect backslash and quote literals\&. However, we
+ must not quote the define, or Xcode will incorrectly interpret variables
+ especially $(inherited)\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB593\fP of file \fBxcode\&.py\fP\&.
+.SS "gyp\&.generator\&.xcode\&.ExpandXcodeVariables ( string,  expansions)"
+
+.PP
+.nf
+Expands Xcode-style $(VARIABLES) in string per the expansions dict\&.
+
+In some rare cases, it is appropriate to expand Xcode variables when a
+project file is generated\&.  For any substring $(VAR) in string, if VAR is a
+key in the expansions dict, $(VAR) will be replaced with expansions[VAR]\&.
+Any $(VAR) substring in string for which VAR is not a key in the expansions
+dict will remain in the returned string\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB564\fP of file \fBxcode\&.py\fP\&.
+.SS "gyp\&.generator\&.xcode\&.GenerateOutput ( target_list,  target_dicts,  data,  params)"
+
+.PP
+Definition at line \fB641\fP of file \fBxcode\&.py\fP\&.
+.SS "gyp\&.generator\&.xcode\&.PerformBuild ( data,  configurations,  params)"
+
+.PP
+Definition at line \fB601\fP of file \fBxcode\&.py\fP\&.
+.SH "Variable Documentation"
+.PP 
+.SS "str gyp\&.generator\&.xcode\&._intermediate_var = 'INTERMEDIATE_DIR'\fR [protected]\fP"
+
+.PP
+Definition at line \fB29\fP of file \fBxcode\&.py\fP\&.
+.SS "str gyp\&.generator\&.xcode\&._library_search_paths_var = 'LIBRARY_SEARCH_PATHS'\fR [protected]\fP"
+
+.PP
+Definition at line \fB35\fP of file \fBxcode\&.py\fP\&.
+.SS "str gyp\&.generator\&.xcode\&._shared_intermediate_var = 'SHARED_INTERMEDIATE_DIR'\fR [protected]\fP"
+
+.PP
+Definition at line \fB33\fP of file \fBxcode\&.py\fP\&.
+.SS "gyp\&.generator\&.xcode\&._xcode_define_re = re\&.compile(r'([\\\\\\'\\' ])')\fR [protected]\fP"
+
+.PP
+Definition at line \fB590\fP of file \fBxcode\&.py\fP\&.
+.SS "gyp\&.generator\&.xcode\&._xcode_variable_re = re\&.compile(r'(\\$\\((\&.*?)\\))')\fR [protected]\fP"
+
+.PP
+Definition at line \fB561\fP of file \fBxcode\&.py\fP\&.
+.SS "list gyp\&.generator\&.xcode\&.generator_additional_non_configuration_keys"
+\fBInitial value:\fP
+.nf
+1 =  [
+2     "ios_app_extension",
+3     "ios_watch_app",
+4     "ios_watchkit_extension",
+5     "mac_bundle",
+6     "mac_bundle_resources",
+7     "mac_framework_headers",
+8     "mac_framework_private_headers",
+9     "mac_xctest_bundle",
+10     "mac_xcuitest_bundle",
+11     "xcode_create_dependents_test_runner",
+12 ]
+.PP
+.fi
+
+.PP
+Definition at line \fB72\fP of file \fBxcode\&.py\fP\&.
+.SS "list gyp\&.generator\&.xcode\&.generator_additional_path_sections"
+\fBInitial value:\fP
+.nf
+1 =  [
+2     "mac_bundle_resources",
+3     "mac_framework_headers",
+4     "mac_framework_private_headers",
+5     # 'mac_framework_dirs', input already handles _dirs endings\&.
+6 ]
+.PP
+.fi
+
+.PP
+Definition at line \fB63\fP of file \fBxcode\&.py\fP\&.
+.SS "dict gyp\&.generator\&.xcode\&.generator_default_variables"
+\fBInitial value:\fP
+.nf
+1 =  {
+2     "EXECUTABLE_PREFIX": "",
+3     "EXECUTABLE_SUFFIX": "",
+4     "STATIC_LIB_PREFIX": "lib",
+5     "SHARED_LIB_PREFIX": "lib",
+6     "STATIC_LIB_SUFFIX": "\&.a",
+7     "SHARED_LIB_SUFFIX": "\&.dylib",
+8     # INTERMEDIATE_DIR is a place for targets to build up intermediate products\&.
+9     # It is specific to each build environment\&.  It is only guaranteed to exist
+10     # and be constant within the context of a project, corresponding to a single
+11     # input file\&.  Some build environments may allow their intermediate directory
+12     # to be shared on a wider scale, but this is not guaranteed\&.
+13     "INTERMEDIATE_DIR": "$(%s)" % _intermediate_var,
+14     "OS": "mac",
+15     "PRODUCT_DIR": "$(BUILT_PRODUCTS_DIR)",
+16     "LIB_DIR": "$(BUILT_PRODUCTS_DIR)",
+17     "RULE_INPUT_ROOT": "$(INPUT_FILE_BASE)",
+18     "RULE_INPUT_EXT": "$(INPUT_FILE_SUFFIX)",
+19     "RULE_INPUT_NAME": "$(INPUT_FILE_NAME)",
+20     "RULE_INPUT_PATH": "$(INPUT_FILE_PATH)",
+21     "RULE_INPUT_DIRNAME": "$(INPUT_FILE_DIRNAME)",
+22     "SHARED_INTERMEDIATE_DIR": "$(%s)" % _shared_intermediate_var,
+23     "CONFIGURATION_NAME": "$(CONFIGURATION)",
+24 }
+.PP
+.fi
+
+.PP
+Definition at line \fB37\fP of file \fBxcode\&.py\fP\&.
+.SS "list gyp\&.generator\&.xcode\&.generator_extra_sources_for_rules"
+\fBInitial value:\fP
+.nf
+1 =  [
+2     "mac_bundle_resources",
+3     "mac_framework_headers",
+4     "mac_framework_private_headers",
+5 ]
+.PP
+.fi
+
+.PP
+Definition at line \fB86\fP of file \fBxcode\&.py\fP\&.
+.SS "gyp\&.generator\&.xcode\&.generator_filelist_paths = None"
+
+.PP
+Definition at line \fB92\fP of file \fBxcode\&.py\fP\&.
+.SS "gyp\&.generator\&.xcode\&.xcode_standard_library_dirs"
+\fBInitial value:\fP
+.nf
+1 =  frozenset(
+2     ["$(SDKROOT)/usr/lib", "$(SDKROOT)/usr/local/lib"]
+3 )
+.PP
+.fi
+
+.PP
+Definition at line \fB96\fP of file \fBxcode\&.py\fP\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

@@ -1,0 +1,638 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2qs_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>qs<sp/>&lt;sup&gt;[![Version<sp/>Badge][npm-version-svg]][package-url]&lt;/sup&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![github<sp/>actions][actions-image]][actions-url]</highlight></codeline>
+<codeline><highlight class="normal">[![coverage][codecov-image]][codecov-url]</highlight></codeline>
+<codeline><highlight class="normal">[![dependency<sp/>status][deps-svg]][deps-url]</highlight></codeline>
+<codeline><highlight class="normal">[![dev<sp/>dependency<sp/>status][dev-deps-svg]][dev-deps-url]</highlight></codeline>
+<codeline><highlight class="normal">[![License][license-image]][license-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Downloads][downloads-image]][downloads-url]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![npm<sp/>badge][npm-badge-png]][package-url]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>querystring<sp/>parsing<sp/>and<sp/>stringifying<sp/>library<sp/>with<sp/>some<sp/>added<sp/>security.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Lead<sp/>Maintainer:<sp/>[Jordan<sp/>Harband](https://github.com/ljharb)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>**qs**<sp/>module<sp/>was<sp/>originally<sp/>created<sp/>and<sp/>maintained<sp/>by<sp/>[TJ<sp/>Holowaychuk](https://github.com/visionmedia/node-querystring).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Usage</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>qs<sp/>=<sp/>require(&apos;qs&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>assert<sp/>=<sp/>require(&apos;assert&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>obj<sp/>=<sp/>qs.parse(&apos;a=c&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(obj,<sp/>{<sp/>a:<sp/>&apos;c&apos;<sp/>});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>str<sp/>=<sp/>qs.stringify(obj);</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(str,<sp/>&apos;a=c&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Parsing<sp/>Objects</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[](#preventEval)</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">qs.parse(string,<sp/>[options]);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**qs**<sp/>allows<sp/>you<sp/>to<sp/>create<sp/>nested<sp/>objects<sp/>within<sp/>your<sp/>query<sp/>strings,<sp/>by<sp/>surrounding<sp/>the<sp/>name<sp/>of<sp/>sub-keys<sp/>with<sp/>square<sp/>brackets<sp/>`[]`.</highlight></codeline>
+<codeline><highlight class="normal">For<sp/>example,<sp/>the<sp/>string<sp/>`&apos;foo[bar]=baz&apos;`<sp/>converts<sp/>to:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(qs.parse(&apos;foo[bar]=baz&apos;),<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>foo:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>bar:<sp/>&apos;baz&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>using<sp/>the<sp/>`plainObjects`<sp/>option<sp/>the<sp/>parsed<sp/>value<sp/>is<sp/>returned<sp/>as<sp/>a<sp/>null<sp/>object,<sp/>created<sp/>via<sp/>`Object.create(null)`<sp/>and<sp/>as<sp/>such<sp/>you<sp/>should<sp/>be<sp/>aware<sp/>that<sp/>prototype<sp/>methods<sp/>will<sp/>not<sp/>exist<sp/>on<sp/>it<sp/>and<sp/>a<sp/>user<sp/>may<sp/>set<sp/>those<sp/>names<sp/>to<sp/>whatever<sp/>value<sp/>they<sp/>like:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>nullObject<sp/>=<sp/>qs.parse(&apos;a[hasOwnProperty]=b&apos;,<sp/>{<sp/>plainObjects:<sp/>true<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(nullObject,<sp/>{<sp/>a:<sp/>{<sp/>hasOwnProperty:<sp/>&apos;b&apos;<sp/>}<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">By<sp/>default<sp/>parameters<sp/>that<sp/>would<sp/>overwrite<sp/>properties<sp/>on<sp/>the<sp/>object<sp/>prototype<sp/>are<sp/>ignored,<sp/>if<sp/>you<sp/>wish<sp/>to<sp/>keep<sp/>the<sp/>data<sp/>from<sp/>those<sp/>fields<sp/>either<sp/>use<sp/>`plainObjects`<sp/>as<sp/>mentioned<sp/>above,<sp/>or<sp/>set<sp/>`allowPrototypes`<sp/>to<sp/>`true`<sp/>which<sp/>will<sp/>allow<sp/>user<sp/>input<sp/>to<sp/>overwrite<sp/>those<sp/>properties.<sp/>*WARNING*<sp/>It<sp/>is<sp/>generally<sp/>a<sp/>bad<sp/>idea<sp/>to<sp/>enable<sp/>this<sp/>option<sp/>as<sp/>it<sp/>can<sp/>cause<sp/>problems<sp/>when<sp/>attempting<sp/>to<sp/>use<sp/>the<sp/>properties<sp/>that<sp/>have<sp/>been<sp/>overwritten.<sp/>Always<sp/>be<sp/>careful<sp/>with<sp/>this<sp/>option.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>protoObject<sp/>=<sp/>qs.parse(&apos;a[hasOwnProperty]=b&apos;,<sp/>{<sp/>allowPrototypes:<sp/>true<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(protoObject,<sp/>{<sp/>a:<sp/>{<sp/>hasOwnProperty:<sp/>&apos;b&apos;<sp/>}<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">URI<sp/>encoded<sp/>strings<sp/>work<sp/>too:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(qs.parse(&apos;a%5Bb%5D=c&apos;),<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>a:<sp/>{<sp/>b:<sp/>&apos;c&apos;<sp/>}</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>also<sp/>nest<sp/>your<sp/>objects,<sp/>like<sp/>`&apos;foo[bar][baz]=foobarbaz&apos;`:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(qs.parse(&apos;foo[bar][baz]=foobarbaz&apos;),<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>foo:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>bar:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>baz:<sp/>&apos;foobarbaz&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">By<sp/>default,<sp/>when<sp/>nesting<sp/>objects<sp/>**qs**<sp/>will<sp/>only<sp/>parse<sp/>up<sp/>to<sp/>5<sp/>children<sp/>deep.<sp/>This<sp/>means<sp/>if<sp/>you<sp/>attempt<sp/>to<sp/>parse<sp/>a<sp/>string<sp/>like</highlight></codeline>
+<codeline><highlight class="normal">`&apos;a[b][c][d][e][f][g][h][i]=j&apos;`<sp/>your<sp/>resulting<sp/>object<sp/>will<sp/>be:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>expected<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>a:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>b:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>c:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>d:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>e:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>f:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;[g][h][i]&apos;:<sp/>&apos;j&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>string<sp/>=<sp/>&apos;a[b][c][d][e][f][g][h][i]=j&apos;;</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(qs.parse(string),<sp/>expected);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>depth<sp/>can<sp/>be<sp/>overridden<sp/>by<sp/>passing<sp/>a<sp/>`depth`<sp/>option<sp/>to<sp/>`qs.parse(string,<sp/>[options])`:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>deep<sp/>=<sp/>qs.parse(&apos;a[b][c][d][e][f][g][h][i]=j&apos;,<sp/>{<sp/>depth:<sp/>1<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(deep,<sp/>{<sp/>a:<sp/>{<sp/>b:<sp/>{<sp/>&apos;[c][d][e][f][g][h][i]&apos;:<sp/>&apos;j&apos;<sp/>}<sp/>}<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>depth<sp/>limit<sp/>helps<sp/>mitigate<sp/>abuse<sp/>when<sp/>**qs**<sp/>is<sp/>used<sp/>to<sp/>parse<sp/>user<sp/>input,<sp/>and<sp/>it<sp/>is<sp/>recommended<sp/>to<sp/>keep<sp/>it<sp/>a<sp/>reasonably<sp/>small<sp/>number.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>similar<sp/>reasons,<sp/>by<sp/>default<sp/>**qs**<sp/>will<sp/>only<sp/>parse<sp/>up<sp/>to<sp/>1000<sp/>parameters.<sp/>This<sp/>can<sp/>be<sp/>overridden<sp/>by<sp/>passing<sp/>a<sp/>`parameterLimit`<sp/>option:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>limited<sp/>=<sp/>qs.parse(&apos;a=b&amp;c=d&apos;,<sp/>{<sp/>parameterLimit:<sp/>1<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(limited,<sp/>{<sp/>a:<sp/>&apos;b&apos;<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>bypass<sp/>the<sp/>leading<sp/>question<sp/>mark,<sp/>use<sp/>`ignoreQueryPrefix`:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>prefixed<sp/>=<sp/>qs.parse(&apos;?a=b&amp;c=d&apos;,<sp/>{<sp/>ignoreQueryPrefix:<sp/>true<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(prefixed,<sp/>{<sp/>a:<sp/>&apos;b&apos;,<sp/>c:<sp/>&apos;d&apos;<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">An<sp/>optional<sp/>delimiter<sp/>can<sp/>also<sp/>be<sp/>passed:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>delimited<sp/>=<sp/>qs.parse(&apos;a=b;c=d&apos;,<sp/>{<sp/>delimiter:<sp/>&apos;;&apos;<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(delimited,<sp/>{<sp/>a:<sp/>&apos;b&apos;,<sp/>c:<sp/>&apos;d&apos;<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Delimiters<sp/>can<sp/>be<sp/>a<sp/>regular<sp/>expression<sp/>too:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>regexed<sp/>=<sp/>qs.parse(&apos;a=b;c=d,e=f&apos;,<sp/>{<sp/>delimiter:<sp/>/[;,]/<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(regexed,<sp/>{<sp/>a:<sp/>&apos;b&apos;,<sp/>c:<sp/>&apos;d&apos;,<sp/>e:<sp/>&apos;f&apos;<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Option<sp/>`allowDots`<sp/>can<sp/>be<sp/>used<sp/>to<sp/>enable<sp/>dot<sp/>notation:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>withDots<sp/>=<sp/>qs.parse(&apos;a.b=c&apos;,<sp/>{<sp/>allowDots:<sp/>true<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(withDots,<sp/>{<sp/>a:<sp/>{<sp/>b:<sp/>&apos;c&apos;<sp/>}<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>have<sp/>to<sp/>deal<sp/>with<sp/>legacy<sp/>browsers<sp/>or<sp/>services,<sp/>there&apos;s</highlight></codeline>
+<codeline><highlight class="normal">also<sp/>support<sp/>for<sp/>decoding<sp/>percent-encoded<sp/>octets<sp/>as<sp/>iso-8859-1:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>oldCharset<sp/>=<sp/>qs.parse(&apos;a=%A7&apos;,<sp/>{<sp/>charset:<sp/>&apos;iso-8859-1&apos;<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(oldCharset,<sp/>{<sp/>a:<sp/>&apos;§&apos;<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Some<sp/>services<sp/>add<sp/>an<sp/>initial<sp/>`utf8=✓`<sp/>value<sp/>to<sp/>forms<sp/>so<sp/>that<sp/>old</highlight></codeline>
+<codeline><highlight class="normal">Internet<sp/>Explorer<sp/>versions<sp/>are<sp/>more<sp/>likely<sp/>to<sp/>submit<sp/>the<sp/>form<sp/>as</highlight></codeline>
+<codeline><highlight class="normal">utf-8.<sp/>Additionally,<sp/>the<sp/>server<sp/>can<sp/>check<sp/>the<sp/>value<sp/>against<sp/>wrong</highlight></codeline>
+<codeline><highlight class="normal">encodings<sp/>of<sp/>the<sp/>checkmark<sp/>character<sp/>and<sp/>detect<sp/>that<sp/>a<sp/>query<sp/>string</highlight></codeline>
+<codeline><highlight class="normal">or<sp/>`application/x-www-form-urlencoded`<sp/>body<sp/>was<sp/>*not*<sp/>sent<sp/>as</highlight></codeline>
+<codeline><highlight class="normal">utf-8,<sp/>eg.<sp/>if<sp/>the<sp/>form<sp/>had<sp/>an<sp/>`accept-charset`<sp/>parameter<sp/>or<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">containing<sp/>page<sp/>had<sp/>a<sp/>different<sp/>character<sp/>set.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**qs**<sp/>supports<sp/>this<sp/>mechanism<sp/>via<sp/>the<sp/>`charsetSentinel`<sp/>option.</highlight></codeline>
+<codeline><highlight class="normal">If<sp/>specified,<sp/>the<sp/>`utf8`<sp/>parameter<sp/>will<sp/>be<sp/>omitted<sp/>from<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">returned<sp/>object.<sp/>It<sp/>will<sp/>be<sp/>used<sp/>to<sp/>switch<sp/>to<sp/>`iso-8859-1`/`utf-8`</highlight></codeline>
+<codeline><highlight class="normal">mode<sp/>depending<sp/>on<sp/>how<sp/>the<sp/>checkmark<sp/>is<sp/>encoded.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Important**:<sp/>When<sp/>you<sp/>specify<sp/>both<sp/>the<sp/>`charset`<sp/>option<sp/>and<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">`charsetSentinel`<sp/>option,<sp/>the<sp/>`charset`<sp/>will<sp/>be<sp/>overridden<sp/>when</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>request<sp/>contains<sp/>a<sp/>`utf8`<sp/>parameter<sp/>from<sp/>which<sp/>the<sp/>actual</highlight></codeline>
+<codeline><highlight class="normal">charset<sp/>can<sp/>be<sp/>deduced.<sp/>In<sp/>that<sp/>sense<sp/>the<sp/>`charset`<sp/>will<sp/>behave</highlight></codeline>
+<codeline><highlight class="normal">as<sp/>the<sp/>default<sp/>charset<sp/>rather<sp/>than<sp/>the<sp/>authoritative<sp/>charset.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>detectedAsUtf8<sp/>=<sp/>qs.parse(&apos;utf8=%E2%9C%93&amp;a=%C3%B8&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>charset:<sp/>&apos;iso-8859-1&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>charsetSentinel:<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(detectedAsUtf8,<sp/>{<sp/>a:<sp/>&apos;ø&apos;<sp/>});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Browsers<sp/>encode<sp/>the<sp/>checkmark<sp/>as<sp/>&amp;#10003;<sp/>when<sp/>submitting<sp/>as<sp/>iso-8859-1:</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>detectedAsIso8859_1<sp/>=<sp/>qs.parse(&apos;utf8=%26%2310003%3B&amp;a=%F8&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>charset:<sp/>&apos;utf-8&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>charsetSentinel:<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(detectedAsIso8859_1,<sp/>{<sp/>a:<sp/>&apos;ø&apos;<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>want<sp/>to<sp/>decode<sp/>the<sp/>`&amp;#...;`<sp/>syntax<sp/>to<sp/>the<sp/>actual<sp/>character,</highlight></codeline>
+<codeline><highlight class="normal">you<sp/>can<sp/>specify<sp/>the<sp/>`interpretNumericEntities`<sp/>option<sp/>as<sp/>well:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>detectedAsIso8859_1<sp/>=<sp/>qs.parse(&apos;a=%26%239786%3B&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>charset:<sp/>&apos;iso-8859-1&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>interpretNumericEntities:<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(detectedAsIso8859_1,<sp/>{<sp/>a:<sp/>&apos;☺&apos;<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It<sp/>also<sp/>works<sp/>when<sp/>the<sp/>charset<sp/>has<sp/>been<sp/>detected<sp/>in<sp/>`charsetSentinel`</highlight></codeline>
+<codeline><highlight class="normal">mode.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Parsing<sp/>Arrays</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**qs**<sp/>can<sp/>also<sp/>parse<sp/>arrays<sp/>using<sp/>a<sp/>similar<sp/>`[]`<sp/>notation:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>withArray<sp/>=<sp/>qs.parse(&apos;a[]=b&amp;a[]=c&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(withArray,<sp/>{<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;c&apos;]<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>may<sp/>specify<sp/>an<sp/>index<sp/>as<sp/>well:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>withIndexes<sp/>=<sp/>qs.parse(&apos;a[1]=c&amp;a[0]=b&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(withIndexes,<sp/>{<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;c&apos;]<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note<sp/>that<sp/>the<sp/>only<sp/>difference<sp/>between<sp/>an<sp/>index<sp/>in<sp/>an<sp/>array<sp/>and<sp/>a<sp/>key<sp/>in<sp/>an<sp/>object<sp/>is<sp/>that<sp/>the<sp/>value<sp/>between<sp/>the<sp/>brackets<sp/>must<sp/>be<sp/>a<sp/>number</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>create<sp/>an<sp/>array.<sp/>When<sp/>creating<sp/>arrays<sp/>with<sp/>specific<sp/>indices,<sp/>**qs**<sp/>will<sp/>compact<sp/>a<sp/>sparse<sp/>array<sp/>to<sp/>only<sp/>the<sp/>existing<sp/>values<sp/>preserving</highlight></codeline>
+<codeline><highlight class="normal">their<sp/>order:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>noSparse<sp/>=<sp/>qs.parse(&apos;a[1]=b&amp;a[15]=c&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(noSparse,<sp/>{<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;c&apos;]<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>may<sp/>also<sp/>use<sp/>`allowSparse`<sp/>option<sp/>to<sp/>parse<sp/>sparse<sp/>arrays:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>sparseArray<sp/>=<sp/>qs.parse(&apos;a[1]=2&amp;a[3]=5&apos;,<sp/>{<sp/>allowSparse:<sp/>true<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(sparseArray,<sp/>{<sp/>a:<sp/>[,<sp/>&apos;2&apos;,<sp/>,<sp/>&apos;5&apos;]<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note<sp/>that<sp/>an<sp/>empty<sp/>string<sp/>is<sp/>also<sp/>a<sp/>value,<sp/>and<sp/>will<sp/>be<sp/>preserved:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>withEmptyString<sp/>=<sp/>qs.parse(&apos;a[]=&amp;a[]=b&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(withEmptyString,<sp/>{<sp/>a:<sp/>[&apos;&apos;,<sp/>&apos;b&apos;]<sp/>});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>withIndexedEmptyString<sp/>=<sp/>qs.parse(&apos;a[0]=b&amp;a[1]=&amp;a[2]=c&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(withIndexedEmptyString,<sp/>{<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;&apos;,<sp/>&apos;c&apos;]<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**qs**<sp/>will<sp/>also<sp/>limit<sp/>specifying<sp/>indices<sp/>in<sp/>an<sp/>array<sp/>to<sp/>a<sp/>maximum<sp/>index<sp/>of<sp/>`20`.<sp/>Any<sp/>array<sp/>members<sp/>with<sp/>an<sp/>index<sp/>of<sp/>greater<sp/>than<sp/>`20`<sp/>will</highlight></codeline>
+<codeline><highlight class="normal">instead<sp/>be<sp/>converted<sp/>to<sp/>an<sp/>object<sp/>with<sp/>the<sp/>index<sp/>as<sp/>the<sp/>key.<sp/>This<sp/>is<sp/>needed<sp/>to<sp/>handle<sp/>cases<sp/>when<sp/>someone<sp/>sent,<sp/>for<sp/>example,<sp/>`a[999999999]`<sp/>and<sp/>it<sp/>will<sp/>take<sp/>significant<sp/>time<sp/>to<sp/>iterate<sp/>over<sp/>this<sp/>huge<sp/>array.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>withMaxIndex<sp/>=<sp/>qs.parse(&apos;a[100]=b&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(withMaxIndex,<sp/>{<sp/>a:<sp/>{<sp/>&apos;100&apos;:<sp/>&apos;b&apos;<sp/>}<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>limit<sp/>can<sp/>be<sp/>overridden<sp/>by<sp/>passing<sp/>an<sp/>`arrayLimit`<sp/>option:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>withArrayLimit<sp/>=<sp/>qs.parse(&apos;a[1]=b&apos;,<sp/>{<sp/>arrayLimit:<sp/>0<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(withArrayLimit,<sp/>{<sp/>a:<sp/>{<sp/>&apos;1&apos;:<sp/>&apos;b&apos;<sp/>}<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>disable<sp/>array<sp/>parsing<sp/>entirely,<sp/>set<sp/>`parseArrays`<sp/>to<sp/>`false`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>noParsingArrays<sp/>=<sp/>qs.parse(&apos;a[]=b&apos;,<sp/>{<sp/>parseArrays:<sp/>false<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(noParsingArrays,<sp/>{<sp/>a:<sp/>{<sp/>&apos;0&apos;:<sp/>&apos;b&apos;<sp/>}<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>mix<sp/>notations,<sp/>**qs**<sp/>will<sp/>merge<sp/>the<sp/>two<sp/>items<sp/>into<sp/>an<sp/>object:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>mixedNotation<sp/>=<sp/>qs.parse(&apos;a[0]=b&amp;a[b]=c&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(mixedNotation,<sp/>{<sp/>a:<sp/>{<sp/>&apos;0&apos;:<sp/>&apos;b&apos;,<sp/>b:<sp/>&apos;c&apos;<sp/>}<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>also<sp/>create<sp/>arrays<sp/>of<sp/>objects:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>arraysOfObjects<sp/>=<sp/>qs.parse(&apos;a[][b]=c&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(arraysOfObjects,<sp/>{<sp/>a:<sp/>[{<sp/>b:<sp/>&apos;c&apos;<sp/>}]<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Some<sp/>people<sp/>use<sp/>comma<sp/>to<sp/>join<sp/>array,<sp/>**qs**<sp/>can<sp/>parse<sp/>it:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>arraysOfObjects<sp/>=<sp/>qs.parse(&apos;a=b,c&apos;,<sp/>{<sp/>comma:<sp/>true<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(arraysOfObjects,<sp/>{<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;c&apos;]<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">(_this<sp/>cannot<sp/>convert<sp/>nested<sp/>objects,<sp/>such<sp/>as<sp/>`a={b:1},{c:d}`_)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Parsing<sp/>primitive/scalar<sp/>values<sp/>(numbers,<sp/>booleans,<sp/>null,<sp/>etc)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">By<sp/>default,<sp/>all<sp/>values<sp/>are<sp/>parsed<sp/>as<sp/>strings.<sp/>This<sp/>behavior<sp/>will<sp/>not<sp/>change<sp/>and<sp/>is<sp/>explained<sp/>in<sp/>[issue<sp/>#91](https://github.com/ljharb/qs/issues/91).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>primitiveValues<sp/>=<sp/>qs.parse(&apos;a=15&amp;b=true&amp;c=null&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(primitiveValues,<sp/>{<sp/>a:<sp/>&apos;15&apos;,<sp/>b:<sp/>&apos;true&apos;,<sp/>c:<sp/>&apos;null&apos;<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>wish<sp/>to<sp/>auto-convert<sp/>values<sp/>which<sp/>look<sp/>like<sp/>numbers,<sp/>booleans,<sp/>and<sp/>other<sp/>values<sp/>into<sp/>their<sp/>primitive<sp/>counterparts,<sp/>you<sp/>can<sp/>use<sp/>the<sp/>[query-types<sp/>Express<sp/>JS<sp/>middleware](https://github.com/xpepermint/query-types)<sp/>which<sp/>will<sp/>auto-convert<sp/>all<sp/>request<sp/>query<sp/>parameters.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Stringifying</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[](#preventEval)</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">qs.stringify(object,<sp/>[options]);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>stringifying,<sp/>**qs**<sp/>by<sp/>default<sp/>URI<sp/>encodes<sp/>output.<sp/>Objects<sp/>are<sp/>stringified<sp/>as<sp/>you<sp/>would<sp/>expect:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>&apos;b&apos;<sp/>}),<sp/>&apos;a=b&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>{<sp/>b:<sp/>&apos;c&apos;<sp/>}<sp/>}),<sp/>&apos;a%5Bb%5D=c&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>encoding<sp/>can<sp/>be<sp/>disabled<sp/>by<sp/>setting<sp/>the<sp/>`encode`<sp/>option<sp/>to<sp/>`false`:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>unencoded<sp/>=<sp/>qs.stringify({<sp/>a:<sp/>{<sp/>b:<sp/>&apos;c&apos;<sp/>}<sp/>},<sp/>{<sp/>encode:<sp/>false<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(unencoded,<sp/>&apos;a[b]=c&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Encoding<sp/>can<sp/>be<sp/>disabled<sp/>for<sp/>keys<sp/>by<sp/>setting<sp/>the<sp/>`encodeValuesOnly`<sp/>option<sp/>to<sp/>`true`:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>encodedValues<sp/>=<sp/>qs.stringify(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>a:<sp/>&apos;b&apos;,<sp/>c:<sp/>[&apos;d&apos;,<sp/>&apos;e=f&apos;],<sp/>f:<sp/>[[&apos;g&apos;],<sp/>[&apos;h&apos;]]<sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>encodeValuesOnly:<sp/>true<sp/>}</highlight></codeline>
+<codeline><highlight class="normal">);</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(encodedValues,&apos;a=b&amp;c[0]=d&amp;c[1]=e%3Df&amp;f[0][0]=g&amp;f[1][0]=h&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>encoding<sp/>can<sp/>also<sp/>be<sp/>replaced<sp/>by<sp/>a<sp/>custom<sp/>encoding<sp/>method<sp/>set<sp/>as<sp/>`encoder`<sp/>option:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>encoded<sp/>=<sp/>qs.stringify({<sp/>a:<sp/>{<sp/>b:<sp/>&apos;c&apos;<sp/>}<sp/>},<sp/>{<sp/>encoder:<sp/>function<sp/>(str)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Passed<sp/>in<sp/>values<sp/>`a`,<sp/>`b`,<sp/>`c`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>//<sp/>Return<sp/>encoded<sp/>string</highlight></codeline>
+<codeline><highlight class="normal">}})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">_(Note:<sp/>the<sp/>`encoder`<sp/>option<sp/>does<sp/>not<sp/>apply<sp/>if<sp/>`encode`<sp/>is<sp/>`false`)_</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Analogue<sp/>to<sp/>the<sp/>`encoder`<sp/>there<sp/>is<sp/>a<sp/>`decoder`<sp/>option<sp/>for<sp/>`parse`<sp/>to<sp/>override<sp/>decoding<sp/>of<sp/>properties<sp/>and<sp/>values:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>decoded<sp/>=<sp/>qs.parse(&apos;x=z&apos;,<sp/>{<sp/>decoder:<sp/>function<sp/>(str)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Passed<sp/>in<sp/>values<sp/>`x`,<sp/>`z`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>//<sp/>Return<sp/>decoded<sp/>string</highlight></codeline>
+<codeline><highlight class="normal">}})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>encode<sp/>keys<sp/>and<sp/>values<sp/>using<sp/>different<sp/>logic<sp/>by<sp/>using<sp/>the<sp/>type<sp/>argument<sp/>provided<sp/>to<sp/>the<sp/>encoder:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>encoded<sp/>=<sp/>qs.stringify({<sp/>a:<sp/>{<sp/>b:<sp/>&apos;c&apos;<sp/>}<sp/>},<sp/>{<sp/>encoder:<sp/>function<sp/>(str,<sp/>defaultEncoder,<sp/>charset,<sp/>type)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(type<sp/>===<sp/>&apos;key&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>//<sp/>Encoded<sp/>key</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/>else<sp/>if<sp/>(type<sp/>===<sp/>&apos;value&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>//<sp/>Encoded<sp/>value</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>type<sp/>argument<sp/>is<sp/>also<sp/>provided<sp/>to<sp/>the<sp/>decoder:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>decoded<sp/>=<sp/>qs.parse(&apos;x=z&apos;,<sp/>{<sp/>decoder:<sp/>function<sp/>(str,<sp/>defaultDecoder,<sp/>charset,<sp/>type)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(type<sp/>===<sp/>&apos;key&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>//<sp/>Decoded<sp/>key</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/>else<sp/>if<sp/>(type<sp/>===<sp/>&apos;value&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>//<sp/>Decoded<sp/>value</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Examples<sp/>beyond<sp/>this<sp/>point<sp/>will<sp/>be<sp/>shown<sp/>as<sp/>though<sp/>the<sp/>output<sp/>is<sp/>not<sp/>URI<sp/>encoded<sp/>for<sp/>clarity.<sp/>Please<sp/>note<sp/>that<sp/>the<sp/>return<sp/>values<sp/>in<sp/>these<sp/>cases<sp/>*will*<sp/>be<sp/>URI<sp/>encoded<sp/>during<sp/>real<sp/>usage.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>arrays<sp/>are<sp/>stringified,<sp/>by<sp/>default<sp/>they<sp/>are<sp/>given<sp/>explicit<sp/>indices:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">qs.stringify({<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;c&apos;,<sp/>&apos;d&apos;]<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;a[0]=b&amp;a[1]=c&amp;a[2]=d&apos;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>may<sp/>override<sp/>this<sp/>by<sp/>setting<sp/>the<sp/>`indices`<sp/>option<sp/>to<sp/>`false`:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">qs.stringify({<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;c&apos;,<sp/>&apos;d&apos;]<sp/>},<sp/>{<sp/>indices:<sp/>false<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;a=b&amp;a=c&amp;a=d&apos;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>may<sp/>use<sp/>the<sp/>`arrayFormat`<sp/>option<sp/>to<sp/>specify<sp/>the<sp/>format<sp/>of<sp/>the<sp/>output<sp/>array:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">qs.stringify({<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;c&apos;]<sp/>},<sp/>{<sp/>arrayFormat:<sp/>&apos;indices&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;a[0]=b&amp;a[1]=c&apos;</highlight></codeline>
+<codeline><highlight class="normal">qs.stringify({<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;c&apos;]<sp/>},<sp/>{<sp/>arrayFormat:<sp/>&apos;brackets&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;a[]=b&amp;a[]=c&apos;</highlight></codeline>
+<codeline><highlight class="normal">qs.stringify({<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;c&apos;]<sp/>},<sp/>{<sp/>arrayFormat:<sp/>&apos;repeat&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;a=b&amp;a=c&apos;</highlight></codeline>
+<codeline><highlight class="normal">qs.stringify({<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;c&apos;]<sp/>},<sp/>{<sp/>arrayFormat:<sp/>&apos;comma&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;a=b,c&apos;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note:<sp/>when<sp/>using<sp/>`arrayFormat`<sp/>set<sp/>to<sp/>`&apos;comma&apos;`,<sp/>you<sp/>can<sp/>also<sp/>pass<sp/>the<sp/>`commaRoundTrip`<sp/>option<sp/>set<sp/>to<sp/>`true`<sp/>or<sp/>`false`,<sp/>to<sp/>append<sp/>`[]`<sp/>on<sp/>single-item<sp/>arrays,<sp/>so<sp/>that<sp/>they<sp/>can<sp/>round<sp/>trip<sp/>through<sp/>a<sp/>parse.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>objects<sp/>are<sp/>stringified,<sp/>by<sp/>default<sp/>they<sp/>use<sp/>bracket<sp/>notation:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">qs.stringify({<sp/>a:<sp/>{<sp/>b:<sp/>{<sp/>c:<sp/>&apos;d&apos;,<sp/>e:<sp/>&apos;f&apos;<sp/>}<sp/>}<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;a[b][c]=d&amp;a[b][e]=f&apos;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>may<sp/>override<sp/>this<sp/>to<sp/>use<sp/>dot<sp/>notation<sp/>by<sp/>setting<sp/>the<sp/>`allowDots`<sp/>option<sp/>to<sp/>`true`:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">qs.stringify({<sp/>a:<sp/>{<sp/>b:<sp/>{<sp/>c:<sp/>&apos;d&apos;,<sp/>e:<sp/>&apos;f&apos;<sp/>}<sp/>}<sp/>},<sp/>{<sp/>allowDots:<sp/>true<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;a.b.c=d&amp;a.b.e=f&apos;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Empty<sp/>strings<sp/>and<sp/>null<sp/>values<sp/>will<sp/>omit<sp/>the<sp/>value,<sp/>but<sp/>the<sp/>equals<sp/>sign<sp/>(=)<sp/>remains<sp/>in<sp/>place:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>&apos;&apos;<sp/>}),<sp/>&apos;a=&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Key<sp/>with<sp/>no<sp/>values<sp/>(such<sp/>as<sp/>an<sp/>empty<sp/>object<sp/>or<sp/>array)<sp/>will<sp/>return<sp/>nothing:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>[]<sp/>}),<sp/>&apos;&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>{}<sp/>}),<sp/>&apos;&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>[{}]<sp/>}),<sp/>&apos;&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>{<sp/>b:<sp/>[]}<sp/>}),<sp/>&apos;&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>{<sp/>b:<sp/>{}}<sp/>}),<sp/>&apos;&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Properties<sp/>that<sp/>are<sp/>set<sp/>to<sp/>`undefined`<sp/>will<sp/>be<sp/>omitted<sp/>entirely:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>null,<sp/>b:<sp/>undefined<sp/>}),<sp/>&apos;a=&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>query<sp/>string<sp/>may<sp/>optionally<sp/>be<sp/>prepended<sp/>with<sp/>a<sp/>question<sp/>mark:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>&apos;b&apos;,<sp/>c:<sp/>&apos;d&apos;<sp/>},<sp/>{<sp/>addQueryPrefix:<sp/>true<sp/>}),<sp/>&apos;?a=b&amp;c=d&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>delimiter<sp/>may<sp/>be<sp/>overridden<sp/>with<sp/>stringify<sp/>as<sp/>well:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>&apos;b&apos;,<sp/>c:<sp/>&apos;d&apos;<sp/>},<sp/>{<sp/>delimiter:<sp/>&apos;;&apos;<sp/>}),<sp/>&apos;a=b;c=d&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>only<sp/>want<sp/>to<sp/>override<sp/>the<sp/>serialization<sp/>of<sp/>`Date`<sp/>objects,<sp/>you<sp/>can<sp/>provide<sp/>a<sp/>`serializeDate`<sp/>option:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>date<sp/>=<sp/>new<sp/>Date(7);</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>date<sp/>}),<sp/>&apos;a=1970-01-01T00:00:00.007Z&apos;.replace(/:/g,<sp/>&apos;%3A&apos;));</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>qs.stringify({<sp/>a:<sp/>date<sp/>},<sp/>{<sp/>serializeDate:<sp/>function<sp/>(d)<sp/>{<sp/>return<sp/>d.getTime();<sp/>}<sp/>}),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&apos;a=7&apos;</highlight></codeline>
+<codeline><highlight class="normal">);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>may<sp/>use<sp/>the<sp/>`sort`<sp/>option<sp/>to<sp/>affect<sp/>the<sp/>order<sp/>of<sp/>parameter<sp/>keys:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">function<sp/>alphabeticalSort(a,<sp/>b)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>a.localeCompare(b);</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>&apos;c&apos;,<sp/>z:<sp/>&apos;y&apos;,<sp/>b<sp/>:<sp/>&apos;f&apos;<sp/>},<sp/>{<sp/>sort:<sp/>alphabeticalSort<sp/>}),<sp/>&apos;a=c&amp;b=f&amp;z=y&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Finally,<sp/>you<sp/>can<sp/>use<sp/>the<sp/>`filter`<sp/>option<sp/>to<sp/>restrict<sp/>which<sp/>keys<sp/>will<sp/>be<sp/>included<sp/>in<sp/>the<sp/>stringified<sp/>output.</highlight></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>pass<sp/>a<sp/>function,<sp/>it<sp/>will<sp/>be<sp/>called<sp/>for<sp/>each<sp/>key<sp/>to<sp/>obtain<sp/>the<sp/>replacement<sp/>value.<sp/>Otherwise,<sp/>if<sp/>you</highlight></codeline>
+<codeline><highlight class="normal">pass<sp/>an<sp/>array,<sp/>it<sp/>will<sp/>be<sp/>used<sp/>to<sp/>select<sp/>properties<sp/>and<sp/>array<sp/>indices<sp/>for<sp/>stringification:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">function<sp/>filterFunc(prefix,<sp/>value)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(prefix<sp/>==<sp/>&apos;b&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>Return<sp/>an<sp/>`undefined`<sp/>value<sp/>to<sp/>omit<sp/>a<sp/>property.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(prefix<sp/>==<sp/>&apos;e[f]&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>value.getTime();</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(prefix<sp/>==<sp/>&apos;e[g][0]&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>value<sp/>*<sp/>2;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>value;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">qs.stringify({<sp/>a:<sp/>&apos;b&apos;,<sp/>c:<sp/>&apos;d&apos;,<sp/>e:<sp/>{<sp/>f:<sp/>new<sp/>Date(123),<sp/>g:<sp/>[2]<sp/>}<sp/>},<sp/>{<sp/>filter:<sp/>filterFunc<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;a=b&amp;c=d&amp;e[f]=123&amp;e[g][0]=4&apos;</highlight></codeline>
+<codeline><highlight class="normal">qs.stringify({<sp/>a:<sp/>&apos;b&apos;,<sp/>c:<sp/>&apos;d&apos;,<sp/>e:<sp/>&apos;f&apos;<sp/>},<sp/>{<sp/>filter:<sp/>[&apos;a&apos;,<sp/>&apos;e&apos;]<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;a=b&amp;e=f&apos;</highlight></codeline>
+<codeline><highlight class="normal">qs.stringify({<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;c&apos;,<sp/>&apos;d&apos;],<sp/>e:<sp/>&apos;f&apos;<sp/>},<sp/>{<sp/>filter:<sp/>[&apos;a&apos;,<sp/>0,<sp/>2]<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;a[0]=b&amp;a[2]=d&apos;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Handling<sp/>of<sp/>`null`<sp/>values</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">By<sp/>default,<sp/>`null`<sp/>values<sp/>are<sp/>treated<sp/>like<sp/>empty<sp/>strings:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>withNull<sp/>=<sp/>qs.stringify({<sp/>a:<sp/>null,<sp/>b:<sp/>&apos;&apos;<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(withNull,<sp/>&apos;a=&amp;b=&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Parsing<sp/>does<sp/>not<sp/>distinguish<sp/>between<sp/>parameters<sp/>with<sp/>and<sp/>without<sp/>equal<sp/>signs.<sp/>Both<sp/>are<sp/>converted<sp/>to<sp/>empty<sp/>strings.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>equalsInsensitive<sp/>=<sp/>qs.parse(&apos;a&amp;b=&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(equalsInsensitive,<sp/>{<sp/>a:<sp/>&apos;&apos;,<sp/>b:<sp/>&apos;&apos;<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>distinguish<sp/>between<sp/>`null`<sp/>values<sp/>and<sp/>empty<sp/>strings<sp/>use<sp/>the<sp/>`strictNullHandling`<sp/>flag.<sp/>In<sp/>the<sp/>result<sp/>string<sp/>the<sp/>`null`</highlight></codeline>
+<codeline><highlight class="normal">values<sp/>have<sp/>no<sp/>`=`<sp/>sign:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>strictNull<sp/>=<sp/>qs.stringify({<sp/>a:<sp/>null,<sp/>b:<sp/>&apos;&apos;<sp/>},<sp/>{<sp/>strictNullHandling:<sp/>true<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(strictNull,<sp/>&apos;a&amp;b=&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>parse<sp/>values<sp/>without<sp/>`=`<sp/>back<sp/>to<sp/>`null`<sp/>use<sp/>the<sp/>`strictNullHandling`<sp/>flag:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>parsedStrictNull<sp/>=<sp/>qs.parse(&apos;a&amp;b=&apos;,<sp/>{<sp/>strictNullHandling:<sp/>true<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(parsedStrictNull,<sp/>{<sp/>a:<sp/>null,<sp/>b:<sp/>&apos;&apos;<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>completely<sp/>skip<sp/>rendering<sp/>keys<sp/>with<sp/>`null`<sp/>values,<sp/>use<sp/>the<sp/>`skipNulls`<sp/>flag:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>nullsSkipped<sp/>=<sp/>qs.stringify({<sp/>a:<sp/>&apos;b&apos;,<sp/>c:<sp/>null},<sp/>{<sp/>skipNulls:<sp/>true<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(nullsSkipped,<sp/>&apos;a=b&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you&apos;re<sp/>communicating<sp/>with<sp/>legacy<sp/>systems,<sp/>you<sp/>can<sp/>switch<sp/>to<sp/>`iso-8859-1`</highlight></codeline>
+<codeline><highlight class="normal">using<sp/>the<sp/>`charset`<sp/>option:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>iso<sp/>=<sp/>qs.stringify({<sp/>æ:<sp/>&apos;æ&apos;<sp/>},<sp/>{<sp/>charset:<sp/>&apos;iso-8859-1&apos;<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(iso,<sp/>&apos;%E6=%E6&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Characters<sp/>that<sp/>don&apos;t<sp/>exist<sp/>in<sp/>`iso-8859-1`<sp/>will<sp/>be<sp/>converted<sp/>to<sp/>numeric</highlight></codeline>
+<codeline><highlight class="normal">entities,<sp/>similar<sp/>to<sp/>what<sp/>browsers<sp/>do:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>numeric<sp/>=<sp/>qs.stringify({<sp/>a:<sp/>&apos;☺&apos;<sp/>},<sp/>{<sp/>charset:<sp/>&apos;iso-8859-1&apos;<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(numeric,<sp/>&apos;a=%26%239786%3B&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>use<sp/>the<sp/>`charsetSentinel`<sp/>option<sp/>to<sp/>announce<sp/>the<sp/>character<sp/>by</highlight></codeline>
+<codeline><highlight class="normal">including<sp/>an<sp/>`utf8=✓`<sp/>parameter<sp/>with<sp/>the<sp/>proper<sp/>encoding<sp/>if<sp/>the<sp/>checkmark,</highlight></codeline>
+<codeline><highlight class="normal">similar<sp/>to<sp/>what<sp/>Ruby<sp/>on<sp/>Rails<sp/>and<sp/>others<sp/>do<sp/>when<sp/>submitting<sp/>forms.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>sentinel<sp/>=<sp/>qs.stringify({<sp/>a:<sp/>&apos;☺&apos;<sp/>},<sp/>{<sp/>charsetSentinel:<sp/>true<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(sentinel,<sp/>&apos;utf8=%E2%9C%93&amp;a=%E2%98%BA&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>isoSentinel<sp/>=<sp/>qs.stringify({<sp/>a:<sp/>&apos;æ&apos;<sp/>},<sp/>{<sp/>charsetSentinel:<sp/>true,<sp/>charset:<sp/>&apos;iso-8859-1&apos;<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(isoSentinel,<sp/>&apos;utf8=%26%2310003%3B&amp;a=%E6&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Dealing<sp/>with<sp/>special<sp/>character<sp/>sets</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">By<sp/>default<sp/>the<sp/>encoding<sp/>and<sp/>decoding<sp/>of<sp/>characters<sp/>is<sp/>done<sp/>in<sp/>`utf-8`,</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>`iso-8859-1`<sp/>support<sp/>is<sp/>also<sp/>built<sp/>in<sp/>via<sp/>the<sp/>`charset`<sp/>parameter.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>wish<sp/>to<sp/>encode<sp/>querystrings<sp/>to<sp/>a<sp/>different<sp/>character<sp/>set<sp/>(i.e.</highlight></codeline>
+<codeline><highlight class="normal">[Shift<sp/>JIS](https://en.wikipedia.org/wiki/Shift_JIS))<sp/>you<sp/>can<sp/>use<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[`qs-iconv`](https://github.com/martinheidegger/qs-iconv)<sp/>library:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>encoder<sp/>=<sp/>require(&apos;qs-iconv/encoder&apos;)(&apos;shift_jis&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>shiftJISEncoded<sp/>=<sp/>qs.stringify({<sp/>a:<sp/>&apos;こんにちは！&apos;<sp/>},<sp/>{<sp/>encoder:<sp/>encoder<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(shiftJISEncoded,<sp/>&apos;a=%82%B1%82%F1%82%C9%82%BF%82%CD%81I&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>also<sp/>works<sp/>for<sp/>decoding<sp/>of<sp/>query<sp/>strings:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>decoder<sp/>=<sp/>require(&apos;qs-iconv/decoder&apos;)(&apos;shift_jis&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>obj<sp/>=<sp/>qs.parse(&apos;a=%82%B1%82%F1%82%C9%82%BF%82%CD%81I&apos;,<sp/>{<sp/>decoder:<sp/>decoder<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(obj,<sp/>{<sp/>a:<sp/>&apos;こんにちは！&apos;<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>RFC<sp/>3986<sp/>and<sp/>RFC<sp/>1738<sp/>space<sp/>encoding</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">RFC3986<sp/>used<sp/>as<sp/>default<sp/>option<sp/>and<sp/>encodes<sp/>&apos;<sp/>&apos;<sp/>to<sp/>*%20*<sp/>which<sp/>is<sp/>backward<sp/>compatible.</highlight></codeline>
+<codeline><highlight class="normal">In<sp/>the<sp/>same<sp/>time,<sp/>output<sp/>can<sp/>be<sp/>stringified<sp/>as<sp/>per<sp/>RFC1738<sp/>with<sp/>&apos;<sp/>&apos;<sp/>equal<sp/>to<sp/>&apos;+&apos;.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>&apos;b<sp/>c&apos;<sp/>}),<sp/>&apos;a=b%20c&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>&apos;b<sp/>c&apos;<sp/>},<sp/>{<sp/>format<sp/>:<sp/>&apos;RFC3986&apos;<sp/>}),<sp/>&apos;a=b%20c&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>&apos;b<sp/>c&apos;<sp/>},<sp/>{<sp/>format<sp/>:<sp/>&apos;RFC1738&apos;<sp/>}),<sp/>&apos;a=b+c&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Security</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Please<sp/>email<sp/>[@ljharb](https://github.com/ljharb)<sp/>or<sp/>see<sp/>https://tidelift.com/security<sp/>if<sp/>you<sp/>have<sp/>a<sp/>potential<sp/>security<sp/>vulnerability<sp/>to<sp/>report.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>qs<sp/>for<sp/>enterprise</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Available<sp/>as<sp/>part<sp/>of<sp/>the<sp/>Tidelift<sp/>Subscription</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>maintainers<sp/>of<sp/>qs<sp/>and<sp/>thousands<sp/>of<sp/>other<sp/>packages<sp/>are<sp/>working<sp/>with<sp/>Tidelift<sp/>to<sp/>deliver<sp/>commercial<sp/>support<sp/>and<sp/>maintenance<sp/>for<sp/>the<sp/>open<sp/>source<sp/>dependencies<sp/>you<sp/>use<sp/>to<sp/>build<sp/>your<sp/>applications.<sp/>Save<sp/>time,<sp/>reduce<sp/>risk,<sp/>and<sp/>improve<sp/>code<sp/>health,<sp/>while<sp/>paying<sp/>the<sp/>maintainers<sp/>of<sp/>the<sp/>exact<sp/>dependencies<sp/>you<sp/>use.<sp/>[Learn<sp/>more.](https://tidelift.com/subscription/pkg/npm-qs?utm_source=npm-qs&amp;utm_medium=referral&amp;utm_campaign=enterprise&amp;utm_term=repo)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[package-url]:<sp/>https://npmjs.org/package/qs</highlight></codeline>
+<codeline><highlight class="normal">[npm-version-svg]:<sp/>https://versionbadg.es/ljharb/qs.svg</highlight></codeline>
+<codeline><highlight class="normal">[deps-svg]:<sp/>https://david-dm.org/ljharb/qs.svg</highlight></codeline>
+<codeline><highlight class="normal">[deps-url]:<sp/>https://david-dm.org/ljharb/qs</highlight></codeline>
+<codeline><highlight class="normal">[dev-deps-svg]:<sp/>https://david-dm.org/ljharb/qs/dev-status.svg</highlight></codeline>
+<codeline><highlight class="normal">[dev-deps-url]:<sp/>https://david-dm.org/ljharb/qs#info=devDependencies</highlight></codeline>
+<codeline><highlight class="normal">[npm-badge-png]:<sp/>https://nodei.co/npm/qs.png?downloads=true&amp;stars=true</highlight></codeline>
+<codeline><highlight class="normal">[license-image]:<sp/>https://img.shields.io/npm/l/qs.svg</highlight></codeline>
+<codeline><highlight class="normal">[license-url]:<sp/>LICENSE</highlight></codeline>
+<codeline><highlight class="normal">[downloads-image]:<sp/>https://img.shields.io/npm/dm/qs.svg</highlight></codeline>
+<codeline><highlight class="normal">[downloads-url]:<sp/>https://npm-stat.com/charts.html?package=qs</highlight></codeline>
+<codeline><highlight class="normal">[codecov-image]:<sp/>https://codecov.io/gh/ljharb/qs/branch/main/graphs/badge.svg</highlight></codeline>
+<codeline><highlight class="normal">[codecov-url]:<sp/>https://app.codecov.io/gh/ljharb/qs/</highlight></codeline>
+<codeline><highlight class="normal">[actions-image]:<sp/>https://img.shields.io/endpoint?url=https://github-actions-badge-u3jn4tfpocch.runkit.sh/ljharb/qs</highlight></codeline>
+<codeline><highlight class="normal">[actions-url]:<sp/>https://github.com/ljharb/qs/actions</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/qs/README.md"/>
+  </compounddef>
+</doxygen>

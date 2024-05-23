@@ -1,0 +1,269 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>`node-gyp`<sp/>-<sp/>Node.js<sp/>native<sp/>addon<sp/>build<sp/>tool</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![Build<sp/>Status](https://github.com/nodejs/node-gyp/workflows/Tests/badge.svg?branch=master)](https://github.com/nodejs/node-gyp/actions?query=workflow%3ATests+branch%3Amaster)</highlight></codeline>
+<codeline><highlight class="normal">![npm](https://img.shields.io/npm/dm/node-gyp)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`node-gyp`<sp/>is<sp/>a<sp/>cross-platform<sp/>command-line<sp/>tool<sp/>written<sp/>in<sp/>Node.js<sp/>for</highlight></codeline>
+<codeline><highlight class="normal">compiling<sp/>native<sp/>addon<sp/>modules<sp/>for<sp/>Node.js.<sp/>It<sp/>contains<sp/>a<sp/>vendored<sp/>copy<sp/>of<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[gyp-next](https://github.com/nodejs/gyp-next)<sp/>project<sp/>that<sp/>was<sp/>previously<sp/>used</highlight></codeline>
+<codeline><highlight class="normal">by<sp/>the<sp/>Chromium<sp/>team,<sp/>extended<sp/>to<sp/>support<sp/>the<sp/>development<sp/>of<sp/>Node.js<sp/>native<sp/>addons.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note<sp/>that<sp/>`node-gyp`<sp/>is<sp/>_not_<sp/>used<sp/>to<sp/>build<sp/>Node.js<sp/>itself.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Multiple<sp/>target<sp/>versions<sp/>of<sp/>Node.js<sp/>are<sp/>supported<sp/>(i.e.<sp/>`0.8`,<sp/>...,<sp/>`4`,<sp/>`5`,<sp/>`6`,</highlight></codeline>
+<codeline><highlight class="normal">etc.),<sp/>regardless<sp/>of<sp/>what<sp/>version<sp/>of<sp/>Node.js<sp/>is<sp/>actually<sp/>installed<sp/>on<sp/>your<sp/>system</highlight></codeline>
+<codeline><highlight class="normal">(`node-gyp`<sp/>downloads<sp/>the<sp/>necessary<sp/>development<sp/>files<sp/>or<sp/>headers<sp/>for<sp/>the<sp/>target<sp/>version).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Features</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>The<sp/>same<sp/>build<sp/>commands<sp/>work<sp/>on<sp/>any<sp/>of<sp/>the<sp/>supported<sp/>platforms</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>Supports<sp/>the<sp/>targeting<sp/>of<sp/>different<sp/>versions<sp/>of<sp/>Node.js</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Installation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>install<sp/>`node-gyp`<sp/>using<sp/>`npm`:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>bash</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>install<sp/>-g<sp/>node-gyp</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Depending<sp/>on<sp/>your<sp/>operating<sp/>system,<sp/>you<sp/>will<sp/>need<sp/>to<sp/>install:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>On<sp/>Unix</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>*<sp/>Python<sp/>v3.6,<sp/>v3.7,<sp/>v3.8,<sp/>or<sp/>v3.9</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>*<sp/>`make`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>*<sp/>A<sp/>proper<sp/>C/C++<sp/>compiler<sp/>toolchain,<sp/>like<sp/>[GCC](https://gcc.gnu.org)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>On<sp/>macOS</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**ATTENTION**:<sp/>If<sp/>your<sp/>Mac<sp/>has<sp/>been<sp/>_upgraded_<sp/>to<sp/>macOS<sp/>Catalina<sp/>(10.15),<sp/>please<sp/>read<sp/>[macOS_Catalina.md](macOS_Catalina.md).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>*<sp/>Python<sp/>v3.6,<sp/>v3.7,<sp/>v3.8,<sp/>or<sp/>v3.9</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>*<sp/>[Xcode](https://developer.apple.com/xcode/download/)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>*<sp/>You<sp/>also<sp/>need<sp/>to<sp/>install<sp/>the<sp/>`XCode<sp/>Command<sp/>Line<sp/>Tools`<sp/>by<sp/>running<sp/>`xcode-select<sp/>--install`.<sp/>Alternatively,<sp/>if<sp/>you<sp/>already<sp/>have<sp/>the<sp/>full<sp/>Xcode<sp/>installed,<sp/>you<sp/>can<sp/>find<sp/>them<sp/>under<sp/>the<sp/>menu<sp/>`Xcode<sp/>-&gt;<sp/>Open<sp/>Developer<sp/>Tool<sp/>-&gt;<sp/>More<sp/>Developer<sp/>Tools...`.<sp/>This<sp/>step<sp/>will<sp/>install<sp/>`clang`,<sp/>`clang++`,<sp/>and<sp/>`make`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>On<sp/>Windows</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Install<sp/>the<sp/>current<sp/>version<sp/>of<sp/>Python<sp/>from<sp/>the<sp/>[Microsoft<sp/>Store<sp/>package](https://docs.python.org/3/using/windows.html#the-microsoft-store-package).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Install<sp/>tools<sp/>and<sp/>configuration<sp/>manually:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>*<sp/>Install<sp/>Visual<sp/>C++<sp/>Build<sp/>Environment:<sp/>[Visual<sp/>Studio<sp/>Build<sp/>Tools](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>(using<sp/>&quot;Visual<sp/>C++<sp/>build<sp/>tools&quot;<sp/>workload)<sp/>or<sp/>[Visual<sp/>Studio<sp/>Community](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>(using<sp/>the<sp/>&quot;Desktop<sp/>development<sp/>with<sp/>C++&quot;<sp/>workload)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>*<sp/>Launch<sp/>cmd,<sp/>`npm<sp/>config<sp/>set<sp/>msvs_version<sp/>2017`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>If<sp/>the<sp/>above<sp/>steps<sp/>didn&apos;t<sp/>work<sp/>for<sp/>you,<sp/>please<sp/>visit<sp/>[Microsoft&apos;s<sp/>Node.js<sp/>Guidelines<sp/>for<sp/>Windows](https://github.com/Microsoft/nodejs-guidelines/blob/master/windows-environment.md#compiling-native-addon-modules)<sp/>for<sp/>additional<sp/>tips.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>To<sp/>target<sp/>native<sp/>ARM64<sp/>Node.js<sp/>on<sp/>Windows<sp/>10<sp/>on<sp/>ARM,<sp/>add<sp/>the<sp/>components<sp/>&quot;Visual<sp/>C++<sp/>compilers<sp/>and<sp/>libraries<sp/>for<sp/>ARM64&quot;<sp/>and<sp/>&quot;Visual<sp/>C++<sp/>ATL<sp/>for<sp/>ARM64&quot;.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Configuring<sp/>Python<sp/>Dependency</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`node-gyp`<sp/>requires<sp/>that<sp/>you<sp/>have<sp/>installed<sp/>a<sp/>compatible<sp/>version<sp/>of<sp/>Python,<sp/>one<sp/>of:<sp/>v3.6,<sp/>v3.7,</highlight></codeline>
+<codeline><highlight class="normal">v3.8,<sp/>or<sp/>v3.9.<sp/>If<sp/>you<sp/>have<sp/>multiple<sp/>Python<sp/>versions<sp/>installed,<sp/>you<sp/>can<sp/>identify<sp/>which<sp/>Python</highlight></codeline>
+<codeline><highlight class="normal">version<sp/>`node-gyp`<sp/>should<sp/>use<sp/>in<sp/>one<sp/>of<sp/>the<sp/>following<sp/>ways:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">1.<sp/>by<sp/>setting<sp/>the<sp/>`--python`<sp/>command-line<sp/>option,<sp/>e.g.:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>bash</highlight></codeline>
+<codeline><highlight class="normal">node-gyp<sp/>&lt;command&gt;<sp/>--python<sp/>/path/to/executable/python</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">2.<sp/>If<sp/>`node-gyp`<sp/>is<sp/>called<sp/>by<sp/>way<sp/>of<sp/>`npm`,<sp/>*and*<sp/>you<sp/>have<sp/>multiple<sp/>versions<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">Python<sp/>installed,<sp/>then<sp/>you<sp/>can<sp/>set<sp/>`npm`&apos;s<sp/>&apos;python&apos;<sp/>config<sp/>key<sp/>to<sp/>the<sp/>appropriate</highlight></codeline>
+<codeline><highlight class="normal">value:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>bash</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>config<sp/>set<sp/>python<sp/>/path/to/executable/python</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">3.<sp/>If<sp/>the<sp/>`PYTHON`<sp/>environment<sp/>variable<sp/>is<sp/>set<sp/>to<sp/>the<sp/>path<sp/>of<sp/>a<sp/>Python<sp/>executable,</highlight></codeline>
+<codeline><highlight class="normal">then<sp/>that<sp/>version<sp/>will<sp/>be<sp/>used,<sp/>if<sp/>it<sp/>is<sp/>a<sp/>compatible<sp/>version.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">4.<sp/>If<sp/>the<sp/>`NODE_GYP_FORCE_PYTHON`<sp/>environment<sp/>variable<sp/>is<sp/>set<sp/>to<sp/>the<sp/>path<sp/>of<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">Python<sp/>executable,<sp/>it<sp/>will<sp/>be<sp/>used<sp/>instead<sp/>of<sp/>any<sp/>of<sp/>the<sp/>other<sp/>configured<sp/>or</highlight></codeline>
+<codeline><highlight class="normal">builtin<sp/>Python<sp/>search<sp/>paths.<sp/>If<sp/>it&apos;s<sp/>not<sp/>a<sp/>compatible<sp/>version,<sp/>no<sp/>further</highlight></codeline>
+<codeline><highlight class="normal">searching<sp/>will<sp/>be<sp/>done.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Build<sp/>for<sp/>Third<sp/>Party<sp/>Node.js<sp/>Runtimes</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>building<sp/>modules<sp/>for<sp/>thid<sp/>party<sp/>Node.js<sp/>runtimes<sp/>like<sp/>Electron,<sp/>which<sp/>have</highlight></codeline>
+<codeline><highlight class="normal">different<sp/>build<sp/>configurations<sp/>from<sp/>the<sp/>official<sp/>Node.js<sp/>distribution,<sp/>you</highlight></codeline>
+<codeline><highlight class="normal">should<sp/>use<sp/>`--dist-url`<sp/>or<sp/>`--nodedir`<sp/>flags<sp/>to<sp/>specify<sp/>the<sp/>headers<sp/>of<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">runtime<sp/>to<sp/>build<sp/>for.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Also<sp/>when<sp/>`--dist-url`<sp/>or<sp/>`--nodedir`<sp/>flags<sp/>are<sp/>passed,<sp/>node-gyp<sp/>will<sp/>use<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">`config.gypi`<sp/>shipped<sp/>in<sp/>the<sp/>headers<sp/>distribution<sp/>to<sp/>generate<sp/>build</highlight></codeline>
+<codeline><highlight class="normal">configurations,<sp/>which<sp/>is<sp/>different<sp/>from<sp/>the<sp/>default<sp/>mode<sp/>that<sp/>would<sp/>use<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">`process.config`<sp/>object<sp/>of<sp/>the<sp/>running<sp/>Node.js<sp/>instance.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Some<sp/>old<sp/>versions<sp/>of<sp/>Electron<sp/>shipped<sp/>malformed<sp/>`config.gypi`<sp/>in<sp/>their<sp/>headers</highlight></codeline>
+<codeline><highlight class="normal">distributions,<sp/>and<sp/>you<sp/>might<sp/>need<sp/>to<sp/>pass<sp/>`--force-process-config`<sp/>to<sp/>node-gyp</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>work<sp/>around<sp/>configuration<sp/>errors.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>How<sp/>to<sp/>Use</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>compile<sp/>your<sp/>native<sp/>addon,<sp/>first<sp/>go<sp/>to<sp/>its<sp/>root<sp/>directory:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>bash</highlight></codeline>
+<codeline><highlight class="normal">cd<sp/>my_node_addon</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>next<sp/>step<sp/>is<sp/>to<sp/>generate<sp/>the<sp/>appropriate<sp/>project<sp/>build<sp/>files<sp/>for<sp/>the<sp/>current</highlight></codeline>
+<codeline><highlight class="normal">platform.<sp/>Use<sp/>`configure`<sp/>for<sp/>that:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>bash</highlight></codeline>
+<codeline><highlight class="normal">node-gyp<sp/>configure</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Auto-detection<sp/>fails<sp/>for<sp/>Visual<sp/>C++<sp/>Build<sp/>Tools<sp/>2015,<sp/>so<sp/>`--msvs_version=2015`</highlight></codeline>
+<codeline><highlight class="normal">needs<sp/>to<sp/>be<sp/>added<sp/>(not<sp/>needed<sp/>when<sp/>run<sp/>by<sp/>npm<sp/>as<sp/>configured<sp/>above):</highlight></codeline>
+<codeline><highlight class="normal">```<sp/>bash</highlight></codeline>
+<codeline><highlight class="normal">node-gyp<sp/>configure<sp/>--msvs_version=2015</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">__Note__:<sp/>The<sp/>`configure`<sp/>step<sp/>looks<sp/>for<sp/>a<sp/>`binding.gyp`<sp/>file<sp/>in<sp/>the<sp/>current</highlight></codeline>
+<codeline><highlight class="normal">directory<sp/>to<sp/>process.<sp/>See<sp/>below<sp/>for<sp/>instructions<sp/>on<sp/>creating<sp/>a<sp/>`binding.gyp`<sp/>file.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Now<sp/>you<sp/>will<sp/>have<sp/>either<sp/>a<sp/>`Makefile`<sp/>(on<sp/>Unix<sp/>platforms)<sp/>or<sp/>a<sp/>`vcxproj`<sp/>file</highlight></codeline>
+<codeline><highlight class="normal">(on<sp/>Windows)<sp/>in<sp/>the<sp/>`build/`<sp/>directory.<sp/>Next,<sp/>invoke<sp/>the<sp/>`build`<sp/>command:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>bash</highlight></codeline>
+<codeline><highlight class="normal">node-gyp<sp/>build</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Now<sp/>you<sp/>have<sp/>your<sp/>compiled<sp/>`.node`<sp/>bindings<sp/>file!<sp/>The<sp/>compiled<sp/>bindings<sp/>end<sp/>up</highlight></codeline>
+<codeline><highlight class="normal">in<sp/>`build/Debug/`<sp/>or<sp/>`build/Release/`,<sp/>depending<sp/>on<sp/>the<sp/>build<sp/>mode.<sp/>At<sp/>this<sp/>point,</highlight></codeline>
+<codeline><highlight class="normal">you<sp/>can<sp/>require<sp/>the<sp/>`.node`<sp/>file<sp/>with<sp/>Node.js<sp/>and<sp/>run<sp/>your<sp/>tests!</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">__Note:__<sp/>To<sp/>create<sp/>a<sp/>_Debug_<sp/>build<sp/>of<sp/>the<sp/>bindings<sp/>file,<sp/>pass<sp/>the<sp/>`--debug`<sp/>(or</highlight></codeline>
+<codeline><highlight class="normal">`-d`)<sp/>switch<sp/>when<sp/>running<sp/>either<sp/>the<sp/>`configure`,<sp/>`build`<sp/>or<sp/>`rebuild`<sp/>commands.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>The<sp/>`binding.gyp`<sp/>file</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>`binding.gyp`<sp/>file<sp/>describes<sp/>the<sp/>configuration<sp/>to<sp/>build<sp/>your<sp/>module,<sp/>in<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">JSON-like<sp/>format.<sp/>This<sp/>file<sp/>gets<sp/>placed<sp/>in<sp/>the<sp/>root<sp/>of<sp/>your<sp/>package,<sp/>alongside</highlight></codeline>
+<codeline><highlight class="normal">`package.json`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>barebones<sp/>`gyp`<sp/>file<sp/>appropriate<sp/>for<sp/>building<sp/>a<sp/>Node.js<sp/>addon<sp/>could<sp/>look<sp/>like:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```python</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;targets&quot;:<sp/>[</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>&quot;target_name&quot;:<sp/>&quot;binding&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>&quot;sources&quot;:<sp/>[<sp/>&quot;src/binding.cc&quot;<sp/>]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>]</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Further<sp/>reading</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>**[docs](./docs/)**<sp/>directory<sp/>contains<sp/>additional<sp/>documentation<sp/>on<sp/>specific<sp/>node-gyp<sp/>topics<sp/>that<sp/>may<sp/>be<sp/>useful<sp/>if<sp/>you<sp/>are<sp/>experiencing<sp/>problems<sp/>installing<sp/>or<sp/>building<sp/>addons<sp/>using<sp/>node-gyp.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Some<sp/>additional<sp/>resources<sp/>for<sp/>Node.js<sp/>native<sp/>addons<sp/>and<sp/>writing<sp/>`gyp`<sp/>configuration<sp/>files:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>[&quot;Going<sp/>Native&quot;<sp/>a<sp/>nodeschool.io<sp/>tutorial](http://nodeschool.io/#goingnative)</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>[&quot;Hello<sp/>World&quot;<sp/>node<sp/>addon<sp/>example](https://github.com/nodejs/node/tree/master/test/addons/hello-world)</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>[gyp<sp/>user<sp/>documentation](https://gyp.gsrc.io/docs/UserDocumentation.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>[gyp<sp/>input<sp/>format<sp/>reference](https://gyp.gsrc.io/docs/InputFormatReference.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>[*&quot;binding.gyp&quot;<sp/>files<sp/>out<sp/>in<sp/>the<sp/>wild*<sp/>wiki<sp/>page](./docs/binding.gyp-files-in-the-wild.md)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Commands</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`node-gyp`<sp/>responds<sp/>to<sp/>the<sp/>following<sp/>commands:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">|<sp/>**Command**<sp/><sp/><sp/>|<sp/>**Description**</highlight></codeline>
+<codeline><highlight class="normal">|:--------------|:---------------------------------------------------------------</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`help`<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Shows<sp/>the<sp/>help<sp/>dialog</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`build`<sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Invokes<sp/>`make`/`msbuild.exe`<sp/>and<sp/>builds<sp/>the<sp/>native<sp/>addon</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`clean`<sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Removes<sp/>the<sp/>`build`<sp/>directory<sp/>if<sp/>it<sp/>exists</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`configure`<sp/><sp/><sp/>|<sp/>Generates<sp/>project<sp/>build<sp/>files<sp/>for<sp/>the<sp/>current<sp/>platform</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`rebuild`<sp/><sp/><sp/><sp/><sp/>|<sp/>Runs<sp/>`clean`,<sp/>`configure`<sp/>and<sp/>`build`<sp/>all<sp/>in<sp/>a<sp/>row</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`install`<sp/><sp/><sp/><sp/><sp/>|<sp/>Installs<sp/>Node.js<sp/>header<sp/>files<sp/>for<sp/>the<sp/>given<sp/>version</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`list`<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Lists<sp/>the<sp/>currently<sp/>installed<sp/>Node.js<sp/>header<sp/>versions</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`remove`<sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Removes<sp/>the<sp/>Node.js<sp/>header<sp/>files<sp/>for<sp/>the<sp/>given<sp/>version</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Command<sp/>Options</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`node-gyp`<sp/>accepts<sp/>the<sp/>following<sp/>command<sp/>options:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">|<sp/>**Command**<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>**Description**</highlight></codeline>
+<codeline><highlight class="normal">|:----------------------------------|:------------------------------------------</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`-j<sp/>n`,<sp/>`--jobs<sp/>n`<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Run<sp/>`make`<sp/>in<sp/>parallel.<sp/>The<sp/>value<sp/>`max`<sp/>will<sp/>use<sp/>all<sp/>available<sp/>CPU<sp/>cores</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`--target=v6.2.1`<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Node.js<sp/>version<sp/>to<sp/>build<sp/>for<sp/>(default<sp/>is<sp/>`process.version`)</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`--silly`,<sp/>`--loglevel=silly`<sp/><sp/><sp/><sp/><sp/>|<sp/>Log<sp/>all<sp/>progress<sp/>to<sp/>console</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`--verbose`,<sp/>`--loglevel=verbose`<sp/>|<sp/>Log<sp/>most<sp/>progress<sp/>to<sp/>console</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`--silent`,<sp/>`--loglevel=silent`<sp/><sp/><sp/>|<sp/>Don&apos;t<sp/>log<sp/>anything<sp/>to<sp/>console</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`debug`,<sp/>`--debug`<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Make<sp/>Debug<sp/>build<sp/>(default<sp/>is<sp/>`Release`)</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`--release`,<sp/>`--no-debug`<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Make<sp/>Release<sp/>build</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`-C<sp/>$dir`,<sp/>`--directory=$dir`<sp/><sp/><sp/><sp/><sp/>|<sp/>Run<sp/>command<sp/>in<sp/>different<sp/>directory</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`--make=$make`<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Override<sp/>`make`<sp/>command<sp/>(e.g.<sp/>`gmake`)</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`--thin=yes`<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Enable<sp/>thin<sp/>static<sp/>libraries</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`--arch=$arch`<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Set<sp/>target<sp/>architecture<sp/>(e.g.<sp/>ia32)</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`--tarball=$path`<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Get<sp/>headers<sp/>from<sp/>a<sp/>local<sp/>tarball</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`--devdir=$path`<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>SDK<sp/>download<sp/>directory<sp/>(default<sp/>is<sp/>OS<sp/>cache<sp/>directory)</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`--ensure`<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Don&apos;t<sp/>reinstall<sp/>headers<sp/>if<sp/>already<sp/>present</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`--dist-url=$url`<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Download<sp/>header<sp/>tarball<sp/>from<sp/>custom<sp/>URL</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`--proxy=$url`<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Set<sp/>HTTP(S)<sp/>proxy<sp/>for<sp/>downloading<sp/>header<sp/>tarball</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`--noproxy=$urls`<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Set<sp/>urls<sp/>to<sp/>ignore<sp/>proxies<sp/>when<sp/>downloading<sp/>header<sp/>tarball</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`--cafile=$cafile`<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Override<sp/>default<sp/>CA<sp/>chain<sp/>(to<sp/>download<sp/>tarball)</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`--nodedir=$path`<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Set<sp/>the<sp/>path<sp/>to<sp/>the<sp/>node<sp/>source<sp/>code</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`--python=$path`<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Set<sp/>path<sp/>to<sp/>the<sp/>Python<sp/>binary</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`--msvs_version=$version`<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Set<sp/>Visual<sp/>Studio<sp/>version<sp/>(Windows<sp/>only)</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`--solution=$solution`<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Set<sp/>Visual<sp/>Studio<sp/>Solution<sp/>version<sp/>(Windows<sp/>only)</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`--force-process-config`<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Force<sp/>using<sp/>runtime&apos;s<sp/>`process.config`<sp/>object<sp/>to<sp/>generate<sp/>`config.gypi`<sp/>file</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Configuration</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Environment<sp/>variables</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Use<sp/>the<sp/>form<sp/>`npm_config_OPTION_NAME`<sp/>for<sp/>any<sp/>of<sp/>the<sp/>command<sp/>options<sp/>listed</highlight></codeline>
+<codeline><highlight class="normal">above<sp/>(dashes<sp/>in<sp/>option<sp/>names<sp/>should<sp/>be<sp/>replaced<sp/>by<sp/>underscores).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>example,<sp/>to<sp/>set<sp/>`devdir`<sp/>equal<sp/>to<sp/>`/tmp/.gyp`,<sp/>you<sp/>would:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Run<sp/>this<sp/>on<sp/>Unix:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```bash</highlight></codeline>
+<codeline><highlight class="normal">export<sp/>npm_config_devdir=/tmp/.gyp</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Or<sp/>this<sp/>on<sp/>Windows:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```console</highlight></codeline>
+<codeline><highlight class="normal">set<sp/>npm_config_devdir=c:\temp\.gyp</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>`npm`<sp/>configuration</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Use<sp/>the<sp/>form<sp/>`OPTION_NAME`<sp/>for<sp/>any<sp/>of<sp/>the<sp/>command<sp/>options<sp/>listed<sp/>above.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>example,<sp/>to<sp/>set<sp/>`devdir`<sp/>equal<sp/>to<sp/>`/tmp/.gyp`,<sp/>you<sp/>would<sp/>run:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```bash</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>config<sp/>set<sp/>[--global]<sp/>devdir<sp/>/tmp/.gyp</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Note:**<sp/>Configuration<sp/>set<sp/>via<sp/>`npm`<sp/>will<sp/>only<sp/>be<sp/>used<sp/>when<sp/>`node-gyp`</highlight></codeline>
+<codeline><highlight class="normal">is<sp/>run<sp/>via<sp/>`npm`,<sp/>not<sp/>when<sp/>`node-gyp`<sp/>is<sp/>run<sp/>directly.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>License</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`node-gyp`<sp/>is<sp/>available<sp/>under<sp/>the<sp/>MIT<sp/>license.<sp/>See<sp/>the<sp/>[LICENSE</highlight></codeline>
+<codeline><highlight class="normal">file](LICENSE)<sp/>for<sp/>details.</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/node-gyp/README.md"/>
+  </compounddef>
+</doxygen>

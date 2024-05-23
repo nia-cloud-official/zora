@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2iconv-lite_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2iconv-lite_2_r_e_a_d_m_e</compoundname>
+    <title>Pure JS character encoding conversion &lt;a href=&quot;https://travis-ci.org/ashtuchkin/iconv-lite&quot; &gt;&lt;img src=&quot;https://travis-ci.org/ashtuchkin/iconv-lite.svg?branch=master&quot; alt=&quot;Build Status&quot;/&gt;&lt;/a&gt;</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2iconv-lite_2_r_e_a_d_m_e_1autotoc_md1669"/><itemizedlist>
+<listitem><para>Doesn&apos;t need native code compilation. Works on Windows and in sandboxed environments like <ulink url="http://c9.io">Cloud9</ulink>.</para>
+</listitem><listitem><para>Used in popular projects like <ulink url="https://github.com/expressjs/body-parser">Express.js (body_parser)</ulink>, <ulink url="http://gruntjs.com/">Grunt</ulink>, <ulink url="http://www.nodemailer.com/">Nodemailer</ulink>, <ulink url="http://yeoman.io/">Yeoman</ulink> and others.</para>
+</listitem><listitem><para>Faster than <ulink url="https://github.com/bnoordhuis/node-iconv">node-iconv</ulink> (see below for performance comparison).</para>
+</listitem><listitem><para>Intuitive encode/decode API</para>
+</listitem><listitem><para>Streaming support for Node v0.10+</para>
+</listitem><listitem><para>[Deprecated] Can extend Node.js primitives (buffers, streams) to support all iconv-lite encodings.</para>
+</listitem><listitem><para>In-browser usage via <ulink url="https://github.com/substack/node-browserify">Browserify</ulink> (~180k gzip compressed with Buffer shim included).</para>
+</listitem><listitem><para>Typescript <ulink url="https://github.com/ashtuchkin/iconv-lite/blob/master/lib/index.d.ts">type definition file</ulink> included.</para>
+</listitem><listitem><para>React Native is supported (need to explicitly <computeroutput>npm install</computeroutput> two more modules: <computeroutput>buffer</computeroutput> and <computeroutput>stream</computeroutput>).</para>
+</listitem><listitem><para>License: MIT.</para>
+</listitem></itemizedlist>
+</para>
+<para><ulink url="https://npmjs.org/packages/iconv-lite/"><image type="html" name="https://nodei.co/npm/iconv-lite.png?downloads=true&amp;downloadRank=true" alt="NPM Stats" inline="yes"></image>
+</ulink></para>
+<sect1 id="md_backend_2node__modules_2iconv-lite_2_r_e_a_d_m_e_1autotoc_md1670">
+<title>Usage</title><sect2 id="md_backend_2node__modules_2iconv-lite_2_r_e_a_d_m_e_1autotoc_md1671">
+<title>Basic API</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>iconv<sp/>=<sp/>require(&apos;iconv-lite&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Convert<sp/>from<sp/>an<sp/>encoded<sp/>buffer<sp/>to<sp/>js<sp/>string.</highlight></codeline>
+<codeline><highlight class="normal">str<sp/>=<sp/>iconv.decode(Buffer.from([0x68,<sp/>0x65,<sp/>0x6c,<sp/>0x6c,<sp/>0x6f]),<sp/>&apos;win1251&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Convert<sp/>from<sp/>js<sp/>string<sp/>to<sp/>an<sp/>encoded<sp/>buffer.</highlight></codeline>
+<codeline><highlight class="normal">buf<sp/>=<sp/>iconv.encode(&quot;Sample<sp/>input<sp/>string&quot;,<sp/>&apos;win1251&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Check<sp/>if<sp/>encoding<sp/>is<sp/>supported</highlight></codeline>
+<codeline><highlight class="normal">iconv.encodingExists(&quot;us-ascii&quot;)</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2iconv-lite_2_r_e_a_d_m_e_1autotoc_md1672">
+<title>Streaming API (Node v0.10+)</title><para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>Decode<sp/>stream<sp/>(from<sp/>binary<sp/>stream<sp/>to<sp/>js<sp/>strings)</highlight></codeline>
+<codeline><highlight class="normal">http.createServer(function(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>var<sp/>converterStream<sp/>=<sp/>iconv.decodeStream(&apos;win1251&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>req.pipe(converterStream);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>converterStream.on(&apos;data&apos;,<sp/>function(str)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>console.log(str);<sp/>//<sp/>Do<sp/>something<sp/>with<sp/>decoded<sp/>strings,<sp/>chunk-by-chunk.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>});</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Convert<sp/>encoding<sp/>streaming<sp/>example</highlight></codeline>
+<codeline><highlight class="normal">fs.createReadStream(&apos;file-in-win1251.txt&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.pipe(iconv.decodeStream(&apos;win1251&apos;))</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.pipe(iconv.encodeStream(&apos;ucs2&apos;))</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.pipe(fs.createWriteStream(&apos;file-in-ucs2.txt&apos;));</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Sugar:<sp/>all<sp/>encode/decode<sp/>streams<sp/>have<sp/>.collect(cb)<sp/>method<sp/>to<sp/>accumulate<sp/>data.</highlight></codeline>
+<codeline><highlight class="normal">http.createServer(function(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>req.pipe(iconv.decodeStream(&apos;win1251&apos;)).collect(function(err,<sp/>body)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>assert(typeof<sp/>body<sp/>==<sp/>&apos;string&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>console.log(body);<sp/>//<sp/>full<sp/>request<sp/>body<sp/>string</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>});</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2iconv-lite_2_r_e_a_d_m_e_1autotoc_md1673">
+<title>[Deprecated] Extend Node.js own encodings</title><para><blockquote><para><zwj/>NOTE: This doesn&apos;t work on latest Node versions. See <ulink url="https://github.com/ashtuchkin/iconv-lite/wiki/Node-v4-compatibility">details</ulink>. </para>
+</blockquote></para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>After<sp/>this<sp/>call<sp/>all<sp/>Node<sp/>basic<sp/>primitives<sp/>will<sp/>understand<sp/>iconv-lite<sp/>encodings.</highlight></codeline>
+<codeline><highlight class="normal">iconv.extendNodeEncodings();</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Examples:</highlight></codeline>
+<codeline><highlight class="normal">buf<sp/>=<sp/>new<sp/>Buffer(str,<sp/>&apos;win1251&apos;);</highlight></codeline>
+<codeline><highlight class="normal">buf.write(str,<sp/>&apos;gbk&apos;);</highlight></codeline>
+<codeline><highlight class="normal">str<sp/>=<sp/>buf.toString(&apos;latin1&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert(Buffer.isEncoding(&apos;iso-8859-15&apos;));</highlight></codeline>
+<codeline><highlight class="normal">Buffer.byteLength(str,<sp/>&apos;us-ascii&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">http.createServer(function(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>req.setEncoding(&apos;big5&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>req.collect(function(err,<sp/>body)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>console.log(body);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>});</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">fs.createReadStream(&quot;file.txt&quot;,<sp/>&quot;shift_jis&quot;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>External<sp/>modules<sp/>are<sp/>also<sp/>supported<sp/>(if<sp/>they<sp/>use<sp/>Node<sp/>primitives,<sp/>which<sp/>they<sp/>probably<sp/>do).</highlight></codeline>
+<codeline><highlight class="normal">request<sp/>=<sp/>require(&apos;request&apos;);</highlight></codeline>
+<codeline><highlight class="normal">request({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>url:<sp/>&quot;http://github.com/&quot;,<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>encoding:<sp/>&quot;cp932&quot;</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>To<sp/>remove<sp/>extensions</highlight></codeline>
+<codeline><highlight class="normal">iconv.undoExtendNodeEncodings();</highlight></codeline>
+</programlisting></para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2iconv-lite_2_r_e_a_d_m_e_1autotoc_md1674">
+<title>Supported encodings</title><para><itemizedlist>
+<listitem><para>All node.js native encodings: utf8, ucs2 / utf16-le, ascii, binary, base64, hex.</para>
+</listitem><listitem><para>Additional unicode encodings: utf16, utf16-be, utf-7, utf-7-imap.</para>
+</listitem><listitem><para>All widespread singlebyte encodings: Windows 125x family, ISO-8859 family, IBM/DOS codepages, Macintosh family, KOI8 family, all others supported by iconv library. Aliases like &apos;latin1&apos;, &apos;us-ascii&apos; also supported.</para>
+</listitem><listitem><para>All widespread multibyte encodings: CP932, CP936, CP949, CP950, GB2312, GBK, GB18030, Big5, Shift_JIS, EUC-JP.</para>
+</listitem></itemizedlist>
+</para>
+<para>See <ulink url="https://github.com/ashtuchkin/iconv-lite/wiki/Supported-Encodings">all supported encodings on wiki</ulink>.</para>
+<para>Most singlebyte encodings are generated automatically from <ulink url="https://github.com/bnoordhuis/node-iconv">node-iconv</ulink>. Thank you Ben Noordhuis and libiconv authors!</para>
+<para>Multibyte encodings are generated from <ulink url="http://www.unicode.org/Public/MAPPINGS/">Unicode.org mappings</ulink> and <ulink url="http://encoding.spec.whatwg.org/">WHATWG Encoding Standard mappings</ulink>. Thank you, respective authors!</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2iconv-lite_2_r_e_a_d_m_e_1autotoc_md1675">
+<title>Encoding/decoding speed</title><para>Comparison with node-iconv module (1000x256kb, on MacBook Pro, Core i5/2.6 GHz, Node v0.12.0). Note: your results may vary, so please always check on your hardware. <verbatim>operation             iconv@2.1.4   iconv-lite@0.4.7
+----------------------------------------------------------
+encode(&apos;win1251&apos;)     ~96 Mb/s      ~320 Mb/s
+decode(&apos;win1251&apos;)     ~95 Mb/s      ~246 Mb/s
+</verbatim> </para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2iconv-lite_2_r_e_a_d_m_e_1autotoc_md1676">
+<title>BOM handling</title><para><itemizedlist>
+<listitem><para>Decoding: BOM is stripped by default, unless overridden by passing <computeroutput>stripBOM: false</computeroutput> in options (f.ex. <computeroutput>iconv.decode(buf, enc, {stripBOM: false})</computeroutput>). A callback might also be given as a <computeroutput>stripBOM</computeroutput> parameter - it&apos;ll be called if BOM character was actually found.</para>
+</listitem><listitem><para>If you want to detect UTF-8 BOM when decoding other encodings, use <ulink url="https://github.com/danielgindi/node-autodetect-decoder-stream">node-autodetect-decoder-stream</ulink> module.</para>
+</listitem><listitem><para>Encoding: No BOM added, unless overridden by <computeroutput>addBOM: true</computeroutput> option.</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2iconv-lite_2_r_e_a_d_m_e_1autotoc_md1677">
+<title>UTF-16 Encodings</title><para>This library supports UTF-16LE, UTF-16BE and UTF-16 encodings. First two are straightforward, but UTF-16 is trying to be smart about endianness in the following ways:<itemizedlist>
+<listitem><para>Decoding: uses BOM and &apos;spaces heuristic&apos; to determine input endianness. Default is UTF-16LE, but can be overridden with <lsquo/>defaultEncoding: &apos;utf-16be<rsquo/><computeroutput>option. Strips BOM unless</computeroutput>stripBOM: false<computeroutput>.</computeroutput></para>
+</listitem><listitem><para><computeroutput>Encoding: uses UTF-16LE and writes BOM by default. Use</computeroutput>addBOM: false` to override.</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2iconv-lite_2_r_e_a_d_m_e_1autotoc_md1678">
+<title>Other notes</title><para>When decoding, be sure to supply a Buffer to decode() method, otherwise <ulink url="https://github.com/ashtuchkin/iconv-lite/wiki/Use-Buffers-when-decoding">bad things usually happen</ulink>. <linebreak/>
+ Untranslatable characters are set to � or ?. No transliteration is currently supported. <linebreak/>
+ Node versions 0.10.31 and 0.11.13 are buggy, don&apos;t use them (see #65, #77). <linebreak/>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2iconv-lite_2_r_e_a_d_m_e_1autotoc_md1679">
+<title>Testing</title><para><programlisting filename=".bash"><codeline><highlight class="normal">$<sp/>git<sp/>clone<sp/>git@github.com:ashtuchkin/iconv-lite.git</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>cd<sp/>iconv-lite</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>install</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>test</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">$<sp/>#<sp/>To<sp/>view<sp/>performance:</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>node<sp/>test/performance.js</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>#<sp/>To<sp/>view<sp/>test<sp/>coverage:</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>run<sp/>coverage</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>open<sp/>coverage/lcov-report/index.html</highlight></codeline>
+</programlisting> </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/iconv-lite/README.md"/>
+  </compounddef>
+</doxygen>

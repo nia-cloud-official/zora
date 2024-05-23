@@ -1,0 +1,179 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2lru-cache_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>lru<sp/>cache</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>cache<sp/>object<sp/>that<sp/>deletes<sp/>the<sp/>least-recently-used<sp/>items.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![Build<sp/>Status](https://travis-ci.org/isaacs/node-lru-cache.svg?branch=master)](https://travis-ci.org/isaacs/node-lru-cache)<sp/>[![Coverage<sp/>Status](https://coveralls.io/repos/isaacs/node-lru-cache/badge.svg?service=github)](https://coveralls.io/github/isaacs/node-lru-cache)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Installation:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>install<sp/>lru-cache<sp/>--save</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Usage:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>LRU<sp/>=<sp/>require(&quot;lru-cache&quot;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>,<sp/>options<sp/>=<sp/>{<sp/>max:<sp/>500</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>length:<sp/>function<sp/>(n,<sp/>key)<sp/>{<sp/>return<sp/>n<sp/>*<sp/>2<sp/>+<sp/>key.length<sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>dispose:<sp/>function<sp/>(key,<sp/>n)<sp/>{<sp/>n.close()<sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>maxAge:<sp/>1000<sp/>*<sp/>60<sp/>*<sp/>60<sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>,<sp/>cache<sp/>=<sp/>new<sp/>LRU(options)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>,<sp/>otherCache<sp/>=<sp/>new<sp/>LRU(50)<sp/>//<sp/>sets<sp/>just<sp/>the<sp/>max<sp/>size</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">cache.set(&quot;key&quot;,<sp/>&quot;value&quot;)</highlight></codeline>
+<codeline><highlight class="normal">cache.get(&quot;key&quot;)<sp/>//<sp/>&quot;value&quot;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>non-string<sp/>keys<sp/>ARE<sp/>fully<sp/>supported</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>but<sp/>note<sp/>that<sp/>it<sp/>must<sp/>be<sp/>THE<sp/>SAME<sp/>object,<sp/>not</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>just<sp/>a<sp/>JSON-equivalent<sp/>object.</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>someObject<sp/>=<sp/>{<sp/>a:<sp/>1<sp/>}</highlight></codeline>
+<codeline><highlight class="normal">cache.set(someObject,<sp/>&apos;a<sp/>value&apos;)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Object<sp/>keys<sp/>are<sp/>not<sp/>toString()-ed</highlight></codeline>
+<codeline><highlight class="normal">cache.set(&apos;[object<sp/>Object]&apos;,<sp/>&apos;a<sp/>different<sp/>value&apos;)</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(cache.get(someObject),<sp/>&apos;a<sp/>value&apos;)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>A<sp/>similar<sp/>object<sp/>with<sp/>same<sp/>keys/values<sp/>won&apos;t<sp/>work,</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>because<sp/>it&apos;s<sp/>a<sp/>different<sp/>object<sp/>identity</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(cache.get({<sp/>a:<sp/>1<sp/>}),<sp/>undefined)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">cache.reset()<sp/><sp/><sp/><sp/>//<sp/>empty<sp/>the<sp/>cache</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>put<sp/>more<sp/>stuff<sp/>in<sp/>it,<sp/>then<sp/>items<sp/>will<sp/>fall<sp/>out.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>try<sp/>to<sp/>put<sp/>an<sp/>oversized<sp/>thing<sp/>in<sp/>it,<sp/>then<sp/>it&apos;ll<sp/>fall<sp/>out<sp/>right</highlight></codeline>
+<codeline><highlight class="normal">away.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Options</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`max`<sp/>The<sp/>maximum<sp/>size<sp/>of<sp/>the<sp/>cache,<sp/>checked<sp/>by<sp/>applying<sp/>the<sp/>length</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>function<sp/>to<sp/>all<sp/>values<sp/>in<sp/>the<sp/>cache.<sp/><sp/>Not<sp/>setting<sp/>this<sp/>is<sp/>kind<sp/>of</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>silly,<sp/>since<sp/>that&apos;s<sp/>the<sp/>whole<sp/>purpose<sp/>of<sp/>this<sp/>lib,<sp/>but<sp/>it<sp/>defaults</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>to<sp/>`Infinity`.<sp/><sp/>Setting<sp/>it<sp/>to<sp/>a<sp/>non-number<sp/>or<sp/>negative<sp/>number<sp/>will</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>throw<sp/>a<sp/>`TypeError`.<sp/><sp/>Setting<sp/>it<sp/>to<sp/>0<sp/>makes<sp/>it<sp/>be<sp/>`Infinity`.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`maxAge`<sp/>Maximum<sp/>age<sp/>in<sp/>ms.<sp/><sp/>Items<sp/>are<sp/>not<sp/>pro-actively<sp/>pruned<sp/>out</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>as<sp/>they<sp/>age,<sp/>but<sp/>if<sp/>you<sp/>try<sp/>to<sp/>get<sp/>an<sp/>item<sp/>that<sp/>is<sp/>too<sp/>old,<sp/>it&apos;ll</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>drop<sp/>it<sp/>and<sp/>return<sp/>undefined<sp/>instead<sp/>of<sp/>giving<sp/>it<sp/>to<sp/>you.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Setting<sp/>this<sp/>to<sp/>a<sp/>negative<sp/>value<sp/>will<sp/>make<sp/>everything<sp/>seem<sp/>old!</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Setting<sp/>it<sp/>to<sp/>a<sp/>non-number<sp/>will<sp/>throw<sp/>a<sp/>`TypeError`.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`length`<sp/>Function<sp/>that<sp/>is<sp/>used<sp/>to<sp/>calculate<sp/>the<sp/>length<sp/>of<sp/>stored</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>items.<sp/><sp/>If<sp/>you&apos;re<sp/>storing<sp/>strings<sp/>or<sp/>buffers,<sp/>then<sp/>you<sp/>probably<sp/>want</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>to<sp/>do<sp/>something<sp/>like<sp/>`function(n,<sp/>key){return<sp/>n.length}`.<sp/><sp/>The<sp/>default<sp/>is</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`function(){return<sp/>1}`,<sp/>which<sp/>is<sp/>fine<sp/>if<sp/>you<sp/>want<sp/>to<sp/>store<sp/>`max`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>like-sized<sp/>things.<sp/><sp/>The<sp/>item<sp/>is<sp/>passed<sp/>as<sp/>the<sp/>first<sp/>argument,<sp/>and</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>the<sp/>key<sp/>is<sp/>passed<sp/>as<sp/>the<sp/>second<sp/>argumnet.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`dispose`<sp/>Function<sp/>that<sp/>is<sp/>called<sp/>on<sp/>items<sp/>when<sp/>they<sp/>are<sp/>dropped</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>from<sp/>the<sp/>cache.<sp/><sp/>This<sp/>can<sp/>be<sp/>handy<sp/>if<sp/>you<sp/>want<sp/>to<sp/>close<sp/>file</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>descriptors<sp/>or<sp/>do<sp/>other<sp/>cleanup<sp/>tasks<sp/>when<sp/>items<sp/>are<sp/>no<sp/>longer</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>accessible.<sp/><sp/>Called<sp/>with<sp/>`key,<sp/>value`.<sp/><sp/>It&apos;s<sp/>called<sp/>*before*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>actually<sp/>removing<sp/>the<sp/>item<sp/>from<sp/>the<sp/>internal<sp/>cache,<sp/>so<sp/>if<sp/>you<sp/>want</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>to<sp/>immediately<sp/>put<sp/>it<sp/>back<sp/>in,<sp/>you&apos;ll<sp/>have<sp/>to<sp/>do<sp/>that<sp/>in<sp/>a</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`nextTick`<sp/>or<sp/>`setTimeout`<sp/>callback<sp/>or<sp/>it<sp/>won&apos;t<sp/>do<sp/>anything.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`stale`<sp/>By<sp/>default,<sp/>if<sp/>you<sp/>set<sp/>a<sp/>`maxAge`,<sp/>it&apos;ll<sp/>only<sp/>actually<sp/>pull</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>stale<sp/>items<sp/>out<sp/>of<sp/>the<sp/>cache<sp/>when<sp/>you<sp/>`get(key)`.<sp/><sp/>(That<sp/>is,<sp/>it&apos;s</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>not<sp/>pre-emptively<sp/>doing<sp/>a<sp/>`setTimeout`<sp/>or<sp/>anything.)<sp/><sp/>If<sp/>you<sp/>set</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`stale:true`,<sp/>it&apos;ll<sp/>return<sp/>the<sp/>stale<sp/>value<sp/>before<sp/>deleting<sp/>it.<sp/><sp/>If</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>you<sp/>don&apos;t<sp/>set<sp/>this,<sp/>then<sp/>it&apos;ll<sp/>return<sp/>`undefined`<sp/>when<sp/>you<sp/>try<sp/>to</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>get<sp/>a<sp/>stale<sp/>entry,<sp/>as<sp/>if<sp/>it<sp/>had<sp/>already<sp/>been<sp/>deleted.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`noDisposeOnSet`<sp/>By<sp/>default,<sp/>if<sp/>you<sp/>set<sp/>a<sp/>`dispose()`<sp/>method,<sp/>then</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>it&apos;ll<sp/>be<sp/>called<sp/>whenever<sp/>a<sp/>`set()`<sp/>operation<sp/>overwrites<sp/>an<sp/>existing</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>key.<sp/><sp/>If<sp/>you<sp/>set<sp/>this<sp/>option,<sp/>`dispose()`<sp/>will<sp/>only<sp/>be<sp/>called<sp/>when<sp/>a</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>key<sp/>falls<sp/>out<sp/>of<sp/>the<sp/>cache,<sp/>not<sp/>when<sp/>it<sp/>is<sp/>overwritten.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`updateAgeOnGet`<sp/>When<sp/>using<sp/>time-expiring<sp/>entries<sp/>with<sp/>`maxAge`,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>setting<sp/>this<sp/>to<sp/>`true`<sp/>will<sp/>make<sp/>each<sp/>item&apos;s<sp/>effective<sp/>time<sp/>update</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>to<sp/>the<sp/>current<sp/>time<sp/>whenever<sp/>it<sp/>is<sp/>retrieved<sp/>from<sp/>cache,<sp/>causing<sp/>it</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>to<sp/>not<sp/>expire.<sp/><sp/>(It<sp/>can<sp/>still<sp/>fall<sp/>out<sp/>of<sp/>cache<sp/>based<sp/>on<sp/>recency<sp/>of</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>use,<sp/>of<sp/>course.)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>API</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`set(key,<sp/>value,<sp/>maxAge)`</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`get(key)<sp/>=&gt;<sp/>value`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Both<sp/>of<sp/>these<sp/>will<sp/>update<sp/>the<sp/>&quot;recently<sp/>used&quot;-ness<sp/>of<sp/>the<sp/>key.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>They<sp/>do<sp/>what<sp/>you<sp/>think.<sp/>`maxAge`<sp/>is<sp/>optional<sp/>and<sp/>overrides<sp/>the</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>cache<sp/>`maxAge`<sp/>option<sp/>if<sp/>provided.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>If<sp/>the<sp/>key<sp/>is<sp/>not<sp/>found,<sp/>`get()`<sp/>will<sp/>return<sp/>`undefined`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>The<sp/>key<sp/>and<sp/>val<sp/>can<sp/>be<sp/>any<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`peek(key)`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Returns<sp/>the<sp/>key<sp/>value<sp/>(or<sp/>`undefined`<sp/>if<sp/>not<sp/>found)<sp/>without</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>updating<sp/>the<sp/>&quot;recently<sp/>used&quot;-ness<sp/>of<sp/>the<sp/>key.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>(If<sp/>you<sp/>find<sp/>yourself<sp/>using<sp/>this<sp/>a<sp/>lot,<sp/>you<sp/>*might*<sp/>be<sp/>using<sp/>the</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>wrong<sp/>sort<sp/>of<sp/>data<sp/>structure,<sp/>but<sp/>there<sp/>are<sp/>some<sp/>use<sp/>cases<sp/>where</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>it&apos;s<sp/>handy.)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`del(key)`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Deletes<sp/>a<sp/>key<sp/>out<sp/>of<sp/>the<sp/>cache.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`reset()`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Clear<sp/>the<sp/>cache<sp/>entirely,<sp/>throwing<sp/>away<sp/>all<sp/>values.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`has(key)`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Check<sp/>if<sp/>a<sp/>key<sp/>is<sp/>in<sp/>the<sp/>cache,<sp/>without<sp/>updating<sp/>the<sp/>recent-ness</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>or<sp/>deleting<sp/>it<sp/>for<sp/>being<sp/>stale.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`forEach(function(value,key,cache),<sp/>[thisp])`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Just<sp/>like<sp/>`Array.prototype.forEach`.<sp/><sp/>Iterates<sp/>over<sp/>all<sp/>the<sp/>keys</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>in<sp/>the<sp/>cache,<sp/>in<sp/>order<sp/>of<sp/>recent-ness.<sp/><sp/>(Ie,<sp/>more<sp/>recently<sp/>used</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>items<sp/>are<sp/>iterated<sp/>over<sp/>first.)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`rforEach(function(value,key,cache),<sp/>[thisp])`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>The<sp/>same<sp/>as<sp/>`cache.forEach(...)`<sp/>but<sp/>items<sp/>are<sp/>iterated<sp/>over<sp/>in</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>reverse<sp/>order.<sp/><sp/>(ie,<sp/>less<sp/>recently<sp/>used<sp/>items<sp/>are<sp/>iterated<sp/>over</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>first.)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`keys()`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Return<sp/>an<sp/>array<sp/>of<sp/>the<sp/>keys<sp/>in<sp/>the<sp/>cache.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`values()`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Return<sp/>an<sp/>array<sp/>of<sp/>the<sp/>values<sp/>in<sp/>the<sp/>cache.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`length`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Return<sp/>total<sp/>length<sp/>of<sp/>objects<sp/>in<sp/>cache<sp/>taking<sp/>into<sp/>account</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>`length`<sp/>options<sp/>function.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`itemCount`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Return<sp/>total<sp/>quantity<sp/>of<sp/>objects<sp/>currently<sp/>in<sp/>cache.<sp/>Note,<sp/>that</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>`stale`<sp/>(see<sp/>options)<sp/>items<sp/>are<sp/>returned<sp/>as<sp/>part<sp/>of<sp/>this<sp/>item</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>count.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`dump()`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Return<sp/>an<sp/>array<sp/>of<sp/>the<sp/>cache<sp/>entries<sp/>ready<sp/>for<sp/>serialization<sp/>and<sp/>usage</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>with<sp/>&apos;destinationCache.load(arr)`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`load(cacheEntriesArray)`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Loads<sp/>another<sp/>cache<sp/>entries<sp/>array,<sp/>obtained<sp/>with<sp/>`sourceCache.dump()`,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>into<sp/>the<sp/>cache.<sp/>The<sp/>destination<sp/>cache<sp/>is<sp/>reset<sp/>before<sp/>loading<sp/>new<sp/>entries</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`prune()`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Manually<sp/>iterates<sp/>over<sp/>the<sp/>entire<sp/>cache<sp/>proactively<sp/>pruning<sp/>old<sp/>entries</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/lru-cache/README.md"/>
+  </compounddef>
+</doxygen>

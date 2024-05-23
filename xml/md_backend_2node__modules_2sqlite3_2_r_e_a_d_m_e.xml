@@ -1,0 +1,208 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e</compoundname>
+    <title>⚙️ node-sqlite3</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_1autotoc_md3601"/> Asynchronous, non-blocking <ulink url="https://sqlite.org/">SQLite3</ulink> bindings for <ulink url="http://nodejs.org/">Node.js</ulink>.</para>
+<para><ulink url="https://www.npmjs.com/package/sqlite3"><image type="html" name="https://img.shields.io/github/release/TryGhost/node-sqlite3.svg" alt="Latest release" inline="yes"></image>
+</ulink> <image type="html" name="https://github.com/TryGhost/node-sqlite3/workflows/CI/badge.svg?branch=master" alt="Build Status" inline="yes"></image>
+ <ulink url="https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fmapbox%2Fnode-sqlite3?ref=badge_shield"><image type="html" name="https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fmapbox%2Fnode-sqlite3.svg?type=shield" alt="FOSSA Status" inline="yes"></image>
+</ulink> <ulink url="https://nodejs.org/dist/latest/docs/api/n-api.html#n_api_n_api"><image type="html" name="https://img.shields.io/badge/N--API-v3-green.svg" alt="N-API v3 Badge" inline="yes"></image>
+</ulink> <ulink url="https://nodejs.org/dist/latest/docs/api/n-api.html#n_api_n_api"><image type="html" name="https://img.shields.io/badge/N--API-v6-green.svg" alt="N-API v6 Badge" inline="yes"></image>
+</ulink></para>
+<sect1 id="md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_1autotoc_md3602">
+<title>Features</title><para><itemizedlist>
+<listitem><para>Straightforward query and parameter binding interface</para>
+</listitem><listitem><para>Full Buffer/Blob support</para>
+</listitem><listitem><para>Extensive <ulink url="https://github.com/tryghost/node-sqlite3/wiki/Debugging">debugging support</ulink></para>
+</listitem><listitem><para><ulink url="https://github.com/tryghost/node-sqlite3/wiki/Control-Flow">Query serialization</ulink> API</para>
+</listitem><listitem><para><ulink url="https://github.com/TryGhost/node-sqlite3/wiki/API#databaseloadextensionpath-callback">Extension support</ulink>, including bundled support for the <ulink url="https://www.sqlite.org/json1.html">json1 extension</ulink></para>
+</listitem><listitem><para>Big test suite</para>
+</listitem><listitem><para>Written in modern C++ and tested for memory leaks</para>
+</listitem><listitem><para>Bundles SQLite v3.44.2, or you can build using a local SQLite</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_1autotoc_md3603">
+<title>Installing</title><para>You can use <ulink url="https://github.com/npm/cli"><computeroutput>npm</computeroutput></ulink> or <ulink url="https://github.com/yarnpkg/yarn"><computeroutput>yarn</computeroutput></ulink> to install <computeroutput>sqlite3</computeroutput>:</para>
+<para><itemizedlist>
+<listitem><para>(recommended) Latest published package: <programlisting filename=".bash"><codeline><highlight class="normal">npm<sp/>install<sp/>sqlite3</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>or</highlight></codeline>
+<codeline><highlight class="normal">yarn<sp/>add<sp/>sqlite3</highlight></codeline>
+</programlisting></para>
+</listitem><listitem><para>GitHub&apos;s <computeroutput>master</computeroutput> branch: <computeroutput>npm install <ulink url="https://github.com/tryghost/node-sqlite3/tarball/master">https://github.com/tryghost/node-sqlite3/tarball/master</ulink></computeroutput></para>
+</listitem></itemizedlist>
+</para>
+<sect3 id="md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_1autotoc_md3604">
+<title>Prebuilt binaries</title><para><computeroutput>sqlite3</computeroutput> v5+ was rewritten to use <ulink url="https://nodejs.org/api/n-api.html">Node-API</ulink> so prebuilt binaries do not need to be built for specific Node versions. <computeroutput>sqlite3</computeroutput> currently builds for both Node-API v3 and v6. Check the <ulink url="https://nodejs.org/api/n-api.html#node-api-version-matrix">Node-API version matrix</ulink> to ensure your Node version supports one of these. The prebuilt binaries should be supported on Node v10+.</para>
+<para>The module uses <ulink url="https://github.com/prebuild/prebuild-install"><computeroutput>prebuild-install</computeroutput></ulink> to download the prebuilt binary for your platform, if it exists. These binaries are hosted on GitHub Releases for <computeroutput>sqlite3</computeroutput> versions above 5.0.2, and they are hosted on S3 otherwise. The following targets are currently provided:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>darwin-arm64</computeroutput></para>
+</listitem><listitem><para><computeroutput>darwin-x64</computeroutput></para>
+</listitem><listitem><para><computeroutput>linux-arm64</computeroutput></para>
+</listitem><listitem><para><computeroutput>linux-x64</computeroutput></para>
+</listitem><listitem><para><computeroutput>linuxmusl-arm64</computeroutput></para>
+</listitem><listitem><para><computeroutput>linuxmusl-x64</computeroutput></para>
+</listitem><listitem><para><computeroutput>win32-ia32</computeroutput></para>
+</listitem><listitem><para><computeroutput>win32-x64</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+<para>Unfortunately, <ulink url="https://github.com/prebuild/prebuild/issues/174">prebuild</ulink> cannot differentiate between <computeroutput>armv6</computeroutput> and <computeroutput>armv7</computeroutput>, and instead uses <computeroutput>arm</computeroutput> as the <computeroutput>{arch}</computeroutput>. Until that is fixed, you will still need to install <computeroutput>sqlite3</computeroutput> from source.</para>
+<para>Support for other platforms and architectures may be added in the future if CI supports building on them.</para>
+<para>If your environment isn&apos;t supported, it&apos;ll use <computeroutput>node-gyp</computeroutput> to build SQLite, but you will need to install a C++ compiler and linker.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_1autotoc_md3605">
+<title>Other ways to install</title><para>It is also possible to make your own build of <computeroutput>sqlite3</computeroutput> from its source instead of its npm package (See below.).</para>
+<para>The <computeroutput>sqlite3</computeroutput> module also works with <ulink url="https://github.com/rogerwang/node-webkit">node-webkit</ulink> if node-webkit contains a supported version of Node.js engine. (See below.)</para>
+<para>SQLite&apos;s <ulink url="https://github.com/sqlcipher/sqlcipher">SQLCipher extension</ulink> is also supported. (See below.)</para>
+</sect3>
+</sect1>
+<sect1 id="md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_1autotoc_md3606">
+<title>API</title><para>See the <ulink url="https://github.com/TryGhost/node-sqlite3/wiki/API">API documentation</ulink> in the wiki.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_1autotoc_md3607">
+<title>Usage</title><para><bold>Note:</bold> the module must be installed before use.</para>
+<para><programlisting><codeline><highlight class="normal"><sp/>js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>sqlite3<sp/>=<sp/>require(&apos;sqlite3&apos;).verbose();</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>db<sp/>=<sp/>new<sp/>sqlite3.Database(&apos;:memory:&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">db.serialize(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>db.run(&quot;CREATE<sp/>TABLE<sp/>lorem<sp/>(info<sp/>TEXT)&quot;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>const<sp/>stmt<sp/>=<sp/>db.prepare(&quot;INSERT<sp/>INTO<sp/>lorem<sp/>VALUES<sp/>(?)&quot;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>for<sp/>(let<sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>10;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>stmt.run(&quot;Ipsum<sp/>&quot;<sp/>+<sp/>i);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>stmt.finalize();</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>db.each(&quot;SELECT<sp/>rowid<sp/>AS<sp/>id,<sp/>info<sp/>FROM<sp/>lorem&quot;,<sp/>(err,<sp/>row)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>console.log(row.id<sp/>+<sp/>&quot;:<sp/>&quot;<sp/>+<sp/>row.info);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>});</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">db.close();</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_1autotoc_md3608">
+<title>Source install</title><para>To skip searching for pre-compiled binaries, and force a build from source, use</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">npm<sp/>install<sp/>--build-from-source</highlight></codeline>
+</programlisting></para>
+<para>The sqlite3 module depends only on libsqlite3. However, by default, an internal/bundled copy of sqlite will be built and statically linked, so an externally installed sqlite3 is not required.</para>
+<para>If you wish to install against an external sqlite then you need to pass the <computeroutput>--sqlite</computeroutput> argument to <computeroutput>npm</computeroutput> wrapper:</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">npm<sp/>install<sp/>--build-from-source<sp/>--sqlite=/usr/local</highlight></codeline>
+</programlisting></para>
+<para>If building against an external sqlite3 make sure to have the development headers available. Mac OS X ships with these by default. If you don&apos;t have them installed, install the <computeroutput>-dev</computeroutput> package with your package manager, e.g. <computeroutput>apt-get install libsqlite3-dev</computeroutput> for Debian/Ubuntu. Make sure that you have at least <computeroutput>libsqlite3</computeroutput> &gt;= 3.6.</para>
+<para>Note, if building against homebrew-installed sqlite on OS X you can do:</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">npm<sp/>install<sp/>--build-from-source<sp/>--sqlite=/usr/local/opt/sqlite/</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_1autotoc_md3609">
+<title>Custom file header (magic)</title><para>The default sqlite file header is &quot;SQLite format 3&quot;. You can specify a different magic, though this will make standard tools and libraries unable to work with your files.</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">npm<sp/>install<sp/>--build-from-source<sp/>--sqlite_magic=&quot;MyCustomMagic15&quot;</highlight></codeline>
+</programlisting></para>
+<para>Note that the magic <emphasis>must</emphasis> be exactly 15 characters long (16 bytes including null terminator).</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_1autotoc_md3610">
+<title>Building for node-webkit</title><para>Because of ABI differences, <computeroutput>sqlite3</computeroutput> must be built in a custom to be used with <ulink url="https://github.com/rogerwang/node-webkit">node-webkit</ulink>.</para>
+<para>To build <computeroutput>sqlite3</computeroutput> for node-webkit:</para>
+<para><orderedlist>
+<listitem><para>Install <ulink url="https://github.com/rogerwang/nw-gyp"><computeroutput>nw-gyp</computeroutput></ulink> globally: <computeroutput>npm install nw-gyp -g</computeroutput> *(unless already installed)*</para>
+</listitem><listitem><para>Build the module with the custom flags of <computeroutput>--runtime</computeroutput>, <computeroutput>--target_arch</computeroutput>, and <computeroutput>--target</computeroutput>:</para>
+</listitem></orderedlist>
+</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">NODE_WEBKIT_VERSION=&quot;0.8.6&quot;<sp/>#<sp/>see<sp/>latest<sp/>version<sp/>at<sp/>https://github.com/rogerwang/node-webkit#downloads</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>install<sp/>sqlite3<sp/>--build-from-source<sp/>--runtime=node-webkit<sp/>--target_arch=ia32<sp/>--target=$(NODE_WEBKIT_VERSION)</highlight></codeline>
+</programlisting></para>
+<para>You can also run this command from within a <computeroutput>sqlite3</computeroutput> checkout:</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">npm<sp/>install<sp/>--build-from-source<sp/>--runtime=node-webkit<sp/>--target_arch=ia32<sp/>--target=$(NODE_WEBKIT_VERSION)</highlight></codeline>
+</programlisting></para>
+<para>Remember the following:</para>
+<para><itemizedlist>
+<listitem><para>You must provide the right <computeroutput>--target_arch</computeroutput> flag. <computeroutput>ia32</computeroutput> is needed to target 32bit node-webkit builds, while <computeroutput>x64</computeroutput> will target 64bit node-webkit builds (if available for your platform).</para>
+</listitem><listitem><para>After the <computeroutput>sqlite3</computeroutput> package is built for node-webkit it cannot run in the vanilla Node.js (and vice versa).<itemizedlist>
+<listitem><para>For example, <computeroutput>npm test</computeroutput> of the node-webkit&apos;s package would fail.</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+<para>Visit the “<ulink url="https://github.com/rogerwang/node-webkit/wiki/Using-Node-modules">Using Node modules</ulink>” article in the node-webkit&apos;s wiki for more details.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_1autotoc_md3611">
+<title>Building for SQLCipher</title><para>For instructions on building SQLCipher, see <ulink url="https://coolaj86.com/articles/building-sqlcipher-for-node-js-on-raspberry-pi-2/">Building SQLCipher for Node.js</ulink>. Alternatively, you can install it with your local package manager.</para>
+<para>To run against SQLCipher, you need to compile <computeroutput>sqlite3</computeroutput> from source by passing build options like:</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">npm<sp/>install<sp/>sqlite3<sp/>--build-from-source<sp/>--sqlite_libname=sqlcipher<sp/>--sqlite=/usr/</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">node<sp/>-e<sp/>&apos;require(&quot;sqlite3&quot;)&apos;</highlight></codeline>
+</programlisting></para>
+<para>If your SQLCipher is installed in a custom location (if you compiled and installed it yourself), you&apos;ll need to set some environment variables:</para>
+<sect3 id="md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_1autotoc_md3612">
+<title>On OS X with Homebrew</title><para>Set the location where <computeroutput>brew</computeroutput> installed it:</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">export<sp/>LDFLAGS=&quot;-L`brew<sp/>--prefix`/opt/sqlcipher/lib&quot;</highlight></codeline>
+<codeline><highlight class="normal">export<sp/>CPPFLAGS=&quot;-I`brew<sp/>--prefix`/opt/sqlcipher/include/sqlcipher&quot;</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>install<sp/>sqlite3<sp/>--build-from-source<sp/>--sqlite_libname=sqlcipher<sp/>--sqlite=`brew<sp/>--prefix`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">node<sp/>-e<sp/>&apos;require(&quot;sqlite3&quot;)&apos;</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_1autotoc_md3613">
+<title>On most Linuxes (including Raspberry Pi)</title><para>Set the location where <computeroutput>make</computeroutput> installed it:</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">export<sp/>LDFLAGS=&quot;-L/usr/local/lib&quot;</highlight></codeline>
+<codeline><highlight class="normal">export<sp/>CPPFLAGS=&quot;-I/usr/local/include<sp/>-I/usr/local/include/sqlcipher&quot;</highlight></codeline>
+<codeline><highlight class="normal">export<sp/>CXXFLAGS=&quot;$CPPFLAGS&quot;</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>install<sp/>sqlite3<sp/>--build-from-source<sp/>--sqlite_libname=sqlcipher<sp/>--sqlite=/usr/local<sp/>--verbose</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">node<sp/>-e<sp/>&apos;require(&quot;sqlite3&quot;)&apos;</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_1autotoc_md3614">
+<title>Custom builds and Electron</title><para>Running <computeroutput>sqlite3</computeroutput> through <ulink url="https://github.com/electron/electron-rebuild">electron-rebuild</ulink> does not preserve the SQLCipher extension, so some additional flags are needed to make this build Electron compatible. Your <computeroutput>npm install sqlite3 --build-from-source</computeroutput> command needs these additional flags (be sure to replace the target version with the current Electron version you are working with):</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">--runtime=electron<sp/>--target=18.2.1<sp/>--dist-url=https://electronjs.org/headers</highlight></codeline>
+</programlisting></para>
+<para>In the case of MacOS with Homebrew, the command should look like the following:</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">npm<sp/>install<sp/>sqlite3<sp/>--build-from-source<sp/>--sqlite_libname=sqlcipher<sp/>--sqlite=`brew<sp/>--prefix`<sp/>--runtime=electron<sp/>--target=18.2.1<sp/>--dist-url=https://electronjs.org/headers</highlight></codeline>
+</programlisting></para>
+</sect3>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_1autotoc_md3615">
+<title>Testing</title><para><programlisting filename=".bash"><codeline><highlight class="normal">npm<sp/>test</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_1autotoc_md3616">
+<title>Contributors</title><para><itemizedlist>
+<listitem><para><ulink url="https://github.com/daniellockyer">Daniel Lockyer</ulink></para>
+</listitem><listitem><para><ulink url="https://github.com/kkaefer">Konstantin Käfer</ulink></para>
+</listitem><listitem><para><ulink url="https://github.com/springmeyer">Dane Springmeyer</ulink></para>
+</listitem><listitem><para><ulink url="https://github.com/willwhite">Will White</ulink></para>
+</listitem><listitem><para><ulink url="https://github.com/orlandov">Orlando Vazquez</ulink></para>
+</listitem><listitem><para><ulink url="https://github.com/artiz">Artem Kustikov</ulink></para>
+</listitem><listitem><para><ulink url="https://github.com/grumdrig">Eric Fredricksen</ulink></para>
+</listitem><listitem><para><ulink url="https://github.com/mrjjwright">John Wright</ulink></para>
+</listitem><listitem><para><ulink url="https://github.com/ry">Ryan Dahl</ulink></para>
+</listitem><listitem><para><ulink url="https://github.com/tmcw">Tom MacWright</ulink></para>
+</listitem><listitem><para><ulink url="https://github.com/carter-thaxton">Carter Thaxton</ulink></para>
+</listitem><listitem><para><ulink url="https://github.com/audriusk">Audrius Kažukauskas</ulink></para>
+</listitem><listitem><para><ulink url="https://github.com/pyneo">Johannes Schauer</ulink></para>
+</listitem><listitem><para><ulink url="https://github.com/Mithgol">Mithgol</ulink></para>
+</listitem><listitem><para><ulink url="https://github.com/kewde">Kewde</ulink></para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_1autotoc_md3617">
+<title>Acknowledgments</title><para>Thanks to <ulink url="https://github.com/orlandov">Orlando Vazquez</ulink>, <ulink url="https://github.com/grumdrig">Eric Fredricksen</ulink> and <ulink url="https://github.com/ry">Ryan Dahl</ulink> for their SQLite bindings for node, and to mraleph on Freenode&apos;s #v8 for answering questions.</para>
+<para>This module was originally created by <ulink url="https://mapbox.com/">Mapbox</ulink> &amp; is now maintained by <ulink url="https://ghost.org">Ghost</ulink>.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_1autotoc_md3618">
+<title>Changelog</title><para>We use <ulink url="https://github.com/TryGhost/node-sqlite3/releases">GitHub releases</ulink> for notes on the latest versions. See <ulink url="https://github.com/TryGhost/node-sqlite3/blob/b05f4594cf8b0de64743561fcd2cfe6f4571754d/CHANGELOG.md">CHANGELOG.md</ulink> in git history for details on older versions.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_1autotoc_md3619">
+<title>License</title><para><computeroutput>node-sqlite3</computeroutput> is <ulink url="https://github.com/tryghost/node-sqlite3/raw/master/LICENSE">BSD licensed</ulink>.</para>
+<para><ulink url="https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fmapbox%2Fnode-sqlite3?ref=badge_large"><image type="html" name="https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fmapbox%2Fnode-sqlite3.svg?type=large" alt="FOSSA Status" inline="yes"></image>
+</ulink> </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/sqlite3/README.md"/>
+  </compounddef>
+</doxygen>

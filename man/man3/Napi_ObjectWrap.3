@@ -1,0 +1,437 @@
+.TH "Napi::ObjectWrap< T >" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Napi::ObjectWrap< T >
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fR#include <napi\&.h>\fP
+.PP
+Inherits \fBNapi::InstanceWrap< T >\fP, and \fBNapi::Reference< Object >\fP\&.
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "using \fBStaticVoidMethodCallback\fP = void (*)(const \fBCallbackInfo\fP& info)"
+.br
+.ti -1c
+.RI "using \fBStaticMethodCallback\fP = \fBNapi::Value\fP (*)(const \fBCallbackInfo\fP& info)"
+.br
+.ti -1c
+.RI "using \fBStaticGetterCallback\fP = \fBNapi::Value\fP (*)(const \fBCallbackInfo\fP& info)"
+.br
+.ti -1c
+.RI "using \fBStaticSetterCallback\fP"
+.br
+.ti -1c
+.RI "using \fBPropertyDescriptor\fP = \fBClassPropertyDescriptor\fP<T>"
+.br
+.in -1c
+
+Public Types inherited from \fBNapi::InstanceWrap< T >\fP
+.in +1c
+.ti -1c
+.RI "using \fBInstanceVoidMethodCallback\fP = void (T::*)(const \fBCallbackInfo\fP& info)"
+.br
+.ti -1c
+.RI "using \fBInstanceMethodCallback\fP = \fBNapi::Value\fP (T::*)(const \fBCallbackInfo\fP& info)"
+.br
+.ti -1c
+.RI "using \fBInstanceGetterCallback\fP = \fBNapi::Value\fP (T::*)(const \fBCallbackInfo\fP& info)"
+.br
+.ti -1c
+.RI "using \fBInstanceSetterCallback\fP"
+.br
+.ti -1c
+.RI "using \fBPropertyDescriptor\fP = \fBClassPropertyDescriptor\fP<T>"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBObjectWrap\fP (const \fBCallbackInfo\fP &callbackInfo)"
+.br
+.ti -1c
+.RI "virtual \fB~ObjectWrap\fP ()"
+.br
+.ti -1c
+.RI "virtual void \fBFinalize\fP (\fBNapi::Env\fP env)"
+.br
+.ti -1c
+.RI "template<typename \fBObjectWrap\fP< T >\fB::StaticVoidMethodCallback\fP method> \fBClassPropertyDescriptor\fP< T > \fBStaticMethod\fP (const char *utf8name, napi_property_attributes attributes, void *data)"
+.br
+.ti -1c
+.RI "template<typename \fBObjectWrap\fP< T >\fB::StaticVoidMethodCallback\fP method> \fBClassPropertyDescriptor\fP< T > \fBStaticMethod\fP (\fBSymbol\fP name, napi_property_attributes attributes, void *data)"
+.br
+.ti -1c
+.RI "template<typename \fBObjectWrap\fP< T >\fB::StaticGetterCallback\fP getter, typename \fBObjectWrap\fP< T >\fB::StaticSetterCallback\fP setter> \fBClassPropertyDescriptor\fP< T > \fBStaticAccessor\fP (const char *utf8name, napi_property_attributes attributes, void *data)"
+.br
+.ti -1c
+.RI "template<typename \fBObjectWrap\fP< T >\fB::StaticGetterCallback\fP getter, typename \fBObjectWrap\fP< T >\fB::StaticSetterCallback\fP setter> \fBClassPropertyDescriptor\fP< T > \fBStaticAccessor\fP (\fBSymbol\fP name, napi_property_attributes attributes, void *data)"
+.br
+.in -1c
+
+Public Member Functions inherited from \fBNapi::InstanceWrap< T >\fP
+.in +1c
+.ti -1c
+.RI "template<typename \fBInstanceWrap\fP< T >\fB::InstanceVoidMethodCallback\fP method> \fBClassPropertyDescriptor\fP< T > \fBInstanceMethod\fP (const char *utf8name, napi_property_attributes attributes, void *data)"
+.br
+.ti -1c
+.RI "template<typename \fBInstanceWrap\fP< T >\fB::InstanceVoidMethodCallback\fP method> \fBClassPropertyDescriptor\fP< T > \fBInstanceMethod\fP (\fBSymbol\fP name, napi_property_attributes attributes, void *data)"
+.br
+.ti -1c
+.RI "template<typename \fBInstanceWrap\fP< T >\fB::InstanceGetterCallback\fP getter, typename \fBInstanceWrap\fP< T >\fB::InstanceSetterCallback\fP setter> \fBClassPropertyDescriptor\fP< T > \fBInstanceAccessor\fP (const char *utf8name, napi_property_attributes attributes, void *data)"
+.br
+.ti -1c
+.RI "template<typename \fBInstanceWrap\fP< T >\fB::InstanceGetterCallback\fP getter, typename \fBInstanceWrap\fP< T >\fB::InstanceSetterCallback\fP setter> \fBClassPropertyDescriptor\fP< T > \fBInstanceAccessor\fP (\fBSymbol\fP name, napi_property_attributes attributes, void *data)"
+.br
+.in -1c
+
+Public Member Functions inherited from \fBNapi::Reference< Object >\fP
+.in +1c
+.ti -1c
+.RI "\fBReference\fP ()"
+.br
+.ti -1c
+.RI "\fBReference\fP (napi_env env, napi_ref ref)"
+.br
+.ti -1c
+.RI "\fBReference\fP (\fBReference\fP< \fBObject\fP > &&other)"
+.br
+.ti -1c
+.RI "\fB~Reference\fP ()"
+.br
+.ti -1c
+.RI "\fBReference\fP< \fBObject\fP > & \fBoperator=\fP (\fBReference\fP< \fBObject\fP > &&other)"
+.br
+.ti -1c
+.RI "\fBoperator napi_ref\fP () const"
+.br
+.ti -1c
+.RI "bool \fBoperator==\fP (const \fBReference\fP< \fBObject\fP > &other) const"
+.br
+.ti -1c
+.RI "bool \fBoperator!=\fP (const \fBReference\fP< \fBObject\fP > &other) const"
+.br
+.ti -1c
+.RI "\fBNapi::Env\fP \fBEnv\fP () const"
+.br
+.ti -1c
+.RI "bool \fBIsEmpty\fP () const"
+.br
+.ti -1c
+.RI "\fBObject\fP \fBValue\fP () const"
+.br
+.ti -1c
+.RI "uint32_t \fBRef\fP () const"
+.br
+.ti -1c
+.RI "uint32_t \fBUnref\fP () const"
+.br
+.ti -1c
+.RI "void \fBReset\fP ()"
+.br
+.ti -1c
+.RI "void \fBReset\fP (const \fBObject\fP &value, uint32_t refcount=0)"
+.br
+.ti -1c
+.RI "void \fBSuppressDestruct\fP ()"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static T * \fBUnwrap\fP (\fBObject\fP wrapper)"
+.br
+.ti -1c
+.RI "static \fBFunction\fP \fBDefineClass\fP (\fBNapi::Env\fP env, const char *utf8name, const std::initializer_list< \fBPropertyDescriptor\fP > &properties, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBFunction\fP \fBDefineClass\fP (\fBNapi::Env\fP env, const char *utf8name, const std::vector< \fBPropertyDescriptor\fP > &properties, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBStaticMethod\fP (const char *utf8name, \fBStaticVoidMethodCallback\fP method, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBStaticMethod\fP (const char *utf8name, \fBStaticMethodCallback\fP method, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBStaticMethod\fP (\fBSymbol\fP name, \fBStaticVoidMethodCallback\fP method, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBStaticMethod\fP (\fBSymbol\fP name, \fBStaticMethodCallback\fP method, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "template<\fBStaticVoidMethodCallback\fP method> static \fBPropertyDescriptor\fP \fBStaticMethod\fP (const char *utf8name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "template<\fBStaticVoidMethodCallback\fP method> static \fBPropertyDescriptor\fP \fBStaticMethod\fP (\fBSymbol\fP name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "template<\fBStaticMethodCallback\fP method> static \fBPropertyDescriptor\fP \fBStaticMethod\fP (const char *utf8name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "template<\fBStaticMethodCallback\fP method> static \fBPropertyDescriptor\fP \fBStaticMethod\fP (\fBSymbol\fP name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBStaticAccessor\fP (const char *utf8name, \fBStaticGetterCallback\fP getter, \fBStaticSetterCallback\fP setter, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBStaticAccessor\fP (\fBSymbol\fP name, \fBStaticGetterCallback\fP getter, \fBStaticSetterCallback\fP setter, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "template<\fBStaticGetterCallback\fP getter, \fBStaticSetterCallback\fP setter = nullptr> static \fBPropertyDescriptor\fP \fBStaticAccessor\fP (const char *utf8name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "template<\fBStaticGetterCallback\fP getter, \fBStaticSetterCallback\fP setter = nullptr> static \fBPropertyDescriptor\fP \fBStaticAccessor\fP (\fBSymbol\fP name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBStaticValue\fP (const char *utf8name, \fBNapi::Value\fP value, napi_property_attributes attributes=napi_default)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBStaticValue\fP (\fBSymbol\fP name, \fBNapi::Value\fP value, napi_property_attributes attributes=napi_default)"
+.br
+.ti -1c
+.RI "static \fBNapi::Value\fP \fBOnCalledAsFunction\fP (const \fBNapi::CallbackInfo\fP &callbackInfo)"
+.br
+.in -1c
+
+Static Public Member Functions inherited from \fBNapi::InstanceWrap< T >\fP
+.in +1c
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBInstanceMethod\fP (const char *utf8name, \fBInstanceVoidMethodCallback\fP method, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBInstanceMethod\fP (const char *utf8name, \fBInstanceMethodCallback\fP method, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBInstanceMethod\fP (\fBSymbol\fP name, \fBInstanceVoidMethodCallback\fP method, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBInstanceMethod\fP (\fBSymbol\fP name, \fBInstanceMethodCallback\fP method, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "template<\fBInstanceVoidMethodCallback\fP method> static \fBPropertyDescriptor\fP \fBInstanceMethod\fP (const char *utf8name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "template<\fBInstanceMethodCallback\fP method> static \fBPropertyDescriptor\fP \fBInstanceMethod\fP (const char *utf8name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "template<\fBInstanceVoidMethodCallback\fP method> static \fBPropertyDescriptor\fP \fBInstanceMethod\fP (\fBSymbol\fP name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "template<\fBInstanceMethodCallback\fP method> static \fBPropertyDescriptor\fP \fBInstanceMethod\fP (\fBSymbol\fP name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBInstanceAccessor\fP (const char *utf8name, \fBInstanceGetterCallback\fP getter, \fBInstanceSetterCallback\fP setter, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBInstanceAccessor\fP (\fBSymbol\fP name, \fBInstanceGetterCallback\fP getter, \fBInstanceSetterCallback\fP setter, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "template<\fBInstanceGetterCallback\fP getter, \fBInstanceSetterCallback\fP setter = nullptr> static \fBPropertyDescriptor\fP \fBInstanceAccessor\fP (const char *utf8name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "template<\fBInstanceGetterCallback\fP getter, \fBInstanceSetterCallback\fP setter = nullptr> static \fBPropertyDescriptor\fP \fBInstanceAccessor\fP (\fBSymbol\fP name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBInstanceValue\fP (const char *utf8name, \fBNapi::Value\fP value, napi_property_attributes attributes=napi_default)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBInstanceValue\fP (\fBSymbol\fP name, \fBNapi::Value\fP value, napi_property_attributes attributes=napi_default)"
+.br
+.in -1c
+
+Static Public Member Functions inherited from \fBNapi::Reference< Object >\fP
+.in +1c
+.ti -1c
+.RI "static \fBReference\fP< \fBObject\fP > \fBNew\fP (const \fBObject\fP &value, uint32_t initialRefcount=0)"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+
+
+Protected Member Functions inherited from \fBNapi::Reference< Object >\fP
+.in +1c
+.ti -1c
+.RI "\fBReference\fP (const \fBReference\fP< \fBObject\fP > &)"
+.br
+.in -1c
+
+Static Protected Member Functions inherited from \fBNapi::InstanceWrap< T >\fP
+.in +1c
+.ti -1c
+.RI "static void \fBAttachPropData\fP (napi_env env, napi_value value, const napi_property_descriptor *prop)"
+.br
+.in -1c
+
+Protected Attributes inherited from \fBNapi::Reference< Object >\fP
+.in +1c
+.ti -1c
+.RI "napi_env \fB_env\fP"
+.br
+.RI "!cond INTERNAL "
+.ti -1c
+.RI "napi_ref \fB_ref\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.SS "template<typename T>
+.br
+class Napi::ObjectWrap< T >"Base class to be extended by C++ classes exposed to JavaScript; each C++ class instance gets 'wrapped' by a JavaScript object that is managed by this class\&.
+.PP
+At initialization time, the \fR\fBDefineClass()\fP\fP method must be used to hook up the accessor and method callbacks\&. It takes a list of property descriptors, which can be constructed via the various static methods on the base class\&.
+.SS "Example:"
+.PP
+.nf
+class Example: public Napi::ObjectWrap<Example> {
+  public:
+    static void Initialize(Napi::Env& env, Napi::Object& target) {
+      Napi::Function constructor = DefineClass(env, 'Example', {
+        InstanceAccessor<&Example::GetSomething,
+        &Example::SetSomething>('value'),
+        InstanceMethod<&Example::DoSomething>('doSomething'),
+      });
+      target\&.Set('Example', constructor);
+    }
+
+    Example(const Napi::CallbackInfo& info); // Constructor
+    Napi::Value GetSomething(const Napi::CallbackInfo& info);
+    void SetSomething(const Napi::CallbackInfo& info, const Napi::Value&
+    value); Napi::Value DoSomething(const Napi::CallbackInfo& info);
+} 
+.fi
+.PP
+ 
+.PP
+Definition at line \fB2300\fP of file \fBnapi\&.h\fP\&.
+.SH "Member Typedef Documentation"
+.PP 
+.SS "template<typename T > using \fBNapi::ObjectWrap\fP< T >::PropertyDescriptor = \fBClassPropertyDescriptor\fP<T>"
+
+.PP
+Definition at line \fB2315\fP of file \fBnapi\&.h\fP\&.
+.SS "template<typename T > using \fBNapi::ObjectWrap\fP< T >::StaticGetterCallback = \fBNapi::Value\fP (*)(const \fBCallbackInfo\fP& info)"
+
+.PP
+Definition at line \fB2311\fP of file \fBnapi\&.h\fP\&.
+.SS "template<typename T > using \fBNapi::ObjectWrap\fP< T >::StaticMethodCallback = \fBNapi::Value\fP (*)(const \fBCallbackInfo\fP& info)"
+
+.PP
+Definition at line \fB2310\fP of file \fBnapi\&.h\fP\&.
+.SS "template<typename T > using \fBNapi::ObjectWrap\fP< T >::StaticSetterCallback"
+\fBInitial value:\fP
+.nf
+ void (*)(const CallbackInfo& info,
+                                        const Napi::Value& value)
+.PP
+.fi
+
+.PP
+Definition at line \fB2312\fP of file \fBnapi\&.h\fP\&.
+.SS "template<typename T > using \fBNapi::ObjectWrap\fP< T >::StaticVoidMethodCallback = void (*)(const \fBCallbackInfo\fP& info)"
+
+.PP
+Definition at line \fB2309\fP of file \fBnapi\&.h\fP\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "template<typename T > \fBNapi::ObjectWrap\fP< T >::ObjectWrap (const \fBCallbackInfo\fP & callbackInfo)\fR [inline]\fP"
+
+.PP
+Definition at line \fB4425\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<typename T > \fBNapi::ObjectWrap\fP< T >::~\fBObjectWrap\fP ()\fR [inline]\fP, \fR [virtual]\fP"
+
+.PP
+Definition at line \fB4439\fP of file \fBnapi\-inl\&.h\fP\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "template<typename T > \fBFunction\fP \fBNapi::ObjectWrap\fP< T >::DefineClass (\fBNapi::Env\fP env, const char * utf8name, const std::initializer_list< \fBPropertyDescriptor\fP > & properties, void * data = \fRnullptr\fP)\fR [inline]\fP, \fR [static]\fP"
+
+.PP
+Definition at line \fB4537\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<typename T > \fBFunction\fP \fBNapi::ObjectWrap\fP< T >::DefineClass (\fBNapi::Env\fP env, const char * utf8name, const std::vector< \fBPropertyDescriptor\fP > & properties, void * data = \fRnullptr\fP)\fR [inline]\fP, \fR [static]\fP"
+
+.PP
+Definition at line \fB4551\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<typename T > void \fBNapi::ObjectWrap\fP< T >::Finalize (\fBNapi::Env\fP env)\fR [inline]\fP, \fR [virtual]\fP"
+
+.PP
+Definition at line \fB4792\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<typename T > \fBValue\fP \fBNapi::ObjectWrap\fP< T >::OnCalledAsFunction (const \fBNapi::CallbackInfo\fP & callbackInfo)\fR [inline]\fP, \fR [static]\fP"
+
+.PP
+Definition at line \fB4783\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<typename T > template<typename \fBObjectWrap\fP< T >\fB::StaticGetterCallback\fP getter, typename \fBObjectWrap\fP< T >\fB::StaticSetterCallback\fP setter> \fBClassPropertyDescriptor\fP< T > \fBNapi::ObjectWrap\fP< T >::StaticAccessor (const char * utf8name, napi_property_attributes attributes, void * data)\fR [inline]\fP"
+
+.PP
+Definition at line \fB4731\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<typename T > template<\fBStaticGetterCallback\fP getter, \fBStaticSetterCallback\fP setter = nullptr> static \fBPropertyDescriptor\fP \fBNapi::ObjectWrap\fP< T >::StaticAccessor (const char * utf8name, napi_property_attributes attributes = \fRnapi_default\fP, void * data = \fRnullptr\fP)\fR [static]\fP"
+
+.SS "template<typename T > \fBClassPropertyDescriptor\fP< T > \fBNapi::ObjectWrap\fP< T >::StaticAccessor (const char * utf8name, \fBStaticGetterCallback\fP getter, \fBStaticSetterCallback\fP setter, napi_property_attributes attributes = \fRnapi_default\fP, void * data = \fRnullptr\fP)\fR [inline]\fP, \fR [static]\fP"
+
+.PP
+Definition at line \fB4689\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<typename T > template<typename \fBObjectWrap\fP< T >\fB::StaticGetterCallback\fP getter, typename \fBObjectWrap\fP< T >\fB::StaticSetterCallback\fP setter> \fBClassPropertyDescriptor\fP< T > \fBNapi::ObjectWrap\fP< T >::StaticAccessor (\fBSymbol\fP name, napi_property_attributes attributes, void * data)\fR [inline]\fP"
+
+.PP
+Definition at line \fB4746\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<typename T > template<\fBStaticGetterCallback\fP getter, \fBStaticSetterCallback\fP setter = nullptr> static \fBPropertyDescriptor\fP \fBNapi::ObjectWrap\fP< T >::StaticAccessor (\fBSymbol\fP name, napi_property_attributes attributes = \fRnapi_default\fP, void * data = \fRnullptr\fP)\fR [static]\fP"
+
+.SS "template<typename T > \fBClassPropertyDescriptor\fP< T > \fBNapi::ObjectWrap\fP< T >::StaticAccessor (\fBSymbol\fP name, \fBStaticGetterCallback\fP getter, \fBStaticSetterCallback\fP setter, napi_property_attributes attributes = \fRnapi_default\fP, void * data = \fRnullptr\fP)\fR [inline]\fP, \fR [static]\fP"
+
+.PP
+Definition at line \fB4709\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<typename T > template<typename \fBObjectWrap\fP< T >\fB::StaticMethodCallback\fP method> \fBClassPropertyDescriptor\fP< T > \fBNapi::ObjectWrap\fP< T >::StaticMethod (const char * utf8name, napi_property_attributes attributes, void * data)\fR [inline]\fP"
+
+.PP
+Definition at line \fB4638\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<typename T > template<\fBStaticVoidMethodCallback\fP method> static \fBPropertyDescriptor\fP \fBNapi::ObjectWrap\fP< T >::StaticMethod (const char * utf8name, napi_property_attributes attributes = \fRnapi_default\fP, void * data = \fRnullptr\fP)\fR [static]\fP"
+
+.SS "template<typename T > template<\fBStaticMethodCallback\fP method> static \fBPropertyDescriptor\fP \fBNapi::ObjectWrap\fP< T >::StaticMethod (const char * utf8name, napi_property_attributes attributes = \fRnapi_default\fP, void * data = \fRnullptr\fP)\fR [static]\fP"
+
+.SS "template<typename T > \fBClassPropertyDescriptor\fP< T > \fBNapi::ObjectWrap\fP< T >::StaticMethod (const char * utf8name, \fBStaticMethodCallback\fP method, napi_property_attributes attributes = \fRnapi_default\fP, void * data = \fRnullptr\fP)\fR [inline]\fP, \fR [static]\fP"
+
+.PP
+Definition at line \fB4583\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<typename T > \fBClassPropertyDescriptor\fP< T > \fBNapi::ObjectWrap\fP< T >::StaticMethod (const char * utf8name, \fBStaticVoidMethodCallback\fP method, napi_property_attributes attributes = \fRnapi_default\fP, void * data = \fRnullptr\fP)\fR [inline]\fP, \fR [static]\fP"
+
+.PP
+Definition at line \fB4565\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<typename T > template<typename \fBObjectWrap\fP< T >\fB::StaticMethodCallback\fP method> \fBClassPropertyDescriptor\fP< T > \fBNapi::ObjectWrap\fP< T >::StaticMethod (\fBSymbol\fP name, napi_property_attributes attributes, void * data)\fR [inline]\fP"
+
+.PP
+Definition at line \fB4651\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<typename T > template<\fBStaticVoidMethodCallback\fP method> static \fBPropertyDescriptor\fP \fBNapi::ObjectWrap\fP< T >::StaticMethod (\fBSymbol\fP name, napi_property_attributes attributes = \fRnapi_default\fP, void * data = \fRnullptr\fP)\fR [static]\fP"
+
+.SS "template<typename T > template<\fBStaticMethodCallback\fP method> static \fBPropertyDescriptor\fP \fBNapi::ObjectWrap\fP< T >::StaticMethod (\fBSymbol\fP name, napi_property_attributes attributes = \fRnapi_default\fP, void * data = \fRnullptr\fP)\fR [static]\fP"
+
+.SS "template<typename T > \fBClassPropertyDescriptor\fP< T > \fBNapi::ObjectWrap\fP< T >::StaticMethod (\fBSymbol\fP name, \fBStaticMethodCallback\fP method, napi_property_attributes attributes = \fRnapi_default\fP, void * data = \fRnullptr\fP)\fR [inline]\fP, \fR [static]\fP"
+
+.PP
+Definition at line \fB4619\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<typename T > \fBClassPropertyDescriptor\fP< T > \fBNapi::ObjectWrap\fP< T >::StaticMethod (\fBSymbol\fP name, \fBStaticVoidMethodCallback\fP method, napi_property_attributes attributes = \fRnapi_default\fP, void * data = \fRnullptr\fP)\fR [inline]\fP, \fR [static]\fP"
+
+.PP
+Definition at line \fB4601\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<typename T > \fBClassPropertyDescriptor\fP< T > \fBNapi::ObjectWrap\fP< T >::StaticValue (const char * utf8name, \fBNapi::Value\fP value, napi_property_attributes attributes = \fRnapi_default\fP)\fR [inline]\fP, \fR [static]\fP"
+
+.PP
+Definition at line \fB4759\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<typename T > \fBClassPropertyDescriptor\fP< T > \fBNapi::ObjectWrap\fP< T >::StaticValue (\fBSymbol\fP name, \fBNapi::Value\fP value, napi_property_attributes attributes = \fRnapi_default\fP)\fR [inline]\fP, \fR [static]\fP"
+
+.PP
+Definition at line \fB4772\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<typename T > T * \fBNapi::ObjectWrap\fP< T >::Unwrap (\fBObject\fP wrapper)\fR [inline]\fP, \fR [static]\fP"
+
+.PP
+Definition at line \fB4453\fP of file \fBnapi\-inl\&.h\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

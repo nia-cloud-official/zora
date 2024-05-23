@@ -1,0 +1,152 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2yallist_2_r_e_a_d_m_e</compoundname>
+    <title>yallist</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md3993"/> Yet Another Linked List</para>
+<para>There are many doubly-linked list implementations like it, but this one is mine.</para>
+<para>For when an array would be too big, and a Map can&apos;t be iterated in reverse order.</para>
+<para><ulink url="https://travis-ci.org/isaacs/yallist"><image type="html" name="https://travis-ci.org/isaacs/yallist.svg?branch=master" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/github/isaacs/yallist"><image type="html" name="https://coveralls.io/repos/isaacs/yallist/badge.svg?service=github" alt="Coverage Status" inline="yes"></image>
+</ulink></para>
+<sect1 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md3994">
+<title>basic usage</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>yallist<sp/>=<sp/>require(&apos;yallist&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>myList<sp/>=<sp/>yallist.create([1,<sp/>2,<sp/>3])</highlight></codeline>
+<codeline><highlight class="normal">myList.push(&apos;foo&apos;)</highlight></codeline>
+<codeline><highlight class="normal">myList.unshift(&apos;bar&apos;)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>of<sp/>course<sp/>pop()<sp/>and<sp/>shift()<sp/>are<sp/>there,<sp/>too</highlight></codeline>
+<codeline><highlight class="normal">console.log(myList.toArray())<sp/>//<sp/>[&apos;bar&apos;,<sp/>1,<sp/>2,<sp/>3,<sp/>&apos;foo&apos;]</highlight></codeline>
+<codeline><highlight class="normal">myList.forEach(function<sp/>(k)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>walk<sp/>the<sp/>list<sp/>head<sp/>to<sp/>tail</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">myList.forEachReverse(function<sp/>(k,<sp/>index,<sp/>list)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>walk<sp/>the<sp/>list<sp/>tail<sp/>to<sp/>head</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>myDoubledList<sp/>=<sp/>myList.map(function<sp/>(k)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>k<sp/>+<sp/>k</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>now<sp/>myDoubledList<sp/>contains<sp/>[&apos;barbar&apos;,<sp/>2,<sp/>4,<sp/>6,<sp/>&apos;foofoo&apos;]</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>mapReverse<sp/>is<sp/>also<sp/>a<sp/>thing</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>myDoubledListReverse<sp/>=<sp/>myList.mapReverse(function<sp/>(k)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>k<sp/>+<sp/>k</highlight></codeline>
+<codeline><highlight class="normal">})<sp/>//<sp/>[&apos;foofoo&apos;,<sp/>6,<sp/>4,<sp/>2,<sp/>&apos;barbar&apos;]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>reduced<sp/>=<sp/>myList.reduce(function<sp/>(set,<sp/>entry)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>set<sp/>+=<sp/>entry</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>set</highlight></codeline>
+<codeline><highlight class="normal">},<sp/>&apos;start&apos;)</highlight></codeline>
+<codeline><highlight class="normal">console.log(reduced)<sp/>//<sp/>&apos;startfoo123bar&apos;</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md3995">
+<title>api</title><para>The whole API is considered &quot;public&quot;.</para>
+<para>Functions with the same name as an Array method work more or less the same way.</para>
+<para>There&apos;s reverse versions of most things because that&apos;s the point.</para>
+<sect2 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md3996">
+<title>Yallist</title><para>Default export, the class that holds and manages a list.</para>
+<para>Call it with either a forEach-able (like an array) or a set of arguments, to initialize the list.</para>
+<para>The Array-ish methods all act like you&apos;d expect. No magic length, though, so if you change that it won&apos;t automatically prune or add empty spots.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md3997">
+<title>Yallist.create(..)</title><para>Alias for Yallist function. Some people like factories.</para>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md3998">
+<title>yallist.head</title><para>The first node in the list</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md3999">
+<title>yallist.tail</title><para>The last node in the list</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4000">
+<title>yallist.length</title><para>The number of nodes in the list. (Change this at your peril. It is not magic like Array length.)</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4001">
+<title>yallist.toArray()</title><para>Convert the list to an array.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4002">
+<title>yallist.forEach(fn, [thisp])</title><para>Call a function on each item in the list.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4003">
+<title>yallist.forEachReverse(fn, [thisp])</title><para>Call a function on each item in the list, in reverse order.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4004">
+<title>yallist.get(n)</title><para>Get the data at position <computeroutput>n</computeroutput> in the list. If you use this a lot, probably better off just using an Array.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4005">
+<title>yallist.getReverse(n)</title><para>Get the data at position <computeroutput>n</computeroutput>, counting from the tail.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4006">
+<title>yallist.map(fn, thisp)</title><para>Create a new Yallist with the result of calling the function on each item.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4007">
+<title>yallist.mapReverse(fn, thisp)</title><para>Same as <computeroutput>map</computeroutput>, but in reverse.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4008">
+<title>yallist.pop()</title><para>Get the data from the list tail, and remove the tail from the list.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4009">
+<title>yallist.push(item, ...)</title><para>Insert one or more items to the tail of the list.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4010">
+<title>yallist.reduce(fn, initialValue)</title><para>Like Array.reduce.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4011">
+<title>yallist.reduceReverse</title><para>Like Array.reduce, but in reverse.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4012">
+<title>yallist.reverse</title><para>Reverse the list in place.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4013">
+<title>yallist.shift()</title><para>Get the data from the list head, and remove the head from the list.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4014">
+<title>yallist.slice([from], [to])</title><para>Just like Array.slice, but returns a new Yallist.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4015">
+<title>yallist.sliceReverse([from], [to])</title><para>Just like yallist.slice, but the result is returned in reverse.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4016">
+<title>yallist.toArray()</title><para>Create an array representation of the list.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4017">
+<title>yallist.toArrayReverse()</title><para>Create a reversed array representation of the list.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4018">
+<title>yallist.unshift(item, ...)</title><para>Insert one or more items to the head of the list.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4019">
+<title>yallist.unshiftNode(node)</title><para>Move a Node object to the front of the list. (That is, pull it out of wherever it lives, and make it the new head.)</para>
+<para>If the node belongs to a different list, then that list will remove it first.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4020">
+<title>yallist.pushNode(node)</title><para>Move a Node object to the end of the list. (That is, pull it out of wherever it lives, and make it the new tail.)</para>
+<para>If the node belongs to a list already, then that list will remove it first.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4021">
+<title>yallist.removeNode(node)</title><para>Remove a node from the list, preserving referential integrity of head and tail and other nodes.</para>
+<para>Will throw an error if you try to have a list remove a node that doesn&apos;t belong to it.</para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4022">
+<title>Yallist.Node</title><para>The class that holds the data and is actually the list.</para>
+<para>Call with <computeroutput>var n = new Node(value, previousNode, nextNode)</computeroutput></para>
+<para>Note that if you do direct operations on Nodes themselves, it&apos;s very easy to get into weird states where the list is broken. Be careful :)</para>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4023">
+<title>node.next</title><para>The next node in the list.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4024">
+<title>node.prev</title><para>The previous node in the list.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4025">
+<title>node.value</title><para>The data the node contains.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2yallist_2_r_e_a_d_m_e_1autotoc_md4026">
+<title>node.list</title><para>The list to which this node belongs. (Null if it does not belong to any list.) </para>
+</sect3>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/yallist/README.md"/>
+  </compounddef>
+</doxygen>

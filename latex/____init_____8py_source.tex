@@ -1,0 +1,672 @@
+\doxysection{\+\_\+\+\_\+init\+\_\+\+\_\+.\+py}
+\hypertarget{____init_____8py_source}{}\label{____init_____8py_source}\index{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/\_\_init\_\_.py@{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/\_\_init\_\_.py}}
+\mbox{\hyperlink{____init_____8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00001}\mbox{\hyperlink{namespacegyp}{00001}}\ \textcolor{comment}{\#!/usr/bin/env\ python3}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00003}00003\ \textcolor{comment}{\#\ Copyright\ (c)\ 2012\ Google\ Inc.\ All\ rights\ reserved.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00004}00004\ \textcolor{comment}{\#\ Use\ of\ this\ source\ code\ is\ governed\ by\ a\ BSD-\/style\ license\ that\ can\ be}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00005}00005\ \textcolor{comment}{\#\ found\ in\ the\ LICENSE\ file.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00008}00008\ \textcolor{keyword}{import}\ copy}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00009}00009\ \textcolor{keyword}{import}\ gyp.input}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00010}00010\ \textcolor{keyword}{import}\ argparse}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00011}00011\ \textcolor{keyword}{import}\ os.path}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00012}00012\ \textcolor{keyword}{import}\ re}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00013}00013\ \textcolor{keyword}{import}\ shlex}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00014}00014\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00015}00015\ \textcolor{keyword}{import}\ traceback}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00016}00016\ \textcolor{keyword}{from}\ \mbox{\hyperlink{namespacegyp_1_1common}{gyp.common}}\ \textcolor{keyword}{import}\ GypError}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00018}00018\ \textcolor{comment}{\#\ Default\ debug\ modes\ for\ GYP}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00019}\mbox{\hyperlink{namespacegyp_ada35b4b21df183f727d36aaed0a89f98}{00019}}\ debug\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00021}00021\ \textcolor{comment}{\#\ List\ of\ "{}official"{}\ debug\ modes,\ but\ you\ can\ use\ anything\ you\ like.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00022}\mbox{\hyperlink{namespacegyp_ac5279db524ab89f4b56e9c304fff5f64}{00022}}\ DEBUG\_GENERAL\ =\ \textcolor{stringliteral}{"{}general"{}}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00023}\mbox{\hyperlink{namespacegyp_ac8fdf6487ed33e0d8f641ff4988ec686}{00023}}\ DEBUG\_VARIABLES\ =\ \textcolor{stringliteral}{"{}variables"{}}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00024}\mbox{\hyperlink{namespacegyp_ace581ccf8a35009470c10f9f814a56b6}{00024}}\ DEBUG\_INCLUDES\ =\ \textcolor{stringliteral}{"{}includes"{}}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00027}\mbox{\hyperlink{namespacegyp_a92df811c956a9b18a53c898b5081f1ed}{00027}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_a92df811c956a9b18a53c898b5081f1ed}{DebugOutput}}(mode,\ message,\ *args):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00028}00028\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}all"{}}\ \textcolor{keywordflow}{in}\ gyp.debug\ \textcolor{keywordflow}{or}\ mode\ \textcolor{keywordflow}{in}\ gyp.debug:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00029}00029\ \ \ \ \ \ \ \ \ ctx\ =\ (\textcolor{stringliteral}{"{}unknown"{}},\ 0,\ \textcolor{stringliteral}{"{}unknown"{}})}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00030}00030\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00031}00031\ \ \ \ \ \ \ \ \ \ \ \ \ f\ =\ traceback.extract\_stack(limit=2)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00032}00032\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ f:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ctx\ =\ f[0][:3]}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00034}00034\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ Exception:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00036}00036\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ args:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00037}00037\ \ \ \ \ \ \ \ \ \ \ \ \ message\ \%=\ args}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00038}00038\ \ \ \ \ \ \ \ \ print(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00039}00039\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\%s:\%s:\%d:\%s\ \%s"{}}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ \%\ (mode.upper(),\ os.path.basename(ctx[0]),\ ctx[1],\ ctx[2],\ message)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00041}00041\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00044}\mbox{\hyperlink{namespacegyp_a274528c08bff928d1c6750065601b92b}{00044}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_a274528c08bff928d1c6750065601b92b}{FindBuildFiles}}():}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00045}00045\ \ \ \ \ extension\ =\ \textcolor{stringliteral}{"{}.gyp"{}}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00046}00046\ \ \ \ \ files\ =\ os.listdir(os.getcwd())}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00047}00047\ \ \ \ \ build\_files\ =\ []}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00048}00048\ \ \ \ \ \textcolor{keywordflow}{for}\ file\ \textcolor{keywordflow}{in}\ files:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00049}00049\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ file.endswith(extension):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ build\_files.append(file)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00051}00051\ \ \ \ \ \textcolor{keywordflow}{return}\ build\_files}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00054}\mbox{\hyperlink{namespacegyp_a0bc64fed18f77300277d691e72844798}{00054}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_a0bc64fed18f77300277d691e72844798}{Load}}(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00055}00055\ \ \ \ \ build\_files,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00056}00056\ \ \ \ \ format,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00057}00057\ \ \ \ \ default\_variables=\{\},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00058}00058\ \ \ \ \ includes=[],}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00059}00059\ \ \ \ \ depth="{}."{},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00060}00060\ \ \ \ \ params=None,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00061}00061\ \ \ \ \ check=False,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00062}00062\ \ \ \ \ circular\_check=True,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00063}00063\ ):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00064}00064\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00065}00065\ \textcolor{stringliteral}{\ \ Loads\ one\ or\ more\ specified\ build\ files.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00066}00066\ \textcolor{stringliteral}{\ \ default\_variables\ and\ includes\ will\ be\ copied\ before\ use.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00067}00067\ \textcolor{stringliteral}{\ \ Returns\ the\ generator\ for\ the\ specified\ format\ and\ the}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00068}00068\ \textcolor{stringliteral}{\ \ data\ returned\ by\ loading\ the\ specified\ build\ files.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00069}00069\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00070}00070\ \ \ \ \ \textcolor{keywordflow}{if}\ params\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00071}00071\ \ \ \ \ \ \ \ \ params\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00073}00073\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}-\/"{}}\ \textcolor{keywordflow}{in}\ format:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00074}00074\ \ \ \ \ \ \ \ \ format,\ params[\textcolor{stringliteral}{"{}flavor"{}}]\ =\ format.split(\textcolor{stringliteral}{"{}-\/"{}},\ 1)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00076}00076\ \ \ \ \ default\_variables\ =\ copy.copy(default\_variables)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00078}00078\ \ \ \ \ \textcolor{comment}{\#\ Default\ variables\ provided\ by\ this\ program\ and\ its\ modules\ should\ be}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00079}00079\ \ \ \ \ \textcolor{comment}{\#\ named\ WITH\_CAPITAL\_LETTERS\ to\ provide\ a\ distinct\ "{}best\ practice"{}\ namespace,}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00080}00080\ \ \ \ \ \textcolor{comment}{\#\ avoiding\ collisions\ with\ user\ and\ automatic\ variables.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00081}00081\ \ \ \ \ default\_variables[\textcolor{stringliteral}{"{}GENERATOR"{}}]\ =\ format}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00082}00082\ \ \ \ \ default\_variables[\textcolor{stringliteral}{"{}GENERATOR\_FLAVOR"{}}]\ =\ params.get(\textcolor{stringliteral}{"{}flavor"{}},\ \textcolor{stringliteral}{"{}"{}})}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00084}00084\ \ \ \ \ \textcolor{comment}{\#\ Format\ can\ be\ a\ custom\ python\ file,\ or\ by\ default\ the\ name\ of\ a\ module}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00085}00085\ \ \ \ \ \textcolor{comment}{\#\ within\ gyp.generator.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00086}00086\ \ \ \ \ \textcolor{keywordflow}{if}\ format.endswith(\textcolor{stringliteral}{"{}.py"{}}):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00087}00087\ \ \ \ \ \ \ \ \ generator\_name\ =\ os.path.splitext(format)[0]}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00088}00088\ \ \ \ \ \ \ \ \ path,\ generator\_name\ =\ os.path.split(generator\_name)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00090}00090\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Make\ sure\ the\ path\ to\ the\ custom\ generator\ is\ in\ sys.path}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00091}00091\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Don't\ worry\ about\ removing\ it\ once\ we\ are\ done.\ \ Keeping\ the\ path}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ to\ each\ generator\ that\ is\ used\ in\ sys.path\ is\ likely\ harmless\ and}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ arguably\ a\ good\ idea.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00094}00094\ \ \ \ \ \ \ \ \ path\ =\ os.path.abspath(path)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ path\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ sys.path:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ sys.path.insert(0,\ path)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00097}00097\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00098}00098\ \ \ \ \ \ \ \ \ generator\_name\ =\ \textcolor{stringliteral}{"{}gyp.generator."{}}\ +\ format}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00100}00100\ \ \ \ \ \textcolor{comment}{\#\ These\ parameters\ are\ passed\ in\ order\ (as\ opposed\ to\ by\ key)}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00101}00101\ \ \ \ \ \textcolor{comment}{\#\ because\ ActivePython\ cannot\ handle\ key\ parameters\ to\ \_\_import\_\_.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00102}00102\ \ \ \ \ generator\ =\ \_\_import\_\_(generator\_name,\ globals(),\ locals(),\ generator\_name)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00103}00103\ \ \ \ \ \textcolor{keywordflow}{for}\ (key,\ val)\ \textcolor{keywordflow}{in}\ generator.generator\_default\_variables.items():}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00104}00104\ \ \ \ \ \ \ \ \ default\_variables.setdefault(key,\ val)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00106}00106\ \ \ \ \ \textcolor{comment}{\#\ Give\ the\ generator\ the\ opportunity\ to\ set\ additional\ variables\ based\ on}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00107}00107\ \ \ \ \ \textcolor{comment}{\#\ the\ params\ it\ will\ receive\ in\ the\ output\ phase.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00108}00108\ \ \ \ \ \textcolor{keywordflow}{if}\ getattr(generator,\ \textcolor{stringliteral}{"{}CalculateVariables"{}},\ \textcolor{keywordtype}{None}):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00109}00109\ \ \ \ \ \ \ \ \ generator.CalculateVariables(default\_variables,\ params)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00111}00111\ \ \ \ \ \textcolor{comment}{\#\ Give\ the\ generator\ the\ opportunity\ to\ set\ generator\_input\_info\ based\ on}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00112}00112\ \ \ \ \ \textcolor{comment}{\#\ the\ params\ it\ will\ receive\ in\ the\ output\ phase.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00113}00113\ \ \ \ \ \textcolor{keywordflow}{if}\ getattr(generator,\ \textcolor{stringliteral}{"{}CalculateGeneratorInputInfo"{}},\ \textcolor{keywordtype}{None}):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00114}00114\ \ \ \ \ \ \ \ \ generator.CalculateGeneratorInputInfo(params)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00116}00116\ \ \ \ \ \textcolor{comment}{\#\ Fetch\ the\ generator\ specific\ info\ that\ gets\ fed\ to\ input,\ we\ use\ getattr}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00117}00117\ \ \ \ \ \textcolor{comment}{\#\ so\ we\ can\ default\ things\ and\ the\ generators\ only\ have\ to\ provide\ what}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00118}00118\ \ \ \ \ \textcolor{comment}{\#\ they\ need.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00119}00119\ \ \ \ \ generator\_input\_info\ =\ \{}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}non\_configuration\_keys"{}}:\ getattr(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ generator,\ \textcolor{stringliteral}{"{}generator\_additional\_non\_configuration\_keys"{}},\ []}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00122}00122\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00123}00123\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}path\_sections"{}}:\ getattr(generator,\ \textcolor{stringliteral}{"{}generator\_additional\_path\_sections"{}},\ []),}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00124}00124\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}extra\_sources\_for\_rules"{}}:\ getattr(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ generator,\ \textcolor{stringliteral}{"{}generator\_extra\_sources\_for\_rules"{}},\ []}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00126}00126\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00127}00127\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}generator\_supports\_multiple\_toolsets"{}}:\ getattr(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ generator,\ \textcolor{stringliteral}{"{}generator\_supports\_multiple\_toolsets"{}},\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00129}00129\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}generator\_wants\_static\_library\_dependencies\_adjusted"{}}:\ getattr(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ generator,\ \textcolor{stringliteral}{"{}generator\_wants\_static\_library\_dependencies\_adjusted"{}},\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00132}00132\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}generator\_wants\_sorted\_dependencies"{}}:\ getattr(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ generator,\ \textcolor{stringliteral}{"{}generator\_wants\_sorted\_dependencies"{}},\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00135}00135\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00136}00136\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}generator\_filelist\_paths"{}}:\ getattr(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ generator,\ \textcolor{stringliteral}{"{}generator\_filelist\_paths"{}},\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00138}00138\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00139}00139\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00140}00140\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00141}00141\ \ \ \ \ \textcolor{comment}{\#\ Process\ the\ input\ specific\ to\ this\ generator.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00142}00142\ \ \ \ \ result\ =\ \mbox{\hyperlink{namespacegyp_1_1input_ad90e79d4281c183f60968ae564a1a8b7}{gyp.input.Load}}(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00143}00143\ \ \ \ \ \ \ \ \ build\_files,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00144}00144\ \ \ \ \ \ \ \ \ default\_variables,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00145}00145\ \ \ \ \ \ \ \ \ includes[:],}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00146}00146\ \ \ \ \ \ \ \ \ depth,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00147}00147\ \ \ \ \ \ \ \ \ generator\_input\_info,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00148}00148\ \ \ \ \ \ \ \ \ check,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00149}00149\ \ \ \ \ \ \ \ \ circular\_check,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00150}00150\ \ \ \ \ \ \ \ \ params[\textcolor{stringliteral}{"{}parallel"{}}],}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00151}00151\ \ \ \ \ \ \ \ \ params[\textcolor{stringliteral}{"{}root\_targets"{}}],}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00152}00152\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00153}00153\ \ \ \ \ \textcolor{keywordflow}{return}\ [generator]\ +\ result}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00154}00154\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00155}00155\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00156}\mbox{\hyperlink{namespacegyp_a69a776d13c304ca8f95afe2c0ddcfb92}{00156}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_a69a776d13c304ca8f95afe2c0ddcfb92}{NameValueListToDict}}(name\_value\_list):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00157}00157\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00158}00158\ \textcolor{stringliteral}{\ \ Takes\ an\ array\ of\ strings\ of\ the\ form\ 'NAME=VALUE'\ and\ creates\ a\ dictionary}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00159}00159\ \textcolor{stringliteral}{\ \ of\ the\ pairs.\ \ If\ a\ string\ is\ simply\ NAME,\ then\ the\ value\ in\ the\ dictionary}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00160}00160\ \textcolor{stringliteral}{\ \ is\ set\ to\ True.\ \ If\ VALUE\ can\ be\ converted\ to\ an\ integer,\ it\ is.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00161}00161\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00162}00162\ \ \ \ \ result\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00163}00163\ \ \ \ \ \textcolor{keywordflow}{for}\ item\ \textcolor{keywordflow}{in}\ name\_value\_list:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00164}00164\ \ \ \ \ \ \ \ \ tokens\ =\ item.split(\textcolor{stringliteral}{"{}="{}},\ 1)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00165}00165\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ len(tokens)\ ==\ 2:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ we\ can\ make\ it\ an\ int,\ use\ that,\ otherwise,\ use\ the\ string.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ token\_value\ =\ int(tokens[1])}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ ValueError:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ token\_value\ =\ tokens[1]}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Set\ the\ variable\ to\ the\ supplied\ value.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00172}00172\ \ \ \ \ \ \ \ \ \ \ \ \ result[tokens[0]]\ =\ token\_value}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00173}00173\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ No\ value\ supplied,\ treat\ it\ as\ a\ boolean\ and\ set\ it.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00175}00175\ \ \ \ \ \ \ \ \ \ \ \ \ result[tokens[0]]\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00176}00176\ \ \ \ \ \textcolor{keywordflow}{return}\ result}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00177}00177\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00178}00178\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00179}\mbox{\hyperlink{namespacegyp_a3eb32661788979e5e6c8361241d8f43d}{00179}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_a3eb32661788979e5e6c8361241d8f43d}{ShlexEnv}}(env\_name):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00180}00180\ \ \ \ \ flags\ =\ os.environ.get(env\_name,\ [])}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00181}00181\ \ \ \ \ \textcolor{keywordflow}{if}\ flags:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00182}00182\ \ \ \ \ \ \ \ \ flags\ =\ shlex.split(flags)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00183}00183\ \ \ \ \ \textcolor{keywordflow}{return}\ flags}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00184}00184\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00185}00185\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00186}\mbox{\hyperlink{namespacegyp_a357aa27a073cb6b473a8e36561cbb323}{00186}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_a357aa27a073cb6b473a8e36561cbb323}{FormatOpt}}(opt,\ value):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00187}00187\ \ \ \ \ \textcolor{keywordflow}{if}\ opt.startswith(\textcolor{stringliteral}{"{}-\/-\/"{}}):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00188}00188\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ f\textcolor{stringliteral}{"{}\{opt\}=\{value\}"{}}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00189}00189\ \ \ \ \ \textcolor{keywordflow}{return}\ opt\ +\ value}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00190}00190\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00191}00191\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00192}\mbox{\hyperlink{namespacegyp_a4ee038f336a06da762837b79ea1e0c48}{00192}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_a4ee038f336a06da762837b79ea1e0c48}{RegenerateAppendFlag}}(flag,\ values,\ predicate,\ env\_name,\ options):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00193}00193\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Regenerate\ a\ list\ of\ command\ line\ flags,\ for\ an\ option\ of\ action='append'.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00194}00194\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00195}00195\ \textcolor{stringliteral}{\ \ The\ |env\_name|,\ if\ given,\ is\ checked\ in\ the\ environment\ and\ used\ to\ generate}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00196}00196\ \textcolor{stringliteral}{\ \ an\ initial\ list\ of\ options,\ then\ the\ options\ that\ were\ specified\ on\ the}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00197}00197\ \textcolor{stringliteral}{\ \ command\ line\ (given\ in\ |values|)\ are\ appended.\ \ This\ matches\ the\ handling\ of}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00198}00198\ \textcolor{stringliteral}{\ \ environment\ variables\ and\ command\ line\ flags\ where\ command\ line\ flags\ override}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00199}00199\ \textcolor{stringliteral}{\ \ the\ environment,\ while\ not\ requiring\ the\ environment\ to\ be\ set\ when\ the\ flags}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00200}00200\ \textcolor{stringliteral}{\ \ are\ used\ again.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00201}00201\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00202}00202\ \ \ \ \ flags\ =\ []}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00203}00203\ \ \ \ \ \textcolor{keywordflow}{if}\ options.use\_environment\ \textcolor{keywordflow}{and}\ env\_name:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00204}00204\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ flag\_value\ \textcolor{keywordflow}{in}\ \mbox{\hyperlink{namespacegyp_a3eb32661788979e5e6c8361241d8f43d}{ShlexEnv}}(env\_name):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00205}00205\ \ \ \ \ \ \ \ \ \ \ \ \ value\ =\ \mbox{\hyperlink{namespacegyp_a357aa27a073cb6b473a8e36561cbb323}{FormatOpt}}(flag,\ predicate(flag\_value))}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ value\ \textcolor{keywordflow}{in}\ flags:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flags.remove(value)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ flags.append(value)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00209}00209\ \ \ \ \ \textcolor{keywordflow}{if}\ values:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00210}00210\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ flag\_value\ \textcolor{keywordflow}{in}\ values:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00211}00211\ \ \ \ \ \ \ \ \ \ \ \ \ flags.append(\mbox{\hyperlink{namespacegyp_a357aa27a073cb6b473a8e36561cbb323}{FormatOpt}}(flag,\ predicate(flag\_value)))}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00212}00212\ \ \ \ \ \textcolor{keywordflow}{return}\ flags}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00213}00213\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00214}00214\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00215}\mbox{\hyperlink{namespacegyp_a8c851f9393a925536133ff195b925146}{00215}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_a8c851f9393a925536133ff195b925146}{RegenerateFlags}}(options):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00216}00216\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Given\ a\ parsed\ options\ object,\ and\ taking\ the\ environment\ variables\ into}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00217}00217\ \textcolor{stringliteral}{\ \ account,\ returns\ a\ list\ of\ flags\ that\ should\ regenerate\ an\ equivalent\ options}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00218}00218\ \textcolor{stringliteral}{\ \ object\ (even\ in\ the\ absence\ of\ the\ environment\ variables.)}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00219}00219\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00220}00220\ \textcolor{stringliteral}{\ \ Any\ path\ options\ will\ be\ normalized\ relative\ to\ depth.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00221}00221\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00222}00222\ \textcolor{stringliteral}{\ \ The\ format\ flag\ is\ not\ included,\ as\ it\ is\ assumed\ the\ calling\ generator\ will}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00223}00223\ \textcolor{stringliteral}{\ \ set\ that\ as\ appropriate.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00224}00224\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00225}00225\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00226}00226\ \ \ \ \ \textcolor{keyword}{def\ }FixPath(path):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00227}00227\ \ \ \ \ \ \ \ \ path\ =\ \mbox{\hyperlink{namespacegyp_1_1common_a33bf5b7cd712c3ae3009fbe6d8522f13}{gyp.common.FixIfRelativePath}}(path,\ options.depth)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00228}00228\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ path:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.curdir}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00230}00230\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ path}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00231}00231\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00232}00232\ \ \ \ \ \textcolor{keyword}{def\ }Noop(value):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00233}00233\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ value}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00234}00234\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00235}00235\ \ \ \ \ \textcolor{comment}{\#\ We\ always\ want\ to\ ignore\ the\ environment\ when\ regenerating,\ to\ avoid}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00236}00236\ \ \ \ \ \textcolor{comment}{\#\ duplicate\ or\ changed\ flags\ in\ the\ environment\ at\ the\ time\ of\ regeneration.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00237}00237\ \ \ \ \ flags\ =\ [\textcolor{stringliteral}{"{}-\/-\/ignore-\/environment"{}}]}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00238}00238\ \ \ \ \ \textcolor{keywordflow}{for}\ name,\ metadata\ \textcolor{keywordflow}{in}\ options.\_regeneration\_metadata.items():}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00239}00239\ \ \ \ \ \ \ \ \ opt\ =\ metadata[\textcolor{stringliteral}{"{}opt"{}}]}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00240}00240\ \ \ \ \ \ \ \ \ value\ =\ getattr(options,\ name)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00241}00241\ \ \ \ \ \ \ \ \ value\_predicate\ =\ metadata[\textcolor{stringliteral}{"{}type"{}}]\ ==\ \textcolor{stringliteral}{"{}path"{}}\ \textcolor{keywordflow}{and}\ FixPath\ \textcolor{keywordflow}{or}\ Noop}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00242}00242\ \ \ \ \ \ \ \ \ action\ =\ metadata[\textcolor{stringliteral}{"{}action"{}}]}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00243}00243\ \ \ \ \ \ \ \ \ env\_name\ =\ metadata[\textcolor{stringliteral}{"{}env\_name"{}}]}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00244}00244\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ action\ ==\ \textcolor{stringliteral}{"{}append"{}}:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00245}00245\ \ \ \ \ \ \ \ \ \ \ \ \ flags.extend(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00246}00246\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_a4ee038f336a06da762837b79ea1e0c48}{RegenerateAppendFlag}}(opt,\ value,\ value\_predicate,\ env\_name,\ options)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00247}00247\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00248}00248\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ action\ \textcolor{keywordflow}{in}\ (\textcolor{stringliteral}{"{}store"{}},\ \textcolor{keywordtype}{None}):\ \ \textcolor{comment}{\#\ None\ is\ a\ synonym\ for\ 'store'.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00249}00249\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ value:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00250}00250\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flags.append(\mbox{\hyperlink{namespacegyp_a357aa27a073cb6b473a8e36561cbb323}{FormatOpt}}(opt,\ value\_predicate(value)))}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00251}00251\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ options.use\_environment\ \textcolor{keywordflow}{and}\ env\_name\ \textcolor{keywordflow}{and}\ os.environ.get(env\_name):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00252}00252\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flags.append(\mbox{\hyperlink{namespacegyp_a357aa27a073cb6b473a8e36561cbb323}{FormatOpt}}(opt,\ value\_predicate(os.environ.get(env\_name))))}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00253}00253\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ action\ \textcolor{keywordflow}{in}\ (\textcolor{stringliteral}{"{}store\_true"{}},\ \textcolor{stringliteral}{"{}store\_false"{}}):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00254}00254\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (action\ ==\ \textcolor{stringliteral}{"{}store\_true"{}}\ \textcolor{keywordflow}{and}\ value)\ \textcolor{keywordflow}{or}\ (}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00255}00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ action\ ==\ \textcolor{stringliteral}{"{}store\_false"{}}\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ value}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00256}00256\ \ \ \ \ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00257}00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flags.append(opt)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00258}00258\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ options.use\_environment\ \textcolor{keywordflow}{and}\ env\_name:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00259}00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ print(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Warning:\ environment\ regeneration\ unimplemented\ "{}}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}for\ \%s\ flag\ \%r\ env\_name\ \%r"{}}\ \%\ (action,\ opt,\ env\_name),}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ file=sys.stderr,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00263}00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00264}00264\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00265}00265\ \ \ \ \ \ \ \ \ \ \ \ \ print(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00266}00266\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Warning:\ regeneration\ unimplemented\ for\ action\ \%r\ "{}}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}flag\ \%r"{}}\ \%\ (action,\ opt),}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ file=sys.stderr,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00270}00270\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00271}00271\ \ \ \ \ \textcolor{keywordflow}{return}\ flags}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00272}00272\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00273}00273\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00274}\mbox{\hyperlink{classgyp_1_1_regeneratable_option_parser}{00274}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classgyp_1_1_regeneratable_option_parser}{RegeneratableOptionParser}}(argparse.ArgumentParser):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00275}\mbox{\hyperlink{classgyp_1_1_regeneratable_option_parser_ab63ca3f4452d66ec20aea4ddc604194c}{00275}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_regeneratable_option_parser_ab63ca3f4452d66ec20aea4ddc604194c}{\_\_init\_\_}}(self,\ usage):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00276}00276\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_regeneratable_option_parser_abc43c65d33c487ca114b61551faabd90}{\_\_regeneratable\_options}}\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00277}00277\ \ \ \ \ \ \ \ \ argparse.ArgumentParser.\_\_init\_\_(self,\ usage=usage)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00278}00278\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00279}\mbox{\hyperlink{classgyp_1_1_regeneratable_option_parser_afd1d9e7d428ea7cb45fa7f180feeef67}{00279}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_regeneratable_option_parser_afd1d9e7d428ea7cb45fa7f180feeef67}{add\_argument}}(self,\ *args,\ **kw):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00280}00280\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Add\ an\ option\ to\ the\ parser.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00281}00281\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00282}00282\ \textcolor{stringliteral}{\ \ \ \ This\ accepts\ the\ same\ arguments\ as\ ArgumentParser.add\_argument,\ plus\ the}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00283}00283\ \textcolor{stringliteral}{\ \ \ \ following:}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00284}00284\ \textcolor{stringliteral}{\ \ \ \ \ \ regenerate:\ can\ be\ set\ to\ False\ to\ prevent\ this\ option\ from\ being\ included}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00285}00285\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in\ regeneration.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00286}00286\ \textcolor{stringliteral}{\ \ \ \ \ \ env\_name:\ name\ of\ environment\ variable\ that\ additional\ values\ for\ this}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00287}00287\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ option\ come\ from.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00288}00288\ \textcolor{stringliteral}{\ \ \ \ \ \ type:\ adds\ type='path',\ to\ tell\ the\ regenerator\ that\ the\ values\ of}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00289}00289\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ this\ option\ need\ to\ be\ made\ relative\ to\ options.depth}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00290}00290\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00291}00291\ \ \ \ \ \ \ \ \ env\_name\ =\ kw.pop(\textcolor{stringliteral}{"{}env\_name"{}},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00292}00292\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}dest"{}}\ \textcolor{keywordflow}{in}\ kw\ \textcolor{keywordflow}{and}\ kw.pop(\textcolor{stringliteral}{"{}regenerate"{}},\ \textcolor{keyword}{True}):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00293}00293\ \ \ \ \ \ \ \ \ \ \ \ \ dest\ =\ kw[\textcolor{stringliteral}{"{}dest"{}}]}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00294}00294\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00295}00295\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ The\ path\ type\ is\ needed\ for\ regenerating,\ for\ optparse\ we\ can\ just\ treat}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00296}00296\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ it\ as\ a\ string.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00297}00297\ \ \ \ \ \ \ \ \ \ \ \ \ type\ =\ kw.get(\textcolor{stringliteral}{"{}type"{}})}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00298}00298\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ type\ ==\ \textcolor{stringliteral}{"{}path"{}}:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00299}00299\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ kw[\textcolor{stringliteral}{"{}type"{}}]\ =\ str}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00300}00300\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00301}00301\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_regeneratable_option_parser_abc43c65d33c487ca114b61551faabd90}{\_\_regeneratable\_options}}[dest]\ =\ \{}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}action"{}}:\ kw.get(\textcolor{stringliteral}{"{}action"{}}),}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}type"{}}:\ type,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00304}00304\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}env\_name"{}}:\ env\_name,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00305}00305\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}opt"{}}:\ args[0],}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00306}00306\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00307}00307\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00308}00308\ \ \ \ \ \ \ \ \ argparse.ArgumentParser.add\_argument(self,\ *args,\ **kw)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00309}00309\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00310}\mbox{\hyperlink{classgyp_1_1_regeneratable_option_parser_a1b9261a7128f715ea80526f74133aa45}{00310}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_regeneratable_option_parser_a1b9261a7128f715ea80526f74133aa45}{parse\_args}}(self,\ *args):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00311}00311\ \ \ \ \ \ \ \ \ values,\ args\ =\ argparse.ArgumentParser.parse\_known\_args(self,\ *args)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00312}00312\ \ \ \ \ \ \ \ \ values.\_regeneration\_metadata\ =\ self.\mbox{\hyperlink{classgyp_1_1_regeneratable_option_parser_abc43c65d33c487ca114b61551faabd90}{\_\_regeneratable\_options}}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00313}00313\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ values,\ args}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00314}00314\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00315}00315\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00316}\mbox{\hyperlink{namespacegyp_ad232b957228659b1c62ea8bb0e317901}{00316}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp__main}{gyp\_main}}(args):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00317}00317\ \ \ \ \ my\_name\ =\ os.path.basename(sys.argv[0])}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00318}00318\ \ \ \ \ usage\ =\ \textcolor{stringliteral}{"{}usage:\ \%(prog)s\ [options\ ...]\ [build\_file\ ...]"{}}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00319}00319\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00320}00320\ \ \ \ \ parser\ =\ \mbox{\hyperlink{classgyp_1_1_regeneratable_option_parser}{RegeneratableOptionParser}}(usage=usage.replace(\textcolor{stringliteral}{"{}\%s"{}},\ \textcolor{stringliteral}{"{}\%(prog)s"{}}))}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00321}00321\ \ \ \ \ parser.add\_argument(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00322}00322\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/build"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00323}00323\ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}configs"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00324}00324\ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}append"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00325}00325\ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}configuration\ for\ build\ after\ project\ generation"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00326}00326\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00327}00327\ \ \ \ \ parser.add\_argument(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00328}00328\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/check"{}},\ dest=\textcolor{stringliteral}{"{}check"{}},\ action=\textcolor{stringliteral}{"{}store\_true"{}},\ help=\textcolor{stringliteral}{"{}check\ format\ of\ gyp\ files"{}}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00329}00329\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00330}00330\ \ \ \ \ parser.add\_argument(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00331}00331\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/config-\/dir"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00332}00332\ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}config\_dir"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00333}00333\ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00334}00334\ \ \ \ \ \ \ \ \ env\_name=\textcolor{stringliteral}{"{}GYP\_CONFIG\_DIR"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00335}00335\ \ \ \ \ \ \ \ \ default=\textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00336}00336\ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}The\ location\ for\ configuration\ files\ like\ "{}}\ \textcolor{stringliteral}{"{}include.gypi."{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00337}00337\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00338}00338\ \ \ \ \ parser.add\_argument(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00339}00339\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/d"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00340}00340\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/debug"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00341}00341\ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}debug"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00342}00342\ \ \ \ \ \ \ \ \ metavar=\textcolor{stringliteral}{"{}DEBUGMODE"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00343}00343\ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}append"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00344}00344\ \ \ \ \ \ \ \ \ default=[],}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00345}00345\ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}turn\ on\ a\ debugging\ "{}}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00346}00346\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'mode\ for\ debugging\ GYP.\ \ Supported\ modes\ are\ "{}variables"{},\ '}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00347}00347\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'"{}includes"{}\ and\ "{}general"{}\ or\ "{}all"{}\ for\ all\ of\ them.'},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00348}00348\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00349}00349\ \ \ \ \ parser.add\_argument(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00350}00350\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/D"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00351}00351\ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}defines"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00352}00352\ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}append"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00353}00353\ \ \ \ \ \ \ \ \ metavar=\textcolor{stringliteral}{"{}VAR=VAL"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00354}00354\ \ \ \ \ \ \ \ \ env\_name=\textcolor{stringliteral}{"{}GYP\_DEFINES"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00355}00355\ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}sets\ variable\ VAR\ to\ value\ VAL"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00356}00356\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00357}00357\ \ \ \ \ parser.add\_argument(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00358}00358\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/depth"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00359}00359\ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}depth"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00360}00360\ \ \ \ \ \ \ \ \ metavar=\textcolor{stringliteral}{"{}PATH"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00361}00361\ \ \ \ \ \ \ \ \ type=\textcolor{stringliteral}{"{}path"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00362}00362\ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}set\ DEPTH\ gyp\ variable\ to\ a\ relative\ path\ to\ PATH"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00363}00363\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00364}00364\ \ \ \ \ parser.add\_argument(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00365}00365\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/f"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00366}00366\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/format"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00367}00367\ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}formats"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00368}00368\ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}append"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00369}00369\ \ \ \ \ \ \ \ \ env\_name=\textcolor{stringliteral}{"{}GYP\_GENERATORS"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00370}00370\ \ \ \ \ \ \ \ \ regenerate=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00371}00371\ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}output\ formats\ to\ generate"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00372}00372\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00373}00373\ \ \ \ \ parser.add\_argument(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00374}00374\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/G"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00375}00375\ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}generator\_flags"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00376}00376\ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}append"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00377}00377\ \ \ \ \ \ \ \ \ default=[],}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00378}00378\ \ \ \ \ \ \ \ \ metavar=\textcolor{stringliteral}{"{}FLAG=VAL"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00379}00379\ \ \ \ \ \ \ \ \ env\_name=\textcolor{stringliteral}{"{}GYP\_GENERATOR\_FLAGS"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00380}00380\ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}sets\ generator\ flag\ FLAG\ to\ VAL"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00381}00381\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00382}00382\ \ \ \ \ parser.add\_argument(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00383}00383\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/generator-\/output"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00384}00384\ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}generator\_output"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00385}00385\ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00386}00386\ \ \ \ \ \ \ \ \ default=\textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00387}00387\ \ \ \ \ \ \ \ \ metavar=\textcolor{stringliteral}{"{}DIR"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00388}00388\ \ \ \ \ \ \ \ \ type=\textcolor{stringliteral}{"{}path"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00389}00389\ \ \ \ \ \ \ \ \ env\_name=\textcolor{stringliteral}{"{}GYP\_GENERATOR\_OUTPUT"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00390}00390\ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}puts\ generated\ build\ files\ under\ DIR"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00391}00391\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00392}00392\ \ \ \ \ parser.add\_argument(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00393}00393\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/ignore-\/environment"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00394}00394\ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}use\_environment"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00395}00395\ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_false"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00396}00396\ \ \ \ \ \ \ \ \ default=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00397}00397\ \ \ \ \ \ \ \ \ regenerate=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00398}00398\ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}do\ not\ read\ options\ from\ environment\ variables"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00399}00399\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00400}00400\ \ \ \ \ parser.add\_argument(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00401}00401\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/I"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00402}00402\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/include"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00403}00403\ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}includes"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00404}00404\ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}append"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00405}00405\ \ \ \ \ \ \ \ \ metavar=\textcolor{stringliteral}{"{}INCLUDE"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00406}00406\ \ \ \ \ \ \ \ \ type=\textcolor{stringliteral}{"{}path"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00407}00407\ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}files\ to\ include\ in\ all\ loaded\ .gyp\ files"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00408}00408\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00409}00409\ \ \ \ \ \textcolor{comment}{\#\ -\/-\/no-\/circular-\/check\ disables\ the\ check\ for\ circular\ relationships\ between}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00410}00410\ \ \ \ \ \textcolor{comment}{\#\ .gyp\ files.\ \ These\ relationships\ should\ not\ exist,\ but\ they've\ only\ been}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00411}00411\ \ \ \ \ \textcolor{comment}{\#\ observed\ to\ be\ harmful\ with\ the\ Xcode\ generator.\ \ Chromium's\ .gyp\ files}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00412}00412\ \ \ \ \ \textcolor{comment}{\#\ currently\ have\ some\ circular\ relationships\ on\ non-\/Mac\ platforms,\ so\ this}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00413}00413\ \ \ \ \ \textcolor{comment}{\#\ option\ allows\ the\ strict\ behavior\ to\ be\ used\ on\ Macs\ and\ the\ lenient}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00414}00414\ \ \ \ \ \textcolor{comment}{\#\ behavior\ to\ be\ used\ elsewhere.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00415}00415\ \ \ \ \ \textcolor{comment}{\#\ TODO(mark):\ Remove\ this\ option\ when\ http://crbug.com/35878\ is\ fixed.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00416}00416\ \ \ \ \ parser.add\_argument(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00417}00417\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/no-\/circular-\/check"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00418}00418\ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}circular\_check"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00419}00419\ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_false"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00420}00420\ \ \ \ \ \ \ \ \ default=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00421}00421\ \ \ \ \ \ \ \ \ regenerate=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00422}00422\ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}don't\ check\ for\ circular\ relationships\ between\ files"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00423}00423\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00424}00424\ \ \ \ \ parser.add\_argument(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00425}00425\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/no-\/parallel"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00426}00426\ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store\_true"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00427}00427\ \ \ \ \ \ \ \ \ default=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00428}00428\ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}Disable\ multiprocessing"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00429}00429\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00430}00430\ \ \ \ \ parser.add\_argument(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00431}00431\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/S"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00432}00432\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/suffix"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00433}00433\ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}suffix"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00434}00434\ \ \ \ \ \ \ \ \ default=\textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00435}00435\ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}suffix\ to\ add\ to\ generated\ files"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00436}00436\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00437}00437\ \ \ \ \ parser.add\_argument(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00438}00438\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/toplevel-\/dir"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00439}00439\ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}toplevel\_dir"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00440}00440\ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}store"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00441}00441\ \ \ \ \ \ \ \ \ default=\textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00442}00442\ \ \ \ \ \ \ \ \ metavar=\textcolor{stringliteral}{"{}DIR"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00443}00443\ \ \ \ \ \ \ \ \ type=\textcolor{stringliteral}{"{}path"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00444}00444\ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}directory\ to\ use\ as\ the\ root\ of\ the\ source\ tree"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00445}00445\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00446}00446\ \ \ \ \ parser.add\_argument(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00447}00447\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/R"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00448}00448\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/root-\/target"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00449}00449\ \ \ \ \ \ \ \ \ dest=\textcolor{stringliteral}{"{}root\_targets"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00450}00450\ \ \ \ \ \ \ \ \ action=\textcolor{stringliteral}{"{}append"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00451}00451\ \ \ \ \ \ \ \ \ metavar=\textcolor{stringliteral}{"{}TARGET"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00452}00452\ \ \ \ \ \ \ \ \ help=\textcolor{stringliteral}{"{}include\ only\ TARGET\ and\ its\ deep\ dependencies"{}},}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00453}00453\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00454}00454\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00455}00455\ \ \ \ \ options,\ build\_files\_arg\ =\ parser.parse\_args(args)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00456}00456\ \ \ \ \ build\_files\ =\ build\_files\_arg}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00457}00457\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00458}00458\ \ \ \ \ \textcolor{comment}{\#\ Set\ up\ the\ configuration\ directory\ (defaults\ to\ \string~/.gyp)}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00459}00459\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ options.config\_dir:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00460}00460\ \ \ \ \ \ \ \ \ home\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00461}00461\ \ \ \ \ \ \ \ \ home\_dot\_gyp\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00462}00462\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.use\_environment:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00463}00463\ \ \ \ \ \ \ \ \ \ \ \ \ home\_dot\_gyp\ =\ os.environ.get(\textcolor{stringliteral}{"{}GYP\_CONFIG\_DIR"{}},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00464}00464\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ home\_dot\_gyp:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00465}00465\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ home\_dot\_gyp\ =\ os.path.expanduser(home\_dot\_gyp)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00466}00466\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00467}00467\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ home\_dot\_gyp:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00468}00468\ \ \ \ \ \ \ \ \ \ \ \ \ home\_vars\ =\ [\textcolor{stringliteral}{"{}HOME"{}}]}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00469}00469\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ sys.platform\ \textcolor{keywordflow}{in}\ (\textcolor{stringliteral}{"{}cygwin"{}},\ \textcolor{stringliteral}{"{}win32"{}}):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00470}00470\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ home\_vars.append(\textcolor{stringliteral}{"{}USERPROFILE"{}})}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00471}00471\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ home\_var\ \textcolor{keywordflow}{in}\ home\_vars:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00472}00472\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ home\ =\ os.getenv(home\_var)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00473}00473\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ home:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00474}00474\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ home\_dot\_gyp\ =\ os.path.join(home,\ \textcolor{stringliteral}{"{}.gyp"{}})}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00475}00475\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ os.path.exists(home\_dot\_gyp):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00476}00476\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ home\_dot\_gyp\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00477}00477\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00478}00478\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00479}00479\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00480}00480\ \ \ \ \ \ \ \ \ home\_dot\_gyp\ =\ os.path.expanduser(options.config\_dir)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00481}00481\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00482}00482\ \ \ \ \ \textcolor{keywordflow}{if}\ home\_dot\_gyp\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ os.path.exists(home\_dot\_gyp):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00483}00483\ \ \ \ \ \ \ \ \ home\_dot\_gyp\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00484}00484\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00485}00485\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ options.formats:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00486}00486\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ no\ format\ was\ given\ on\ the\ command\ line,\ then\ check\ the\ env\ variable.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00487}00487\ \ \ \ \ \ \ \ \ generate\_formats\ =\ []}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00488}00488\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.use\_environment:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00489}00489\ \ \ \ \ \ \ \ \ \ \ \ \ generate\_formats\ =\ os.environ.get(\textcolor{stringliteral}{"{}GYP\_GENERATORS"{}},\ [])}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00490}00490\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ generate\_formats:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00491}00491\ \ \ \ \ \ \ \ \ \ \ \ \ generate\_formats\ =\ re.split(\textcolor{stringliteral}{r"{}[\(\backslash\)s,]"{}},\ generate\_formats)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00492}00492\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ generate\_formats:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00493}00493\ \ \ \ \ \ \ \ \ \ \ \ \ options.formats\ =\ generate\_formats}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00494}00494\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00495}00495\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Nothing\ in\ the\ variable,\ default\ based\ on\ platform.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00496}00496\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ sys.platform\ ==\ \textcolor{stringliteral}{"{}darwin"{}}:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00497}00497\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ options.formats\ =\ [\textcolor{stringliteral}{"{}xcode"{}}]}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00498}00498\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ sys.platform\ \textcolor{keywordflow}{in}\ (\textcolor{stringliteral}{"{}win32"{}},\ \textcolor{stringliteral}{"{}cygwin"{}}):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00499}00499\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ options.formats\ =\ [\textcolor{stringliteral}{"{}msvs"{}}]}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00500}00500\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00501}00501\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ options.formats\ =\ [\textcolor{stringliteral}{"{}make"{}}]}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00502}00502\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00503}00503\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ options.generator\_output\ \textcolor{keywordflow}{and}\ options.use\_environment:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00504}00504\ \ \ \ \ \ \ \ \ g\_o\ =\ os.environ.get(\textcolor{stringliteral}{"{}GYP\_GENERATOR\_OUTPUT"{}})}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00505}00505\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ g\_o:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00506}00506\ \ \ \ \ \ \ \ \ \ \ \ \ options.generator\_output\ =\ g\_o}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00507}00507\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00508}00508\ \ \ \ \ options.parallel\ =\ \textcolor{keywordflow}{not}\ options.no\_parallel}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00509}00509\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00510}00510\ \ \ \ \ \textcolor{keywordflow}{for}\ mode\ \textcolor{keywordflow}{in}\ options.debug:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00511}00511\ \ \ \ \ \ \ \ \ gyp.debug[mode]\ =\ 1}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00512}00512\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00513}00513\ \ \ \ \ \textcolor{comment}{\#\ Do\ an\ extra\ check\ to\ avoid\ work\ when\ we're\ not\ debugging.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00514}00514\ \ \ \ \ \textcolor{keywordflow}{if}\ DEBUG\_GENERAL\ \textcolor{keywordflow}{in}\ gyp.debug:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00515}00515\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_a92df811c956a9b18a53c898b5081f1ed}{DebugOutput}}(DEBUG\_GENERAL,\ \textcolor{stringliteral}{"{}running\ with\ these\ options:"{}})}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00516}00516\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ option,\ value\ \textcolor{keywordflow}{in}\ sorted(options.\_\_dict\_\_.items()):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00517}00517\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ option[0]\ ==\ \textcolor{stringliteral}{"{}\_"{}}:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00518}00518\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00519}00519\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(value,\ str):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00520}00520\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_a92df811c956a9b18a53c898b5081f1ed}{DebugOutput}}(DEBUG\_GENERAL,\ \textcolor{stringliteral}{"{}\ \ \%s:\ '\%s'"{}},\ option,\ value)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00521}00521\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00522}00522\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_a92df811c956a9b18a53c898b5081f1ed}{DebugOutput}}(DEBUG\_GENERAL,\ \textcolor{stringliteral}{"{}\ \ \%s:\ \%s"{}},\ option,\ value)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00523}00523\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00524}00524\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ build\_files:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00525}00525\ \ \ \ \ \ \ \ \ build\_files\ =\ \mbox{\hyperlink{namespacegyp_a274528c08bff928d1c6750065601b92b}{FindBuildFiles}}()}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00526}00526\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ build\_files:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00527}00527\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classgyp_1_1common_1_1_gyp_error}{GypError}}((usage\ +\ \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)n\%s:\ error:\ no\ build\_file"{}})\ \%\ (my\_name,\ my\_name))}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00528}00528\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00529}00529\ \ \ \ \ \textcolor{comment}{\#\ TODO(mark):\ Chromium-\/specific\ hack!}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00530}00530\ \ \ \ \ \textcolor{comment}{\#\ For\ Chromium,\ the\ gyp\ "{}depth"{}\ variable\ should\ always\ be\ a\ relative\ path}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00531}00531\ \ \ \ \ \textcolor{comment}{\#\ to\ Chromium's\ top-\/level\ "{}src"{}\ directory.\ \ If\ no\ depth\ variable\ was\ set}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00532}00532\ \ \ \ \ \textcolor{comment}{\#\ on\ the\ command\ line,\ try\ to\ find\ a\ "{}src"{}\ directory\ by\ looking\ at\ the}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00533}00533\ \ \ \ \ \textcolor{comment}{\#\ absolute\ path\ to\ each\ build\ file's\ directory.\ \ The\ first\ "{}src"{}\ component}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00534}00534\ \ \ \ \ \textcolor{comment}{\#\ found\ will\ be\ treated\ as\ though\ it\ were\ the\ path\ used\ for\ -\/-\/depth.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00535}00535\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ options.depth:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00536}00536\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ build\_file\ \textcolor{keywordflow}{in}\ build\_files:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00537}00537\ \ \ \ \ \ \ \ \ \ \ \ \ build\_file\_dir\ =\ os.path.abspath(os.path.dirname(build\_file))}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00538}00538\ \ \ \ \ \ \ \ \ \ \ \ \ build\_file\_dir\_components\ =\ build\_file\_dir.split(os.path.sep)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00539}00539\ \ \ \ \ \ \ \ \ \ \ \ \ components\_len\ =\ len(build\_file\_dir\_components)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00540}00540\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ index\ \textcolor{keywordflow}{in}\ range(components\_len\ -\/\ 1,\ -\/1,\ -\/1):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00541}00541\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ build\_file\_dir\_components[index]\ ==\ \textcolor{stringliteral}{"{}src"{}}:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00542}00542\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ options.depth\ =\ os.path.sep.join(build\_file\_dir\_components)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00543}00543\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00544}00544\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ del\ build\_file\_dir\_components[index]}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00545}00545\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00546}00546\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ the\ inner\ loop\ found\ something,\ break\ without\ advancing\ to\ another}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00547}00547\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ build\ file.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00548}00548\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.depth:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00549}00549\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00550}00550\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00551}00551\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ options.depth:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00552}00552\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classgyp_1_1common_1_1_gyp_error}{GypError}}(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00553}00553\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Could\ not\ automatically\ locate\ src\ directory.\ \ This\ is"{}}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00554}00554\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}a\ temporary\ Chromium\ feature\ that\ will\ be\ removed.\ \ Use"{}}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00555}00555\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/depth\ as\ a\ workaround."{}}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00556}00556\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00557}00557\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00558}00558\ \ \ \ \ \textcolor{comment}{\#\ If\ toplevel-\/dir\ is\ not\ set,\ we\ assume\ that\ depth\ is\ the\ root\ of\ our\ source}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00559}00559\ \ \ \ \ \textcolor{comment}{\#\ tree.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00560}00560\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ options.toplevel\_dir:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00561}00561\ \ \ \ \ \ \ \ \ options.toplevel\_dir\ =\ options.depth}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00562}00562\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00563}00563\ \ \ \ \ \textcolor{comment}{\#\ -\/D\ on\ the\ command\ line\ sets\ variable\ defaults\ -\/\ D\ isn't\ just\ for\ define,}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00564}00564\ \ \ \ \ \textcolor{comment}{\#\ it's\ for\ default.\ \ Perhaps\ there\ should\ be\ a\ way\ to\ force\ (-\/F?)\ a}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00565}00565\ \ \ \ \ \textcolor{comment}{\#\ variable's\ value\ so\ that\ it\ can't\ be\ overridden\ by\ anything\ else.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00566}00566\ \ \ \ \ cmdline\_default\_variables\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00567}00567\ \ \ \ \ defines\ =\ []}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00568}00568\ \ \ \ \ \textcolor{keywordflow}{if}\ options.use\_environment:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00569}00569\ \ \ \ \ \ \ \ \ defines\ +=\ \mbox{\hyperlink{namespacegyp_a3eb32661788979e5e6c8361241d8f43d}{ShlexEnv}}(\textcolor{stringliteral}{"{}GYP\_DEFINES"{}})}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00570}00570\ \ \ \ \ \textcolor{keywordflow}{if}\ options.defines:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00571}00571\ \ \ \ \ \ \ \ \ defines\ +=\ options.defines}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00572}00572\ \ \ \ \ cmdline\_default\_variables\ =\ \mbox{\hyperlink{namespacegyp_a69a776d13c304ca8f95afe2c0ddcfb92}{NameValueListToDict}}(defines)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00573}00573\ \ \ \ \ \textcolor{keywordflow}{if}\ DEBUG\_GENERAL\ \textcolor{keywordflow}{in}\ gyp.debug:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00574}00574\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_a92df811c956a9b18a53c898b5081f1ed}{DebugOutput}}(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00575}00575\ \ \ \ \ \ \ \ \ \ \ \ \ DEBUG\_GENERAL,\ \textcolor{stringliteral}{"{}cmdline\_default\_variables:\ \%s"{}},\ cmdline\_default\_variables}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00576}00576\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00577}00577\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00578}00578\ \ \ \ \ \textcolor{comment}{\#\ Set\ up\ includes.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00579}00579\ \ \ \ \ includes\ =\ []}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00580}00580\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00581}00581\ \ \ \ \ \textcolor{comment}{\#\ If\ \string~/.gyp/include.gypi\ exists,\ it'll\ be\ forcibly\ included\ into\ every}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00582}00582\ \ \ \ \ \textcolor{comment}{\#\ .gyp\ file\ that's\ loaded,\ before\ anything\ else\ is\ included.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00583}00583\ \ \ \ \ \textcolor{keywordflow}{if}\ home\_dot\_gyp:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00584}00584\ \ \ \ \ \ \ \ \ default\_include\ =\ os.path.join(home\_dot\_gyp,\ \textcolor{stringliteral}{"{}include.gypi"{}})}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00585}00585\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ os.path.exists(default\_include):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00586}00586\ \ \ \ \ \ \ \ \ \ \ \ \ print(\textcolor{stringliteral}{"{}Using\ overrides\ found\ in\ "{}}\ +\ default\_include)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00587}00587\ \ \ \ \ \ \ \ \ \ \ \ \ includes.append(default\_include)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00588}00588\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00589}00589\ \ \ \ \ \textcolor{comment}{\#\ Command-\/line\ -\/-\/include\ files\ come\ after\ the\ default\ include.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00590}00590\ \ \ \ \ \textcolor{keywordflow}{if}\ options.includes:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00591}00591\ \ \ \ \ \ \ \ \ includes.extend(options.includes)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00592}00592\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00593}00593\ \ \ \ \ \textcolor{comment}{\#\ Generator\ flags\ should\ be\ prefixed\ with\ the\ target\ generator\ since\ they}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00594}00594\ \ \ \ \ \textcolor{comment}{\#\ are\ global\ across\ all\ generator\ runs.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00595}00595\ \ \ \ \ gen\_flags\ =\ []}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00596}00596\ \ \ \ \ \textcolor{keywordflow}{if}\ options.use\_environment:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00597}00597\ \ \ \ \ \ \ \ \ gen\_flags\ +=\ \mbox{\hyperlink{namespacegyp_a3eb32661788979e5e6c8361241d8f43d}{ShlexEnv}}(\textcolor{stringliteral}{"{}GYP\_GENERATOR\_FLAGS"{}})}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00598}00598\ \ \ \ \ \textcolor{keywordflow}{if}\ options.generator\_flags:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00599}00599\ \ \ \ \ \ \ \ \ gen\_flags\ +=\ options.generator\_flags}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00600}00600\ \ \ \ \ generator\_flags\ =\ \mbox{\hyperlink{namespacegyp_a69a776d13c304ca8f95afe2c0ddcfb92}{NameValueListToDict}}(gen\_flags)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00601}00601\ \ \ \ \ \textcolor{keywordflow}{if}\ DEBUG\_GENERAL\ \textcolor{keywordflow}{in}\ gyp.debug.keys():}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00602}00602\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_a92df811c956a9b18a53c898b5081f1ed}{DebugOutput}}(DEBUG\_GENERAL,\ \textcolor{stringliteral}{"{}generator\_flags:\ \%s"{}},\ generator\_flags)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00603}00603\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00604}00604\ \ \ \ \ \textcolor{comment}{\#\ Generate\ all\ requested\ formats\ (use\ a\ set\ in\ case\ we\ got\ one\ format\ request}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00605}00605\ \ \ \ \ \textcolor{comment}{\#\ twice)}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00606}00606\ \ \ \ \ \textcolor{keywordflow}{for}\ format\ \textcolor{keywordflow}{in}\ set(options.formats):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00607}00607\ \ \ \ \ \ \ \ \ params\ =\ \{}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00608}00608\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}options"{}}:\ options,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00609}00609\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}build\_files"{}}:\ build\_files,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00610}00610\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}generator\_flags"{}}:\ generator\_flags,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00611}00611\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}cwd"{}}:\ os.getcwd(),}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00612}00612\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}build\_files\_arg"{}}:\ build\_files\_arg,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00613}00613\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}gyp\_binary"{}}:\ sys.argv[0],}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00614}00614\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}home\_dot\_gyp"{}}:\ home\_dot\_gyp,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00615}00615\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}parallel"{}}:\ options.parallel,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00616}00616\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}root\_targets"{}}:\ options.root\_targets,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00617}00617\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}target\_arch"{}}:\ cmdline\_default\_variables.get(\textcolor{stringliteral}{"{}target\_arch"{}},\ \textcolor{stringliteral}{"{}"{}}),}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00618}00618\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00619}00619\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00620}00620\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Start\ with\ the\ default\ variables\ from\ the\ command\ line.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00621}00621\ \ \ \ \ \ \ \ \ [generator,\ flat\_list,\ targets,\ data]\ =\ \mbox{\hyperlink{namespacegyp_a0bc64fed18f77300277d691e72844798}{Load}}(}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00622}00622\ \ \ \ \ \ \ \ \ \ \ \ \ build\_files,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00623}00623\ \ \ \ \ \ \ \ \ \ \ \ \ format,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00624}00624\ \ \ \ \ \ \ \ \ \ \ \ \ cmdline\_default\_variables,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00625}00625\ \ \ \ \ \ \ \ \ \ \ \ \ includes,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00626}00626\ \ \ \ \ \ \ \ \ \ \ \ \ options.depth,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00627}00627\ \ \ \ \ \ \ \ \ \ \ \ \ params,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00628}00628\ \ \ \ \ \ \ \ \ \ \ \ \ options.check,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00629}00629\ \ \ \ \ \ \ \ \ \ \ \ \ options.circular\_check,}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00630}00630\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00631}00631\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00632}00632\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ TODO(mark):\ Pass\ |data|\ for\ now\ because\ the\ generator\ needs\ a\ list\ of}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00633}00633\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ build\ files\ that\ came\ in.\ \ In\ the\ future,\ maybe\ it\ should\ just\ accept}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00634}00634\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ a\ list,\ and\ not\ the\ whole\ data\ dict.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00635}00635\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ NOTE:\ flat\_list\ is\ the\ flattened\ dependency\ graph\ specifying\ the\ order}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00636}00636\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ that\ targets\ may\ be\ built.\ \ Build\ systems\ that\ operate\ serially\ or\ that}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00637}00637\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ need\ to\ have\ dependencies\ defined\ before\ dependents\ reference\ them\ should}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00638}00638\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ generate\ targets\ in\ the\ order\ specified\ in\ flat\_list.}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00639}00639\ \ \ \ \ \ \ \ \ generator.GenerateOutput(flat\_list,\ targets,\ data,\ params)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00640}00640\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00641}00641\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ options.configs:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00642}00642\ \ \ \ \ \ \ \ \ \ \ \ \ valid\_configs\ =\ targets[flat\_list[0]][\textcolor{stringliteral}{"{}configurations"{}}]}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00643}00643\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ conf\ \textcolor{keywordflow}{in}\ options.configs:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00644}00644\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ conf\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ valid\_configs:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00645}00645\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ \mbox{\hyperlink{classgyp_1_1common_1_1_gyp_error}{GypError}}(\textcolor{stringliteral}{"{}Invalid\ config\ specified\ via\ -\/-\/build:\ \%s"{}}\ \%\ conf)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00646}00646\ \ \ \ \ \ \ \ \ \ \ \ \ generator.PerformBuild(data,\ options.configs,\ params)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00647}00647\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00648}00648\ \ \ \ \ \textcolor{comment}{\#\ Done}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00649}00649\ \ \ \ \ \textcolor{keywordflow}{return}\ 0}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00650}00650\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00651}00651\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00652}\mbox{\hyperlink{namespacegyp_a01f9bd9c01b5a095fd53214c9b36b824}{00652}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_a01f9bd9c01b5a095fd53214c9b36b824}{main}}(args):}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00653}00653\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00654}00654\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacegyp__main}{gyp\_main}}(args)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00655}00655\ \ \ \ \ \textcolor{keywordflow}{except}\ GypError\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00656}00656\ \ \ \ \ \ \ \ \ sys.stderr.write(\textcolor{stringliteral}{"{}gyp:\ \%s\(\backslash\)n"{}}\ \%\ e)}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00657}00657\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00658}00658\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00659}00659\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00660}00660\ \textcolor{comment}{\#\ NOTE:\ setuptools\ generated\ console\_scripts\ calls\ function\ with\ no\ arguments}}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00661}\mbox{\hyperlink{namespacegyp_a4fedb308a9d4d652b1f2dd06c9bc0a50}{00661}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_a4fedb308a9d4d652b1f2dd06c9bc0a50}{script\_main}}():}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00662}00662\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacegyp_a01f9bd9c01b5a095fd53214c9b36b824}{main}}(sys.argv[1:])}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00663}00663\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00664}00664\ }
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00665}00665\ \textcolor{keywordflow}{if}\ \_\_name\_\_\ ==\ \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
+\DoxyCodeLine{\Hypertarget{____init_____8py_source_l00666}00666\ \ \ \ \ sys.exit(\mbox{\hyperlink{namespacegyp_a4fedb308a9d4d652b1f2dd06c9bc0a50}{script\_main}}())}
+
+\end{DoxyCode}

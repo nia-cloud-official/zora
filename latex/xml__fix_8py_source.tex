@@ -1,0 +1,71 @@
+\doxysection{xml\+\_\+fix.\+py}
+\hypertarget{xml__fix_8py_source}{}\label{xml__fix_8py_source}\index{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/xml\_fix.py@{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/xml\_fix.py}}
+\mbox{\hyperlink{xml__fix_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00001}\mbox{\hyperlink{namespacegyp_1_1xml__fix}{00001}}\ \textcolor{comment}{\#\ Copyright\ (c)\ 2011\ Google\ Inc.\ All\ rights\ reserved.}}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00002}00002\ \textcolor{comment}{\#\ Use\ of\ this\ source\ code\ is\ governed\ by\ a\ BSD-\/style\ license\ that\ can\ be}}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00003}00003\ \textcolor{comment}{\#\ found\ in\ the\ LICENSE\ file.}}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00005}00005\ \textcolor{stringliteral}{"{}"{}"{}Applies\ a\ fix\ to\ CR\ LF\ TAB\ handling\ in\ xml.dom.}}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00006}00006\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00007}00007\ \textcolor{stringliteral}{Fixes\ this:\ http://code.google.com/p/chromium/issues/detail?id=76293}}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00008}00008\ \textcolor{stringliteral}{Working\ around\ this:\ http://bugs.python.org/issue5752}}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00009}00009\ \textcolor{stringliteral}{TODO(bradnelson):\ Consider\ dropping\ this\ when\ we\ drop\ XP\ support.}}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00010}00010\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00013}00013\ \textcolor{keyword}{import}\ xml.dom.minidom}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00016}\mbox{\hyperlink{namespacegyp_1_1xml__fix_a85e7e7c0e5fb93d63edc0e1d96838833}{00016}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1xml__fix_a85e7e7c0e5fb93d63edc0e1d96838833}{\_Replacement\_write\_data}}(writer,\ data,\ is\_attrib=False):}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00017}00017\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Writes\ datachars\ to\ writer."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00018}00018\ \ \ \ \ data\ =\ data.replace(\textcolor{stringliteral}{"{}\&"{}},\ \textcolor{stringliteral}{"{}\&amp;"{}}).replace(\textcolor{stringliteral}{"{}<"{}},\ \textcolor{stringliteral}{"{}\&lt;"{}})}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00019}00019\ \ \ \ \ data\ =\ data.replace(\textcolor{stringliteral}{'"{}'},\ \textcolor{stringliteral}{"{}\&quot;"{}}).replace(\textcolor{stringliteral}{"{}>"{}},\ \textcolor{stringliteral}{"{}\&gt;"{}})}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00020}00020\ \ \ \ \ \textcolor{keywordflow}{if}\ is\_attrib:}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00021}00021\ \ \ \ \ \ \ \ \ data\ =\ data.replace(\textcolor{stringliteral}{"{}\(\backslash\)r"{}},\ \textcolor{stringliteral}{"{}\&\#xD;"{}}).replace(\textcolor{stringliteral}{"{}\(\backslash\)n"{}},\ \textcolor{stringliteral}{"{}\&\#xA;"{}}).replace(\textcolor{stringliteral}{"{}\(\backslash\)t"{}},\ \textcolor{stringliteral}{"{}\&\#x9;"{}})}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00022}00022\ \ \ \ \ writer.write(data)}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00025}\mbox{\hyperlink{namespacegyp_1_1xml__fix_ad0ba10a7bc6d51ce7e3e3da8acb9d500}{00025}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1xml__fix_ad0ba10a7bc6d51ce7e3e3da8acb9d500}{\_Replacement\_writexml}}(self,\ writer,\ indent="{}"{},\ addindent="{}"{},\ newl="{}"{}):}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00026}00026\ \ \ \ \ \textcolor{comment}{\#\ indent\ =\ current\ indentation}}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00027}00027\ \ \ \ \ \textcolor{comment}{\#\ addindent\ =\ indentation\ to\ add\ to\ higher\ levels}}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00028}00028\ \ \ \ \ \textcolor{comment}{\#\ newl\ =\ newline\ string}}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00029}\mbox{\hyperlink{namespacegyp_1_1xml__fix_ab6a48172b9a9efa0acefed0ea4368c80}{00029}}\ \ \ \ \ writer.write(indent\ +\ \textcolor{stringliteral}{"{}<"{}}\ +\ self.tagName)}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00031}00031\ \ \ \ \ attrs\ =\ self.\_get\_attributes()}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00032}00032\ \ \ \ \ a\_names\ =\ sorted(attrs.keys())}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00034}00034\ \ \ \ \ \textcolor{keywordflow}{for}\ a\_name\ \textcolor{keywordflow}{in}\ a\_names:}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00035}00035\ \ \ \ \ \ \ \ \ writer.write(\textcolor{stringliteral}{'\ \%s="{}'}\ \%\ a\_name)}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00036}00036\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1xml__fix_a85e7e7c0e5fb93d63edc0e1d96838833}{\_Replacement\_write\_data}}(writer,\ attrs[a\_name].value,\ is\_attrib=\textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00037}00037\ \ \ \ \ \ \ \ \ writer.write(\textcolor{stringliteral}{'"{}'})}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00038}\mbox{\hyperlink{namespacegyp_1_1xml__fix_a7fc5c6ff7058688d467f7995029e2e82}{00038}}\ \ \ \ \ \textcolor{keywordflow}{if}\ self.childNodes:}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ writer.write(\textcolor{stringliteral}{"{}>\%s"{}}\ \%\ newl)}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00040}00040\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ node\ \textcolor{keywordflow}{in}\ self.childNodes:}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ \ \ \ \ node.writexml(writer,\ indent\ +\ addindent,\ addindent,\ newl)}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ writer.write(f\textcolor{stringliteral}{"{}\{indent\}</\{self.tagName\}>\{newl\}"{}})}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00043}00043\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ writer.write(\textcolor{stringliteral}{"{}/>\%s"{}}\ \%\ newl)}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00047}\mbox{\hyperlink{classgyp_1_1xml__fix_1_1_xml_fix}{00047}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classgyp_1_1xml__fix_1_1_xml_fix}{XmlFix}}:}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00048}00048\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Object\ to\ manage\ temporary\ patching\ of\ xml.dom.minidom."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00050}\mbox{\hyperlink{classgyp_1_1xml__fix_1_1_xml_fix_a1fb96c5f90563af179d0b6fcbcf449fd}{00050}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1xml__fix_1_1_xml_fix_a1fb96c5f90563af179d0b6fcbcf449fd}{\_\_init\_\_}}(self):}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Preserve\ current\ xml.dom.minidom\ functions.}}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00052}\mbox{\hyperlink{classgyp_1_1xml__fix_1_1_xml_fix_ad1af792a82751835751168efee40b9c4}{00052}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1xml__fix_1_1_xml_fix_ad1af792a82751835751168efee40b9c4}{write\_data}}\ =\ xml.dom.minidom.\_write\_data}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00053}\mbox{\hyperlink{classgyp_1_1xml__fix_1_1_xml_fix_ad9d102243aa98fecb85e46dbec7ddc6c}{00053}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1xml__fix_1_1_xml_fix_ad9d102243aa98fecb85e46dbec7ddc6c}{writexml}}\ =\ xml.dom.minidom.Element.writexml}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Inject\ replacement\ versions\ of\ a\ function\ and\ a\ method.}}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ xml.dom.minidom.\_write\_data\ =\ \_Replacement\_write\_data}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ xml.dom.minidom.Element.writexml\ =\ \_Replacement\_writexml}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00058}\mbox{\hyperlink{classgyp_1_1xml__fix_1_1_xml_fix_ab0ce29441b96a596ef31465cafadd5d5}{00058}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1xml__fix_1_1_xml_fix_ab0ce29441b96a596ef31465cafadd5d5}{Cleanup}}(self):}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classgyp_1_1xml__fix_1_1_xml_fix_ad1af792a82751835751168efee40b9c4}{write\_data}}:}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ xml.dom.minidom.\_write\_data\ =\ self.\mbox{\hyperlink{classgyp_1_1xml__fix_1_1_xml_fix_ad1af792a82751835751168efee40b9c4}{write\_data}}}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ xml.dom.minidom.Element.writexml\ =\ self.\mbox{\hyperlink{classgyp_1_1xml__fix_1_1_xml_fix_ad9d102243aa98fecb85e46dbec7ddc6c}{writexml}}}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1xml__fix_1_1_xml_fix_ad1af792a82751835751168efee40b9c4}{write\_data}}\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00064}\mbox{\hyperlink{classgyp_1_1xml__fix_1_1_xml_fix_af4e6bdd0cc3f35e6586bfc30b6d17870}{00064}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1xml__fix_1_1_xml_fix_af4e6bdd0cc3f35e6586bfc30b6d17870}{\_\_del\_\_}}(self):}
+\DoxyCodeLine{\Hypertarget{xml__fix_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1xml__fix_1_1_xml_fix_ab0ce29441b96a596ef31465cafadd5d5}{Cleanup}}()}
+
+\end{DoxyCode}

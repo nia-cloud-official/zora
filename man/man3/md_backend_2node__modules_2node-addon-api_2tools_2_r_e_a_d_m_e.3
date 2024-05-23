@@ -1,0 +1,94 @@
+.TH "md_backend_2node__modules_2node-addon-api_2tools_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2node-addon-api_2tools_2_r_e_a_d_m_e \- Tools 
+.PP
+ 
+.SH "clang-format"
+.PP
+The clang-format checking tools is designed to check changed lines of code compared to given git-refs\&.
+.SH "Migration Script"
+.PP
+The migration tool is designed to reduce repetitive work in the migration process\&. However, the script is not aiming to convert every thing for you\&. There are usually some small fixes and major reconstruction required\&.
+.SS "How To Use"
+To run the conversion script, first make sure you have the latest \fRnode-addon-api\fP in your \fRnode_modules\fP directory\&. 
+.PP
+.nf
+npm install node\-addon\-api
+
+.fi
+.PP
+.PP
+Then run the script passing your project directory 
+.PP
+.nf
+node \&./node_modules/node\-addon\-api/tools/conversion\&.js \&./
+
+.fi
+.PP
+.PP
+After finish, recompile and debug things that are missed by the script\&.
+.SS "Quick Fixes"
+Here is the list of things that can be fixed easily\&.
+.IP "1." 4
+Change your methods' return value to void if it doesn't return value to JavaScript\&.
+.IP "2." 4
+Use \fR\&.\fP to access attribute or to invoke member function in \fBNapi::Object\fP instead of \fR->\fP\&.
+.IP "3." 4
+\fRNapi::New(env, value);\fP to `Napi::[Type]New(env, value);
+.PP
+.SS "Major Reconstructions"
+The implementation of \fR\fBNapi::ObjectWrap\fP\fP is significantly different from NAN's\&. \fR\fBNapi::ObjectWrap\fP\fP takes a pointer to the wrapped object and creates a reference to the wrapped object inside ObjectWrap constructor\&. \fR\fBNapi::ObjectWrap\fP\fP also associates wrapped object's instance methods to Javascript module instead of static methods like NAN\&.
+.PP
+So if you use Nan::ObjectWrap in your module, you will need to execute the following steps\&.
+.PP
+.IP "1." 4
+Convert your [ClassName]New function to a constructor function that takes a \fR\fBNapi::CallbackInfo\fP\fP\&. Declare it as 
+.PP
+.nf
+[ClassName](const Napi::CallbackInfo& info);
+
+.fi
+.PP
+ and define it as 
+.PP
+.nf
+[ClassName]::[ClassName](const Napi::CallbackInfo& info) : Napi::ObjectWrap<[ClassName]>(info){
+  \&.\&.\&.
+}
+
+.fi
+.PP
+ This way, the \fR\fBNapi::ObjectWrap\fP\fP constructor will be invoked after the object has been instantiated and \fR\fBNapi::ObjectWrap\fP\fP can use the \fRthis\fP pointer to create a reference to the wrapped object\&.
+.IP "2." 4
+Move your original constructor code into the new constructor\&. Delete your original constructor\&.
+.IP "3." 4
+In your class initialization function, associate native methods in the following way\&. 
+.PP
+.nf
+Napi::FunctionReference constructor;
+
+void [ClassName]::Init(Napi::Env env, Napi::Object exports, Napi::Object module) {
+  Napi::HandleScope scope(env);
+  Napi::Function ctor = DefineClass(env, "Canvas", {
+    InstanceMethod<&[ClassName]::Func1>("Func1"),
+    InstanceMethod<&[ClassName]::Func2>("Func2"),
+    InstanceAccessor<&[ClassName]::ValueGetter>("Value"),
+    StaticMethod<&[ClassName]::StaticMethod>("MethodName"),
+    InstanceValue("Value", Napi::[Type]::New(env, value)),
+  });
+
+  constructor = Napi::Persistent(ctor);
+  constructor \&.SuppressDestruct();
+  exports\&.Set("[ClassName]", ctor);
+}
+
+.fi
+.PP
+
+.IP "4." 4
+In function where you need to Unwrap the ObjectWrap in NAN like \fR[ClassName]* native = Nan::ObjectWrap::Unwrap<[ClassName]>(info\&.This());\fP, use \fRthis\fP pointer directly as the unwrapped object as each ObjectWrap instance is associated with a unique object instance\&.
+.PP
+.PP
+If you still find issues after following this guide, please leave us an issue describing your problem and we will try to resolve it\&. 

@@ -1,0 +1,570 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2tar_2_r_e_a_d_m_e</compoundname>
+    <title>node-tar</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3819"/> Fast and full-featured Tar for Node.js</para>
+<para>The API is designed to mimic the behavior of <computeroutput>tar(1)</computeroutput> on unix systems. If you are familiar with how tar works, most of this will hopefully be straightforward for you. If not, then hopefully this module can teach you useful unix skills that may come in handy someday :)</para>
+<sect1 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3820">
+<title>Background</title><para>A &quot;tar file&quot; or &quot;tarball&quot; is an archive of file system entries (directories, files, links, etc.) The name comes from &quot;tape archive&quot;. If you run <computeroutput>man tar</computeroutput> on almost any Unix command line, you&apos;ll learn quite a bit about what it can do, and its history.</para>
+<para>Tar has 5 main top-level commands:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>c</computeroutput> Create an archive</para>
+</listitem><listitem><para><computeroutput>r</computeroutput> Replace entries within an archive</para>
+</listitem><listitem><para><computeroutput>u</computeroutput> Update entries within an archive (ie, replace if they&apos;re newer)</para>
+</listitem><listitem><para><computeroutput>t</computeroutput> List out the contents of an archive</para>
+</listitem><listitem><para><computeroutput>x</computeroutput> Extract an archive to disk</para>
+</listitem></itemizedlist>
+</para>
+<para>The other flags and options modify how this top level function works.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3821">
+<title>High-Level API</title><para>These 5 functions are the high-level API. All of them have a single-character name (for unix nerds familiar with <computeroutput>tar(1)</computeroutput>) as well as a long name (for everyone else).</para>
+<para>All the high-level functions take the following arguments, all three of which are optional and may be omitted.</para>
+<para><orderedlist>
+<listitem><para><computeroutput>options</computeroutput> - An optional object specifying various options</para>
+</listitem><listitem><para><computeroutput>paths</computeroutput> - An array of paths to add or extract</para>
+</listitem><listitem><para><computeroutput>callback</computeroutput> - Called when the command is completed, if async. (If sync or no file specified, providing a callback throws a <computeroutput>TypeError</computeroutput>.)</para>
+</listitem></orderedlist>
+</para>
+<para>If the command is sync (ie, if <computeroutput>options.sync=true</computeroutput>), then the callback is not allowed, since the action will be completed immediately.</para>
+<para>If a <computeroutput>file</computeroutput> argument is specified, and the command is async, then a <computeroutput>Promise</computeroutput> is returned. In this case, if async, a callback may be provided which is called when the command is completed.</para>
+<para>If a <computeroutput>file</computeroutput> option is not specified, then a stream is returned. For <computeroutput>create</computeroutput>, this is a readable stream of the generated archive. For <computeroutput>list</computeroutput> and <computeroutput>extract</computeroutput> this is a writable stream that an archive should be written into. If a file is not specified, then a callback is not allowed, because you&apos;re already getting a stream to work with.</para>
+<para><computeroutput>replace</computeroutput> and <computeroutput>update</computeroutput> only work on existing archives, and so require a <computeroutput>file</computeroutput> argument.</para>
+<para>Sync commands without a file argument return a stream that acts on its input immediately in the same tick. For readable streams, this means that all of the data is immediately available by calling <computeroutput>stream.read()</computeroutput>. For writable streams, it will be acted upon as soon as it is provided, but this can be at any time.</para>
+<sect2 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3822">
+<title>Warnings and Errors</title><para>Tar emits warnings and errors for recoverable and unrecoverable situations, respectively. In many cases, a warning only affects a single entry in an archive, or is simply informing you that it&apos;s modifying an entry to comply with the settings provided.</para>
+<para>Unrecoverable warnings will always raise an error (ie, emit <lsquo/>&apos;error<rsquo/><computeroutput>on streaming actions, throw for non-streaming sync actions, reject the returned Promise for non-streaming async operations, or call a provided callback with an</computeroutput>Error<computeroutput>as the first argument). Recoverable errors will raise an error only if</computeroutput>strict: true` is set in the options.</para>
+<para>Respond to (recoverable) warnings by listening to the <computeroutput>warn</computeroutput> event. Handlers receive 3 arguments:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>code</computeroutput> String. One of the error codes below. This may not match <computeroutput>data.code</computeroutput>, which preserves the original error code from fs and zlib.</para>
+</listitem><listitem><para><computeroutput>message</computeroutput> String. More details about the error.</para>
+</listitem><listitem><para><computeroutput>data</computeroutput> Metadata about the error. An <computeroutput>Error</computeroutput> object for errors raised by fs and zlib. All fields are attached to errors raisd by tar. Typically contains the following fields, as relevant:<itemizedlist>
+<listitem><para><computeroutput>tarCode</computeroutput> The tar error code.</para>
+</listitem><listitem><para><computeroutput>code</computeroutput> Either the tar error code, or the error code set by the underlying system.</para>
+</listitem><listitem><para><computeroutput>file</computeroutput> The archive file being read or written.</para>
+</listitem><listitem><para><computeroutput>cwd</computeroutput> Working directory for creation and extraction operations.</para>
+</listitem><listitem><para><computeroutput>entry</computeroutput> The entry object (if it could be created) for <computeroutput>TAR_ENTRY_INFO</computeroutput>, <computeroutput>TAR_ENTRY_INVALID</computeroutput>, and <computeroutput>TAR_ENTRY_ERROR</computeroutput> warnings.</para>
+</listitem><listitem><para><computeroutput>header</computeroutput> The header object (if it could be created, and the entry could not be created) for <computeroutput>TAR_ENTRY_INFO</computeroutput> and <computeroutput>TAR_ENTRY_INVALID</computeroutput> warnings.</para>
+</listitem><listitem><para><computeroutput>recoverable</computeroutput> Boolean. If <computeroutput>false</computeroutput>, then the warning will emit an <computeroutput>error</computeroutput>, even in non-strict mode.</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+<sect3 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3823">
+<title>Error Codes</title><para><itemizedlist>
+<listitem><para><computeroutput>TAR_ENTRY_INFO</computeroutput> An informative error indicating that an entry is being modified, but otherwise processed normally. For example, removing <computeroutput>/</computeroutput> or <computeroutput>C:\</computeroutput> from absolute paths if <computeroutput>preservePaths</computeroutput> is not set.</para>
+</listitem><listitem><para><computeroutput>TAR_ENTRY_INVALID</computeroutput> An indication that a given entry is not a valid tar archive entry, and will be skipped. This occurs when:<itemizedlist>
+<listitem><para>a checksum fails,</para>
+</listitem><listitem><para>a <computeroutput>linkpath</computeroutput> is missing for a link type, or</para>
+</listitem><listitem><para>a <computeroutput>linkpath</computeroutput> is provided for a non-link type.</para>
+</listitem></itemizedlist>
+</para>
+<para>If every entry in a parsed archive raises an <computeroutput>TAR_ENTRY_INVALID</computeroutput> error, then the archive is presumed to be unrecoverably broken, and <computeroutput>TAR_BAD_ARCHIVE</computeroutput> will be raised.</para>
+</listitem><listitem><para><computeroutput>TAR_ENTRY_ERROR</computeroutput> The entry appears to be a valid tar archive entry, but encountered an error which prevented it from being unpacked. This occurs when:<itemizedlist>
+<listitem><para>an unrecoverable fs error happens during unpacking,</para>
+</listitem><listitem><para>an entry is trying to extract into an excessively deep location (by default, limited to 1024 subfolders),</para>
+</listitem><listitem><para>an entry has <computeroutput>..</computeroutput> in the path and <computeroutput>preservePaths</computeroutput> is not set, or</para>
+</listitem><listitem><para>an entry is extracting through a symbolic link, when <computeroutput>preservePaths</computeroutput> is not set.</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>TAR_ENTRY_UNSUPPORTED</computeroutput> An indication that a given entry is a valid archive entry, but of a type that is unsupported, and so will be skipped in archive creation or extracting.</para>
+</listitem><listitem><para><computeroutput>TAR_ABORT</computeroutput> When parsing gzipped-encoded archives, the parser will abort the parse process raise a warning for any zlib errors encountered. Aborts are considered unrecoverable for both parsing and unpacking.</para>
+</listitem><listitem><para><computeroutput>TAR_BAD_ARCHIVE</computeroutput> The archive file is totally hosed. This can happen for a number of reasons, and always occurs at the end of a parse or extract:<itemizedlist>
+<listitem><para>An entry body was truncated before seeing the full number of bytes.</para>
+</listitem><listitem><para>The archive contained only invalid entries, indicating that it is likely not an archive, or at least, not an archive this library can parse.</para>
+</listitem></itemizedlist>
+</para>
+<para><computeroutput>TAR_BAD_ARCHIVE</computeroutput> is considered informative for parse operations, but unrecoverable for extraction. Note that, if encountered at the end of an extraction, tar WILL still have extracted as much it could from the archive, so there may be some garbage files to clean up.</para>
+</listitem></itemizedlist>
+</para>
+<para>Errors that occur deeper in the system (ie, either the filesystem or zlib) will have their error codes left intact, and a <computeroutput>tarCode</computeroutput> matching one of the above will be added to the warning metadata or the raised error object.</para>
+<para>Errors generated by tar will have one of the above codes set as the <computeroutput>error.code</computeroutput> field as well, but since errors originating in zlib or fs will have their original codes, it&apos;s better to read <computeroutput>error.tarCode</computeroutput> if you wish to see how tar is handling the issue.</para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3824">
+<title>Examples</title><para>The API mimics the <computeroutput>tar(1)</computeroutput> command line functionality, with aliases for more human-readable option and function names. The goal is that if you know how to use <computeroutput>tar(1)</computeroutput> in Unix, then you know how to use <lsquo/>require(&apos;tar<rsquo/>)` in JavaScript.</para>
+<para>To replicate <computeroutput>tar czf my-tarball.tgz files and folders</computeroutput>, you&apos;d do:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">tar.c(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>gzip:<sp/>&lt;true|gzip<sp/>options&gt;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>file:<sp/>&apos;my-tarball.tgz&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>[&apos;some&apos;,<sp/>&apos;files&apos;,<sp/>&apos;and&apos;,<sp/>&apos;folders&apos;]</highlight></codeline>
+<codeline><highlight class="normal">).then(_<sp/>=&gt;<sp/>{<sp/>..<sp/>tarball<sp/>has<sp/>been<sp/>created<sp/>..<sp/>})</highlight></codeline>
+</programlisting></para>
+<para>To replicate <computeroutput>tar cz files and folders &gt; my-tarball.tgz</computeroutput>, you&apos;d do:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">tar.c(<sp/>//<sp/>or<sp/>tar.create</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>gzip:<sp/>&lt;true|gzip<sp/>options&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>[&apos;some&apos;,<sp/>&apos;files&apos;,<sp/>&apos;and&apos;,<sp/>&apos;folders&apos;]</highlight></codeline>
+<codeline><highlight class="normal">).pipe(fs.createWriteStream(&apos;my-tarball.tgz&apos;))</highlight></codeline>
+</programlisting></para>
+<para>To replicate <computeroutput>tar xf my-tarball.tgz</computeroutput> you&apos;d do:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">tar.x(<sp/><sp/>//<sp/>or<sp/>tar.extract(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>file:<sp/>&apos;my-tarball.tgz&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">).then(_=&gt;<sp/>{<sp/>..<sp/>tarball<sp/>has<sp/>been<sp/>dumped<sp/>in<sp/>cwd<sp/>..<sp/>})</highlight></codeline>
+</programlisting></para>
+<para>To replicate <computeroutput>cat my-tarball.tgz | tar x -C some-dir --strip=1</computeroutput>:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">fs.createReadStream(&apos;my-tarball.tgz&apos;).pipe(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>tar.x({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>strip:<sp/>1,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>C:<sp/>&apos;some-dir&apos;<sp/>//<sp/>alias<sp/>for<sp/>cwd:&apos;some-dir&apos;,<sp/>also<sp/>ok</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">)</highlight></codeline>
+</programlisting></para>
+<para>To replicate <computeroutput>tar tf my-tarball.tgz</computeroutput>, do this:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">tar.t({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>file:<sp/>&apos;my-tarball.tgz&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>onentry:<sp/>entry<sp/>=&gt;<sp/>{<sp/>..<sp/>do<sp/>whatever<sp/>with<sp/>it<sp/>..<sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+<para>For example, to just get the list of filenames from an archive:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>getEntryFilenames<sp/>=<sp/>async<sp/>tarballFilename<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>const<sp/>filenames<sp/>=<sp/>[]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>await<sp/>tar.t({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>file:<sp/>tarballFilename,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>onentry:<sp/>entry<sp/>=&gt;<sp/>filenames.push(entry.path),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>filenames</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+<para>To replicate <computeroutput>cat my-tarball.tgz | tar t</computeroutput> do:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">fs.createReadStream(&apos;my-tarball.tgz&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>.pipe(tar.t())</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>.on(&apos;entry&apos;,<sp/>entry<sp/>=&gt;<sp/>{<sp/>..<sp/>do<sp/>whatever<sp/>with<sp/>it<sp/>..<sp/>})</highlight></codeline>
+</programlisting></para>
+<para>To do anything synchronous, add <computeroutput>sync: true</computeroutput> to the options. Note that sync functions don&apos;t take a callback and don&apos;t return a promise. When the function returns, it&apos;s already done. Sync methods without a file argument return a sync stream, which flushes immediately. But, of course, it still won&apos;t be done until you <computeroutput>.end()</computeroutput> it.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>getEntryFilenamesSync<sp/>=<sp/>tarballFilename<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>const<sp/>filenames<sp/>=<sp/>[]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>tar.t({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>file:<sp/>tarballFilename,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>onentry:<sp/>entry<sp/>=&gt;<sp/>filenames.push(entry.path),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>sync:<sp/>true,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>filenames</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+<para>To filter entries, add <computeroutput>filter: &lt;function&gt;</computeroutput> to the options. Tar-creating methods call the filter with <computeroutput>filter(path, stat)</computeroutput>. Tar-reading methods (including extraction) call the filter with <computeroutput>filter(path, entry)</computeroutput>. The filter is called in the <computeroutput>this</computeroutput>-context of the <computeroutput>Pack</computeroutput> or <computeroutput>Unpack</computeroutput> stream object.</para>
+<para>The arguments list to <computeroutput>tar t</computeroutput> and <computeroutput>tar x</computeroutput> specify a list of filenames to extract or list, so they&apos;re equivalent to a filter that tests if the file is in the list.</para>
+<para>For those who <emphasis>aren&apos;t</emphasis> fans of tar&apos;s single-character command names:</para>
+<para><programlisting><codeline><highlight class="normal">tar.c<sp/>===<sp/>tar.create</highlight></codeline>
+<codeline><highlight class="normal">tar.r<sp/>===<sp/>tar.replace<sp/>(appends<sp/>to<sp/>archive,<sp/>file<sp/>is<sp/>required)</highlight></codeline>
+<codeline><highlight class="normal">tar.u<sp/>===<sp/>tar.update<sp/>(appends<sp/>if<sp/>newer,<sp/>file<sp/>is<sp/>required)</highlight></codeline>
+<codeline><highlight class="normal">tar.x<sp/>===<sp/>tar.extract</highlight></codeline>
+<codeline><highlight class="normal">tar.t<sp/>===<sp/>tar.list</highlight></codeline>
+</programlisting></para>
+<para>Keep reading for all the command descriptions and options, as well as the low-level API that they are built on.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3825">
+<title>tar.c(options, fileList, callback) [alias: tar.create]</title><para>Create a tarball archive.</para>
+<para>The <computeroutput>fileList</computeroutput> is an array of paths to add to the tarball. Adding a directory also adds its children recursively.</para>
+<para>An entry in <computeroutput>fileList</computeroutput> that starts with an <computeroutput>@</computeroutput> symbol is a tar archive whose entries will be added. To add a file that starts with <computeroutput>@</computeroutput>, prepend it with <computeroutput>./</computeroutput>.</para>
+<para>The following options are supported:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>file</computeroutput> Write the tarball archive to the specified filename. If this is specified, then the callback will be fired when the file has been written, and a promise will be returned that resolves when the file is written. If a filename is not specified, then a Readable Stream will be returned which will emit the file data. [Alias: <computeroutput>f</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>sync</computeroutput> Act synchronously. If this is set, then any provided file will be fully written after the call to <computeroutput>tar.c</computeroutput>. If this is set, and a file is not provided, then the resulting stream will already have the data ready to <computeroutput>read</computeroutput> or <lsquo/>emit(&apos;data<rsquo/>)<computeroutput>as soon as you request it. -</computeroutput>onwarn<computeroutput>A function that will get called with</computeroutput>(code, message, data)<computeroutput>for any warnings encountered. (See &quot;Warnings and Errors&quot;) -</computeroutput>strict<computeroutput>Treat warnings as crash-worthy errors. Default false. -</computeroutput>cwd<computeroutput>The current working directory for creating the archive. Defaults to</computeroutput>process.cwd()<computeroutput>. [Alias:</computeroutput>C<computeroutput>] -</computeroutput>prefix<computeroutput>A path portion to prefix onto the entries in the archive. -</computeroutput>gzip<computeroutput>Set to any truthy value to create a gzipped archive, or an object with settings for</computeroutput>zlib.Gzip()<computeroutput>[Alias:</computeroutput>z<computeroutput>] -</computeroutput>filter<computeroutput>A function that gets called with</computeroutput>(path, stat)<computeroutput>for each entry being added. Return</computeroutput>true<computeroutput>to add the entry to the archive, or</computeroutput>false<computeroutput>to omit it. -</computeroutput>portable<computeroutput>Omit metadata that is system-specific:</computeroutput>ctime<computeroutput>,</computeroutput>atime<computeroutput>, </computeroutput>uid<computeroutput>,</computeroutput>gid<computeroutput>,</computeroutput>uname<computeroutput>,</computeroutput>gname<computeroutput>,</computeroutput>dev<computeroutput>,</computeroutput>ino<computeroutput>, and</computeroutput>nlink<computeroutput>. Note that</computeroutput>mtime<computeroutput>is still included, because this is necessary for other time-based operations. Additionally,</computeroutput>mode<computeroutput>is set to a &quot;reasonable
+  default&quot; for most unix systems, based on a</computeroutput>umask<computeroutput>value of</computeroutput>0o22<computeroutput>. -</computeroutput>preservePaths<computeroutput>Allow absolute paths. By default,</computeroutput>/<computeroutput>is stripped from absolute paths. [Alias:</computeroutput>P<computeroutput>] -</computeroutput>mode<computeroutput>The mode to set on the created file archive -</computeroutput>noDirRecurse<computeroutput>Do not recursively archive the contents of directories. [Alias:</computeroutput>n<computeroutput>] -</computeroutput>follow<computeroutput>Set to true to pack the targets of symbolic links. Without this option, symbolic links are archived as such. [Alias:</computeroutput>L<computeroutput>,</computeroutput>h<computeroutput>] -</computeroutput>noPax<computeroutput>Suppress pax extended headers. Note that this means that long paths and linkpaths will be truncated, and large or negative numeric values may be interpreted incorrectly. -</computeroutput>noMtime<computeroutput>Set to true to omit writing</computeroutput>mtime<computeroutput>values for entries. Note that this prevents using other mtime-based features like </computeroutput>tar.update<computeroutput>or the</computeroutput>keepNewer<computeroutput>option with the resulting tar archive. [Alias:</computeroutput>m<computeroutput>,</computeroutput>no-mtime<computeroutput>] -</computeroutput>mtime<computeroutput>Set to a</computeroutput>Date<computeroutput>object to force a specific</computeroutput>mtime<computeroutput>for everything added to the archive. Overridden by</computeroutput>noMtime`.</para>
+</listitem></itemizedlist>
+</para>
+<para>The following options are mostly internal, but can be modified in some advanced use cases, such as re-using caches between runs.</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>linkCache</computeroutput> A Map object containing the device and inode value for any file whose nlink is &gt; 1, to identify hard links.</para>
+</listitem><listitem><para><computeroutput>statCache</computeroutput> A Map object that caches calls <computeroutput>lstat</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>readdirCache</computeroutput> A Map object that caches calls to <computeroutput>readdir</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>jobs</computeroutput> A number specifying how many concurrent jobs to run. Defaults to 4.</para>
+</listitem><listitem><para><computeroutput>maxReadSize</computeroutput> The maximum buffer size for <computeroutput>fs.read()</computeroutput> operations. Defaults to 16 MB.</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3826">
+<title>tar.x(options, fileList, callback) [alias: tar.extract]</title><para>Extract a tarball archive.</para>
+<para>The <computeroutput>fileList</computeroutput> is an array of paths to extract from the tarball. If no paths are provided, then all the entries are extracted.</para>
+<para>If the archive is gzipped, then tar will detect this and unzip it.</para>
+<para>Note that all directories that are created will be forced to be writable, readable, and listable by their owner, to avoid cases where a directory prevents extraction of child entries by virtue of its mode.</para>
+<para>Most extraction errors will cause a <computeroutput>warn</computeroutput> event to be emitted. If the <computeroutput>cwd</computeroutput> is missing, or not a directory, then the extraction will fail completely.</para>
+<para>The following options are supported:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>cwd</computeroutput> Extract files relative to the specified directory. Defaults to <computeroutput>process.cwd()</computeroutput>. If provided, this must exist and must be a directory. [Alias: <computeroutput>C</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>file</computeroutput> The archive file to extract. If not specified, then a Writable stream is returned where the archive data should be written. [Alias: <computeroutput>f</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>sync</computeroutput> Create files and directories synchronously.</para>
+</listitem><listitem><para><computeroutput>strict</computeroutput> Treat warnings as crash-worthy errors. Default false.</para>
+</listitem><listitem><para><computeroutput>filter</computeroutput> A function that gets called with <computeroutput>(path, entry)</computeroutput> for each entry being unpacked. Return <computeroutput>true</computeroutput> to unpack the entry from the archive, or <computeroutput>false</computeroutput> to skip it.</para>
+</listitem><listitem><para><computeroutput>newer</computeroutput> Set to true to keep the existing file on disk if it&apos;s newer than the file in the archive. [Alias: <computeroutput>keep-newer</computeroutput>, <computeroutput>keep-newer-files</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>keep</computeroutput> Do not overwrite existing files. In particular, if a file appears more than once in an archive, later copies will not overwrite earlier copies. [Alias: <computeroutput>k</computeroutput>, <computeroutput>keep-existing</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>preservePaths</computeroutput> Allow absolute paths, paths containing <computeroutput>..</computeroutput>, and extracting through symbolic links. By default, <computeroutput>/</computeroutput> is stripped from absolute paths, <computeroutput>..</computeroutput> paths are not extracted, and any file whose location would be modified by a symbolic link is not extracted. [Alias: <computeroutput>P</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>unlink</computeroutput> Unlink files before creating them. Without this option, tar overwrites existing files, which preserves existing hardlinks. With this option, existing hardlinks will be broken, as will any symlink that would affect the location of an extracted file. [Alias: <computeroutput>U</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>strip</computeroutput> Remove the specified number of leading path elements. Pathnames with fewer elements will be silently skipped. Note that the pathname is edited after applying the filter, but before security checks. [Alias: <computeroutput>strip-components</computeroutput>, <computeroutput>stripComponents</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>onwarn</computeroutput> A function that will get called with <computeroutput>(code, message, data)</computeroutput> for any warnings encountered. (See &quot;Warnings and Errors&quot;)</para>
+</listitem><listitem><para><computeroutput>preserveOwner</computeroutput> If true, tar will set the <computeroutput>uid</computeroutput> and <computeroutput>gid</computeroutput> of extracted entries to the <computeroutput>uid</computeroutput> and <computeroutput>gid</computeroutput> fields in the archive. This defaults to true when run as root, and false otherwise. If false, then files and directories will be set with the owner and group of the user running the process. This is similar to <computeroutput>-p</computeroutput> in <computeroutput>tar(1)</computeroutput>, but ACLs and other system-specific data is never unpacked in this implementation, and modes are set by default already. [Alias: <computeroutput>p</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>uid</computeroutput> Set to a number to force ownership of all extracted files and folders, and all implicitly created directories, to be owned by the specified user id, regardless of the <computeroutput>uid</computeroutput> field in the archive. Cannot be used along with <computeroutput>preserveOwner</computeroutput>. Requires also setting a <computeroutput>gid</computeroutput> option.</para>
+</listitem><listitem><para><computeroutput>gid</computeroutput> Set to a number to force ownership of all extracted files and folders, and all implicitly created directories, to be owned by the specified group id, regardless of the <computeroutput>gid</computeroutput> field in the archive. Cannot be used along with <computeroutput>preserveOwner</computeroutput>. Requires also setting a <computeroutput>uid</computeroutput> option.</para>
+</listitem><listitem><para><computeroutput>noMtime</computeroutput> Set to true to omit writing <computeroutput>mtime</computeroutput> value for extracted entries. [Alias: <computeroutput>m</computeroutput>, <computeroutput>no-mtime</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>transform</computeroutput> Provide a function that takes an <computeroutput>entry</computeroutput> object, and returns a stream, or any falsey value. If a stream is provided, then that stream&apos;s data will be written instead of the contents of the archive entry. If a falsey value is provided, then the entry is written to disk as normal. (To exclude items from extraction, use the <computeroutput>filter</computeroutput> option described above.)</para>
+</listitem><listitem><para><computeroutput>onentry</computeroutput> A function that gets called with <computeroutput>(entry)</computeroutput> for each entry that passes the filter.</para>
+</listitem><listitem><para><computeroutput>onwarn</computeroutput> A function that will get called with <computeroutput>(code, message, data)</computeroutput> for any warnings encountered. (See &quot;Warnings and Errors&quot;)</para>
+</listitem><listitem><para><computeroutput>noChmod</computeroutput> Set to true to omit calling <computeroutput>fs.chmod()</computeroutput> to ensure that the extracted file matches the entry mode. This also suppresses the call to <computeroutput>process.umask()</computeroutput> to determine the default umask value, since tar will extract with whatever mode is provided, and let the process <computeroutput>umask</computeroutput> apply normally.</para>
+</listitem><listitem><para><computeroutput>maxDepth</computeroutput> The maximum depth of subfolders to extract into. This defaults to 1024. Anything deeper than the limit will raise a warning and skip the entry. Set to <computeroutput>Infinity</computeroutput> to remove the limitation.</para>
+</listitem></itemizedlist>
+</para>
+<para>The following options are mostly internal, but can be modified in some advanced use cases, such as re-using caches between runs.</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>maxReadSize</computeroutput> The maximum buffer size for <computeroutput>fs.read()</computeroutput> operations. Defaults to 16 MB.</para>
+</listitem><listitem><para><computeroutput>umask</computeroutput> Filter the modes of entries like <computeroutput>process.umask()</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>dmode</computeroutput> Default mode for directories</para>
+</listitem><listitem><para><computeroutput>fmode</computeroutput> Default mode for files</para>
+</listitem><listitem><para><computeroutput>dirCache</computeroutput> A Map object of which directories exist.</para>
+</listitem><listitem><para><computeroutput>maxMetaEntrySize</computeroutput> The maximum size of meta entries that is supported. Defaults to 1 MB.</para>
+</listitem></itemizedlist>
+</para>
+<para>Note that using an asynchronous stream type with the <computeroutput>transform</computeroutput> option will cause undefined behavior in sync extractions. <ulink url="http://npm.im/minipass">MiniPass</ulink>-based streams are designed for this use case.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3827">
+<title>tar.t(options, fileList, callback) [alias: tar.list]</title><para>List the contents of a tarball archive.</para>
+<para>The <computeroutput>fileList</computeroutput> is an array of paths to list from the tarball. If no paths are provided, then all the entries are listed.</para>
+<para>If the archive is gzipped, then tar will detect this and unzip it.</para>
+<para>If the <computeroutput>file</computeroutput> option is <emphasis>not</emphasis> provided, then returns an event emitter that emits <computeroutput>entry</computeroutput> events with <computeroutput>tar.ReadEntry</computeroutput> objects. However, they don&apos;t emit <lsquo/>&apos;data<rsquo/><computeroutput>or</computeroutput>&apos;end&apos;<computeroutput>events. (If you want to get actual readable entries, use the</computeroutput>tar.Parse` class instead.)</para>
+<para>If a <computeroutput>file</computeroutput> option <emphasis>is</emphasis> provided, then the return value will be a promise that resolves when the file has been fully traversed in async mode, or <computeroutput>undefined</computeroutput> if <computeroutput>sync: true</computeroutput> is set. Thus, you <emphasis>must</emphasis> specify an <computeroutput>onentry</computeroutput> method in order to do anything useful with the data it parses.</para>
+<para>The following options are supported:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>file</computeroutput> The archive file to list. If not specified, then a Writable stream is returned where the archive data should be written. [Alias: <computeroutput>f</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>sync</computeroutput> Read the specified file synchronously. (This has no effect when a file option isn&apos;t specified, because entries are emitted as fast as they are parsed from the stream anyway.)</para>
+</listitem><listitem><para><computeroutput>strict</computeroutput> Treat warnings as crash-worthy errors. Default false.</para>
+</listitem><listitem><para><computeroutput>filter</computeroutput> A function that gets called with <computeroutput>(path, entry)</computeroutput> for each entry being listed. Return <computeroutput>true</computeroutput> to emit the entry from the archive, or <computeroutput>false</computeroutput> to skip it.</para>
+</listitem><listitem><para><computeroutput>onentry</computeroutput> A function that gets called with <computeroutput>(entry)</computeroutput> for each entry that passes the filter. This is important for when <computeroutput>file</computeroutput> is set, because there is no other way to do anything useful with this method.</para>
+</listitem><listitem><para><computeroutput>maxReadSize</computeroutput> The maximum buffer size for <computeroutput>fs.read()</computeroutput> operations. Defaults to 16 MB.</para>
+</listitem><listitem><para><computeroutput>noResume</computeroutput> By default, <computeroutput>entry</computeroutput> streams are resumed immediately after the call to <computeroutput>onentry</computeroutput>. Set <computeroutput>noResume: true</computeroutput> to suppress this behavior. Note that by opting into this, the stream will never complete until the entry data is consumed.</para>
+</listitem><listitem><para><computeroutput>onwarn</computeroutput> A function that will get called with <computeroutput>(code, message, data)</computeroutput> for any warnings encountered. (See &quot;Warnings and Errors&quot;)</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3828">
+<title>tar.u(options, fileList, callback) [alias: tar.update]</title><para>Add files to an archive if they are newer than the entry already in the tarball archive.</para>
+<para>The <computeroutput>fileList</computeroutput> is an array of paths to add to the tarball. Adding a directory also adds its children recursively.</para>
+<para>An entry in <computeroutput>fileList</computeroutput> that starts with an <computeroutput>@</computeroutput> symbol is a tar archive whose entries will be added. To add a file that starts with <computeroutput>@</computeroutput>, prepend it with <computeroutput>./</computeroutput>.</para>
+<para>The following options are supported:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>file</computeroutput> Required. Write the tarball archive to the specified filename. [Alias: <computeroutput>f</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>sync</computeroutput> Act synchronously. If this is set, then any provided file will be fully written after the call to <computeroutput>tar.c</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>onwarn</computeroutput> A function that will get called with <computeroutput>(code, message, data)</computeroutput> for any warnings encountered. (See &quot;Warnings and Errors&quot;)</para>
+</listitem><listitem><para><computeroutput>strict</computeroutput> Treat warnings as crash-worthy errors. Default false.</para>
+</listitem><listitem><para><computeroutput>cwd</computeroutput> The current working directory for adding entries to the archive. Defaults to <computeroutput>process.cwd()</computeroutput>. [Alias: <computeroutput>C</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>prefix</computeroutput> A path portion to prefix onto the entries in the archive.</para>
+</listitem><listitem><para><computeroutput>gzip</computeroutput> Set to any truthy value to create a gzipped archive, or an object with settings for <computeroutput>zlib.Gzip()</computeroutput> [Alias: <computeroutput>z</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>filter</computeroutput> A function that gets called with <computeroutput>(path, stat)</computeroutput> for each entry being added. Return <computeroutput>true</computeroutput> to add the entry to the archive, or <computeroutput>false</computeroutput> to omit it.</para>
+</listitem><listitem><para><computeroutput>portable</computeroutput> Omit metadata that is system-specific: <computeroutput>ctime</computeroutput>, <computeroutput>atime</computeroutput>, <computeroutput>uid</computeroutput>, <computeroutput>gid</computeroutput>, <computeroutput>uname</computeroutput>, <computeroutput>gname</computeroutput>, <computeroutput>dev</computeroutput>, <computeroutput>ino</computeroutput>, and <computeroutput>nlink</computeroutput>. Note that <computeroutput>mtime</computeroutput> is still included, because this is necessary for other time-based operations. Additionally, <computeroutput>mode</computeroutput> is set to a &quot;reasonable
+  default&quot; for most unix systems, based on a <computeroutput>umask</computeroutput> value of <computeroutput>0o22</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>preservePaths</computeroutput> Allow absolute paths. By default, <computeroutput>/</computeroutput> is stripped from absolute paths. [Alias: <computeroutput>P</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>maxReadSize</computeroutput> The maximum buffer size for <computeroutput>fs.read()</computeroutput> operations. Defaults to 16 MB.</para>
+</listitem><listitem><para><computeroutput>noDirRecurse</computeroutput> Do not recursively archive the contents of directories. [Alias: <computeroutput>n</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>follow</computeroutput> Set to true to pack the targets of symbolic links. Without this option, symbolic links are archived as such. [Alias: <computeroutput>L</computeroutput>, <computeroutput>h</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>noPax</computeroutput> Suppress pax extended headers. Note that this means that long paths and linkpaths will be truncated, and large or negative numeric values may be interpreted incorrectly.</para>
+</listitem><listitem><para><computeroutput>noMtime</computeroutput> Set to true to omit writing <computeroutput>mtime</computeroutput> values for entries. Note that this prevents using other mtime-based features like <computeroutput>tar.update</computeroutput> or the <computeroutput>keepNewer</computeroutput> option with the resulting tar archive. [Alias: <computeroutput>m</computeroutput>, <computeroutput>no-mtime</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>mtime</computeroutput> Set to a <computeroutput>Date</computeroutput> object to force a specific <computeroutput>mtime</computeroutput> for everything added to the archive. Overridden by <computeroutput>noMtime</computeroutput>.</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3829">
+<title>tar.r(options, fileList, callback) [alias: tar.replace]</title><para>Add files to an existing archive. Because later entries override earlier entries, this effectively replaces any existing entries.</para>
+<para>The <computeroutput>fileList</computeroutput> is an array of paths to add to the tarball. Adding a directory also adds its children recursively.</para>
+<para>An entry in <computeroutput>fileList</computeroutput> that starts with an <computeroutput>@</computeroutput> symbol is a tar archive whose entries will be added. To add a file that starts with <computeroutput>@</computeroutput>, prepend it with <computeroutput>./</computeroutput>.</para>
+<para>The following options are supported:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>file</computeroutput> Required. Write the tarball archive to the specified filename. [Alias: <computeroutput>f</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>sync</computeroutput> Act synchronously. If this is set, then any provided file will be fully written after the call to <computeroutput>tar.c</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>onwarn</computeroutput> A function that will get called with <computeroutput>(code, message, data)</computeroutput> for any warnings encountered. (See &quot;Warnings and Errors&quot;)</para>
+</listitem><listitem><para><computeroutput>strict</computeroutput> Treat warnings as crash-worthy errors. Default false.</para>
+</listitem><listitem><para><computeroutput>cwd</computeroutput> The current working directory for adding entries to the archive. Defaults to <computeroutput>process.cwd()</computeroutput>. [Alias: <computeroutput>C</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>prefix</computeroutput> A path portion to prefix onto the entries in the archive.</para>
+</listitem><listitem><para><computeroutput>gzip</computeroutput> Set to any truthy value to create a gzipped archive, or an object with settings for <computeroutput>zlib.Gzip()</computeroutput> [Alias: <computeroutput>z</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>filter</computeroutput> A function that gets called with <computeroutput>(path, stat)</computeroutput> for each entry being added. Return <computeroutput>true</computeroutput> to add the entry to the archive, or <computeroutput>false</computeroutput> to omit it.</para>
+</listitem><listitem><para><computeroutput>portable</computeroutput> Omit metadata that is system-specific: <computeroutput>ctime</computeroutput>, <computeroutput>atime</computeroutput>, <computeroutput>uid</computeroutput>, <computeroutput>gid</computeroutput>, <computeroutput>uname</computeroutput>, <computeroutput>gname</computeroutput>, <computeroutput>dev</computeroutput>, <computeroutput>ino</computeroutput>, and <computeroutput>nlink</computeroutput>. Note that <computeroutput>mtime</computeroutput> is still included, because this is necessary for other time-based operations. Additionally, <computeroutput>mode</computeroutput> is set to a &quot;reasonable
+  default&quot; for most unix systems, based on a <computeroutput>umask</computeroutput> value of <computeroutput>0o22</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>preservePaths</computeroutput> Allow absolute paths. By default, <computeroutput>/</computeroutput> is stripped from absolute paths. [Alias: <computeroutput>P</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>maxReadSize</computeroutput> The maximum buffer size for <computeroutput>fs.read()</computeroutput> operations. Defaults to 16 MB.</para>
+</listitem><listitem><para><computeroutput>noDirRecurse</computeroutput> Do not recursively archive the contents of directories. [Alias: <computeroutput>n</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>follow</computeroutput> Set to true to pack the targets of symbolic links. Without this option, symbolic links are archived as such. [Alias: <computeroutput>L</computeroutput>, <computeroutput>h</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>noPax</computeroutput> Suppress pax extended headers. Note that this means that long paths and linkpaths will be truncated, and large or negative numeric values may be interpreted incorrectly.</para>
+</listitem><listitem><para><computeroutput>noMtime</computeroutput> Set to true to omit writing <computeroutput>mtime</computeroutput> values for entries. Note that this prevents using other mtime-based features like <computeroutput>tar.update</computeroutput> or the <computeroutput>keepNewer</computeroutput> option with the resulting tar archive. [Alias: <computeroutput>m</computeroutput>, <computeroutput>no-mtime</computeroutput>]</para>
+</listitem><listitem><para><computeroutput>mtime</computeroutput> Set to a <computeroutput>Date</computeroutput> object to force a specific <computeroutput>mtime</computeroutput> for everything added to the archive. Overridden by <computeroutput>noMtime</computeroutput>.</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3830">
+<title>Low-Level API</title><sect2 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3831">
+<title>class tar.Pack</title><para>A readable tar stream.</para>
+<para>Has all the standard readable stream interface stuff. <lsquo/>&apos;data<rsquo/><computeroutput>and </computeroutput>&apos;end&apos;<computeroutput>events,</computeroutput>read()<computeroutput>method,</computeroutput>pause()<computeroutput>and</computeroutput>resume()`, etc.</para>
+<sect3 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3832">
+<title>constructor(options)</title><para>The following options are supported:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>onwarn</computeroutput> A function that will get called with <computeroutput>(code, message, data)</computeroutput> for any warnings encountered. (See &quot;Warnings and Errors&quot;)</para>
+</listitem><listitem><para><computeroutput>strict</computeroutput> Treat warnings as crash-worthy errors. Default false.</para>
+</listitem><listitem><para><computeroutput>cwd</computeroutput> The current working directory for creating the archive. Defaults to <computeroutput>process.cwd()</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>prefix</computeroutput> A path portion to prefix onto the entries in the archive.</para>
+</listitem><listitem><para><computeroutput>gzip</computeroutput> Set to any truthy value to create a gzipped archive, or an object with settings for <computeroutput>zlib.Gzip()</computeroutput></para>
+</listitem><listitem><para><computeroutput>filter</computeroutput> A function that gets called with <computeroutput>(path, stat)</computeroutput> for each entry being added. Return <computeroutput>true</computeroutput> to add the entry to the archive, or <computeroutput>false</computeroutput> to omit it.</para>
+</listitem><listitem><para><computeroutput>portable</computeroutput> Omit metadata that is system-specific: <computeroutput>ctime</computeroutput>, <computeroutput>atime</computeroutput>, <computeroutput>uid</computeroutput>, <computeroutput>gid</computeroutput>, <computeroutput>uname</computeroutput>, <computeroutput>gname</computeroutput>, <computeroutput>dev</computeroutput>, <computeroutput>ino</computeroutput>, and <computeroutput>nlink</computeroutput>. Note that <computeroutput>mtime</computeroutput> is still included, because this is necessary for other time-based operations. Additionally, <computeroutput>mode</computeroutput> is set to a &quot;reasonable
+  default&quot; for most unix systems, based on a <computeroutput>umask</computeroutput> value of <computeroutput>0o22</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>preservePaths</computeroutput> Allow absolute paths. By default, <computeroutput>/</computeroutput> is stripped from absolute paths.</para>
+</listitem><listitem><para><computeroutput>linkCache</computeroutput> A Map object containing the device and inode value for any file whose nlink is &gt; 1, to identify hard links.</para>
+</listitem><listitem><para><computeroutput>statCache</computeroutput> A Map object that caches calls <computeroutput>lstat</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>readdirCache</computeroutput> A Map object that caches calls to <computeroutput>readdir</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>jobs</computeroutput> A number specifying how many concurrent jobs to run. Defaults to 4.</para>
+</listitem><listitem><para><computeroutput>maxReadSize</computeroutput> The maximum buffer size for <computeroutput>fs.read()</computeroutput> operations. Defaults to 16 MB.</para>
+</listitem><listitem><para><computeroutput>noDirRecurse</computeroutput> Do not recursively archive the contents of directories.</para>
+</listitem><listitem><para><computeroutput>follow</computeroutput> Set to true to pack the targets of symbolic links. Without this option, symbolic links are archived as such.</para>
+</listitem><listitem><para><computeroutput>noPax</computeroutput> Suppress pax extended headers. Note that this means that long paths and linkpaths will be truncated, and large or negative numeric values may be interpreted incorrectly.</para>
+</listitem><listitem><para><computeroutput>noMtime</computeroutput> Set to true to omit writing <computeroutput>mtime</computeroutput> values for entries. Note that this prevents using other mtime-based features like <computeroutput>tar.update</computeroutput> or the <computeroutput>keepNewer</computeroutput> option with the resulting tar archive.</para>
+</listitem><listitem><para><computeroutput>mtime</computeroutput> Set to a <computeroutput>Date</computeroutput> object to force a specific <computeroutput>mtime</computeroutput> for everything added to the archive. Overridden by <computeroutput>noMtime</computeroutput>.</para>
+</listitem></itemizedlist>
+</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3833">
+<title>add(path)</title><para>Adds an entry to the archive. Returns the Pack stream.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3834">
+<title>write(path)</title><para>Adds an entry to the archive. Returns true if flushed.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3835">
+<title>end()</title><para>Finishes the archive.</para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3836">
+<title>class tar.Pack.Sync</title><para>Synchronous version of <computeroutput>tar.Pack</computeroutput>.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3837">
+<title>class tar.Unpack</title><para>A writable stream that unpacks a tar archive onto the file system.</para>
+<para>All the normal writable stream stuff is supported. <computeroutput>write()</computeroutput> and <computeroutput>end()</computeroutput> methods, <lsquo/>&apos;drain<rsquo/>` events, etc.</para>
+<para>Note that all directories that are created will be forced to be writable, readable, and listable by their owner, to avoid cases where a directory prevents extraction of child entries by virtue of its mode.</para>
+<para><lsquo/>&apos;close<rsquo/>` is emitted when it&apos;s done writing stuff to the file system.</para>
+<para>Most unpack errors will cause a <computeroutput>warn</computeroutput> event to be emitted. If the <computeroutput>cwd</computeroutput> is missing, or not a directory, then an error will be emitted.</para>
+<sect3 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3838">
+<title>constructor(options)</title><para><itemizedlist>
+<listitem><para><computeroutput>cwd</computeroutput> Extract files relative to the specified directory. Defaults to <computeroutput>process.cwd()</computeroutput>. If provided, this must exist and must be a directory.</para>
+</listitem><listitem><para><computeroutput>filter</computeroutput> A function that gets called with <computeroutput>(path, entry)</computeroutput> for each entry being unpacked. Return <computeroutput>true</computeroutput> to unpack the entry from the archive, or <computeroutput>false</computeroutput> to skip it.</para>
+</listitem><listitem><para><computeroutput>newer</computeroutput> Set to true to keep the existing file on disk if it&apos;s newer than the file in the archive.</para>
+</listitem><listitem><para><computeroutput>keep</computeroutput> Do not overwrite existing files. In particular, if a file appears more than once in an archive, later copies will not overwrite earlier copies.</para>
+</listitem><listitem><para><computeroutput>preservePaths</computeroutput> Allow absolute paths, paths containing <computeroutput>..</computeroutput>, and extracting through symbolic links. By default, <computeroutput>/</computeroutput> is stripped from absolute paths, <computeroutput>..</computeroutput> paths are not extracted, and any file whose location would be modified by a symbolic link is not extracted.</para>
+</listitem><listitem><para><computeroutput>unlink</computeroutput> Unlink files before creating them. Without this option, tar overwrites existing files, which preserves existing hardlinks. With this option, existing hardlinks will be broken, as will any symlink that would affect the location of an extracted file.</para>
+</listitem><listitem><para><computeroutput>strip</computeroutput> Remove the specified number of leading path elements. Pathnames with fewer elements will be silently skipped. Note that the pathname is edited after applying the filter, but before security checks.</para>
+</listitem><listitem><para><computeroutput>onwarn</computeroutput> A function that will get called with <computeroutput>(code, message, data)</computeroutput> for any warnings encountered. (See &quot;Warnings and Errors&quot;)</para>
+</listitem><listitem><para><computeroutput>umask</computeroutput> Filter the modes of entries like <computeroutput>process.umask()</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>dmode</computeroutput> Default mode for directories</para>
+</listitem><listitem><para><computeroutput>fmode</computeroutput> Default mode for files</para>
+</listitem><listitem><para><computeroutput>dirCache</computeroutput> A Map object of which directories exist.</para>
+</listitem><listitem><para><computeroutput>maxMetaEntrySize</computeroutput> The maximum size of meta entries that is supported. Defaults to 1 MB.</para>
+</listitem><listitem><para><computeroutput>preserveOwner</computeroutput> If true, tar will set the <computeroutput>uid</computeroutput> and <computeroutput>gid</computeroutput> of extracted entries to the <computeroutput>uid</computeroutput> and <computeroutput>gid</computeroutput> fields in the archive. This defaults to true when run as root, and false otherwise. If false, then files and directories will be set with the owner and group of the user running the process. This is similar to <computeroutput>-p</computeroutput> in <computeroutput>tar(1)</computeroutput>, but ACLs and other system-specific data is never unpacked in this implementation, and modes are set by default already.</para>
+</listitem><listitem><para><computeroutput>win32</computeroutput> True if on a windows platform. Causes behavior where filenames containing <computeroutput>&lt;|&gt;?</computeroutput> chars are converted to windows-compatible values while being unpacked.</para>
+</listitem><listitem><para><computeroutput>uid</computeroutput> Set to a number to force ownership of all extracted files and folders, and all implicitly created directories, to be owned by the specified user id, regardless of the <computeroutput>uid</computeroutput> field in the archive. Cannot be used along with <computeroutput>preserveOwner</computeroutput>. Requires also setting a <computeroutput>gid</computeroutput> option.</para>
+</listitem><listitem><para><computeroutput>gid</computeroutput> Set to a number to force ownership of all extracted files and folders, and all implicitly created directories, to be owned by the specified group id, regardless of the <computeroutput>gid</computeroutput> field in the archive. Cannot be used along with <computeroutput>preserveOwner</computeroutput>. Requires also setting a <computeroutput>uid</computeroutput> option.</para>
+</listitem><listitem><para><computeroutput>noMtime</computeroutput> Set to true to omit writing <computeroutput>mtime</computeroutput> value for extracted entries.</para>
+</listitem><listitem><para><computeroutput>transform</computeroutput> Provide a function that takes an <computeroutput>entry</computeroutput> object, and returns a stream, or any falsey value. If a stream is provided, then that stream&apos;s data will be written instead of the contents of the archive entry. If a falsey value is provided, then the entry is written to disk as normal. (To exclude items from extraction, use the <computeroutput>filter</computeroutput> option described above.)</para>
+</listitem><listitem><para><computeroutput>strict</computeroutput> Treat warnings as crash-worthy errors. Default false.</para>
+</listitem><listitem><para><computeroutput>onentry</computeroutput> A function that gets called with <computeroutput>(entry)</computeroutput> for each entry that passes the filter.</para>
+</listitem><listitem><para><computeroutput>onwarn</computeroutput> A function that will get called with <computeroutput>(code, message, data)</computeroutput> for any warnings encountered. (See &quot;Warnings and Errors&quot;)</para>
+</listitem><listitem><para><computeroutput>noChmod</computeroutput> Set to true to omit calling <computeroutput>fs.chmod()</computeroutput> to ensure that the extracted file matches the entry mode. This also suppresses the call to <computeroutput>process.umask()</computeroutput> to determine the default umask value, since tar will extract with whatever mode is provided, and let the process <computeroutput>umask</computeroutput> apply normally.</para>
+</listitem><listitem><para><computeroutput>maxDepth</computeroutput> The maximum depth of subfolders to extract into. This defaults to 1024. Anything deeper than the limit will raise a warning and skip the entry. Set to <computeroutput>Infinity</computeroutput> to remove the limitation.</para>
+</listitem></itemizedlist>
+</para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3839">
+<title>class tar.Unpack.Sync</title><para>Synchronous version of <computeroutput>tar.Unpack</computeroutput>.</para>
+<para>Note that using an asynchronous stream type with the <computeroutput>transform</computeroutput> option will cause undefined behavior in sync unpack streams. <ulink url="http://npm.im/minipass">MiniPass</ulink>-based streams are designed for this use case.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3840">
+<title>class tar.Parse</title><para>A writable stream that parses a tar archive stream. All the standard writable stream stuff is supported.</para>
+<para>If the archive is gzipped, then tar will detect this and unzip it.</para>
+<para>Emits <lsquo/>&apos;entry<rsquo/><computeroutput>events with</computeroutput>tar.ReadEntry` objects, which are themselves readable streams that you can pipe wherever.</para>
+<para>Each <computeroutput>entry</computeroutput> will not emit until the one before it is flushed through, so make sure to either consume the data (with <lsquo/>on(&apos;data<rsquo/>, ...)<computeroutput>or </computeroutput>.pipe(...)<computeroutput>) or throw it away with</computeroutput>.resume()` to keep the stream flowing.</para>
+<sect3 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3841">
+<title>constructor(options)</title><para>Returns an event emitter that emits <computeroutput>entry</computeroutput> events with <computeroutput>tar.ReadEntry</computeroutput> objects.</para>
+<para>The following options are supported:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>strict</computeroutput> Treat warnings as crash-worthy errors. Default false.</para>
+</listitem><listitem><para><computeroutput>filter</computeroutput> A function that gets called with <computeroutput>(path, entry)</computeroutput> for each entry being listed. Return <computeroutput>true</computeroutput> to emit the entry from the archive, or <computeroutput>false</computeroutput> to skip it.</para>
+</listitem><listitem><para><computeroutput>onentry</computeroutput> A function that gets called with <computeroutput>(entry)</computeroutput> for each entry that passes the filter.</para>
+</listitem><listitem><para><computeroutput>onwarn</computeroutput> A function that will get called with <computeroutput>(code, message, data)</computeroutput> for any warnings encountered. (See &quot;Warnings and Errors&quot;)</para>
+</listitem></itemizedlist>
+</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3842">
+<title>abort(error)</title><para>Stop all parsing activities. This is called when there are zlib errors. It also emits an unrecoverable warning with the error provided.</para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3843">
+<title>class tar.ReadEntry extends <ulink url="http://npm.im/minipass">MiniPass</ulink></title><para>A representation of an entry that is being read out of a tar archive.</para>
+<para>It has the following fields:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>extended</computeroutput> The extended metadata object provided to the constructor.</para>
+</listitem><listitem><para><computeroutput>globalExtended</computeroutput> The global extended metadata object provided to the constructor.</para>
+</listitem><listitem><para><computeroutput>remain</computeroutput> The number of bytes remaining to be written into the stream.</para>
+</listitem><listitem><para><computeroutput>blockRemain</computeroutput> The number of 512-byte blocks remaining to be written into the stream.</para>
+</listitem><listitem><para><computeroutput>ignore</computeroutput> Whether this entry should be ignored.</para>
+</listitem><listitem><para><computeroutput>meta</computeroutput> True if this represents metadata about the next entry, false if it represents a filesystem object.</para>
+</listitem><listitem><para>All the fields from the header, extended header, and global extended header are added to the ReadEntry object. So it has <computeroutput>path</computeroutput>, <computeroutput>type</computeroutput>, <computeroutput>size</computeroutput>, <computeroutput>mode</computeroutput>, and so on.</para>
+</listitem></itemizedlist>
+</para>
+<sect3 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3844">
+<title>constructor(header, extended, globalExtended)</title><para>Create a new ReadEntry object with the specified header, extended header, and global extended header values.</para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3845">
+<title>class tar.WriteEntry extends <ulink url="http://npm.im/minipass">MiniPass</ulink></title><para>A representation of an entry that is being written from the file system into a tar archive.</para>
+<para>Emits data for the Header, and for the Pax Extended Header if one is required, as well as any body data.</para>
+<para>Creating a WriteEntry for a directory does not also create WriteEntry objects for all of the directory contents.</para>
+<para>It has the following fields:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>path</computeroutput> The path field that will be written to the archive. By default, this is also the path from the cwd to the file system object.</para>
+</listitem><listitem><para><computeroutput>portable</computeroutput> Omit metadata that is system-specific: <computeroutput>ctime</computeroutput>, <computeroutput>atime</computeroutput>, <computeroutput>uid</computeroutput>, <computeroutput>gid</computeroutput>, <computeroutput>uname</computeroutput>, <computeroutput>gname</computeroutput>, <computeroutput>dev</computeroutput>, <computeroutput>ino</computeroutput>, and <computeroutput>nlink</computeroutput>. Note that <computeroutput>mtime</computeroutput> is still included, because this is necessary for other time-based operations. Additionally, <computeroutput>mode</computeroutput> is set to a &quot;reasonable
+  default&quot; for most unix systems, based on a <computeroutput>umask</computeroutput> value of <computeroutput>0o22</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>myuid</computeroutput> If supported, the uid of the user running the current process.</para>
+</listitem><listitem><para><computeroutput>myuser</computeroutput> The <computeroutput>env.USER</computeroutput> string if set, or <lsquo/><rsquo/>&apos;<computeroutput>. Set as the entry </computeroutput>uname<computeroutput>field if the file&apos;s</computeroutput>uid<computeroutput>matches</computeroutput>this.myuid<computeroutput>. -</computeroutput>maxReadSize<computeroutput>The maximum buffer size for</computeroutput>fs.read()<computeroutput>operations. Defaults to 1 MB. -</computeroutput>linkCache<computeroutput>A Map object containing the device and inode value for any file whose nlink is &gt; 1, to identify hard links. -</computeroutput>statCache<computeroutput>A Map object that caches calls</computeroutput>lstat<computeroutput>. -</computeroutput>preservePaths<computeroutput>Allow absolute paths. By default,</computeroutput>/<computeroutput>is stripped from absolute paths. -</computeroutput>cwd<computeroutput>The current working directory for creating the archive. Defaults to</computeroutput>process.cwd()<computeroutput>. -</computeroutput>absolute<computeroutput>The absolute path to the entry on the filesystem. By default, this is</computeroutput>path.resolve(this.cwd, this.path)<computeroutput>, but it can be overridden explicitly. -</computeroutput>strict<computeroutput>Treat warnings as crash-worthy errors. Default false. -</computeroutput>win32<computeroutput>True if on a windows platform. Causes behavior where paths replace</computeroutput>` with <computeroutput>/</computeroutput> and filenames containing the windows-compatible forms of <computeroutput>&lt;|&gt;?:</computeroutput> characters are converted to actual <computeroutput>&lt;|&gt;?:</computeroutput> characters in the archive.</para>
+</listitem><listitem><para><computeroutput>noPax</computeroutput> Suppress pax extended headers. Note that this means that long paths and linkpaths will be truncated, and large or negative numeric values may be interpreted incorrectly.</para>
+</listitem><listitem><para><computeroutput>noMtime</computeroutput> Set to true to omit writing <computeroutput>mtime</computeroutput> values for entries. Note that this prevents using other mtime-based features like <computeroutput>tar.update</computeroutput> or the <computeroutput>keepNewer</computeroutput> option with the resulting tar archive.</para>
+</listitem></itemizedlist>
+</para>
+<sect3 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3846">
+<title>constructor(path, options)</title><para><computeroutput>path</computeroutput> is the path of the entry as it is written in the archive.</para>
+<para>The following options are supported:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>portable</computeroutput> Omit metadata that is system-specific: <computeroutput>ctime</computeroutput>, <computeroutput>atime</computeroutput>, <computeroutput>uid</computeroutput>, <computeroutput>gid</computeroutput>, <computeroutput>uname</computeroutput>, <computeroutput>gname</computeroutput>, <computeroutput>dev</computeroutput>, <computeroutput>ino</computeroutput>, and <computeroutput>nlink</computeroutput>. Note that <computeroutput>mtime</computeroutput> is still included, because this is necessary for other time-based operations. Additionally, <computeroutput>mode</computeroutput> is set to a &quot;reasonable
+  default&quot; for most unix systems, based on a <computeroutput>umask</computeroutput> value of <computeroutput>0o22</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>maxReadSize</computeroutput> The maximum buffer size for <computeroutput>fs.read()</computeroutput> operations. Defaults to 1 MB.</para>
+</listitem><listitem><para><computeroutput>linkCache</computeroutput> A Map object containing the device and inode value for any file whose nlink is &gt; 1, to identify hard links.</para>
+</listitem><listitem><para><computeroutput>statCache</computeroutput> A Map object that caches calls <computeroutput>lstat</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>preservePaths</computeroutput> Allow absolute paths. By default, <computeroutput>/</computeroutput> is stripped from absolute paths.</para>
+</listitem><listitem><para><computeroutput>cwd</computeroutput> The current working directory for creating the archive. Defaults to <computeroutput>process.cwd()</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>absolute</computeroutput> The absolute path to the entry on the filesystem. By default, this is <computeroutput>path.resolve(this.cwd, this.path)</computeroutput>, but it can be overridden explicitly.</para>
+</listitem><listitem><para><computeroutput>strict</computeroutput> Treat warnings as crash-worthy errors. Default false.</para>
+</listitem><listitem><para><computeroutput>win32</computeroutput> True if on a windows platform. Causes behavior where paths replace <computeroutput>\</computeroutput> with <computeroutput>/</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>onwarn</computeroutput> A function that will get called with <computeroutput>(code, message, data)</computeroutput> for any warnings encountered. (See &quot;Warnings and Errors&quot;)</para>
+</listitem><listitem><para><computeroutput>noMtime</computeroutput> Set to true to omit writing <computeroutput>mtime</computeroutput> values for entries. Note that this prevents using other mtime-based features like <computeroutput>tar.update</computeroutput> or the <computeroutput>keepNewer</computeroutput> option with the resulting tar archive.</para>
+</listitem><listitem><para><computeroutput>umask</computeroutput> Set to restrict the modes on the entries in the archive, somewhat like how umask works on file creation. Defaults to <computeroutput>process.umask()</computeroutput> on unix systems, or <computeroutput>0o22</computeroutput> on Windows.</para>
+</listitem></itemizedlist>
+</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3847">
+<title>warn(message, data)</title><para>If strict, emit an error with the provided message.</para>
+<para>Othewise, emit a <lsquo/>&apos;warn<rsquo/>` event with the provided message and data.</para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3848">
+<title>class tar.WriteEntry.Sync</title><para>Synchronous version of tar.WriteEntry</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3849">
+<title>class tar.WriteEntry.Tar</title><para>A version of tar.WriteEntry that gets its data from a tar.ReadEntry instead of from the filesystem.</para>
+<sect3 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3850">
+<title>constructor(readEntry, options)</title><para><computeroutput>readEntry</computeroutput> is the entry being read out of another archive.</para>
+<para>The following options are supported:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>portable</computeroutput> Omit metadata that is system-specific: <computeroutput>ctime</computeroutput>, <computeroutput>atime</computeroutput>, <computeroutput>uid</computeroutput>, <computeroutput>gid</computeroutput>, <computeroutput>uname</computeroutput>, <computeroutput>gname</computeroutput>, <computeroutput>dev</computeroutput>, <computeroutput>ino</computeroutput>, and <computeroutput>nlink</computeroutput>. Note that <computeroutput>mtime</computeroutput> is still included, because this is necessary for other time-based operations. Additionally, <computeroutput>mode</computeroutput> is set to a &quot;reasonable
+  default&quot; for most unix systems, based on a <computeroutput>umask</computeroutput> value of <computeroutput>0o22</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>preservePaths</computeroutput> Allow absolute paths. By default, <computeroutput>/</computeroutput> is stripped from absolute paths.</para>
+</listitem><listitem><para><computeroutput>strict</computeroutput> Treat warnings as crash-worthy errors. Default false.</para>
+</listitem><listitem><para><computeroutput>onwarn</computeroutput> A function that will get called with <computeroutput>(code, message, data)</computeroutput> for any warnings encountered. (See &quot;Warnings and Errors&quot;)</para>
+</listitem><listitem><para><computeroutput>noMtime</computeroutput> Set to true to omit writing <computeroutput>mtime</computeroutput> values for entries. Note that this prevents using other mtime-based features like <computeroutput>tar.update</computeroutput> or the <computeroutput>keepNewer</computeroutput> option with the resulting tar archive.</para>
+</listitem></itemizedlist>
+</para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3851">
+<title>class tar.Header</title><para>A class for reading and writing header blocks.</para>
+<para>It has the following fields:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>nullBlock</computeroutput> True if decoding a block which is entirely composed of <computeroutput>0x00</computeroutput> null bytes. (Useful because tar files are terminated by at least 2 null blocks.)</para>
+</listitem><listitem><para><computeroutput>cksumValid</computeroutput> True if the checksum in the header is valid, false otherwise.</para>
+</listitem><listitem><para><computeroutput>needPax</computeroutput> True if the values, as encoded, will require a Pax extended header.</para>
+</listitem><listitem><para><computeroutput>path</computeroutput> The path of the entry.</para>
+</listitem><listitem><para><computeroutput>mode</computeroutput> The 4 lowest-order octal digits of the file mode. That is, read/write/execute permissions for world, group, and owner, and the setuid, setgid, and sticky bits.</para>
+</listitem><listitem><para><computeroutput>uid</computeroutput> Numeric user id of the file owner</para>
+</listitem><listitem><para><computeroutput>gid</computeroutput> Numeric group id of the file owner</para>
+</listitem><listitem><para><computeroutput>size</computeroutput> Size of the file in bytes</para>
+</listitem><listitem><para><computeroutput>mtime</computeroutput> Modified time of the file</para>
+</listitem><listitem><para><computeroutput>cksum</computeroutput> The checksum of the header. This is generated by adding all the bytes of the header block, treating the checksum field itself as all ascii space characters (that is, <computeroutput>0x20</computeroutput>).</para>
+</listitem><listitem><para><computeroutput>type</computeroutput> The human-readable name of the type of entry this represents, or the alphanumeric key if unknown.</para>
+</listitem><listitem><para><computeroutput>typeKey</computeroutput> The alphanumeric key for the type of entry this header represents.</para>
+</listitem><listitem><para><computeroutput>linkpath</computeroutput> The target of Link and SymbolicLink entries.</para>
+</listitem><listitem><para><computeroutput>uname</computeroutput> Human-readable user name of the file owner</para>
+</listitem><listitem><para><computeroutput>gname</computeroutput> Human-readable group name of the file owner</para>
+</listitem><listitem><para><computeroutput>devmaj</computeroutput> The major portion of the device number. Always <computeroutput>0</computeroutput> for files, directories, and links.</para>
+</listitem><listitem><para><computeroutput>devmin</computeroutput> The minor portion of the device number. Always <computeroutput>0</computeroutput> for files, directories, and links.</para>
+</listitem><listitem><para><computeroutput>atime</computeroutput> File access time.</para>
+</listitem><listitem><para><computeroutput>ctime</computeroutput> File change time.</para>
+</listitem></itemizedlist>
+</para>
+<sect3 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3852">
+<title>constructor(data, [offset=0])</title><para><computeroutput>data</computeroutput> is optional. It is either a Buffer that should be interpreted as a tar Header starting at the specified offset and continuing for 512 bytes, or a data object of keys and values to set on the header object, and eventually encode as a tar Header.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3853">
+<title>decode(block, offset)</title><para>Decode the provided buffer starting at the specified offset.</para>
+<para>Buffer length must be greater than 512 bytes.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3854">
+<title>set(data)</title><para>Set the fields in the data object.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3855">
+<title>encode(buffer, offset)</title><para>Encode the header fields into the buffer at the specified offset.</para>
+<para>Returns <computeroutput>this.needPax</computeroutput> to indicate whether a Pax Extended Header is required to properly encode the specified data.</para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3856">
+<title>class tar.Pax</title><para>An object representing a set of key-value pairs in an Pax extended header entry.</para>
+<para>It has the following fields. Where the same name is used, they have the same semantics as the tar.Header field of the same name.</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>global</computeroutput> True if this represents a global extended header, or false if it is for a single entry.</para>
+</listitem><listitem><para><computeroutput>atime</computeroutput></para>
+</listitem><listitem><para><computeroutput>charset</computeroutput></para>
+</listitem><listitem><para><computeroutput>comment</computeroutput></para>
+</listitem><listitem><para><computeroutput>ctime</computeroutput></para>
+</listitem><listitem><para><computeroutput>gid</computeroutput></para>
+</listitem><listitem><para><computeroutput>gname</computeroutput></para>
+</listitem><listitem><para><computeroutput>linkpath</computeroutput></para>
+</listitem><listitem><para><computeroutput>mtime</computeroutput></para>
+</listitem><listitem><para><computeroutput>path</computeroutput></para>
+</listitem><listitem><para><computeroutput>size</computeroutput></para>
+</listitem><listitem><para><computeroutput>uid</computeroutput></para>
+</listitem><listitem><para><computeroutput>uname</computeroutput></para>
+</listitem><listitem><para><computeroutput>dev</computeroutput></para>
+</listitem><listitem><para><computeroutput>ino</computeroutput></para>
+</listitem><listitem><para><computeroutput>nlink</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+<sect3 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3857">
+<title>constructor(object, global)</title><para>Set the fields set in the object. <computeroutput>global</computeroutput> is a boolean that defaults to false.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3858">
+<title>encode()</title><para>Return a Buffer containing the header and body for the Pax extended header entry, or <computeroutput>null</computeroutput> if there is nothing to encode.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3859">
+<title>encodeBody()</title><para>Return a string representing the body of the pax extended header entry.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3860">
+<title>encodeField(fieldName)</title><para>Return a string representing the key/value encoding for the specified fieldName, or <lsquo/><rsquo/>&apos;` if the field is unset.</para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3861">
+<title>tar.Pax.parse(string, extended, global)</title><para>Return a new Pax object created by parsing the contents of the string provided.</para>
+<para>If the <computeroutput>extended</computeroutput> object is set, then also add the fields from that object. (This is necessary because multiple metadata entries can occur in sequence.)</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3862">
+<title>tar.types</title><para>A translation table for the <computeroutput>type</computeroutput> field in tar headers.</para>
+<sect3 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3863">
+<title>tar.types.name.get(code)</title><para>Get the human-readable name for a given alphanumeric code.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2tar_2_r_e_a_d_m_e_1autotoc_md3864">
+<title>tar.types.code.get(name)</title><para>Get the alphanumeric code for a given human-readable name. </para>
+</sect3>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/tar/README.md"/>
+  </compounddef>
+</doxygen>

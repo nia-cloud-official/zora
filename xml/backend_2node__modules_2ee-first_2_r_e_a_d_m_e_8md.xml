@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2ee-first_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>EE<sp/>First</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![NPM<sp/>version][npm-image]][npm-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Build<sp/>status][travis-image]][travis-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Test<sp/>coverage][coveralls-image]][coveralls-url]</highlight></codeline>
+<codeline><highlight class="normal">[![License][license-image]][license-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Downloads][downloads-image]][downloads-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Gittip][gittip-image]][gittip-url]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Get<sp/>the<sp/>first<sp/>event<sp/>in<sp/>a<sp/>set<sp/>of<sp/>event<sp/>emitters<sp/>and<sp/>event<sp/>pairs,</highlight></codeline>
+<codeline><highlight class="normal">then<sp/>clean<sp/>up<sp/>after<sp/>itself.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Install</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```sh</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>ee-first</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>API</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>first<sp/>=<sp/>require(&apos;ee-first&apos;)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>first(arr,<sp/>listener)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Invoke<sp/>`listener`<sp/>on<sp/>the<sp/>first<sp/>event<sp/>from<sp/>the<sp/>list<sp/>specified<sp/>in<sp/>`arr`.<sp/>`arr`<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">an<sp/>array<sp/>of<sp/>arrays,<sp/>with<sp/>each<sp/>array<sp/>in<sp/>the<sp/>format<sp/>`[ee,<sp/>...event]`.<sp/>`listener`</highlight></codeline>
+<codeline><highlight class="normal">will<sp/>be<sp/>called<sp/>only<sp/>once,<sp/>the<sp/>first<sp/>time<sp/>any<sp/>of<sp/>the<sp/>given<sp/>events<sp/>are<sp/>emitted.<sp/>If</highlight></codeline>
+<codeline><highlight class="normal">`error`<sp/>is<sp/>one<sp/>of<sp/>the<sp/>listened<sp/>events,<sp/>then<sp/>if<sp/>that<sp/>fires<sp/>first,<sp/>the<sp/>`listener`</highlight></codeline>
+<codeline><highlight class="normal">will<sp/>be<sp/>given<sp/>the<sp/>`err`<sp/>argument.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`listener`<sp/>is<sp/>invoked<sp/>as<sp/>`listener(err,<sp/>ee,<sp/>event,<sp/>args)`,<sp/>where<sp/>`err`<sp/>is<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">first<sp/>argument<sp/>emitted<sp/>from<sp/>an<sp/>`error`<sp/>event,<sp/>if<sp/>applicable;<sp/>`ee`<sp/>is<sp/>the<sp/>event</highlight></codeline>
+<codeline><highlight class="normal">emitter<sp/>that<sp/>fired;<sp/>`event`<sp/>is<sp/>the<sp/>string<sp/>event<sp/>name<sp/>that<sp/>fired;<sp/>and<sp/>`args`<sp/>is<sp/>an</highlight></codeline>
+<codeline><highlight class="normal">array<sp/>of<sp/>the<sp/>arguments<sp/>that<sp/>were<sp/>emitted<sp/>on<sp/>the<sp/>event.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>ee1<sp/>=<sp/>new<sp/>EventEmitter()</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>ee2<sp/>=<sp/>new<sp/>EventEmitter()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">first([</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>[ee1,<sp/>&apos;close&apos;,<sp/>&apos;end&apos;,<sp/>&apos;error&apos;],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>[ee2,<sp/>&apos;error&apos;]</highlight></codeline>
+<codeline><highlight class="normal">],<sp/>function<sp/>(err,<sp/>ee,<sp/>event,<sp/>args)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>listener<sp/>invoked</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>.cancel()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>group<sp/>of<sp/>listeners<sp/>can<sp/>be<sp/>cancelled<sp/>before<sp/>being<sp/>invoked<sp/>and<sp/>have<sp/>all<sp/>the<sp/>event</highlight></codeline>
+<codeline><highlight class="normal">listeners<sp/>removed<sp/>from<sp/>the<sp/>underlying<sp/>event<sp/>emitters.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>thunk<sp/>=<sp/>first([</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>[ee1,<sp/>&apos;close&apos;,<sp/>&apos;end&apos;,<sp/>&apos;error&apos;],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>[ee2,<sp/>&apos;error&apos;]</highlight></codeline>
+<codeline><highlight class="normal">],<sp/>function<sp/>(err,<sp/>ee,<sp/>event,<sp/>args)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>listener<sp/>invoked</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>cancel<sp/>and<sp/>clean<sp/>up</highlight></codeline>
+<codeline><highlight class="normal">thunk.cancel()</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[npm-image]:<sp/>https://img.shields.io/npm/v/ee-first.svg?style=flat-square</highlight></codeline>
+<codeline><highlight class="normal">[npm-url]:<sp/>https://npmjs.org/package/ee-first</highlight></codeline>
+<codeline><highlight class="normal">[github-tag]:<sp/>http://img.shields.io/github/tag/jonathanong/ee-first.svg?style=flat-square</highlight></codeline>
+<codeline><highlight class="normal">[github-url]:<sp/>https://github.com/jonathanong/ee-first/tags</highlight></codeline>
+<codeline><highlight class="normal">[travis-image]:<sp/>https://img.shields.io/travis/jonathanong/ee-first.svg?style=flat-square</highlight></codeline>
+<codeline><highlight class="normal">[travis-url]:<sp/>https://travis-ci.org/jonathanong/ee-first</highlight></codeline>
+<codeline><highlight class="normal">[coveralls-image]:<sp/>https://img.shields.io/coveralls/jonathanong/ee-first.svg?style=flat-square</highlight></codeline>
+<codeline><highlight class="normal">[coveralls-url]:<sp/>https://coveralls.io/r/jonathanong/ee-first?branch=master</highlight></codeline>
+<codeline><highlight class="normal">[license-image]:<sp/>http://img.shields.io/npm/l/ee-first.svg?style=flat-square</highlight></codeline>
+<codeline><highlight class="normal">[license-url]:<sp/>LICENSE.md</highlight></codeline>
+<codeline><highlight class="normal">[downloads-image]:<sp/>http://img.shields.io/npm/dm/ee-first.svg?style=flat-square</highlight></codeline>
+<codeline><highlight class="normal">[downloads-url]:<sp/>https://npmjs.org/package/ee-first</highlight></codeline>
+<codeline><highlight class="normal">[gittip-image]:<sp/>https://img.shields.io/gittip/jonathanong.svg?style=flat-square</highlight></codeline>
+<codeline><highlight class="normal">[gittip-url]:<sp/>https://www.gittip.com/jonathanong/</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/ee-first/README.md"/>
+  </compounddef>
+</doxygen>

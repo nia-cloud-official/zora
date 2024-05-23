@@ -1,0 +1,76 @@
+.TH "md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e \- @npmcli/fs 
+.PP
+ polyfills, and extensions, of the core \fRfs\fP module\&.
+.SH "Features"
+.PP
+.IP "\(bu" 2
+all exposed functions return promises
+.IP "\(bu" 2
+\fRfs\&.rm\fP polyfill for node versions < 14\&.14\&.0
+.IP "\(bu" 2
+\fRfs\&.mkdir\fP polyfill adding support for the \fRrecursive\fP and \fRforce\fP options in node versions < 10\&.12\&.0
+.IP "\(bu" 2
+\fRfs\&.copyFile\fP extended to accept an \fRowner\fP option
+.IP "\(bu" 2
+\fRfs\&.mkdir\fP extended to accept an \fRowner\fP option
+.IP "\(bu" 2
+\fRfs\&.mkdtemp\fP extended to accept an \fRowner\fP option
+.IP "\(bu" 2
+\fRfs\&.writeFile\fP extended to accept an \fRowner\fP option
+.IP "\(bu" 2
+\fRfs\&.withTempDir\fP added
+.IP "\(bu" 2
+\fRfs\&.cp\fP polyfill for node < 16\&.7\&.0
+.PP
+.SH "The \fRowner\fP option"
+.PP
+The \fRcopyFile\fP, \fRmkdir\fP, \fRmkdtemp\fP, \fRwriteFile\fP, and \fRwithTempDir\fP functions all accept a new \fRowner\fP property in their options\&. It can be used in two ways:
+.PP
+.IP "\(bu" 2
+\fR{ owner: { uid: 100, gid: 100 } }\fP - set the \fRuid\fP and \fRgid\fP explicitly
+.IP "\(bu" 2
+\fR{ owner: 100 }\fP - use one value, will set both \fRuid\fP and \fRgid\fP the same
+.PP
+.PP
+The special string `'inherit'\fRmay be passed instead of a number, which will cause this module to automatically determine the correct\fPuid\fRand/or\fPgid` from the nearest existing parent directory of the target\&.
+.SH "\fRfs\&.withTempDir(root, fn, options) -> Promise\fP"
+.PP
+.SS "Parameters"
+.IP "\(bu" 2
+\fRroot\fP: the directory in which to create the temporary directory
+.IP "\(bu" 2
+\fRfn\fP: a function that will be called with the path to the temporary directory
+.IP "\(bu" 2
+\fRoptions\fP
+.IP "  \(bu" 4
+\fRtmpPrefix\fP: a prefix to be used in the generated directory name
+.PP
+
+.PP
+.SS "Usage"
+The \fRwithTempDir\fP function creates a temporary directory, runs the provided function (\fRfn\fP), then removes the temporary directory and resolves or rejects based on the result of \fRfn\fP\&.
+.PP
+.PP
+.nf
+const fs = require('@npmcli/fs')
+const os = require('os')
+
+// this function will be called with the full path to the temporary directory
+// it is called with `await` behind the scenes, so can be async if desired\&.
+const myFunction = async (tempPath) => {
+  return 'done!'
+}
+
+const main = async () => {
+  const result = await fs\&.withTempDir(os\&.tmpdir(), myFunction)
+  // result === 'done!'
+}
+
+main()
+.fi
+.PP
+ 

@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2infer-owner_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2infer-owner_2_r_e_a_d_m_e</compoundname>
+    <title>infer-owner</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2infer-owner_2_r_e_a_d_m_e_1autotoc_md1711"/> Infer the owner of a path based on the owner of its nearest existing parent</para>
+<sect1 id="md_backend_2node__modules_2infer-owner_2_r_e_a_d_m_e_1autotoc_md1712">
+<title>USAGE</title><para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>inferOwner<sp/>=<sp/>require(&apos;infer-owner&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">inferOwner(&apos;/some/cache/folder/file&apos;).then(owner<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>owner<sp/>is<sp/>{uid,<sp/>gid}<sp/>that<sp/>should<sp/>be<sp/>attached<sp/>to</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>the<sp/>/some/cache/folder/file,<sp/>based<sp/>on<sp/>ownership</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>of<sp/>/some/cache/folder,<sp/>/some/cache,<sp/>/some,<sp/>or<sp/>/,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>whichever<sp/>is<sp/>the<sp/>first<sp/>to<sp/>exist</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>same,<sp/>but<sp/>not<sp/>async</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>owner<sp/>=<sp/>inferOwner.sync(&apos;/some/cache/folder/file&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>results<sp/>are<sp/>cached!<sp/><sp/>to<sp/>reset<sp/>the<sp/>cache<sp/>(eg,<sp/>to<sp/>change</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>permissions<sp/>for<sp/>whatever<sp/>reason),<sp/>do<sp/>this:</highlight></codeline>
+<codeline><highlight class="normal">inferOwner.clearCache()</highlight></codeline>
+</programlisting></para>
+<para>This module endeavors to be as performant as possible. Parallel requests for ownership of the same path will only stat the directories one time.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2infer-owner_2_r_e_a_d_m_e_1autotoc_md1713">
+<title>API</title><para><itemizedlist>
+<listitem><para><computeroutput>inferOwner(path) -&gt; Promise&lt;{ uid, gid }&gt;</computeroutput></para>
+<para>If the path exists, return its uid and gid. If it does not, look to its parent, then its grandparent, and so on.</para>
+</listitem><listitem><para><computeroutput>inferOwner(path) -&gt; { uid, gid }</computeroutput></para>
+<para>Sync form of <computeroutput>inferOwner(path)</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>inferOwner.clearCache()</computeroutput></para>
+<para>Delete all cached ownership information and in-flight tracking. </para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/infer-owner/README.md"/>
+  </compounddef>
+</doxygen>

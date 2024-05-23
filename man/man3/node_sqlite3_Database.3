@@ -1,0 +1,677 @@
+.TH "node_sqlite3::Database" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+node_sqlite3::Database
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fR#include <database\&.h>\fP
+.PP
+Inherits \fBNapi::ObjectWrap< Database >\fP\&.
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBBaton\fP"
+.br
+.ti -1c
+.RI "struct \fBCall\fP"
+.br
+.ti -1c
+.RI "struct \fBExecBaton\fP"
+.br
+.ti -1c
+.RI "struct \fBLimitBaton\fP"
+.br
+.ti -1c
+.RI "struct \fBLoadExtensionBaton\fP"
+.br
+.ti -1c
+.RI "struct \fBOpenBaton\fP"
+.br
+.ti -1c
+.RI "struct \fBProfileInfo\fP"
+.br
+.ti -1c
+.RI "struct \fBUpdateInfo\fP"
+.br
+.in -1c
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "typedef void(* \fBWork_Callback\fP) (\fBBaton\fP *baton)"
+.br
+.ti -1c
+.RI "typedef \fBAsync\fP< std::string, \fBDatabase\fP > \fBAsyncTrace\fP"
+.br
+.ti -1c
+.RI "typedef \fBAsync\fP< \fBProfileInfo\fP, \fBDatabase\fP > \fBAsyncProfile\fP"
+.br
+.ti -1c
+.RI "typedef \fBAsync\fP< \fBUpdateInfo\fP, \fBDatabase\fP > \fBAsyncUpdate\fP"
+.br
+.in -1c
+
+Public Types inherited from \fBNapi::ObjectWrap< Database >\fP
+.in +1c
+.ti -1c
+.RI "using \fBStaticVoidMethodCallback\fP"
+.br
+.ti -1c
+.RI "using \fBStaticMethodCallback\fP"
+.br
+.ti -1c
+.RI "using \fBStaticGetterCallback\fP"
+.br
+.ti -1c
+.RI "using \fBStaticSetterCallback\fP"
+.br
+.ti -1c
+.RI "using \fBPropertyDescriptor\fP"
+.br
+.in -1c
+
+Public Types inherited from \fBNapi::InstanceWrap< Database >\fP
+.in +1c
+.ti -1c
+.RI "using \fBInstanceVoidMethodCallback\fP"
+.br
+.ti -1c
+.RI "using \fBInstanceMethodCallback\fP"
+.br
+.ti -1c
+.RI "using \fBInstanceGetterCallback\fP"
+.br
+.ti -1c
+.RI "using \fBInstanceSetterCallback\fP"
+.br
+.ti -1c
+.RI "using \fBPropertyDescriptor\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "bool \fBIsOpen\fP ()"
+.br
+.ti -1c
+.RI "bool \fBIsLocked\fP ()"
+.br
+.ti -1c
+.RI "\fBDatabase\fP (const \fBNapi::CallbackInfo\fP &info)"
+.br
+.ti -1c
+.RI "\fB~Database\fP ()"
+.br
+.in -1c
+
+Public Member Functions inherited from \fBNapi::ObjectWrap< Database >\fP
+.in +1c
+.ti -1c
+.RI "\fBObjectWrap\fP (const \fBCallbackInfo\fP &callbackInfo)"
+.br
+.ti -1c
+.RI "virtual \fB~ObjectWrap\fP ()"
+.br
+.ti -1c
+.RI "\fBClassPropertyDescriptor\fP< Database > \fBStaticMethod\fP (const char *utf8name, napi_property_attributes attributes, void *data)"
+.br
+.ti -1c
+.RI "\fBClassPropertyDescriptor\fP< Database > \fBStaticMethod\fP (\fBSymbol\fP name, napi_property_attributes attributes, void *data)"
+.br
+.ti -1c
+.RI "\fBClassPropertyDescriptor\fP< Database > \fBStaticAccessor\fP (const char *utf8name, napi_property_attributes attributes, void *data)"
+.br
+.ti -1c
+.RI "\fBClassPropertyDescriptor\fP< Database > \fBStaticAccessor\fP (\fBSymbol\fP name, napi_property_attributes attributes, void *data)"
+.br
+.ti -1c
+.RI "virtual void \fBFinalize\fP (\fBNapi::Env\fP env)"
+.br
+.in -1c
+
+Public Member Functions inherited from \fBNapi::InstanceWrap< Database >\fP
+.in +1c
+.ti -1c
+.RI "\fBClassPropertyDescriptor\fP< Database > \fBInstanceMethod\fP (const char *utf8name, napi_property_attributes attributes, void *data)"
+.br
+.ti -1c
+.RI "\fBClassPropertyDescriptor\fP< Database > \fBInstanceMethod\fP (\fBSymbol\fP name, napi_property_attributes attributes, void *data)"
+.br
+.ti -1c
+.RI "\fBClassPropertyDescriptor\fP< Database > \fBInstanceAccessor\fP (const char *utf8name, napi_property_attributes attributes, void *data)"
+.br
+.ti -1c
+.RI "\fBClassPropertyDescriptor\fP< Database > \fBInstanceAccessor\fP (\fBSymbol\fP name, napi_property_attributes attributes, void *data)"
+.br
+.in -1c
+
+Public Member Functions inherited from \fBNapi::Reference< Object >\fP
+.in +1c
+.ti -1c
+.RI "\fBReference\fP ()"
+.br
+.ti -1c
+.RI "\fBReference\fP (napi_env env, napi_ref ref)"
+.br
+.ti -1c
+.RI "\fBReference\fP (\fBReference\fP< \fBObject\fP > &&other)"
+.br
+.ti -1c
+.RI "\fB~Reference\fP ()"
+.br
+.ti -1c
+.RI "\fBReference\fP< \fBObject\fP > & \fBoperator=\fP (\fBReference\fP< \fBObject\fP > &&other)"
+.br
+.ti -1c
+.RI "\fBoperator napi_ref\fP () const"
+.br
+.ti -1c
+.RI "bool \fBoperator==\fP (const \fBReference\fP< \fBObject\fP > &other) const"
+.br
+.ti -1c
+.RI "bool \fBoperator!=\fP (const \fBReference\fP< \fBObject\fP > &other) const"
+.br
+.ti -1c
+.RI "\fBNapi::Env\fP \fBEnv\fP () const"
+.br
+.ti -1c
+.RI "bool \fBIsEmpty\fP () const"
+.br
+.ti -1c
+.RI "\fBObject\fP \fBValue\fP () const"
+.br
+.ti -1c
+.RI "uint32_t \fBRef\fP () const"
+.br
+.ti -1c
+.RI "uint32_t \fBUnref\fP () const"
+.br
+.ti -1c
+.RI "void \fBReset\fP ()"
+.br
+.ti -1c
+.RI "void \fBReset\fP (const \fBObject\fP &value, uint32_t refcount=0)"
+.br
+.ti -1c
+.RI "void \fBSuppressDestruct\fP ()"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBNapi::Object\fP \fBInit\fP (\fBNapi::Env\fP env, \fBNapi::Object\fP exports)"
+.br
+.ti -1c
+.RI "static bool \fBHasInstance\fP (\fBNapi::Value\fP val)"
+.br
+.in -1c
+
+Static Public Member Functions inherited from \fBNapi::ObjectWrap< Database >\fP
+.in +1c
+.ti -1c
+.RI "static Database * \fBUnwrap\fP (\fBObject\fP wrapper)"
+.br
+.ti -1c
+.RI "static \fBFunction\fP \fBDefineClass\fP (\fBNapi::Env\fP env, const char *utf8name, const std::initializer_list< \fBPropertyDescriptor\fP > &properties, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBFunction\fP \fBDefineClass\fP (\fBNapi::Env\fP env, const char *utf8name, const std::vector< \fBPropertyDescriptor\fP > &properties, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBStaticMethod\fP (const char *utf8name, \fBStaticVoidMethodCallback\fP method, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBStaticMethod\fP (const char *utf8name, \fBStaticMethodCallback\fP method, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBStaticMethod\fP (\fBSymbol\fP name, \fBStaticVoidMethodCallback\fP method, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBStaticMethod\fP (\fBSymbol\fP name, \fBStaticMethodCallback\fP method, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBStaticMethod\fP (const char *utf8name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBStaticMethod\fP (\fBSymbol\fP name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBStaticMethod\fP (const char *utf8name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBStaticMethod\fP (\fBSymbol\fP name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBStaticAccessor\fP (const char *utf8name, \fBStaticGetterCallback\fP getter, \fBStaticSetterCallback\fP setter, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBStaticAccessor\fP (\fBSymbol\fP name, \fBStaticGetterCallback\fP getter, \fBStaticSetterCallback\fP setter, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBStaticAccessor\fP (const char *utf8name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBStaticAccessor\fP (\fBSymbol\fP name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBStaticValue\fP (const char *utf8name, \fBNapi::Value\fP value, napi_property_attributes attributes=napi_default)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBStaticValue\fP (\fBSymbol\fP name, \fBNapi::Value\fP value, napi_property_attributes attributes=napi_default)"
+.br
+.ti -1c
+.RI "static \fBNapi::Value\fP \fBOnCalledAsFunction\fP (const \fBNapi::CallbackInfo\fP &callbackInfo)"
+.br
+.in -1c
+
+Static Public Member Functions inherited from \fBNapi::InstanceWrap< Database >\fP
+.in +1c
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBInstanceMethod\fP (const char *utf8name, \fBInstanceVoidMethodCallback\fP method, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBInstanceMethod\fP (const char *utf8name, \fBInstanceMethodCallback\fP method, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBInstanceMethod\fP (\fBSymbol\fP name, \fBInstanceVoidMethodCallback\fP method, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBInstanceMethod\fP (\fBSymbol\fP name, \fBInstanceMethodCallback\fP method, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBInstanceMethod\fP (const char *utf8name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBInstanceMethod\fP (const char *utf8name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBInstanceMethod\fP (\fBSymbol\fP name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBInstanceMethod\fP (\fBSymbol\fP name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBInstanceAccessor\fP (const char *utf8name, \fBInstanceGetterCallback\fP getter, \fBInstanceSetterCallback\fP setter, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBInstanceAccessor\fP (\fBSymbol\fP name, \fBInstanceGetterCallback\fP getter, \fBInstanceSetterCallback\fP setter, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBInstanceAccessor\fP (const char *utf8name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBInstanceAccessor\fP (\fBSymbol\fP name, napi_property_attributes attributes=napi_default, void *data=nullptr)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBInstanceValue\fP (const char *utf8name, \fBNapi::Value\fP value, napi_property_attributes attributes=napi_default)"
+.br
+.ti -1c
+.RI "static \fBPropertyDescriptor\fP \fBInstanceValue\fP (\fBSymbol\fP name, \fBNapi::Value\fP value, napi_property_attributes attributes=napi_default)"
+.br
+.in -1c
+
+Static Public Member Functions inherited from \fBNapi::Reference< Object >\fP
+.in +1c
+.ti -1c
+.RI "static \fBReference\fP< \fBObject\fP > \fBNew\fP (const \fBObject\fP &value, uint32_t initialRefcount=0)"
+.br
+.in -1c
+.SS "Static Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "static \fBNapi::FunctionReference\fP \fBconstructor\fP"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBWORK_DEFINITION\fP (Open)"
+.br
+.ti -1c
+.RI "\fBWORK_DEFINITION\fP (Exec)"
+.br
+.ti -1c
+.RI "\fBWORK_DEFINITION\fP (Close)"
+.br
+.ti -1c
+.RI "\fBWORK_DEFINITION\fP (LoadExtension)"
+.br
+.ti -1c
+.RI "void \fBSchedule\fP (\fBWork_Callback\fP callback, \fBBaton\fP *baton, bool exclusive=false)"
+.br
+.ti -1c
+.RI "void \fBProcess\fP ()"
+.br
+.ti -1c
+.RI "\fBNapi::Value\fP \fBWait\fP (const \fBNapi::CallbackInfo\fP &info)"
+.br
+.ti -1c
+.RI "\fBNapi::Value\fP \fBSerialize\fP (const \fBNapi::CallbackInfo\fP &info)"
+.br
+.ti -1c
+.RI "\fBNapi::Value\fP \fBParallelize\fP (const \fBNapi::CallbackInfo\fP &info)"
+.br
+.ti -1c
+.RI "\fBNapi::Value\fP \fBConfigure\fP (const \fBNapi::CallbackInfo\fP &info)"
+.br
+.ti -1c
+.RI "\fBNapi::Value\fP \fBInterrupt\fP (const \fBNapi::CallbackInfo\fP &info)"
+.br
+.ti -1c
+.RI "void \fBRemoveCallbacks\fP ()"
+.br
+.in -1c
+
+Protected Member Functions inherited from \fBNapi::Reference< Object >\fP
+.in +1c
+.ti -1c
+.RI "\fBReference\fP (const \fBReference\fP< \fBObject\fP > &)"
+.br
+.in -1c
+.SS "Static Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static void \fBWork_Wait\fP (\fBBaton\fP *baton)"
+.br
+.ti -1c
+.RI "static void \fBSetBusyTimeout\fP (\fBBaton\fP *baton)"
+.br
+.ti -1c
+.RI "static void \fBSetLimit\fP (\fBBaton\fP *baton)"
+.br
+.ti -1c
+.RI "static void \fBRegisterTraceCallback\fP (\fBBaton\fP *baton)"
+.br
+.ti -1c
+.RI "static void \fBTraceCallback\fP (void *db, const char *sql)"
+.br
+.ti -1c
+.RI "static void \fBTraceCallback\fP (\fBDatabase\fP *db, std::string *sql)"
+.br
+.ti -1c
+.RI "static void \fBRegisterProfileCallback\fP (\fBBaton\fP *baton)"
+.br
+.ti -1c
+.RI "static void \fBProfileCallback\fP (void *db, const char *sql, sqlite3_uint64 nsecs)"
+.br
+.ti -1c
+.RI "static void \fBProfileCallback\fP (\fBDatabase\fP *db, \fBProfileInfo\fP *info)"
+.br
+.ti -1c
+.RI "static void \fBRegisterUpdateCallback\fP (\fBBaton\fP *baton)"
+.br
+.ti -1c
+.RI "static void \fBUpdateCallback\fP (void *db, int type, const char *\fBdatabase\fP, const char *table, sqlite3_int64 rowid)"
+.br
+.ti -1c
+.RI "static void \fBUpdateCallback\fP (\fBDatabase\fP *db, \fBUpdateInfo\fP *info)"
+.br
+.in -1c
+
+Static Protected Member Functions inherited from \fBNapi::InstanceWrap< Database >\fP
+.in +1c
+.ti -1c
+.RI "static void \fBAttachPropData\fP (napi_env env, napi_value value, const napi_property_descriptor *prop)"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "sqlite3 * \fB_handle\fP = NULL"
+.br
+.ti -1c
+.RI "bool \fBopen\fP = false"
+.br
+.ti -1c
+.RI "bool \fBclosing\fP = false"
+.br
+.ti -1c
+.RI "bool \fBlocked\fP = false"
+.br
+.ti -1c
+.RI "unsigned int \fBpending\fP = 0"
+.br
+.ti -1c
+.RI "bool \fBserialize\fP = false"
+.br
+.ti -1c
+.RI "std::queue< \fBCall\fP * > \fBqueue\fP"
+.br
+.ti -1c
+.RI "\fBAsyncTrace\fP * \fBdebug_trace\fP = NULL"
+.br
+.ti -1c
+.RI "\fBAsyncProfile\fP * \fBdebug_profile\fP = NULL"
+.br
+.ti -1c
+.RI "\fBAsyncUpdate\fP * \fBupdate_event\fP = NULL"
+.br
+.in -1c
+
+Protected Attributes inherited from \fBNapi::Reference< Object >\fP
+.in +1c
+.ti -1c
+.RI "napi_env \fB_env\fP"
+.br
+.RI "!cond INTERNAL "
+.ti -1c
+.RI "napi_ref \fB_ref\fP"
+.br
+.in -1c
+.SS "Friends"
+
+.in +1c
+.ti -1c
+.RI "class \fBStatement\fP"
+.br
+.ti -1c
+.RI "class \fBBackup\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line \fB22\fP of file \fBdatabase\&.h\fP\&.
+.SH "Member Typedef Documentation"
+.PP 
+.SS "typedef \fBAsync\fP<\fBProfileInfo\fP, \fBDatabase\fP> \fBnode_sqlite3::Database::AsyncProfile\fP"
+
+.PP
+Definition at line \fB120\fP of file \fBdatabase\&.h\fP\&.
+.SS "typedef \fBAsync\fP<std::string, \fBDatabase\fP> \fBnode_sqlite3::Database::AsyncTrace\fP"
+
+.PP
+Definition at line \fB119\fP of file \fBdatabase\&.h\fP\&.
+.SS "typedef \fBAsync\fP<\fBUpdateInfo\fP, \fBDatabase\fP> \fBnode_sqlite3::Database::AsyncUpdate\fP"
+
+.PP
+Definition at line \fB121\fP of file \fBdatabase\&.h\fP\&.
+.SS "typedef void(* node_sqlite3::Database::Work_Callback) (\fBBaton\fP *baton)"
+
+.PP
+Definition at line \fB94\fP of file \fBdatabase\&.h\fP\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Database::Database (const \fBNapi::CallbackInfo\fP & info)"
+
+.PP
+Definition at line \fB120\fP of file \fBdatabase\&.cc\fP\&.
+.SS "node_sqlite3::Database::~Database ()\fR [inline]\fP"
+
+.PP
+Definition at line \fB128\fP of file \fBdatabase\&.h\fP\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBNapi::Value\fP Database::Configure (const \fBNapi::CallbackInfo\fP & info)\fR [protected]\fP"
+
+.PP
+Definition at line \fB336\fP of file \fBdatabase\&.cc\fP\&.
+.SS "static bool node_sqlite3::Database::HasInstance (\fBNapi::Value\fP val)\fR [inline]\fP, \fR [static]\fP"
+
+.PP
+Definition at line \fB29\fP of file \fBdatabase\&.h\fP\&.
+.SS "\fBNapi::Object\fP Database::Init (\fBNapi::Env\fP env, \fBNapi::Object\fP exports)\fR [static]\fP"
+
+.PP
+Definition at line \fB14\fP of file \fBdatabase\&.cc\fP\&.
+.SS "\fBNapi::Value\fP Database::Interrupt (const \fBNapi::CallbackInfo\fP & info)\fR [protected]\fP"
+
+.PP
+Definition at line \fB395\fP of file \fBdatabase\&.cc\fP\&.
+.SS "bool node_sqlite3::Database::IsLocked ()\fR [inline]\fP"
+
+.PP
+Definition at line \fB117\fP of file \fBdatabase\&.h\fP\&.
+.SS "bool node_sqlite3::Database::IsOpen ()\fR [inline]\fP"
+
+.PP
+Definition at line \fB116\fP of file \fBdatabase\&.h\fP\&.
+.SS "\fBNapi::Value\fP Database::Parallelize (const \fBNapi::CallbackInfo\fP & info)\fR [protected]\fP"
+
+.PP
+Definition at line \fB318\fP of file \fBdatabase\&.cc\fP\&.
+.SS "void Database::Process ()\fR [protected]\fP"
+
+.PP
+Definition at line \fB44\fP of file \fBdatabase\&.cc\fP\&.
+.SS "void Database::ProfileCallback (\fBDatabase\fP * db, \fBProfileInfo\fP * info)\fR [static]\fP, \fR [protected]\fP"
+
+.PP
+Definition at line \fB498\fP of file \fBdatabase\&.cc\fP\&.
+.SS "void Database::ProfileCallback (void * db, const char * sql, sqlite3_uint64 nsecs)\fR [static]\fP, \fR [protected]\fP"
+
+.PP
+Definition at line \fB489\fP of file \fBdatabase\&.cc\fP\&.
+.SS "void Database::RegisterProfileCallback (\fBBaton\fP * baton)\fR [static]\fP, \fR [protected]\fP"
+
+.PP
+Definition at line \fB470\fP of file \fBdatabase\&.cc\fP\&.
+.SS "void Database::RegisterTraceCallback (\fBBaton\fP * baton)\fR [static]\fP, \fR [protected]\fP"
+
+.PP
+Definition at line \fB432\fP of file \fBdatabase\&.cc\fP\&.
+.SS "void Database::RegisterUpdateCallback (\fBBaton\fP * baton)\fR [static]\fP, \fR [protected]\fP"
+
+.PP
+Definition at line \fB511\fP of file \fBdatabase\&.cc\fP\&.
+.SS "void Database::RemoveCallbacks ()\fR [protected]\fP"
+
+.PP
+Definition at line \fB738\fP of file \fBdatabase\&.cc\fP\&.
+.SS "void Database::Schedule (\fBWork_Callback\fP callback, \fBBaton\fP * baton, bool exclusive = \fRfalse\fP)\fR [protected]\fP"
+
+.PP
+Definition at line \fB90\fP of file \fBdatabase\&.cc\fP\&.
+.SS "\fBNapi::Value\fP Database::Serialize (const \fBNapi::CallbackInfo\fP & info)\fR [protected]\fP"
+
+.PP
+Definition at line \fB300\fP of file \fBdatabase\&.cc\fP\&.
+.SS "void Database::SetBusyTimeout (\fBBaton\fP * baton)\fR [static]\fP, \fR [protected]\fP"
+
+.PP
+Definition at line \fB413\fP of file \fBdatabase\&.cc\fP\&.
+.SS "void Database::SetLimit (\fBBaton\fP * baton)\fR [static]\fP, \fR [protected]\fP"
+
+.PP
+Definition at line \fB423\fP of file \fBdatabase\&.cc\fP\&.
+.SS "void Database::TraceCallback (\fBDatabase\fP * db, std::string * sql)\fR [static]\fP, \fR [protected]\fP"
+
+.PP
+Definition at line \fB457\fP of file \fBdatabase\&.cc\fP\&.
+.SS "void Database::TraceCallback (void * db, const char * sql)\fR [static]\fP, \fR [protected]\fP"
+
+.PP
+Definition at line \fB451\fP of file \fBdatabase\&.cc\fP\&.
+.SS "void Database::UpdateCallback (\fBDatabase\fP * db, \fBUpdateInfo\fP * info)\fR [static]\fP, \fR [protected]\fP"
+
+.PP
+Definition at line \fB542\fP of file \fBdatabase\&.cc\fP\&.
+.SS "void Database::UpdateCallback (void * db, int type, const char * database, const char * table, sqlite3_int64 rowid)\fR [static]\fP, \fR [protected]\fP"
+
+.PP
+Definition at line \fB530\fP of file \fBdatabase\&.cc\fP\&.
+.SS "\fBNapi::Value\fP Database::Wait (const \fBNapi::CallbackInfo\fP & info)\fR [protected]\fP"
+
+.PP
+Definition at line \fB630\fP of file \fBdatabase\&.cc\fP\&.
+.SS "node_sqlite3::Database::WORK_DEFINITION (Close )\fR [protected]\fP"
+
+.SS "node_sqlite3::Database::WORK_DEFINITION (Exec )\fR [protected]\fP"
+
+.SS "node_sqlite3::Database::WORK_DEFINITION (LoadExtension )\fR [protected]\fP"
+
+.SS "node_sqlite3::Database::WORK_DEFINITION (Open )\fR [protected]\fP"
+
+.SS "void Database::Work_Wait (\fBBaton\fP * baton)\fR [static]\fP, \fR [protected]\fP"
+
+.PP
+Definition at line \fB642\fP of file \fBdatabase\&.cc\fP\&.
+.SH "Friends And Related Symbol Documentation"
+.PP 
+.SS "friend class \fBBackup\fP\fR [friend]\fP"
+
+.PP
+Definition at line \fB124\fP of file \fBdatabase\&.h\fP\&.
+.SS "friend class \fBStatement\fP\fR [friend]\fP"
+
+.PP
+Definition at line \fB123\fP of file \fBdatabase\&.h\fP\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "sqlite3* node_sqlite3::Database::_handle = NULL\fR [protected]\fP"
+
+.PP
+Definition at line \fB170\fP of file \fBdatabase\&.h\fP\&.
+.SS "bool node_sqlite3::Database::closing = false\fR [protected]\fP"
+
+.PP
+Definition at line \fB173\fP of file \fBdatabase\&.h\fP\&.
+.SS "\fBNapi::FunctionReference\fP Database::constructor\fR [static]\fP"
+
+.PP
+Definition at line \fB25\fP of file \fBdatabase\&.h\fP\&.
+.SS "\fBAsyncProfile\fP* node_sqlite3::Database::debug_profile = NULL\fR [protected]\fP"
+
+.PP
+Definition at line \fB182\fP of file \fBdatabase\&.h\fP\&.
+.SS "\fBAsyncTrace\fP* node_sqlite3::Database::debug_trace = NULL\fR [protected]\fP"
+
+.PP
+Definition at line \fB181\fP of file \fBdatabase\&.h\fP\&.
+.SS "bool node_sqlite3::Database::locked = false\fR [protected]\fP"
+
+.PP
+Definition at line \fB174\fP of file \fBdatabase\&.h\fP\&.
+.SS "bool node_sqlite3::Database::open = false\fR [protected]\fP"
+
+.PP
+Definition at line \fB172\fP of file \fBdatabase\&.h\fP\&.
+.SS "unsigned int node_sqlite3::Database::pending = 0\fR [protected]\fP"
+
+.PP
+Definition at line \fB175\fP of file \fBdatabase\&.h\fP\&.
+.SS "std::queue<\fBCall\fP*> node_sqlite3::Database::queue\fR [protected]\fP"
+
+.PP
+Definition at line \fB179\fP of file \fBdatabase\&.h\fP\&.
+.SS "bool node_sqlite3::Database::serialize = false\fR [protected]\fP"
+
+.PP
+Definition at line \fB177\fP of file \fBdatabase\&.h\fP\&.
+.SS "\fBAsyncUpdate\fP* node_sqlite3::Database::update_event = NULL\fR [protected]\fP"
+
+.PP
+Definition at line \fB183\fP of file \fBdatabase\&.h\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

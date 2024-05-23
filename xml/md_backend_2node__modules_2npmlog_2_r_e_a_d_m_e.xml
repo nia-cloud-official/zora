@@ -1,0 +1,191 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e</compoundname>
+    <title>npmlog</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2495"/> The logger util that npm uses.</para>
+<para>This logger is very basic. It does the logging for npm. It supports custom levels and colored output.</para>
+<para>By default, logs are written to stderr. If you want to send log messages to outputs other than streams, then you can change the <computeroutput>log.stream</computeroutput> member, or you can just listen to the events that it emits, and do whatever you want with them.</para>
+<sect1 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2496">
+<title>Installation</title><para><programlisting filename=".console"><codeline><highlight class="normal">npm<sp/>install<sp/>npmlog<sp/>--save</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2497">
+<title>Basic Usage</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>log<sp/>=<sp/>require(&apos;npmlog&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>additional<sp/>stuff<sp/>---------------------------+</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>message<sp/>----------+<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>prefix<sp/>----+<sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>level<sp/>-+<sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>v<sp/><sp/><sp/>v<sp/><sp/><sp/><sp/><sp/><sp/>v<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>v</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>log.info(&apos;fyi&apos;,<sp/>&apos;I<sp/>have<sp/>a<sp/>kitty<sp/>cat:<sp/>%j&apos;,<sp/>myKittyCat)</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2498">
+<title>log.level</title><para><itemizedlist>
+<listitem><para>{String}</para>
+</listitem></itemizedlist>
+</para>
+<para>The level to display logs at. Any logs at or above this level will be displayed. The special level <computeroutput>silent</computeroutput> will prevent anything from being displayed ever.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2499">
+<title>log.record</title><para><itemizedlist>
+<listitem><para>{Array}</para>
+</listitem></itemizedlist>
+</para>
+<para>An array of all the log messages that have been entered.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2500">
+<title>log.maxRecordSize</title><para><itemizedlist>
+<listitem><para>{Number}</para>
+</listitem></itemizedlist>
+</para>
+<para>The maximum number of records to keep. If log.record gets bigger than 10% over this value, then it is sliced down to 90% of this value.</para>
+<para>The reason for the 10% window is so that it doesn&apos;t have to resize a large array on every log entry.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2501">
+<title>log.prefixStyle</title><para><itemizedlist>
+<listitem><para>{Object}</para>
+</listitem></itemizedlist>
+</para>
+<para>A style object that specifies how prefixes are styled. (See below)</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2502">
+<title>log.headingStyle</title><para><itemizedlist>
+<listitem><para>{Object}</para>
+</listitem></itemizedlist>
+</para>
+<para>A style object that specifies how the heading is styled. (See below)</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2503">
+<title>log.heading</title><para><itemizedlist>
+<listitem><para>{String} Default: &quot;&quot;</para>
+</listitem></itemizedlist>
+</para>
+<para>If set, a heading that is printed at the start of every line.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2504">
+<title>log.stream</title><para><itemizedlist>
+<listitem><para>{Stream} Default: <computeroutput>process.stderr</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+<para>The stream where output is written.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2505">
+<title>log.enableColor()</title><para>Force colors to be used on all messages, regardless of the output stream.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2506">
+<title>log.disableColor()</title><para>Disable colors on all messages.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2507">
+<title>log.enableProgress()</title><para>Enable the display of log activity spinner and progress bar</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2508">
+<title>log.disableProgress()</title><para>Disable the display of a progress bar</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2509">
+<title>log.enableUnicode()</title><para>Force the unicode theme to be used for the progress bar.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2510">
+<title>log.disableUnicode()</title><para>Disable the use of unicode in the progress bar.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2511">
+<title>log.setGaugeTemplate(template)</title><para>Set a template for outputting the progress bar. See the <ulink url="https://npmjs.com/package/gauge">gauge documentation</ulink> for details.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2512">
+<title>log.setGaugeThemeset(themes)</title><para>Select a themeset to pick themes from for the progress bar. See the <ulink url="https://npmjs.com/package/gauge">gauge documentation</ulink> for details.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2513">
+<title>log.pause()</title><para>Stop emitting messages to the stream, but do not drop them.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2514">
+<title>log.resume()</title><para>Emit all buffered messages that were written while paused.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2515">
+<title>log.log(level, prefix, message, ...)</title><para><itemizedlist>
+<listitem><para><computeroutput>level</computeroutput> {String} The level to emit the message at</para>
+</listitem><listitem><para><computeroutput>prefix</computeroutput> {String} A string prefix. Set to &quot;&quot; to skip.</para>
+</listitem><listitem><para><computeroutput>message...</computeroutput> Arguments to <computeroutput>util.format</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+<para>Emit a log message at the specified level.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2516">
+<title>log[level](prefix, message, ...)</title><para>For example,</para>
+<para><itemizedlist>
+<listitem><para>log.silly(prefix, message, ...)</para>
+</listitem><listitem><para>log.verbose(prefix, message, ...)</para>
+</listitem><listitem><para>log.info(prefix, message, ...)</para>
+</listitem><listitem><para>log.http(prefix, message, ...)</para>
+</listitem><listitem><para>log.warn(prefix, message, ...)</para>
+</listitem><listitem><para>log.error(prefix, message, ...)</para>
+</listitem></itemizedlist>
+</para>
+<para>Like <computeroutput>log.log(level, prefix, message, ...)</computeroutput>. In this way, each level is given a shorthand, so you can do <computeroutput>log.info(prefix, message)</computeroutput>.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2517">
+<title>log.addLevel(level, n, style, disp)</title><para><itemizedlist>
+<listitem><para><computeroutput>level</computeroutput> {String} Level indicator</para>
+</listitem><listitem><para><computeroutput>n</computeroutput> {Number} The numeric level</para>
+</listitem><listitem><para><computeroutput>style</computeroutput> {Object} Object with fg, bg, inverse, etc.</para>
+</listitem><listitem><para><computeroutput>disp</computeroutput> {String} Optional replacement for <computeroutput>level</computeroutput> in the output.</para>
+</listitem></itemizedlist>
+</para>
+<para>Sets up a new level with a shorthand function and so forth.</para>
+<para>Note that if the number is <computeroutput>Infinity</computeroutput>, then setting the level to that will cause all log messages to be suppressed. If the number is <computeroutput>-Infinity</computeroutput>, then the only way to show it is to enable all log messages.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2518">
+<title>log.newItem(name, todo, weight)</title><para><itemizedlist>
+<listitem><para><computeroutput>name</computeroutput> {String} Optional; progress item name.</para>
+</listitem><listitem><para><computeroutput>todo</computeroutput> {Number} Optional; total amount of work to be done. Default 0.</para>
+</listitem><listitem><para><computeroutput>weight</computeroutput> {Number} Optional; the weight of this item relative to others. Default 1.</para>
+</listitem></itemizedlist>
+</para>
+<para>This adds a new <computeroutput>are-we-there-yet</computeroutput> item tracker to the progress tracker. The object returned has the <computeroutput>log[level]</computeroutput> methods but is otherwise an <computeroutput>are-we-there-yet</computeroutput> <computeroutput>Tracker</computeroutput> object.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2519">
+<title>log.newStream(name, todo, weight)</title><para>This adds a new <computeroutput>are-we-there-yet</computeroutput> stream tracker to the progress tracker. The object returned has the <computeroutput>log[level]</computeroutput> methods but is otherwise an <computeroutput>are-we-there-yet</computeroutput> <computeroutput>TrackerStream</computeroutput> object.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2520">
+<title>log.newGroup(name, weight)</title><para>This adds a new <computeroutput>are-we-there-yet</computeroutput> tracker group to the progress tracker. The object returned has the <computeroutput>log[level]</computeroutput> methods but is otherwise an <computeroutput>are-we-there-yet</computeroutput> <computeroutput>TrackerGroup</computeroutput> object.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2521">
+<title>Events</title><para>Events are all emitted with the message object.</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>log</computeroutput> Emitted for all messages</para>
+</listitem><listitem><para><computeroutput>log.&lt;level&gt;</computeroutput> Emitted for all messages with the <computeroutput>&lt;level&gt;</computeroutput> level.</para>
+</listitem><listitem><para><computeroutput>&lt;prefix&gt;</computeroutput> Messages with prefixes also emit their prefix as an event.</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2522">
+<title>Style Objects</title><para>Style objects can have the following fields:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>fg</computeroutput> {String} Color for the foreground text</para>
+</listitem><listitem><para><computeroutput>bg</computeroutput> {String} Color for the background</para>
+</listitem><listitem><para><computeroutput>bold</computeroutput>, <computeroutput>inverse</computeroutput>, <computeroutput>underline</computeroutput> {Boolean} Set the associated property</para>
+</listitem><listitem><para><computeroutput>bell</computeroutput> {Boolean} Make a noise (This is pretty annoying, probably.)</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2523">
+<title>Message Objects</title><para>Every log event is emitted with a message object, and the <computeroutput>log.record</computeroutput> list contains all of them that have been created. They have the following fields:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>id</computeroutput> {Number}</para>
+</listitem><listitem><para><computeroutput>level</computeroutput> {String}</para>
+</listitem><listitem><para><computeroutput>prefix</computeroutput> {String}</para>
+</listitem><listitem><para><computeroutput>message</computeroutput> {String} Result of <computeroutput>util.format()</computeroutput></para>
+</listitem><listitem><para><computeroutput>messageRaw</computeroutput> {Array} Arguments to <computeroutput>util.format()</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_1autotoc_md2524">
+<title>Blocking TTYs</title><para>We use <ulink url="https://npmjs.com/package/set-blocking"><computeroutput>set-blocking</computeroutput></ulink> to set stderr and stdout blocking if they are tty&apos;s and have the setBlocking call. This is a work around for an issue in early versions of Node.js 6.x, which made stderr and stdout non-blocking on OSX. (They are always blocking Windows and were never blocking on Linux.) <computeroutput>npmlog</computeroutput> needs them to be blocking so that it can allow output to stdout and stderr to be interlaced. </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/npmlog/README.md"/>
+  </compounddef>
+</doxygen>

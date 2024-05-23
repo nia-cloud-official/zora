@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">iMurmurHash.js</highlight></codeline>
+<codeline><highlight class="normal">==============</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">An<sp/>incremental<sp/>implementation<sp/>of<sp/>the<sp/>MurmurHash3<sp/>(32-bit)<sp/>hashing<sp/>algorithm<sp/>for<sp/>JavaScript<sp/>based<sp/>on<sp/>[Gary<sp/>Court&apos;s<sp/>implementation](https://github.com/garycourt/murmurhash-js)<sp/>with<sp/>[kazuyukitanimura&apos;s<sp/>modifications](https://github.com/kazuyukitanimura/murmurhash-js).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>version<sp/>works<sp/>significantly<sp/>faster<sp/>than<sp/>the<sp/>non-incremental<sp/>version<sp/>if<sp/>you<sp/>need<sp/>to<sp/>hash<sp/>many<sp/>small<sp/>strings<sp/>into<sp/>a<sp/>single<sp/>hash,<sp/>since<sp/>string<sp/>concatenation<sp/>(to<sp/>build<sp/>the<sp/>single<sp/>string<sp/>to<sp/>pass<sp/>the<sp/>non-incremental<sp/>version)<sp/>is<sp/>fairly<sp/>costly.<sp/>In<sp/>one<sp/>case<sp/>tested,<sp/>using<sp/>the<sp/>incremental<sp/>version<sp/>was<sp/>about<sp/>50%<sp/>faster<sp/>than<sp/>concatenating<sp/>5-10<sp/>strings<sp/>and<sp/>then<sp/>hashing.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Installation</highlight></codeline>
+<codeline><highlight class="normal">------------</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>use<sp/>iMurmurHash<sp/>in<sp/>the<sp/>browser,<sp/>[download<sp/>the<sp/>latest<sp/>version](https://raw.github.com/jensyt/imurmurhash-js/master/imurmurhash.min.js)<sp/>and<sp/>include<sp/>it<sp/>as<sp/>a<sp/>script<sp/>on<sp/>your<sp/>site.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```html</highlight></codeline>
+<codeline><highlight class="normal">&lt;script<sp/>type=&quot;text/javascript&quot;<sp/>src=&quot;/scripts/imurmurhash.min.js&quot;&gt;&lt;/script&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;script&gt;</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Your<sp/>code<sp/>here,<sp/>access<sp/>iMurmurHash<sp/>using<sp/>the<sp/>global<sp/>object<sp/>MurmurHash3</highlight></codeline>
+<codeline><highlight class="normal">&lt;/script&gt;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">---</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>use<sp/>iMurmurHash<sp/>in<sp/>Node.js,<sp/>install<sp/>the<sp/>module<sp/>using<sp/>NPM:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```bash</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>install<sp/>imurmurhash</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Then<sp/>simply<sp/>include<sp/>it<sp/>in<sp/>your<sp/>scripts:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">MurmurHash3<sp/>=<sp/>require(&apos;imurmurhash&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Quick<sp/>Example</highlight></codeline>
+<codeline><highlight class="normal">-------------</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Create<sp/>the<sp/>initial<sp/>hash</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>hashState<sp/>=<sp/>MurmurHash3(&apos;string&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Incrementally<sp/>add<sp/>text</highlight></codeline>
+<codeline><highlight class="normal">hashState.hash(&apos;more<sp/>strings&apos;);</highlight></codeline>
+<codeline><highlight class="normal">hashState.hash(&apos;even<sp/>more<sp/>strings&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>All<sp/>calls<sp/>can<sp/>be<sp/>chained<sp/>if<sp/>desired</highlight></codeline>
+<codeline><highlight class="normal">hashState.hash(&apos;and&apos;).hash(&apos;some&apos;).hash(&apos;more&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Get<sp/>a<sp/>result</highlight></codeline>
+<codeline><highlight class="normal">hashState.result();</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>returns<sp/>0xe4ccfe6b</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Functions</highlight></codeline>
+<codeline><highlight class="normal">---------</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>MurmurHash3<sp/>([string],<sp/>[seed])</highlight></codeline>
+<codeline><highlight class="normal">Get<sp/>a<sp/>hash<sp/>state<sp/>object,<sp/>optionally<sp/>initialized<sp/>with<sp/>the<sp/>given<sp/>_string_<sp/>and<sp/>_seed_.<sp/>_Seed_<sp/>must<sp/>be<sp/>a<sp/>positive<sp/>integer<sp/>if<sp/>provided.<sp/>Calling<sp/>this<sp/>function<sp/>without<sp/>the<sp/>`new`<sp/>keyword<sp/>will<sp/>return<sp/>a<sp/>cached<sp/>state<sp/>object<sp/>that<sp/>has<sp/>been<sp/>reset.<sp/>This<sp/>is<sp/>safe<sp/>to<sp/>use<sp/>as<sp/>long<sp/>as<sp/>the<sp/>object<sp/>is<sp/>only<sp/>used<sp/>from<sp/>a<sp/>single<sp/>thread<sp/>and<sp/>no<sp/>other<sp/>hashes<sp/>are<sp/>created<sp/>while<sp/>operating<sp/>on<sp/>this<sp/>one.<sp/>If<sp/>this<sp/>constraint<sp/>cannot<sp/>be<sp/>met,<sp/>you<sp/>can<sp/>use<sp/>`new`<sp/>to<sp/>create<sp/>a<sp/>new<sp/>state<sp/>object.<sp/>For<sp/>example:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Use<sp/>the<sp/>cached<sp/>object,<sp/>calling<sp/>the<sp/>function<sp/>again<sp/>will<sp/>return<sp/>the<sp/>same</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>object<sp/>(but<sp/>reset,<sp/>so<sp/>the<sp/>current<sp/>state<sp/>would<sp/>be<sp/>lost)</highlight></codeline>
+<codeline><highlight class="normal">hashState<sp/>=<sp/>MurmurHash3();</highlight></codeline>
+<codeline><highlight class="normal">...</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Create<sp/>a<sp/>new<sp/>object<sp/>that<sp/>can<sp/>be<sp/>safely<sp/>used<sp/>however<sp/>you<sp/>wish.<sp/>Calling<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>function<sp/>again<sp/>will<sp/>simply<sp/>return<sp/>a<sp/>new<sp/>state<sp/>object,<sp/>and<sp/>no<sp/>state<sp/>loss</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>will<sp/>occur,<sp/>at<sp/>the<sp/>cost<sp/>of<sp/>creating<sp/>more<sp/>objects.</highlight></codeline>
+<codeline><highlight class="normal">hashState<sp/>=<sp/>new<sp/>MurmurHash3();</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Both<sp/>methods<sp/>can<sp/>be<sp/>mixed<sp/>however<sp/>you<sp/>like<sp/>if<sp/>you<sp/>have<sp/>different<sp/>use<sp/>cases.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">---</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>MurmurHash3.prototype.hash<sp/>(string)</highlight></codeline>
+<codeline><highlight class="normal">Incrementally<sp/>add<sp/>_string_<sp/>to<sp/>the<sp/>hash.<sp/>This<sp/>can<sp/>be<sp/>called<sp/>as<sp/>many<sp/>times<sp/>as<sp/>you<sp/>want<sp/>for<sp/>the<sp/>hash<sp/>state<sp/>object,<sp/>including<sp/>after<sp/>a<sp/>call<sp/>to<sp/>`result()`.<sp/>Returns<sp/>`this`<sp/>so<sp/>calls<sp/>can<sp/>be<sp/>chained.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">---</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>MurmurHash3.prototype.result<sp/>()</highlight></codeline>
+<codeline><highlight class="normal">Get<sp/>the<sp/>result<sp/>of<sp/>the<sp/>hash<sp/>as<sp/>a<sp/>32-bit<sp/>positive<sp/>integer.<sp/>This<sp/>performs<sp/>the<sp/>tail<sp/>and<sp/>finalizer<sp/>portions<sp/>of<sp/>the<sp/>algorithm,<sp/>but<sp/>does<sp/>not<sp/>store<sp/>the<sp/>result<sp/>in<sp/>the<sp/>state<sp/>object.<sp/>This<sp/>means<sp/>that<sp/>it<sp/>is<sp/>perfectly<sp/>safe<sp/>to<sp/>get<sp/>results<sp/>and<sp/>then<sp/>continue<sp/>adding<sp/>strings<sp/>via<sp/>`hash`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Do<sp/>the<sp/>whole<sp/>string<sp/>at<sp/>once</highlight></codeline>
+<codeline><highlight class="normal">MurmurHash3(&apos;this<sp/>is<sp/>a<sp/>test<sp/>string&apos;).result();</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>0x70529328</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Do<sp/>part<sp/>of<sp/>the<sp/>string,<sp/>get<sp/>a<sp/>result,<sp/>then<sp/>the<sp/>other<sp/>part</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>m<sp/>=<sp/>MurmurHash3(&apos;this<sp/>is<sp/>a&apos;);</highlight></codeline>
+<codeline><highlight class="normal">m.result();</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>0xbfc4f834</highlight></codeline>
+<codeline><highlight class="normal">m.hash(&apos;<sp/>test<sp/>string&apos;).result();</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>0x70529328<sp/>(same<sp/>as<sp/>above)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">---</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>MurmurHash3.prototype.reset<sp/>([seed])</highlight></codeline>
+<codeline><highlight class="normal">Reset<sp/>the<sp/>state<sp/>object<sp/>for<sp/>reuse,<sp/>optionally<sp/>using<sp/>the<sp/>given<sp/>_seed_<sp/>(defaults<sp/>to<sp/>0<sp/>like<sp/>the<sp/>constructor).<sp/>Returns<sp/>`this`<sp/>so<sp/>calls<sp/>can<sp/>be<sp/>chained.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">---</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">License<sp/>(MIT)</highlight></codeline>
+<codeline><highlight class="normal">-------------</highlight></codeline>
+<codeline><highlight class="normal">Copyright<sp/>(c)<sp/>2013<sp/>Gary<sp/>Court,<sp/>Jens<sp/>Taylor</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Permission<sp/>is<sp/>hereby<sp/>granted,<sp/>free<sp/>of<sp/>charge,<sp/>to<sp/>any<sp/>person<sp/>obtaining<sp/>a<sp/>copy<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">this<sp/>software<sp/>and<sp/>associated<sp/>documentation<sp/>files<sp/>(the<sp/>&quot;Software&quot;),<sp/>to<sp/>deal<sp/>in</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>Software<sp/>without<sp/>restriction,<sp/>including<sp/>without<sp/>limitation<sp/>the<sp/>rights<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">use,<sp/>copy,<sp/>modify,<sp/>merge,<sp/>publish,<sp/>distribute,<sp/>sublicense,<sp/>and/or<sp/>sell<sp/>copies<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>Software,<sp/>and<sp/>to<sp/>permit<sp/>persons<sp/>to<sp/>whom<sp/>the<sp/>Software<sp/>is<sp/>furnished<sp/>to<sp/>do<sp/>so,</highlight></codeline>
+<codeline><highlight class="normal">subject<sp/>to<sp/>the<sp/>following<sp/>conditions:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>above<sp/>copyright<sp/>notice<sp/>and<sp/>this<sp/>permission<sp/>notice<sp/>shall<sp/>be<sp/>included<sp/>in<sp/>all</highlight></codeline>
+<codeline><highlight class="normal">copies<sp/>or<sp/>substantial<sp/>portions<sp/>of<sp/>the<sp/>Software.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">THE<sp/>SOFTWARE<sp/>IS<sp/>PROVIDED<sp/>&quot;AS<sp/>IS&quot;,<sp/>WITHOUT<sp/>WARRANTY<sp/>OF<sp/>ANY<sp/>KIND,<sp/>EXPRESS<sp/>OR</highlight></codeline>
+<codeline><highlight class="normal">IMPLIED,<sp/>INCLUDING<sp/>BUT<sp/>NOT<sp/>LIMITED<sp/>TO<sp/>THE<sp/>WARRANTIES<sp/>OF<sp/>MERCHANTABILITY,<sp/>FITNESS</highlight></codeline>
+<codeline><highlight class="normal">FOR<sp/>A<sp/>PARTICULAR<sp/>PURPOSE<sp/>AND<sp/>NONINFRINGEMENT.<sp/>IN<sp/>NO<sp/>EVENT<sp/>SHALL<sp/>THE<sp/>AUTHORS<sp/>OR</highlight></codeline>
+<codeline><highlight class="normal">COPYRIGHT<sp/>HOLDERS<sp/>BE<sp/>LIABLE<sp/>FOR<sp/>ANY<sp/>CLAIM,<sp/>DAMAGES<sp/>OR<sp/>OTHER<sp/>LIABILITY,<sp/>WHETHER</highlight></codeline>
+<codeline><highlight class="normal">IN<sp/>AN<sp/>ACTION<sp/>OF<sp/>CONTRACT,<sp/>TORT<sp/>OR<sp/>OTHERWISE,<sp/>ARISING<sp/>FROM,<sp/>OUT<sp/>OF<sp/>OR<sp/>IN</highlight></codeline>
+<codeline><highlight class="normal">CONNECTION<sp/>WITH<sp/>THE<sp/>SOFTWARE<sp/>OR<sp/>THE<sp/>USE<sp/>OR<sp/>OTHER<sp/>DEALINGS<sp/>IN<sp/>THE<sp/>SOFTWARE.</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/imurmurhash/README.md"/>
+  </compounddef>
+</doxygen>

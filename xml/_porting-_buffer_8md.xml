@@ -1,0 +1,281 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="_porting-_buffer_8md" kind="file" language="Markdown">
+    <compoundname>Porting-Buffer.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>Porting<sp/>to<sp/>the<sp/>Buffer.from/Buffer.alloc<sp/>API</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>id=&quot;overview&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">##<sp/>Overview</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>[Variant<sp/>1:<sp/>Drop<sp/>support<sp/>for<sp/>Node.js<sp/>≤<sp/>4.4.x<sp/>and<sp/>5.0.0<sp/>—<sp/>5.9.x.](#variant-1)<sp/>(*recommended*)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[Variant<sp/>2:<sp/>Use<sp/>a<sp/>polyfill](#variant-2)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[Variant<sp/>3:<sp/>manual<sp/>detection,<sp/>with<sp/>safeguards](#variant-3)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Finding<sp/>problematic<sp/>bits<sp/>of<sp/>code<sp/>using<sp/>grep</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Just<sp/>run<sp/>`grep<sp/>-nrE<sp/>&apos;[^a-zA-Z](Slow)?Buffer\s*\(&apos;<sp/>--exclude-dir<sp/>node_modules`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It<sp/>will<sp/>find<sp/>all<sp/>the<sp/>potentially<sp/>unsafe<sp/>places<sp/>in<sp/>your<sp/>own<sp/>code<sp/>(with<sp/>some<sp/>considerably<sp/>unlikely</highlight></codeline>
+<codeline><highlight class="normal">exceptions).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Finding<sp/>problematic<sp/>bits<sp/>of<sp/>code<sp/>using<sp/>Node.js<sp/>8</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you’re<sp/>using<sp/>Node.js<sp/>≥<sp/>8.0.0<sp/>(which<sp/>is<sp/>recommended),<sp/>Node.js<sp/>exposes<sp/>multiple<sp/>options<sp/>that<sp/>help<sp/>with<sp/>finding<sp/>the<sp/>relevant<sp/>pieces<sp/>of<sp/>code:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>`--trace-warnings`<sp/>will<sp/>make<sp/>Node.js<sp/>show<sp/>a<sp/>stack<sp/>trace<sp/>for<sp/>this<sp/>warning<sp/>and<sp/>other<sp/>warnings<sp/>that<sp/>are<sp/>printed<sp/>by<sp/>Node.js.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`--trace-deprecation`<sp/>does<sp/>the<sp/>same<sp/>thing,<sp/>but<sp/>only<sp/>for<sp/>deprecation<sp/>warnings.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`--pending-deprecation`<sp/>will<sp/>show<sp/>more<sp/>types<sp/>of<sp/>deprecation<sp/>warnings.<sp/>In<sp/>particular,<sp/>it<sp/>will<sp/>show<sp/>the<sp/>`Buffer()`<sp/>deprecation<sp/>warning,<sp/>even<sp/>on<sp/>Node.js<sp/>8.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>set<sp/>these<sp/>flags<sp/>using<sp/>an<sp/>environment<sp/>variable:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```console</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>export<sp/>NODE_OPTIONS=&apos;--trace-warnings<sp/>--pending-deprecation&apos;</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>cat<sp/>example.js</highlight></codeline>
+<codeline><highlight class="normal">&apos;use<sp/>strict&apos;;</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>foo<sp/>=<sp/>new<sp/>Buffer(&apos;foo&apos;);</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>node<sp/>example.js</highlight></codeline>
+<codeline><highlight class="normal">(node:7147)<sp/>[DEP0005]<sp/>DeprecationWarning:<sp/>The<sp/>Buffer()<sp/>and<sp/>new<sp/>Buffer()<sp/>constructors<sp/>are<sp/>not<sp/>recommended<sp/>for<sp/>use<sp/>due<sp/>to<sp/>security<sp/>and<sp/>usability<sp/>concerns.<sp/>Please<sp/>use<sp/>the<sp/>new<sp/>Buffer.alloc(),<sp/>Buffer.allocUnsafe(),<sp/>or<sp/>Buffer.from()<sp/>construction<sp/>methods<sp/>instead.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>showFlaggedDeprecation<sp/>(buffer.js:127:13)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>new<sp/>Buffer<sp/>(buffer.js:148:3)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>Object.&lt;anonymous&gt;<sp/>(/path/to/example.js:2:13)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>[...<sp/>more<sp/>stack<sp/>trace<sp/>lines<sp/>...]</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Finding<sp/>problematic<sp/>bits<sp/>of<sp/>code<sp/>using<sp/>linters</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Eslint<sp/>rules<sp/>[no-buffer-constructor](https://eslint.org/docs/rules/no-buffer-constructor)</highlight></codeline>
+<codeline><highlight class="normal">or</highlight></codeline>
+<codeline><highlight class="normal">[node/no-deprecated-api](https://github.com/mysticatea/eslint-plugin-node/blob/master/docs/rules/no-deprecated-api.md)</highlight></codeline>
+<codeline><highlight class="normal">also<sp/>find<sp/>calls<sp/>to<sp/>deprecated<sp/>`Buffer()`<sp/>API.<sp/>Those<sp/>rules<sp/>are<sp/>included<sp/>in<sp/>some<sp/>pre-sets.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">There<sp/>is<sp/>a<sp/>drawback,<sp/>though,<sp/>that<sp/>it<sp/>doesn&apos;t<sp/>always</highlight></codeline>
+<codeline><highlight class="normal">[work<sp/>correctly](https://github.com/chalker/safer-buffer#why-not-safe-buffer)<sp/>when<sp/>`Buffer`<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">overriden<sp/>e.g.<sp/>with<sp/>a<sp/>polyfill,<sp/>so<sp/>recommended<sp/>is<sp/>a<sp/>combination<sp/>of<sp/>this<sp/>and<sp/>some<sp/>other<sp/>method</highlight></codeline>
+<codeline><highlight class="normal">described<sp/>above.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>id=&quot;variant-1&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">##<sp/>Variant<sp/>1:<sp/>Drop<sp/>support<sp/>for<sp/>Node.js<sp/>≤<sp/>4.4.x<sp/>and<sp/>5.0.0<sp/>—<sp/>5.9.x.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>the<sp/>recommended<sp/>solution<sp/>nowadays<sp/>that<sp/>would<sp/>imply<sp/>only<sp/>minimal<sp/>overhead.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>Node.js<sp/>5.x<sp/>release<sp/>line<sp/>has<sp/>been<sp/>unsupported<sp/>since<sp/>July<sp/>2016,<sp/>and<sp/>the<sp/>Node.js<sp/>4.x<sp/>release<sp/>line<sp/>reaches<sp/>its<sp/>End<sp/>of<sp/>Life<sp/>in<sp/>April<sp/>2018<sp/>(→<sp/>[Schedule](https://github.com/nodejs/Release#release-schedule)).<sp/>This<sp/>means<sp/>that<sp/>these<sp/>versions<sp/>of<sp/>Node.js<sp/>will<sp/>*not*<sp/>receive<sp/>any<sp/>updates,<sp/>even<sp/>in<sp/>case<sp/>of<sp/>security<sp/>issues,<sp/>so<sp/>using<sp/>these<sp/>release<sp/>lines<sp/>should<sp/>be<sp/>avoided,<sp/>if<sp/>at<sp/>all<sp/>possible.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">What<sp/>you<sp/>would<sp/>do<sp/>in<sp/>this<sp/>case<sp/>is<sp/>to<sp/>convert<sp/>all<sp/>`new<sp/>Buffer()`<sp/>or<sp/>`Buffer()`<sp/>calls<sp/>to<sp/>use<sp/>`Buffer.alloc()`<sp/>or<sp/>`Buffer.from()`,<sp/>in<sp/>the<sp/>following<sp/>way:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>For<sp/>`new<sp/>Buffer(number)`,<sp/>replace<sp/>it<sp/>with<sp/>`Buffer.alloc(number)`.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>For<sp/>`new<sp/>Buffer(string)`<sp/>(or<sp/>`new<sp/>Buffer(string,<sp/>encoding)`),<sp/>replace<sp/>it<sp/>with<sp/>`Buffer.from(string)`<sp/>(or<sp/>`Buffer.from(string,<sp/>encoding)`).</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>For<sp/>all<sp/>other<sp/>combinations<sp/>of<sp/>arguments<sp/>(these<sp/>are<sp/>much<sp/>rarer),<sp/>also<sp/>replace<sp/>`new<sp/>Buffer(...arguments)`<sp/>with<sp/>`Buffer.from(...arguments)`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note<sp/>that<sp/>`Buffer.alloc()`<sp/>is<sp/>also<sp/>_faster_<sp/>on<sp/>the<sp/>current<sp/>Node.js<sp/>versions<sp/>than</highlight></codeline>
+<codeline><highlight class="normal">`new<sp/>Buffer(size).fill(0)`,<sp/>which<sp/>is<sp/>what<sp/>you<sp/>would<sp/>otherwise<sp/>need<sp/>to<sp/>ensure<sp/>zero-filling.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Enabling<sp/>eslint<sp/>rule<sp/>[no-buffer-constructor](https://eslint.org/docs/rules/no-buffer-constructor)</highlight></codeline>
+<codeline><highlight class="normal">or</highlight></codeline>
+<codeline><highlight class="normal">[node/no-deprecated-api](https://github.com/mysticatea/eslint-plugin-node/blob/master/docs/rules/no-deprecated-api.md)</highlight></codeline>
+<codeline><highlight class="normal">is<sp/>recommended<sp/>to<sp/>avoid<sp/>accidential<sp/>unsafe<sp/>Buffer<sp/>API<sp/>usage.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">There<sp/>is<sp/>also<sp/>a<sp/>[JSCodeshift<sp/>codemod](https://github.com/joyeecheung/node-dep-codemod#dep005)</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>automatically<sp/>migrating<sp/>Buffer<sp/>constructors<sp/>to<sp/>`Buffer.alloc()`<sp/>or<sp/>`Buffer.from()`.</highlight></codeline>
+<codeline><highlight class="normal">Note<sp/>that<sp/>it<sp/>currently<sp/>only<sp/>works<sp/>with<sp/>cases<sp/>where<sp/>the<sp/>arguments<sp/>are<sp/>literals<sp/>or<sp/>where<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">constructor<sp/>is<sp/>invoked<sp/>with<sp/>two<sp/>arguments.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">_If<sp/>you<sp/>currently<sp/>support<sp/>those<sp/>older<sp/>Node.js<sp/>versions<sp/>and<sp/>dropping<sp/>them<sp/>would<sp/>be<sp/>a<sp/>semver-major<sp/>change</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>you,<sp/>or<sp/>if<sp/>you<sp/>support<sp/>older<sp/>branches<sp/>of<sp/>your<sp/>packages,<sp/>consider<sp/>using<sp/>[Variant<sp/>2](#variant-2)</highlight></codeline>
+<codeline><highlight class="normal">or<sp/>[Variant<sp/>3](#variant-3)<sp/>on<sp/>older<sp/>branches,<sp/>so<sp/>people<sp/>using<sp/>those<sp/>older<sp/>branches<sp/>will<sp/>also<sp/>receive</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>fix.<sp/>That<sp/>way,<sp/>you<sp/>will<sp/>eradicate<sp/>potential<sp/>issues<sp/>caused<sp/>by<sp/>unguarded<sp/>Buffer<sp/>API<sp/>usage<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">your<sp/>users<sp/>will<sp/>not<sp/>observe<sp/>a<sp/>runtime<sp/>deprecation<sp/>warning<sp/>when<sp/>running<sp/>your<sp/>code<sp/>on<sp/>Node.js<sp/>10._</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>id=&quot;variant-2&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">##<sp/>Variant<sp/>2:<sp/>Use<sp/>a<sp/>polyfill</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Utilize<sp/>[safer-buffer](https://www.npmjs.com/package/safer-buffer)<sp/>as<sp/>a<sp/>polyfill<sp/>to<sp/>support<sp/>older</highlight></codeline>
+<codeline><highlight class="normal">Node.js<sp/>versions.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>would<sp/>take<sp/>exacly<sp/>the<sp/>same<sp/>steps<sp/>as<sp/>in<sp/>[Variant<sp/>1](#variant-1),<sp/>but<sp/>with<sp/>a<sp/>polyfill</highlight></codeline>
+<codeline><highlight class="normal">`const<sp/>Buffer<sp/>=<sp/>require(&apos;safer-buffer&apos;).Buffer`<sp/>in<sp/>all<sp/>files<sp/>where<sp/>you<sp/>use<sp/>the<sp/>new<sp/>`Buffer`<sp/>api.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Make<sp/>sure<sp/>that<sp/>you<sp/>do<sp/>not<sp/>use<sp/>old<sp/>`new<sp/>Buffer`<sp/>API<sp/>—<sp/>in<sp/>any<sp/>files<sp/>where<sp/>the<sp/>line<sp/>above<sp/>is<sp/>added,</highlight></codeline>
+<codeline><highlight class="normal">using<sp/>old<sp/>`new<sp/>Buffer()`<sp/>API<sp/>will<sp/>_throw_.<sp/>It<sp/>will<sp/>be<sp/>easy<sp/>to<sp/>notice<sp/>that<sp/>in<sp/>CI,<sp/>though.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Alternatively,<sp/>you<sp/>could<sp/>use<sp/>[buffer-from](https://www.npmjs.com/package/buffer-from)<sp/>and/or</highlight></codeline>
+<codeline><highlight class="normal">[buffer-alloc](https://www.npmjs.com/package/buffer-alloc)<sp/>[ponyfills](https://ponyfill.com/)<sp/>—</highlight></codeline>
+<codeline><highlight class="normal">those<sp/>are<sp/>great,<sp/>the<sp/>only<sp/>downsides<sp/>being<sp/>4<sp/>deps<sp/>in<sp/>the<sp/>tree<sp/>and<sp/>slightly<sp/>more<sp/>code<sp/>changes<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">migrate<sp/>off<sp/>them<sp/>(as<sp/>you<sp/>would<sp/>be<sp/>using<sp/>e.g.<sp/>`Buffer.from`<sp/>under<sp/>a<sp/>different<sp/>name).<sp/>If<sp/>you<sp/>need<sp/>only</highlight></codeline>
+<codeline><highlight class="normal">`Buffer.from`<sp/>polyfilled<sp/>—<sp/>`buffer-from`<sp/>alone<sp/>which<sp/>comes<sp/>with<sp/>no<sp/>extra<sp/>dependencies.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">_Alternatively,<sp/>you<sp/>could<sp/>use<sp/>[safe-buffer](https://www.npmjs.com/package/safe-buffer)<sp/>—<sp/>it<sp/>also</highlight></codeline>
+<codeline><highlight class="normal">provides<sp/>a<sp/>polyfill,<sp/>but<sp/>takes<sp/>a<sp/>different<sp/>approach<sp/>which<sp/>has</highlight></codeline>
+<codeline><highlight class="normal">[it&apos;s<sp/>drawbacks](https://github.com/chalker/safer-buffer#why-not-safe-buffer).<sp/>It<sp/>will<sp/>allow<sp/>you</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>also<sp/>use<sp/>the<sp/>older<sp/>`new<sp/>Buffer()`<sp/>API<sp/>in<sp/>your<sp/>code,<sp/>though<sp/>—<sp/>but<sp/>that&apos;s<sp/>arguably<sp/>a<sp/>benefit,<sp/>as</highlight></codeline>
+<codeline><highlight class="normal">it<sp/>is<sp/>problematic,<sp/>can<sp/>cause<sp/>issues<sp/>in<sp/>your<sp/>code,<sp/>and<sp/>will<sp/>start<sp/>emitting<sp/>runtime<sp/>deprecation</highlight></codeline>
+<codeline><highlight class="normal">warnings<sp/>starting<sp/>with<sp/>Node.js<sp/>10._</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note<sp/>that<sp/>in<sp/>either<sp/>case,<sp/>it<sp/>is<sp/>important<sp/>that<sp/>you<sp/>also<sp/>remove<sp/>all<sp/>calls<sp/>to<sp/>the<sp/>old<sp/>Buffer</highlight></codeline>
+<codeline><highlight class="normal">API<sp/>manually<sp/>—<sp/>just<sp/>throwing<sp/>in<sp/>`safe-buffer`<sp/>doesn&apos;t<sp/>fix<sp/>the<sp/>problem<sp/>by<sp/>itself,<sp/>it<sp/>just<sp/>provides</highlight></codeline>
+<codeline><highlight class="normal">a<sp/>polyfill<sp/>for<sp/>the<sp/>new<sp/>API.<sp/>I<sp/>have<sp/>seen<sp/>people<sp/>doing<sp/>that<sp/>mistake.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Enabling<sp/>eslint<sp/>rule<sp/>[no-buffer-constructor](https://eslint.org/docs/rules/no-buffer-constructor)</highlight></codeline>
+<codeline><highlight class="normal">or</highlight></codeline>
+<codeline><highlight class="normal">[node/no-deprecated-api](https://github.com/mysticatea/eslint-plugin-node/blob/master/docs/rules/no-deprecated-api.md)</highlight></codeline>
+<codeline><highlight class="normal">is<sp/>recommended.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">_Don&apos;t<sp/>forget<sp/>to<sp/>drop<sp/>the<sp/>polyfill<sp/>usage<sp/>once<sp/>you<sp/>drop<sp/>support<sp/>for<sp/>Node.js<sp/>&lt;<sp/>4.5.0._</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>id=&quot;variant-3&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">##<sp/>Variant<sp/>3<sp/>—<sp/>manual<sp/>detection,<sp/>with<sp/>safeguards</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>useful<sp/>if<sp/>you<sp/>create<sp/>Buffer<sp/>instances<sp/>in<sp/>only<sp/>a<sp/>few<sp/>places<sp/>(e.g.<sp/>one),<sp/>or<sp/>you<sp/>have<sp/>your<sp/>own</highlight></codeline>
+<codeline><highlight class="normal">wrapper<sp/>around<sp/>them.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Buffer(0)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>special<sp/>case<sp/>for<sp/>creating<sp/>empty<sp/>buffers<sp/>can<sp/>be<sp/>safely<sp/>replaced<sp/>with<sp/>`Buffer.concat([])`,<sp/>which</highlight></codeline>
+<codeline><highlight class="normal">returns<sp/>the<sp/>same<sp/>result<sp/>all<sp/>the<sp/>way<sp/>down<sp/>to<sp/>Node.js<sp/>0.8.x.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Buffer(notNumber)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Before:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>buf<sp/>=<sp/>new<sp/>Buffer(notNumber,<sp/>encoding);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">After:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>buf;</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>(Buffer.from<sp/>&amp;&amp;<sp/>Buffer.from<sp/>!==<sp/>Uint8Array.from)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>buf<sp/>=<sp/>Buffer.from(notNumber,<sp/>encoding);</highlight></codeline>
+<codeline><highlight class="normal">}<sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(typeof<sp/>notNumber<sp/>===<sp/>&apos;number&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>throw<sp/>new<sp/>Error(&apos;The<sp/>&quot;size&quot;<sp/>argument<sp/>must<sp/>be<sp/>of<sp/>type<sp/>number.&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>buf<sp/>=<sp/>new<sp/>Buffer(notNumber,<sp/>encoding);</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`encoding`<sp/>is<sp/>optional.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note<sp/>that<sp/>the<sp/>`typeof<sp/>notNumber`<sp/>before<sp/>`new<sp/>Buffer`<sp/>is<sp/>required<sp/>(for<sp/>cases<sp/>when<sp/>`notNumber`<sp/>argument<sp/>is<sp/>not</highlight></codeline>
+<codeline><highlight class="normal">hard-coded)<sp/>and<sp/>_is<sp/>not<sp/>caused<sp/>by<sp/>the<sp/>deprecation<sp/>of<sp/>Buffer<sp/>constructor_<sp/>—<sp/>it&apos;s<sp/>exactly<sp/>_why_<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">Buffer<sp/>constructor<sp/>is<sp/>deprecated.<sp/>Ecosystem<sp/>packages<sp/>lacking<sp/>this<sp/>type-check<sp/>caused<sp/>numereous</highlight></codeline>
+<codeline><highlight class="normal">security<sp/>issues<sp/>—<sp/>situations<sp/>when<sp/>unsanitized<sp/>user<sp/>input<sp/>could<sp/>end<sp/>up<sp/>in<sp/>the<sp/>`Buffer(arg)`<sp/>create</highlight></codeline>
+<codeline><highlight class="normal">problems<sp/>ranging<sp/>from<sp/>DoS<sp/>to<sp/>leaking<sp/>sensitive<sp/>information<sp/>to<sp/>the<sp/>attacker<sp/>from<sp/>the<sp/>process<sp/>memory.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>`notNumber`<sp/>argument<sp/>is<sp/>hardcoded<sp/>(e.g.<sp/>literal<sp/>`&quot;abc&quot;`<sp/>or<sp/>`[0,1,2]`),<sp/>the<sp/>`typeof`<sp/>check<sp/>can</highlight></codeline>
+<codeline><highlight class="normal">be<sp/>omitted.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Also<sp/>note<sp/>that<sp/>using<sp/>TypeScript<sp/>does<sp/>not<sp/>fix<sp/>this<sp/>problem<sp/>for<sp/>you<sp/>—<sp/>when<sp/>libs<sp/>written<sp/>in</highlight></codeline>
+<codeline><highlight class="normal">`TypeScript`<sp/>are<sp/>used<sp/>from<sp/>JS,<sp/>or<sp/>when<sp/>user<sp/>input<sp/>ends<sp/>up<sp/>there<sp/>—<sp/>it<sp/>behaves<sp/>exactly<sp/>as<sp/>pure<sp/>JS,<sp/>as</highlight></codeline>
+<codeline><highlight class="normal">all<sp/>type<sp/>checks<sp/>are<sp/>translation-time<sp/>only<sp/>and<sp/>are<sp/>not<sp/>present<sp/>in<sp/>the<sp/>actual<sp/>JS<sp/>code<sp/>which<sp/>TS</highlight></codeline>
+<codeline><highlight class="normal">compiles<sp/>to.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Buffer(number)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>Node.js<sp/>0.10.x<sp/>(and<sp/>below)<sp/>support:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>buf;</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>(Buffer.alloc)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>buf<sp/>=<sp/>Buffer.alloc(number);</highlight></codeline>
+<codeline><highlight class="normal">}<sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>buf<sp/>=<sp/>new<sp/>Buffer(number);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>buf.fill(0);</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Otherwise<sp/>(Node.js<sp/>≥<sp/>0.12.x):</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buf<sp/>=<sp/>Buffer.alloc<sp/>?<sp/>Buffer.alloc(number)<sp/>:<sp/>new<sp/>Buffer(number).fill(0);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Regarding<sp/>Buffer.allocUnsafe</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Be<sp/>extra<sp/>cautious<sp/>when<sp/>using<sp/>`Buffer.allocUnsafe`:</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>Don&apos;t<sp/>use<sp/>it<sp/>if<sp/>you<sp/>don&apos;t<sp/>have<sp/>a<sp/>good<sp/>reason<sp/>to</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>*<sp/>e.g.<sp/>you<sp/>probably<sp/>won&apos;t<sp/>ever<sp/>see<sp/>a<sp/>performance<sp/>difference<sp/>for<sp/>small<sp/>buffers,<sp/>in<sp/>fact,<sp/>those</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>might<sp/>be<sp/>even<sp/>faster<sp/>with<sp/>`Buffer.alloc()`,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>*<sp/>if<sp/>your<sp/>code<sp/>is<sp/>not<sp/>in<sp/>the<sp/>hot<sp/>code<sp/>path<sp/>—<sp/>you<sp/>also<sp/>probably<sp/>won&apos;t<sp/>notice<sp/>a<sp/>difference,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>*<sp/>keep<sp/>in<sp/>mind<sp/>that<sp/>zero-filling<sp/>minimizes<sp/>the<sp/>potential<sp/>risks.</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>If<sp/>you<sp/>use<sp/>it,<sp/>make<sp/>sure<sp/>that<sp/>you<sp/>never<sp/>return<sp/>the<sp/>buffer<sp/>in<sp/>a<sp/>partially-filled<sp/>state,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>*<sp/>if<sp/>you<sp/>are<sp/>writing<sp/>to<sp/>it<sp/>sequentially<sp/>—<sp/>always<sp/>truncate<sp/>it<sp/>to<sp/>the<sp/>actuall<sp/>written<sp/>length</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Errors<sp/>in<sp/>handling<sp/>buffers<sp/>allocated<sp/>with<sp/>`Buffer.allocUnsafe`<sp/>could<sp/>result<sp/>in<sp/>various<sp/>issues,</highlight></codeline>
+<codeline><highlight class="normal">ranged<sp/>from<sp/>undefined<sp/>behaviour<sp/>of<sp/>your<sp/>code<sp/>to<sp/>sensitive<sp/>data<sp/>(user<sp/>input,<sp/>passwords,<sp/>certs)</highlight></codeline>
+<codeline><highlight class="normal">leaking<sp/>to<sp/>the<sp/>remote<sp/>attacker.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">_Note<sp/>that<sp/>the<sp/>same<sp/>applies<sp/>to<sp/>`new<sp/>Buffer`<sp/>usage<sp/>without<sp/>zero-filling,<sp/>depending<sp/>on<sp/>the<sp/>Node.js</highlight></codeline>
+<codeline><highlight class="normal">version<sp/>(and<sp/>lacking<sp/>type<sp/>checks<sp/>also<sp/>adds<sp/>DoS<sp/>to<sp/>the<sp/>list<sp/>of<sp/>potential<sp/>problems)._</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>id=&quot;faq&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">##<sp/>FAQ</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>id=&quot;design-flaws&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>What<sp/>is<sp/>wrong<sp/>with<sp/>the<sp/>`Buffer`<sp/>constructor?</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`Buffer`<sp/>constructor<sp/>could<sp/>be<sp/>used<sp/>to<sp/>create<sp/>a<sp/>buffer<sp/>in<sp/>many<sp/>different<sp/>ways:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>`new<sp/>Buffer(42)`<sp/>creates<sp/>a<sp/>`Buffer`<sp/>of<sp/>42<sp/>bytes.<sp/>Before<sp/>Node.js<sp/>8,<sp/>this<sp/>buffer<sp/>contained</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*arbitrary<sp/>memory*<sp/>for<sp/>performance<sp/>reasons,<sp/>which<sp/>could<sp/>include<sp/>anything<sp/>ranging<sp/>from</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>program<sp/>source<sp/>code<sp/>to<sp/>passwords<sp/>and<sp/>encryption<sp/>keys.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`new<sp/>Buffer(&apos;abc&apos;)`<sp/>creates<sp/>a<sp/>`Buffer`<sp/>that<sp/>contains<sp/>the<sp/>UTF-8-encoded<sp/>version<sp/>of</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>the<sp/>string<sp/>`&apos;abc&apos;`.<sp/>A<sp/>second<sp/>argument<sp/>could<sp/>specify<sp/>another<sp/>encoding:<sp/>For<sp/>example,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`new<sp/>Buffer(string,<sp/>&apos;base64&apos;)`<sp/>could<sp/>be<sp/>used<sp/>to<sp/>convert<sp/>a<sp/>Base64<sp/>string<sp/>into<sp/>the<sp/>original</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>sequence<sp/>of<sp/>bytes<sp/>that<sp/>it<sp/>represents.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>There<sp/>are<sp/>several<sp/>other<sp/>combinations<sp/>of<sp/>arguments.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>meant<sp/>that,<sp/>in<sp/>code<sp/>like<sp/>`var<sp/>buffer<sp/>=<sp/>new<sp/>Buffer(foo);`,<sp/>*it<sp/>is<sp/>not<sp/>possible<sp/>to<sp/>tell</highlight></codeline>
+<codeline><highlight class="normal">what<sp/>exactly<sp/>the<sp/>contents<sp/>of<sp/>the<sp/>generated<sp/>buffer<sp/>are*<sp/>without<sp/>knowing<sp/>the<sp/>type<sp/>of<sp/>`foo`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Sometimes,<sp/>the<sp/>value<sp/>of<sp/>`foo`<sp/>comes<sp/>from<sp/>an<sp/>external<sp/>source.<sp/>For<sp/>example,<sp/>this<sp/>function</highlight></codeline>
+<codeline><highlight class="normal">could<sp/>be<sp/>exposed<sp/>as<sp/>a<sp/>service<sp/>on<sp/>a<sp/>web<sp/>server,<sp/>converting<sp/>a<sp/>UTF-8<sp/>string<sp/>into<sp/>its<sp/>Base64<sp/>form:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">function<sp/>stringToBase64(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>The<sp/>request<sp/>body<sp/>should<sp/>have<sp/>the<sp/>format<sp/>of<sp/>`{<sp/>string:<sp/>&apos;foobar&apos;<sp/>}`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>const<sp/>rawBytes<sp/>=<sp/>new<sp/>Buffer(req.body.string)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>const<sp/>encoded<sp/>=<sp/>rawBytes.toString(&apos;base64&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.end({<sp/>encoded:<sp/>encoded<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note<sp/>that<sp/>this<sp/>code<sp/>does<sp/>*not*<sp/>validate<sp/>the<sp/>type<sp/>of<sp/>`req.body.string`:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>`req.body.string`<sp/>is<sp/>expected<sp/>to<sp/>be<sp/>a<sp/>string.<sp/>If<sp/>this<sp/>is<sp/>the<sp/>case,<sp/>all<sp/>goes<sp/>well.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`req.body.string`<sp/>is<sp/>controlled<sp/>by<sp/>the<sp/>client<sp/>that<sp/>sends<sp/>the<sp/>request.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>If<sp/>`req.body.string`<sp/>is<sp/>the<sp/>*number*<sp/>`50`,<sp/>the<sp/>`rawBytes`<sp/>would<sp/>be<sp/>50<sp/>bytes:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>Before<sp/>Node.js<sp/>8,<sp/>the<sp/>content<sp/>would<sp/>be<sp/>uninitialized</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>After<sp/>Node.js<sp/>8,<sp/>the<sp/>content<sp/>would<sp/>be<sp/>`50`<sp/>bytes<sp/>with<sp/>the<sp/>value<sp/>`0`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Because<sp/>of<sp/>the<sp/>missing<sp/>type<sp/>check,<sp/>an<sp/>attacker<sp/>could<sp/>intentionally<sp/>send<sp/>a<sp/>number</highlight></codeline>
+<codeline><highlight class="normal">as<sp/>part<sp/>of<sp/>the<sp/>request.<sp/>Using<sp/>this,<sp/>they<sp/>can<sp/>either:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>Read<sp/>uninitialized<sp/>memory.<sp/>This<sp/>**will**<sp/>leak<sp/>passwords,<sp/>encryption<sp/>keys<sp/>and<sp/>other</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>kinds<sp/>of<sp/>sensitive<sp/>information.<sp/>(Information<sp/>leak)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Force<sp/>the<sp/>program<sp/>to<sp/>allocate<sp/>a<sp/>large<sp/>amount<sp/>of<sp/>memory.<sp/>For<sp/>example,<sp/>when<sp/>specifying</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`500000000`<sp/>as<sp/>the<sp/>input<sp/>value,<sp/>each<sp/>request<sp/>will<sp/>allocate<sp/>500MB<sp/>of<sp/>memory.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>This<sp/>can<sp/>be<sp/>used<sp/>to<sp/>either<sp/>exhaust<sp/>the<sp/>memory<sp/>available<sp/>of<sp/>a<sp/>program<sp/>completely</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>and<sp/>make<sp/>it<sp/>crash,<sp/>or<sp/>slow<sp/>it<sp/>down<sp/>significantly.<sp/>(Denial<sp/>of<sp/>Service)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Both<sp/>of<sp/>these<sp/>scenarios<sp/>are<sp/>considered<sp/>serious<sp/>security<sp/>issues<sp/>in<sp/>a<sp/>real-world</highlight></codeline>
+<codeline><highlight class="normal">web<sp/>server<sp/>context.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">when<sp/>using<sp/>`Buffer.from(req.body.string)`<sp/>instead,<sp/>passing<sp/>a<sp/>number<sp/>will<sp/>always</highlight></codeline>
+<codeline><highlight class="normal">throw<sp/>an<sp/>exception<sp/>instead,<sp/>giving<sp/>a<sp/>controlled<sp/>behaviour<sp/>that<sp/>can<sp/>always<sp/>be</highlight></codeline>
+<codeline><highlight class="normal">handled<sp/>by<sp/>the<sp/>program.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>id=&quot;ecosystem-usage&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>The<sp/>`Buffer()`<sp/>constructor<sp/>has<sp/>been<sp/>deprecated<sp/>for<sp/>a<sp/>while.<sp/>Is<sp/>this<sp/>really<sp/>an<sp/>issue?</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Surveys<sp/>of<sp/>code<sp/>in<sp/>the<sp/>`npm`<sp/>ecosystem<sp/>have<sp/>shown<sp/>that<sp/>the<sp/>`Buffer()`<sp/>constructor<sp/>is<sp/>still</highlight></codeline>
+<codeline><highlight class="normal">widely<sp/>used.<sp/>This<sp/>includes<sp/>new<sp/>code,<sp/>and<sp/>overall<sp/>usage<sp/>of<sp/>such<sp/>code<sp/>has<sp/>actually<sp/>been</highlight></codeline>
+<codeline><highlight class="normal">*increasing*.</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/safer-buffer/Porting-Buffer.md"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,569 @@
+.TH "gyp.generator.cmake" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gyp.generator.cmake
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBCMakeNamer\fP"
+.br
+.ti -1c
+.RI "class \fBCMakeTargetType\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBRemovePrefix\fP (a, prefix)"
+.br
+.ti -1c
+.RI "\fBCalculateVariables\fP (default_variables, params)"
+.br
+.ti -1c
+.RI "\fBCompilable\fP (filename)"
+.br
+.ti -1c
+.RI "\fBLinkable\fP (filename)"
+.br
+.ti -1c
+.RI "\fBNormjoinPathForceCMakeSource\fP (base_path, rel_path)"
+.br
+.ti -1c
+.RI "\fBNormjoinPath\fP (base_path, rel_path)"
+.br
+.ti -1c
+.RI "\fBCMakeStringEscape\fP (a)"
+.br
+.ti -1c
+.RI "\fBSetFileProperty\fP (output, source_name, property_name, values, sep)"
+.br
+.ti -1c
+.RI "\fBSetFilesProperty\fP (output, variable, property_name, values, sep)"
+.br
+.ti -1c
+.RI "\fBSetTargetProperty\fP (output, target_name, property_name, values, sep='')"
+.br
+.ti -1c
+.RI "\fBSetVariable\fP (output, variable_name, value)"
+.br
+.ti -1c
+.RI "\fBSetVariableList\fP (output, variable_name, values)"
+.br
+.ti -1c
+.RI "\fBUnsetVariable\fP (output, variable_name)"
+.br
+.ti -1c
+.RI "\fBWriteVariable\fP (output, variable_name, prepend=None)"
+.br
+.ti -1c
+.RI "\fBStringToCMakeTargetName\fP (a)"
+.br
+.ti -1c
+.RI "\fBWriteActions\fP (target_name, actions, extra_sources, extra_deps, path_to_gyp, output)"
+.br
+.ti -1c
+.RI "\fBNormjoinRulePathForceCMakeSource\fP (base_path, rel_path, rule_source)"
+.br
+.ti -1c
+.RI "\fBWriteRules\fP (target_name, rules, extra_sources, extra_deps, path_to_gyp, output)"
+.br
+.ti -1c
+.RI "\fBWriteCopies\fP (target_name, copies, extra_deps, path_to_gyp, output)"
+.br
+.ti -1c
+.RI "\fBCreateCMakeTargetBaseName\fP (qualified_target)"
+.br
+.ti -1c
+.RI "\fBCreateCMakeTargetFullName\fP (qualified_target)"
+.br
+.ti -1c
+.RI "\fBWriteTarget\fP (namer, qualified_target, target_dicts, build_dir, config_to_use, options, generator_flags, all_qualified_targets, flavor, output)"
+.br
+.ti -1c
+.RI "\fBGenerateOutputForConfig\fP (target_list, target_dicts, data, params, config_to_use)"
+.br
+.ti -1c
+.RI "\fBPerformBuild\fP (data, configurations, params)"
+.br
+.ti -1c
+.RI "\fBCallGenerateOutputForConfig\fP (arglist)"
+.br
+.ti -1c
+.RI "\fBGenerateOutput\fP (target_list, target_dicts, data, params)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fB_maketrans\fP = str\&.maketrans"
+.br
+.ti -1c
+.RI "dict \fBgenerator_default_variables\fP"
+.br
+.ti -1c
+.RI "tuple \fBFULL_PATH_VARS\fP = ('${CMAKE_CURRENT_LIST_DIR}', '${builddir}', '${obj}')"
+.br
+.ti -1c
+.RI "bool \fBgenerator_supports_multiple_toolsets\fP = True"
+.br
+.ti -1c
+.RI "bool \fBgenerator_wants_static_library_dependencies_adjusted\fP = True"
+.br
+.ti -1c
+.RI "dict \fBCOMPILABLE_EXTENSIONS\fP"
+.br
+.ti -1c
+.RI "dict \fBcmake_target_type_from_gyp_target_type\fP"
+.br
+.ti -1c
+.RI "\fBcmake_inputs\fP"
+.br
+.ti -1c
+.RI "\fBcmake_outputs\fP"
+.br
+.ti -1c
+.RI "\fBgyp_inputs\fP"
+.br
+.ti -1c
+.RI "\fBgyp_outputs\fP"
+.br
+.ti -1c
+.RI "\fBext\fP"
+.br
+.ti -1c
+.RI "\fBinputs_name\fP"
+.br
+.ti -1c
+.RI "\fBoutputs_name\fP"
+.br
+.ti -1c
+.RI "\fBcommand\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.PP
+.nf
+cmake output module
+
+This module is under development and should be considered experimental\&.
+
+This module produces cmake (2\&.8\&.8+) input as its output\&. One CMakeLists\&.txt is
+created for each configuration\&.
+
+This module's original purpose was to support editing in IDEs like KDevelop
+which use CMake for project management\&. It is also possible to use CMake to
+generate projects for other IDEs such as eclipse cdt and code::blocks\&. QtCreator
+will convert the CMakeLists\&.txt to a code::blocks cbp for the editor to read,
+but build using CMake\&. As a result QtCreator editor is unaware of compiler
+defines\&. The generated CMakeLists\&.txt can also be used to build on Linux\&. There
+is currently no support for building on platforms other than Linux\&.
+
+The generated CMakeLists\&.txt should properly compile all projects\&. However,
+there is a mismatch between gyp and cmake with regard to linking\&. All attempts
+are made to work around this, but CMake sometimes sees -Wl,--start-group as a
+library and incorrectly repeats it\&. As a result the output of this generator
+should not be relied on for building\&.
+
+When using with kdevelop, use version 4\&.4+\&. Previous versions of kdevelop will
+not be able to find the header file directories described in the generated
+CMakeLists\&.txt file\&.
+
+.fi
+.PP
+ 
+.SH "Function Documentation"
+.PP 
+.SS "gyp\&.generator\&.cmake\&.CalculateVariables ( default_variables,  params)"
+
+.PP
+.nf
+Calculate additional variables for use in the build (called by gyp)\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB81\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.CallGenerateOutputForConfig ( arglist)"
+
+.PP
+Definition at line \fB1290\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.CMakeStringEscape ( a)"
+
+.PP
+.nf
+Escapes the string 'a' for use inside a CMake string\&.
+
+This means escaping
+'\\' otherwise it may be seen as modifying the next character
+''' otherwise it will end the string
+';' otherwise the string becomes a list
+
+The following do not need to be escaped
+'#' when the lexer is in string state, this does not start a comment
+
+The following are yet unknown
+'$' generator variables (like ${obj}) must not be escaped,
+  but text $ should be escaped
+  what is wanted is to know which $ come from generator variables
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB125\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.Compilable ( filename)"
+
+.PP
+.nf
+Return true if the file is compilable (should be in OBJS)\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB86\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.CreateCMakeTargetBaseName ( qualified_target)"
+
+.PP
+.nf
+This is the name we would like the target to have\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB562\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.CreateCMakeTargetFullName ( qualified_target)"
+
+.PP
+.nf
+An unambiguous name for the target\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB573\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.GenerateOutput ( target_list,  target_dicts,  data,  params)"
+
+.PP
+Definition at line \fB1299\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.GenerateOutputForConfig ( target_list,  target_dicts,  data,  params,  config_to_use)"
+
+.PP
+Definition at line \fB1143\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.Linkable ( filename)"
+
+.PP
+.nf
+Return true if the file is linkable (should be on the link line)\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB91\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.NormjoinPath ( base_path,  rel_path)"
+
+.PP
+.nf
+Resolves rel_path against base_path and returns the result\&.
+TODO: what is this really used for?
+If rel_path begins with '$' it is returned unchanged\&.
+Otherwise it is resolved against base_path if relative, then normalized\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB114\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.NormjoinPathForceCMakeSource ( base_path,  rel_path)"
+
+.PP
+.nf
+Resolves rel_path against base_path and returns the result\&.
+
+If rel_path is an absolute path it is returned unchanged\&.
+Otherwise it is resolved against base_path and normalized\&.
+If the result is a relative path, it is forced to be relative to the
+CMakeLists\&.txt\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB96\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.NormjoinRulePathForceCMakeSource ( base_path,  rel_path,  rule_source)"
+
+.PP
+Definition at line \fB329\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.PerformBuild ( data,  configurations,  params)"
+
+.PP
+Definition at line \fB1264\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.RemovePrefix ( a,  prefix)"
+
+.PP
+.nf
+Returns 'a' without 'prefix' if it starts with 'prefix'\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB76\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.SetFileProperty ( output,  source_name,  property_name,  values,  sep)"
+
+.PP
+.nf
+Given a set of source file, sets the given property on them\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB144\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.SetFilesProperty ( output,  variable,  property_name,  values,  sep)"
+
+.PP
+.nf
+Given a set of source files, sets the given property on them\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB157\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.SetTargetProperty ( output,  target_name,  property_name,  values,  sep = \fR''\fP)"
+
+.PP
+.nf
+Given a target, sets the given property\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB170\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.SetVariable ( output,  variable_name,  value)"
+
+.PP
+.nf
+Sets a CMake variable\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB183\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.SetVariableList ( output,  variable_name,  values)"
+
+.PP
+.nf
+Sets a CMake variable to a list\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB192\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.StringToCMakeTargetName ( a)"
+
+.PP
+.nf
+Converts the given string 'a' to a valid CMake target name\&.
+
+All invalid characters are replaced by '_'\&.
+Invalid for cmake: ' ', '/', '(', ')', '''
+Invalid for make: ':'
+Invalid for unknown reasons but cause failures: '\&.'
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB236\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.UnsetVariable ( output,  variable_name)"
+
+.PP
+.nf
+Unsets a CMake variable\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB205\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.WriteActions ( target_name,  actions,  extra_sources,  extra_deps,  path_to_gyp,  output)"
+
+.PP
+.nf
+Write CMake for the 'actions' in the target\&.
+
+Args:
+target_name: the name of the CMake target being generated\&.
+actions: the Gyp 'actions' dict for this target\&.
+extra_sources: [(<cmake_src>, <src>)] to append with generated source files\&.
+extra_deps: [<cmake_taget>] to append with generated targets\&.
+path_to_gyp: relative path from CMakeLists\&.txt being generated to
+    the Gyp file in which the target being generated is defined\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB247\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.WriteCopies ( target_name,  copies,  extra_deps,  path_to_gyp,  output)"
+
+.PP
+.nf
+Write CMake for the 'copies' in the target\&.
+
+Args:
+target_name: the name of the CMake target being generated\&.
+actions: the Gyp 'actions' dict for this target\&.
+extra_deps: [<cmake_taget>] to append with generated targets\&.
+path_to_gyp: relative path from CMakeLists\&.txt being generated to
+    the Gyp file in which the target being generated is defined\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB454\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.WriteRules ( target_name,  rules,  extra_sources,  extra_deps,  path_to_gyp,  output)"
+
+.PP
+.nf
+Write CMake for the 'rules' in the target\&.
+
+Args:
+target_name: the name of the CMake target being generated\&.
+actions: the Gyp 'actions' dict for this target\&.
+extra_sources: [(<cmake_src>, <src>)] to append with generated source files\&.
+extra_deps: [<cmake_taget>] to append with generated targets\&.
+path_to_gyp: relative path from CMakeLists\&.txt being generated to
+    the Gyp file in which the target being generated is defined\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB336\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.WriteTarget ( namer,  qualified_target,  target_dicts,  build_dir,  config_to_use,  options,  generator_flags,  all_qualified_targets,  flavor,  output)"
+
+.PP
+Definition at line \fB624\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.WriteVariable ( output,  variable_name,  prepend = \fRNone\fP)"
+
+.PP
+Definition at line \fB212\fP of file \fBcmake\&.py\fP\&.
+.SH "Variable Documentation"
+.PP 
+.SS "gyp\&.generator\&.cmake\&._maketrans = str\&.maketrans\fR [protected]\fP"
+
+.PP
+Definition at line \fB39\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.cmake_inputs"
+
+.PP
+Definition at line \fB477\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.cmake_outputs"
+
+.PP
+Definition at line \fB478\fP of file \fBcmake\&.py\fP\&.
+.SS "dict gyp\&.generator\&.cmake\&.cmake_target_type_from_gyp_target_type"
+\fBInitial value:\fP
+.nf
+1 =  {
+2     "executable": CMakeTargetType("add_executable", None, "RUNTIME"),
+3     "static_library": CMakeTargetType("add_library", "STATIC", "ARCHIVE"),
+4     "shared_library": CMakeTargetType("add_library", "SHARED", "LIBRARY"),
+5     "loadable_module": CMakeTargetType("add_library", "MODULE", "LIBRARY"),
+6     "none": CMakeTargetType("add_custom_target", "SOURCES", None),
+7 }
+.PP
+.fi
+
+.PP
+Definition at line \fB227\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.command"
+
+.PP
+Definition at line \fB484\fP of file \fBcmake\&.py\fP\&.
+.SS "dict gyp\&.generator\&.cmake\&.COMPILABLE_EXTENSIONS"
+\fBInitial value:\fP
+.nf
+1 =  {
+2     "\&.c": "cc",
+3     "\&.cc": "cxx",
+4     "\&.cpp": "cxx",
+5     "\&.cxx": "cxx",
+6     "\&.s": "s",  # cc
+7     "\&.S": "s",  # cc
+8 }
+.PP
+.fi
+
+.PP
+Definition at line \fB66\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.ext"
+
+.PP
+Definition at line \fB481\fP of file \fBcmake\&.py\fP\&.
+.SS "tuple gyp\&.generator\&.cmake\&.FULL_PATH_VARS = ('${CMAKE_CURRENT_LIST_DIR}', '${builddir}', '${obj}')"
+
+.PP
+Definition at line \fB61\fP of file \fBcmake\&.py\fP\&.
+.SS "dict gyp\&.generator\&.cmake\&.generator_default_variables"
+\fBInitial value:\fP
+.nf
+1 =  {
+2     "EXECUTABLE_PREFIX": "",
+3     "EXECUTABLE_SUFFIX": "",
+4     "STATIC_LIB_PREFIX": "lib",
+5     "STATIC_LIB_SUFFIX": "\&.a",
+6     "SHARED_LIB_PREFIX": "lib",
+7     "SHARED_LIB_SUFFIX": "\&.so",
+8     "SHARED_LIB_DIR": "${builddir}/lib\&.${TOOLSET}",
+9     "LIB_DIR": "${obj}\&.${TOOLSET}",
+10     "INTERMEDIATE_DIR": "${obj}\&.${TOOLSET}/${TARGET}/geni",
+11     "SHARED_INTERMEDIATE_DIR": "${obj}/gen",
+12     "PRODUCT_DIR": "${builddir}",
+13     "RULE_INPUT_PATH": "${RULE_INPUT_PATH}",
+14     "RULE_INPUT_DIRNAME": "${RULE_INPUT_DIRNAME}",
+15     "RULE_INPUT_NAME": "${RULE_INPUT_NAME}",
+16     "RULE_INPUT_ROOT": "${RULE_INPUT_ROOT}",
+17     "RULE_INPUT_EXT": "${RULE_INPUT_EXT}",
+18     "CONFIGURATION_NAME": "${configuration}",
+19 }
+.PP
+.fi
+
+.PP
+Definition at line \fB41\fP of file \fBcmake\&.py\fP\&.
+.SS "bool gyp\&.generator\&.cmake\&.generator_supports_multiple_toolsets = True"
+
+.PP
+Definition at line \fB63\fP of file \fBcmake\&.py\fP\&.
+.SS "bool gyp\&.generator\&.cmake\&.generator_wants_static_library_dependencies_adjusted = True"
+
+.PP
+Definition at line \fB64\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.gyp_inputs"
+
+.PP
+Definition at line \fB479\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.gyp_outputs"
+
+.PP
+Definition at line \fB480\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.inputs_name"
+
+.PP
+Definition at line \fB482\fP of file \fBcmake\&.py\fP\&.
+.SS "gyp\&.generator\&.cmake\&.outputs_name"
+
+.PP
+Definition at line \fB483\fP of file \fBcmake\&.py\fP\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

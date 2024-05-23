@@ -1,0 +1,491 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e</compoundname>
+    <title>minipass</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3792"/> A <emphasis>very</emphasis> minimal implementation of a <ulink url="https://nodejs.org/api/stream.html#stream_class_stream_passthrough">PassThrough stream</ulink></para>
+<para><ulink url="https://docs.google.com/spreadsheets/d/1K_HR5oh3r80b8WVMWCPPjfuWXUgfkmhlX7FGI6JJ8tY/edit?usp=sharing">It&apos;s very fast</ulink> for objects, strings, and buffers.</para>
+<para>Supports <computeroutput>pipe()</computeroutput>ing (including multi-<computeroutput>pipe()</computeroutput> and backpressure transmission), buffering data until either a <computeroutput>data</computeroutput> event handler or <computeroutput>pipe()</computeroutput> is added (so you don&apos;t lose the first chunk), and most other cases where PassThrough is a good idea.</para>
+<para>There is a <computeroutput>read()</computeroutput> method, but it&apos;s much more efficient to consume data from this stream via <lsquo/>&apos;data<rsquo/><computeroutput>events or by calling </computeroutput>pipe()<computeroutput>into some other stream. Calling</computeroutput>read()` requires the buffer to be flattened in some cases, which requires copying memory.</para>
+<para>If you set <computeroutput>objectMode: true</computeroutput> in the options, then whatever is written will be emitted. Otherwise, it&apos;ll do a minimal amount of Buffer copying to ensure proper Streams semantics when <computeroutput>read(n)</computeroutput> is called.</para>
+<para><computeroutput>objectMode</computeroutput> can also be set by doing <computeroutput>stream.objectMode = true</computeroutput>, or by writing any non-string/non-buffer data. <computeroutput>objectMode</computeroutput> cannot be set to false once it is set.</para>
+<para>This is not a <computeroutput>through</computeroutput> or <computeroutput>through2</computeroutput> stream. It doesn&apos;t transform the data, it just passes it right through. If you want to transform the data, extend the class, and override the <computeroutput>write()</computeroutput> method. Once you&apos;re done transforming the data however you want, call <computeroutput>super.write()</computeroutput> with the transform output.</para>
+<para>For some examples of streams that extend Minipass in various ways, check out:</para>
+<para><itemizedlist>
+<listitem><para><ulink url="http://npm.im/minizlib">minizlib</ulink></para>
+</listitem><listitem><para><ulink url="http://npm.im/fs-minipass">fs-minipass</ulink></para>
+</listitem><listitem><para><ulink url="http://npm.im/tar">tar</ulink></para>
+</listitem><listitem><para><ulink url="http://npm.im/minipass-collect">minipass-collect</ulink></para>
+</listitem><listitem><para><ulink url="http://npm.im/minipass-flush">minipass-flush</ulink></para>
+</listitem><listitem><para><ulink url="http://npm.im/minipass-pipeline">minipass-pipeline</ulink></para>
+</listitem><listitem><para><ulink url="http://npm.im/tap">tap</ulink></para>
+</listitem><listitem><para><ulink url="http://npm.im/tap-parser">tap-parser</ulink></para>
+</listitem><listitem><para><ulink url="http://npm.im/treport">treport</ulink></para>
+</listitem><listitem><para><ulink url="http://npm.im/minipass-fetch">minipass-fetch</ulink></para>
+</listitem><listitem><para><ulink url="http://npm.im/pacote">pacote</ulink></para>
+</listitem><listitem><para><ulink url="http://npm.im/make-fetch-happen">make-fetch-happen</ulink></para>
+</listitem><listitem><para><ulink url="http://npm.im/cacache">cacache</ulink></para>
+</listitem><listitem><para><ulink url="http://npm.im/ssri">ssri</ulink></para>
+</listitem><listitem><para><ulink url="http://npm.im/npm-registry-fetch">npm-registry-fetch</ulink></para>
+</listitem><listitem><para><ulink url="http://npm.im/minipass-json-stream">minipass-json-stream</ulink></para>
+</listitem><listitem><para><ulink url="http://npm.im/minipass-sized">minipass-sized</ulink></para>
+</listitem></itemizedlist>
+</para>
+<sect1 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3793">
+<title>Differences from Node.js Streams</title><para>There are several things that make Minipass streams different from (and in some ways superior to) Node.js core streams.</para>
+<para>Please read these caveats if you are familiar with node-core streams and intend to use Minipass streams in your programs.</para>
+<para>You can avoid most of these differences entirely (for a very small performance penalty) by setting <computeroutput>{async: true}</computeroutput> in the constructor options.</para>
+<sect2 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3794">
+<title>Timing</title><para>Minipass streams are designed to support synchronous use-cases. Thus, data is emitted as soon as it is available, always. It is buffered until read, but no longer. Another way to look at it is that Minipass streams are exactly as synchronous as the logic that writes into them.</para>
+<para>This can be surprising if your code relies on <computeroutput>PassThrough.write()</computeroutput> always providing data on the next tick rather than the current one, or being able to call <computeroutput>resume()</computeroutput> and not have the entire buffer disappear immediately.</para>
+<para>However, without this synchronicity guarantee, there would be no way for Minipass to achieve the speeds it does, or support the synchronous use cases that it does. Simply put, waiting takes time.</para>
+<para>This non-deferring approach makes Minipass streams much easier to reason about, especially in the context of Promises and other flow-control mechanisms.</para>
+<para>Example:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>hybrid<sp/>module,<sp/>either<sp/>works</highlight></codeline>
+<codeline><highlight class="normal">import<sp/>{<sp/>Minipass<sp/>}<sp/>from<sp/>&apos;minipass&apos;</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>or:</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>Minipass<sp/>}<sp/>=<sp/>require(&apos;minipass&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>stream<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline><highlight class="normal">stream.on(&apos;data&apos;,<sp/>()<sp/>=&gt;<sp/>console.log(&apos;data<sp/>event&apos;))</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;before<sp/>write&apos;)</highlight></codeline>
+<codeline><highlight class="normal">stream.write(&apos;hello&apos;)</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;after<sp/>write&apos;)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>output:</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>before<sp/>write</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>data<sp/>event</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>after<sp/>write</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3795">
+<title>Exception: Async Opt-In</title><para>If you wish to have a Minipass stream with behavior that more closely mimics Node.js core streams, you can set the stream in async mode either by setting <computeroutput>async: true</computeroutput> in the constructor options, or by setting <computeroutput>stream.async = true</computeroutput> later on.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>hybrid<sp/>module,<sp/>either<sp/>works</highlight></codeline>
+<codeline><highlight class="normal">import<sp/>{<sp/>Minipass<sp/>}<sp/>from<sp/>&apos;minipass&apos;</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>or:</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>Minipass<sp/>}<sp/>=<sp/>require(&apos;minipass&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>asyncStream<sp/>=<sp/>new<sp/>Minipass({<sp/>async:<sp/>true<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">asyncStream.on(&apos;data&apos;,<sp/>()<sp/>=&gt;<sp/>console.log(&apos;data<sp/>event&apos;))</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;before<sp/>write&apos;)</highlight></codeline>
+<codeline><highlight class="normal">asyncStream.write(&apos;hello&apos;)</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;after<sp/>write&apos;)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>output:</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>before<sp/>write</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>after<sp/>write</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>data<sp/>event<sp/>&lt;--<sp/>this<sp/>is<sp/>deferred<sp/>until<sp/>the<sp/>next<sp/>tick</highlight></codeline>
+</programlisting></para>
+<para>Switching <emphasis>out</emphasis> of async mode is unsafe, as it could cause data corruption, and so is not enabled. Example:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">import<sp/>{<sp/>Minipass<sp/>}<sp/>from<sp/>&apos;minipass&apos;</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>stream<sp/>=<sp/>new<sp/>Minipass({<sp/>encoding:<sp/>&apos;utf8&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">stream.on(&apos;data&apos;,<sp/>chunk<sp/>=&gt;<sp/>console.log(chunk))</highlight></codeline>
+<codeline><highlight class="normal">stream.async<sp/>=<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;before<sp/>writes&apos;)</highlight></codeline>
+<codeline><highlight class="normal">stream.write(&apos;hello&apos;)</highlight></codeline>
+<codeline><highlight class="normal">setStreamSyncAgainSomehow(stream)<sp/>//<sp/>&lt;--<sp/>this<sp/>doesn&apos;t<sp/>actually<sp/>exist!</highlight></codeline>
+<codeline><highlight class="normal">stream.write(&apos;world&apos;)</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;after<sp/>writes&apos;)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>hypothetical<sp/>output<sp/>would<sp/>be:</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>before<sp/>writes</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>world</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>after<sp/>writes</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>hello</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>NOT<sp/>GOOD!</highlight></codeline>
+</programlisting></para>
+<para>To avoid this problem, once set into async mode, any attempt to make the stream sync again will be ignored.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>{<sp/>Minipass<sp/>}<sp/>=<sp/>require(&apos;minipass&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>stream<sp/>=<sp/>new<sp/>Minipass({<sp/>encoding:<sp/>&apos;utf8&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">stream.on(&apos;data&apos;,<sp/>chunk<sp/>=&gt;<sp/>console.log(chunk))</highlight></codeline>
+<codeline><highlight class="normal">stream.async<sp/>=<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;before<sp/>writes&apos;)</highlight></codeline>
+<codeline><highlight class="normal">stream.write(&apos;hello&apos;)</highlight></codeline>
+<codeline><highlight class="normal">stream.async<sp/>=<sp/>false<sp/>//<sp/>&lt;--<sp/>no-op,<sp/>stream<sp/>already<sp/>async</highlight></codeline>
+<codeline><highlight class="normal">stream.write(&apos;world&apos;)</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;after<sp/>writes&apos;)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>actual<sp/>output:</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>before<sp/>writes</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>after<sp/>writes</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>hello</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>world</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3796">
+<title>No High/Low Water Marks</title><para>Node.js core streams will optimistically fill up a buffer, returning <computeroutput>true</computeroutput> on all writes until the limit is hit, even if the data has nowhere to go. Then, they will not attempt to draw more data in until the buffer size dips below a minimum value.</para>
+<para>Minipass streams are much simpler. The <computeroutput>write()</computeroutput> method will return <computeroutput>true</computeroutput> if the data has somewhere to go (which is to say, given the timing guarantees, that the data is already there by the time <computeroutput>write()</computeroutput> returns).</para>
+<para>If the data has nowhere to go, then <computeroutput>write()</computeroutput> returns false, and the data sits in a buffer, to be drained out immediately as soon as anyone consumes it.</para>
+<para>Since nothing is ever buffered unnecessarily, there is much less copying data, and less bookkeeping about buffer capacity levels.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3797">
+<title>Hazards of Buffering (or: Why Minipass Is So Fast)</title><para>Since data written to a Minipass stream is immediately written all the way through the pipeline, and <computeroutput>write()</computeroutput> always returns true/false based on whether the data was fully flushed, backpressure is communicated immediately to the upstream caller. This minimizes buffering.</para>
+<para>Consider this case:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>{<sp/>PassThrough<sp/>}<sp/>=<sp/>require(&apos;stream&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>p1<sp/>=<sp/>new<sp/>PassThrough({<sp/>highWaterMark:<sp/>1024<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>p2<sp/>=<sp/>new<sp/>PassThrough({<sp/>highWaterMark:<sp/>1024<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>p3<sp/>=<sp/>new<sp/>PassThrough({<sp/>highWaterMark:<sp/>1024<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>p4<sp/>=<sp/>new<sp/>PassThrough({<sp/>highWaterMark:<sp/>1024<sp/>})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">p1.pipe(p2).pipe(p3).pipe(p4)</highlight></codeline>
+<codeline><highlight class="normal">p4.on(&apos;data&apos;,<sp/>()<sp/>=&gt;<sp/>console.log(&apos;made<sp/>it<sp/>through&apos;))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>this<sp/>returns<sp/>false<sp/>and<sp/>buffers,<sp/>then<sp/>writes<sp/>to<sp/>p2<sp/>on<sp/>next<sp/>tick<sp/>(1)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>p2<sp/>returns<sp/>false<sp/>and<sp/>buffers,<sp/>pausing<sp/>p1,<sp/>then<sp/>writes<sp/>to<sp/>p3<sp/>on<sp/>next<sp/>tick<sp/>(2)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>p3<sp/>returns<sp/>false<sp/>and<sp/>buffers,<sp/>pausing<sp/>p2,<sp/>then<sp/>writes<sp/>to<sp/>p4<sp/>on<sp/>next<sp/>tick<sp/>(3)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>p4<sp/>returns<sp/>false<sp/>and<sp/>buffers,<sp/>pausing<sp/>p3,<sp/>then<sp/>emits<sp/>&apos;data&apos;<sp/>and<sp/>&apos;drain&apos;</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>on<sp/>next<sp/>tick<sp/>(4)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>p3<sp/>sees<sp/>p4&apos;s<sp/>&apos;drain&apos;<sp/>event,<sp/>and<sp/>calls<sp/>resume(),<sp/>emitting<sp/>&apos;resume&apos;<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;drain&apos;<sp/>on<sp/>next<sp/>tick<sp/>(5)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>p2<sp/>sees<sp/>p3&apos;s<sp/>&apos;drain&apos;,<sp/>calls<sp/>resume(),<sp/>emits<sp/>&apos;resume&apos;<sp/>and<sp/>&apos;drain&apos;<sp/>on<sp/>next<sp/>tick<sp/>(6)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>p1<sp/>sees<sp/>p2&apos;s<sp/>&apos;drain&apos;,<sp/>calls<sp/>resume(),<sp/>emits<sp/>&apos;resume&apos;<sp/>and<sp/>&apos;drain&apos;<sp/>on<sp/>next</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>tick<sp/>(7)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">p1.write(Buffer.alloc(2048))<sp/>//<sp/>returns<sp/>false</highlight></codeline>
+</programlisting></para>
+<para>Along the way, the data was buffered and deferred at each stage, and multiple event deferrals happened, for an unblocked pipeline where it was perfectly safe to write all the way through!</para>
+<para>Furthermore, setting a <computeroutput>highWaterMark</computeroutput> of <computeroutput>1024</computeroutput> might lead someone reading the code to think an advisory maximum of 1KiB is being set for the pipeline. However, the actual advisory buffering level is the <emphasis>sum</emphasis> of <computeroutput>highWaterMark</computeroutput> values, since each one has its own bucket.</para>
+<para>Consider the Minipass case:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>m1<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>m2<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>m3<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>m4<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">m1.pipe(m2).pipe(m3).pipe(m4)</highlight></codeline>
+<codeline><highlight class="normal">m4.on(&apos;data&apos;,<sp/>()<sp/>=&gt;<sp/>console.log(&apos;made<sp/>it<sp/>through&apos;))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>m1<sp/>is<sp/>flowing,<sp/>so<sp/>it<sp/>writes<sp/>the<sp/>data<sp/>to<sp/>m2<sp/>immediately</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>m2<sp/>is<sp/>flowing,<sp/>so<sp/>it<sp/>writes<sp/>the<sp/>data<sp/>to<sp/>m3<sp/>immediately</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>m3<sp/>is<sp/>flowing,<sp/>so<sp/>it<sp/>writes<sp/>the<sp/>data<sp/>to<sp/>m4<sp/>immediately</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>m4<sp/>is<sp/>flowing,<sp/>so<sp/>it<sp/>fires<sp/>the<sp/>&apos;data&apos;<sp/>event<sp/>immediately,<sp/>returns<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>m4&apos;s<sp/>write<sp/>returned<sp/>true,<sp/>so<sp/>m3<sp/>is<sp/>still<sp/>flowing,<sp/>returns<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>m3&apos;s<sp/>write<sp/>returned<sp/>true,<sp/>so<sp/>m2<sp/>is<sp/>still<sp/>flowing,<sp/>returns<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>m2&apos;s<sp/>write<sp/>returned<sp/>true,<sp/>so<sp/>m1<sp/>is<sp/>still<sp/>flowing,<sp/>returns<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>No<sp/>event<sp/>deferrals<sp/>or<sp/>buffering<sp/>along<sp/>the<sp/>way!</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">m1.write(Buffer.alloc(2048))<sp/>//<sp/>returns<sp/>true</highlight></codeline>
+</programlisting></para>
+<para>It is extremely unlikely that you <emphasis>don&apos;t</emphasis> want to buffer any data written, or <emphasis>ever</emphasis> buffer data that can be flushed all the way through. Neither node-core streams nor Minipass ever fail to buffer written data, but node-core streams do a lot of unnecessary buffering and pausing.</para>
+<para>As always, the faster implementation is the one that does less stuff and waits less time to do it.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3798">
+<title>Immediately emit <computeroutput>end</computeroutput> for empty streams (when not paused)</title><para>If a stream is not paused, and <computeroutput>end()</computeroutput> is called before writing any data into it, then it will emit <computeroutput>end</computeroutput> immediately.</para>
+<para>If you have logic that occurs on the <computeroutput>end</computeroutput> event which you don&apos;t want to potentially happen immediately (for example, closing file descriptors, moving on to the next entry in an archive parse stream, etc.) then be sure to call <computeroutput>stream.pause()</computeroutput> on creation, and then <computeroutput>stream.resume()</computeroutput> once you are ready to respond to the <computeroutput>end</computeroutput> event.</para>
+<para>However, this is <emphasis>usually</emphasis> not a problem because:</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3799">
+<title>Emit <computeroutput>end</computeroutput> When Asked</title><para>One hazard of immediately emitting <lsquo/>&apos;end<rsquo/><computeroutput>is that you may not yet have had a chance to add a listener. In order to avoid this hazard, Minipass streams safely re-emit the</computeroutput>&apos;end&apos;<computeroutput>event if a new listener is added after</computeroutput>&apos;end&apos;` has been emitted.</para>
+<para>Ie, if you do <lsquo/>stream.on(&apos;end<rsquo/>, someFunction)<computeroutput>, and the stream has already emitted</computeroutput>end<computeroutput>, then it will call the handler right away. (You can think of this somewhat like attaching a new </computeroutput>.then(fn)` to a previously-resolved Promise.)</para>
+<para>To prevent calling handlers multiple times who would not expect multiple ends to occur, all listeners are removed from the <lsquo/>&apos;end<rsquo/>` event whenever it is emitted.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3800">
+<title>Emit <computeroutput>error</computeroutput> When Asked</title><para>The most recent error object passed to the <lsquo/>&apos;error<rsquo/><computeroutput>event is stored on the stream. If a new</computeroutput>&apos;error&apos;<computeroutput>event handler is added, and an error was previously emitted, then the event handler will be called immediately (or on</computeroutput>process.nextTick` in the case of async streams).</para>
+<para>This makes it much more difficult to end up trying to interact with a broken stream, if the error handler is added after an error was previously emitted.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3801">
+<title>Impact of &quot;immediate flow&quot; on Tee-streams</title><para>A &quot;tee stream&quot; is a stream piping to multiple destinations:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>tee<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline><highlight class="normal">t.pipe(dest1)</highlight></codeline>
+<codeline><highlight class="normal">t.pipe(dest2)</highlight></codeline>
+<codeline><highlight class="normal">t.write(&apos;foo&apos;)<sp/>//<sp/>goes<sp/>to<sp/>both<sp/>destinations</highlight></codeline>
+</programlisting></para>
+<para>Since Minipass streams <emphasis>immediately</emphasis> process any pending data through the pipeline when a new pipe destination is added, this can have surprising effects, especially when a stream comes in from some other function and may or may not have data in its buffer.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>WARNING!<sp/>WILL<sp/>LOSE<sp/>DATA!</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>src<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline><highlight class="normal">src.write(&apos;foo&apos;)</highlight></codeline>
+<codeline><highlight class="normal">src.pipe(dest1)<sp/>//<sp/>&apos;foo&apos;<sp/>chunk<sp/>flows<sp/>to<sp/>dest1<sp/>immediately,<sp/>and<sp/>is<sp/>gone</highlight></codeline>
+<codeline><highlight class="normal">src.pipe(dest2)<sp/>//<sp/>gets<sp/>nothing!</highlight></codeline>
+</programlisting></para>
+<para>One solution is to create a dedicated tee-stream junction that pipes to both locations, and then pipe to <emphasis>that</emphasis> instead.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>Safe<sp/>example:<sp/>tee<sp/>to<sp/>both<sp/>places</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>src<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline><highlight class="normal">src.write(&apos;foo&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>tee<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline><highlight class="normal">tee.pipe(dest1)</highlight></codeline>
+<codeline><highlight class="normal">tee.pipe(dest2)</highlight></codeline>
+<codeline><highlight class="normal">src.pipe(tee)<sp/>//<sp/>tee<sp/>gets<sp/>&apos;foo&apos;,<sp/>pipes<sp/>to<sp/>both<sp/>locations</highlight></codeline>
+</programlisting></para>
+<para>The same caveat applies to <lsquo/>on(&apos;data<rsquo/>)` event listeners. The first one added will <emphasis>immediately</emphasis> receive all of the data, leaving nothing for the second:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>WARNING!<sp/>WILL<sp/>LOSE<sp/>DATA!</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>src<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline><highlight class="normal">src.write(&apos;foo&apos;)</highlight></codeline>
+<codeline><highlight class="normal">src.on(&apos;data&apos;,<sp/>handler1)<sp/>//<sp/>receives<sp/>&apos;foo&apos;<sp/>right<sp/>away</highlight></codeline>
+<codeline><highlight class="normal">src.on(&apos;data&apos;,<sp/>handler2)<sp/>//<sp/>nothing<sp/>to<sp/>see<sp/>here!</highlight></codeline>
+</programlisting></para>
+<para>Using a dedicated tee-stream can be used in this case as well:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>Safe<sp/>example:<sp/>tee<sp/>to<sp/>both<sp/>data<sp/>handlers</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>src<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline><highlight class="normal">src.write(&apos;foo&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>tee<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline><highlight class="normal">tee.on(&apos;data&apos;,<sp/>handler1)</highlight></codeline>
+<codeline><highlight class="normal">tee.on(&apos;data&apos;,<sp/>handler2)</highlight></codeline>
+<codeline><highlight class="normal">src.pipe(tee)</highlight></codeline>
+</programlisting></para>
+<para>All of the hazards in this section are avoided by setting <computeroutput>{ async: true }</computeroutput> in the Minipass constructor, or by setting <computeroutput>stream.async = true</computeroutput> afterwards. Note that this does add some overhead, so should only be done in cases where you are willing to lose a bit of performance in order to avoid having to refactor program logic.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3802">
+<title>USAGE</title><para>It&apos;s a stream! Use it like a stream and it&apos;ll most likely do what you want.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">import<sp/>{<sp/>Minipass<sp/>}<sp/>from<sp/>&apos;minipass&apos;</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>mp<sp/>=<sp/>new<sp/>Minipass(options)<sp/>//<sp/>optional:<sp/>{<sp/>encoding,<sp/>objectMode<sp/>}</highlight></codeline>
+<codeline><highlight class="normal">mp.write(&apos;foo&apos;)</highlight></codeline>
+<codeline><highlight class="normal">mp.pipe(someOtherStream)</highlight></codeline>
+<codeline><highlight class="normal">mp.end(&apos;bar&apos;)</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3803">
+<title>OPTIONS</title><para><itemizedlist>
+<listitem><para><computeroutput>encoding</computeroutput> How would you like the data coming <emphasis>out</emphasis> of the stream to be encoded? Accepts any values that can be passed to <computeroutput>Buffer.toString()</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>objectMode</computeroutput> Emit data exactly as it comes in. This will be flipped on by default if you write() something other than a string or Buffer at any point. Setting <computeroutput>objectMode: true</computeroutput> will prevent setting any encoding value.</para>
+</listitem><listitem><para><computeroutput>async</computeroutput> Defaults to <computeroutput>false</computeroutput>. Set to <computeroutput>true</computeroutput> to defer data emission until next tick. This reduces performance slightly, but makes Minipass streams use timing behavior closer to Node core streams. See Timing for more details.</para>
+</listitem><listitem><para><computeroutput>signal</computeroutput> An <computeroutput>AbortSignal</computeroutput> that will cause the stream to unhook itself from everything and become as inert as possible. Note that providing a <computeroutput>signal</computeroutput> parameter will make <lsquo/>&apos;error<rsquo/>` events no longer throw if they are unhandled, but they will still be emitted to handlers if any are attached.</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3804">
+<title>API</title><para>Implements the user-facing portions of Node.js&apos;s <computeroutput>Readable</computeroutput> and <computeroutput>Writable</computeroutput> streams.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3805">
+<title>Methods</title><para><itemizedlist>
+<listitem><para><computeroutput>write(chunk, [encoding], [callback])</computeroutput> - Put data in. (Note that, in the base Minipass class, the same data will come out.) Returns <computeroutput>false</computeroutput> if the stream will buffer the next write, or true if it&apos;s still in &quot;flowing&quot; mode.</para>
+</listitem><listitem><para><computeroutput>end([chunk, [encoding]], [callback])</computeroutput> - Signal that you have no more data to write. This will queue an <computeroutput>end</computeroutput> event to be fired when all the data has been consumed.</para>
+</listitem><listitem><para><computeroutput>setEncoding(encoding)</computeroutput> - Set the encoding for data coming of the stream. This can only be done once.</para>
+</listitem><listitem><para><computeroutput>pause()</computeroutput> - No more data for a while, please. This also prevents <computeroutput>end</computeroutput> from being emitted for empty streams until the stream is resumed.</para>
+</listitem><listitem><para><computeroutput>resume()</computeroutput> - Resume the stream. If there&apos;s data in the buffer, it is all discarded. Any buffered events are immediately emitted.</para>
+</listitem><listitem><para><computeroutput>pipe(dest)</computeroutput> - Send all output to the stream provided. When data is emitted, it is immediately written to any and all pipe destinations. (Or written on next tick in <computeroutput>async</computeroutput> mode.)</para>
+</listitem><listitem><para><computeroutput>unpipe(dest)</computeroutput> - Stop piping to the destination stream. This is immediate, meaning that any asynchronously queued data will <emphasis>not</emphasis> make it to the destination when running in <computeroutput>async</computeroutput> mode.<itemizedlist>
+<listitem><para><computeroutput>options.end</computeroutput> - Boolean, end the destination stream when the source stream ends. Default <computeroutput>true</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>options.proxyErrors</computeroutput> - Boolean, proxy <computeroutput>error</computeroutput> events from the source stream to the destination stream. Note that errors are <emphasis>not</emphasis> proxied after the pipeline terminates, either due to the source emitting <lsquo/>&apos;end<rsquo/><computeroutput>or manually unpiping with </computeroutput>src.unpipe(dest)<computeroutput>. Default</computeroutput>false<computeroutput>. -</computeroutput>on(ev, fn)<computeroutput>,</computeroutput>emit(ev, fn)<computeroutput>- Minipass streams are EventEmitters. Some events are given special treatment, however. (See below under &quot;events&quot;.) -</computeroutput>promise()<computeroutput>- Returns a Promise that resolves when the stream emits</computeroutput>end<computeroutput>, or rejects if the stream emits</computeroutput>error<computeroutput>. -</computeroutput>collect()<computeroutput>- Return a Promise that resolves on</computeroutput>end<computeroutput>with an array containing each chunk of data that was emitted, or rejects if the stream emits</computeroutput>error<computeroutput>. Note that this consumes the stream data. -</computeroutput>concat()<computeroutput>- Same as</computeroutput>collect()<computeroutput>, but concatenates the data into a single Buffer object. Will reject the returned promise if the stream is in objectMode, or if it goes into objectMode by the end of the data. -</computeroutput>read(n)<computeroutput>- Consume</computeroutput>n<computeroutput>bytes of data out of the buffer. If</computeroutput>n<computeroutput> is not provided, then consume all of it. If</computeroutput>n<computeroutput>bytes are not available, then it returns null. **Note** consuming streams in this way is less efficient, and can lead to unnecessary Buffer copying. -</computeroutput>destroy([er])<computeroutput>- Destroy the stream. If an error is provided, then an</computeroutput>&apos;error&apos;<computeroutput>event is emitted. If the stream has a </computeroutput>close()<computeroutput>method, and has not emitted a</computeroutput>&apos;close&apos;<computeroutput>event yet, then</computeroutput>stream.close()<computeroutput>will be called. Any Promises returned by </computeroutput>.promise()<computeroutput>,</computeroutput>.collect()<computeroutput>or</computeroutput>.concat()` will be rejected. After being destroyed, writing to the stream will emit an error. No more data will be emitted if the stream is destroyed, even if it was previously buffered.</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3806">
+<title>Properties</title><para><itemizedlist>
+<listitem><para><computeroutput>bufferLength</computeroutput> Read-only. Total number of bytes buffered, or in the case of objectMode, the total number of objects.</para>
+</listitem><listitem><para><computeroutput>encoding</computeroutput> The encoding that has been set. (Setting this is equivalent to calling <computeroutput>setEncoding(enc)</computeroutput> and has the same prohibition against setting multiple times.)</para>
+</listitem><listitem><para><computeroutput>flowing</computeroutput> Read-only. Boolean indicating whether a chunk written to the stream will be immediately emitted.</para>
+</listitem><listitem><para><computeroutput>emittedEnd</computeroutput> Read-only. Boolean indicating whether the end-ish events (ie, <computeroutput>end</computeroutput>, <computeroutput>prefinish</computeroutput>, <computeroutput>finish</computeroutput>) have been emitted. Note that listening on any end-ish event will immediateyl re-emit it if it has already been emitted.</para>
+</listitem><listitem><para><computeroutput>writable</computeroutput> Whether the stream is writable. Default <computeroutput>true</computeroutput>. Set to <computeroutput>false</computeroutput> when <computeroutput>end()</computeroutput></para>
+</listitem><listitem><para><computeroutput>readable</computeroutput> Whether the stream is readable. Default <computeroutput>true</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>pipes</computeroutput> An array of Pipe objects referencing streams that this stream is piping into.</para>
+</listitem><listitem><para><computeroutput>destroyed</computeroutput> A getter that indicates whether the stream was destroyed.</para>
+</listitem><listitem><para><computeroutput>paused</computeroutput> True if the stream has been explicitly paused, otherwise false.</para>
+</listitem><listitem><para><computeroutput>objectMode</computeroutput> Indicates whether the stream is in <computeroutput>objectMode</computeroutput>. Once set to <computeroutput>true</computeroutput>, it cannot be set to <computeroutput>false</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>aborted</computeroutput> Readonly property set when the <computeroutput>AbortSignal</computeroutput> dispatches an <computeroutput>abort</computeroutput> event.</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3807">
+<title>Events</title><para><itemizedlist>
+<listitem><para><computeroutput>data</computeroutput> Emitted when there&apos;s data to read. Argument is the data to read. This is never emitted while not flowing. If a listener is attached, that will resume the stream.</para>
+</listitem><listitem><para><computeroutput>end</computeroutput> Emitted when there&apos;s no more data to read. This will be emitted immediately for empty streams when <computeroutput>end()</computeroutput> is called. If a listener is attached, and <computeroutput>end</computeroutput> was already emitted, then it will be emitted again. All listeners are removed when <computeroutput>end</computeroutput> is emitted.</para>
+</listitem><listitem><para><computeroutput>prefinish</computeroutput> An end-ish event that follows the same logic as <computeroutput>end</computeroutput> and is emitted in the same conditions where <computeroutput>end</computeroutput> is emitted. Emitted after <lsquo/>&apos;end<rsquo/><computeroutput>. -</computeroutput>finish<computeroutput>An end-ish event that follows the same logic as</computeroutput>end<computeroutput> and is emitted in the same conditions where</computeroutput>end<computeroutput>is emitted. Emitted after</computeroutput>&apos;prefinish&apos;<computeroutput>. -</computeroutput>close<computeroutput>An indication that an underlying resource has been released. Minipass does not emit this event, but will defer it until after</computeroutput>end<computeroutput>has been emitted, since it throws off some stream libraries otherwise. -</computeroutput>drain<computeroutput>Emitted when the internal buffer empties, and it is again suitable to</computeroutput>write()<computeroutput>into the stream. -</computeroutput>readable<computeroutput>Emitted when data is buffered and ready to be read by a consumer. -</computeroutput>resume<computeroutput>Emitted when stream changes state from buffering to flowing mode. (Ie, when</computeroutput>resume<computeroutput>is called,</computeroutput>pipe<computeroutput>is called, or a</computeroutput>data` event listener is added.)</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3808">
+<title>Static Methods</title><para><itemizedlist>
+<listitem><para><computeroutput>Minipass.isStream(stream)</computeroutput> Returns <computeroutput>true</computeroutput> if the argument is a stream, and false otherwise. To be considered a stream, the object must be either an instance of Minipass, or an EventEmitter that has either a <computeroutput>pipe()</computeroutput> method, or both <computeroutput>write()</computeroutput> and <computeroutput>end()</computeroutput> methods. (Pretty much any stream in node-land will return <computeroutput>true</computeroutput> for this.)</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3809">
+<title>EXAMPLES</title><para>Here are some examples of things you can do with Minipass streams.</para>
+<sect2 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3810">
+<title>simple &quot;are you done yet&quot; promise</title><para><programlisting filename=".js"><codeline><highlight class="normal">mp.promise().then(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>stream<sp/>is<sp/>finished</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>er<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>stream<sp/>emitted<sp/>an<sp/>error</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">)</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3811">
+<title>collecting</title><para><programlisting filename=".js"><codeline><highlight class="normal">mp.collect().then(all<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>all<sp/>is<sp/>an<sp/>array<sp/>of<sp/>all<sp/>the<sp/>data<sp/>emitted</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>encoding<sp/>is<sp/>supported<sp/>in<sp/>this<sp/>case,<sp/>so</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>so<sp/>the<sp/>result<sp/>will<sp/>be<sp/>a<sp/>collection<sp/>of<sp/>strings<sp/>if</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>an<sp/>encoding<sp/>is<sp/>specified,<sp/>or<sp/>buffers/objects<sp/>if<sp/>not.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>In<sp/>an<sp/>async<sp/>function,<sp/>you<sp/>may<sp/>do</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>const<sp/>data<sp/>=<sp/>await<sp/>stream.collect()</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3812">
+<title>collecting into a single blob</title><para>This is a bit slower because it concatenates the data into one chunk for you, but if you&apos;re going to do it yourself anyway, it&apos;s convenient this way:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">mp.concat().then(onebigchunk<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>onebigchunk<sp/>is<sp/>a<sp/>string<sp/>if<sp/>the<sp/>stream</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>had<sp/>an<sp/>encoding<sp/>set,<sp/>or<sp/>a<sp/>buffer<sp/>otherwise.</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3813">
+<title>iteration</title><para>You can iterate over streams synchronously or asynchronously in platforms that support it.</para>
+<para>Synchronous iteration will end when the currently available data is consumed, even if the <computeroutput>end</computeroutput> event has not been reached. In string and buffer mode, the data is concatenated, so unless multiple writes are occurring in the same tick as the <computeroutput>read()</computeroutput>, sync iteration loops will generally only have a single iteration.</para>
+<para>To consume chunks in this way exactly as they have been written, with no flattening, create the stream with the <computeroutput>{ objectMode: true }</computeroutput> option.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>mp<sp/>=<sp/>new<sp/>Minipass({<sp/>objectMode:<sp/>true<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">mp.write(&apos;a&apos;)</highlight></codeline>
+<codeline><highlight class="normal">mp.write(&apos;b&apos;)</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>(let<sp/>letter<sp/>of<sp/>mp)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(letter)<sp/>//<sp/>a,<sp/>b</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">mp.write(&apos;c&apos;)</highlight></codeline>
+<codeline><highlight class="normal">mp.write(&apos;d&apos;)</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>(let<sp/>letter<sp/>of<sp/>mp)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(letter)<sp/>//<sp/>c,<sp/>d</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">mp.write(&apos;e&apos;)</highlight></codeline>
+<codeline><highlight class="normal">mp.end()</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>(let<sp/>letter<sp/>of<sp/>mp)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(letter)<sp/>//<sp/>e</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>(let<sp/>letter<sp/>of<sp/>mp)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(letter)<sp/>//<sp/>nothing</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+<para>Asynchronous iteration will continue until the end event is reached, consuming all of the data.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>mp<sp/>=<sp/>new<sp/>Minipass({<sp/>encoding:<sp/>&apos;utf8&apos;<sp/>})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>some<sp/>source<sp/>of<sp/>some<sp/>data</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>i<sp/>=<sp/>5</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>inter<sp/>=<sp/>setInterval(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(i--<sp/>&gt;<sp/>0)<sp/>mp.write(Buffer.from(&apos;foo\n&apos;,<sp/>&apos;utf8&apos;))</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>mp.end()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>clearInterval(inter)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">},<sp/>100)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>consume<sp/>the<sp/>data<sp/>with<sp/>asynchronous<sp/>iteration</highlight></codeline>
+<codeline><highlight class="normal">async<sp/>function<sp/>consume()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>for<sp/>await<sp/>(let<sp/>chunk<sp/>of<sp/>mp)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(chunk)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>&apos;ok&apos;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">consume().then(res<sp/>=&gt;<sp/>console.log(res))</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>logs<sp/>`foo\n`<sp/>5<sp/>times,<sp/>and<sp/>then<sp/>`ok`</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3814">
+<title>subclass that <computeroutput>console.log()</computeroutput>s everything written into it</title><para><programlisting filename=".js"><codeline><highlight class="normal">class<sp/>Logger<sp/>extends<sp/>Minipass<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>write(chunk,<sp/>encoding,<sp/>callback)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(&apos;WRITE&apos;,<sp/>chunk,<sp/>encoding)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>super.write(chunk,<sp/>encoding,<sp/>callback)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>end(chunk,<sp/>encoding,<sp/>callback)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(&apos;END&apos;,<sp/>chunk,<sp/>encoding)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>super.end(chunk,<sp/>encoding,<sp/>callback)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">someSource.pipe(new<sp/>Logger()).pipe(someDest)</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3815">
+<title>same thing, but using an inline anonymous class</title><para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>js<sp/>classes<sp/>are<sp/>fun</highlight></codeline>
+<codeline><highlight class="normal">someSource</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>.pipe(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>new<sp/>(class<sp/>extends<sp/>Minipass<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>emit(ev,<sp/>...data)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>let&apos;s<sp/>also<sp/>log<sp/>events,<sp/>because<sp/>debugging<sp/>some<sp/>weird<sp/>thing</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>console.log(&apos;EMIT&apos;,<sp/>ev)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>super.emit(ev,<sp/>...data)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>write(chunk,<sp/>encoding,<sp/>callback)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>console.log(&apos;WRITE&apos;,<sp/>chunk,<sp/>encoding)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>super.write(chunk,<sp/>encoding,<sp/>callback)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>end(chunk,<sp/>encoding,<sp/>callback)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>console.log(&apos;END&apos;,<sp/>chunk,<sp/>encoding)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>super.end(chunk,<sp/>encoding,<sp/>callback)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>})()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>.pipe(someDest)</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3816">
+<title>subclass that defers &apos;end&apos; for some reason</title><para><programlisting filename=".js"><codeline><highlight class="normal">class<sp/>SlowEnd<sp/>extends<sp/>Minipass<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>emit(ev,<sp/>...args)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(ev<sp/>===<sp/>&apos;end&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>console.log(&apos;going<sp/>to<sp/>end,<sp/>hold<sp/>on<sp/>a<sp/>sec&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>setTimeout(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>console.log(&apos;ok,<sp/>ready<sp/>to<sp/>end<sp/>now&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>super.emit(&apos;end&apos;,<sp/>...args)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>},<sp/>100)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>super.emit(ev,<sp/>...args)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3817">
+<title>transform that creates newline-delimited JSON</title><para><programlisting filename=".js"><codeline><highlight class="normal">class<sp/>NDJSONEncode<sp/>extends<sp/>Minipass<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>write(obj,<sp/>cb)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>try<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>JSON.stringify<sp/>can<sp/>throw,<sp/>emit<sp/>an<sp/>error<sp/>on<sp/>that</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>super.write(JSON.stringify(obj)<sp/>+<sp/>&apos;\n&apos;,<sp/>&apos;utf8&apos;,<sp/>cb)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/>catch<sp/>(er)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>this.emit(&apos;error&apos;,<sp/>er)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>end(obj,<sp/>cb)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(typeof<sp/>obj<sp/>===<sp/>&apos;function&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>cb<sp/>=<sp/>obj</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>obj<sp/>=<sp/>undefined</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(obj<sp/>!==<sp/>undefined)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>this.write(obj)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>super.end(cb)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_1autotoc_md3818">
+<title>transform that parses newline-delimited JSON</title><para><programlisting filename=".js"><codeline><highlight class="normal">class<sp/>NDJSONDecode<sp/>extends<sp/>Minipass<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>constructor<sp/>(options)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>always<sp/>be<sp/>in<sp/>object<sp/>mode,<sp/>as<sp/>far<sp/>as<sp/>Minipass<sp/>is<sp/>concerned</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>super({<sp/>objectMode:<sp/>true<sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>this._jsonBuffer<sp/>=<sp/>&apos;&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>write<sp/>(chunk,<sp/>encoding,<sp/>cb)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(typeof<sp/>chunk<sp/>===<sp/>&apos;string&apos;<sp/>&amp;&amp;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>typeof<sp/>encoding<sp/>===<sp/>&apos;string&apos;<sp/>&amp;&amp;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>encoding<sp/>!==<sp/>&apos;utf8&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>chunk<sp/>=<sp/>Buffer.from(chunk,<sp/>encoding).toString()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/>else<sp/>if<sp/>(Buffer.isBuffer(chunk))<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>chunk<sp/>=<sp/>chunk.toString()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(typeof<sp/>encoding<sp/>===<sp/>&apos;function&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>cb<sp/>=<sp/>encoding</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>const<sp/>jsonData<sp/>=<sp/>(this._jsonBuffer<sp/>+<sp/>chunk).split(&apos;\n&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>this._jsonBuffer<sp/>=<sp/>jsonData.pop()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>for<sp/>(let<sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>jsonData.length;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>try<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>JSON.parse<sp/>can<sp/>throw,<sp/>emit<sp/>an<sp/>error<sp/>on<sp/>that</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>super.write(JSON.parse(jsonData[i]))</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/>catch<sp/>(er)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>this.emit(&apos;error&apos;,<sp/>er)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>continue</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(cb)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>cb()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> </para>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/tar/node_modules/minipass/README.md"/>
+  </compounddef>
+</doxygen>

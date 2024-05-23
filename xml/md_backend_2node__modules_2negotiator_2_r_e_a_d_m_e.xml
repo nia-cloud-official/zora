@@ -1,0 +1,162 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e</compoundname>
+    <title>negotiator</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2265"/> <ulink url="https://npmjs.org/package/negotiator"><image type="html" name="https://img.shields.io/npm/v/negotiator.svg" alt="NPM Version" inline="yes"></image>
+</ulink> <ulink url="https://npmjs.org/package/negotiator"><image type="html" name="https://img.shields.io/npm/dm/negotiator.svg" alt="NPM Downloads" inline="yes"></image>
+</ulink> <ulink url="https://nodejs.org/en/download/"><image type="html" name="https://img.shields.io/node/v/negotiator.svg" alt="Node.js Version" inline="yes"></image>
+</ulink> <ulink url="https://github.com/jshttp/negotiator/actions/workflows/ci.yml"><image type="html" name="https://img.shields.io/github/workflow/status/jshttp/negotiator/ci/master?label=ci" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/r/jshttp/negotiator?branch=master"><image type="html" name="https://img.shields.io/coveralls/jshttp/negotiator/master.svg" alt="Test Coverage" inline="yes"></image>
+</ulink></para>
+<para>An HTTP content negotiator for Node.js</para>
+<sect1 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2266">
+<title>Installation</title><para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>negotiator</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2267">
+<title>API</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>Negotiator<sp/>=<sp/>require(&apos;negotiator&apos;)</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2268">
+<title>Accept Negotiation</title><para><programlisting filename=".js"><codeline><highlight class="normal">availableMediaTypes<sp/>=<sp/>[&apos;text/html&apos;,<sp/>&apos;text/plain&apos;,<sp/>&apos;application/json&apos;]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>The<sp/>negotiator<sp/>constructor<sp/>receives<sp/>a<sp/>request<sp/>object</highlight></codeline>
+<codeline><highlight class="normal">negotiator<sp/>=<sp/>new<sp/>Negotiator(request)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Let&apos;s<sp/>say<sp/>Accept<sp/>header<sp/>is<sp/>&apos;text/html,<sp/>application/*;q=0.2,<sp/>image/jpeg;q=0.8&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">negotiator.mediaTypes()</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>-&gt;<sp/>[&apos;text/html&apos;,<sp/>&apos;image/jpeg&apos;,<sp/>&apos;application/*&apos;]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">negotiator.mediaTypes(availableMediaTypes)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>-&gt;<sp/>[&apos;text/html&apos;,<sp/>&apos;application/json&apos;]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">negotiator.mediaType(availableMediaTypes)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>-&gt;<sp/>&apos;text/html&apos;</highlight></codeline>
+</programlisting></para>
+<para>You can check a working example at <computeroutput>examples/accept.js</computeroutput>.</para>
+<sect3 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2269">
+<title>Methods</title><sect4 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2270">
+<title>mediaType()</title><para>Returns the most preferred media type from the client.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2271">
+<title>mediaType(availableMediaType)</title><para>Returns the most preferred media type from a list of available media types.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2272">
+<title>mediaTypes()</title><para>Returns an array of preferred media types ordered by the client preference.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2273">
+<title>mediaTypes(availableMediaTypes)</title><para>Returns an array of preferred media types ordered by priority from a list of available media types.</para>
+</sect4>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2274">
+<title>Accept-Language Negotiation</title><para><programlisting filename=".js"><codeline><highlight class="normal">negotiator<sp/>=<sp/>new<sp/>Negotiator(request)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">availableLanguages<sp/>=<sp/>[&apos;en&apos;,<sp/>&apos;es&apos;,<sp/>&apos;fr&apos;]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Let&apos;s<sp/>say<sp/>Accept-Language<sp/>header<sp/>is<sp/>&apos;en;q=0.8,<sp/>es,<sp/>pt&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">negotiator.languages()</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>-&gt;<sp/>[&apos;es&apos;,<sp/>&apos;pt&apos;,<sp/>&apos;en&apos;]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">negotiator.languages(availableLanguages)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>-&gt;<sp/>[&apos;es&apos;,<sp/>&apos;en&apos;]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">language<sp/>=<sp/>negotiator.language(availableLanguages)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>-&gt;<sp/>&apos;es&apos;</highlight></codeline>
+</programlisting></para>
+<para>You can check a working example at <computeroutput>examples/language.js</computeroutput>.</para>
+<sect3 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2275">
+<title>Methods</title><sect4 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2276">
+<title>language()</title><para>Returns the most preferred language from the client.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2277">
+<title>language(availableLanguages)</title><para>Returns the most preferred language from a list of available languages.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2278">
+<title>languages()</title><para>Returns an array of preferred languages ordered by the client preference.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2279">
+<title>languages(availableLanguages)</title><para>Returns an array of preferred languages ordered by priority from a list of available languages.</para>
+</sect4>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2280">
+<title>Accept-Charset Negotiation</title><para><programlisting filename=".js"><codeline><highlight class="normal">availableCharsets<sp/>=<sp/>[&apos;utf-8&apos;,<sp/>&apos;iso-8859-1&apos;,<sp/>&apos;iso-8859-5&apos;]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">negotiator<sp/>=<sp/>new<sp/>Negotiator(request)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Let&apos;s<sp/>say<sp/>Accept-Charset<sp/>header<sp/>is<sp/>&apos;utf-8,<sp/>iso-8859-1;q=0.8,<sp/>utf-7;q=0.2&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">negotiator.charsets()</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>-&gt;<sp/>[&apos;utf-8&apos;,<sp/>&apos;iso-8859-1&apos;,<sp/>&apos;utf-7&apos;]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">negotiator.charsets(availableCharsets)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>-&gt;<sp/>[&apos;utf-8&apos;,<sp/>&apos;iso-8859-1&apos;]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">negotiator.charset(availableCharsets)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>-&gt;<sp/>&apos;utf-8&apos;</highlight></codeline>
+</programlisting></para>
+<para>You can check a working example at <computeroutput>examples/charset.js</computeroutput>.</para>
+<sect3 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2281">
+<title>Methods</title><sect4 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2282">
+<title>charset()</title><para>Returns the most preferred charset from the client.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2283">
+<title>charset(availableCharsets)</title><para>Returns the most preferred charset from a list of available charsets.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2284">
+<title>charsets()</title><para>Returns an array of preferred charsets ordered by the client preference.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2285">
+<title>charsets(availableCharsets)</title><para>Returns an array of preferred charsets ordered by priority from a list of available charsets.</para>
+</sect4>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2286">
+<title>Accept-Encoding Negotiation</title><para><programlisting filename=".js"><codeline><highlight class="normal">availableEncodings<sp/>=<sp/>[&apos;identity&apos;,<sp/>&apos;gzip&apos;]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">negotiator<sp/>=<sp/>new<sp/>Negotiator(request)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Let&apos;s<sp/>say<sp/>Accept-Encoding<sp/>header<sp/>is<sp/>&apos;gzip,<sp/>compress;q=0.2,<sp/>identity;q=0.5&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">negotiator.encodings()</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>-&gt;<sp/>[&apos;gzip&apos;,<sp/>&apos;identity&apos;,<sp/>&apos;compress&apos;]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">negotiator.encodings(availableEncodings)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>-&gt;<sp/>[&apos;gzip&apos;,<sp/>&apos;identity&apos;]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">negotiator.encoding(availableEncodings)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>-&gt;<sp/>&apos;gzip&apos;</highlight></codeline>
+</programlisting></para>
+<para>You can check a working example at <computeroutput>examples/encoding.js</computeroutput>.</para>
+<sect3 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2287">
+<title>Methods</title><sect4 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2288">
+<title>encoding()</title><para>Returns the most preferred encoding from the client.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2289">
+<title>encoding(availableEncodings)</title><para>Returns the most preferred encoding from a list of available encodings.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2290">
+<title>encodings()</title><para>Returns an array of preferred encodings ordered by the client preference.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2291">
+<title>encodings(availableEncodings)</title><para>Returns an array of preferred encodings ordered by priority from a list of available encodings.</para>
+</sect4>
+</sect3>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2292">
+<title>See Also</title><para>The <ulink url="https://npmjs.org/package/accepts#readme">accepts</ulink> module builds on this module and provides an alternative interface, mime type validation, and more.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2negotiator_2_r_e_a_d_m_e_1autotoc_md2293">
+<title>License</title><para>[MIT](LICENSE) </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/negotiator/README.md"/>
+  </compounddef>
+</doxygen>

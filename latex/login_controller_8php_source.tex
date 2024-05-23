@@ -1,0 +1,59 @@
+\doxysection{login\+Controller.\+php}
+\hypertarget{login_controller_8php_source}{}\label{login_controller_8php_source}\index{Controllers/loginController.php@{Controllers/loginController.php}}
+\mbox{\hyperlink{login_controller_8php}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00001}00001\ <?php}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00002}00002\ session\_start();}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00003}\mbox{\hyperlink{login_controller_8php_a0eb82aa5f81cf845de4b36cd653c42cf}{00003}}\ \mbox{\hyperlink{login_controller_8php_a0eb82aa5f81cf845de4b36cd653c42cf}{\$username}}\ =\ \$\_POST[\textcolor{stringliteral}{'username'}];}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00004}00004\ include\ \textcolor{stringliteral}{'site.config.php'};}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00005}00005\ include\_once\ \textcolor{stringliteral}{'./../Models/\_redirects.php'};}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00007}\mbox{\hyperlink{login_controller_8php_aa311da27ba5706f5710cea7706c8eae1}{00007}}\ \textcolor{keyword}{function}\ \mbox{\hyperlink{login_controller_8php_aa311da27ba5706f5710cea7706c8eae1}{login}}()}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00008}00008\ \{}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00009}00009\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ user\ input\ from\ the\ POST\ request}}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00010}00010\ \ \ \ \ \mbox{\hyperlink{login_controller_8php_a0eb82aa5f81cf845de4b36cd653c42cf}{\$username}}\ =\ \$\_POST[\textcolor{stringliteral}{'username'}];}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00011}00011\ \ \ \ \ \mbox{\hyperlink{db_8php_a607686ef9f99ea7c42f4f3dd3dbb2b0d}{\$password}}\ =\ \$\_POST[\textcolor{stringliteral}{'password'}];}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00013}00013\ \ \ \ \ \textcolor{comment}{//\ Database\ connection\ details}}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00014}00014\ \ \ \ \ \mbox{\hyperlink{db_8php_ad79b54e31bd1050001133c4d70f850fe}{\$servername}}\ =\ \mbox{\hyperlink{site_8config_8php_ae3076e8ff25d710f0b39e78352782795}{SERVER}};}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00015}00015\ \ \ \ \ \$username\_db\ =\ \mbox{\hyperlink{site_8config_8php_a1bbff5b87a1e3a8d402d50c9fdb4e6e9}{USER}};}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00016}00016\ \ \ \ \ \$password\_db\ =\ \mbox{\hyperlink{site_8config_8php_a721e0e48b7536b275be96f3018324f28}{PASS}};}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00017}00017\ \ \ \ \ \mbox{\hyperlink{db_8php_ac5111a571fffa2499732833bb7f0d8c1}{\$dbname}}\ =\ \mbox{\hyperlink{site_8config_8php_af7d219badcc93cc3a13a604c769542bc}{DBNAME}};}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00019}00019\ \ \ \ \ \textcolor{comment}{//\ Create\ a\ connection\ to\ the\ database}}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00020}00020\ \ \ \ \ \mbox{\hyperlink{db_8php_aa8a5a87b9c1a6a0819b88447cbe41877}{\$conn}}\ =\ mysqli\_connect(\mbox{\hyperlink{db_8php_ad79b54e31bd1050001133c4d70f850fe}{\$servername}},\ \$username\_db,\ \$password\_db,\ \mbox{\hyperlink{db_8php_ac5111a571fffa2499732833bb7f0d8c1}{\$dbname}});}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00022}00022\ \ \ \ \ \textcolor{comment}{//\ Check\ connection}}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00023}00023\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{db_8php_aa8a5a87b9c1a6a0819b88447cbe41877}{\$conn}})\ \{}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00024}00024\ \ \ \ \ \ \ \ \ die(\textcolor{stringliteral}{"{}Connection\ failed:\ "{}}\ .\ mysqli\_connect\_error());}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00025}00025\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00027}00027\ \ \ \ \ \textcolor{comment}{//\ Query\ the\ database\ for\ the\ user\ with\ the\ given\ username\ and\ password}}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00028}00028\ \ \ \ \ \mbox{\hyperlink{authenticate_8php_a888153ba43bbd2cd3be19c24c6c30ef7}{\$query}}\ =\ \textcolor{stringliteral}{"{}SELECT\ *\ FROM\ users\ WHERE\ username\ =\ '\$username'"{}};}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00029}00029\ \ \ \ \ \mbox{\hyperlink{execute_8php_a4fd01df38e08fc33f651c7b774894c29}{\$result}}\ =\ mysqli\_query(\mbox{\hyperlink{db_8php_aa8a5a87b9c1a6a0819b88447cbe41877}{\$conn}},\ \mbox{\hyperlink{authenticate_8php_a888153ba43bbd2cd3be19c24c6c30ef7}{\$query}});}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00031}00031\ \ \ \ \ \textcolor{comment}{//\ Check\ if\ the\ query\ returned\ any\ rows}}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00032}00032\ \ \ \ \ \textcolor{keywordflow}{if}\ (mysqli\_num\_rows(\mbox{\hyperlink{execute_8php_a4fd01df38e08fc33f651c7b774894c29}{\$result}})\ ==\ 1)\ \{}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00033}00033\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Fetch\ the\ user\ data\ from\ the\ result}}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00034}00034\ \ \ \ \ \ \ \ \ \$user\ =\ mysqli\_fetch\_assoc(\mbox{\hyperlink{execute_8php_a4fd01df38e08fc33f651c7b774894c29}{\$result}});}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00036}00036\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Store\ the\ username\ in\ a\ session\ variable}}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00037}00037\ \ \ \ \ \ \ \ \ \$\_SESSION[\textcolor{stringliteral}{'name'}]\ =\ \$user[\textcolor{stringliteral}{'username'}];}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00038}00038\ \ \ \ \ \ \ \ \ \$\_SESSION[\textcolor{stringliteral}{'fullname'}]\ =\ \$user[\textcolor{stringliteral}{'name'}];}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00039}00039\ \ \ \ \ \ \ \ \ \$\_SESSION[\textcolor{stringliteral}{'email'}]\ =\ \$user[\textcolor{stringliteral}{'email'}];}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00041}00041\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Redirect\ to\ the\ dashboard}}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00042}00042\ \ \ \ \ \ \ \ \ header(\textcolor{stringliteral}{"{}Location:\ ./../Views/dashboard/index.php"{}});}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00043}00043\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00044}00044\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Redirect\ back\ to\ the\ login\ page\ with\ an\ error\ message}}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00045}00045\ \ \ \ \ \ \ \ \ header(\textcolor{stringliteral}{"{}Location:\ ./../Views/login.php?error=invalid\_credentials"{}});}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00046}00046\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00048}00048\ \ \ \ \ \textcolor{comment}{//\ Close\ the\ database\ connection}}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00049}00049\ \ \ \ \ mysqli\_close(\mbox{\hyperlink{db_8php_aa8a5a87b9c1a6a0819b88447cbe41877}{\$conn}});}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00050}00050\ \}}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00052}00052\ \textcolor{comment}{//\ Call\ the\ login\ function}}
+\DoxyCodeLine{\Hypertarget{login_controller_8php_source_l00053}00053\ \mbox{\hyperlink{login_controller_8php_aa311da27ba5706f5710cea7706c8eae1}{login}}();}
+
+\end{DoxyCode}

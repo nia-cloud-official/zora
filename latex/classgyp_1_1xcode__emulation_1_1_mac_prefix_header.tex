@@ -1,0 +1,192 @@
+\doxysection{gyp.\+xcode\+\_\+emulation.\+Mac\+Prefix\+Header Class Reference}
+\hypertarget{classgyp_1_1xcode__emulation_1_1_mac_prefix_header}{}\label{classgyp_1_1xcode__emulation_1_1_mac_prefix_header}\index{gyp.xcode\_emulation.MacPrefixHeader@{gyp.xcode\_emulation.MacPrefixHeader}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a27628503e71488f30e2c6aa716b20126}{\+\_\+\+\_\+init\+\_\+\+\_\+}} (self, xcode\+\_\+settings, gyp\+\_\+path\+\_\+to\+\_\+build\+\_\+path, gyp\+\_\+path\+\_\+to\+\_\+build\+\_\+output)
+\item 
+\mbox{\hyperlink{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a3fcb0a8ab748ec1ec0b174f2119e34a3}{Get\+Include}} (self, lang, arch=None)
+\item 
+\mbox{\hyperlink{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_ae7f5eda67aab342217aff7c70812c339}{Get\+Obj\+Dependencies}} (self, sources, objs, arch=None)
+\item 
+\mbox{\hyperlink{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a2b6fbdb79ef4f092890177add0090721}{Get\+Pch\+Build\+Commands}} (self, arch=None)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a3a7783956a3829e02caf5de93e35e026}{header}}
+\item 
+\mbox{\hyperlink{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a7dc1867ab18452463ae521cb7fc84bbf}{compile\+\_\+headers}}
+\item 
+\mbox{\hyperlink{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a2176f79ba5d0fa41f87a11de2233c6ef}{compiled\+\_\+headers}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a806d6ea8ca70a69635b41fe477e13e89}{\+\_\+\+Compiled\+Header}} (self, lang, arch)
+\item 
+\mbox{\hyperlink{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a5ab1d1bf6bfab4b307a890cb0c8ffa56}{\+\_\+\+Gch}} (self, lang, arch)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}A class that helps with emulating Xcode's GCC_PREFIX_HEADER feature.
+
+This feature consists of several pieces:
+* If GCC_PREFIX_HEADER is present, all compilations in that project get an
+additional |-include path_to_prefix_header| cflag.
+* If GCC_PRECOMPILE_PREFIX_HEADER is present too, then the prefix header is
+instead compiled, and all other compilations in the project get an
+additional |-include path_to_compiled_header| instead.
++ Compiled prefix headers have the extension gch. There is one gch file for
+  every language used in the project (c, cc, m, mm), since gch files for
+  different languages aren't compatible.
++ gch files themselves are built with the target's normal cflags, but they
+  obviously don't get the |-include| flag. Instead, they need a -x flag that
+  describes their language.
++ All o files in the target need to depend on the gch file, to make sure
+  it's built before any o file is built.
+
+This class helps with some of these tasks, but it needs help from the build
+system for writing dependencies to the gch files, for writing build commands
+for the gch files, and for figuring out the location of the gch files.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{xcode__emulation_8py_source_l01371}{1371}} of file \mbox{\hyperlink{xcode__emulation_8py_source}{xcode\+\_\+emulation.\+py}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a27628503e71488f30e2c6aa716b20126}\index{gyp.xcode\_emulation.MacPrefixHeader@{gyp.xcode\_emulation.MacPrefixHeader}!\_\_init\_\_@{\_\_init\_\_}}
+\index{\_\_init\_\_@{\_\_init\_\_}!gyp.xcode\_emulation.MacPrefixHeader@{gyp.xcode\_emulation.MacPrefixHeader}}
+\doxysubsubsection{\texorpdfstring{\_\_init\_\_()}{\_\_init\_\_()}}
+{\footnotesize\ttfamily \label{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a27628503e71488f30e2c6aa716b20126} 
+gyp.\+xcode\+\_\+emulation.\+Mac\+Prefix\+Header.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{xcode\+\_\+settings}{, }\item[{}]{gyp\+\_\+path\+\_\+to\+\_\+build\+\_\+path}{, }\item[{}]{gyp\+\_\+path\+\_\+to\+\_\+build\+\_\+output}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}If xcode_settings is None, all methods on this class are no-ops.
+
+Args:
+gyp_path_to_build_path: A function that takes a gyp-relative path,
+    and returns a path relative to the build directory.
+gyp_path_to_build_output: A function that takes a gyp-relative path and
+    a language code ('c', 'cc', 'm', or 'mm'), and that returns a path
+    to where the output of precompiling that path for that language
+    should be placed (without the trailing '.gch').
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{xcode__emulation_8py_source_l01394}{1394}} of file \mbox{\hyperlink{xcode__emulation_8py_source}{xcode\+\_\+emulation.\+py}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a806d6ea8ca70a69635b41fe477e13e89}\index{gyp.xcode\_emulation.MacPrefixHeader@{gyp.xcode\_emulation.MacPrefixHeader}!\_CompiledHeader@{\_CompiledHeader}}
+\index{\_CompiledHeader@{\_CompiledHeader}!gyp.xcode\_emulation.MacPrefixHeader@{gyp.xcode\_emulation.MacPrefixHeader}}
+\doxysubsubsection{\texorpdfstring{\_CompiledHeader()}{\_CompiledHeader()}}
+{\footnotesize\ttfamily \label{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a806d6ea8ca70a69635b41fe477e13e89} 
+gyp.\+xcode\+\_\+emulation.\+Mac\+Prefix\+Header.\+\_\+\+Compiled\+Header (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{lang}{, }\item[{}]{arch}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line \mbox{\hyperlink{xcode__emulation_8py_source_l01428}{1428}} of file \mbox{\hyperlink{xcode__emulation_8py_source}{xcode\+\_\+emulation.\+py}}.
+
+Here is the caller graph for this function\+:
+% FIG 0
+\Hypertarget{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a5ab1d1bf6bfab4b307a890cb0c8ffa56}\index{gyp.xcode\_emulation.MacPrefixHeader@{gyp.xcode\_emulation.MacPrefixHeader}!\_Gch@{\_Gch}}
+\index{\_Gch@{\_Gch}!gyp.xcode\_emulation.MacPrefixHeader@{gyp.xcode\_emulation.MacPrefixHeader}}
+\doxysubsubsection{\texorpdfstring{\_Gch()}{\_Gch()}}
+{\footnotesize\ttfamily \label{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a5ab1d1bf6bfab4b307a890cb0c8ffa56} 
+gyp.\+xcode\+\_\+emulation.\+Mac\+Prefix\+Header.\+\_\+\+Gch (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{lang}{, }\item[{}]{arch}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\begin{DoxyVerb}Returns the actual file name of the prefix header for language |lang|.\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{xcode__emulation_8py_source_l01444}{1444}} of file \mbox{\hyperlink{xcode__emulation_8py_source}{xcode\+\_\+emulation.\+py}}.
+
+Here is the call graph for this function\+:
+% FIG 1
+Here is the caller graph for this function\+:
+% FIG 2
+\Hypertarget{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a3fcb0a8ab748ec1ec0b174f2119e34a3}\index{gyp.xcode\_emulation.MacPrefixHeader@{gyp.xcode\_emulation.MacPrefixHeader}!GetInclude@{GetInclude}}
+\index{GetInclude@{GetInclude}!gyp.xcode\_emulation.MacPrefixHeader@{gyp.xcode\_emulation.MacPrefixHeader}}
+\doxysubsubsection{\texorpdfstring{GetInclude()}{GetInclude()}}
+{\footnotesize\ttfamily \label{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a3fcb0a8ab748ec1ec0b174f2119e34a3} 
+gyp.\+xcode\+\_\+emulation.\+Mac\+Prefix\+Header.\+Get\+Include (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{lang}{, }\item[{}]{arch}{ = {\ttfamily None}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Gets the cflags to include the prefix header for language |lang|.\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{xcode__emulation_8py_source_l01435}{1435}} of file \mbox{\hyperlink{xcode__emulation_8py_source}{xcode\+\_\+emulation.\+py}}.
+
+Here is the call graph for this function\+:
+% FIG 3
+\Hypertarget{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_ae7f5eda67aab342217aff7c70812c339}\index{gyp.xcode\_emulation.MacPrefixHeader@{gyp.xcode\_emulation.MacPrefixHeader}!GetObjDependencies@{GetObjDependencies}}
+\index{GetObjDependencies@{GetObjDependencies}!gyp.xcode\_emulation.MacPrefixHeader@{gyp.xcode\_emulation.MacPrefixHeader}}
+\doxysubsubsection{\texorpdfstring{GetObjDependencies()}{GetObjDependencies()}}
+{\footnotesize\ttfamily \label{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_ae7f5eda67aab342217aff7c70812c339} 
+gyp.\+xcode\+\_\+emulation.\+Mac\+Prefix\+Header.\+Get\+Obj\+Dependencies (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{sources}{, }\item[{}]{objs}{, }\item[{}]{arch}{ = {\ttfamily None}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Given a list of source files and the corresponding object files, returns
+a list of (source, object, gch) tuples, where |gch| is the build-directory
+relative path to the gch file each object file depends on.  |compilable[i]|
+has to be the source file belonging to |objs[i]|.\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{xcode__emulation_8py_source_l01449}{1449}} of file \mbox{\hyperlink{xcode__emulation_8py_source}{xcode\+\_\+emulation.\+py}}.
+
+Here is the call graph for this function\+:
+% FIG 4
+\Hypertarget{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a2b6fbdb79ef4f092890177add0090721}\index{gyp.xcode\_emulation.MacPrefixHeader@{gyp.xcode\_emulation.MacPrefixHeader}!GetPchBuildCommands@{GetPchBuildCommands}}
+\index{GetPchBuildCommands@{GetPchBuildCommands}!gyp.xcode\_emulation.MacPrefixHeader@{gyp.xcode\_emulation.MacPrefixHeader}}
+\doxysubsubsection{\texorpdfstring{GetPchBuildCommands()}{GetPchBuildCommands()}}
+{\footnotesize\ttfamily \label{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a2b6fbdb79ef4f092890177add0090721} 
+gyp.\+xcode\+\_\+emulation.\+Mac\+Prefix\+Header.\+Get\+Pch\+Build\+Commands (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{arch}{ = {\ttfamily None}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Returns [(path_to_gch, language_flag, language, header)].
+|path_to_gch| and |header| are relative to the build directory.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{xcode__emulation_8py_source_l01472}{1472}} of file \mbox{\hyperlink{xcode__emulation_8py_source}{xcode\+\_\+emulation.\+py}}.
+
+Here is the call graph for this function\+:
+% FIG 5
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a7dc1867ab18452463ae521cb7fc84bbf}\index{gyp.xcode\_emulation.MacPrefixHeader@{gyp.xcode\_emulation.MacPrefixHeader}!compile\_headers@{compile\_headers}}
+\index{compile\_headers@{compile\_headers}!gyp.xcode\_emulation.MacPrefixHeader@{gyp.xcode\_emulation.MacPrefixHeader}}
+\doxysubsubsection{\texorpdfstring{compile\_headers}{compile\_headers}}
+{\footnotesize\ttfamily \label{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a7dc1867ab18452463ae521cb7fc84bbf} 
+gyp.\+xcode\+\_\+emulation.\+Mac\+Prefix\+Header.\+compile\+\_\+headers}
+
+
+
+Definition at line \mbox{\hyperlink{xcode__emulation_8py_source_l01410}{1410}} of file \mbox{\hyperlink{xcode__emulation_8py_source}{xcode\+\_\+emulation.\+py}}.
+
+\Hypertarget{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a2176f79ba5d0fa41f87a11de2233c6ef}\index{gyp.xcode\_emulation.MacPrefixHeader@{gyp.xcode\_emulation.MacPrefixHeader}!compiled\_headers@{compiled\_headers}}
+\index{compiled\_headers@{compiled\_headers}!gyp.xcode\_emulation.MacPrefixHeader@{gyp.xcode\_emulation.MacPrefixHeader}}
+\doxysubsubsection{\texorpdfstring{compiled\_headers}{compiled\_headers}}
+{\footnotesize\ttfamily \label{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a2176f79ba5d0fa41f87a11de2233c6ef} 
+gyp.\+xcode\+\_\+emulation.\+Mac\+Prefix\+Header.\+compiled\+\_\+headers}
+
+
+
+Definition at line \mbox{\hyperlink{xcode__emulation_8py_source_l01419}{1419}} of file \mbox{\hyperlink{xcode__emulation_8py_source}{xcode\+\_\+emulation.\+py}}.
+
+\Hypertarget{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a3a7783956a3829e02caf5de93e35e026}\index{gyp.xcode\_emulation.MacPrefixHeader@{gyp.xcode\_emulation.MacPrefixHeader}!header@{header}}
+\index{header@{header}!gyp.xcode\_emulation.MacPrefixHeader@{gyp.xcode\_emulation.MacPrefixHeader}}
+\doxysubsubsection{\texorpdfstring{header}{header}}
+{\footnotesize\ttfamily \label{classgyp_1_1xcode__emulation_1_1_mac_prefix_header_a3a7783956a3829e02caf5de93e35e026} 
+gyp.\+xcode\+\_\+emulation.\+Mac\+Prefix\+Header.\+header}
+
+
+
+Definition at line \mbox{\hyperlink{xcode__emulation_8py_source_l01409}{1409}} of file \mbox{\hyperlink{xcode__emulation_8py_source}{xcode\+\_\+emulation.\+py}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+backend/node\+\_\+modules/node-\/gyp/gyp/pylib/gyp/\mbox{\hyperlink{xcode__emulation_8py}{xcode\+\_\+emulation.\+py}}\end{DoxyCompactItemize}

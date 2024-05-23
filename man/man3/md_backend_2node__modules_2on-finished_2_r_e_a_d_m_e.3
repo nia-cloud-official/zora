@@ -1,0 +1,116 @@
+.TH "md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e \- on-finished 
+.PP
+ \fR\fP \fR\fP \fR\fP \fR\fP \fR\fP
+.PP
+Execute a callback when a HTTP request closes, finishes, or errors\&.
+.SH "Install"
+.PP
+This is a \fRNode\&.js\fP module available through the \fRnpm registry\fP\&. Installation is done using the \fR\fRnpm install\fP command\fP:
+.PP
+.PP
+.nf
+$ npm install on\-finished
+.fi
+.PP
+.SH "API"
+.PP
+.PP
+.nf
+var onFinished = require('on\-finished')
+.fi
+.PP
+.SS "onFinished(res, listener)"
+Attach a listener to listen for the response to finish\&. The listener will be invoked only once when the response finished\&. If the response finished to an error, the first argument will contain the error\&. If the response has already finished, the listener will be invoked\&.
+.PP
+Listening to the end of a response would be used to close things associated with the response, like open files\&.
+.PP
+Listener is invoked as \fRlistener(err, res)\fP\&.
+.PP
+.PP
+.nf
+onFinished(res, function (err, res) {
+  // clean up open fds, etc\&.
+  // err contains the error if request error'd
+})
+.fi
+.PP
+.SS "onFinished(req, listener)"
+Attach a listener to listen for the request to finish\&. The listener will be invoked only once when the request finished\&. If the request finished to an error, the first argument will contain the error\&. If the request has already finished, the listener will be invoked\&.
+.PP
+Listening to the end of a request would be used to know when to continue after reading the data\&.
+.PP
+Listener is invoked as \fRlistener(err, req)\fP\&.
+.PP
+.PP
+.nf
+var data = ''
+
+req\&.setEncoding('utf8')
+req\&.on('data', function (str) {
+  data += str
+})
+
+onFinished(req, function (err, req) {
+  // data is read unless there is err
+})
+.fi
+.PP
+.SS "onFinished\&.isFinished(res)"
+Determine if \fRres\fP is already finished\&. This would be useful to check and not even start certain operations if the response has already finished\&.
+.SS "onFinished\&.isFinished(req)"
+Determine if \fRreq\fP is already finished\&. This would be useful to check and not even start certain operations if the request has already finished\&.
+.SH "Special Node\&.js requests"
+.PP
+.SS "HTTP CONNECT method"
+The meaning of the \fRCONNECT\fP method from RFC 7231, section 4\&.3\&.6:
+.PP
+.RS 4
+The CONNECT method requests that the recipient establish a tunnel to the destination origin server identified by the request-target and, if successful, thereafter restrict its behavior to blind forwarding of packets, in both directions, until the tunnel is closed\&. Tunnels are commonly used to create an end-to-end virtual connection, through one or more proxies, which can then be secured using TLS (Transport Layer Security, [RFC5246])\&. 
+.RE
+.PP
+.PP
+In Node\&.js, these request objects come from the `'connect'` event on the HTTP server\&.
+.PP
+When this module is used on a HTTP \fRCONNECT\fP request, the request is considered 'finished' immediately, \fBdue to limitations in the Node\&.js interface\fP\&. This means if the \fRCONNECT\fP request contains a request entity, the request will be considered 'finished' even before it has been read\&.
+.PP
+There is no such thing as a response object to a \fRCONNECT\fP request in Node\&.js, so there is no support for one\&.
+.SS "HTTP Upgrade request"
+The meaning of the \fRUpgrade\fP header from RFC 7230, section 6\&.1:
+.PP
+.RS 4
+The 'Upgrade' header field is intended to provide a simple mechanism for transitioning from HTTP/1\&.1 to some other protocol on the same connection\&. 
+.RE
+.PP
+.PP
+In Node\&.js, these request objects come from the `'upgrade'` event on the HTTP server\&.
+.PP
+When this module is used on a HTTP request with an \fRUpgrade\fP header, the request is considered 'finished' immediately, \fBdue to limitations in the Node\&.js interface\fP\&. This means if the \fRUpgrade\fP request contains a request entity, the request will be considered 'finished' even before it has been read\&.
+.PP
+There is no such thing as a response object to a \fRUpgrade\fP request in Node\&.js, so there is no support for one\&.
+.SH "Example"
+.PP
+The following code ensures that file descriptors are always closed once the response finishes\&.
+.PP
+.PP
+.nf
+var destroy = require('destroy')
+var fs = require('fs')
+var http = require('http')
+var onFinished = require('on\-finished')
+
+http\&.createServer(function onRequest (req, res) {
+  var stream = fs\&.createReadStream('package\&.json')
+  stream\&.pipe(res)
+  onFinished(res, function () {
+    destroy(stream)
+  })
+})
+.fi
+.PP
+.SH "License"
+.PP
+[MIT](LICENSE) 

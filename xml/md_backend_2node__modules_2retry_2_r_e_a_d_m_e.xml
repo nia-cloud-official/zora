@@ -1,0 +1,176 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2retry_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2retry_2_r_e_a_d_m_e</compoundname>
+    <title>README</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><ulink url="http://travis-ci.org/tim-kos/node-retry"><image type="html" name="https://secure.travis-ci.org/tim-kos/node-retry.png?branch=master" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://codecov.io/gh/tim-kos/node-retry"><image type="html" name="https://codecov.io/gh/tim-kos/node-retry/branch/master/graph/badge.svg" alt="codecov" inline="yes"></image>
+</ulink></para>
+<sect1 id="md_backend_2node__modules_2retry_2_r_e_a_d_m_e_1autotoc_md2980">
+<title>retry</title><para>Abstraction for exponential and custom retry strategies for failed operations.</para>
+<sect2 id="md_backend_2node__modules_2retry_2_r_e_a_d_m_e_1autotoc_md2981">
+<title>Installation</title><para><verbatim>npm install retry
+</verbatim> </para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2retry_2_r_e_a_d_m_e_1autotoc_md2982">
+<title>Current Status</title><para>This module has been tested and is ready to be used.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2retry_2_r_e_a_d_m_e_1autotoc_md2983">
+<title>Tutorial</title><para>The example below will retry a potentially failing <computeroutput>dns.resolve</computeroutput> operation <computeroutput>10</computeroutput> times using an exponential backoff strategy. With the default settings, this means the last attempt is made after <computeroutput>17 minutes and 3 seconds</computeroutput>.</para>
+<para><programlisting><codeline><highlight class="normal"><sp/>javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>dns<sp/>=<sp/>require(&apos;dns&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>retry<sp/>=<sp/>require(&apos;retry&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>faultTolerantResolve(address,<sp/>cb)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>operation<sp/>=<sp/>retry.operation();</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>operation.attempt(function(currentAttempt)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>dns.resolve(address,<sp/>function(err,<sp/>addresses)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>if<sp/>(operation.retry(err))<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>cb(err<sp/>?<sp/>operation.mainError()<sp/>:<sp/>null,<sp/>addresses);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>});</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>});</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">faultTolerantResolve(&apos;nodejs.org&apos;,<sp/>function(err,<sp/>addresses)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(err,<sp/>addresses);</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+</programlisting></para>
+<para>Of course you can also configure the factors that go into the exponential backoff. See the API documentation below for all available settings. currentAttempt is an int representing the number of attempts so far.</para>
+<para><programlisting><codeline><highlight class="normal"><sp/>javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>operation<sp/>=<sp/>retry.operation({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>retries:<sp/>5,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>factor:<sp/>3,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>minTimeout:<sp/>1<sp/>*<sp/>1000,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>maxTimeout:<sp/>60<sp/>*<sp/>1000,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>randomize:<sp/>true,</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2retry_2_r_e_a_d_m_e_1autotoc_md2984">
+<title>API</title><sect3 id="md_backend_2node__modules_2retry_2_r_e_a_d_m_e_1autotoc_md2985">
+<title>retry.operation([options])</title><para>Creates a new <computeroutput>RetryOperation</computeroutput> object. <computeroutput>options</computeroutput> is the same as <computeroutput>retry.timeouts()</computeroutput>&apos;s <computeroutput>options</computeroutput>, with two additions:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>forever</computeroutput>: Whether to retry forever, defaults to <computeroutput>false</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>unref</computeroutput>: Whether to <ulink url="https://nodejs.org/api/timers.html#timers_unref">unref</ulink> the setTimeout&apos;s, defaults to <computeroutput>false</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>maxRetryTime</computeroutput>: The maximum time (in milliseconds) that the retried operation is allowed to run. Default is <computeroutput>Infinity</computeroutput>. <linebreak/>
+</para>
+</listitem></itemizedlist>
+</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2retry_2_r_e_a_d_m_e_1autotoc_md2986">
+<title>retry.timeouts([options])</title><para>Returns an array of timeouts. All time <computeroutput>options</computeroutput> and return values are in milliseconds. If <computeroutput>options</computeroutput> is an array, a copy of that array is returned.</para>
+<para><computeroutput>options</computeroutput> is a JS object that can contain any of the following keys:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>retries</computeroutput>: The maximum amount of times to retry the operation. Default is <computeroutput>10</computeroutput>. Seting this to <computeroutput>1</computeroutput> means <computeroutput>do it once, then retry it once</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>factor</computeroutput>: The exponential factor to use. Default is <computeroutput>2</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>minTimeout</computeroutput>: The number of milliseconds before starting the first retry. Default is <computeroutput>1000</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>maxTimeout</computeroutput>: The maximum number of milliseconds between two retries. Default is <computeroutput>Infinity</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>randomize</computeroutput>: Randomizes the timeouts by multiplying with a factor between <computeroutput>1</computeroutput> to <computeroutput>2</computeroutput>. Default is <computeroutput>false</computeroutput>.</para>
+</listitem></itemizedlist>
+</para>
+<para>The formula used to calculate the individual timeouts is:</para>
+<para><programlisting><codeline><highlight class="normal">Math.min(random<sp/>*<sp/>minTimeout<sp/>*<sp/>Math.pow(factor,<sp/>attempt),<sp/>maxTimeout)</highlight></codeline>
+</programlisting></para>
+<para>Have a look at <ulink url="http://dthain.blogspot.com/2009/02/exponential-backoff-in-distributed.html">this article</ulink> for a better explanation of approach.</para>
+<para>If you want to tune your <computeroutput>factor</computeroutput> / <computeroutput>times</computeroutput> settings to attempt the last retry after a certain amount of time, you can use wolfram alpha. For example in order to tune for <computeroutput>10</computeroutput> attempts in <computeroutput>5 minutes</computeroutput>, you can use this equation:</para>
+<para><image type="html" name="https://github.com/tim-kos/node-retry/raw/master/equation.gif" alt="screenshot" inline="yes"></image>
+</para>
+<para>Explaining the various values from left to right:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>k = 0 ... 9</computeroutput>: The <computeroutput>retries</computeroutput> value (10)</para>
+</listitem><listitem><para><computeroutput>1000</computeroutput>: The <computeroutput>minTimeout</computeroutput> value in ms (1000)</para>
+</listitem><listitem><para><computeroutput>x^k</computeroutput>: No need to change this, <computeroutput>x</computeroutput> will be your resulting factor</para>
+</listitem><listitem><para><computeroutput>5 * 60 * 1000</computeroutput>: The desired total amount of time for retrying in ms (5 minutes)</para>
+</listitem></itemizedlist>
+</para>
+<para>To make this a little easier for you, use wolfram alpha to do the calculations:</para>
+<para>&lt;<ulink url="http://www.wolframalpha.com/input/?i=Sum%5B1000">http://www.wolframalpha.com/input/?i=Sum%5B1000</ulink>*x^k%2C+{k%2C+0%2C+9}%5D+%3D+5+*+60+*+1000&gt;</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2retry_2_r_e_a_d_m_e_1autotoc_md2987">
+<title>retry.createTimeout(attempt, opts)</title><para>Returns a new <computeroutput>timeout</computeroutput> (integer in milliseconds) based on the given parameters.</para>
+<para><computeroutput>attempt</computeroutput> is an integer representing for which retry the timeout should be calculated. If your retry operation was executed 4 times you had one attempt and 3 retries. If you then want to calculate a new timeout, you should set <computeroutput>attempt</computeroutput> to 4 (attempts are zero-indexed).</para>
+<para><computeroutput>opts</computeroutput> can include <computeroutput>factor</computeroutput>, <computeroutput>minTimeout</computeroutput>, <computeroutput>randomize</computeroutput> (boolean) and <computeroutput>maxTimeout</computeroutput>. They are documented above.</para>
+<para><computeroutput>retry.createTimeout()</computeroutput> is used internally by <computeroutput>retry.timeouts()</computeroutput> and is public for you to be able to create your own timeouts for reinserting an item, see <ulink url="https://github.com/tim-kos/node-retry/issues/13">issue #13</ulink>.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2retry_2_r_e_a_d_m_e_1autotoc_md2988">
+<title>retry.wrap(obj, [options], [methodNames])</title><para>Wrap all functions of the <computeroutput>obj</computeroutput> with retry. Optionally you can pass operation options and an array of method names which need to be wrapped.</para>
+<para><programlisting><codeline><highlight class="normal">retry.wrap(obj)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">retry.wrap(obj,<sp/>[&apos;method1&apos;,<sp/>&apos;method2&apos;])</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">retry.wrap(obj,<sp/>{retries:<sp/>3})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">retry.wrap(obj,<sp/>{retries:<sp/>3},<sp/>[&apos;method1&apos;,<sp/>&apos;method2&apos;])</highlight></codeline>
+</programlisting> The <computeroutput>options</computeroutput> object can take any options that the usual call to <computeroutput>retry.operation</computeroutput> can take.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2retry_2_r_e_a_d_m_e_1autotoc_md2989">
+<title>new RetryOperation(timeouts, [options])</title><para>Creates a new <computeroutput>RetryOperation</computeroutput> where <computeroutput>timeouts</computeroutput> is an array where each value is a timeout given in milliseconds.</para>
+<para>Available options:<itemizedlist>
+<listitem><para><computeroutput>forever</computeroutput>: Whether to retry forever, defaults to <computeroutput>false</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>unref</computeroutput>: Wether to <ulink url="https://nodejs.org/api/timers.html#timers_unref">unref</ulink> the setTimeout&apos;s, defaults to <computeroutput>false</computeroutput>.</para>
+</listitem></itemizedlist>
+</para>
+<para>If <computeroutput>forever</computeroutput> is true, the following changes happen:<itemizedlist>
+<listitem><para><computeroutput>RetryOperation.errors()</computeroutput> will only output an array of one item: the last error.</para>
+</listitem><listitem><para><computeroutput>RetryOperation</computeroutput> will repeatedly use the <computeroutput>timeouts</computeroutput> array. Once all of its timeouts have been used up, it restarts with the first timeout, then uses the second and so on.</para>
+</listitem></itemizedlist>
+</para>
+<sect4 id="md_backend_2node__modules_2retry_2_r_e_a_d_m_e_1autotoc_md2990">
+<title>retryOperation.errors()</title><para>Returns an array of all errors that have been passed to <computeroutput>retryOperation.retry()</computeroutput> so far. The returning array has the errors ordered chronologically based on when they were passed to <computeroutput>retryOperation.retry()</computeroutput>, which means the first passed error is at index zero and the last is at the last index.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2retry_2_r_e_a_d_m_e_1autotoc_md2991">
+<title>retryOperation.mainError()</title><para>A reference to the error object that occured most frequently. Errors are compared using the <computeroutput>error.message</computeroutput> property.</para>
+<para>If multiple error messages occured the same amount of time, the last error object with that message is returned.</para>
+<para>If no errors occured so far, the value is <computeroutput>null</computeroutput>.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2retry_2_r_e_a_d_m_e_1autotoc_md2992">
+<title>retryOperation.attempt(fn, timeoutOps)</title><para>Defines the function <computeroutput>fn</computeroutput> that is to be retried and executes it for the first time right away. The <computeroutput>fn</computeroutput> function can receive an optional <computeroutput>currentAttempt</computeroutput> callback that represents the number of attempts to execute <computeroutput>fn</computeroutput> so far.</para>
+<para>Optionally defines <computeroutput>timeoutOps</computeroutput> which is an object having a property <computeroutput>timeout</computeroutput> in miliseconds and a property <computeroutput>cb</computeroutput> callback function. Whenever your retry operation takes longer than <computeroutput>timeout</computeroutput> to execute, the timeout callback function <computeroutput>cb</computeroutput> is called.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2retry_2_r_e_a_d_m_e_1autotoc_md2993">
+<title>retryOperation.try(fn)</title><para>This is an alias for <computeroutput>retryOperation.attempt(fn)</computeroutput>. This is deprecated. Please use <computeroutput>retryOperation.attempt(fn)</computeroutput> instead.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2retry_2_r_e_a_d_m_e_1autotoc_md2994">
+<title>retryOperation.start(fn)</title><para>This is an alias for <computeroutput>retryOperation.attempt(fn)</computeroutput>. This is deprecated. Please use <computeroutput>retryOperation.attempt(fn)</computeroutput> instead.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2retry_2_r_e_a_d_m_e_1autotoc_md2995">
+<title>retryOperation.retry(error)</title><para>Returns <computeroutput>false</computeroutput> when no <computeroutput>error</computeroutput> value is given, or the maximum amount of retries has been reached.</para>
+<para>Otherwise it returns <computeroutput>true</computeroutput>, and retries the operation after the timeout for the current attempt number.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2retry_2_r_e_a_d_m_e_1autotoc_md2996">
+<title>retryOperation.stop()</title><para>Allows you to stop the operation being retried. Useful for aborting the operation on a fatal error etc.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2retry_2_r_e_a_d_m_e_1autotoc_md2997">
+<title>retryOperation.reset()</title><para>Resets the internal state of the operation object, so that you can call <computeroutput>attempt()</computeroutput> again as if this was a new operation object.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2retry_2_r_e_a_d_m_e_1autotoc_md2998">
+<title>retryOperation.attempts()</title><para>Returns an int representing the number of attempts it took to call <computeroutput>fn</computeroutput> before it was successful.</para>
+</sect4>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2retry_2_r_e_a_d_m_e_1autotoc_md2999">
+<title>License</title><para>retry is licensed under the MIT license.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2retry_2_r_e_a_d_m_e_1autotoc_md3000">
+<title>Changelog</title><para>0.10.0 Adding <computeroutput>stop</computeroutput> functionality, thanks to @maxnachlinger.</para>
+<para>0.9.0 Adding <computeroutput>unref</computeroutput> functionality, thanks to @satazor.</para>
+<para>0.8.0 Implementing retry.wrap.</para>
+<para>0.7.0 Some bug fixes and made retry.createTimeout() public. Fixed issues <ulink url="https://github.com/tim-kos/node-retry/issues/10">#10</ulink>, <ulink url="https://github.com/tim-kos/node-retry/issues/12">#12</ulink>, and <ulink url="https://github.com/tim-kos/node-retry/issues/13">#13</ulink>.</para>
+<para>0.6.0 Introduced optional timeOps parameter for the attempt() function which is an object having a property timeout in milliseconds and a property cb callback function. Whenever your retry operation takes longer than timeout to execute, the timeout callback function cb is called.</para>
+<para>0.5.0 Some minor refactoring.</para>
+<para>0.4.0 Changed retryOperation.try() to retryOperation.attempt(). Deprecated the aliases start() and <ref refid="site_8config_8php_1abe4cc9788f52e49485473dc699537388" kindref="member">try()</ref> for it.</para>
+<para>0.3.0 Added retryOperation.start() which is an alias for retryOperation.try().</para>
+<para>0.2.0 Added attempts() function and parameter to retryOperation.try() representing the number of attempts it took to call fn(). </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/retry/README.md"/>
+  </compounddef>
+</doxygen>

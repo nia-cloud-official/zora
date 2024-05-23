@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="xml__fix_8py" kind="file" language="Python">
+    <compoundname>xml_fix.py</compoundname>
+    <innerclass refid="classgyp_1_1xml__fix_1_1_xml_fix" prot="public">gyp::xml_fix::XmlFix</innerclass>
+    <innernamespace refid="namespacegyp">gyp</innernamespace>
+    <innernamespace refid="namespacegyp_1_1xml__fix">gyp::xml_fix</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1" refid="namespacegyp_1_1xml__fix" refkind="compound"><highlight class="comment">#<sp/>Copyright<sp/>(c)<sp/>2011<sp/>Google<sp/>Inc.<sp/>All<sp/>rights<sp/>reserved.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">#<sp/>Use<sp/>of<sp/>this<sp/>source<sp/>code<sp/>is<sp/>governed<sp/>by<sp/>a<sp/>BSD-style<sp/>license<sp/>that<sp/>can<sp/>be</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">#<sp/>found<sp/>in<sp/>the<sp/>LICENSE<sp/>file.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="stringliteral">&quot;&quot;&quot;Applies<sp/>a<sp/>fix<sp/>to<sp/>CR<sp/>LF<sp/>TAB<sp/>handling<sp/>in<sp/>xml.dom.</highlight></codeline>
+<codeline lineno="6"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="7"><highlight class="stringliteral">Fixes<sp/>this:<sp/>http://code.google.com/p/chromium/issues/detail?id=76293</highlight></codeline>
+<codeline lineno="8"><highlight class="stringliteral">Working<sp/>around<sp/>this:<sp/>http://bugs.python.org/issue5752</highlight></codeline>
+<codeline lineno="9"><highlight class="stringliteral">TODO(bradnelson):<sp/>Consider<sp/>dropping<sp/>this<sp/>when<sp/>we<sp/>drop<sp/>XP<sp/>support.</highlight></codeline>
+<codeline lineno="10"><highlight class="stringliteral">&quot;&quot;&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>xml.dom.minidom</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="namespacegyp_1_1xml__fix_1a85e7e7c0e5fb93d63edc0e1d96838833" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="namespacegyp_1_1xml__fix_1a85e7e7c0e5fb93d63edc0e1d96838833" kindref="member">_Replacement_write_data</ref>(writer,<sp/>data,<sp/>is_attrib=False):</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;&quot;&quot;Writes<sp/>datachars<sp/>to<sp/>writer.&quot;&quot;&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/>data<sp/>=<sp/>data.replace(</highlight><highlight class="stringliteral">&quot;&amp;&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;&amp;amp;&quot;</highlight><highlight class="normal">).replace(</highlight><highlight class="stringliteral">&quot;&lt;&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;&amp;lt;&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/>data<sp/>=<sp/>data.replace(</highlight><highlight class="stringliteral">&apos;&quot;&apos;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;&amp;quot;&quot;</highlight><highlight class="normal">).replace(</highlight><highlight class="stringliteral">&quot;&gt;&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;&amp;gt;&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>is_attrib:</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>data<sp/>=<sp/>data.replace(</highlight><highlight class="stringliteral">&quot;\r&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;&amp;#xD;&quot;</highlight><highlight class="normal">).replace(</highlight><highlight class="stringliteral">&quot;\n&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;&amp;#xA;&quot;</highlight><highlight class="normal">).replace(</highlight><highlight class="stringliteral">&quot;\t&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;&amp;#x9;&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/>writer.write(data)</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25" refid="namespacegyp_1_1xml__fix_1ad0ba10a7bc6d51ce7e3e3da8acb9d500" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="namespacegyp_1_1xml__fix_1ad0ba10a7bc6d51ce7e3e3da8acb9d500" kindref="member">_Replacement_writexml</ref>(self,<sp/>writer,<sp/>indent=&quot;&quot;,<sp/>addindent=&quot;&quot;,<sp/>newl=&quot;&quot;):</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>indent<sp/>=<sp/>current<sp/>indentation</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>addindent<sp/>=<sp/>indentation<sp/>to<sp/>add<sp/>to<sp/>higher<sp/>levels</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>newl<sp/>=<sp/>newline<sp/>string</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29" refid="namespacegyp_1_1xml__fix_1ab6a48172b9a9efa0acefed0ea4368c80" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>writer.write(indent<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;&lt;&quot;</highlight><highlight class="normal"><sp/>+<sp/>self.tagName)</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/>attrs<sp/>=<sp/>self._get_attributes()</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/>a_names<sp/>=<sp/>sorted(attrs.keys())</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>a_name<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>a_names:</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>writer.write(</highlight><highlight class="stringliteral">&apos;<sp/>%s=&quot;&apos;</highlight><highlight class="normal"><sp/>%<sp/>a_name)</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacegyp_1_1xml__fix_1a85e7e7c0e5fb93d63edc0e1d96838833" kindref="member">_Replacement_write_data</ref>(writer,<sp/>attrs[a_name].value,<sp/>is_attrib=</highlight><highlight class="keyword">True</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>writer.write(</highlight><highlight class="stringliteral">&apos;&quot;&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="38" refid="namespacegyp_1_1xml__fix_1a7fc5c6ff7058688d467f7995029e2e82" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>self.childNodes:</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>writer.write(</highlight><highlight class="stringliteral">&quot;&gt;%s&quot;</highlight><highlight class="normal"><sp/>%<sp/>newl)</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>node<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>self.childNodes:</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>node.writexml(writer,<sp/>indent<sp/>+<sp/>addindent,<sp/>addindent,<sp/>newl)</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>writer.write(f</highlight><highlight class="stringliteral">&quot;{indent}&lt;/{self.tagName}&gt;{newl}&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>writer.write(</highlight><highlight class="stringliteral">&quot;/&gt;%s&quot;</highlight><highlight class="normal"><sp/>%<sp/>newl)</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47" refid="classgyp_1_1xml__fix_1_1_xml_fix" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classgyp_1_1xml__fix_1_1_xml_fix" kindref="compound">XmlFix</ref>:</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;&quot;&quot;Object<sp/>to<sp/>manage<sp/>temporary<sp/>patching<sp/>of<sp/>xml.dom.minidom.&quot;&quot;&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50" refid="classgyp_1_1xml__fix_1_1_xml_fix_1a1fb96c5f90563af179d0b6fcbcf449fd" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="classgyp_1_1xml__fix_1_1_xml_fix_1a1fb96c5f90563af179d0b6fcbcf449fd" kindref="member">__init__</ref>(self):</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>Preserve<sp/>current<sp/>xml.dom.minidom<sp/>functions.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52" refid="classgyp_1_1xml__fix_1_1_xml_fix_1ad1af792a82751835751168efee40b9c4" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classgyp_1_1xml__fix_1_1_xml_fix_1ad1af792a82751835751168efee40b9c4" kindref="member">write_data</ref><sp/>=<sp/>xml.dom.minidom._write_data</highlight></codeline>
+<codeline lineno="53" refid="classgyp_1_1xml__fix_1_1_xml_fix_1ad9d102243aa98fecb85e46dbec7ddc6c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classgyp_1_1xml__fix_1_1_xml_fix_1ad9d102243aa98fecb85e46dbec7ddc6c" kindref="member">writexml</ref><sp/>=<sp/>xml.dom.minidom.Element.writexml</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>Inject<sp/>replacement<sp/>versions<sp/>of<sp/>a<sp/>function<sp/>and<sp/>a<sp/>method.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>xml.dom.minidom._write_data<sp/>=<sp/>_Replacement_write_data</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>xml.dom.minidom.Element.writexml<sp/>=<sp/>_Replacement_writexml</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="58" refid="classgyp_1_1xml__fix_1_1_xml_fix_1ab0ce29441b96a596ef31465cafadd5d5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="classgyp_1_1xml__fix_1_1_xml_fix_1ab0ce29441b96a596ef31465cafadd5d5" kindref="member">Cleanup</ref>(self):</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>self.<ref refid="classgyp_1_1xml__fix_1_1_xml_fix_1ad1af792a82751835751168efee40b9c4" kindref="member">write_data</ref>:</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>xml.dom.minidom._write_data<sp/>=<sp/>self.<ref refid="classgyp_1_1xml__fix_1_1_xml_fix_1ad1af792a82751835751168efee40b9c4" kindref="member">write_data</ref></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>xml.dom.minidom.Element.writexml<sp/>=<sp/>self.<ref refid="classgyp_1_1xml__fix_1_1_xml_fix_1ad9d102243aa98fecb85e46dbec7ddc6c" kindref="member">writexml</ref></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classgyp_1_1xml__fix_1_1_xml_fix_1ad1af792a82751835751168efee40b9c4" kindref="member">write_data</ref><sp/>=<sp/></highlight><highlight class="keywordtype">None</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64" refid="classgyp_1_1xml__fix_1_1_xml_fix_1af4e6bdd0cc3f35e6586bfc30b6d17870" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="classgyp_1_1xml__fix_1_1_xml_fix_1af4e6bdd0cc3f35e6586bfc30b6d17870" kindref="member">__del__</ref>(self):</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.<ref refid="classgyp_1_1xml__fix_1_1_xml_fix_1ab0ce29441b96a596ef31465cafadd5d5" kindref="member">Cleanup</ref>()</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/xml_fix.py"/>
+  </compounddef>
+</doxygen>

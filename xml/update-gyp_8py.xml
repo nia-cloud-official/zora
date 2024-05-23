@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="update-gyp_8py" kind="file" language="Python">
+    <compoundname>update-gyp.py</compoundname>
+    <innernamespace refid="namespaceupdate-gyp">update-gyp</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1" refid="namespaceupdate-gyp" refkind="compound"><highlight class="comment">#!/usr/bin/env<sp/>python3</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>argparse</highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>os</highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>shutil</highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>subprocess</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>tarfile</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>tempfile</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>urllib.request</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11" refid="namespaceupdate-gyp_1ad2ecd548040937f45583efe18b28113e" refkind="member"><highlight class="normal">BASE_URL<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;https://github.com/nodejs/gyp-next/archive/&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12" refid="namespaceupdate-gyp_1a9980780c6976fd321f5a6c1abc5d6208" refkind="member"><highlight class="normal">CHECKOUT_PATH<sp/>=<sp/>os.path.dirname(os.path.realpath(__file__))</highlight></codeline>
+<codeline lineno="13" refid="namespaceupdate-gyp_1aef51dd8049967775aed825101c1294bd" refkind="member"><highlight class="normal">CHECKOUT_GYP_PATH<sp/>=<sp/>os.path.join(CHECKOUT_PATH,<sp/></highlight><highlight class="stringliteral">&quot;gyp&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15" refid="namespaceupdate-gyp_1a73e96ddd455240365dc59ad1c1f01a2d" refkind="member"><highlight class="normal">parser<sp/>=<sp/>argparse.ArgumentParser()</highlight></codeline>
+<codeline lineno="16" refid="namespaceupdate-gyp_1a1870bb9fc9674e9b64956dffa76f15e8" refkind="member"><highlight class="normal">parser.add_argument(</highlight><highlight class="stringliteral">&quot;tag&quot;</highlight><highlight class="normal">,<sp/>help=</highlight><highlight class="stringliteral">&quot;gyp<sp/>tag<sp/>to<sp/>update<sp/>to&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="17" refid="namespaceupdate-gyp_1a3fd4f4f0e66ccc4096224ad28868f294" refkind="member"><highlight class="normal">args<sp/>=<sp/>parser.parse_args()</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19" refid="namespaceupdate-gyp_1a9804e36cfed1e387489d9d2ab863e45b" refkind="member"><highlight class="normal">tar_url<sp/>=<sp/>BASE_URL<sp/>+<sp/>args.tag<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;.tar.gz&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21" refid="namespaceupdate-gyp_1a69b5695d0a60de657b4a3e6b11072a31" refkind="member"><highlight class="normal">changed_files<sp/>=<sp/>subprocess.check_output([</highlight><highlight class="stringliteral">&quot;git&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;diff&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;--name-only&quot;</highlight><highlight class="normal">]).strip()</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>changed_files:</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">raise</highlight><highlight class="normal"><sp/>Exception(</highlight><highlight class="stringliteral">&quot;Can&apos;t<sp/>update<sp/>gyp<sp/>while<sp/>you<sp/>have<sp/>uncommitted<sp/>changes<sp/>in<sp/>node-gyp&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="keyword">with</highlight><highlight class="normal"><sp/>tempfile.TemporaryDirectory()<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>tmp_dir:</highlight></codeline>
+<codeline lineno="26" refid="namespaceupdate-gyp_1a4abca497be2e9bb5050796221a98ae61" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>tar_file<sp/>=<sp/>os.path.join(tmp_dir,<sp/></highlight><highlight class="stringliteral">&quot;gyp.tar.gz&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="27" refid="namespaceupdate-gyp_1ad1c2ad735414da397e7710f312d59105" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>unzip_target<sp/>=<sp/>os.path.join(tmp_dir,<sp/></highlight><highlight class="stringliteral">&quot;gyp&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">with</highlight><highlight class="normal"><sp/>open(tar_file,<sp/></highlight><highlight class="stringliteral">&quot;wb&quot;</highlight><highlight class="normal">)<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>f:</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>print(</highlight><highlight class="stringliteral">&quot;Downloading<sp/>gyp-next@&quot;</highlight><highlight class="normal"><sp/>+<sp/>args.tag<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;<sp/>into<sp/>temporary<sp/>directory...&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>print(</highlight><highlight class="stringliteral">&quot;From:<sp/>&quot;</highlight><highlight class="normal"><sp/>+<sp/>tar_url)</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">with</highlight><highlight class="normal"><sp/>urllib.request.urlopen(tar_url)<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>in_file:</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>f.write(in_file.read())</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>print(</highlight><highlight class="stringliteral">&quot;Unzipping...&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">with</highlight><highlight class="normal"><sp/>tarfile.open(tar_file,<sp/></highlight><highlight class="stringliteral">&quot;r:gz&quot;</highlight><highlight class="normal">)<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>tar_ref:</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>tar_ref.extractall(unzip_target)</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>print(</highlight><highlight class="stringliteral">&quot;Moving<sp/>to<sp/>current<sp/>checkout<sp/>(&quot;</highlight><highlight class="normal"><sp/>+<sp/>CHECKOUT_PATH<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;)...&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>os.path.exists(CHECKOUT_GYP_PATH):</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>shutil.rmtree(CHECKOUT_GYP_PATH)</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>shutil.move(</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>os.path.join(unzip_target,<sp/>os.listdir(unzip_target)[0]),<sp/>CHECKOUT_GYP_PATH</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>)</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45" refid="namespaceupdate-gyp_1a353f325a85a850b0456a7cbaff8fc43b" refkind="member"><highlight class="normal">subprocess.check_output([</highlight><highlight class="stringliteral">&quot;git&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;add&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;gyp&quot;</highlight><highlight class="normal">],<sp/>cwd=CHECKOUT_PATH)</highlight></codeline>
+<codeline lineno="46"><highlight class="normal">subprocess.check_output([</highlight><highlight class="stringliteral">&quot;git&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;commit&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;-m&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;feat(gyp):<sp/>update<sp/>gyp<sp/>to<sp/>&quot;</highlight><highlight class="normal"><sp/>+<sp/>args.tag])</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/node-gyp/update-gyp.py"/>
+  </compounddef>
+</doxygen>

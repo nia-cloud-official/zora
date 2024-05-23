@@ -1,0 +1,88 @@
+\chapter{socks}
+\hypertarget{md_backend_2node__modules_2socks_2docs_2migrating_from_v1}{}\label{md_backend_2node__modules_2socks_2docs_2migrating_from_v1}\index{socks@{socks}}
+\label{md_backend_2node__modules_2socks_2docs_2migrating_from_v1_autotoc_md3550}%
+\Hypertarget{md_backend_2node__modules_2socks_2docs_2migrating_from_v1_autotoc_md3550}%
+ \hypertarget{md_backend_2node__modules_2socks_2docs_2migrating_from_v1_autotoc_md3551}{}\doxysection{\texorpdfstring{Migrating from v1}{Migrating from v1}}\label{md_backend_2node__modules_2socks_2docs_2migrating_from_v1_autotoc_md3551}
+For the most part, migrating from v1 takes minimal effort as v2 still supports factory creation of proxy connections with callback support.\hypertarget{md_backend_2node__modules_2socks_2docs_2migrating_from_v1_autotoc_md3552}{}\doxysubsection{\texorpdfstring{Notable breaking changes}{Notable breaking changes}}\label{md_backend_2node__modules_2socks_2docs_2migrating_from_v1_autotoc_md3552}
+
+\begin{DoxyItemize}
+\item In an options object, the proxy \textquotesingle{}command\textquotesingle{} is now required and does not default to \textquotesingle{}connect\textquotesingle{}.
+\item {\bfseries{In an options object, \textquotesingle{}target\textquotesingle{} is now known as \textquotesingle{}destination\textquotesingle{}.}}
+\item Sockets are no longer paused after a SOCKS connection is made, so socket.\+resume() is no longer required. (Please be sure to attach data handlers immediately to the Socket to avoid losing data).
+\item In v2, only the \textquotesingle{}connect\textquotesingle{} command is supported via the factory Socks\+Client.\+create\+Connection function. (BIND and ASSOCIATE must be used with a Socks\+Client instance via event handlers).
+\item In v2, the factory Socks\+Client.\+create\+Connection function callback is called with a single object rather than separate socket and info object.
+\item A SOCKS http/https agent is no longer bundled into the library.
+\end{DoxyItemize}
+
+For informational purposes, here is the original getting started example from v1 converted to work with v2.\hypertarget{md_backend_2node__modules_2socks_2docs_2migrating_from_v1_autotoc_md3553}{}\doxysubsection{\texorpdfstring{Before (v1)}{Before (v1)}}\label{md_backend_2node__modules_2socks_2docs_2migrating_from_v1_autotoc_md3553}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ Socks\ =\ require('socks');}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ options\ =\ \{}
+\DoxyCodeLine{\ \ \ \ proxy:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ipaddress:\ "{}202.101.228.108"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ port:\ 1080,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ type:\ 5}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ target:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ host:\ "{}google.com"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ port:\ 80}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ command:\ 'connect'}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{Socks.createConnection(options,\ function(err,\ socket,\ info)\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (err)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ console.log(err);}
+\DoxyCodeLine{\ \ \ \ else\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ socket.write("{}GET\ /\ HTTP/1.1\(\backslash\)nHost:\ google.com\(\backslash\)n\(\backslash\)n"{});}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ socket.on('data',\ function(data)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ console.log(data.length);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ console.log(data);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ PLEASE\ NOTE:\ sockets\ need\ to\ be\ resumed\ before\ any\ data\ will\ come\ in\ or\ out\ as\ they\ are\ paused\ right\ before\ this\ callback\ is\ fired.}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ socket.resume();}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ 569}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ <Buffer\ 48\ 54\ 54\ 50\ 2f\ 31\ 2e\ 31\ 20\ 33\ 30\ 31\ 20\ 4d\ 6f\ 76\ 65\ 64\ 20\ 50\ 65...}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2socks_2docs_2migrating_from_v1_autotoc_md3554}{}\doxysubsection{\texorpdfstring{After (v2)}{After (v2)}}\label{md_backend_2node__modules_2socks_2docs_2migrating_from_v1_autotoc_md3554}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ SocksClient\ =\ require('socks').SocksClient;}
+\DoxyCodeLine{}
+\DoxyCodeLine{let\ options\ =\ \{}
+\DoxyCodeLine{\ \ \ \ proxy:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ipaddress:\ "{}202.101.228.108"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ port:\ 1080,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ type:\ 5}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ destination:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ host:\ "{}google.com"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ port:\ 80}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ command:\ 'connect'}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{SocksClient.createConnection(options,\ function(err,\ result)\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (err)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ console.log(err);}
+\DoxyCodeLine{\ \ \ \ else\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ result.socket.write("{}GET\ /\ HTTP/1.1\(\backslash\)nHost:\ google.com\(\backslash\)n\(\backslash\)n"{});}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ result.socket.on('data',\ function(data)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ console.log(data.length);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ console.log(data);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ 569}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ <Buffer\ 48\ 54\ 54\ 50\ 2f\ 31\ 2e\ 31\ 20\ 33\ 30\ 31\ 20\ 4d\ 6f\ 76\ 65\ 64\ 20\ 50\ 65...}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+ 

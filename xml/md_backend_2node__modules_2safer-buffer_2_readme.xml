@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2safer-buffer_2_readme" kind="page">
+    <compoundname>md_backend_2node__modules_2safer-buffer_2_readme</compoundname>
+    <title>safer-buffer &lt;a href=&quot;https://travis-ci.org/ChALkeR/safer-buffer&quot; &gt;&lt;img src=&quot;https://travis-ci.org/ChALkeR/safer-buffer.svg?branch=master&quot; alt=&quot;travis&quot;/&gt;&lt;/a&gt; &lt;a href=&quot;https://npmjs.org/package/safer-buffer&quot; &gt;&lt;img src=&quot;https://img.shields.io/npm/v/safer-buffer.svg&quot; alt=&quot;npm&quot;/&gt;&lt;/a&gt; &lt;a href=&quot;https://standardjs.com&quot; &gt;&lt;img src=&quot;https://img.shields.io/badge/code_style-standard-brightgreen.svg&quot; alt=&quot;javascript style guide&quot;/&gt;&lt;/a&gt; &lt;a href=&quot;https://github.com/nodejs/security-wg/blob/master/processes/responsible_disclosure_template.md&quot; &gt;&lt;img src=&quot;https://img.shields.io/badge/Security-Responsible%20Disclosure-green.svg&quot; alt=&quot;Security Responsible Disclosure&quot;/&gt;&lt;/a&gt;</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2safer-buffer_2_readme_1autotoc_md3060"/></para>
+<para>Modern Buffer API polyfill without footguns, working on Node.js from 0.8 to current.</para>
+<sect1 id="md_backend_2node__modules_2safer-buffer_2_readme_1autotoc_md3061">
+<title>How to use?</title><para>First, port all <computeroutput>Buffer()</computeroutput> and <computeroutput>new Buffer()</computeroutput> calls to <computeroutput>Buffer.alloc()</computeroutput> and <computeroutput>Buffer.from()</computeroutput> API.</para>
+<para>Then, to achieve compatibility with outdated Node.js versions (<computeroutput>&lt;4.5.0</computeroutput> and 5.x <computeroutput>&lt;5.9.0</computeroutput>), use <lsquo/>const Buffer = require(&apos;safer-buffer<rsquo/>).Buffer<computeroutput>in all files where you make calls to the new Buffer API. _Use</computeroutput>var<computeroutput>instead of</computeroutput>const` if you need that for your Node.js version range support._</para>
+<para>Also, see the <ulink url="https://github.com/ChALkeR/safer-buffer/blob/master/Porting-Buffer.md">porting Buffer</ulink> guide.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2safer-buffer_2_readme_1autotoc_md3062">
+<title>Do I need it?</title><para>Hopefully, not — dropping support for outdated Node.js versions should be fine nowdays, and that is the recommended path forward. You <emphasis>do</emphasis> need to port to the <computeroutput>Buffer.alloc()</computeroutput> and <computeroutput>Buffer.from()</computeroutput> though.</para>
+<para>See the <ulink url="https://github.com/ChALkeR/safer-buffer/blob/master/Porting-Buffer.md">porting guide</ulink> for a better description.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2safer-buffer_2_readme_1autotoc_md3063">
+<title>Why not <ulink url="https://npmjs.com/safe-buffer">safe-buffer</ulink>?</title><para><emphasis>In short: while <computeroutput>safe-buffer</computeroutput> serves as a polyfill for the new API, it allows old API usage and itself contains footguns.</emphasis></para>
+<para><computeroutput>safe-buffer</computeroutput> could be used safely to get the new API while still keeping support for older Node.js versions (like this module), but while analyzing ecosystem usage of the old Buffer API I found out that <computeroutput>safe-buffer</computeroutput> is itself causing problems in some cases.</para>
+<para>For example, consider the following snippet:</para>
+<para><programlisting filename=".console"><codeline><highlight class="normal">$<sp/>cat<sp/>example.unsafe.js</highlight></codeline>
+<codeline><highlight class="normal">console.log(Buffer(20))</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>./node-v6.13.0-linux-x64/bin/node<sp/>example.unsafe.js</highlight></codeline>
+<codeline><highlight class="normal">&lt;Buffer<sp/>0a<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>28<sp/>13<sp/>de<sp/>02<sp/>00<sp/>00<sp/>00<sp/>00<sp/>05<sp/>00<sp/>00<sp/>00&gt;</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>standard<sp/>example.unsafe.js</highlight></codeline>
+<codeline><highlight class="normal">standard:<sp/>Use<sp/>JavaScript<sp/>Standard<sp/>Style<sp/>(https://standardjs.com)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>/home/chalker/repo/safer-buffer/example.unsafe.js:2:13:<sp/>&apos;Buffer()&apos;<sp/>was<sp/>deprecated<sp/>since<sp/>v6.<sp/>Use<sp/>&apos;Buffer.alloc()&apos;<sp/>or<sp/>&apos;Buffer.from()&apos;<sp/>(use<sp/>&apos;https://www.npmjs.com/package/safe-buffer&apos;<sp/>for<sp/>&apos;&lt;4.5.0&apos;)<sp/>instead.</highlight></codeline>
+</programlisting></para>
+<para>This is allocates and writes to console an uninitialized chunk of memory. <ulink url="https://www.npmjs.com/package/standard">standard</ulink> linter (among others) catch that and warn people to avoid using unsafe API.</para>
+<para>Let&apos;s now throw in <computeroutput>safe-buffer</computeroutput>!</para>
+<para><programlisting filename=".console"><codeline><highlight class="normal">$<sp/>cat<sp/>example.safe-buffer.js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>Buffer<sp/>=<sp/>require(&apos;safe-buffer&apos;).Buffer</highlight></codeline>
+<codeline><highlight class="normal">console.log(Buffer(20))</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>standard<sp/>example.safe-buffer.js</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>./node-v6.13.0-linux-x64/bin/node<sp/>example.safe-buffer.js</highlight></codeline>
+<codeline><highlight class="normal">&lt;Buffer<sp/>08<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>28<sp/>58<sp/>01<sp/>82<sp/>fe<sp/>7f<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00&gt;</highlight></codeline>
+</programlisting></para>
+<para>See the problem? Adding in <computeroutput>safe-buffer</computeroutput> <emphasis>magically removes the lint warning</emphasis>, but the behavior remains identiсal to what we had before, and when launched on Node.js 6.x LTS — this dumps out chunks of uninitialized memory. <emphasis>And this code will still emit runtime warnings on Node.js 10.x and above.</emphasis></para>
+<para>That was done by design. I first considered changing <computeroutput>safe-buffer</computeroutput>, prohibiting old API usage or emitting warnings on it, but that significantly diverges from <computeroutput>safe-buffer</computeroutput> design. After some discussion, it was decided to move my approach into a separate package, and <emphasis>this is that separate package</emphasis>.</para>
+<para>This footgun is not imaginary — I observed top-downloaded packages doing that kind of thing, «fixing» the lint warning by blindly including <computeroutput>safe-buffer</computeroutput> without any actual changes.</para>
+<para>Also in some cases, even if the API <emphasis>was</emphasis> migrated to use of safe Buffer API — a random pull request can bring unsafe Buffer API usage back to the codebase by adding new calls — and that could go unnoticed even if you have a linter prohibiting that (becase of the reason stated above), and even pass CI. <emphasis>I also observed that being done in popular packages.</emphasis></para>
+<para>Some examples:<itemizedlist>
+<listitem><para><ulink url="https://github.com/webdriverio/webdriverio/commit/05cbd3167c12e4930f09ef7cf93b127ba4effae4#diff-124380949022817b90b622871837d56cR31">webdriverio</ulink> (a module with 548 759 downloads/month),</para>
+</listitem><listitem><para><ulink url="https://github.com/maxogden/websocket-stream/commit/c9312bd24d08271687d76da0fe3c83493871cf61">websocket-stream</ulink> (218 288 d/m, fix in <ulink url="https://github.com/maxogden/websocket-stream/pull/142">maxogden/websocket-stream#142</ulink>),</para>
+</listitem><listitem><para><ulink url="https://github.com/node-serialport/node-serialport/commit/e8d9d2b16c664224920ce1c895199b1ce2def48c">node-serialport</ulink> (113 138 d/m, fix in <ulink url="https://github.com/node-serialport/node-serialport/pull/1510">node-serialport/node-serialport#1510</ulink>),</para>
+</listitem><listitem><para><ulink url="https://github.com/karma-runner/karma/commit/3d94b8cf18c695104ca195334dc75ff054c74eec">karma</ulink> (3 973 193 d/m, fix in <ulink url="https://github.com/karma-runner/karma/pull/2947">karma-runner/karma#2947</ulink>),</para>
+</listitem><listitem><para><ulink url="https://github.com/spdy-http2/spdy-transport/commit/5375ac33f4a62a4f65bcfc2827447d42a5dbe8b1">spdy-transport</ulink> (5 970 727 d/m, fix in <ulink url="https://github.com/spdy-http2/spdy-transport/pull/53">spdy-http2/spdy-transport#53</ulink>).</para>
+</listitem><listitem><para>And there are a lot more over the ecosystem.</para>
+</listitem></itemizedlist>
+</para>
+<para>I filed a PR at <ulink url="https://github.com/mysticatea/eslint-plugin-node/pull/110">mysticatea/eslint-plugin-node#110</ulink> to partially fix that (for cases when that lint rule is used), but it is a semver-major change for linter rules and presets, so it would take significant time for that to reach actual setups. <emphasis>It also hasn&apos;t been released yet (2018-03-20).</emphasis></para>
+<para>Also, <computeroutput>safer-buffer</computeroutput> discourages the usage of <computeroutput>.allocUnsafe()</computeroutput>, which is often done by a mistake. It still supports it with an explicit concern barier, by placing it under <lsquo/>require(&apos;safer-buffer/dangereous<rsquo/>)`.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2safer-buffer_2_readme_1autotoc_md3064">
+<title>But isn&apos;t throwing bad?</title><para>Not really. It&apos;s an error that could be noticed and fixed early, instead of causing havoc later like unguarded <computeroutput>new Buffer()</computeroutput> calls that end up receiving user input can do.</para>
+<para>This package affects only the files where <lsquo/>var Buffer = require(&apos;safer-buffer<rsquo/>).Buffer` was done, so it is really simple to keep track of things and make sure that you don&apos;t mix old API usage with that. Also, CI should hint anything that you might have missed.</para>
+<para>New commits, if tested, won&apos;t land new usage of unsafe Buffer API this way. <emphasis>Node.js 10.x also deals with that by printing a runtime depecation warning.</emphasis></para>
+<sect2 id="md_backend_2node__modules_2safer-buffer_2_readme_1autotoc_md3065">
+<title>Would it affect third-party modules?</title><para>No, unless you explicitly do an awful thing like monkey-patching or overriding the built-in <computeroutput>Buffer</computeroutput>. Don&apos;t do that.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2safer-buffer_2_readme_1autotoc_md3066">
+<title>But I don&apos;t want throwing…</title><para>That is also fine!</para>
+<para>Also, it could be better in some cases when you don&apos;t comprehensive enough test coverage.</para>
+<para>In that case — just don&apos;t override <computeroutput>Buffer</computeroutput> and use <lsquo/>var SaferBuffer = require(&apos;safer-buffer<rsquo/>).Buffer` instead.</para>
+<para>That way, everything using <computeroutput>Buffer</computeroutput> natively would still work, but there would be two drawbacks:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>Buffer.from</computeroutput>/<computeroutput>Buffer.alloc</computeroutput> won&apos;t be polyfilled — use <computeroutput>SaferBuffer.from</computeroutput> and <computeroutput>SaferBuffer.alloc</computeroutput> instead.</para>
+</listitem><listitem><para>You are still open to accidentally using the insecure deprecated API — use a linter to catch that.</para>
+</listitem></itemizedlist>
+</para>
+<para>Note that using a linter to catch accidential <computeroutput>Buffer</computeroutput> constructor usage in this case is strongly recommended. <computeroutput>Buffer</computeroutput> is not overriden in this usecase, so linters won&apos;t get confused.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2safer-buffer_2_readme_1autotoc_md3067">
+<title>«Without footguns»?</title><para>Well, it is still possible to do <emphasis>some</emphasis> things with <computeroutput>Buffer</computeroutput> API, e.g. accessing <computeroutput>.buffer</computeroutput> property on older versions and duping things from there. You shouldn&apos;t do that in your code, probabably.</para>
+<para>The intention is to remove the most significant footguns that affect lots of packages in the ecosystem, and to do it in the proper way.</para>
+<para>Also, this package doesn&apos;t protect against security issues affecting some Node.js versions, so for usage in your own production code, it is still recommended to update to a Node.js version <ulink url="https://github.com/nodejs/release#release-schedule">supported by upstream</ulink>. </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/safer-buffer/Readme.md"/>
+  </compounddef>
+</doxygen>

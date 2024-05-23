@@ -1,0 +1,103 @@
+\chapter{agent-\/base}
+\hypertarget{md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e}\index{agent-\/base@{agent-\/base}}
+\hypertarget{md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_autotoc_md103}{}\doxysubsection{\texorpdfstring{Turn a function into an \href{https://nodejs.org/api/http.html\#http_class_http_agent}{\texttt{ {\ttfamily http.\+Agent}}} instance}{Turn a function into an \href{https://nodejs.org/api/http.html\#http_class_http_agent}{\texttt{ {\ttfamily http.\+Agent}}} instance}}\label{md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_autotoc_md103}
+\href{https://github.com/TooTallNate/node-agent-base/actions?workflow=Node+CI}{\texttt{ }}
+
+This module provides an {\ttfamily http.\+Agent} generator. That is, you pass it an async callback function, and it returns a new {\ttfamily http.\+Agent} instance that will invoke the given callback function when sending outbound HTTP requests.\hypertarget{md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_autotoc_md104}{}\doxysubsubsection{\texorpdfstring{Some subclasses\+:}{Some subclasses\+:}}\label{md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_autotoc_md104}
+Here\textquotesingle{}s some more interesting uses of {\ttfamily agent-\/base}. Send a pull request to list yours!
+
+
+\begin{DoxyItemize}
+\item \href{https://github.com/TooTallNate/node-http-proxy-agent}{\texttt{ {\ttfamily http-\/proxy-\/agent}}}\+: An HTTP(s) proxy {\ttfamily http.\+Agent} implementation for HTTP endpoints
+\item \href{https://github.com/TooTallNate/node-https-proxy-agent}{\texttt{ {\ttfamily https-\/proxy-\/agent}}}\+: An HTTP(s) proxy {\ttfamily http.\+Agent} implementation for HTTPS endpoints
+\item \href{https://github.com/TooTallNate/node-pac-proxy-agent}{\texttt{ {\ttfamily pac-\/proxy-\/agent}}}\+: A PAC file proxy {\ttfamily http.\+Agent} implementation for HTTP and HTTPS
+\item \href{https://github.com/TooTallNate/node-socks-proxy-agent}{\texttt{ {\ttfamily socks-\/proxy-\/agent}}}\+: A SOCKS proxy {\ttfamily http.\+Agent} implementation for HTTP and HTTPS
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_autotoc_md105}{}\doxysection{\texorpdfstring{Installation}{Installation}}\label{md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_autotoc_md105}
+Install with {\ttfamily npm}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ bash}
+\DoxyCodeLine{\$\ npm\ install\ agent-\/base}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_autotoc_md106}{}\doxysection{\texorpdfstring{Example}{Example}}\label{md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_autotoc_md106}
+Here\textquotesingle{}s a minimal example that creates a new {\ttfamily net.\+Socket} connection to the server for every HTTP request (i.\+e. the equivalent of {\ttfamily agent\+: false} option)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ net\ =\ require('net');}
+\DoxyCodeLine{var\ tls\ =\ require('tls');}
+\DoxyCodeLine{var\ url\ =\ require('url');}
+\DoxyCodeLine{var\ http\ =\ require('http');}
+\DoxyCodeLine{var\ agent\ =\ require('agent-\/base');}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ endpoint\ =\ 'http://nodejs.org/api/';}
+\DoxyCodeLine{var\ parsed\ =\ url.parse(endpoint);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ This\ is\ the\ important\ part!}
+\DoxyCodeLine{parsed.agent\ =\ agent(function\ (req,\ opts)\ \{}
+\DoxyCodeLine{\ \ var\ socket;}
+\DoxyCodeLine{\ \ //\ \`{}secureEndpoint`\ is\ true\ when\ using\ the\ https\ module}
+\DoxyCodeLine{\ \ if\ (opts.secureEndpoint)\ \{}
+\DoxyCodeLine{\ \ \ \ socket\ =\ tls.connect(opts);}
+\DoxyCodeLine{\ \ \}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ socket\ =\ net.connect(opts);}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ return\ socket;}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Everything\ else\ works\ just\ like\ normal...}
+\DoxyCodeLine{http.get(parsed,\ function\ (res)\ \{}
+\DoxyCodeLine{\ \ console.log('"{}response"{}\ event!',\ res.headers);}
+\DoxyCodeLine{\ \ res.pipe(process.stdout);}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Returning a Promise or using an {\ttfamily async} function is also supported\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{agent(async\ function\ (req,\ opts)\ \{}
+\DoxyCodeLine{\ \ await\ sleep(1000);}
+\DoxyCodeLine{\ \ //\ etc…}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Return another {\ttfamily http.\+Agent} instance to "{}pass through"{} the responsibility for that HTTP request to that agent\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{agent(function\ (req,\ opts)\ \{}
+\DoxyCodeLine{\ \ return\ opts.secureEndpoint\ ?\ https.globalAgent\ :\ http.globalAgent;}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_autotoc_md107}{}\doxysection{\texorpdfstring{API}{API}}\label{md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_autotoc_md107}
+\hypertarget{md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_autotoc_md108}{}\doxysection{\texorpdfstring{Agent(\+Function callback\mbox{[}, Object options\mbox{]}) → \href{https://nodejs.org/api/http.html\#http_class_http_agent}{\texttt{ http.\+Agent}}}{Agent(\+Function callback\mbox{[}, Object options\mbox{]}) → \href{https://nodejs.org/api/http.html\#http_class_http_agent}{\texttt{ http.\+Agent}}}}\label{md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_autotoc_md108}
+Creates a base {\ttfamily http.\+Agent} that will execute the callback function {\ttfamily callback} for every HTTP request that it is used as the {\ttfamily agent} for. The callback function is responsible for creating a {\ttfamily stream.\+Duplex} instance of some kind that will be used as the underlying socket in the HTTP request.
+
+The {\ttfamily options} object accepts the following properties\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily timeout} -\/ Number -\/ Timeout for the {\ttfamily callback()} function in milliseconds. Defaults to Infinity (optional).
+\end{DoxyItemize}
+
+The callback function should have the following signature\+:\hypertarget{md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_autotoc_md109}{}\doxysubsection{\texorpdfstring{callback(http.\+Client\+Request req, Object options, Function cb) → undefined}{callback(http.\+Client\+Request req, Object options, Function cb) → undefined}}\label{md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_autotoc_md109}
+The Client\+Request {\ttfamily req} can be accessed to read request headers and and the path, etc. The {\ttfamily options} object contains the options passed to the {\ttfamily http.\+request()}/{\ttfamily https.\+request()} function call, and is formatted to be directly passed to {\ttfamily net.\+connect()}/{\ttfamily tls.\+connect()}, or however else you want a Socket to be created. Pass the created socket to the callback function {\ttfamily cb} once created, and the HTTP request will continue to proceed.
+
+If the {\ttfamily https} module is used to invoke the HTTP request, then the {\ttfamily secure\+Endpoint} property on {\ttfamily options} {\itshape will be set to {\ttfamily true}}.\hypertarget{md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_autotoc_md110}{}\doxysection{\texorpdfstring{License}{License}}\label{md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_autotoc_md110}
+(The MIT License)
+
+Copyright (c) 2013 Nathan Rajlich \texorpdfstring{$<$}{<}\href{mailto:nathan@tootallnate.net}{\texttt{ nathan@tootallnate.\+net}}\texorpdfstring{$>$}{>}
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \textquotesingle{}Software\textquotesingle{}), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions\+:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED \textquotesingle{}AS IS\textquotesingle{}, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 

@@ -1,0 +1,541 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2ssri_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>ssri<sp/>[![npm<sp/>version](https://img.shields.io/npm/v/ssri.svg)](https://npm.im/ssri)<sp/>[![license](https://img.shields.io/npm/l/ssri.svg)](https://npm.im/ssri)<sp/>[![Travis](https://img.shields.io/travis/npm/ssri.svg)](https://travis-ci.org/npm/ssri)<sp/>[![AppVeyor](https://ci.appveyor.com/api/projects/status/github/npm/ssri?svg=true)](https://ci.appveyor.com/project/npm/ssri)<sp/>[![Coverage<sp/>Status](https://coveralls.io/repos/github/npm/ssri/badge.svg?branch=latest)](https://coveralls.io/github/npm/ssri?branch=latest)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[`ssri`](https://github.com/npm/ssri),<sp/>short<sp/>for<sp/>Standard<sp/>Subresource</highlight></codeline>
+<codeline><highlight class="normal">Integrity,<sp/>is<sp/>a<sp/>Node.js<sp/>utility<sp/>for<sp/>parsing,<sp/>manipulating,<sp/>serializing,</highlight></codeline>
+<codeline><highlight class="normal">generating,<sp/>and<sp/>verifying<sp/>[Subresource</highlight></codeline>
+<codeline><highlight class="normal">Integrity](https://w3c.github.io/webappsec/specs/subresourceintegrity/)<sp/>hashes.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Install</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`$<sp/>npm<sp/>install<sp/>--save<sp/>ssri`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Table<sp/>of<sp/>Contents</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>[Example](#example)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>[Features](#features)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>[Contributing](#contributing)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>[API](#api)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>Parsing<sp/>&amp;<sp/>Serializing</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`parse`](#parse)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`stringify`](#stringify)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`Integrity#concat`](#integrity-concat)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`Integrity#merge`](#integrity-merge)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`Integrity#toString`](#integrity-to-string)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`Integrity#toJSON`](#integrity-to-json)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`Integrity#match`](#integrity-match)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`Integrity#pickAlgorithm`](#integrity-pick-algorithm)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`Integrity#hexDigest`](#integrity-hex-digest)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>Integrity<sp/>Generation</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`fromHex`](#from-hex)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`fromData`](#from-data)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`fromStream`](#from-stream)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`create`](#create)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>Integrity<sp/>Verification</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`checkData`](#check-data)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`checkStream`](#check-stream)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`integrityStream`](#integrity-stream)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>ssri<sp/>=<sp/>require(&apos;ssri&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>integrity<sp/>=<sp/>&apos;sha512-9KhgCRIx/AmzC8xqYJTZRrnO8OW2Pxyl2DIMZSBOr0oDvtEFyht3xpp71j/r/pAe1DM+JI/A+line3jUBgzQ7A==?foo&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Parsing<sp/>and<sp/>serializing</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>parsed<sp/>=<sp/>ssri.parse(integrity)</highlight></codeline>
+<codeline><highlight class="normal">ssri.stringify(parsed)<sp/>//<sp/>===<sp/>integrity<sp/>(works<sp/>on<sp/>non-Integrity<sp/>objects)</highlight></codeline>
+<codeline><highlight class="normal">parsed.toString()<sp/>//<sp/>===<sp/>integrity</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Async<sp/>stream<sp/>functions</highlight></codeline>
+<codeline><highlight class="normal">ssri.checkStream(fs.createReadStream(&apos;./my-file&apos;),<sp/>integrity).then(...)</highlight></codeline>
+<codeline><highlight class="normal">ssri.fromStream(fs.createReadStream(&apos;./my-file&apos;)).then(sri<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>sri.toString()<sp/>===<sp/>integrity</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">fs.createReadStream(&apos;./my-file&apos;).pipe(ssri.createCheckerStream(sri))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Sync<sp/>data<sp/>functions</highlight></codeline>
+<codeline><highlight class="normal">ssri.fromData(fs.readFileSync(&apos;./my-file&apos;))<sp/>//<sp/>===<sp/>parsed</highlight></codeline>
+<codeline><highlight class="normal">ssri.checkData(fs.readFileSync(&apos;./my-file&apos;),<sp/>integrity)<sp/>//<sp/>=&gt;<sp/>&apos;sha512&apos;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Features</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>Parses<sp/>and<sp/>stringifies<sp/>SRI<sp/>strings.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Generates<sp/>SRI<sp/>strings<sp/>from<sp/>raw<sp/>data<sp/>or<sp/>Streams.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Strict<sp/>standard<sp/>compliance.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`?foo`<sp/>metadata<sp/>option<sp/>support.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Multiple<sp/>entries<sp/>for<sp/>the<sp/>same<sp/>algorithm.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Object-based<sp/>integrity<sp/>hash<sp/>manipulation.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Small<sp/>footprint:<sp/>no<sp/>dependencies,<sp/>concise<sp/>implementation.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Full<sp/>test<sp/>coverage.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Customizable<sp/>algorithm<sp/>picker.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Contributing</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>ssri<sp/>team<sp/>enthusiastically<sp/>welcomes<sp/>contributions<sp/>and<sp/>project<sp/>participation!</highlight></codeline>
+<codeline><highlight class="normal">There&apos;s<sp/>a<sp/>bunch<sp/>of<sp/>things<sp/>you<sp/>can<sp/>do<sp/>if<sp/>you<sp/>want<sp/>to<sp/>contribute!<sp/>The<sp/>[Contributor</highlight></codeline>
+<codeline><highlight class="normal">Guide](CONTRIBUTING.md)<sp/>has<sp/>all<sp/>the<sp/>information<sp/>you<sp/>need<sp/>for<sp/>everything<sp/>from</highlight></codeline>
+<codeline><highlight class="normal">reporting<sp/>bugs<sp/>to<sp/>contributing<sp/>entire<sp/>new<sp/>features.<sp/>Please<sp/>don&apos;t<sp/>hesitate<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">jump<sp/>in<sp/>if<sp/>you&apos;d<sp/>like<sp/>to,<sp/>or<sp/>even<sp/>ask<sp/>us<sp/>questions<sp/>if<sp/>something<sp/>isn&apos;t<sp/>clear.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>API</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;parse&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>ssri.parse(sri,<sp/>[opts])<sp/>-&gt;<sp/>Integrity`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Parses<sp/>`sri`<sp/>into<sp/>an<sp/>`Integrity`<sp/>data<sp/>structure.<sp/>`sri`<sp/>can<sp/>be<sp/>an<sp/>integrity</highlight></codeline>
+<codeline><highlight class="normal">string,<sp/>an<sp/>`Hash`-like<sp/>with<sp/>`digest`<sp/>and<sp/>`algorithm`<sp/>fields<sp/>and<sp/>an<sp/>optional</highlight></codeline>
+<codeline><highlight class="normal">`options`<sp/>field,<sp/>or<sp/>an<sp/>`Integrity`-like<sp/>object.<sp/>The<sp/>resulting<sp/>object<sp/>will<sp/>be<sp/>an</highlight></codeline>
+<codeline><highlight class="normal">`Integrity`<sp/>instance<sp/>that<sp/>has<sp/>this<sp/>shape:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&apos;sha1&apos;:<sp/>[{algorithm:<sp/>&apos;sha1&apos;,<sp/>digest:<sp/>&apos;deadbeef&apos;,<sp/>options:<sp/>[]}],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&apos;sha512&apos;:<sp/>[</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{algorithm:<sp/>&apos;sha512&apos;,<sp/>digest:<sp/>&apos;c0ffee&apos;,<sp/>options:<sp/>[]},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{algorithm:<sp/>&apos;sha512&apos;,<sp/>digest:<sp/>&apos;bad1dea&apos;,<sp/>options:<sp/>[&apos;foo&apos;]}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>],</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.single`<sp/>is<sp/>truthy,<sp/>a<sp/>single<sp/>`Hash`<sp/>object<sp/>will<sp/>be<sp/>returned.<sp/>That<sp/>is,<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">single<sp/>object<sp/>that<sp/>looks<sp/>like<sp/>`{algorithm,<sp/>digest,<sp/>options}`,<sp/>as<sp/>opposed<sp/>to<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">larger<sp/>object<sp/>with<sp/>multiple<sp/>of<sp/>these.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.strict`<sp/>is<sp/>truthy,<sp/>the<sp/>resulting<sp/>object<sp/>will<sp/>be<sp/>filtered<sp/>such<sp/>that</highlight></codeline>
+<codeline><highlight class="normal">it<sp/>strictly<sp/>follows<sp/>the<sp/>Subresource<sp/>Integrity<sp/>spec,<sp/>throwing<sp/>away<sp/>any<sp/>entries</highlight></codeline>
+<codeline><highlight class="normal">with<sp/>any<sp/>invalid<sp/>components.<sp/>This<sp/>also<sp/>means<sp/>a<sp/>restricted<sp/>set<sp/>of<sp/>algorithms</highlight></codeline>
+<codeline><highlight class="normal">will<sp/>be<sp/>used<sp/>--<sp/>the<sp/>spec<sp/>limits<sp/>them<sp/>to<sp/>`sha256`,<sp/>`sha384`,<sp/>and<sp/>`sha512`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Strict<sp/>mode<sp/>is<sp/>recommended<sp/>if<sp/>the<sp/>integrity<sp/>strings<sp/>are<sp/>intended<sp/>for<sp/>use<sp/>in</highlight></codeline>
+<codeline><highlight class="normal">browsers,<sp/>or<sp/>in<sp/>other<sp/>situations<sp/>where<sp/>strict<sp/>adherence<sp/>to<sp/>the<sp/>spec<sp/>is<sp/>needed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">ssri.parse(&apos;sha512-9KhgCRIx/AmzC8xqYJTZRrnO8OW2Pxyl2DIMZSBOr0oDvtEFyht3xpp71j/r/pAe1DM+JI/A+line3jUBgzQ7A==?foo&apos;)<sp/>//<sp/>-&gt;<sp/>Integrity<sp/>object</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;stringify&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>ssri.stringify(sri,<sp/>[opts])<sp/>-&gt;<sp/>String`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>function<sp/>is<sp/>identical<sp/>to<sp/>[`Integrity#toString()`](#integrity-to-string),</highlight></codeline>
+<codeline><highlight class="normal">except<sp/>it<sp/>can<sp/>be<sp/>used<sp/>on<sp/>_any_<sp/>object<sp/>that<sp/>[`parse`](#parse)<sp/>can<sp/>handle<sp/>--<sp/>that</highlight></codeline>
+<codeline><highlight class="normal">is,<sp/>a<sp/>string,<sp/>an<sp/>`Hash`-like,<sp/>or<sp/>an<sp/>`Integrity`-like.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`opts.sep`<sp/>option<sp/>defines<sp/>the<sp/>string<sp/>to<sp/>use<sp/>when<sp/>joining<sp/>multiple<sp/>entries</highlight></codeline>
+<codeline><highlight class="normal">together.<sp/>To<sp/>be<sp/>spec-compliant,<sp/>this<sp/>_must_<sp/>be<sp/>whitespace.<sp/>The<sp/>default<sp/>is<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">single<sp/>space<sp/>(`&apos;<sp/>&apos;`).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.strict`<sp/>is<sp/>true,<sp/>the<sp/>integrity<sp/>string<sp/>will<sp/>be<sp/>created<sp/>using<sp/>strict</highlight></codeline>
+<codeline><highlight class="normal">parsing<sp/>rules.<sp/>See<sp/>[`ssri.parse`](#parse).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Useful<sp/>for<sp/>cleaning<sp/>up<sp/>input<sp/>SRI<sp/>strings:</highlight></codeline>
+<codeline><highlight class="normal">ssri.stringify(&apos;\n\rsha512-foo\n\t\tsha384-bar&apos;)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>-&gt;<sp/>&apos;sha512-foo<sp/>sha384-bar&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Hash-like:<sp/>only<sp/>a<sp/>single<sp/>entry.</highlight></codeline>
+<codeline><highlight class="normal">ssri.stringify({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>algorithm:<sp/>&apos;sha512&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>digest:&apos;9KhgCRIx/AmzC8xqYJTZRrnO8OW2Pxyl2DIMZSBOr0oDvtEFyht3xpp71j/r/pAe1DM+JI/A+line3jUBgzQ7A==&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>options:<sp/>[&apos;foo&apos;]</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>-&gt;</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;sha512-9KhgCRIx/AmzC8xqYJTZRrnO8OW2Pxyl2DIMZSBOr0oDvtEFyht3xpp71j/r/pAe1DM+JI/A+line3jUBgzQ7A==?foo&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Integrity-like:<sp/>full<sp/>multi-entry<sp/>syntax.<sp/>Similar<sp/>to<sp/>output<sp/>of<sp/>`ssri.parse`</highlight></codeline>
+<codeline><highlight class="normal">ssri.stringify({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&apos;sha512&apos;:<sp/>[</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>algorithm:<sp/>&apos;sha512&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>digest:&apos;9KhgCRIx/AmzC8xqYJTZRrnO8OW2Pxyl2DIMZSBOr0oDvtEFyht3xpp71j/r/pAe1DM+JI/A+line3jUBgzQ7A==&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>options:<sp/>[&apos;foo&apos;]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>]</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>-&gt;</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;sha512-9KhgCRIx/AmzC8xqYJTZRrnO8OW2Pxyl2DIMZSBOr0oDvtEFyht3xpp71j/r/pAe1DM+JI/A+line3jUBgzQ7A==?foo&apos;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;integrity-concat&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>Integrity#concat(otherIntegrity,<sp/>[opts])<sp/>-&gt;<sp/>Integrity`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Concatenates<sp/>an<sp/>`Integrity`<sp/>object<sp/>with<sp/>another<sp/>IntegrityLike,<sp/>or<sp/>an<sp/>integrity</highlight></codeline>
+<codeline><highlight class="normal">string.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>functionally<sp/>equivalent<sp/>to<sp/>concatenating<sp/>the<sp/>string<sp/>format<sp/>of<sp/>both</highlight></codeline>
+<codeline><highlight class="normal">integrity<sp/>arguments,<sp/>and<sp/>calling<sp/>[`ssri.parse`](#ssri-parse)<sp/>on<sp/>the<sp/>new<sp/>string.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.strict`<sp/>is<sp/>true,<sp/>the<sp/>new<sp/>`Integrity`<sp/>will<sp/>be<sp/>created<sp/>using<sp/>strict</highlight></codeline>
+<codeline><highlight class="normal">parsing<sp/>rules.<sp/>See<sp/>[`ssri.parse`](#parse).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>This<sp/>will<sp/>combine<sp/>the<sp/>integrity<sp/>checks<sp/>for<sp/>two<sp/>different<sp/>versions<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>your<sp/>index.js<sp/>file<sp/>so<sp/>you<sp/>can<sp/>use<sp/>a<sp/>single<sp/>integrity<sp/>string<sp/>and<sp/>serve</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>either<sp/>of<sp/>these<sp/>to<sp/>clients,<sp/>from<sp/>a<sp/>single<sp/>`&lt;script&gt;`<sp/>tag.</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>desktopIntegrity<sp/>=<sp/>ssri.fromData(fs.readFileSync(&apos;./index.desktop.js&apos;))</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>mobileIntegrity<sp/>=<sp/>ssri.fromData(fs.readFileSync(&apos;./index.mobile.js&apos;))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Note<sp/>that<sp/>browsers<sp/>(and<sp/>ssri)<sp/>will<sp/>succeed<sp/>as<sp/>long<sp/>as<sp/>ONE<sp/>of<sp/>the<sp/>entries</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>for<sp/>the<sp/>*prioritized*<sp/>algorithm<sp/>succeeds.<sp/>That<sp/>is,<sp/>in<sp/>order<sp/>for<sp/>this<sp/>fallback</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>to<sp/>work,<sp/>both<sp/>desktop<sp/>and<sp/>mobile<sp/>*must*<sp/>use<sp/>the<sp/>same<sp/>`algorithm`<sp/>values.</highlight></codeline>
+<codeline><highlight class="normal">desktopIntegrity.concat(mobileIntegrity)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;integrity-merge&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>Integrity#merge(otherIntegrity,<sp/>[opts])`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Safely<sp/>merges<sp/>another<sp/>IntegrityLike<sp/>or<sp/>integrity<sp/>string<sp/>into<sp/>an<sp/>`Integrity`</highlight></codeline>
+<codeline><highlight class="normal">object.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>the<sp/>other<sp/>integrity<sp/>value<sp/>has<sp/>any<sp/>algorithms<sp/>in<sp/>common<sp/>with<sp/>the<sp/>current</highlight></codeline>
+<codeline><highlight class="normal">object,<sp/>then<sp/>the<sp/>hash<sp/>digests<sp/>must<sp/>match,<sp/>or<sp/>an<sp/>error<sp/>is<sp/>thrown.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Any<sp/>new<sp/>hashes<sp/>will<sp/>be<sp/>added<sp/>to<sp/>the<sp/>current<sp/>object&apos;s<sp/>set.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>useful<sp/>when<sp/>an<sp/>integrity<sp/>value<sp/>may<sp/>be<sp/>upgraded<sp/>with<sp/>a<sp/>stronger</highlight></codeline>
+<codeline><highlight class="normal">algorithm,<sp/>you<sp/>wish<sp/>to<sp/>prevent<sp/>accidentally<sp/>supressing<sp/>integrity<sp/>errors<sp/>by</highlight></codeline>
+<codeline><highlight class="normal">overwriting<sp/>the<sp/>expected<sp/>integrity<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>data<sp/>=<sp/>fs.readFileSync(&apos;data.txt&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>integrity.txt<sp/>contains<sp/>&apos;sha1-X1UT+IIv2+UUWvM7ZNjZcNz5XG4=&apos;</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>because<sp/>we<sp/>were<sp/>young,<sp/>and<sp/>didn&apos;t<sp/>realize<sp/>sha1<sp/>would<sp/>not<sp/>last</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>expectedIntegrity<sp/>=<sp/>ssri.parse(fs.readFileSync(&apos;integrity.txt&apos;,<sp/>&apos;utf8&apos;))</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>match<sp/>=<sp/>ssri.checkData(data,<sp/>expectedIntegrity,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>algorithms:<sp/>[&apos;sha512&apos;,<sp/>&apos;sha1&apos;]</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>(!match)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>throw<sp/>new<sp/>Error(&apos;data<sp/>corrupted<sp/>or<sp/>something!&apos;)</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>get<sp/>a<sp/>stronger<sp/>algo!</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>(match<sp/>&amp;&amp;<sp/>match.algorithm<sp/>!==<sp/>&apos;sha512&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>const<sp/>updatedIntegrity<sp/>=<sp/>ssri.fromData(data,<sp/>{<sp/>algorithms:<sp/>[&apos;sha512&apos;]<sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>expectedIntegrity.merge(updatedIntegrity)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fs.writeFileSync(&apos;integrity.txt&apos;,<sp/>expectedIntegrity.toString())</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>file<sp/>now<sp/>contains</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>&apos;sha1-X1UT+IIv2+UUWvM7ZNjZcNz5XG4=<sp/>sha512-yzd8ELD1piyANiWnmdnpCL5F52f10UfUdEkHywVZeqTt0ymgrxR63Qz0GB7TKPoeeZQmWCaz7T1+9vBnypkYWg==&apos;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;integrity-to-string&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>Integrity#toString([opts])<sp/>-&gt;<sp/>String`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>the<sp/>string<sp/>representation<sp/>of<sp/>an<sp/>`Integrity`<sp/>object.<sp/>All<sp/>hash<sp/>entries</highlight></codeline>
+<codeline><highlight class="normal">will<sp/>be<sp/>concatenated<sp/>in<sp/>the<sp/>string<sp/>by<sp/>`opts.sep`,<sp/>which<sp/>defaults<sp/>to<sp/>`&apos;<sp/>&apos;`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>want<sp/>to<sp/>serialize<sp/>an<sp/>object<sp/>that<sp/>didn&apos;t<sp/>come<sp/>from<sp/>an<sp/>`ssri`<sp/>function,</highlight></codeline>
+<codeline><highlight class="normal">use<sp/>[`ssri.stringify()`](#stringify).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.strict`<sp/>is<sp/>true,<sp/>the<sp/>integrity<sp/>string<sp/>will<sp/>be<sp/>created<sp/>using<sp/>strict</highlight></codeline>
+<codeline><highlight class="normal">parsing<sp/>rules.<sp/>See<sp/>[`ssri.parse`](#parse).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>integrity<sp/>=<sp/>&apos;sha512-9KhgCRIx/AmzC8xqYJTZRrnO8OW2Pxyl2DIMZSBOr0oDvtEFyht3xpp71j/r/pAe1DM+JI/A+line3jUBgzQ7A==?foo&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">ssri.parse(integrity).toString()<sp/>===<sp/>integrity</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;integrity-to-json&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>Integrity#toJSON()<sp/>-&gt;<sp/>String`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>the<sp/>string<sp/>representation<sp/>of<sp/>an<sp/>`Integrity`<sp/>object.<sp/>All<sp/>hash<sp/>entries</highlight></codeline>
+<codeline><highlight class="normal">will<sp/>be<sp/>concatenated<sp/>in<sp/>the<sp/>string<sp/>by<sp/>`&apos;<sp/>&apos;`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>a<sp/>convenience<sp/>method<sp/>so<sp/>you<sp/>can<sp/>pass<sp/>an<sp/>`Integrity`<sp/>object<sp/>directly<sp/>to<sp/>`JSON.stringify`.</highlight></codeline>
+<codeline><highlight class="normal">For<sp/>more<sp/>info<sp/>check<sp/>out<sp/>[toJSON()<sp/>behavior<sp/>on<sp/>mdn](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#toJSON%28%29_behavior).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>integrity<sp/>=<sp/>&apos;&quot;sha512-9KhgCRIx/AmzC8xqYJTZRrnO8OW2Pxyl2DIMZSBOr0oDvtEFyht3xpp71j/r/pAe1DM+JI/A+line3jUBgzQ7A==?foo&quot;&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">JSON.stringify(ssri.parse(integrity))<sp/>===<sp/>integrity</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;integrity-match&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>Integrity#match(sri,<sp/>[opts])<sp/>-&gt;<sp/>Hash<sp/>|<sp/>false`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>the<sp/>matching<sp/>(truthy)<sp/>hash<sp/>if<sp/>`Integrity`<sp/>matches<sp/>the<sp/>argument<sp/>passed<sp/>as</highlight></codeline>
+<codeline><highlight class="normal">`sri`,<sp/>which<sp/>can<sp/>be<sp/>anything<sp/>that<sp/>[`parse`](#parse)<sp/>will<sp/>accept.<sp/>`opts`<sp/>will<sp/>be</highlight></codeline>
+<codeline><highlight class="normal">passed<sp/>through<sp/>to<sp/>`parse`<sp/>and<sp/>[`pickAlgorithm()`](#integrity-pick-algorithm).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>integrity<sp/>=<sp/>&apos;sha512-9KhgCRIx/AmzC8xqYJTZRrnO8OW2Pxyl2DIMZSBOr0oDvtEFyht3xpp71j/r/pAe1DM+JI/A+line3jUBgzQ7A==&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">ssri.parse(integrity).match(integrity)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Hash<sp/>{</highlight></codeline>
+<codeline><highlight class="normal">//<sp/><sp/><sp/>digest:<sp/>&apos;9KhgCRIx/AmzC8xqYJTZRrnO8OW2Pxyl2DIMZSBOr0oDvtEFyht3xpp71j/r/pAe1DM+JI/A+line3jUBgzQ7A==&apos;</highlight></codeline>
+<codeline><highlight class="normal">//<sp/><sp/><sp/>algorithm:<sp/>&apos;sha512&apos;</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">ssri.parse(integrity).match(&apos;sha1-deadbeef&apos;)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>false</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;integrity-pick-algorithm&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>Integrity#pickAlgorithm([opts])<sp/>-&gt;<sp/>String`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>the<sp/>&quot;best&quot;<sp/>algorithm<sp/>from<sp/>those<sp/>available<sp/>in<sp/>the<sp/>integrity<sp/>object.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.pickAlgorithm`<sp/>is<sp/>provided,<sp/>it<sp/>will<sp/>be<sp/>passed<sp/>two<sp/>algorithms<sp/>as</highlight></codeline>
+<codeline><highlight class="normal">arguments.<sp/>ssri<sp/>will<sp/>prioritize<sp/>whichever<sp/>of<sp/>the<sp/>two<sp/>algorithms<sp/>is<sp/>returned<sp/>by</highlight></codeline>
+<codeline><highlight class="normal">this<sp/>function.<sp/>Note<sp/>that<sp/>the<sp/>function<sp/>may<sp/>be<sp/>called<sp/>multiple<sp/>times,<sp/>and<sp/>it</highlight></codeline>
+<codeline><highlight class="normal">**must**<sp/>return<sp/>one<sp/>of<sp/>the<sp/>two<sp/>algorithms<sp/>provided.<sp/>By<sp/>default,<sp/>ssri<sp/>will<sp/>make</highlight></codeline>
+<codeline><highlight class="normal">a<sp/>best-effort<sp/>to<sp/>pick<sp/>the<sp/>strongest/most<sp/>reliable<sp/>of<sp/>the<sp/>given<sp/>algorithms.<sp/>It</highlight></codeline>
+<codeline><highlight class="normal">may<sp/>intentionally<sp/>deprioritize<sp/>algorithms<sp/>with<sp/>known<sp/>vulnerabilities.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">ssri.parse(&apos;sha1-WEakDigEST<sp/>sha512-yzd8ELD1piyANiWnmdnpCL5F52f10UfUdEkHywVZeqTt0ymgrxR63Qz0GB7TKPoeeZQmWCaz7T1&apos;).pickAlgorithm()<sp/>//<sp/>sha512</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;integrity-hex-digest&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>Integrity#hexDigest()<sp/>-&gt;<sp/>String`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`Integrity`<sp/>is<sp/>assumed<sp/>to<sp/>be<sp/>either<sp/>a<sp/>single-hash<sp/>`Integrity`<sp/>instance,<sp/>or<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">`Hash`<sp/>instance.<sp/>Returns<sp/>its<sp/>`digest`,<sp/>converted<sp/>to<sp/>a<sp/>hex<sp/>representation<sp/>of<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">base64<sp/>data.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">ssri.parse(&apos;sha1-deadbeef&apos;).hexDigest()<sp/>//<sp/>&apos;75e69d6de79f&apos;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;from-hex&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>ssri.fromHex(hexDigest,<sp/>algorithm,<sp/>[opts])<sp/>-&gt;<sp/>Integrity`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Creates<sp/>an<sp/>`Integrity`<sp/>object<sp/>with<sp/>a<sp/>single<sp/>entry,<sp/>based<sp/>on<sp/>a<sp/>hex-formatted</highlight></codeline>
+<codeline><highlight class="normal">hash.<sp/>This<sp/>is<sp/>a<sp/>utility<sp/>function<sp/>to<sp/>help<sp/>convert<sp/>existing<sp/>shasums<sp/>to<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">Integrity<sp/>format,<sp/>and<sp/>is<sp/>roughly<sp/>equivalent<sp/>to<sp/>something<sp/>like:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">algorithm<sp/>+<sp/>&apos;-&apos;<sp/>+<sp/>Buffer.from(hexDigest,<sp/>&apos;hex&apos;).toString(&apos;base64&apos;)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`opts.options`<sp/>may<sp/>optionally<sp/>be<sp/>passed<sp/>in:<sp/>it<sp/>must<sp/>be<sp/>an<sp/>array<sp/>of<sp/>option</highlight></codeline>
+<codeline><highlight class="normal">strings<sp/>that<sp/>will<sp/>be<sp/>added<sp/>to<sp/>all<sp/>generated<sp/>integrity<sp/>hashes<sp/>generated<sp/>by</highlight></codeline>
+<codeline><highlight class="normal">`fromData`.<sp/>This<sp/>is<sp/>a<sp/>loosely-specified<sp/>feature<sp/>of<sp/>SRIs,<sp/>and<sp/>currently<sp/>has<sp/>no</highlight></codeline>
+<codeline><highlight class="normal">specified<sp/>semantics<sp/>besides<sp/>being<sp/>`?`-separated.<sp/>Use<sp/>at<sp/>your<sp/>own<sp/>risk,<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">probably<sp/>avoid<sp/>if<sp/>your<sp/>integrity<sp/>strings<sp/>are<sp/>meant<sp/>to<sp/>be<sp/>used<sp/>with<sp/>browsers.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.strict`<sp/>is<sp/>true,<sp/>the<sp/>integrity<sp/>object<sp/>will<sp/>be<sp/>created<sp/>using<sp/>strict</highlight></codeline>
+<codeline><highlight class="normal">parsing<sp/>rules.<sp/>See<sp/>[`ssri.parse`](#parse).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.single`<sp/>is<sp/>true,<sp/>a<sp/>single<sp/>`Hash`<sp/>object<sp/>will<sp/>be<sp/>returned.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">ssri.fromHex(&apos;75e69d6de79f&apos;,<sp/>&apos;sha1&apos;).toString()<sp/>//<sp/>&apos;sha1-deadbeef&apos;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;from-data&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>ssri.fromData(data,<sp/>[opts])<sp/>-&gt;<sp/>Integrity`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Creates<sp/>an<sp/>`Integrity`<sp/>object<sp/>from<sp/>either<sp/>string<sp/>or<sp/>`Buffer`<sp/>data,<sp/>calculating</highlight></codeline>
+<codeline><highlight class="normal">all<sp/>the<sp/>requested<sp/>hashes<sp/>and<sp/>adding<sp/>any<sp/>specified<sp/>options<sp/>to<sp/>the<sp/>object.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`opts.algorithms`<sp/>determines<sp/>which<sp/>algorithms<sp/>to<sp/>generate<sp/>hashes<sp/>for.<sp/>All</highlight></codeline>
+<codeline><highlight class="normal">results<sp/>will<sp/>be<sp/>included<sp/>in<sp/>a<sp/>single<sp/>`Integrity`<sp/>object.<sp/>The<sp/>default<sp/>value<sp/>for</highlight></codeline>
+<codeline><highlight class="normal">`opts.algorithms`<sp/>is<sp/>`[&apos;sha512&apos;]`.<sp/>All<sp/>algorithm<sp/>strings<sp/>must<sp/>be<sp/>hashes<sp/>listed</highlight></codeline>
+<codeline><highlight class="normal">in<sp/>`crypto.getHashes()`<sp/>for<sp/>the<sp/>host<sp/>Node.js<sp/>platform.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`opts.options`<sp/>may<sp/>optionally<sp/>be<sp/>passed<sp/>in:<sp/>it<sp/>must<sp/>be<sp/>an<sp/>array<sp/>of<sp/>option</highlight></codeline>
+<codeline><highlight class="normal">strings<sp/>that<sp/>will<sp/>be<sp/>added<sp/>to<sp/>all<sp/>generated<sp/>integrity<sp/>hashes<sp/>generated<sp/>by</highlight></codeline>
+<codeline><highlight class="normal">`fromData`.<sp/>This<sp/>is<sp/>a<sp/>loosely-specified<sp/>feature<sp/>of<sp/>SRIs,<sp/>and<sp/>currently<sp/>has<sp/>no</highlight></codeline>
+<codeline><highlight class="normal">specified<sp/>semantics<sp/>besides<sp/>being<sp/>`?`-separated.<sp/>Use<sp/>at<sp/>your<sp/>own<sp/>risk,<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">probably<sp/>avoid<sp/>if<sp/>your<sp/>integrity<sp/>strings<sp/>are<sp/>meant<sp/>to<sp/>be<sp/>used<sp/>with<sp/>browsers.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.strict`<sp/>is<sp/>true,<sp/>the<sp/>integrity<sp/>object<sp/>will<sp/>be<sp/>created<sp/>using<sp/>strict</highlight></codeline>
+<codeline><highlight class="normal">parsing<sp/>rules.<sp/>See<sp/>[`ssri.parse`](#parse).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>integrityObj<sp/>=<sp/>ssri.fromData(&apos;foobarbaz&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>algorithms:<sp/>[&apos;sha256&apos;,<sp/>&apos;sha384&apos;,<sp/>&apos;sha512&apos;]</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">integrity.toString(&apos;\n&apos;)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>-&gt;</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>sha256-l981iLWj8kurw4UbNy8Lpxqdzd7UOxS50Glhv8FwfZ0=</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>sha384-irnCxQ0CfQhYGlVAUdwTPC9bF3+YWLxlaDGM4xbYminxpbXEq+D+2GCEBTxcjES9</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>sha512-yzd8ELD1piyANiWnmdnpCL5F52f10UfUdEkHywVZeqTt0ymgrxR63Qz0GB7TKPoeeZQmWCaz7T1+9vBnypkYWg==</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;from-stream&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>ssri.fromStream(stream,<sp/>[opts])<sp/>-&gt;<sp/>Promise&lt;Integrity&gt;`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>a<sp/>Promise<sp/>of<sp/>an<sp/>Integrity<sp/>object<sp/>calculated<sp/>by<sp/>reading<sp/>data<sp/>from</highlight></codeline>
+<codeline><highlight class="normal">a<sp/>given<sp/>`stream`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It<sp/>accepts<sp/>both<sp/>`opts.algorithms`<sp/>and<sp/>`opts.options`,<sp/>which<sp/>are<sp/>documented<sp/>as</highlight></codeline>
+<codeline><highlight class="normal">part<sp/>of<sp/>[`ssri.fromData`](#from-data).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Additionally,<sp/>`opts.Promise`<sp/>may<sp/>be<sp/>passed<sp/>in<sp/>to<sp/>inject<sp/>a<sp/>Promise<sp/>library<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">choice.<sp/>By<sp/>default,<sp/>ssri<sp/>will<sp/>use<sp/>Node&apos;s<sp/>built-in<sp/>Promises.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.strict`<sp/>is<sp/>true,<sp/>the<sp/>integrity<sp/>object<sp/>will<sp/>be<sp/>created<sp/>using<sp/>strict</highlight></codeline>
+<codeline><highlight class="normal">parsing<sp/>rules.<sp/>See<sp/>[`ssri.parse`](#parse).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">ssri.fromStream(fs.createReadStream(&apos;index.js&apos;),<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>algorithms:<sp/>[&apos;sha1&apos;,<sp/>&apos;sha512&apos;]</highlight></codeline>
+<codeline><highlight class="normal">}).then(integrity<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>ssri.checkStream(fs.createReadStream(&apos;index.js&apos;),<sp/>integrity)</highlight></codeline>
+<codeline><highlight class="normal">})<sp/>//<sp/>succeeds</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;create&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>ssri.create([opts])<sp/>-&gt;<sp/>&lt;Hash&gt;`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>a<sp/>Hash<sp/>object<sp/>with<sp/>`update(&lt;Buffer<sp/>or<sp/>string&gt;[,enc])`<sp/>and<sp/>`digest()`<sp/>methods.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>Hash<sp/>object<sp/>provides<sp/>the<sp/>same<sp/>methods<sp/>as<sp/>[crypto<sp/>class<sp/>Hash](https://nodejs.org/dist/latest-v6.x/docs/api/crypto.html#crypto_class_hash).</highlight></codeline>
+<codeline><highlight class="normal">`digest()`<sp/>accepts<sp/>no<sp/>arguments<sp/>and<sp/>returns<sp/>an<sp/>Integrity<sp/>object<sp/>calculated<sp/>by<sp/>reading<sp/>data<sp/>from</highlight></codeline>
+<codeline><highlight class="normal">calls<sp/>to<sp/>update.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It<sp/>accepts<sp/>both<sp/>`opts.algorithms`<sp/>and<sp/>`opts.options`,<sp/>which<sp/>are<sp/>documented<sp/>as</highlight></codeline>
+<codeline><highlight class="normal">part<sp/>of<sp/>[`ssri.fromData`](#from-data).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.strict`<sp/>is<sp/>true,<sp/>the<sp/>integrity<sp/>object<sp/>will<sp/>be<sp/>created<sp/>using<sp/>strict</highlight></codeline>
+<codeline><highlight class="normal">parsing<sp/>rules.<sp/>See<sp/>[`ssri.parse`](#parse).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>integrity<sp/>=<sp/>ssri.create().update(&apos;foobarbaz&apos;).digest()</highlight></codeline>
+<codeline><highlight class="normal">integrity.toString()</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>-&gt;</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>sha512-yzd8ELD1piyANiWnmdnpCL5F52f10UfUdEkHywVZeqTt0ymgrxR63Qz0GB7TKPoeeZQmWCaz7T1+9vBnypkYWg==</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;check-data&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>ssri.checkData(data,<sp/>sri,<sp/>[opts])<sp/>-&gt;<sp/>Hash|false`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Verifies<sp/>`data`<sp/>integrity<sp/>against<sp/>an<sp/>`sri`<sp/>argument.<sp/>`data`<sp/>may<sp/>be<sp/>either<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">`String`<sp/>or<sp/>a<sp/>`Buffer`,<sp/>and<sp/>`sri`<sp/>can<sp/>be<sp/>any<sp/>subresource<sp/>integrity</highlight></codeline>
+<codeline><highlight class="normal">representation<sp/>that<sp/>[`ssri.parse`](#parse)<sp/>can<sp/>handle.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>verification<sp/>succeeds,<sp/>`checkData`<sp/>will<sp/>return<sp/>the<sp/>name<sp/>of<sp/>the<sp/>algorithm<sp/>that</highlight></codeline>
+<codeline><highlight class="normal">was<sp/>used<sp/>for<sp/>verification<sp/>(a<sp/>truthy<sp/>value).<sp/>Otherwise,<sp/>it<sp/>will<sp/>return<sp/>`false`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.pickAlgorithm`<sp/>is<sp/>provided,<sp/>it<sp/>will<sp/>be<sp/>used<sp/>by</highlight></codeline>
+<codeline><highlight class="normal">[`Integrity#pickAlgorithm`](#integrity-pick-algorithm)<sp/>when<sp/>deciding<sp/>which<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>available<sp/>digests<sp/>to<sp/>match<sp/>against.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.error`<sp/>is<sp/>true,<sp/>and<sp/>verification<sp/>fails,<sp/>`checkData`<sp/>will<sp/>throw<sp/>either</highlight></codeline>
+<codeline><highlight class="normal">an<sp/>`EBADSIZE`<sp/>or<sp/>an<sp/>`EINTEGRITY`<sp/>error,<sp/>instead<sp/>of<sp/>just<sp/>returning<sp/>false.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>data<sp/>=<sp/>fs.readFileSync(&apos;index.js&apos;)</highlight></codeline>
+<codeline><highlight class="normal">ssri.checkData(data,<sp/>ssri.fromData(data))<sp/>//<sp/>-&gt;<sp/>&apos;sha512&apos;</highlight></codeline>
+<codeline><highlight class="normal">ssri.checkData(data,<sp/>&apos;sha256-l981iLWj8kurw4UbNy8Lpxqdzd7UOxS50Glhv8FwfZ0&apos;)</highlight></codeline>
+<codeline><highlight class="normal">ssri.checkData(data,<sp/>&apos;sha1-BaDDigEST&apos;)<sp/>//<sp/>-&gt;<sp/>false</highlight></codeline>
+<codeline><highlight class="normal">ssri.checkData(data,<sp/>&apos;sha1-BaDDigEST&apos;,<sp/>{error:<sp/>true})<sp/>//<sp/>-&gt;<sp/>Error!<sp/>EINTEGRITY</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;check-stream&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>ssri.checkStream(stream,<sp/>sri,<sp/>[opts])<sp/>-&gt;<sp/>Promise&lt;Hash&gt;`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Verifies<sp/>the<sp/>contents<sp/>of<sp/>`stream`<sp/>against<sp/>an<sp/>`sri`<sp/>argument.<sp/>`stream`<sp/>will<sp/>be</highlight></codeline>
+<codeline><highlight class="normal">consumed<sp/>in<sp/>its<sp/>entirety<sp/>by<sp/>this<sp/>process.<sp/>`sri`<sp/>can<sp/>be<sp/>any<sp/>subresource<sp/>integrity</highlight></codeline>
+<codeline><highlight class="normal">representation<sp/>that<sp/>[`ssri.parse`](#parse)<sp/>can<sp/>handle.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`checkStream`<sp/>will<sp/>return<sp/>a<sp/>Promise<sp/>that<sp/>either<sp/>resolves<sp/>to<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">`Hash`<sp/>that<sp/>succeeded<sp/>verification,<sp/>or,<sp/>if<sp/>the<sp/>verification<sp/>fails</highlight></codeline>
+<codeline><highlight class="normal">or<sp/>an<sp/>error<sp/>happens<sp/>with<sp/>`stream`,<sp/>the<sp/>Promise<sp/>will<sp/>be<sp/>rejected.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>the<sp/>Promise<sp/>is<sp/>rejected<sp/>because<sp/>verification<sp/>failed,<sp/>the<sp/>returned<sp/>error<sp/>will</highlight></codeline>
+<codeline><highlight class="normal">have<sp/>`err.code`<sp/>as<sp/>`EINTEGRITY`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.size`<sp/>is<sp/>given,<sp/>it<sp/>will<sp/>be<sp/>matched<sp/>against<sp/>the<sp/>stream<sp/>size.<sp/>An<sp/>error</highlight></codeline>
+<codeline><highlight class="normal">with<sp/>`err.code`<sp/>`EBADSIZE`<sp/>will<sp/>be<sp/>returned<sp/>by<sp/>a<sp/>rejection<sp/>if<sp/>the<sp/>expected<sp/>size</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>actual<sp/>size<sp/>fail<sp/>to<sp/>match.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.pickAlgorithm`<sp/>is<sp/>provided,<sp/>it<sp/>will<sp/>be<sp/>used<sp/>by</highlight></codeline>
+<codeline><highlight class="normal">[`Integrity#pickAlgorithm`](#integrity-pick-algorithm)<sp/>when<sp/>deciding<sp/>which<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>available<sp/>digests<sp/>to<sp/>match<sp/>against.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>integrity<sp/>=<sp/>ssri.fromData(fs.readFileSync(&apos;index.js&apos;))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">ssri.checkStream(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fs.createReadStream(&apos;index.js&apos;),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>integrity</highlight></codeline>
+<codeline><highlight class="normal">)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>-&gt;</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Promise&lt;{</highlight></codeline>
+<codeline><highlight class="normal">//<sp/><sp/><sp/>algorithm:<sp/>&apos;sha512&apos;,</highlight></codeline>
+<codeline><highlight class="normal">//<sp/><sp/><sp/>digest:<sp/>&apos;sha512-yzd8ELD1piyANiWnmdnpCL5F52f10UfUdEkHywVZeqTt0ymgrxR63Qz0GB7TKPoeeZQmWCaz7T1&apos;</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>}&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">ssri.checkStream(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fs.createReadStream(&apos;index.js&apos;),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&apos;sha256-l981iLWj8kurw4UbNy8Lpxqdzd7UOxS50Glhv8FwfZ0&apos;</highlight></codeline>
+<codeline><highlight class="normal">)<sp/>//<sp/>-&gt;<sp/>Promise&lt;Hash&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">ssri.checkStream(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fs.createReadStream(&apos;index.js&apos;),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&apos;sha1-BaDDigEST&apos;</highlight></codeline>
+<codeline><highlight class="normal">)<sp/>//<sp/>-&gt;<sp/>Promise&lt;Error&lt;{code:<sp/>&apos;EINTEGRITY&apos;}&gt;&gt;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;integrity-stream&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>integrityStream([opts])<sp/>-&gt;<sp/>IntegrityStream`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>a<sp/>`Transform`<sp/>stream<sp/>that<sp/>data<sp/>can<sp/>be<sp/>piped<sp/>through<sp/>in<sp/>order<sp/>to<sp/>generate</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>optionally<sp/>check<sp/>data<sp/>integrity<sp/>for<sp/>piped<sp/>data.<sp/>When<sp/>the<sp/>stream<sp/>completes</highlight></codeline>
+<codeline><highlight class="normal">successfully,<sp/>it<sp/>emits<sp/>`size`<sp/>and<sp/>`integrity`<sp/>events,<sp/>containing<sp/>the<sp/>total</highlight></codeline>
+<codeline><highlight class="normal">number<sp/>of<sp/>bytes<sp/>processed<sp/>and<sp/>a<sp/>calculated<sp/>`Integrity`<sp/>instance<sp/>based<sp/>on<sp/>stream</highlight></codeline>
+<codeline><highlight class="normal">data,<sp/>respectively.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.algorithms`<sp/>is<sp/>passed<sp/>in,<sp/>the<sp/>listed<sp/>algorithms<sp/>will<sp/>be<sp/>calculated<sp/>when</highlight></codeline>
+<codeline><highlight class="normal">generating<sp/>the<sp/>final<sp/>`Integrity`<sp/>instance.<sp/>The<sp/>default<sp/>is<sp/>`[&apos;sha512&apos;]`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.single`<sp/>is<sp/>passed<sp/>in,<sp/>a<sp/>single<sp/>`Hash`<sp/>instance<sp/>will<sp/>be<sp/>returned.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.integrity`<sp/>is<sp/>passed<sp/>in,<sp/>it<sp/>should<sp/>be<sp/>an<sp/>`integrity`<sp/>value<sp/>understood</highlight></codeline>
+<codeline><highlight class="normal">by<sp/>[`parse`](#parse)<sp/>that<sp/>the<sp/>stream<sp/>will<sp/>check<sp/>the<sp/>data<sp/>against.<sp/>If</highlight></codeline>
+<codeline><highlight class="normal">verification<sp/>succeeds,<sp/>the<sp/>integrity<sp/>stream<sp/>will<sp/>emit<sp/>a<sp/>`verified`<sp/>event<sp/>whose</highlight></codeline>
+<codeline><highlight class="normal">value<sp/>is<sp/>a<sp/>single<sp/>`Hash`<sp/>object<sp/>that<sp/>is<sp/>the<sp/>one<sp/>that<sp/>succeeded<sp/>verification.<sp/>If</highlight></codeline>
+<codeline><highlight class="normal">verification<sp/>fails,<sp/>the<sp/>stream<sp/>will<sp/>error<sp/>with<sp/>an<sp/>`EINTEGRITY`<sp/>error<sp/>code.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.size`<sp/>is<sp/>given,<sp/>it<sp/>will<sp/>be<sp/>matched<sp/>against<sp/>the<sp/>stream<sp/>size.<sp/>An<sp/>error</highlight></codeline>
+<codeline><highlight class="normal">with<sp/>`err.code`<sp/>`EBADSIZE`<sp/>will<sp/>be<sp/>emitted<sp/>by<sp/>the<sp/>stream<sp/>if<sp/>the<sp/>expected<sp/>size</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>actual<sp/>size<sp/>fail<sp/>to<sp/>match.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.pickAlgorithm`<sp/>is<sp/>provided,<sp/>it<sp/>will<sp/>be<sp/>passed<sp/>two<sp/>algorithms<sp/>as</highlight></codeline>
+<codeline><highlight class="normal">arguments.<sp/>ssri<sp/>will<sp/>prioritize<sp/>whichever<sp/>of<sp/>the<sp/>two<sp/>algorithms<sp/>is<sp/>returned<sp/>by</highlight></codeline>
+<codeline><highlight class="normal">this<sp/>function.<sp/>Note<sp/>that<sp/>the<sp/>function<sp/>may<sp/>be<sp/>called<sp/>multiple<sp/>times,<sp/>and<sp/>it</highlight></codeline>
+<codeline><highlight class="normal">**must**<sp/>return<sp/>one<sp/>of<sp/>the<sp/>two<sp/>algorithms<sp/>provided.<sp/>By<sp/>default,<sp/>ssri<sp/>will<sp/>make</highlight></codeline>
+<codeline><highlight class="normal">a<sp/>best-effort<sp/>to<sp/>pick<sp/>the<sp/>strongest/most<sp/>reliable<sp/>of<sp/>the<sp/>given<sp/>algorithms.<sp/>It</highlight></codeline>
+<codeline><highlight class="normal">may<sp/>intentionally<sp/>deprioritize<sp/>algorithms<sp/>with<sp/>known<sp/>vulnerabilities.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>integrity<sp/>=<sp/>ssri.fromData(fs.readFileSync(&apos;index.js&apos;))</highlight></codeline>
+<codeline><highlight class="normal">fs.createReadStream(&apos;index.js&apos;)</highlight></codeline>
+<codeline><highlight class="normal">.pipe(ssri.integrityStream({integrity}))</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/ssri/README.md"/>
+  </compounddef>
+</doxygen>

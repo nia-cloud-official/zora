@@ -1,0 +1,1720 @@
+.TH "gyp.generator.msvs" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gyp.generator.msvs
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBMSBuildRule\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fB_GetDomainAndUserName\fP ()"
+.br
+.ti -1c
+.RI "\fB_NormalizedSource\fP (source)"
+.br
+.ti -1c
+.RI "\fB_FixPath\fP (path, separator='\\\\')"
+.br
+.ti -1c
+.RI "\fB_IsWindowsAbsPath\fP (path)"
+.br
+.ti -1c
+.RI "\fB_FixPaths\fP (paths, separator='\\\\')"
+.br
+.ti -1c
+.RI "\fB_ConvertSourcesToFilterHierarchy\fP (sources, prefix=None, excluded=None, list_excluded=True, msvs_version=None)"
+.br
+.ti -1c
+.RI "\fB_ToolAppend\fP (tools, tool_name, setting, value, only_if_unset=False)"
+.br
+.ti -1c
+.RI "\fB_ToolSetOrAppend\fP (tools, tool_name, setting, value, only_if_unset=False)"
+.br
+.ti -1c
+.RI "\fB_ConfigTargetVersion\fP (config_data)"
+.br
+.ti -1c
+.RI "\fB_ConfigPlatform\fP (config_data)"
+.br
+.ti -1c
+.RI "\fB_ConfigBaseName\fP (config_name, platform_name)"
+.br
+.ti -1c
+.RI "\fB_ConfigFullName\fP (config_name, config_data)"
+.br
+.ti -1c
+.RI "\fB_ConfigWindowsTargetPlatformVersion\fP (config_data, version)"
+.br
+.ti -1c
+.RI "\fB_BuildCommandLineForRuleRaw\fP (spec, cmd, cygwin_shell, has_input_path, quote_cmd, do_setup_env)"
+.br
+.ti -1c
+.RI "\fB_BuildCommandLineForRule\fP (spec, rule, has_input_path, do_setup_env)"
+.br
+.ti -1c
+.RI "\fB_AddActionStep\fP (actions_dict, inputs, outputs, description, command)"
+.br
+.ti -1c
+.RI "\fB_AddCustomBuildToolForMSVS\fP (p, spec, primary_input, inputs, outputs, description, cmd)"
+.br
+.ti -1c
+.RI "\fB_AddAccumulatedActionsToMSVS\fP (p, spec, actions_dict)"
+.br
+.ti -1c
+.RI "\fB_RuleExpandPath\fP (path, input_file)"
+.br
+.ti -1c
+.RI "\fB_FindRuleTriggerFiles\fP (rule, sources)"
+.br
+.ti -1c
+.RI "\fB_RuleInputsAndOutputs\fP (rule, trigger_file)"
+.br
+.ti -1c
+.RI "\fB_GenerateNativeRulesForMSVS\fP (p, rules, output_dir, spec, options)"
+.br
+.ti -1c
+.RI "\fB_Cygwinify\fP (path)"
+.br
+.ti -1c
+.RI "\fB_GenerateExternalRules\fP (rules, output_dir, spec, sources, options, actions_to_add)"
+.br
+.ti -1c
+.RI "\fB_EscapeEnvironmentVariableExpansion\fP (s)"
+.br
+.ti -1c
+.RI "\fB_EscapeCommandLineArgumentForMSVS\fP (s)"
+.br
+.ti -1c
+.RI "\fB_EscapeVCProjCommandLineArgListItem\fP (s)"
+.br
+.ti -1c
+.RI "\fB_EscapeCppDefineForMSVS\fP (s)"
+.br
+.ti -1c
+.RI "\fB_EscapeCommandLineArgumentForMSBuild\fP (s)"
+.br
+.ti -1c
+.RI "\fB_EscapeMSBuildSpecialCharacters\fP (s)"
+.br
+.ti -1c
+.RI "\fB_EscapeCppDefineForMSBuild\fP (s)"
+.br
+.ti -1c
+.RI "\fB_GenerateRulesForMSVS\fP (p, output_dir, options, spec, sources, excluded_sources, actions_to_add)"
+.br
+.ti -1c
+.RI "\fB_AdjustSourcesForRules\fP (rules, sources, excluded_sources, is_msbuild)"
+.br
+.ti -1c
+.RI "\fB_FilterActionsFromExcluded\fP (excluded_sources, actions_to_add)"
+.br
+.ti -1c
+.RI "\fB_GetDefaultConfiguration\fP (spec)"
+.br
+.ti -1c
+.RI "\fB_GetGuidOfProject\fP (proj_path, spec)"
+.br
+.ti -1c
+.RI "\fB_GetMsbuildToolsetOfProject\fP (proj_path, spec, version)"
+.br
+.ti -1c
+.RI "\fB_GenerateProject\fP (project, options, version, generator_flags, spec)"
+.br
+.ti -1c
+.RI "\fB_GenerateMSVSProject\fP (project, options, version, generator_flags)"
+.br
+.ti -1c
+.RI "\fB_GetUniquePlatforms\fP (spec)"
+.br
+.ti -1c
+.RI "\fB_CreateMSVSUserFile\fP (proj_path, version, spec)"
+.br
+.ti -1c
+.RI "\fB_GetMSVSConfigurationType\fP (spec, build_file)"
+.br
+.ti -1c
+.RI "\fB_AddConfigurationToMSVSProject\fP (p, spec, config_type, config_name, config)"
+.br
+.ti -1c
+.RI "\fB_GetIncludeDirs\fP (config)"
+.br
+.ti -1c
+.RI "\fB_GetLibraryDirs\fP (config)"
+.br
+.ti -1c
+.RI "\fB_GetLibraries\fP (spec)"
+.br
+.ti -1c
+.RI "\fB_GetOutputFilePathAndTool\fP (spec, msbuild)"
+.br
+.ti -1c
+.RI "\fB_GetOutputTargetExt\fP (spec)"
+.br
+.ti -1c
+.RI "\fB_GetDefines\fP (config)"
+.br
+.ti -1c
+.RI "\fB_GetDisabledWarnings\fP (config)"
+.br
+.ti -1c
+.RI "\fB_GetModuleDefinition\fP (spec)"
+.br
+.ti -1c
+.RI "\fB_ConvertToolsToExpectedForm\fP (tools)"
+.br
+.ti -1c
+.RI "\fB_AddConfigurationToMSVS\fP (p, spec, tools, config, config_type, config_name)"
+.br
+.ti -1c
+.RI "\fB_GetMSVSAttributes\fP (spec, config, config_type)"
+.br
+.ti -1c
+.RI "\fB_AddNormalizedSources\fP (sources_set, sources_array)"
+.br
+.ti -1c
+.RI "\fB_PrepareListOfSources\fP (spec, generator_flags, gyp_file)"
+.br
+.ti -1c
+.RI "\fB_AdjustSourcesAndConvertToFilterHierarchy\fP (spec, options, gyp_dir, sources, excluded_sources, list_excluded, version)"
+.br
+.ti -1c
+.RI "\fB_IdlFilesHandledNonNatively\fP (spec, sources)"
+.br
+.ti -1c
+.RI "\fB_GetPrecompileRelatedFiles\fP (spec)"
+.br
+.ti -1c
+.RI "\fB_ExcludeFilesFromBeingBuilt\fP (p, spec, excluded_sources, excluded_idl, list_excluded)"
+.br
+.ti -1c
+.RI "\fB_GetExcludedFilesFromBuild\fP (spec, excluded_sources, excluded_idl)"
+.br
+.ti -1c
+.RI "\fB_AddToolFilesToMSVS\fP (p, spec)"
+.br
+.ti -1c
+.RI "\fB_HandlePreCompiledHeaders\fP (p, sources, spec)"
+.br
+.ti -1c
+.RI "\fB_AddActions\fP (actions_to_add, spec, relative_path_of_gyp_file)"
+.br
+.ti -1c
+.RI "\fB_WriteMSVSUserFile\fP (project_path, version, spec)"
+.br
+.ti -1c
+.RI "\fB_AddCopies\fP (actions_to_add, spec)"
+.br
+.ti -1c
+.RI "\fB_GetCopies\fP (spec)"
+.br
+.ti -1c
+.RI "\fB_GetPathDict\fP (root, path)"
+.br
+.ti -1c
+.RI "\fB_DictsToFolders\fP (base_path, bucket, flat)"
+.br
+.ti -1c
+.RI "\fB_CollapseSingles\fP (parent, node)"
+.br
+.ti -1c
+.RI "\fB_GatherSolutionFolders\fP (sln_projects, project_objects, flat)"
+.br
+.ti -1c
+.RI "\fB_GetPathOfProject\fP (qualified_target, spec, options, msvs_version)"
+.br
+.ti -1c
+.RI "\fB_GetPlatformOverridesOfProject\fP (spec)"
+.br
+.ti -1c
+.RI "\fB_CreateProjectObjects\fP (target_list, target_dicts, options, msvs_version)"
+.br
+.ti -1c
+.RI "\fB_InitNinjaFlavor\fP (params, target_list, target_dicts)"
+.br
+.ti -1c
+.RI "\fBCalculateVariables\fP (default_variables, params)"
+.br
+.ti -1c
+.RI "\fBPerformBuild\fP (data, configurations, params)"
+.br
+.ti -1c
+.RI "\fBCalculateGeneratorInputInfo\fP (params)"
+.br
+.ti -1c
+.RI "\fBGenerateOutput\fP (target_list, target_dicts, data, params)"
+.br
+.ti -1c
+.RI "\fB_GenerateMSBuildFiltersFile\fP (filters_path, source_files, rule_dependencies, extension_to_rule_name, platforms, toolset)"
+.br
+.ti -1c
+.RI "\fB_AppendFiltersForMSBuild\fP (parent_filter_name, sources, rule_dependencies, extension_to_rule_name, platforms, toolset, filter_group, source_group)"
+.br
+.ti -1c
+.RI "\fB_MapFileToMsBuildSourceType\fP (source, rule_dependencies, extension_to_rule_name, platforms, toolset)"
+.br
+.ti -1c
+.RI "\fB_GenerateRulesForMSBuild\fP (output_dir, options, spec, sources, excluded_sources, props_files_of_rules, targets_files_of_rules, actions_to_add, rule_dependencies, extension_to_rule_name)"
+.br
+.ti -1c
+.RI "\fB_GenerateMSBuildRulePropsFile\fP (props_path, msbuild_rules)"
+.br
+.ti -1c
+.RI "\fB_GenerateMSBuildRuleTargetsFile\fP (targets_path, msbuild_rules)"
+.br
+.ti -1c
+.RI "\fB_GenerateMSBuildRuleXmlFile\fP (xml_path, msbuild_rules)"
+.br
+.ti -1c
+.RI "\fB_GetConfigurationAndPlatform\fP (name, settings, spec)"
+.br
+.ti -1c
+.RI "\fB_GetConfigurationCondition\fP (name, settings, spec)"
+.br
+.ti -1c
+.RI "\fB_GetMSBuildProjectConfigurations\fP (configurations, spec)"
+.br
+.ti -1c
+.RI "\fB_GetMSBuildGlobalProperties\fP (spec, version, guid, gyp_file_name)"
+.br
+.ti -1c
+.RI "\fB_GetMSBuildConfigurationDetails\fP (spec, build_file)"
+.br
+.ti -1c
+.RI "\fB_GetMSBuildLocalProperties\fP (msbuild_toolset)"
+.br
+.ti -1c
+.RI "\fB_GetMSBuildPropertySheets\fP (configurations, spec)"
+.br
+.ti -1c
+.RI "\fB_ConvertMSVSBuildAttributes\fP (spec, config, build_file)"
+.br
+.ti -1c
+.RI "\fB_ConvertMSVSCharacterSet\fP (char_set)"
+.br
+.ti -1c
+.RI "\fB_ConvertMSVSConfigurationType\fP (config_type)"
+.br
+.ti -1c
+.RI "\fB_GetMSBuildAttributes\fP (spec, config, build_file)"
+.br
+.ti -1c
+.RI "\fB_GetMSBuildConfigurationGlobalProperties\fP (spec, configurations, build_file)"
+.br
+.ti -1c
+.RI "\fB_AddConditionalProperty\fP (properties, condition, name, value)"
+.br
+.ti -1c
+.RI "\fB_GetMSBuildPropertyGroup\fP (spec, label, properties)"
+.br
+.ti -1c
+.RI "\fB_GetMSBuildToolSettingsSections\fP (spec, configurations)"
+.br
+.ti -1c
+.RI "\fB_FinalizeMSBuildSettings\fP (spec, configuration)"
+.br
+.ti -1c
+.RI "\fB_GetValueFormattedForMSBuild\fP (tool_name, name, value)"
+.br
+.ti -1c
+.RI "\fB_VerifySourcesExist\fP (sources, root_dir)"
+.br
+.ti -1c
+.RI "\fB_GetMSBuildSources\fP (spec, sources, exclusions, rule_dependencies, extension_to_rule_name, actions_spec, sources_handled_by_action, list_excluded)"
+.br
+.ti -1c
+.RI "\fB_AddSources2\fP (spec, sources, exclusions, grouped_sources, rule_dependencies, extension_to_rule_name, sources_handled_by_action, list_excluded)"
+.br
+.ti -1c
+.RI "\fB_GetMSBuildProjectReferences\fP (project)"
+.br
+.ti -1c
+.RI "\fB_GenerateMSBuildProject\fP (project, options, version, generator_flags, spec)"
+.br
+.ti -1c
+.RI "\fB_GetMSBuildExternalBuilderTargets\fP (spec)"
+.br
+.ti -1c
+.RI "\fB_GetMSBuildExtensions\fP (props_files_of_rules)"
+.br
+.ti -1c
+.RI "\fB_GetMSBuildExtensionTargets\fP (targets_files_of_rules)"
+.br
+.ti -1c
+.RI "\fB_GenerateActionsForMSBuild\fP (spec, actions_to_add)"
+.br
+.ti -1c
+.RI "\fB_AddMSBuildAction\fP (spec, primary_input, inputs, outputs, cmd, description, sources_handled_by_action, actions_spec)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBVALID_MSVS_GUID_CHARS\fP = re\&.compile(r'^[A\-F0\-9\\\-]+$')"
+.br
+.ti -1c
+.RI "\fBgenerator_supports_multiple_toolsets\fP = \fBgyp\&.common\&.CrossCompileRequested\fP()"
+.br
+.ti -1c
+.RI "dict \fBgenerator_default_variables\fP"
+.br
+.ti -1c
+.RI "list \fBgenerator_additional_path_sections\fP"
+.br
+.ti -1c
+.RI "list \fBgenerator_additional_non_configuration_keys\fP"
+.br
+.ti -1c
+.RI "\fBgenerator_filelist_paths\fP = None"
+.br
+.ti -1c
+.RI "list \fBprecomp_keys\fP"
+.br
+.ti -1c
+.RI "\fBcached_username\fP = None"
+.br
+.ti -1c
+.RI "\fBcached_domain\fP = None"
+.br
+.ti -1c
+.RI "\fBfixpath_prefix\fP = None"
+.br
+.ti -1c
+.RI "\fBquote_replacer_regex\fP = re\&.compile(r'(\\\\*)'')"
+.br
+.ti -1c
+.RI "\fBdelimiters_replacer_regex\fP = re\&.compile(r'(\\\\*)([,;]+)')"
+.br
+.ti -1c
+.RI "\fBquote_replacer_regex2\fP = re\&.compile(r'(\\\\+)'')"
+.br
+.ti -1c
+.RI "\fBMSVS_VARIABLE_REFERENCE\fP = re\&.compile(r'\\$\\(([a\-zA\-Z_][a\-zA\-Z0\-9_]*)\\)')"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "gyp\&.generator\&.msvs\&._AddAccumulatedActionsToMSVS ( p,  spec,  actions_dict)\fR [protected]\fP"
+
+.PP
+.nf
+Add actions accumulated into an actions_dict, merging as needed\&.
+
+Arguments:
+p: the target project
+spec: the target project dict
+actions_dict: dictionary keyed on input name, which maps to a list of
+    dicts describing the actions attached to that input file\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB526\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._AddActions ( actions_to_add,  spec,  relative_path_of_gyp_file)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1711\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._AddActionStep ( actions_dict,  inputs,  outputs,  description,  command)\fR [protected]\fP"
+
+.PP
+.nf
+Merge action into an existing list of actions\&.
+
+Care must be taken so that actions which have overlapping inputs either don't
+get assigned to the same input, or get collapsed into one\&.
+
+Arguments:
+actions_dict: dictionary keyed on input name, which maps to a list of
+  dicts describing the actions attached to that input file\&.
+inputs: list of inputs
+outputs: list of outputs
+description: description of the action
+command: command line to execute
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB459\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._AddConditionalProperty ( properties,  condition,  name,  value)\fR [protected]\fP"
+
+.PP
+.nf
+Adds a property / conditional value pair to a dictionary\&.
+
+Arguments:
+properties: The dictionary to be modified\&.  The key is the name of the
+    property\&.  The value is itself a dictionary; its key is the value and
+    the value a list of condition for which this value is true\&.
+condition: The condition under which the named property has the value\&.
+name: The name of the property\&.
+value: The value of the property\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB3235\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._AddConfigurationToMSVS ( p,  spec,  tools,  config,  config_type,  config_name)\fR [protected]\fP"
+
+.PP
+.nf
+Add to the project file the configuration specified by config\&.
+
+Arguments:
+p: The target project being generated\&.
+spec: the target project dict\&.
+tools: A dictionary of settings; the tool name is the key\&.
+config: The dictionary that defines the special processing to be done
+        for this configuration\&.
+config_type: The configuration type, a number as defined by Microsoft\&.
+config_name: The name of the configuration\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1442\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._AddConfigurationToMSVSProject ( p,  spec,  config_type,  config_name,  config)\fR [protected]\fP"
+
+.PP
+.nf
+Adds a configuration to the MSVS project\&.
+
+Many settings in a vcproj file are specific to a configuration\&.  This
+function the main part of the vcproj file that's configuration specific\&.
+
+Arguments:
+p: The target project being generated\&.
+spec: The target dictionary containing the properties of the target\&.
+config_type: The configuration type, a number as defined by Microsoft\&.
+config_name: The name of the configuration\&.
+config: The dictionary that defines the special processing to be done
+        for this configuration\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1161\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._AddCopies ( actions_to_add,  spec)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1760\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._AddCustomBuildToolForMSVS ( p,  spec,  primary_input,  inputs,  outputs,  description,  cmd)\fR [protected]\fP"
+
+.PP
+.nf
+Add a custom build tool to execute something\&.
+
+Arguments:
+p: the target project
+spec: the target project dict
+primary_input: input file to attach the build tool to
+inputs: list of inputs
+outputs: list of outputs
+description: description of the action
+cmd: command line to execute
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB494\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._AddMSBuildAction ( spec,  primary_input,  inputs,  outputs,  cmd,  description,  sources_handled_by_action,  actions_spec)\fR [protected]\fP"
+
+.PP
+Definition at line \fB3949\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._AddNormalizedSources ( sources_set,  sources_array)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1487\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._AddSources2 ( spec,  sources,  exclusions,  grouped_sources,  rule_dependencies,  extension_to_rule_name,  sources_handled_by_action,  list_excluded)\fR [protected]\fP"
+
+.PP
+Definition at line \fB3542\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._AddToolFilesToMSVS ( p,  spec)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1653\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._AdjustSourcesAndConvertToFilterHierarchy ( spec,  options,  gyp_dir,  sources,  excluded_sources,  list_excluded,  version)\fR [protected]\fP"
+
+.PP
+.nf
+Adjusts the list of sources and excluded sources\&.
+
+Also converts the sets to lists\&.
+
+Arguments:
+spec: The target dictionary containing the properties of the target\&.
+options: Global generator options\&.
+gyp_dir: The path to the gyp file being processed\&.
+sources: A set of sources to be included for this project\&.
+excluded_sources: A set of sources to be excluded for this project\&.
+version: A MSVSVersion object\&.
+Returns:
+A trio of (list of sources, list of excluded sources,
+           path of excluded IDL file)
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1530\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._AdjustSourcesForRules ( rules,  sources,  excluded_sources,  is_msbuild)\fR [protected]\fP"
+
+.PP
+Definition at line \fB924\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._AppendFiltersForMSBuild ( parent_filter_name,  sources,  rule_dependencies,  extension_to_rule_name,  platforms,  toolset,  filter_group,  source_group)\fR [protected]\fP"
+
+.PP
+.nf
+Creates the list of filters and sources to be added in the filter file\&.
+
+Args:
+  parent_filter_name: The name of the filter under which the sources are
+      found\&.
+  sources: The hierarchy of filters and sources to process\&.
+  extension_to_rule_name: A dictionary mapping file extensions to rules\&.
+  filter_group: The list to which filter entries will be appended\&.
+  source_group: The list to which source entries will be appended\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB2225\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._BuildCommandLineForRule ( spec,  rule,  has_input_path,  do_setup_env)\fR [protected]\fP"
+
+.PP
+Definition at line \fB443\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._BuildCommandLineForRuleRaw ( spec,  cmd,  cygwin_shell,  has_input_path,  quote_cmd,  do_setup_env)\fR [protected]\fP"
+
+.PP
+Definition at line \fB362\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._CollapseSingles ( parent,  node)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1845\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._ConfigBaseName ( config_name,  platform_name)\fR [protected]\fP"
+
+.PP
+Definition at line \fB311\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._ConfigFullName ( config_name,  config_data)\fR [protected]\fP"
+
+.PP
+Definition at line \fB318\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._ConfigPlatform ( config_data)\fR [protected]\fP"
+
+.PP
+Definition at line \fB307\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._ConfigTargetVersion ( config_data)\fR [protected]\fP"
+
+.PP
+Definition at line \fB303\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._ConfigWindowsTargetPlatformVersion ( config_data,  version)\fR [protected]\fP"
+
+.PP
+Definition at line \fB323\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._ConvertMSVSBuildAttributes ( spec,  config,  build_file)\fR [protected]\fP"
+
+.PP
+Definition at line \fB3090\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._ConvertMSVSCharacterSet ( char_set)\fR [protected]\fP"
+
+.PP
+Definition at line \fB3109\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._ConvertMSVSConfigurationType ( config_type)\fR [protected]\fP"
+
+.PP
+Definition at line \fB3115\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._ConvertSourcesToFilterHierarchy ( sources,  prefix = \fRNone\fP,  excluded = \fRNone\fP,  list_excluded = \fRTrue\fP,  msvs_version = \fRNone\fP)\fR [protected]\fP"
+
+.PP
+.nf
+Converts a list split source file paths into a vcproj folder hierarchy\&.
+
+Arguments:
+sources: A list of source file paths split\&.
+prefix: A list of source file path layers meant to apply to each of sources\&.
+excluded: A set of excluded files\&.
+msvs_version: A MSVSVersion object\&.
+
+Returns:
+A hierarchy of filenames and MSVSProject\&.Filter objects that matches the
+layout of the source tree\&.
+For example:
+_ConvertSourcesToFilterHierarchy([['a', 'bob1\&.c'], ['b', 'bob2\&.c']],
+                                 prefix=['joe'])
+-->
+[MSVSProject\&.Filter('a', contents=['joe\\\\a\\\\bob1\&.c']),
+ MSVSProject\&.Filter('b', contents=['joe\\\\b\\\\bob2\&.c'])]
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB196\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._ConvertToolsToExpectedForm ( tools)\fR [protected]\fP"
+
+.PP
+.nf
+Convert tools to a form expected by Visual Studio\&.
+
+Arguments:
+tools: A dictionary of settings; the tool name is the key\&.
+Returns:
+A list of Tool objects\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1415\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._CreateMSVSUserFile ( proj_path,  version,  spec)\fR [protected]\fP"
+
+.PP
+.nf
+Generates a \&.user file for the user running this Gyp program\&.
+
+Arguments:
+proj_path: The path of the project file being created\&.  The \&.user file
+           shares the same path (with an appropriate suffix)\&.
+version: The VisualStudioVersion object\&.
+spec: The target dictionary containing the properties of the target\&.
+Returns:
+The MSVSUserFile object created\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1110\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._CreateProjectObjects ( target_list,  target_dicts,  options,  msvs_version)\fR [protected]\fP"
+
+.PP
+.nf
+Create a MSVSProject object for the targets found in target list\&.
+
+Arguments:
+target_list: the list of targets to generate project objects for\&.
+target_dicts: the dictionary of specifications\&.
+options: global generator options\&.
+msvs_version: the MSVSVersion object\&.
+Returns:
+A set of created projects, keyed by target\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1917\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._Cygwinify ( path)\fR [protected]\fP"
+
+.PP
+Definition at line \fB652\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._DictsToFolders ( base_path,  bucket,  flat)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1823\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._EscapeCommandLineArgumentForMSBuild ( s)\fR [protected]\fP"
+
+.PP
+.nf
+Escapes a Windows command-line argument for use by MSBuild\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB858\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._EscapeCommandLineArgumentForMSVS ( s)\fR [protected]\fP"
+
+.PP
+.nf
+Escapes a Windows command-line argument\&.
+
+So that the Win32 CommandLineToArgv function will turn the escaped result back
+into the original string\&.
+See http://msdn\&.microsoft\&.com/en-us/library/17w5ykft\&.aspx
+('Parsing C++ Command-Line Arguments') to understand why we have to do
+this\&.
+
+Args:
+  s: the string to be escaped\&.
+Returns:
+  the escaped string\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB764\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._EscapeCppDefineForMSBuild ( s)\fR [protected]\fP"
+
+.PP
+.nf
+Escapes a CPP define so that it will reach the compiler unaltered\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB883\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._EscapeCppDefineForMSVS ( s)\fR [protected]\fP"
+
+.PP
+.nf
+Escapes a CPP define so that it will reach the compiler unaltered\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB844\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._EscapeEnvironmentVariableExpansion ( s)\fR [protected]\fP"
+
+.PP
+.nf
+Escapes % characters\&.
+
+Escapes any % characters so that Windows-style environment variable
+expansions will leave them alone\&.
+See http://connect\&.microsoft\&.com/VisualStudio/feedback/details/106127/cl-d-name-text-containing-percentage-characters-doesnt-compile
+to understand why we have to do this\&.
+
+Args:
+  s: The string to be escaped\&.
+
+Returns:
+  The escaped string\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB743\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._EscapeMSBuildSpecialCharacters ( s)\fR [protected]\fP"
+
+.PP
+Definition at line \fB869\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._EscapeVCProjCommandLineArgListItem ( s)\fR [protected]\fP"
+
+.PP
+.nf
+Escapes command line arguments for MSVS\&.
+
+The VCProj format stores string lists in a single string using commas and
+semi-colons as separators, which must be quoted if they are to be
+interpreted literally\&. However, command-line arguments may already have
+quotes, and the VCProj parser is ignorant of the backslash escaping
+convention used by CommandLineToArgv, so the command-line quotes and the
+VCProj quotes may not be the same quotes\&. So to store a general
+command-line argument in a VCProj list, we need to parse the existing
+quoting according to VCProj's convention and quote any delimiters that are
+not already quoted by that convention\&. The quotes that we add will also be
+seen by CommandLineToArgv, so if backslashes precede them then we also have
+to escape those backslashes according to the CommandLineToArgv
+convention\&.
+
+Args:
+  s: the string to be escaped\&.
+Returns:
+  the escaped string\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB795\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._ExcludeFilesFromBeingBuilt ( p,  spec,  excluded_sources,  excluded_idl,  list_excluded)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1616\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._FilterActionsFromExcluded ( excluded_sources,  actions_to_add)\fR [protected]\fP"
+
+.PP
+.nf
+Take inputs with actions attached out of the list of exclusions\&.
+
+Arguments:
+excluded_sources: list of source files not to be built\&.
+actions_to_add: dict of actions keyed on source file they're attached to\&.
+Returns:
+excluded_sources with files that have actions attached removed\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB946\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._FinalizeMSBuildSettings ( spec,  configuration)\fR [protected]\fP"
+
+.PP
+Definition at line \fB3339\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._FindRuleTriggerFiles ( rule,  sources)\fR [protected]\fP"
+
+.PP
+.nf
+Find the list of files which a particular rule applies to\&.
+
+Arguments:
+rule: the rule in question
+sources: the set of all known source files for this project
+Returns:
+The list of sources that trigger a particular rule\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB580\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._FixPath ( path,  separator = \fR'\\\\'\fP)\fR [protected]\fP"
+
+.PP
+.nf
+Convert paths to a form that will make sense in a vcproj file\&.
+
+Arguments:
+path: The path to convert, may contain / etc\&.
+Returns:
+The path with all slashes made into backslashes\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB155\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._FixPaths ( paths,  separator = \fR'\\\\'\fP)\fR [protected]\fP"
+
+.PP
+.nf
+Fix each of the paths of the list\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB191\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GatherSolutionFolders ( sln_projects,  project_objects,  flat)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1858\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GenerateActionsForMSBuild ( spec,  actions_to_add)\fR [protected]\fP"
+
+.PP
+.nf
+Add actions accumulated into an actions_to_add, merging as needed\&.
+
+Arguments:
+spec: the target project dict
+actions_to_add: dictionary keyed on input name, which maps to a list of
+    dicts describing the actions attached to that input file\&.
+
+Returns:
+A pair of (action specification, the sources handled by this action)\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB3884\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GenerateExternalRules ( rules,  output_dir,  spec,  sources,  options,  actions_to_add)\fR [protected]\fP"
+
+.PP
+.nf
+Generate an external makefile to do a set of rules\&.
+
+Arguments:
+rules: the list of rules to include
+output_dir: path containing project and gyp files
+spec: project specification data
+sources: set of sources known
+options: global generator options
+actions_to_add: The list of actions we will add to\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB658\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GenerateMSBuildFiltersFile ( filters_path,  source_files,  rule_dependencies,  extension_to_rule_name,  platforms,  toolset)\fR [protected]\fP"
+
+.PP
+.nf
+Generate the filters file\&.
+
+This file is used by Visual Studio to organize the presentation of source
+files into folders\&.
+
+Arguments:
+  filters_path: The path of the file to be created\&.
+  source_files: The hierarchical structure of all the sources\&.
+  extension_to_rule_name: A dictionary mapping file extensions to rules\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB2179\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GenerateMSBuildProject ( project,  options,  version,  generator_flags,  spec)\fR [protected]\fP"
+
+.PP
+Definition at line \fB3677\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GenerateMSBuildRulePropsFile ( props_path,  msbuild_rules)\fR [protected]\fP"
+
+.PP
+.nf
+Generate the \&.props file\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB2438\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GenerateMSBuildRuleTargetsFile ( targets_path,  msbuild_rules)\fR [protected]\fP"
+
+.PP
+.nf
+Generate the \&.targets file\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB2480\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GenerateMSBuildRuleXmlFile ( xml_path,  msbuild_rules)\fR [protected]\fP"
+
+.PP
+Definition at line \fB2682\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GenerateMSVSProject ( project,  options,  version,  generator_flags)\fR [protected]\fP"
+
+.PP
+.nf
+Generates a \&.vcproj file\&.  It may create \&.rules and \&.user files too\&.
+
+Arguments:
+project: The project object we will generate the file for\&.
+options: Global options passed to the generator\&.
+version: The VisualStudioVersion object\&.
+generator_flags: dict of generator-specific flags\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1032\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GenerateNativeRulesForMSVS ( p,  rules,  output_dir,  spec,  options)\fR [protected]\fP"
+
+.PP
+.nf
+Generate a native rules file\&.
+
+Arguments:
+p: the target project
+rules: the set of rules to include
+output_dir: the directory in which the project/gyp resides
+spec: the project dict
+options: global generator options
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB613\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GenerateProject ( project,  options,  version,  generator_flags,  spec)\fR [protected]\fP"
+
+.PP
+.nf
+Generates a vcproj file\&.
+
+Arguments:
+project: the MSVSProject object\&.
+options: global generator options\&.
+version: the MSVSVersion object\&.
+generator_flags: dict of generator-specific flags\&.
+Returns:
+A list of source files that cannot be found on disk\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1009\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GenerateRulesForMSBuild ( output_dir,  options,  spec,  sources,  excluded_sources,  props_files_of_rules,  targets_files_of_rules,  actions_to_add,  rule_dependencies,  extension_to_rule_name)\fR [protected]\fP"
+
+.PP
+Definition at line \fB2326\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GenerateRulesForMSVS ( p,  output_dir,  options,  spec,  sources,  excluded_sources,  actions_to_add)\fR [protected]\fP"
+
+.PP
+.nf
+Generate all the rules for a particular project\&.
+
+Arguments:
+p: the project
+output_dir: directory to emit rules to
+options: global options passed to the generator
+spec: the specification for this project
+sources: the set of all known source files in this project
+excluded_sources: the set of sources excluded from normal processing
+actions_to_add: deferred list of actions to add in
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB894\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetConfigurationAndPlatform ( name,  settings,  spec)\fR [protected]\fP"
+
+.PP
+Definition at line \fB2906\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetConfigurationCondition ( name,  settings,  spec)\fR [protected]\fP"
+
+.PP
+Definition at line \fB2914\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetCopies ( spec)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1772\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetDefaultConfiguration ( spec)\fR [protected]\fP"
+
+.PP
+Definition at line \fB959\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetDefines ( config)\fR [protected]\fP"
+
+.PP
+.nf
+Returns the list of preprocessor definitions for this configuration\&.
+
+Arguments:
+config: The dictionary that defines the special processing to be done
+        for this configuration\&.
+Returns:
+The list of preprocessor definitions\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1373\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetDisabledWarnings ( config)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1392\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetDomainAndUserName ()\fR [protected]\fP"
+
+.PP
+Definition at line \fB108\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetExcludedFilesFromBuild ( spec,  excluded_sources,  excluded_idl)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1632\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetGuidOfProject ( proj_path,  spec)\fR [protected]\fP"
+
+.PP
+.nf
+Get the guid for the project\&.
+
+Arguments:
+proj_path: Path of the vcproj or vcxproj file to generate\&.
+spec: The target dictionary containing the properties of the target\&.
+Returns:
+the guid\&.
+Raises:
+ValueError: if the specified GUID is invalid\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB963\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetIncludeDirs ( config)\fR [protected]\fP"
+
+.PP
+.nf
+Returns the list of directories to be used for #include directives\&.
+
+Arguments:
+config: The dictionary that defines the special processing to be done
+        for this configuration\&.
+Returns:
+The list of directory paths\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1251\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetLibraries ( spec)\fR [protected]\fP"
+
+.PP
+.nf
+Returns the list of libraries for this configuration\&.
+
+Arguments:
+spec: The target dictionary containing the properties of the target\&.
+Returns:
+The list of directory paths\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1290\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetLibraryDirs ( config)\fR [protected]\fP"
+
+.PP
+.nf
+Returns the list of directories to be used for library search paths\&.
+
+Arguments:
+config: The dictionary that defines the special processing to be done
+        for this configuration\&.
+Returns:
+The list of directory paths\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1275\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetModuleDefinition ( spec)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1396\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetMSBuildAttributes ( spec,  config,  build_file)\fR [protected]\fP"
+
+.PP
+Definition at line \fB3127\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetMSBuildConfigurationDetails ( spec,  build_file)\fR [protected]\fP"
+
+.PP
+Definition at line \fB3007\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetMSBuildConfigurationGlobalProperties ( spec,  configurations,  build_file)\fR [protected]\fP"
+
+.PP
+Definition at line \fB3182\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetMSBuildExtensions ( props_files_of_rules)\fR [protected]\fP"
+
+.PP
+Definition at line \fB3870\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetMSBuildExtensionTargets ( targets_files_of_rules)\fR [protected]\fP"
+
+.PP
+Definition at line \fB3877\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetMSBuildExternalBuilderTargets ( spec)\fR [protected]\fP"
+
+.PP
+.nf
+Return a list of MSBuild targets for external builders\&.
+
+The 'Build' and 'Clean' targets are always generated\&.  If the spec contains
+'msvs_external_builder_clcompile_cmd', then the 'ClCompile' target will also
+be generated, to support building selected C/C++ files\&.
+
+Arguments:
+spec: The gyp target spec\&.
+Returns:
+List of MSBuild 'Target' specs\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB3828\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetMSBuildGlobalProperties ( spec,  version,  guid,  gyp_file_name)\fR [protected]\fP"
+
+.PP
+Definition at line \fB2936\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetMSBuildLocalProperties ( msbuild_toolset)\fR [protected]\fP"
+
+.PP
+Definition at line \fB3028\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetMSBuildProjectConfigurations ( configurations,  spec)\fR [protected]\fP"
+
+.PP
+Definition at line \fB2920\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetMSBuildProjectReferences ( project)\fR [protected]\fP"
+
+.PP
+Definition at line \fB3636\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetMSBuildPropertyGroup ( spec,  label,  properties)\fR [protected]\fP"
+
+.PP
+.nf
+Returns a PropertyGroup definition for the specified properties\&.
+
+Arguments:
+spec: The target project dict\&.
+label: An optional label for the PropertyGroup\&.
+properties: The dictionary to be converted\&.  The key is the name of the
+    property\&.  The value is itself a dictionary; its key is the value and
+    the value a list of condition for which this value is true\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB3259\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetMSBuildPropertySheets ( configurations,  spec)\fR [protected]\fP"
+
+.PP
+Definition at line \fB3042\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetMSBuildSources ( spec,  sources,  exclusions,  rule_dependencies,  extension_to_rule_name,  actions_spec,  sources_handled_by_action,  list_excluded)\fR [protected]\fP"
+
+.PP
+Definition at line \fB3499\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetMsbuildToolsetOfProject ( proj_path,  spec,  version)\fR [protected]\fP"
+
+.PP
+.nf
+Get the platform toolset for the project\&.
+
+Arguments:
+proj_path: Path of the vcproj or vcxproj file to generate\&.
+spec: The target dictionary containing the properties of the target\&.
+version: The MSVSVersion object\&.
+Returns:
+the platform toolset string or None\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB989\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetMSBuildToolSettingsSections ( spec,  configurations)\fR [protected]\fP"
+
+.PP
+Definition at line \fB3315\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetMSVSAttributes ( spec,  config,  config_type)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1460\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetMSVSConfigurationType ( spec,  build_file)\fR [protected]\fP"
+
+.PP
+.nf
+Returns the configuration type for this project\&.
+
+It's a number defined by Microsoft\&.  May raise an exception\&.
+
+Args:
+  spec: The target dictionary containing the properties of the target\&.
+  build_file: The path of the gyp file\&.
+Returns:
+  An integer, the configuration type\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1127\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetOutputFilePathAndTool ( spec,  msbuild)\fR [protected]\fP"
+
+.PP
+.nf
+Returns the path and tool to use for this target\&.
+
+Figures out the path of the file this spec will create and the name of
+the VC tool that will create it\&.
+
+Arguments:
+spec: The target dictionary containing the properties of the target\&.
+Returns:
+A triple of (file path, name of the vc tool, name of the msbuild tool)
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1316\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetOutputTargetExt ( spec)\fR [protected]\fP"
+
+.PP
+.nf
+Returns the extension for this target, including the dot
+
+If product_extension is specified, set target_extension to this to avoid
+MSB8012, returns None otherwise\&. Ignores any target_extension settings in
+the input files\&.
+
+Arguments:
+spec: The target dictionary containing the properties of the target\&.
+Returns:
+A string with the extension, or None
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1355\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetPathDict ( root,  path)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1811\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetPathOfProject ( qualified_target,  spec,  options,  msvs_version)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1879\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetPlatformOverridesOfProject ( spec)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1900\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetPrecompileRelatedFiles ( spec)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1605\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetUniquePlatforms ( spec)\fR [protected]\fP"
+
+.PP
+.nf
+Returns the list of unique platforms for this spec, e\&.g ['win32', \&.\&.\&.]\&.
+
+Arguments:
+spec: The target dictionary containing the properties of the target\&.
+Returns:
+The MSVSUserFile object created\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1094\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._GetValueFormattedForMSBuild ( tool_name,  name,  value)\fR [protected]\fP"
+
+.PP
+Definition at line \fB3442\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._HandlePreCompiledHeaders ( p,  sources,  spec)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1663\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._IdlFilesHandledNonNatively ( spec,  sources)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1590\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._InitNinjaFlavor ( params,  target_list,  target_dicts)\fR [protected]\fP"
+
+.PP
+.nf
+Initialize targets for the ninja flavor\&.
+
+This sets up the necessary variables in the targets to generate msvs projects
+that use ninja as an external builder\&. The variables in the spec are only set
+if they have not been set\&. This allows individual specs to override the
+default values initialized here\&.
+Arguments:
+params: Params provided to the generator\&.
+target_list: List of target pairs: 'base/base\&.gyp:base'\&.
+target_dicts: Dict of target properties keyed on target pair\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1968\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._IsWindowsAbsPath ( path)\fR [protected]\fP"
+
+.PP
+.nf
+On Cygwin systems Python needs a little help determining if a path
+is an absolute Windows path or not, so that
+it does not treat those as relative, which results in bad paths like:
+'\&.\&.\\\\C:\\\\<some path>\\\\some_source_code_file\&.cc'
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB181\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._MapFileToMsBuildSourceType ( source,  rule_dependencies,  extension_to_rule_name,  platforms,  toolset)\fR [protected]\fP"
+
+.PP
+.nf
+Returns the group and element type of the source file\&.
+
+Arguments:
+  source: The source file name\&.
+  extension_to_rule_name: A dictionary mapping file extensions to rules\&.
+
+Returns:
+  A pair of (group this file should be part of, the label of element)
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB2283\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._NormalizedSource ( source)\fR [protected]\fP"
+
+.PP
+.nf
+Normalize the path\&.
+
+But not if that gets rid of a variable, as this may expand to something
+larger than one directory\&.
+
+Arguments:
+  source: The path to be normalize\&.d
+
+Returns:
+  The normalized path\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB137\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._PrepareListOfSources ( spec,  generator_flags,  gyp_file)\fR [protected]\fP"
+
+.PP
+.nf
+Prepare list of sources and excluded sources\&.
+
+Besides the sources specified directly in the spec, adds the gyp file so
+that a change to it will cause a re-compile\&. Also adds appropriate sources
+for actions and copies\&. Assumes later stage will un-exclude files which
+have custom build steps attached\&.
+
+Arguments:
+spec: The target dictionary containing the properties of the target\&.
+gyp_file: The name of the gyp file\&.
+Returns:
+A pair of (list of sources, list of excluded sources)\&.
+The sources will be relative to the gyp file\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1491\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._RuleExpandPath ( path,  input_file)\fR [protected]\fP"
+
+.PP
+.nf
+Given the input file to which a rule applied, string substitute a path\&.
+
+Arguments:
+path: a path to string expand
+input_file: the file to which the rule applied\&.
+Returns:
+The string substituted path\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB559\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._RuleInputsAndOutputs ( rule,  trigger_file)\fR [protected]\fP"
+
+.PP
+.nf
+Find the inputs and outputs generated by a rule\&.
+
+Arguments:
+rule: the rule in question\&.
+trigger_file: the main trigger for this rule\&.
+Returns:
+The pair of (inputs, outputs) involved in this rule\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB592\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._ToolAppend ( tools,  tool_name,  setting,  value,  only_if_unset = \fRFalse\fP)\fR [protected]\fP"
+
+.PP
+Definition at line \fB270\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._ToolSetOrAppend ( tools,  tool_name,  setting,  value,  only_if_unset = \fRFalse\fP)\fR [protected]\fP"
+
+.PP
+Definition at line \fB276\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._VerifySourcesExist ( sources,  root_dir)\fR [protected]\fP"
+
+.PP
+.nf
+Verifies that all source files exist on disk\&.
+
+Checks that all regular source files, i\&.e\&. not created at run time,
+exist on disk\&.  Missing files cause needless recompilation but no otherwise
+visible errors\&.
+
+Arguments:
+sources: A recursive list of Filter/file names\&.
+root_dir: The root directory for the relative path names\&.
+Returns:
+A list of source files that cannot be found on disk\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB3474\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&._WriteMSVSUserFile ( project_path,  version,  spec)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1738\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&.CalculateGeneratorInputInfo ( params)"
+
+.PP
+Definition at line \fB2069\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&.CalculateVariables ( default_variables,  params)"
+
+.PP
+.nf
+Generated variables that require params to be known\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB2019\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&.GenerateOutput ( target_list,  target_dicts,  data,  params)"
+
+.PP
+.nf
+Generate \&.sln and \&.vcproj files\&.
+
+This is the entry point for this generator\&.
+Arguments:
+target_list: List of target pairs: 'base/base\&.gyp:base'\&.
+target_dicts: Dict of target properties keyed on target pair\&.
+data: Dictionary containing per \&.gyp data\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB2087\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&.PerformBuild ( data,  configurations,  params)"
+
+.PP
+Definition at line \fB2050\fP of file \fBmsvs\&.py\fP\&.
+.SH "Variable Documentation"
+.PP 
+.SS "gyp\&.generator\&.msvs\&.cached_domain = None"
+
+.PP
+Definition at line \fB101\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&.cached_username = None"
+
+.PP
+Definition at line \fB98\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&.delimiters_replacer_regex = re\&.compile(r'(\\\\*)([,;]+)')"
+
+.PP
+Definition at line \fB792\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&.fixpath_prefix = None"
+
+.PP
+Definition at line \fB134\fP of file \fBmsvs\&.py\fP\&.
+.SS "list gyp\&.generator\&.msvs\&.generator_additional_non_configuration_keys"
+\fBInitial value:\fP
+.nf
+1 =  [
+2     "msvs_cygwin_dirs",
+3     "msvs_cygwin_shell",
+4     "msvs_large_pdb",
+5     "msvs_shard",
+6     "msvs_external_builder",
+7     "msvs_external_builder_out_dir",
+8     "msvs_external_builder_build_cmd",
+9     "msvs_external_builder_clean_cmd",
+10     "msvs_external_builder_clcompile_cmd",
+11     "msvs_enable_winrt",
+12     "msvs_requires_importlibrary",
+13     "msvs_enable_winphone",
+14     "msvs_application_type_revision",
+15     "msvs_target_platform_version",
+16     "msvs_target_platform_minversion",
+17 ]
+.PP
+.fi
+
+.PP
+Definition at line \fB71\fP of file \fBmsvs\&.py\fP\&.
+.SS "list gyp\&.generator\&.msvs\&.generator_additional_path_sections"
+\fBInitial value:\fP
+.nf
+1 =  [
+2     "msvs_cygwin_dirs",
+3     "msvs_props",
+4 ]
+.PP
+.fi
+
+.PP
+Definition at line \fB65\fP of file \fBmsvs\&.py\fP\&.
+.SS "dict gyp\&.generator\&.msvs\&.generator_default_variables"
+\fBInitial value:\fP
+.nf
+1 =  {
+2     "DRIVER_PREFIX": "",
+3     "DRIVER_SUFFIX": "\&.sys",
+4     "EXECUTABLE_PREFIX": "",
+5     "EXECUTABLE_SUFFIX": "\&.exe",
+6     "STATIC_LIB_PREFIX": "",
+7     "SHARED_LIB_PREFIX": "",
+8     "STATIC_LIB_SUFFIX": "\&.lib",
+9     "SHARED_LIB_SUFFIX": "\&.dll",
+10     "INTERMEDIATE_DIR": "$(IntDir)",
+11     "SHARED_INTERMEDIATE_DIR": "$(OutDir)/obj/global_intermediate",
+12     "OS": "win",
+13     "PRODUCT_DIR": "$(OutDir)",
+14     "LIB_DIR": "$(OutDir)lib",
+15     "RULE_INPUT_ROOT": "$(InputName)",
+16     "RULE_INPUT_DIRNAME": "$(InputDir)",
+17     "RULE_INPUT_EXT": "$(InputExt)",
+18     "RULE_INPUT_NAME": "$(InputFileName)",
+19     "RULE_INPUT_PATH": "$(InputPath)",
+20     "CONFIGURATION_NAME": "$(ConfigurationName)",
+21 }
+.PP
+.fi
+
+.PP
+Definition at line \fB41\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&.generator_filelist_paths = None"
+
+.PP
+Definition at line \fB89\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&.generator_supports_multiple_toolsets = \fBgyp\&.common\&.CrossCompileRequested\fP()"
+
+.PP
+Definition at line \fB39\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&.MSVS_VARIABLE_REFERENCE = re\&.compile(r'\\$\\(([a\-zA\-Z_][a\-zA\-Z0\-9_]*)\\)')"
+
+.PP
+Definition at line \fB3256\fP of file \fBmsvs\&.py\fP\&.
+.SS "list gyp\&.generator\&.msvs\&.precomp_keys"
+\fBInitial value:\fP
+.nf
+1 =  [
+2     "msvs_precompiled_header",
+3     "msvs_precompiled_source",
+4 ]
+.PP
+.fi
+
+.PP
+Definition at line \fB92\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&.quote_replacer_regex = re\&.compile(r'(\\\\*)'')"
+
+.PP
+Definition at line \fB761\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&.quote_replacer_regex2 = re\&.compile(r'(\\\\+)'')"
+
+.PP
+Definition at line \fB855\fP of file \fBmsvs\&.py\fP\&.
+.SS "gyp\&.generator\&.msvs\&.VALID_MSVS_GUID_CHARS = re\&.compile(r'^[A\-F0\-9\\\-]+$')"
+
+.PP
+Definition at line \fB37\fP of file \fBmsvs\&.py\fP\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

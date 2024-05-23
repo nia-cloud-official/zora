@@ -1,0 +1,480 @@
+.TH "gyp.mac_tool.MacTool" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gyp.mac_tool.MacTool
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBDispatch\fP (self, args)"
+.br
+.ti -1c
+.RI "\fBExecCopyBundleResource\fP (self, source, dest, convert_to_binary)"
+.br
+.ti -1c
+.RI "\fBExecCopyInfoPlist\fP (self, source, dest, convert_to_binary, *keys)"
+.br
+.ti -1c
+.RI "\fBExecFlock\fP (self, lockfile, *cmd_list)"
+.br
+.ti -1c
+.RI "\fBExecFilterLibtool\fP (self, *cmd_list)"
+.br
+.ti -1c
+.RI "\fBExecPackageIosFramework\fP (self, framework)"
+.br
+.ti -1c
+.RI "\fBExecPackageFramework\fP (self, framework, version)"
+.br
+.ti -1c
+.RI "\fBExecCompileIosFrameworkHeaderMap\fP (self, out, framework, *all_headers)"
+.br
+.ti -1c
+.RI "\fBExecCopyIosFrameworkHeaders\fP (self, framework, *copy_headers)"
+.br
+.ti -1c
+.RI "\fBExecCompileXcassets\fP (self, keys, *inputs)"
+.br
+.ti -1c
+.RI "\fBExecMergeInfoPlist\fP (self, output, *inputs)"
+.br
+.ti -1c
+.RI "\fBExecCodeSignBundle\fP (self, key, entitlements, provisioning, path, preserve)"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fB_CommandifyName\fP (self, name_string)"
+.br
+.ti -1c
+.RI "\fB_CopyXIBFile\fP (self, source, dest)"
+.br
+.ti -1c
+.RI "\fB_ConvertToBinary\fP (self, dest)"
+.br
+.ti -1c
+.RI "\fB_CopyStringsFile\fP (self, source, dest)"
+.br
+.ti -1c
+.RI "\fB_DetectInputEncoding\fP (self, file_name)"
+.br
+.ti -1c
+.RI "\fB_WritePkgInfo\fP (self, info_plist)"
+.br
+.ti -1c
+.RI "\fB_Relink\fP (self, dest, link)"
+.br
+.ti -1c
+.RI "\fB_InstallProvisioningProfile\fP (self, profile, bundle_identifier)"
+.br
+.ti -1c
+.RI "\fB_FindProvisioningProfile\fP (self, profile, bundle_identifier)"
+.br
+.ti -1c
+.RI "\fB_LoadProvisioningProfile\fP (self, profile_path)"
+.br
+.ti -1c
+.RI "\fB_MergePlist\fP (self, merged_plist, plist)"
+.br
+.ti -1c
+.RI "\fB_LoadPlistMaybeBinary\fP (self, plist_path)"
+.br
+.ti -1c
+.RI "\fB_GetSubstitutions\fP (self, bundle_identifier, app_identifier_prefix)"
+.br
+.ti -1c
+.RI "\fB_GetCFBundleIdentifier\fP (self)"
+.br
+.ti -1c
+.RI "\fB_InstallEntitlements\fP (self, entitlements, substitutions, overrides)"
+.br
+.ti -1c
+.RI "\fB_ExpandVariables\fP (self, data, substitutions)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.PP
+.nf
+This class performs all the Mac tooling steps\&. The methods can either be
+executed directly, or dispatched from an argument list\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB33\fP of file \fBmac_tool\&.py\fP\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "gyp\&.mac_tool\&.MacTool\&._CommandifyName ( self,  name_string)\fR [protected]\fP"
+
+.PP
+.nf
+Transforms a tool name like copy-info-plist to CopyInfoPlist
+.fi
+.PP
+ 
+.PP
+Definition at line \fB45\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&._ConvertToBinary ( self,  dest)\fR [protected]\fP"
+
+.PP
+Definition at line \fB133\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&._CopyStringsFile ( self,  source,  dest)\fR [protected]\fP"
+
+.PP
+.nf
+Copies a \&.strings file using iconv to reconvert the input into UTF-16\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB138\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&._CopyXIBFile ( self,  source,  dest)\fR [protected]\fP"
+
+.PP
+.nf
+Compiles a XIB file with ibtool into a binary plist in the bundle\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB76\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&._DetectInputEncoding ( self,  file_name)\fR [protected]\fP"
+
+.PP
+.nf
+Reads the first few bytes from file_name and tries to guess the text
+encoding\&. Returns None as a guess if it can't detect it\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB159\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&._ExpandVariables ( self,  data,  substitutions)\fR [protected]\fP"
+
+.PP
+.nf
+Expands variables '$(variable)' in data\&.
+
+Args:
+data: object, can be either string, list or dictionary
+substitutions: dictionary, variable substitutions to perform
+
+Returns:
+Copy of data where each references to '$(variable)' has been replaced
+by the corresponding value found in substitutions, or left intact if
+the key was not found\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB669\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&._FindProvisioningProfile ( self,  profile,  bundle_identifier)\fR [protected]\fP"
+
+.PP
+.nf
+Finds the \&.mobileprovision file to use for signing the bundle\&.
+
+Checks all the installed provisioning profiles (or if the user specified
+the PROVISIONING_PROFILE variable, only consult it) and select the most
+specific that correspond to the bundle identifier\&.
+
+Args:
+profile: string, optional, short name of the \&.mobileprovision file
+to use, if empty or the file is missing, the best file installed
+will be used
+bundle_identifier: string, value of CFBundleIdentifier from Info\&.plist
+
+Returns:
+A tuple of the path to the selected provisioning profile, the data of
+the embedded plist in the provisioning profile and the team identifier
+to use for code signing\&.
+
+Raises:
+SystemExit: if no \&.mobileprovision can be used to sign the bundle\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB492\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&._GetCFBundleIdentifier ( self)\fR [protected]\fP"
+
+.PP
+.nf
+Extracts CFBundleIdentifier value from Info\&.plist in the bundle\&.
+
+Returns:
+Value of CFBundleIdentifier in the Info\&.plist located in the bundle\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB625\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&._GetSubstitutions ( self,  bundle_identifier,  app_identifier_prefix)\fR [protected]\fP"
+
+.PP
+.nf
+Constructs a dictionary of variable substitutions for Entitlements\&.plist\&.
+
+Args:
+bundle_identifier: string, value of CFBundleIdentifier from Info\&.plist
+app_identifier_prefix: string, value for AppIdentifierPrefix
+
+Returns:
+Dictionary of substitutions to apply when generating Entitlements\&.plist\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB610\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&._InstallEntitlements ( self,  entitlements,  substitutions,  overrides)\fR [protected]\fP"
+
+.PP
+.nf
+Generates and install the ${BundleName}\&.xcent entitlements file\&.
+
+Expands variables '$(variable)' pattern in the source entitlements file,
+add extra entitlements defined in the \&.mobileprovision file and the copy
+the generated plist to '${BundlePath}\&.xcent'\&.
+
+Args:
+entitlements: string, optional, path to the Entitlements\&.plist template
+to use, defaults to '${SDKROOT}/Entitlements\&.plist'
+substitutions: dictionary, variable substitutions
+overrides: dictionary, values to add to the entitlements
+
+Returns:
+Path to the generated entitlements file\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB637\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&._InstallProvisioningProfile ( self,  profile,  bundle_identifier)\fR [protected]\fP"
+
+.PP
+.nf
+Installs embedded\&.mobileprovision into the bundle\&.
+
+Args:
+profile: string, optional, short name of the \&.mobileprovision file
+to use, if empty or the file is missing, the best file installed
+will be used
+bundle_identifier: string, value of CFBundleIdentifier from Info\&.plist
+
+Returns:
+A tuple containing two dictionary: variables substitutions and values
+to overrides when generating the entitlements file\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB467\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&._LoadPlistMaybeBinary ( self,  plist_path)\fR [protected]\fP"
+
+.PP
+.nf
+Loads into a memory a plist possibly encoded in binary format\&.
+
+This is a wrapper around plistlib\&.readPlist that tries to convert the
+plist to the XML format if it can't be parsed (assuming that it is in
+the binary format)\&.
+
+Args:
+plist_path: string, path to a plist file, in XML or binary format
+
+Returns:
+Content of the plist as a dictionary\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB585\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&._LoadProvisioningProfile ( self,  profile_path)\fR [protected]\fP"
+
+.PP
+.nf
+Extracts the plist embedded in a provisioning profile\&.
+
+Args:
+profile_path: string, path to the \&.mobileprovision file
+
+Returns:
+Content of the plist embedded in the provisioning profile as a dictionary\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB557\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&._MergePlist ( self,  merged_plist,  plist)\fR [protected]\fP"
+
+.PP
+.nf
+Merge |plist| into |merged_plist|\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB572\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&._Relink ( self,  dest,  link)\fR [protected]\fP"
+
+.PP
+.nf
+Creates a symlink to |dest| named |link|\&. If |link| already exists,
+it is overwritten\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB338\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&._WritePkgInfo ( self,  info_plist)\fR [protected]\fP"
+
+.PP
+.nf
+This writes the PkgInfo file from the data stored in Info\&.plist\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB231\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&.Dispatch ( self,  args)"
+
+.PP
+.nf
+Dispatches a string command to a method\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB37\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&.ExecCodeSignBundle ( self,  key,  entitlements,  provisioning,  path,  preserve)"
+
+.PP
+.nf
+Code sign a bundle\&.
+
+This function tries to code sign an iOS bundle, following the same
+algorithm as Xcode:
+1\&. pick the provisioning profile that best match the bundle identifier,
+ and copy it into the bundle as embedded\&.mobileprovision,
+2\&. copy Entitlements\&.plist from user or SDK next to the bundle,
+3\&. code sign the bundle\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB442\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&.ExecCompileIosFrameworkHeaderMap ( self,  out,  framework, * all_headers)"
+
+.PP
+Definition at line \fB345\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&.ExecCompileXcassets ( self,  keys, * inputs)"
+
+.PP
+.nf
+Compiles multiple \&.xcassets files into a single \&.car file\&.
+
+This invokes 'actool' to compile all the inputs \&.xcassets files\&. The
+|keys| arguments is a json-encoded dictionary of extra arguments to
+pass to 'actool' when the asset catalogs contains an application icon
+or a launch image\&.
+
+Note that 'actool' does not create the Assets\&.car file if the asset
+catalogs does not contains imageset\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB362\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&.ExecCopyBundleResource ( self,  source,  dest,  convert_to_binary)"
+
+.PP
+.nf
+Copies a resource file to the bundle/Resources directory, performing any
+necessary compilation on each resource\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB49\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&.ExecCopyInfoPlist ( self,  source,  dest,  convert_to_binary, * keys)"
+
+.PP
+.nf
+Copies the |source| Info\&.plist to the destination directory |dest|\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB176\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&.ExecCopyIosFrameworkHeaders ( self,  framework, * copy_headers)"
+
+.PP
+Definition at line \fB355\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&.ExecFilterLibtool ( self, * cmd_list)"
+
+.PP
+.nf
+Calls libtool and filters out '/path/to/libtool: file: foo\&.o has no
+symbols'\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB260\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&.ExecFlock ( self,  lockfile, * cmd_list)"
+
+.PP
+.nf
+Emulates the most basic behavior of Linux's flock(1)\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB253\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&.ExecMergeInfoPlist ( self,  output, * inputs)"
+
+.PP
+.nf
+Merge multiple \&.plist files into a single \&.plist file\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB434\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&.ExecPackageFramework ( self,  framework,  version)"
+
+.PP
+.nf
+Takes a path to Something\&.framework and the Current version of that and
+sets up all the symlinks\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB309\fP of file \fBmac_tool\&.py\fP\&.
+.SS "gyp\&.mac_tool\&.MacTool\&.ExecPackageIosFramework ( self,  framework)"
+
+.PP
+Definition at line \fB291\fP of file \fBmac_tool\&.py\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

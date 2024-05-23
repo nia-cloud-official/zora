@@ -1,0 +1,172 @@
+.TH "md_backend_2node__modules_2raw-body_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2raw-body_2_r_e_a_d_m_e \- raw-body 
+.PP
+ \fR\fP \fR\fP \fR\fP \fR\fP \fR\fP
+.PP
+Gets the entire buffer of a stream either as a \fRBuffer\fP or a string\&. Validates the stream's length against an expected length and maximum limit\&. Ideal for parsing request bodies\&.
+.SH "Install"
+.PP
+This is a \fRNode\&.js\fP module available through the \fRnpm registry\fP\&. Installation is done using the \fR\fRnpm install\fP command\fP:
+.PP
+.PP
+.nf
+$ npm install raw\-body
+.fi
+.PP
+.SS "TypeScript"
+This module includes a \fRTypeScript\fP declaration file to enable auto complete in compatible editors and type information for TypeScript projects\&. This module depends on the Node\&.js types, so install \fR@types/node\fP:
+.PP
+.PP
+.nf
+$ npm install @types/node
+.fi
+.PP
+.SH "API"
+.PP
+.PP
+.nf
+var getRawBody = require('raw\-body')
+.fi
+.PP
+.SS "getRawBody(stream, [options], [callback])"
+\fBReturns a promise if no callback specified and global \fRPromise\fP exists\&.\fP
+.PP
+Options:
+.PP
+.IP "\(bu" 2
+\fRlength\fP - The length of the stream\&. If the contents of the stream do not add up to this length, an \fR400\fP error code is returned\&.
+.IP "\(bu" 2
+\fRlimit\fP - The byte limit of the body\&. This is the number of bytes or any string format supported by \fRbytes\fP, for example \fR1000\fP, `'500kb'\fRor\fP'3mb'\fR\&. If the body ends up being larger than this limit, a\fP413\fRerror code is returned\&. -\fPencoding\fR- The encoding to use to decode the body into a string\&. By default, a\fPBuffer\fRinstance will be returned when no encoding is specified\&. Most likely, you want\fPutf-8\fR, so setting\fPencoding\fRto\fPtrue\fRwill decode as\fPutf-8`\&. You can use any type of encoding supported by \fRiconv-lite\fP\&.
+.PP
+.PP
+You can also pass a string in place of options to just specify the encoding\&.
+.PP
+If an error occurs, the stream will be paused, everything unpiped, and you are responsible for correctly disposing the stream\&. For HTTP requests, you may need to finish consuming the stream if you want to keep the socket open for future requests\&. For streams that use file descriptors, you should \fRstream\&.destroy()\fP or \fRstream\&.close()\fP to prevent leaks\&.
+.SH "Errors"
+.PP
+This module creates errors depending on the error condition during reading\&. The error may be an error from the underlying Node\&.js implementation, but is otherwise an error created by this module, which has the following attributes:
+.PP
+.IP "\(bu" 2
+\fRlimit\fP - the limit in bytes
+.IP "\(bu" 2
+\fRlength\fP and \fRexpected\fP - the expected length of the stream
+.IP "\(bu" 2
+\fRreceived\fP - the received bytes
+.IP "\(bu" 2
+\fRencoding\fP - the invalid encoding
+.IP "\(bu" 2
+\fRstatus\fP and \fRstatusCode\fP - the corresponding status code for the error
+.IP "\(bu" 2
+\fRtype\fP - the error type
+.PP
+.SS "Types"
+The errors from this module have a \fRtype\fP property which allows for the programmatic determination of the type of error returned\&.
+.SS "encoding\&.unsupported"
+This error will occur when the \fRencoding\fP option is specified, but the value does not map to an encoding supported by the \fRiconv-lite\fP module\&.
+.SS "entity\&.too\&.large"
+This error will occur when the \fRlimit\fP option is specified, but the stream has an entity that is larger\&.
+.SS "request\&.aborted"
+This error will occur when the request stream is aborted by the client before reading the body has finished\&.
+.SS "request\&.size\&.invalid"
+This error will occur when the \fRlength\fP option is specified, but the stream has emitted more bytes\&.
+.SS "stream\&.encoding\&.set"
+This error will occur when the given stream has an encoding set on it, making it a decoded stream\&. The stream should not have an encoding set and is expected to emit \fRBuffer\fP objects\&.
+.SS "stream\&.not\&.readable"
+This error will occur when the given stream is not readable\&.
+.SH "Examples"
+.PP
+.SS "Simple Express example"
+.PP
+.nf
+var contentType = require('content\-type')
+var express = require('express')
+var getRawBody = require('raw\-body')
+
+var app = express()
+
+app\&.use(function (req, res, next) {
+  getRawBody(req, {
+    length: req\&.headers['content\-length'],
+    limit: '1mb',
+    encoding: contentType\&.parse(req)\&.parameters\&.charset
+  }, function (err, string) {
+    if (err) return next(err)
+    req\&.text = string
+    next()
+  })
+})
+
+// now access req\&.text
+.fi
+.PP
+.SS "Simple Koa example"
+.PP
+.nf
+var contentType = require('content\-type')
+var getRawBody = require('raw\-body')
+var koa = require('koa')
+
+var app = koa()
+
+app\&.use(function * (next) {
+  this\&.text = yield getRawBody(this\&.req, {
+    length: this\&.req\&.headers['content\-length'],
+    limit: '1mb',
+    encoding: contentType\&.parse(this\&.req)\&.parameters\&.charset
+  })
+  yield next
+})
+
+// now access this\&.text
+.fi
+.PP
+.SS "Using as a promise"
+To use this library as a promise, simply omit the \fRcallback\fP and a promise is returned, provided that a global \fRPromise\fP is defined\&.
+.PP
+.PP
+.nf
+var getRawBody = require('raw\-body')
+var http = require('http')
+
+var server = http\&.createServer(function (req, res) {
+  getRawBody(req)
+    \&.then(function (buf) {
+      res\&.statusCode = 200
+      res\&.end(buf\&.length + ' bytes submitted')
+    })
+    \&.catch(function (err) {
+      res\&.statusCode = 500
+      res\&.end(err\&.message)
+    })
+})
+
+server\&.listen(3000)
+.fi
+.PP
+.SS "Using with TypeScript"
+.PP
+.nf
+import * as getRawBody from 'raw\-body';
+import * as http from 'http';
+
+const server = http\&.createServer((req, res) => {
+  getRawBody(req)
+  \&.then((buf) => {
+    res\&.statusCode = 200;
+    res\&.end(buf\&.length + ' bytes submitted');
+  })
+  \&.catch((err) => {
+    res\&.statusCode = err\&.statusCode;
+    res\&.end(err\&.message);
+  });
+});
+
+server\&.listen(3000);
+.fi
+.PP
+.SH "License"
+.PP
+[MIT](LICENSE) 

@@ -1,0 +1,91 @@
+\chapter{emoji-\/regex \texorpdfstring{$<$}{<}a href="{}https\+://travis-\/ci.\+org/mathiasbynens/emoji-\/regex"{} \texorpdfstring{$>$}{>}\texorpdfstring{$<$}{<}img src="{}https\+://travis-\/ci.\+org/mathiasbynens/emoji-\/regex.\+svg?branch=master"{} alt="{}\+Build status"{}/\texorpdfstring{$>$}{>}\texorpdfstring{$<$}{<}/a\texorpdfstring{$>$}{>}}
+\hypertarget{md_backend_2node__modules_2emoji-regex_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2emoji-regex_2_r_e_a_d_m_e}\index{emoji-\/regex $<$a href="{}https://travis-\/ci.org/mathiasbynens/emoji-\/regex"{} $>$$<$img src="{}https://travis-\/ci.org/mathiasbynens/emoji-\/regex.svg?branch=master"{} alt="{}Build status"{}/$>$$<$/a$>$@{emoji-\/regex $<$a href=""https://travis-\/ci.org/mathiasbynens/emoji-\/regex"" $>$$<$img src=""https://travis-\/ci.org/mathiasbynens/emoji-\/regex.svg?branch=master"" alt=""Build status""/$>$$<$/a$>$}}
+\label{md_backend_2node__modules_2emoji-regex_2_r_e_a_d_m_e_autotoc_md806}%
+\Hypertarget{md_backend_2node__modules_2emoji-regex_2_r_e_a_d_m_e_autotoc_md806}%
+ {\itshape emoji-\/regex} offers a regular expression to match all emoji symbols (including textual representations of emoji) as per the Unicode Standard.
+
+This repository contains a script that generates this regular expression based on \href{https://github.com/mathiasbynens/unicode-12.0.0}{\texttt{ the data from Unicode v12}}. Because of this, the regular expression can easily be updated whenever new emoji are added to the Unicode standard.\hypertarget{md_backend_2node__modules_2emoji-regex_2_r_e_a_d_m_e_autotoc_md807}{}\doxysection{\texorpdfstring{Installation}{Installation}}\label{md_backend_2node__modules_2emoji-regex_2_r_e_a_d_m_e_autotoc_md807}
+Via \href{https://www.npmjs.com/}{\texttt{ npm}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ emoji-\/regex}
+
+\end{DoxyCode}
+
+
+In \href{https://nodejs.org/}{\texttt{ Node.\+js}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ emojiRegex\ =\ require('emoji-\/regex');}
+\DoxyCodeLine{//\ Note:\ because\ the\ regular\ expression\ has\ the\ global\ flag\ set,\ this\ module}
+\DoxyCodeLine{//\ exports\ a\ function\ that\ returns\ the\ regex\ rather\ than\ exporting\ the\ regular}
+\DoxyCodeLine{//\ expression\ itself,\ to\ make\ it\ impossible\ to\ (accidentally)\ mutate\ the}
+\DoxyCodeLine{//\ original\ regular\ expression.}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ text\ =\ \`{}}
+\DoxyCodeLine{\(\backslash\)u\{231A\}:\ ⌚\ default\ emoji\ presentation\ character\ (Emoji\_Presentation)}
+\DoxyCodeLine{\(\backslash\)u\{2194\}\(\backslash\)u\{FE0F\}:\ ↔️\ default\ text\ presentation\ character\ rendered\ as\ emoji}
+\DoxyCodeLine{\(\backslash\)u\{1F469\}:\ 👩\ emoji\ modifier\ base\ (Emoji\_Modifier\_Base)}
+\DoxyCodeLine{\(\backslash\)u\{1F469\}\(\backslash\)u\{1F3FF\}:\ 👩🏿\ emoji\ modifier\ base\ followed\ by\ a\ modifier}
+\DoxyCodeLine{\`{};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ regex\ =\ emojiRegex();}
+\DoxyCodeLine{let\ match;}
+\DoxyCodeLine{while\ (match\ =\ regex.exec(text))\ \{}
+\DoxyCodeLine{\ \ const\ emoji\ =\ match[0];}
+\DoxyCodeLine{\ \ console.log(`Matched\ sequence\ \$\{\ emoji\ \}\ —\ code\ points:\ \$\{\ [...emoji].length\ \}`);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Console output\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Matched\ sequence\ ⌚\ —\ code\ points:\ 1}
+\DoxyCodeLine{Matched\ sequence\ ⌚\ —\ code\ points:\ 1}
+\DoxyCodeLine{Matched\ sequence\ ↔️\ —\ code\ points:\ 2}
+\DoxyCodeLine{Matched\ sequence\ ↔️\ —\ code\ points:\ 2}
+\DoxyCodeLine{Matched\ sequence\ 👩\ —\ code\ points:\ 1}
+\DoxyCodeLine{Matched\ sequence\ 👩\ —\ code\ points:\ 1}
+\DoxyCodeLine{Matched\ sequence\ 👩🏿\ —\ code\ points:\ 2}
+\DoxyCodeLine{Matched\ sequence\ 👩🏿\ —\ code\ points:\ 2}
+
+\end{DoxyCode}
+
+
+To match emoji in their textual representation as well (i.\+e. emoji that are not {\ttfamily Emoji\+\_\+\+Presentation} symbols and that aren’t forced to render as emoji by a variation selector), {\ttfamily require} the other regex\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ emojiRegex\ =\ require('emoji-\/regex/text.js');}
+
+\end{DoxyCode}
+
+
+Additionally, in environments which support ES2015 Unicode escapes, you may {\ttfamily require} ES2015-\/style versions of the regexes\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ emojiRegex\ =\ require('emoji-\/regex/es2015/index.js');}
+\DoxyCodeLine{const\ emojiRegexText\ =\ require('emoji-\/regex/es2015/text.js');}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2emoji-regex_2_r_e_a_d_m_e_autotoc_md808}{}\doxysection{\texorpdfstring{Author}{Author}}\label{md_backend_2node__modules_2emoji-regex_2_r_e_a_d_m_e_autotoc_md808}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{1}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ \href{https://twitter.com/mathias}{\texttt{ }}    }\\\cline{1-1}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ \href{https://twitter.com/mathias}{\texttt{ }}    }\\\cline{1-1}
+\endhead
+\href{https://mathiasbynens.be/}{\texttt{ Mathias Bynens}}   \\\cline{1-1}
+\end{longtabu}
+\hypertarget{md_backend_2node__modules_2emoji-regex_2_r_e_a_d_m_e_autotoc_md809}{}\doxysection{\texorpdfstring{License}{License}}\label{md_backend_2node__modules_2emoji-regex_2_r_e_a_d_m_e_autotoc_md809}
+{\itshape emoji-\/regex} is available under the \href{https://mths.be/mit}{\texttt{ MIT}} license. 

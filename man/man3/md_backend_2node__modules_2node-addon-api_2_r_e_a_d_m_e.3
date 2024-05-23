@@ -1,0 +1,340 @@
+.TH "md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e \- README 
+.PP
+NOTE: The default branch has been renamed! master is now named main
+.PP
+If you have a local clone, you can update it by running:
+.PP
+.PP
+.nf
+git branch \-m master main
+git fetch origin
+git branch \-u origin/main main
+.fi
+.PP
+.SH "\fBnode-addon-api module\fP"
+.PP
+This module contains \fBheader-only C++ wrapper classes\fP which simplify the use of the C based \fRNode-API\fP provided by Node\&.js when using C++\&. It provides a C++ object model and exception handling semantics with low overhead\&.
+.PP
+There are three options for implementing addons: Node-API, nan, or direct use of internal V8, libuv, and Node\&.js libraries\&. Unless there is a need for direct access to functionality that is not exposed by Node-API as outlined in \fRC/C++ addons\fP in Node\&.js core, use Node-API\&. Refer to \fRC/C++ addons with Node-API\fP for more information on Node-API\&.
+.PP
+Node-API is an ABI stable C interface provided by Node\&.js for building native addons\&. It is independent of the underlying JavaScript runtime (e\&.g\&. V8 or ChakraCore) and is maintained as part of Node\&.js itself\&. It is intended to insulate native addons from changes in the underlying JavaScript engine and allow modules compiled for one version to run on later versions of Node\&.js without recompilation\&.
+.PP
+The \fRnode-addon-api\fP module, which is not part of Node\&.js, preserves the benefits of the Node-API as it consists only of inline code that depends only on the stable API provided by Node-API\&. As such, modules built against one version of Node\&.js using node-addon-api should run without having to be rebuilt with newer versions of Node\&.js\&.
+.PP
+It is important to remember that \fIother\fP Node\&.js interfaces such as \fRlibuv\fP (included in a project via \fR#include <uv\&.h>\fP) are not ABI-stable across Node\&.js major versions\&. Thus, an addon must use Node-API and/or \fRnode-addon-api\fP exclusively and build against a version of Node\&.js that includes an implementation of Node-API (meaning an active LTS version of Node\&.js) in order to benefit from ABI stability across Node\&.js major versions\&. Node\&.js provides an \fRABI stability guide\fP containing a detailed explanation of ABI stability in general, and the Node-API ABI stability guarantee in particular\&.
+.PP
+As new APIs are added to Node-API, node-addon-api must be updated to provide wrappers for those new APIs\&. For this reason, node-addon-api provides methods that allow callers to obtain the underlying Node-API handles so direct calls to Node-API and the use of the objects/methods provided by node-addon-api can be used together\&. For example, in order to be able to use an API for which the node-addon-api does not yet provide a wrapper\&.
+.PP
+APIs exposed by node-addon-api are generally used to create and manipulate JavaScript values\&. Concepts and operations generally map to ideas specified in the \fBECMA262 Language Specification\fP\&.
+.PP
+The \fRNode-API Resource\fP offers an excellent orientation and tips for developers just getting started with Node-API and node-addon-api\&.
+.PP
+.IP "\(bu" 2
+\fB\fBSetup\fP\fP
+.IP "\(bu" 2
+\fB\fBAPI Documentation\fP\fP
+.IP "\(bu" 2
+\fB\fBExamples\fP\fP
+.IP "\(bu" 2
+\fB\fBTests\fP\fP
+.IP "\(bu" 2
+\fB\fBMore resource and info about native Addons\fP\fP
+.IP "\(bu" 2
+\fB\fBBadges\fP\fP
+.IP "\(bu" 2
+\fB\fBCode of Conduct\fP\fP
+.IP "\(bu" 2
+\fB\fBContributors\fP\fP
+.IP "\(bu" 2
+\fB\fBLicense\fP\fP
+.PP
+.SS "\fBCurrent version: 7\&.1\&.0\fP"
+(See \fBCHANGELOG\&.md\fP for complete Changelog)
+.PP
+\fR\fP \fR\fP
+.PP
+.PP
+node-addon-api is based on \fRNode-API\fP and supports using different Node-API versions\&. This allows addons built with it to run with Node\&.js versions which support the targeted Node-API version\&. \fBHowever\fP the node-addon-api support model is to support only the active LTS Node\&.js versions\&. This means that every year there will be a new major which drops support for the Node\&.js LTS version which has gone out of service\&.
+.PP
+The oldest Node\&.js version supported by the current version of node-addon-api is Node\&.js 16\&.x\&.
+.SS "Setup"
+.IP "\(bu" 2
+\fBInstallation and usage\fP
+.IP "\(bu" 2
+\fBnode-gyp\fP
+.IP "\(bu" 2
+\fBcmake-js\fP
+.IP "\(bu" 2
+\fBConversion tool\fP
+.IP "\(bu" 2
+\fBChecker tool\fP
+.IP "\(bu" 2
+\fBGenerator\fP
+.IP "\(bu" 2
+\fBPrebuild tools\fP
+.PP
+.PP
+.SS "\fBAPI Documentation\fP"
+The following is the documentation for node-addon-api\&.
+.PP
+.IP "\(bu" 2
+\fBFull Class Hierarchy\fP
+.IP "\(bu" 2
+\fBAddon Structure\fP
+.IP "\(bu" 2
+Data Types:
+.IP "  \(bu" 4
+\fBEnv\fP
+.IP "  \(bu" 4
+\fBCallbackInfo\fP
+.IP "  \(bu" 4
+\fBReference\fP
+.IP "  \(bu" 4
+\fBValue\fP
+.IP "    \(bu" 6
+\fBName\fP
+.IP "      \(bu" 8
+\fBSymbol\fP
+.IP "      \(bu" 8
+\fBString\fP
+.PP
+
+.IP "    \(bu" 6
+\fBNumber\fP
+.IP "    \(bu" 6
+\fBDate\fP
+.IP "    \(bu" 6
+\fBBigInt\fP
+.IP "    \(bu" 6
+\fBBoolean\fP
+.IP "    \(bu" 6
+\fBExternal\fP
+.IP "    \(bu" 6
+\fBObject\fP
+.IP "      \(bu" 8
+\fBArray\fP
+.IP "      \(bu" 8
+\fBObjectReference\fP
+.PP
+
+.PP
+
+.IP "  \(bu" 4
+\fBPropertyDescriptor\fP
+.IP "  \(bu" 4
+\fBFunction\fP
+.IP "    \(bu" 6
+\fBFunctionReference\fP
+.PP
+
+.IP "  \(bu" 4
+\fBObjectWrap\fP
+.IP "    \(bu" 6
+\fBClassPropertyDescriptor\fP
+.PP
+
+.IP "  \(bu" 4
+\fBBuffer\fP
+.IP "  \(bu" 4
+\fBArrayBuffer\fP
+.IP "  \(bu" 4
+\fBTypedArray\fP
+.IP "    \(bu" 6
+\fBTypedArrayOf\fP
+.PP
+
+.IP "  \(bu" 4
+\fBDataView\fP
+.PP
+
+.IP "\(bu" 2
+\fBError Handling\fP
+.IP "  \(bu" 4
+\fBError\fP
+.IP "    \(bu" 6
+\fBTypeError\fP
+.IP "    \(bu" 6
+\fBRangeError\fP
+.IP "    \(bu" 6
+\fBSyntaxError\fP
+.PP
+
+.PP
+
+.IP "\(bu" 2
+\fBObject Lifetime Management\fP
+.IP "  \(bu" 4
+\fBHandleScope\fP
+.IP "  \(bu" 4
+\fBEscapableHandleScope\fP
+.PP
+
+.IP "\(bu" 2
+\fBMemory Management\fP
+.IP "\(bu" 2
+\fBAsync Operations\fP
+.IP "  \(bu" 4
+\fBAsyncWorker\fP
+.IP "  \(bu" 4
+\fBAsyncContext\fP
+.IP "  \(bu" 4
+\fBAsyncWorker Variants\fP
+.PP
+
+.IP "\(bu" 2
+\fBThread-safe Functions\fP
+.IP "  \(bu" 4
+\fBThreadSafeFunction\fP
+.IP "  \(bu" 4
+\fBTypedThreadSafeFunction\fP
+.PP
+
+.IP "\(bu" 2
+\fBPromises\fP
+.IP "\(bu" 2
+\fBVersion management\fP
+.PP
+.PP
+.SS "\fBExamples\fP"
+Are you new to \fBnode-addon-api\fP? Take a look at our \fB\fRexamples\fP\fP
+.PP
+.IP "\(bu" 2
+\fB\fRHello World\fP\fP
+.IP "\(bu" 2
+\fB\fRPass arguments to a function\fP\fP
+.IP "\(bu" 2
+\fB\fRCallbacks\fP\fP
+.IP "\(bu" 2
+\fB\fRObject factory\fP\fP
+.IP "\(bu" 2
+\fB\fRFunction factory\fP\fP
+.IP "\(bu" 2
+\fB\fRWrapping C++ Object\fP\fP
+.IP "\(bu" 2
+\fB\fRFactory of wrapped object\fP\fP
+.IP "\(bu" 2
+\fB\fRPassing wrapped object around\fP\fP
+.PP
+.PP
+.SS "\fBTests\fP"
+To run the \fBnode-addon-api\fP tests do:
+.PP
+.PP
+.nf
+npm install
+npm test
+.fi
+.PP
+.PP
+To avoid testing the deprecated portions of the API run 
+.PP
+.nf
+npm install
+npm test \-\-disable\-deprecated
+
+.fi
+.PP
+.PP
+To run the tests targeting a specific version of Node-API run 
+.PP
+.nf
+npm install
+export NAPI_VERSION=X
+npm test \-\-NAPI_VERSION=X
+
+.fi
+.PP
+.PP
+where X is the version of Node-API you want to target\&.
+.PP
+To run a specific unit test, filter conditions are available
+.PP
+\fBExample:\fP compile and run only tests on objectwrap\&.cc and objectwrap\&.js 
+.PP
+.nf
+npm run unit \-\-filter=objectwrap
+
+.fi
+.PP
+.PP
+Multiple unit tests cane be selected with wildcards
+.PP
+\fBExample:\fP compile and run all test files ending with 'reference' -> function_reference\&.cc, object_reference\&.cc, reference\&.cc 
+.PP
+.nf
+npm run unit \-\-filter=*reference
+
+.fi
+.PP
+.PP
+Multiple filter conditions can be joined to broaden the test selection
+.PP
+\fBExample:\fP compile and run all tests under folders threadsafe_function and typed_threadsafe_function and also the objectwrap\&.cc file npm run unit --filter='*function objectwrap'
+.SS "\fBDebug\fP"
+To run the \fBnode-addon-api\fP tests with \fR--debug\fP option:
+.PP
+.PP
+.nf
+npm run\-script dev
+.fi
+.PP
+.PP
+If you want a faster build, you might use the following option:
+.PP
+.PP
+.nf
+npm run\-script dev:incremental
+.fi
+.PP
+.PP
+Take a look and get inspired by our \fB\fRtest suite\fP\fP
+.SS "\fBBenchmarks\fP"
+You can run the available benchmarks using the following command:
+.PP
+.PP
+.nf
+npm run\-script benchmark
+.fi
+.PP
+.PP
+See \fBbenchmark/README\&.md\fP for more details about running and adding benchmarks\&.
+.PP
+.SS "\fBMore resource and info about native Addons\fP"
+.IP "\(bu" 2
+\fB\fRC++ Addons\fP\fP
+.IP "\(bu" 2
+\fB\fRNode-API\fP\fP
+.IP "\(bu" 2
+\fB\fRNode-API - Next Generation Node API for Native Modules\fP\fP
+.IP "\(bu" 2
+\fB\fRHow We Migrated Realm JavaScript From NAN to Node-API\fP\fP
+.PP
+.PP
+As node-addon-api's core mission is to expose the plain C Node-API as C++ wrappers, tools that facilitate n-api/node-addon-api providing more convenient patterns for developing a Node\&.js add-on with n-api/node-addon-api can be published to NPM as standalone packages\&. It is also recommended to tag such packages with \fRnode-addon-api\fP to provide more visibility to the community\&.
+.PP
+Quick links to NPM searches: \fRkeywords:node-addon-api\fP\&.
+.PP
+.SS "\fBOther bindings\fP"
+.IP "\(bu" 2
+\fB\fRnapi-rs\fP\fP - (\fRRust\fP)
+.PP
+.PP
+.SS "\fBBadges\fP"
+The use of badges is recommended to indicate the minimum version of Node-API required for the module\&. This helps to determine which Node\&.js major versions are supported\&. Addon maintainers can consult the \fRNode-API support matrix\fP to determine which Node\&.js versions provide a given Node-API version\&. The following badges are available:
+.PP
+         
+.SS "\fBContributing\fP"
+We love contributions from the community to \fBnode-addon-api\fP! See \fBCONTRIBUTING\&.md\fP for more details on our philosophy around extending this module\&.
+.PP
+.SS "Team members"
+.SS "Active"
+Name   GitHub Link    Anna Henningsen   \fRaddaleax\fP    Chengzhong Wu   \fRlegendecas\fP    Jack Xia   \fRJckXia\fP    Kevin Eady   \fRKevinEady\fP    Michael Dawson   \fRmhdawson\fP    Nicola Del Gobbo   \fRNickNaso\fP    Vladimir Morozov   \fRvmoroz\fP   
+.SS "Emeritus"
+Name   GitHub Link    Arunesh Chandra   \fRaruneshchandra\fP    Benjamin Byholm   \fRkkoopa\fP    Gabriel Schulhof   \fRgabrielschulhof\fP    Hitesh Kanwathirtha   \fRdigitalinfinity\fP    Jason Ginchereau   \fRjasongin\fP    Jim Schlight   \fRjschlight\fP    Sampson Gao   \fRsampsongao\fP    Taylor Woll   \fRboingoing\fP   
+.PP
+.PP
+Licensed under \fBMIT\fP 

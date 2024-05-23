@@ -1,0 +1,206 @@
+.TH "md_backend_2node__modules_2retry_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2retry_2_r_e_a_d_m_e \- README 
+.PP
+\fR\fP \fR\fP
+.SH "retry"
+.PP
+Abstraction for exponential and custom retry strategies for failed operations\&.
+.SS "Installation"
+.PP
+.nf
+npm install retry
+.fi
+.PP
+ 
+.SS "Current Status"
+This module has been tested and is ready to be used\&.
+.SS "Tutorial"
+The example below will retry a potentially failing \fRdns\&.resolve\fP operation \fR10\fP times using an exponential backoff strategy\&. With the default settings, this means the last attempt is made after \fR17 minutes and 3 seconds\fP\&.
+.PP
+.PP
+.nf
+ javascript
+var dns = require('dns');
+var retry = require('retry');
+
+function faultTolerantResolve(address, cb) {
+  var operation = retry\&.operation();
+
+  operation\&.attempt(function(currentAttempt) {
+    dns\&.resolve(address, function(err, addresses) {
+      if (operation\&.retry(err)) {
+        return;
+      }
+
+      cb(err ? operation\&.mainError() : null, addresses);
+    });
+  });
+}
+
+faultTolerantResolve('nodejs\&.org', function(err, addresses) {
+  console\&.log(err, addresses);
+});
+.fi
+.PP
+.PP
+Of course you can also configure the factors that go into the exponential backoff\&. See the API documentation below for all available settings\&. currentAttempt is an int representing the number of attempts so far\&.
+.PP
+.PP
+.nf
+ javascript
+var operation = retry\&.operation({
+  retries: 5,
+  factor: 3,
+  minTimeout: 1 * 1000,
+  maxTimeout: 60 * 1000,
+  randomize: true,
+});
+.fi
+.PP
+.SS "API"
+.SS "retry\&.operation([options])"
+Creates a new \fRRetryOperation\fP object\&. \fRoptions\fP is the same as \fRretry\&.timeouts()\fP's \fRoptions\fP, with two additions:
+.PP
+.IP "\(bu" 2
+\fRforever\fP: Whether to retry forever, defaults to \fRfalse\fP\&.
+.IP "\(bu" 2
+\fRunref\fP: Whether to \fRunref\fP the setTimeout's, defaults to \fRfalse\fP\&.
+.IP "\(bu" 2
+\fRmaxRetryTime\fP: The maximum time (in milliseconds) that the retried operation is allowed to run\&. Default is \fRInfinity\fP\&. 
+.br
+
+.PP
+.SS "retry\&.timeouts([options])"
+Returns an array of timeouts\&. All time \fRoptions\fP and return values are in milliseconds\&. If \fRoptions\fP is an array, a copy of that array is returned\&.
+.PP
+\fRoptions\fP is a JS object that can contain any of the following keys:
+.PP
+.IP "\(bu" 2
+\fRretries\fP: The maximum amount of times to retry the operation\&. Default is \fR10\fP\&. Seting this to \fR1\fP means \fRdo it once, then retry it once\fP\&.
+.IP "\(bu" 2
+\fRfactor\fP: The exponential factor to use\&. Default is \fR2\fP\&.
+.IP "\(bu" 2
+\fRminTimeout\fP: The number of milliseconds before starting the first retry\&. Default is \fR1000\fP\&.
+.IP "\(bu" 2
+\fRmaxTimeout\fP: The maximum number of milliseconds between two retries\&. Default is \fRInfinity\fP\&.
+.IP "\(bu" 2
+\fRrandomize\fP: Randomizes the timeouts by multiplying with a factor between \fR1\fP to \fR2\fP\&. Default is \fRfalse\fP\&.
+.PP
+.PP
+The formula used to calculate the individual timeouts is:
+.PP
+.PP
+.nf
+Math\&.min(random * minTimeout * Math\&.pow(factor, attempt), maxTimeout)
+.fi
+.PP
+.PP
+Have a look at \fRthis article\fP for a better explanation of approach\&.
+.PP
+If you want to tune your \fRfactor\fP / \fRtimes\fP settings to attempt the last retry after a certain amount of time, you can use wolfram alpha\&. For example in order to tune for \fR10\fP attempts in \fR5 minutes\fP, you can use this equation:
+.PP
+.PP
+Explaining the various values from left to right:
+.PP
+.IP "\(bu" 2
+\fRk = 0 \&.\&.\&. 9\fP: The \fRretries\fP value (10)
+.IP "\(bu" 2
+\fR1000\fP: The \fRminTimeout\fP value in ms (1000)
+.IP "\(bu" 2
+\fRx^k\fP: No need to change this, \fRx\fP will be your resulting factor
+.IP "\(bu" 2
+\fR5 * 60 * 1000\fP: The desired total amount of time for retrying in ms (5 minutes)
+.PP
+.PP
+To make this a little easier for you, use wolfram alpha to do the calculations:
+.PP
+<http://www.wolframalpha.com/input/?i=Sum%5B1000*x^k%2C+{k%2C+0%2C+9}%5D+%3D+5+*+60+*+1000>
+.SS "retry\&.createTimeout(attempt, opts)"
+Returns a new \fRtimeout\fP (integer in milliseconds) based on the given parameters\&.
+.PP
+\fRattempt\fP is an integer representing for which retry the timeout should be calculated\&. If your retry operation was executed 4 times you had one attempt and 3 retries\&. If you then want to calculate a new timeout, you should set \fRattempt\fP to 4 (attempts are zero-indexed)\&.
+.PP
+\fRopts\fP can include \fRfactor\fP, \fRminTimeout\fP, \fRrandomize\fP (boolean) and \fRmaxTimeout\fP\&. They are documented above\&.
+.PP
+\fRretry\&.createTimeout()\fP is used internally by \fRretry\&.timeouts()\fP and is public for you to be able to create your own timeouts for reinserting an item, see \fRissue #13\fP\&.
+.SS "retry\&.wrap(obj, [options], [methodNames])"
+Wrap all functions of the \fRobj\fP with retry\&. Optionally you can pass operation options and an array of method names which need to be wrapped\&.
+.PP
+.PP
+.nf
+retry\&.wrap(obj)
+
+retry\&.wrap(obj, ['method1', 'method2'])
+
+retry\&.wrap(obj, {retries: 3})
+
+retry\&.wrap(obj, {retries: 3}, ['method1', 'method2'])
+.fi
+.PP
+ The \fRoptions\fP object can take any options that the usual call to \fRretry\&.operation\fP can take\&.
+.SS "new RetryOperation(timeouts, [options])"
+Creates a new \fRRetryOperation\fP where \fRtimeouts\fP is an array where each value is a timeout given in milliseconds\&.
+.PP
+Available options:
+.IP "\(bu" 2
+\fRforever\fP: Whether to retry forever, defaults to \fRfalse\fP\&.
+.IP "\(bu" 2
+\fRunref\fP: Wether to \fRunref\fP the setTimeout's, defaults to \fRfalse\fP\&.
+.PP
+.PP
+If \fRforever\fP is true, the following changes happen:
+.IP "\(bu" 2
+\fRRetryOperation\&.errors()\fP will only output an array of one item: the last error\&.
+.IP "\(bu" 2
+\fRRetryOperation\fP will repeatedly use the \fRtimeouts\fP array\&. Once all of its timeouts have been used up, it restarts with the first timeout, then uses the second and so on\&.
+.PP
+.SS "retryOperation\&.errors()"
+Returns an array of all errors that have been passed to \fRretryOperation\&.retry()\fP so far\&. The returning array has the errors ordered chronologically based on when they were passed to \fRretryOperation\&.retry()\fP, which means the first passed error is at index zero and the last is at the last index\&.
+.SS "retryOperation\&.mainError()"
+A reference to the error object that occured most frequently\&. Errors are compared using the \fRerror\&.message\fP property\&.
+.PP
+If multiple error messages occured the same amount of time, the last error object with that message is returned\&.
+.PP
+If no errors occured so far, the value is \fRnull\fP\&.
+.SS "retryOperation\&.attempt(fn, timeoutOps)"
+Defines the function \fRfn\fP that is to be retried and executes it for the first time right away\&. The \fRfn\fP function can receive an optional \fRcurrentAttempt\fP callback that represents the number of attempts to execute \fRfn\fP so far\&.
+.PP
+Optionally defines \fRtimeoutOps\fP which is an object having a property \fRtimeout\fP in miliseconds and a property \fRcb\fP callback function\&. Whenever your retry operation takes longer than \fRtimeout\fP to execute, the timeout callback function \fRcb\fP is called\&.
+.SS "retryOperation\&.try(fn)"
+This is an alias for \fRretryOperation\&.attempt(fn)\fP\&. This is deprecated\&. Please use \fRretryOperation\&.attempt(fn)\fP instead\&.
+.SS "retryOperation\&.start(fn)"
+This is an alias for \fRretryOperation\&.attempt(fn)\fP\&. This is deprecated\&. Please use \fRretryOperation\&.attempt(fn)\fP instead\&.
+.SS "retryOperation\&.retry(error)"
+Returns \fRfalse\fP when no \fRerror\fP value is given, or the maximum amount of retries has been reached\&.
+.PP
+Otherwise it returns \fRtrue\fP, and retries the operation after the timeout for the current attempt number\&.
+.SS "retryOperation\&.stop()"
+Allows you to stop the operation being retried\&. Useful for aborting the operation on a fatal error etc\&.
+.SS "retryOperation\&.reset()"
+Resets the internal state of the operation object, so that you can call \fRattempt()\fP again as if this was a new operation object\&.
+.SS "retryOperation\&.attempts()"
+Returns an int representing the number of attempts it took to call \fRfn\fP before it was successful\&.
+.SS "License"
+retry is licensed under the MIT license\&.
+.SH "Changelog"
+.PP
+0\&.10\&.0 Adding \fRstop\fP functionality, thanks to @maxnachlinger\&.
+.PP
+0\&.9\&.0 Adding \fRunref\fP functionality, thanks to @satazor\&.
+.PP
+0\&.8\&.0 Implementing retry\&.wrap\&.
+.PP
+0\&.7\&.0 Some bug fixes and made retry\&.createTimeout() public\&. Fixed issues \fR#10\fP, \fR#12\fP, and \fR#13\fP\&.
+.PP
+0\&.6\&.0 Introduced optional timeOps parameter for the attempt() function which is an object having a property timeout in milliseconds and a property cb callback function\&. Whenever your retry operation takes longer than timeout to execute, the timeout callback function cb is called\&.
+.PP
+0\&.5\&.0 Some minor refactoring\&.
+.PP
+0\&.4\&.0 Changed retryOperation\&.try() to retryOperation\&.attempt()\&. Deprecated the aliases start() and \fBtry()\fP for it\&.
+.PP
+0\&.3\&.0 Added retryOperation\&.start() which is an alias for retryOperation\&.try()\&.
+.PP
+0\&.2\&.0 Added attempts() function and parameter to retryOperation\&.try() representing the number of attempts it took to call fn()\&. 

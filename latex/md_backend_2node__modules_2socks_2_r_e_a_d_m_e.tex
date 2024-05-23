@@ -1,0 +1,707 @@
+\chapter{socks \texorpdfstring{$<$}{<}a href="{}https\+://travis-\/ci.\+org/\+Josh\+Glazebrook/socks"{} \texorpdfstring{$>$}{>}\texorpdfstring{$<$}{<}img src="{}https\+://travis-\/ci.\+org/\+Josh\+Glazebrook/socks.\+svg?branch=master"{} alt="{}\+Build Status"{}/\texorpdfstring{$>$}{>}\texorpdfstring{$<$}{<}/a\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}a href="{}https\+://coveralls.\+io/github/\+Josh\+Glazebrook/socks?branch=v2"{} \texorpdfstring{$>$}{>}\texorpdfstring{$<$}{<}img src="{}https\+://coveralls.\+io/repos/github/\+Josh\+Glazebrook/socks/badge.\+svg?branch=master"{} alt="{}\+Coverage Status"{}/\texorpdfstring{$>$}{>}\texorpdfstring{$<$}{<}/a\texorpdfstring{$>$}{>}}
+\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e}\index{socks  $<$a href="{}https://travis-\/ci.org/JoshGlazebrook/socks"{} $>$$<$img src="{}https://travis-\/ci.org/JoshGlazebrook/socks.svg?branch=master"{} alt="{}Build Status"{}/$>$$<$/a$>$  $<$a href="{}https://coveralls.io/github/JoshGlazebrook/socks?branch=v2"{} $>$$<$img src="{}https://coveralls.io/repos/github/JoshGlazebrook/socks/badge.svg?branch=master"{} alt="{}Coverage Status"{}/$>$$<$/a$>$@{socks  $<$a href=""https://travis-\/ci.org/JoshGlazebrook/socks"" $>$$<$img src=""https://travis-\/ci.org/JoshGlazebrook/socks.svg?branch=master"" alt=""Build Status""/$>$$<$/a$>$  $<$a href=""https://coveralls.io/github/JoshGlazebrook/socks?branch=v2"" $>$$<$img src=""https://coveralls.io/repos/github/JoshGlazebrook/socks/badge.svg?branch=master"" alt=""Coverage Status""/$>$$<$/a$>$}}
+\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3555}%
+\Hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3555}%
+ Fully featured SOCKS proxy client supporting SOCKSv4, SOCKSv4a, and SOCKSv5. Includes Bind and Associate functionality.
+
+\begin{quote}
+Looking for Node.\+js agent? Check \href{https://github.com/TooTallNate/node-socks-proxy-agent}{\texttt{ node-\/socks-\/proxy-\/agent}}. \end{quote}
+\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3556}{}\doxysubsection{\texorpdfstring{Features}{Features}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3556}
+
+\begin{DoxyItemize}
+\item Supports SOCKS v4, v4a, v5, and v5h protocols.
+\item Supports the CONNECT, BIND, and ASSOCIATE commands.
+\item Supports callbacks, promises, and events for proxy connection creation async flow control.
+\item Supports proxy chaining (CONNECT only).
+\item Supports user/password authentication.
+\item Supports custom authentication.
+\item Built in UDP frame creation \& parse functions.
+\item Created with Type\+Script, type definitions are provided.
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3557}{}\doxysubsection{\texorpdfstring{Requirements}{Requirements}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3557}
+
+\begin{DoxyItemize}
+\item Node.\+js v10.\+0+ (Please use \href{https://github.com/JoshGlazebrook/socks/tree/82d83923ad960693d8b774cafe17443ded7ed584}{\texttt{ v1}} for older versions of Node.\+js)
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3558}{}\doxysubsection{\texorpdfstring{Looking for v1?}{Looking for v1?}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3558}
+
+\begin{DoxyItemize}
+\item Docs for v1 are available \href{https://github.com/JoshGlazebrook/socks/tree/82d83923ad960693d8b774cafe17443ded7ed584}{\texttt{ here}}
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3559}{}\doxysection{\texorpdfstring{Installation}{Installation}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3559}
+{\ttfamily yarn add socks}
+
+or
+
+{\ttfamily npm install -\/-\/save socks}\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3560}{}\doxysection{\texorpdfstring{Usage}{Usage}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3560}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ TypeScript}
+\DoxyCodeLine{import\ \{\ SocksClient,\ SocksClientOptions,\ SocksClientChainOptions\ \}\ from\ 'socks';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ ES6\ JavaScript}
+\DoxyCodeLine{import\ \{\ SocksClient\ \}\ from\ 'socks';}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Legacy\ JavaScript}
+\DoxyCodeLine{const\ SocksClient\ =\ require('socks').SocksClient;}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3561}{}\doxysection{\texorpdfstring{Quick Start Example}{Quick Start Example}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3561}
+Connect to github.\+com (192.\+30.\+253.\+113) on port 80, using a SOCKS proxy.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ options\ =\ \{}
+\DoxyCodeLine{\ \ proxy:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ '159.203.75.200',\ //\ ipv4\ or\ ipv6\ or\ hostname}
+\DoxyCodeLine{\ \ \ \ port:\ 1080,}
+\DoxyCodeLine{\ \ \ \ type:\ 5\ //\ Proxy\ version\ (4\ or\ 5)}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ command:\ 'connect',\ //\ SOCKS\ command\ (createConnection\ factory\ function\ only\ supports\ the\ connect\ command)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ destination:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ '192.30.253.113',\ //\ github.com\ (hostname\ lookups\ are\ supported\ with\ SOCKS\ v4a\ and\ 5)}
+\DoxyCodeLine{\ \ \ \ port:\ 80}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Async/Await}
+\DoxyCodeLine{try\ \{}
+\DoxyCodeLine{\ \ const\ info\ =\ await\ SocksClient.createConnection(options);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ console.log(info.socket);}
+\DoxyCodeLine{\ \ //\ <Socket\ ...>\ \ (this\ is\ a\ raw\ net.Socket\ that\ is\ established\ to\ the\ destination\ host\ through\ the\ given\ proxy\ server)}
+\DoxyCodeLine{\}\ catch\ (err)\ \{}
+\DoxyCodeLine{\ \ //\ Handle\ errors}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Promises}
+\DoxyCodeLine{SocksClient.createConnection(options)}
+\DoxyCodeLine{.then(info\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(info.socket);}
+\DoxyCodeLine{\ \ //\ <Socket\ ...>\ \ (this\ is\ a\ raw\ net.Socket\ that\ is\ established\ to\ the\ destination\ host\ through\ the\ given\ proxy\ server)}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{.catch(err\ =>\ \{}
+\DoxyCodeLine{\ \ //\ Handle\ errors}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Callbacks}
+\DoxyCodeLine{SocksClient.createConnection(options,\ (err,\ info)\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (!err)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(info.socket);}
+\DoxyCodeLine{\ \ \ \ //\ <Socket\ ...>\ \ (this\ is\ a\ raw\ net.Socket\ that\ is\ established\ to\ the\ destination\ host\ through\ the\ given\ proxy\ server)}
+\DoxyCodeLine{\ \ \}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ //\ Handle\ errors}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3562}{}\doxysection{\texorpdfstring{Chaining Proxies}{Chaining Proxies}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3562}
+{\bfseries{Note\+:}} Chaining is only supported when using the SOCKS connect command, and chaining can only be done through the special factory chaining function.
+
+This example makes a proxy chain through two SOCKS proxies to ip-\/api.\+com. Once the connection to the destination is established it sends an HTTP request to get a JSON response that returns ip info for the requesting ip.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ options\ =\ \{}
+\DoxyCodeLine{\ \ destination:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ 'ip-\/api.com',\ //\ host\ names\ are\ supported\ with\ SOCKS\ v4a\ and\ SOCKS\ v5.}
+\DoxyCodeLine{\ \ \ \ port:\ 80}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ command:\ 'connect',\ //\ Only\ the\ connect\ command\ is\ supported\ when\ chaining\ proxies.}
+\DoxyCodeLine{\ \ proxies:\ [\ //\ The\ chain\ order\ is\ the\ order\ in\ the\ proxies\ array,\ meaning\ the\ last\ proxy\ will\ establish\ a\ connection\ to\ the\ destination.}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ host:\ '159.203.75.235',\ //\ ipv4,\ ipv6,\ or\ hostname}
+\DoxyCodeLine{\ \ \ \ \ \ port:\ 1081,}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 5}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ host:\ '104.131.124.203',\ //\ ipv4,\ ipv6,\ or\ hostname}
+\DoxyCodeLine{\ \ \ \ \ \ port:\ 1081,}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 5}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Async/Await}
+\DoxyCodeLine{try\ \{}
+\DoxyCodeLine{\ \ const\ info\ =\ await\ SocksClient.createConnectionChain(options);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ console.log(info.socket);}
+\DoxyCodeLine{\ \ //\ <Socket\ ...>\ \ (this\ is\ a\ raw\ net.Socket\ that\ is\ established\ to\ the\ destination\ host\ through\ the\ given\ proxy\ servers)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ console.log(info.socket.remoteAddress)\ //\ The\ remote\ address\ of\ the\ returned\ socket\ is\ the\ first\ proxy\ in\ the\ chain.}
+\DoxyCodeLine{\ \ //\ 159.203.75.235}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ info.socket.write('GET\ /json\ HTTP/1.1\(\backslash\)nHost:\ ip-\/api.com\(\backslash\)n\(\backslash\)n');}
+\DoxyCodeLine{\ \ info.socket.on('data',\ (data)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(data.toString());\ //\ ip-\/api.com\ sees\ that\ the\ last\ proxy\ in\ the\ chain\ (104.131.124.203)\ is\ connected\ to\ it.}
+\DoxyCodeLine{\ \ \ \ /*}
+\DoxyCodeLine{\ \ \ \ \ \ HTTP/1.1\ 200\ OK}
+\DoxyCodeLine{\ \ \ \ \ \ Access-\/Control-\/Allow-\/Origin:\ *}
+\DoxyCodeLine{\ \ \ \ \ \ Content-\/Type:\ application/json;\ charset=utf-\/8}
+\DoxyCodeLine{\ \ \ \ \ \ Date:\ Sun,\ 24\ Dec\ 2017\ 03:47:51\ GMT}
+\DoxyCodeLine{\ \ \ \ \ \ Content-\/Length:\ 300}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}as"{}:"{}AS14061\ Digital\ Ocean,\ Inc."{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}city"{}:"{}Clifton"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}country"{}:"{}United\ States"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}countryCode"{}:"{}US"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}isp"{}:"{}Digital\ Ocean"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}lat"{}:40.8326,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}lon"{}:-\/74.1307,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}org"{}:"{}Digital\ Ocean"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}query"{}:"{}104.131.124.203"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}region"{}:"{}NJ"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}regionName"{}:"{}New\ Jersey"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}status"{}:"{}success"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}timezone"{}:"{}America/New\_York"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}zip"{}:"{}07014"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ */}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\}\ catch\ (err)\ \{}
+\DoxyCodeLine{\ \ //\ Handle\ errors}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Promises}
+\DoxyCodeLine{SocksClient.createConnectionChain(options)}
+\DoxyCodeLine{.then(info\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(info.socket);}
+\DoxyCodeLine{\ \ //\ <Socket\ ...>\ \ (this\ is\ a\ raw\ net.Socket\ that\ is\ established\ to\ the\ destination\ host\ through\ the\ given\ proxy\ server)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ console.log(info.socket.remoteAddress)\ //\ The\ remote\ address\ of\ the\ returned\ socket\ is\ the\ first\ proxy\ in\ the\ chain.}
+\DoxyCodeLine{\ \ //\ 159.203.75.235}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ info.socket.write('GET\ /json\ HTTP/1.1\(\backslash\)nHost:\ ip-\/api.com\(\backslash\)n\(\backslash\)n');}
+\DoxyCodeLine{\ \ info.socket.on('data',\ (data)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(data.toString());\ //\ ip-\/api.com\ sees\ that\ the\ last\ proxy\ in\ the\ chain\ (104.131.124.203)\ is\ connected\ to\ it.}
+\DoxyCodeLine{\ \ \ \ /*}
+\DoxyCodeLine{\ \ \ \ \ \ HTTP/1.1\ 200\ OK}
+\DoxyCodeLine{\ \ \ \ \ \ Access-\/Control-\/Allow-\/Origin:\ *}
+\DoxyCodeLine{\ \ \ \ \ \ Content-\/Type:\ application/json;\ charset=utf-\/8}
+\DoxyCodeLine{\ \ \ \ \ \ Date:\ Sun,\ 24\ Dec\ 2017\ 03:47:51\ GMT}
+\DoxyCodeLine{\ \ \ \ \ \ Content-\/Length:\ 300}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}as"{}:"{}AS14061\ Digital\ Ocean,\ Inc."{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}city"{}:"{}Clifton"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}country"{}:"{}United\ States"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}countryCode"{}:"{}US"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}isp"{}:"{}Digital\ Ocean"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}lat"{}:40.8326,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}lon"{}:-\/74.1307,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}org"{}:"{}Digital\ Ocean"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}query"{}:"{}104.131.124.203"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}region"{}:"{}NJ"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}regionName"{}:"{}New\ Jersey"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}status"{}:"{}success"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}timezone"{}:"{}America/New\_York"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}zip"{}:"{}07014"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ */}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{.catch(err\ =>\ \{}
+\DoxyCodeLine{\ \ //\ Handle\ errors}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Callbacks}
+\DoxyCodeLine{SocksClient.createConnectionChain(options,\ (err,\ info)\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (!err)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(info.socket);}
+\DoxyCodeLine{\ \ \ \ //\ <Socket\ ...>\ \ (this\ is\ a\ raw\ net.Socket\ that\ is\ established\ to\ the\ destination\ host\ through\ the\ given\ proxy\ server)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ console.log(info.socket.remoteAddress)\ //\ The\ remote\ address\ of\ the\ returned\ socket\ is\ the\ first\ proxy\ in\ the\ chain.}
+\DoxyCodeLine{\ \ //\ 159.203.75.235}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ info.socket.write('GET\ /json\ HTTP/1.1\(\backslash\)nHost:\ ip-\/api.com\(\backslash\)n\(\backslash\)n');}
+\DoxyCodeLine{\ \ info.socket.on('data',\ (data)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(data.toString());\ //\ ip-\/api.com\ sees\ that\ the\ last\ proxy\ in\ the\ chain\ (104.131.124.203)\ is\ connected\ to\ it.}
+\DoxyCodeLine{\ \ \ \ /*}
+\DoxyCodeLine{\ \ \ \ \ \ HTTP/1.1\ 200\ OK}
+\DoxyCodeLine{\ \ \ \ \ \ Access-\/Control-\/Allow-\/Origin:\ *}
+\DoxyCodeLine{\ \ \ \ \ \ Content-\/Type:\ application/json;\ charset=utf-\/8}
+\DoxyCodeLine{\ \ \ \ \ \ Date:\ Sun,\ 24\ Dec\ 2017\ 03:47:51\ GMT}
+\DoxyCodeLine{\ \ \ \ \ \ Content-\/Length:\ 300}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}as"{}:"{}AS14061\ Digital\ Ocean,\ Inc."{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}city"{}:"{}Clifton"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}country"{}:"{}United\ States"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}countryCode"{}:"{}US"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}isp"{}:"{}Digital\ Ocean"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}lat"{}:40.8326,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}lon"{}:-\/74.1307,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}org"{}:"{}Digital\ Ocean"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}query"{}:"{}104.131.124.203"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}region"{}:"{}NJ"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}regionName"{}:"{}New\ Jersey"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}status"{}:"{}success"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}timezone"{}:"{}America/New\_York"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}zip"{}:"{}07014"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ */}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\ \ \}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ //\ Handle\ errors}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3563}{}\doxysection{\texorpdfstring{Bind Example (TCP Relay)}{Bind Example (TCP Relay)}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3563}
+When the bind command is sent to a SOCKS v4/v5 proxy server, the proxy server starts listening on a new TCP port and the proxy relays then remote host information back to the client. When another remote client connects to the proxy server on this port the SOCKS proxy sends a notification that an incoming connection has been accepted to the initial client and a full duplex stream is now established to the initial client and the client that connected to that special port.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ options\ =\ \{}
+\DoxyCodeLine{\ \ proxy:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ '159.203.75.235',\ //\ ipv4,\ ipv6,\ or\ hostname}
+\DoxyCodeLine{\ \ \ \ port:\ 1081,}
+\DoxyCodeLine{\ \ \ \ type:\ 5}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ command:\ 'bind',}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ When\ using\ BIND,\ the\ destination\ should\ be\ the\ remote\ client\ that\ is\ expected\ to\ connect\ to\ the\ SOCKS\ proxy.\ Using\ 0.0.0.0\ makes\ the\ Proxy\ accept\ any\ incoming\ connection\ on\ that\ port.}
+\DoxyCodeLine{\ \ destination:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ '0.0.0.0',}
+\DoxyCodeLine{\ \ \ \ port:\ 0}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Creates\ a\ new\ SocksClient\ instance.}
+\DoxyCodeLine{const\ client\ =\ new\ SocksClient(options);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ When\ the\ SOCKS\ proxy\ has\ bound\ a\ new\ port\ and\ started\ listening,\ this\ event\ is\ fired.}
+\DoxyCodeLine{client.on('bound',\ info\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(info.remoteHost);}
+\DoxyCodeLine{\ \ /*}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ host:\ "{}159.203.75.235"{},}
+\DoxyCodeLine{\ \ \ \ port:\ 57362}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ */}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ When\ a\ client\ connects\ to\ the\ newly\ bound\ port\ on\ the\ SOCKS\ proxy,\ this\ event\ is\ fired.}
+\DoxyCodeLine{client.on('established',\ info\ =>\ \{}
+\DoxyCodeLine{\ \ //\ info.remoteHost\ is\ the\ remote\ address\ of\ the\ client\ that\ connected\ to\ the\ SOCKS\ proxy.}
+\DoxyCodeLine{\ \ console.log(info.remoteHost);}
+\DoxyCodeLine{\ \ /*}
+\DoxyCodeLine{\ \ \ \ host:\ 67.171.34.23,}
+\DoxyCodeLine{\ \ \ \ port:\ 49823}
+\DoxyCodeLine{\ \ */}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ console.log(info.socket);}
+\DoxyCodeLine{\ \ //\ <Socket\ ...>\ \ (This\ is\ a\ raw\ net.Socket\ that\ is\ a\ connection\ between\ the\ initial\ client\ and\ the\ remote\ client\ that\ connected\ to\ the\ proxy)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Handle\ received\ data...}
+\DoxyCodeLine{\ \ info.socket.on('data',\ data\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log('recv',\ data);}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ An\ error\ occurred\ trying\ to\ establish\ this\ SOCKS\ connection.}
+\DoxyCodeLine{client.on('error',\ err\ =>\ \{}
+\DoxyCodeLine{\ \ console.error(err);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Start\ connection\ to\ proxy}
+\DoxyCodeLine{client.connect();}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3564}{}\doxysection{\texorpdfstring{Associate Example (UDP Relay)}{Associate Example (UDP Relay)}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3564}
+When the associate command is sent to a SOCKS v5 proxy server, it sets up a UDP relay that allows the client to send UDP packets to a remote host through the proxy server, and also receive UDP packet responses back through the proxy server.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ options\ =\ \{}
+\DoxyCodeLine{\ \ proxy:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ '159.203.75.235',\ //\ ipv4,\ ipv6,\ or\ hostname}
+\DoxyCodeLine{\ \ \ \ port:\ 1081,}
+\DoxyCodeLine{\ \ \ \ type:\ 5}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ command:\ 'associate',}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ When\ using\ associate,\ the\ destination\ should\ be\ the\ remote\ client\ that\ is\ expected\ to\ send\ UDP\ packets\ to\ the\ proxy\ server\ to\ be\ forwarded.\ This\ should\ be\ your\ local\ ip,\ or\ optionally\ the\ wildcard\ address\ (0.0.0.0)\ \ UDP\ Client\ <-\/>\ Proxy\ <-\/>\ UDP\ Client}
+\DoxyCodeLine{\ \ destination:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ '0.0.0.0',}
+\DoxyCodeLine{\ \ \ \ port:\ 0}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Create\ a\ local\ UDP\ socket\ for\ sending\ packets\ to\ the\ proxy.}
+\DoxyCodeLine{const\ udpSocket\ =\ dgram.createSocket('udp4');}
+\DoxyCodeLine{udpSocket.bind();}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Listen\ for\ incoming\ UDP\ packets\ from\ the\ proxy\ server.}
+\DoxyCodeLine{udpSocket.on('message',\ (message,\ rinfo)\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(SocksClient.parseUDPFrame(message));}
+\DoxyCodeLine{\ \ /*}
+\DoxyCodeLine{\ \ \{\ frameNumber:\ 0,}
+\DoxyCodeLine{\ \ \ \ remoteHost:\ \{\ host:\ '165.227.108.231',\ port:\ 4444\ \},\ //\ The\ remote\ host\ that\ replied\ with\ a\ UDP\ packet}
+\DoxyCodeLine{\ \ \ \ data:\ <Buffer\ 74\ 65\ 73\ 74\ 0a>\ //\ The\ data}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ */}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{let\ client\ =\ new\ SocksClient(associateOptions);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ When\ the\ UDP\ relay\ is\ established,\ this\ event\ is\ fired\ and\ includes\ the\ UDP\ relay\ port\ to\ send\ data\ to\ on\ the\ proxy\ server.}
+\DoxyCodeLine{client.on('established',\ info\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(info.remoteHost);}
+\DoxyCodeLine{\ \ /*}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ host:\ '159.203.75.235',}
+\DoxyCodeLine{\ \ \ \ \ \ port:\ 44711}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ */}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Send\ 'hello'\ to\ 165.227.108.231:4444}
+\DoxyCodeLine{\ \ const\ packet\ =\ SocksClient.createUDPFrame(\{}
+\DoxyCodeLine{\ \ \ \ remoteHost:\ \{\ host:\ '165.227.108.231',\ port:\ 4444\ \},}
+\DoxyCodeLine{\ \ \ \ data:\ Buffer.from(line)}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\ \ udpSocket.send(packet,\ info.remoteHost.port,\ info.remoteHost.host);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Start\ connection}
+\DoxyCodeLine{client.connect();}
+
+\end{DoxyCode}
+
+
+{\bfseries{Note\+:}} The associate TCP connection to the proxy must remain open for the UDP relay to work.\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3565}{}\doxysection{\texorpdfstring{Additional Examples}{Additional Examples}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3565}
+\doxysectlink{md_backend_2node__modules_2socks_2docs_2index}{Documentation}{0}\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3566}{}\doxysection{\texorpdfstring{Migrating from v1}{Migrating from v1}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3566}
+Looking for a guide to migrate from v1? Look \doxysectlink{md_backend_2node__modules_2socks_2docs_2migrating_from_v1}{here}{0}\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3567}{}\doxysection{\texorpdfstring{Api Reference\+:}{Api Reference\+:}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3567}
+{\bfseries{Note\+:}} socks includes full Type\+Script definitions. These can even be used without using Type\+Script as most IDEs (such as VS Code) will use these type definition files for auto completion intellisense even in Java\+Script files.
+
+
+\begin{DoxyItemize}
+\item Class\+: Socks\+Client
+\begin{DoxyItemize}
+\item new Socks\+Client(options\mbox{[}, callback\mbox{]})
+\item Class Method\+: Socks\+Client.create\+Connection(options\mbox{[}, callback\mbox{]})
+\item Class Method\+: Socks\+Client.create\+Connection\+Chain(options\mbox{[}, callback\mbox{]})
+\item Class Method\+: Socks\+Client.create\+UDPFrame(options)
+\item Class Method\+: Socks\+Client.parse\+UDPFrame(data)
+\item Event\+: \textquotesingle{}error\textquotesingle{}
+\item Event\+: \textquotesingle{}bound\textquotesingle{}
+\item Event\+: \textquotesingle{}established\textquotesingle{}
+\item client.connect()
+\item client.socks\+Client\+Options
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3568}{}\doxysubsection{\texorpdfstring{Socks\+Client}{Socks\+Client}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3568}
+Socks\+Client establishes SOCKS proxy connections to remote destination hosts. These proxy connections are fully transparent to the server and once established act as full duplex streams. SOCKS v4, v4a, v5, and v5h are supported, as well as the connect, bind, and associate commands.
+
+Socks\+Client supports creating connections using callbacks, promises, and async/await flow control using two static factory functions create\+Connection and create\+Connection\+Chain. It also internally extends Event\+Emitter which results in allowing event handling based async flow control.
+
+{\bfseries{SOCKS Compatibility Table}}
+
+Note\+: When using 4a please specify type\+: 4, and when using 5h please specify type 5.
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{6}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Socks Version   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ TCP   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ UDP   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ IPv4   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ IPv6   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Hostname    }\\\cline{1-6}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Socks Version   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ TCP   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ UDP   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ IPv4   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ IPv6   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Hostname    }\\\cline{1-6}
+\endhead
+SOCKS v4   &\PBS\centering ✅   &\PBS\centering ❌   &\PBS\centering ✅   &\PBS\centering ❌   &\PBS\centering ❌    \\\cline{1-6}
+SOCKS v4a   &\PBS\centering ✅   &\PBS\centering ❌   &\PBS\centering ✅   &\PBS\centering ❌   &\PBS\centering ✅    \\\cline{1-6}
+SOCKS v5 (includes v5h)   &\PBS\centering ✅   &\PBS\centering ✅   &\PBS\centering ✅   &\PBS\centering ✅   &\PBS\centering ✅   \\\cline{1-6}
+\end{longtabu}
+\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3569}{}\doxysubsection{\texorpdfstring{new Socks\+Client(options)}{new Socks\+Client(options)}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3569}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} \{Socks\+Client\+Options\} -\/ An object describing the SOCKS proxy to use, the command to send and establish, and the destination host to connect to.
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3570}{}\doxysubsection{\texorpdfstring{Socks\+Client\+Options}{Socks\+Client\+Options}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3570}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ proxy:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ '159.203.75.200',\ //\ ipv4,\ ipv6,\ or\ hostname}
+\DoxyCodeLine{\ \ \ \ port:\ 1080,}
+\DoxyCodeLine{\ \ \ \ type:\ 5,\ //\ Proxy\ version\ (4\ or\ 5).\ For\ v4a\ use\ 4,\ for\ v5h\ use\ 5.}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ //\ Optional\ fields}
+\DoxyCodeLine{\ \ \ \ userId:\ 'some\ username',\ //\ Used\ for\ SOCKS4\ userId\ auth,\ and\ SOCKS5\ user/pass\ auth\ in\ conjunction\ with\ password.}
+\DoxyCodeLine{\ \ \ \ password:\ 'some\ password',\ //\ Used\ in\ conjunction\ with\ userId\ for\ user/pass\ auth\ for\ SOCKS5\ proxies.}
+\DoxyCodeLine{\ \ \ \ custom\_auth\_method:\ 0x80,\ \ //\ If\ using\ a\ custom\ auth\ method,\ specify\ the\ type\ here.\ If\ this\ is\ set,\ ALL\ other\ custom\_auth\_***\ options\ must\ be\ set\ as\ well.}
+\DoxyCodeLine{\ \ \ \ custom\_auth\_request\_handler:\ async\ ()\ =>.\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ This\ will\ be\ called\ when\ it's\ time\ to\ send\ the\ custom\ auth\ handshake.\ You\ must\ return\ a\ Buffer\ containing\ the\ data\ to\ send\ as\ your\ authentication.}
+\DoxyCodeLine{\ \ \ \ \ \ return\ Buffer.from([0x01,0x02,0x03]);}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ //\ This\ is\ the\ expected\ size\ (bytes)\ of\ the\ custom\ auth\ response\ from\ the\ proxy\ server.}
+\DoxyCodeLine{\ \ \ \ custom\_auth\_response\_size:\ 2,}
+\DoxyCodeLine{\ \ \ \ //\ This\ is\ called\ when\ the\ auth\ response\ is\ received.\ The\ received\ packet\ is\ passed\ in\ as\ a\ Buffer,\ and\ you\ must\ return\ a\ boolean\ indicating\ the\ response\ from\ the\ server\ said\ your\ custom\ auth\ was\ successful\ or\ failed.}
+\DoxyCodeLine{\ \ \ \ custom\_auth\_response\_handler:\ async\ (data)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ data[1]\ ===\ 0x00;}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ command:\ 'connect',\ //\ connect,\ bind,\ associate}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ destination:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ '192.30.253.113',\ //\ ipv4,\ ipv6,\ hostname.\ Hostnames\ work\ with\ v4a\ and\ v5.}
+\DoxyCodeLine{\ \ \ \ port:\ 80}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ Optional\ fields}
+\DoxyCodeLine{\ \ timeout:\ 30000,\ //\ How\ long\ to\ wait\ to\ establish\ a\ proxy\ connection.\ (defaults\ to\ 30\ seconds)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ set\_tcp\_nodelay:\ true\ //\ If\ true,\ will\ turn\ on\ the\ underlying\ sockets\ TCP\_NODELAY\ option.}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3571}{}\doxysubsection{\texorpdfstring{Class Method\+: Socks\+Client.\+create\+Connection(options\mbox{[}, callback\mbox{]})}{Class Method\+: Socks\+Client.\+create\+Connection(options\mbox{[}, callback\mbox{]})}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3571}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} \{ Socks\+Client\+Options \} -\/ An object describing the SOCKS proxy to use, the command to send and establish, and the destination host to connect to.
+\item {\ttfamily callback} \{ Function \} -\/ Optional callback function that is called when the proxy connection is established, or an error occurs.
+\item {\ttfamily returns} \{ Promise \} -\/ A Promise is returned that is resolved when the proxy connection is established, or rejected when an error occurs.
+\end{DoxyItemize}
+
+Creates a new proxy connection through the given proxy to the given destination host. This factory function supports callbacks and promises for async flow control.
+
+{\bfseries{Note\+:}} If a callback function is provided, the promise will always resolve regardless of an error occurring. Please be sure to exclusively use either promises or callbacks when using this factory function.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ options\ =\ \{}
+\DoxyCodeLine{\ \ proxy:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ '159.203.75.200',\ //\ ipv4,\ ipv6,\ or\ hostname}
+\DoxyCodeLine{\ \ \ \ port:\ 1080,}
+\DoxyCodeLine{\ \ \ \ type:\ 5\ //\ Proxy\ version\ (4\ or\ 5)}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ command:\ 'connect',\ //\ connect,\ bind,\ associate}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ destination:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ '192.30.253.113',\ //\ ipv4,\ ipv6,\ or\ hostname}
+\DoxyCodeLine{\ \ \ \ port:\ 80}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Await/Async\ (uses\ a\ Promise)}
+\DoxyCodeLine{try\ \{}
+\DoxyCodeLine{\ \ const\ info\ =\ await\ SocksClient.createConnection(options);}
+\DoxyCodeLine{\ \ console.log(info);}
+\DoxyCodeLine{\ \ /*}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ socket:\ <Socket\ ...>,\ \ //\ Raw\ net.Socket}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ */}
+\DoxyCodeLine{\ \ /\ <Socket\ ...>\ \ (this\ is\ a\ raw\ net.Socket\ that\ is\ established\ to\ the\ destination\ host\ through\ the\ given\ proxy\ server)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\}\ catch\ (err)\ \{}
+\DoxyCodeLine{\ \ //\ Handle\ error...}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Promise}
+\DoxyCodeLine{SocksClient.createConnection(options)}
+\DoxyCodeLine{.then(info\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(info);}
+\DoxyCodeLine{\ \ /*}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ socket:\ <Socket\ ...>,\ \ //\ Raw\ net.Socket}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ */}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{.catch(err\ =>\ \{}
+\DoxyCodeLine{\ \ //\ Handle\ error...}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Callback}
+\DoxyCodeLine{SocksClient.createConnection(options,\ (err,\ info)\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (!err)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(info);}
+\DoxyCodeLine{\ \ /*}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ socket:\ <Socket\ ...>,\ \ //\ Raw\ net.Socket}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ */}
+\DoxyCodeLine{\ \ \}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ //\ Handle\ error...}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3572}{}\doxysubsection{\texorpdfstring{Class Method\+: Socks\+Client.\+create\+Connection\+Chain(options\mbox{[}, callback\mbox{]})}{Class Method\+: Socks\+Client.\+create\+Connection\+Chain(options\mbox{[}, callback\mbox{]})}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3572}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} \{ Socks\+Client\+Chain\+Options \} -\/ An object describing a list of SOCKS proxies to use, the command to send and establish, and the destination host to connect to.
+\item {\ttfamily callback} \{ Function \} -\/ Optional callback function that is called when the proxy connection chain is established, or an error occurs.
+\item {\ttfamily returns} \{ Promise \} -\/ A Promise is returned that is resolved when the proxy connection chain is established, or rejected when an error occurs.
+\end{DoxyItemize}
+
+Creates a new proxy connection chain through a list of at least two SOCKS proxies to the given destination host. This factory method supports callbacks and promises for async flow control.
+
+{\bfseries{Note\+:}} If a callback function is provided, the promise will always resolve regardless of an error occurring. Please be sure to exclusively use either promises or callbacks when using this factory function.
+
+{\bfseries{Note\+:}} At least two proxies must be provided for the chain to be established.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ options\ =\ \{}
+\DoxyCodeLine{\ \ proxies:\ [\ //\ The\ chain\ order\ is\ the\ order\ in\ the\ proxies\ array,\ meaning\ the\ last\ proxy\ will\ establish\ a\ connection\ to\ the\ destination.}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ host:\ '159.203.75.235',\ //\ ipv4,\ ipv6,\ or\ hostname}
+\DoxyCodeLine{\ \ \ \ \ \ port:\ 1081,}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 5}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ host:\ '104.131.124.203',\ //\ ipv4,\ ipv6,\ or\ hostname}
+\DoxyCodeLine{\ \ \ \ \ \ port:\ 1081,}
+\DoxyCodeLine{\ \ \ \ \ \ type:\ 5}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ command:\ 'connect',\ //\ Only\ connect\ is\ supported\ in\ chaining\ mode.}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ destination:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ '192.30.253.113',\ //\ ipv4,\ ipv6,\ hostname}
+\DoxyCodeLine{\ \ \ \ port:\ 80}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3573}{}\doxysubsection{\texorpdfstring{Class Method\+: Socks\+Client.\+create\+UDPFrame(details)}{Class Method\+: Socks\+Client.\+create\+UDPFrame(details)}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3573}
+
+\begin{DoxyItemize}
+\item {\ttfamily details} \{ Socks\+UDPFrame\+Details \} -\/ An object containing the remote host, frame number, and frame data to use when creating a SOCKS UDP frame packet.
+\item {\ttfamily returns} \{ Buffer \} -\/ A Buffer containing all of the UDP frame data.
+\end{DoxyItemize}
+
+Creates a SOCKS UDP frame relay packet that is sent and received via a SOCKS proxy when using the associate command for UDP packet forwarding.
+
+{\bfseries{Socks\+UDPFrame\+Details}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ frameNumber:\ 0,\ //\ The\ frame\ number\ (used\ for\ breaking\ up\ larger\ packets)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ remoteHost:\ \{\ //\ The\ remote\ host\ to\ have\ the\ proxy\ send\ data\ to,\ or\ the\ remote\ host\ that\ send\ this\ data.}
+\DoxyCodeLine{\ \ \ \ host:\ '1.2.3.4',}
+\DoxyCodeLine{\ \ \ \ port:\ 1234}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ data:\ <Buffer\ 01\ 02\ 03\ 04...>\ //\ A\ Buffer\ instance\ of\ data\ to\ include\ in\ the\ packet\ (actual\ data\ sent\ to\ the\ remote\ host)}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{interface\ SocksUDPFrameDetails\ \{}
+\DoxyCodeLine{\ \ //\ The\ frame\ number\ of\ the\ packet.}
+\DoxyCodeLine{\ \ frameNumber?:\ number;}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ The\ remote\ host.}
+\DoxyCodeLine{\ \ remoteHost:\ SocksRemoteHost;}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ The\ packet\ data.}
+\DoxyCodeLine{\ \ data:\ Buffer;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3574}{}\doxysubsection{\texorpdfstring{Class Method\+: Socks\+Client.\+parse\+UDPFrame(data)}{Class Method\+: Socks\+Client.\+parse\+UDPFrame(data)}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3574}
+
+\begin{DoxyItemize}
+\item {\ttfamily data} \{ Buffer \} -\/ A Buffer instance containing SOCKS UDP frame data to parse.
+\item {\ttfamily returns} \{ Socks\+UDPFrame\+Details \} -\/ An object containing the remote host, frame number, and frame data of the SOCKS UDP frame.
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ frame\ =\ SocksClient.parseUDPFrame(data);}
+\DoxyCodeLine{console.log(frame);}
+\DoxyCodeLine{/*}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ frameNumber:\ 0,}
+\DoxyCodeLine{\ \ remoteHost:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ '1.2.3.4',}
+\DoxyCodeLine{\ \ \ \ port:\ 1234}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ data:\ <Buffer\ 01\ 02\ 03\ 04\ ...>}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{*/}
+
+\end{DoxyCode}
+
+
+Parses a Buffer instance and returns the parsed Socks\+UDPFrame\+Details object.\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3575}{}\doxysection{\texorpdfstring{Event\+: \textquotesingle{}error\textquotesingle{}}{Event\+: \textquotesingle{}error\textquotesingle{}}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3575}
+
+\begin{DoxyItemize}
+\item {\ttfamily err} \{ Socks\+Client\+Error \} -\/ An Error object containing an error message and the original Socks\+Client\+Options.
+\end{DoxyItemize}
+
+This event is emitted if an error occurs when trying to establish the proxy connection.\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3576}{}\doxysection{\texorpdfstring{Event\+: \textquotesingle{}bound\textquotesingle{}}{Event\+: \textquotesingle{}bound\textquotesingle{}}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3576}
+
+\begin{DoxyItemize}
+\item {\ttfamily info} \{ Socks\+Client\+Bound\+Event \} An object containing a Socket and Socks\+Remote\+Host info.
+\end{DoxyItemize}
+
+This event is emitted when using the BIND command on a remote SOCKS proxy server. This event indicates the proxy server is now listening for incoming connections on a specified port.
+
+{\bfseries{Socks\+Client\+Bound\+Event}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ socket:\ net.Socket,\ //\ The\ underlying\ raw\ Socket}
+\DoxyCodeLine{\ \ remoteHost:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ '1.2.3.4',\ //\ The\ remote\ host\ that\ is\ listening\ (usually\ the\ proxy\ itself)}
+\DoxyCodeLine{\ \ \ \ port:\ 4444\ //\ The\ remote\ port\ the\ proxy\ is\ listening\ on\ for\ incoming\ connections\ (when\ using\ BIND).}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3577}{}\doxysection{\texorpdfstring{Event\+: \textquotesingle{}established\textquotesingle{}}{Event\+: \textquotesingle{}established\textquotesingle{}}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3577}
+
+\begin{DoxyItemize}
+\item {\ttfamily info} \{ Socks\+Client\+Established\+Event \} An object containing a Socket and Socks\+Remote\+Host info.
+\end{DoxyItemize}
+
+This event is emitted when the following conditions are met\+:
+\begin{DoxyEnumerate}
+\item When using the CONNECT command, and a proxy connection has been established to the remote host.
+\item When using the BIND command, and an incoming connection has been accepted by the proxy and a TCP relay has been established.
+\item When using the ASSOCIATE command, and a UDP relay has been established.
+\end{DoxyEnumerate}
+
+When using BIND, \textquotesingle{}bound\textquotesingle{} is first emitted to indicate the SOCKS server is waiting for an incoming connection, and provides the remote port the SOCKS server is listening on.
+
+When using ASSOCIATE, \textquotesingle{}established\textquotesingle{} is emitted with the remote UDP port the SOCKS server is accepting UDP frame packets on.
+
+{\bfseries{Socks\+Client\+Established\+Event}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ socket:\ net.Socket,\ //\ The\ underlying\ raw\ Socket}
+\DoxyCodeLine{\ \ remoteHost:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ '1.2.3.4',\ //\ The\ remote\ host\ that\ is\ listening\ (usually\ the\ proxy\ itself)}
+\DoxyCodeLine{\ \ \ \ port:\ 52738\ //\ The\ remote\ port\ the\ proxy\ is\ listening\ on\ for\ incoming\ connections\ (when\ using\ BIND).}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3578}{}\doxysection{\texorpdfstring{client.\+connect()}{client.\+connect()}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3578}
+Starts connecting to the remote SOCKS proxy server to establish a proxy connection to the destination host.\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3579}{}\doxysection{\texorpdfstring{client.\+socks\+Client\+Options}{client.\+socks\+Client\+Options}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3579}
+
+\begin{DoxyItemize}
+\item {\ttfamily returns} \{ Socks\+Client\+Options \} The options that were passed to the Socks\+Client.
+\end{DoxyItemize}
+
+Gets the options that were passed to the Socks\+Client when it was created.
+
+{\bfseries{Socks\+Client\+Error}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{\ //\ Subclassed\ from\ Error.}
+\DoxyCodeLine{\ \ message:\ 'An\ error\ has\ occurred',}
+\DoxyCodeLine{\ \ options:\ \{}
+\DoxyCodeLine{\ \ \ \ //\ SocksClientOptions}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3580}{}\doxysection{\texorpdfstring{Further Reading\+:}{Further Reading\+:}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3580}
+Please read the SOCKS 5 specifications for more information on how to use BIND and Associate. \href{http://www.ietf.org/rfc/rfc1928.txt}{\texttt{ http\+://www.\+ietf.\+org/rfc/rfc1928.\+txt}}\hypertarget{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3581}{}\doxysection{\texorpdfstring{License}{License}}\label{md_backend_2node__modules_2socks_2_r_e_a_d_m_e_autotoc_md3581}
+This work is licensed under the \href{http://en.wikipedia.org/wiki/MIT_License}{\texttt{ MIT license}}. 

@@ -1,0 +1,39 @@
+\chapter{infer-\/owner}
+\hypertarget{md_backend_2node__modules_2infer-owner_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2infer-owner_2_r_e_a_d_m_e}\index{infer-\/owner@{infer-\/owner}}
+\label{md_backend_2node__modules_2infer-owner_2_r_e_a_d_m_e_autotoc_md1711}%
+\Hypertarget{md_backend_2node__modules_2infer-owner_2_r_e_a_d_m_e_autotoc_md1711}%
+ Infer the owner of a path based on the owner of its nearest existing parent\hypertarget{md_backend_2node__modules_2infer-owner_2_r_e_a_d_m_e_autotoc_md1712}{}\doxysection{\texorpdfstring{USAGE}{USAGE}}\label{md_backend_2node__modules_2infer-owner_2_r_e_a_d_m_e_autotoc_md1712}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ inferOwner\ =\ require('infer-\/owner')}
+\DoxyCodeLine{}
+\DoxyCodeLine{inferOwner('/some/cache/folder/file').then(owner\ =>\ \{}
+\DoxyCodeLine{\ \ //\ owner\ is\ \{uid,\ gid\}\ that\ should\ be\ attached\ to}
+\DoxyCodeLine{\ \ //\ the\ /some/cache/folder/file,\ based\ on\ ownership}
+\DoxyCodeLine{\ \ //\ of\ /some/cache/folder,\ /some/cache,\ /some,\ or\ /,}
+\DoxyCodeLine{\ \ //\ whichever\ is\ the\ first\ to\ exist}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ same,\ but\ not\ async}
+\DoxyCodeLine{const\ owner\ =\ inferOwner.sync('/some/cache/folder/file')}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ results\ are\ cached!\ \ to\ reset\ the\ cache\ (eg,\ to\ change}
+\DoxyCodeLine{//\ permissions\ for\ whatever\ reason),\ do\ this:}
+\DoxyCodeLine{inferOwner.clearCache()}
+
+\end{DoxyCode}
+
+
+This module endeavors to be as performant as possible. Parallel requests for ownership of the same path will only stat the directories one time.\hypertarget{md_backend_2node__modules_2infer-owner_2_r_e_a_d_m_e_autotoc_md1713}{}\doxysection{\texorpdfstring{API}{API}}\label{md_backend_2node__modules_2infer-owner_2_r_e_a_d_m_e_autotoc_md1713}
+
+\begin{DoxyItemize}
+\item {\ttfamily infer\+Owner(path) -\/\texorpdfstring{$>$}{>} Promise\texorpdfstring{$<$}{<}\{ uid, gid \}\texorpdfstring{$>$}{>}}
+
+If the path exists, return its uid and gid. If it does not, look to its parent, then its grandparent, and so on.
+\item {\ttfamily infer\+Owner(path) -\/\texorpdfstring{$>$}{>} \{ uid, gid \}}
+
+Sync form of {\ttfamily infer\+Owner(path)}.
+\item {\ttfamily infer\+Owner.\+clear\+Cache()}
+
+Delete all cached ownership information and in-\/flight tracking. 
+\end{DoxyItemize}

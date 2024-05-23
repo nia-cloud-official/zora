@@ -1,0 +1,896 @@
+.TH "gyp.input" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gyp.input
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBDependencyGraphNode\fP"
+.br
+.ti -1c
+.RI "class \fBParallelProcessingError\fP"
+.br
+.ti -1c
+.RI "class \fBParallelState\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBIsPathSection\fP (section)"
+.br
+.ti -1c
+.RI "\fBGetIncludedBuildFiles\fP (build_file_path, aux_data, included=None)"
+.br
+.ti -1c
+.RI "\fBCheckedEval\fP (file_contents)"
+.br
+.ti -1c
+.RI "\fBCheckNode\fP (node, keypath)"
+.br
+.ti -1c
+.RI "\fBLoadOneBuildFile\fP (build_file_path, data, aux_data, includes, is_target, check)"
+.br
+.ti -1c
+.RI "\fBLoadBuildFileIncludesIntoDict\fP (subdict, subdict_path, data, aux_data, includes, check)"
+.br
+.ti -1c
+.RI "\fBLoadBuildFileIncludesIntoList\fP (sublist, sublist_path, data, aux_data, check)"
+.br
+.ti -1c
+.RI "\fBProcessToolsetsInDict\fP (data)"
+.br
+.ti -1c
+.RI "\fBLoadTargetBuildFile\fP (build_file_path, data, aux_data, variables, includes, depth, check, load_dependencies)"
+.br
+.ti -1c
+.RI "\fBCallLoadTargetBuildFile\fP (global_flags, build_file_path, variables, includes, depth, check, generator_input_info)"
+.br
+.ti -1c
+.RI "\fBLoadTargetBuildFilesParallel\fP (build_files, data, variables, includes, depth, check, generator_input_info)"
+.br
+.ti -1c
+.RI "\fBFindEnclosingBracketGroup\fP (input_str)"
+.br
+.ti -1c
+.RI "\fBIsStrCanonicalInt\fP (string)"
+.br
+.ti -1c
+.RI "\fBFixupPlatformCommand\fP (cmd)"
+.br
+.ti -1c
+.RI "\fBExpandVariables\fP (input, phase, variables, build_file)"
+.br
+.ti -1c
+.RI "\fBEvalCondition\fP (condition, conditions_key, phase, variables, build_file)"
+.br
+.ti -1c
+.RI "\fBEvalSingleCondition\fP (cond_expr, true_dict, false_dict, phase, variables, build_file)"
+.br
+.ti -1c
+.RI "\fBProcessConditionsInDict\fP (the_dict, phase, variables, build_file)"
+.br
+.ti -1c
+.RI "\fBLoadAutomaticVariablesFromDict\fP (variables, the_dict)"
+.br
+.ti -1c
+.RI "\fBLoadVariablesFromVariablesDict\fP (variables, the_dict, the_dict_key)"
+.br
+.ti -1c
+.RI "\fBProcessVariablesAndConditionsInDict\fP (the_dict, phase, variables_in, build_file, the_dict_key=None)"
+.br
+.ti -1c
+.RI "\fBProcessVariablesAndConditionsInList\fP (the_list, phase, variables, build_file)"
+.br
+.ti -1c
+.RI "\fBBuildTargetsDict\fP (data)"
+.br
+.ti -1c
+.RI "\fBQualifyDependencies\fP (targets)"
+.br
+.ti -1c
+.RI "\fBExpandWildcardDependencies\fP (targets, data)"
+.br
+.ti -1c
+.RI "\fBUnify\fP (items)"
+.br
+.ti -1c
+.RI "\fBRemoveDuplicateDependencies\fP (targets)"
+.br
+.ti -1c
+.RI "\fBFilter\fP (items, item)"
+.br
+.ti -1c
+.RI "\fBRemoveSelfDependencies\fP (targets)"
+.br
+.ti -1c
+.RI "\fBRemoveLinkDependenciesFromNoneTargets\fP (targets)"
+.br
+.ti -1c
+.RI "\fBBuildDependencyList\fP (targets)"
+.br
+.ti -1c
+.RI "\fBVerifyNoGYPFileCircularDependencies\fP (targets)"
+.br
+.ti -1c
+.RI "\fBDoDependentSettings\fP (key, flat_list, targets, dependency_nodes)"
+.br
+.ti -1c
+.RI "\fBAdjustStaticLibraryDependencies\fP (flat_list, targets, dependency_nodes, sort_dependencies)"
+.br
+.ti -1c
+.RI "\fBMakePathRelative\fP (to_file, fro_file, item)"
+.br
+.ti -1c
+.RI "\fBMergeLists\fP (to, fro, to_file, fro_file, is_paths=False, append=True)"
+.br
+.ti -1c
+.RI "\fBMergeDicts\fP (to, fro, to_file, fro_file)"
+.br
+.ti -1c
+.RI "\fBMergeConfigWithInheritance\fP (new_configuration_dict, build_file, target_dict, configuration, visited)"
+.br
+.ti -1c
+.RI "\fBSetUpConfigurations\fP (target, target_dict)"
+.br
+.ti -1c
+.RI "\fBProcessListFiltersInDict\fP (name, the_dict)"
+.br
+.ti -1c
+.RI "\fBProcessListFiltersInList\fP (name, the_list)"
+.br
+.ti -1c
+.RI "\fBValidateTargetType\fP (target, target_dict)"
+.br
+.ti -1c
+.RI "\fBValidateRulesInTarget\fP (target, target_dict, extra_sources_for_rules)"
+.br
+.ti -1c
+.RI "\fBValidateRunAsInTarget\fP (target, target_dict, build_file)"
+.br
+.ti -1c
+.RI "\fBValidateActionsInTarget\fP (target, target_dict, build_file)"
+.br
+.ti -1c
+.RI "\fBTurnIntIntoStrInDict\fP (the_dict)"
+.br
+.ti -1c
+.RI "\fBTurnIntIntoStrInList\fP (the_list)"
+.br
+.ti -1c
+.RI "\fBPruneUnwantedTargets\fP (targets, flat_list, dependency_nodes, root_targets, data)"
+.br
+.ti -1c
+.RI "\fBVerifyNoCollidingTargets\fP (targets)"
+.br
+.ti -1c
+.RI "\fBSetGeneratorGlobals\fP (generator_input_info)"
+.br
+.ti -1c
+.RI "\fBLoad\fP (build_files, variables, includes, depth, generator_input_info, check, circular_check, parallel, root_targets)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "list \fBlinkable_types\fP"
+.br
+.ti -1c
+.RI "list \fBdependency_sections\fP = ['dependencies', 'export_dependent_settings']"
+.br
+.ti -1c
+.RI "list \fBbase_path_sections\fP"
+.br
+.ti -1c
+.RI "\fBpath_sections\fP = set()"
+.br
+.ti -1c
+.RI "dict \fBper_process_data\fP = {}"
+.br
+.ti -1c
+.RI "dict \fBper_process_aux_data\fP = {}"
+.br
+.ti -1c
+.RI "list \fBbase_non_configuration_keys\fP"
+.br
+.ti -1c
+.RI "list \fBnon_configuration_keys\fP = []"
+.br
+.ti -1c
+.RI "list \fBinvalid_configuration_keys\fP"
+.br
+.ti -1c
+.RI "bool \fBmultiple_toolsets\fP = False"
+.br
+.ti -1c
+.RI "\fBgenerator_filelist_paths\fP = None"
+.br
+.ti -1c
+.RI "\fBLBRACKETS\fP = set('{[(')"
+.br
+.ti -1c
+.RI "dict \fBBRACKETS\fP = {'}': '{', ']': '[', ')': '('}"
+.br
+.ti -1c
+.RI "\fBearly_variable_re\fP"
+.br
+.ti -1c
+.RI "\fBlate_variable_re\fP"
+.br
+.ti -1c
+.RI "\fBlatelate_variable_re\fP"
+.br
+.ti -1c
+.RI "dict \fBcached_command_results\fP = {}"
+.br
+.ti -1c
+.RI "int \fBPHASE_EARLY\fP = 0"
+.br
+.ti -1c
+.RI "int \fBPHASE_LATE\fP = 1"
+.br
+.ti -1c
+.RI "int \fBPHASE_LATELATE\fP = 2"
+.br
+.ti -1c
+.RI "dict \fBcached_conditions_asts\fP = {}"
+.br
+.ti -1c
+.RI "\fBexception_re\fP = re\&.compile()"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "gyp\&.input\&.AdjustStaticLibraryDependencies ( flat_list,  targets,  dependency_nodes,  sort_dependencies)"
+
+.PP
+Definition at line \fB2099\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.BuildDependencyList ( targets)"
+
+.PP
+Definition at line \fB1955\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.BuildTargetsDict ( data)"
+
+.PP
+.nf
+Builds a dict mapping fully-qualified target names to their target dicts\&.
+
+|data| is a dict mapping loaded build files by pathname relative to the
+current directory\&.  Values in |data| are build file contents\&.  For each
+|data| value with a 'targets' key, the value of the 'targets' key is taken
+as a list containing target dicts\&.  Each target's fully-qualified name is
+constructed from the pathname of the build file (|data| key) and its
+'target_name' property\&.  These fully-qualified names are used as the keys
+in the returned dict\&.  These keys provide access to the target dicts,
+the dicts in the 'targets' lists\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1453\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.CallLoadTargetBuildFile ( global_flags,  build_file_path,  variables,  includes,  depth,  check,  generator_input_info)"
+
+.PP
+.nf
+Wrapper around LoadTargetBuildFile for parallel processing\&.
+
+ This wrapper is used when LoadTargetBuildFile is executed in
+ a worker process\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB500\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.CheckedEval ( file_contents)"
+
+.PP
+.nf
+Return the eval of a gyp file\&.
+The gyp file is restricted to dictionaries and lists only, and
+repeated keys are not allowed\&.
+Note that this is slower than eval() is\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB172\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.CheckNode ( node,  keypath)"
+
+.PP
+Definition at line \fB188\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.DoDependentSettings ( key,  flat_list,  targets,  dependency_nodes)"
+
+.PP
+Definition at line \fB2067\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.EvalCondition ( condition,  conditions_key,  phase,  variables,  build_file)"
+
+.PP
+.nf
+Returns the dict that should be used or None if the result was
+that nothing should be used\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1125\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.EvalSingleCondition ( cond_expr,  true_dict,  false_dict,  phase,  variables,  build_file)"
+
+.PP
+.nf
+Returns true_dict if cond_expr evaluates to true, and false_dict
+otherwise\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1172\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.ExpandVariables ( input,  phase,  variables,  build_file)"
+
+.PP
+Definition at line \fB759\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.ExpandWildcardDependencies ( targets,  data)"
+
+.PP
+.nf
+Expands dependencies specified as build_file:*\&.
+
+For each target in |targets|, examines sections containing links to other
+targets\&.  If any such section contains a link of the form build_file:*, it
+is taken as a wildcard link, and is expanded to list each target in
+build_file\&.  The |data| dict provides access to build file dicts\&.
+
+Any target that does not wish to be included by wildcard can provide an
+optional 'suppress_wildcard' key in its target dict\&.  When present and
+true, a wildcard dependency link will not include such targets\&.
+
+All dependency names, including the keys to |targets| and the values in each
+dependency list, must be qualified when this function is called\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1528\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.Filter ( items,  item)"
+
+.PP
+.nf
+Removes item from items\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1626\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.FindEnclosingBracketGroup ( input_str)"
+
+.PP
+Definition at line \fB674\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.FixupPlatformCommand ( cmd)"
+
+.PP
+Definition at line \fB745\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.GetIncludedBuildFiles ( build_file_path,  aux_data,  included = \fRNone\fP)"
+
+.PP
+.nf
+Return a list of all build files included into build_file_path\&.
+
+The returned list will contain build_file_path as well as all other files
+that it included, either directly or indirectly\&.  Note that the list may
+contain files that were included into a conditional section that evaluated
+to false and was not merged into build_file_path's dict\&.
+
+aux_data is a dict containing a key for each build file or included build
+file\&.  Those keys provide access to dicts whose 'included' keys contain
+lists of all other files included by the build file\&.
+
+included should be left at its default None value by external callers\&.  It
+is used for recursion\&.
+
+The returned list will not contain any duplicate entries\&.  Each build file
+in the list will be relative to the current directory\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB139\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.IsPathSection ( section)"
+
+.PP
+Definition at line \fB56\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.IsStrCanonicalInt ( string)"
+
+.PP
+.nf
+Returns True if |string| is in its canonical integer form\&.
+
+The canonical form is such that str(int(string)) == string\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB692\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.Load ( build_files,  variables,  includes,  depth,  generator_input_info,  check,  circular_check,  parallel,  root_targets)"
+
+.PP
+Definition at line \fB2974\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.LoadAutomaticVariablesFromDict ( variables,  the_dict)"
+
+.PP
+Definition at line \fB1263\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.LoadBuildFileIncludesIntoDict ( subdict,  subdict_path,  data,  aux_data,  includes,  check)"
+
+.PP
+Definition at line \fB271\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.LoadBuildFileIncludesIntoList ( sublist,  sublist_path,  data,  aux_data,  check)"
+
+.PP
+Definition at line \fB313\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.LoadOneBuildFile ( build_file_path,  data,  aux_data,  includes,  is_target,  check)"
+
+.PP
+Definition at line \fB223\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.LoadTargetBuildFile ( build_file_path,  data,  aux_data,  variables,  includes,  depth,  check,  load_dependencies)"
+
+.PP
+Definition at line \fB362\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.LoadTargetBuildFilesParallel ( build_files,  data,  variables,  includes,  depth,  check,  generator_input_info)"
+
+.PP
+Definition at line \fB607\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.LoadVariablesFromVariablesDict ( variables,  the_dict,  the_dict_key)"
+
+.PP
+Definition at line \fB1271\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.MakePathRelative ( to_file,  fro_file,  item)"
+
+.PP
+Definition at line \fB2190\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.MergeConfigWithInheritance ( new_configuration_dict,  build_file,  target_dict,  configuration,  visited)"
+
+.PP
+Definition at line \fB2415\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.MergeDicts ( to,  fro,  to_file,  fro_file)"
+
+.PP
+Definition at line \fB2301\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.MergeLists ( to,  fro,  to_file,  fro_file,  is_paths = \fRFalse\fP,  append = \fRTrue\fP)"
+
+.PP
+Definition at line \fB2227\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.ProcessConditionsInDict ( the_dict,  phase,  variables,  build_file)"
+
+.PP
+Definition at line \fB1215\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.ProcessListFiltersInDict ( name,  the_dict)"
+
+.PP
+.nf
+Process regular expression and exclusion-based filters on lists\&.
+
+An exclusion list is in a dict key named with a trailing '!', like
+'sources!'\&.  Every item in such a list is removed from the associated
+main list, which in this example, would be 'sources'\&.  Removed items are
+placed into a 'sources_excluded' list in the dict\&.
+
+Regular expression (regex) filters are contained in dict keys named with a
+trailing '/', such as 'sources/' to operate on the 'sources' list\&.  Regex
+filters in a dict take the form:
+'sources/': [ ['exclude', '_(linux|mac|win)\\\\\&.cc$'],
+              ['include', '_mac\\\\\&.cc$'] ],
+The first filter says to exclude all files ending in _linux\&.cc, _mac\&.cc, and
+_win\&.cc\&.  The second filter then includes all files ending in _mac\&.cc that
+are now or were once in the 'sources' list\&.  Items matching an 'exclude'
+filter are subject to the same processing as would occur if they were listed
+by name in an exclusion list (ending in '!')\&.  Items matching an 'include'
+filter are brought back into the main list if previously excluded by an
+exclusion list or exclusion regex filter\&.  Subsequent matching 'exclude'
+patterns can still cause items to be excluded after matching an 'include'\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB2529\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.ProcessListFiltersInList ( name,  the_list)"
+
+.PP
+Definition at line \fB2699\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.ProcessToolsetsInDict ( data)"
+
+.PP
+Definition at line \fB325\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.ProcessVariablesAndConditionsInDict ( the_dict,  phase,  variables_in,  build_file,  the_dict_key = \fRNone\fP)"
+
+.PP
+.nf
+Handle all variable and command expansion and conditional evaluation\&.
+
+This function is the public entry point for all variable expansions and
+conditional evaluations\&.  The variables_in dictionary will not be modified
+by this function\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1299\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.ProcessVariablesAndConditionsInList ( the_list,  phase,  variables,  build_file)"
+
+.PP
+Definition at line \fB1416\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.PruneUnwantedTargets ( targets,  flat_list,  dependency_nodes,  root_targets,  data)"
+
+.PP
+.nf
+Return only the targets that are deep dependencies of |root_targets|\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB2893\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.QualifyDependencies ( targets)"
+
+.PP
+.nf
+Make dependency links fully-qualified relative to the current directory\&.
+
+|targets| is a dict mapping fully-qualified target names to their target
+dicts\&.  For each target in this dict, keys known to contain dependency
+links are examined, and any dependencies referenced will be rewritten
+so that they are fully-qualified and relative to the current directory\&.
+All rewritten dependencies are suitable for use as keys to |targets| or a
+similar dict\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1479\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.RemoveDuplicateDependencies ( targets)"
+
+.PP
+.nf
+Makes sure every dependency appears only once in all targets's dependency
+lists\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1616\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.RemoveLinkDependenciesFromNoneTargets ( targets)"
+
+.PP
+.nf
+Remove dependencies having the 'link_dependency' attribute from the 'none'
+targets\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1651\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.RemoveSelfDependencies ( targets)"
+
+.PP
+.nf
+Remove self dependencies from targets that have the prune_self_dependency
+variable set\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1632\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.SetGeneratorGlobals ( generator_input_info)"
+
+.PP
+Definition at line \fB2956\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.SetUpConfigurations ( target,  target_dict)"
+
+.PP
+Definition at line \fB2443\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.TurnIntIntoStrInDict ( the_dict)"
+
+.PP
+.nf
+Given dict the_dict, recursively converts all integers into strings\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB2862\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.TurnIntIntoStrInList ( the_list)"
+
+.PP
+.nf
+Given list the_list, recursively converts all integers into strings\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB2881\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.Unify ( items)"
+
+.PP
+.nf
+Removes duplicate elements from items, keeping the first element\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1610\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.ValidateActionsInTarget ( target,  target_dict,  build_file)"
+
+.PP
+.nf
+Validates the inputs to the actions in a target\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB2843\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.ValidateRulesInTarget ( target,  target_dict,  extra_sources_for_rules)"
+
+.PP
+.nf
+Ensures that the rules sections in target_dict are valid and consistent,
+and determines which sources they apply to\&.
+
+Arguments:
+target: string, name of target\&.
+target_dict: dict, target spec containing 'rules' and 'sources' lists\&.
+extra_sources_for_rules: a list of keys to scan for rule matches in
+    addition to 'sources'\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB2741\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.ValidateRunAsInTarget ( target,  target_dict,  build_file)"
+
+.PP
+Definition at line \fB2808\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.ValidateTargetType ( target,  target_dict)"
+
+.PP
+.nf
+Ensures the 'type' field on the target is one of the known types\&.
+
+Arguments:
+target: string, name of target\&.
+target_dict: dict, target spec\&.
+
+Raises an exception on error\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB2707\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.VerifyNoCollidingTargets ( targets)"
+
+.PP
+.nf
+Verify that no two targets in the same directory share the same name\&.
+
+Arguments:
+targets: A list of targets in the form 'path/to/file\&.gyp:target_name'\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB2927\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.VerifyNoGYPFileCircularDependencies ( targets)"
+
+.PP
+Definition at line \fB2007\fP of file \fBinput\&.py\fP\&.
+.SH "Variable Documentation"
+.PP 
+.SS "list gyp\&.input\&.base_non_configuration_keys"
+\fBInitial value:\fP
+.nf
+1 =  [
+2     # Sections that must exist inside targets and not configurations\&.
+3     "actions",
+4     "configurations",
+5     "copies",
+6     "default_configuration",
+7     "dependencies",
+8     "dependencies_original",
+9     "libraries",
+10     "postbuilds",
+11     "product_dir",
+12     "product_extension",
+13     "product_name",
+14     "product_prefix",
+15     "rules",
+16     "run_as",
+17     "sources",
+18     "standalone_static_library",
+19     "suppress_wildcard",
+20     "target_name",
+21     "toolset",
+22     "toolsets",
+23     "type",
+24     # Sections that can be found inside targets or configurations, but that
+25     # should not be propagated from targets into their configurations\&.
+26     "variables",
+27 ]
+.PP
+.fi
+
+.PP
+Definition at line \fB85\fP of file \fBinput\&.py\fP\&.
+.SS "list gyp\&.input\&.base_path_sections"
+\fBInitial value:\fP
+.nf
+1 =  [
+2     "destination",
+3     "files",
+4     "include_dirs",
+5     "inputs",
+6     "libraries",
+7     "outputs",
+8     "sources",
+9 ]
+.PP
+.fi
+
+.PP
+Definition at line \fB39\fP of file \fBinput\&.py\fP\&.
+.SS "dict gyp\&.input\&.BRACKETS = {'}': '{', ']': '[', ')': '('}"
+
+.PP
+Definition at line \fB671\fP of file \fBinput\&.py\fP\&.
+.SS "dict gyp\&.input\&.cached_command_results = {}"
+
+.PP
+Definition at line \fB742\fP of file \fBinput\&.py\fP\&.
+.SS "dict gyp\&.input\&.cached_conditions_asts = {}"
+
+.PP
+Definition at line \fB1122\fP of file \fBinput\&.py\fP\&.
+.SS "list gyp\&.input\&.dependency_sections = ['dependencies', 'export_dependent_settings']"
+
+.PP
+Definition at line \fB33\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.early_variable_re"
+\fBInitial value:\fP
+.nf
+1 =  re\&.compile(
+2     r"(?P<replace>(?P<type><(?:(?:!?@?)|\\|)?)"
+3     r"(?P<command_string>[\-a\-zA\-Z0\-9_\&.]+)?"
+4     r"\\((?P<is_array>\\s*\\[?)"
+5     r"(?P<content>\&.*?)(\\]?)\\))"
+6 )
+.PP
+.fi
+
+.PP
+Definition at line \fB717\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.exception_re = re\&.compile()"
+
+.PP
+Definition at line \fB2187\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.generator_filelist_paths = None"
+
+.PP
+Definition at line \fB136\fP of file \fBinput\&.py\fP\&.
+.SS "list gyp\&.input\&.invalid_configuration_keys"
+\fBInitial value:\fP
+.nf
+1 =  [
+2     "actions",
+3     "all_dependent_settings",
+4     "configurations",
+5     "dependencies",
+6     "direct_dependent_settings",
+7     "libraries",
+8     "link_settings",
+9     "sources",
+10     "standalone_static_library",
+11     "target_name",
+12     "type",
+13 ]
+.PP
+.fi
+
+.PP
+Definition at line \fB115\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.late_variable_re"
+\fBInitial value:\fP
+.nf
+1 =  re\&.compile(
+2     r"(?P<replace>(?P<type>>(?:(?:!?@?)|\\|)?)"
+3     r"(?P<command_string>[\-a\-zA\-Z0\-9_\&.]+)?"
+4     r"\\((?P<is_array>\\s*\\[?)"
+5     r"(?P<content>\&.*?)(\\]?)\\))"
+6 )
+.PP
+.fi
+
+.PP
+Definition at line \fB725\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.latelate_variable_re"
+\fBInitial value:\fP
+.nf
+1 =  re\&.compile(
+2     r"(?P<replace>(?P<type>[\\^](?:(?:!?@?)|\\|)?)"
+3     r"(?P<command_string>[\-a\-zA\-Z0\-9_\&.]+)?"
+4     r"\\((?P<is_array>\\s*\\[?)"
+5     r"(?P<content>\&.*?)(\\]?)\\))"
+6 )
+.PP
+.fi
+
+.PP
+Definition at line \fB733\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.LBRACKETS = set('{[(')"
+
+.PP
+Definition at line \fB670\fP of file \fBinput\&.py\fP\&.
+.SS "list gyp\&.input\&.linkable_types"
+\fBInitial value:\fP
+.nf
+1 =  [
+2     "executable",
+3     "shared_library",
+4     "loadable_module",
+5     "mac_kernel_extension",
+6     "windows_driver",
+7 ]
+.PP
+.fi
+
+.PP
+Definition at line \fB24\fP of file \fBinput\&.py\fP\&.
+.SS "bool gyp\&.input\&.multiple_toolsets = False"
+
+.PP
+Definition at line \fB130\fP of file \fBinput\&.py\fP\&.
+.SS "list gyp\&.input\&.non_configuration_keys = []"
+
+.PP
+Definition at line \fB112\fP of file \fBinput\&.py\fP\&.
+.SS "gyp\&.input\&.path_sections = set()"
+
+.PP
+Definition at line \fB48\fP of file \fBinput\&.py\fP\&.
+.SS "dict gyp\&.input\&.per_process_aux_data = {}"
+
+.PP
+Definition at line \fB53\fP of file \fBinput\&.py\fP\&.
+.SS "dict gyp\&.input\&.per_process_data = {}"
+
+.PP
+Definition at line \fB52\fP of file \fBinput\&.py\fP\&.
+.SS "int gyp\&.input\&.PHASE_EARLY = 0"
+
+.PP
+Definition at line \fB754\fP of file \fBinput\&.py\fP\&.
+.SS "int gyp\&.input\&.PHASE_LATE = 1"
+
+.PP
+Definition at line \fB755\fP of file \fBinput\&.py\fP\&.
+.SS "int gyp\&.input\&.PHASE_LATELATE = 2"
+
+.PP
+Definition at line \fB756\fP of file \fBinput\&.py\fP\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

@@ -1,0 +1,271 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="javascript_2connect_example_8md" kind="file" language="Markdown">
+    <compoundname>connectExample.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>socks<sp/>examples</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Example<sp/>for<sp/>SOCKS<sp/>&apos;connect&apos;<sp/>command</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>connect<sp/>command<sp/>is<sp/>the<sp/>most<sp/>common<sp/>use-case<sp/>for<sp/>a<sp/>SOCKS<sp/>proxy.<sp/>This<sp/>establishes<sp/>a<sp/>direct<sp/>connection<sp/>to<sp/>a<sp/>destination<sp/>host<sp/>through<sp/>a<sp/>proxy<sp/>server.<sp/>The<sp/>destination<sp/>host<sp/>only<sp/>has<sp/>knowledge<sp/>of<sp/>the<sp/>proxy<sp/>server<sp/>connecting<sp/>to<sp/>it<sp/>and<sp/>does<sp/>not<sp/>know<sp/>about<sp/>the<sp/>origin<sp/>client<sp/>(you).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Origin<sp/>Client<sp/>(you)<sp/>&lt;-&gt;<sp/>Proxy<sp/>Server<sp/>&lt;-&gt;<sp/>Destination<sp/>Server**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">In<sp/>this<sp/>example,<sp/>we<sp/>are<sp/>connecting<sp/>to<sp/>a<sp/>web<sp/>server<sp/>on<sp/>port<sp/>80,<sp/>and<sp/>sending<sp/>a<sp/>very<sp/>basic<sp/>HTTP<sp/>request<sp/>to<sp/>receive<sp/>a<sp/>response.<sp/>It&apos;s<sp/>worth<sp/>noting<sp/>that<sp/>there<sp/>are<sp/>many<sp/>socks-http-agents<sp/>that<sp/>can<sp/>be<sp/>used<sp/>with<sp/>the<sp/>node<sp/>http<sp/>module<sp/>(and<sp/>libraries<sp/>such<sp/>as<sp/>request.js)<sp/>to<sp/>make<sp/>this<sp/>easier.<sp/>This<sp/>HTTP<sp/>request<sp/>is<sp/>used<sp/>as<sp/>a<sp/>simple<sp/>example.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>&apos;connect&apos;<sp/>command<sp/>can<sp/>be<sp/>used<sp/>via<sp/>the<sp/>SocksClient.createConnection()<sp/>factory<sp/>function<sp/>as<sp/>well<sp/>as<sp/>by<sp/>creating<sp/>a<sp/>SocksClient<sp/>instance<sp/>and<sp/>using<sp/>event<sp/>handlers.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Using<sp/>createConnection<sp/>with<sp/>async/await</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Since<sp/>SocksClient.createConnection<sp/>returns<sp/>a<sp/>Promise,<sp/>we<sp/>can<sp/>easily<sp/>use<sp/>async/await<sp/>for<sp/>flow<sp/>control.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```typescript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>SocksClient<sp/>=<sp/>require(&apos;socks&apos;).SocksClient;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>options<sp/><sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>proxy:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;104.131.124.203&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>1081,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>type:<sp/>5</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>destination:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;ip-api.com&apos;,<sp/>//<sp/>host<sp/>names<sp/>are<sp/>supported<sp/>with<sp/>SOCKS<sp/>v4a<sp/>and<sp/>SOCKS<sp/>v5.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>80</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>command:<sp/>&apos;connect&apos;</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">async<sp/>function<sp/>start()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>try<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>const<sp/>info<sp/>=<sp/>await<sp/>SocksClient.createConnection(options);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(info.socket);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>&lt;Socket<sp/>...&gt;<sp/><sp/>(this<sp/>is<sp/>a<sp/>raw<sp/>net.Socket<sp/>that<sp/>is<sp/>established<sp/>to<sp/>the<sp/>destination<sp/>host<sp/>through<sp/>the<sp/>given<sp/>proxy<sp/>servers)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>info.socket.write(&apos;GET<sp/>/json<sp/>HTTP/1.1\nHost:<sp/>ip-api.com\n\n&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>info.socket.on(&apos;data&apos;,<sp/>(data)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>console.log(data.toString());<sp/>//<sp/>ip-api.com<sp/>sees<sp/>that<sp/>the<sp/>last<sp/>proxy<sp/>(104.131.124.203)<sp/>is<sp/>connected<sp/>to<sp/>it<sp/>and<sp/>not<sp/>the<sp/>origin<sp/>client<sp/>(you).</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>/*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>HTTP/1.1<sp/>200<sp/>OK</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Access-Control-Allow-Origin:<sp/>*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Content-Type:<sp/>application/json;<sp/>charset=utf-8</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Date:<sp/>Sun,<sp/>24<sp/>Dec<sp/>2017<sp/>03:47:51<sp/>GMT</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Content-Length:<sp/>300</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;as&quot;:&quot;AS14061<sp/>Digital<sp/>Ocean,<sp/>Inc.&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;city&quot;:&quot;Clifton&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;country&quot;:&quot;United<sp/>States&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;countryCode&quot;:&quot;US&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;isp&quot;:&quot;Digital<sp/>Ocean&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;lat&quot;:40.8326,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;lon&quot;:-74.1307,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;org&quot;:&quot;Digital<sp/>Ocean&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;query&quot;:&quot;104.131.124.203&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;region&quot;:&quot;NJ&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;regionName&quot;:&quot;New<sp/>Jersey&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;status&quot;:&quot;success&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;timezone&quot;:&quot;America/New_York&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;zip&quot;:&quot;07014&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}<sp/>catch<sp/>(err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Handle<sp/>errors</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">start();</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Using<sp/>createConnection<sp/>with<sp/>Promises</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```typescript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>SocksClient<sp/>=<sp/>require(&apos;socks&apos;).SocksClient;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>options<sp/><sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>proxy:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>ipaddress:<sp/>&apos;104.131.124.203&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>1081,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>type:<sp/>5</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>destination:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;ip-api.com&apos;,<sp/>//<sp/>host<sp/>names<sp/>are<sp/>supported<sp/>with<sp/>SOCKS<sp/>v4a<sp/>and<sp/>SOCKS<sp/>v5.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>80</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>command:<sp/>&apos;connect&apos;</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">SocksClient.createConnection(options)</highlight></codeline>
+<codeline><highlight class="normal">.then(info<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(info.socket);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>&lt;Socket<sp/>...&gt;<sp/><sp/>(this<sp/>is<sp/>a<sp/>raw<sp/>net.Socket<sp/>that<sp/>is<sp/>established<sp/>to<sp/>the<sp/>destination<sp/>host<sp/>through<sp/>the<sp/>given<sp/>proxy<sp/>servers)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>info.socket.write(&apos;GET<sp/>/json<sp/>HTTP/1.1\nHost:<sp/>ip-api.com\n\n&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>info.socket.on(&apos;data&apos;,<sp/>(data)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(data.toString());<sp/>//<sp/>ip-api.com<sp/>sees<sp/>that<sp/>the<sp/>last<sp/>proxy<sp/>(104.131.124.203)<sp/>is<sp/>connected<sp/>to<sp/>it<sp/>and<sp/>not<sp/>the<sp/>origin<sp/>client<sp/>(you).</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>/*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>HTTP/1.1<sp/>200<sp/>OK</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Access-Control-Allow-Origin:<sp/>*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Content-Type:<sp/>application/json;<sp/>charset=utf-8</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Date:<sp/>Sun,<sp/>24<sp/>Dec<sp/>2017<sp/>03:47:51<sp/>GMT</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Content-Length:<sp/>300</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;as&quot;:&quot;AS14061<sp/>Digital<sp/>Ocean,<sp/>Inc.&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;city&quot;:&quot;Clifton&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;country&quot;:&quot;United<sp/>States&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;countryCode&quot;:&quot;US&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;isp&quot;:&quot;Digital<sp/>Ocean&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;lat&quot;:40.8326,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;lon&quot;:-74.1307,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;org&quot;:&quot;Digital<sp/>Ocean&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;query&quot;:&quot;104.131.124.203&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;region&quot;:&quot;NJ&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;regionName&quot;:&quot;New<sp/>Jersey&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;status&quot;:&quot;success&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;timezone&quot;:&quot;America/New_York&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;zip&quot;:&quot;07014&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">.catch(err<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>handle<sp/>errors</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Using<sp/>createConnection<sp/>with<sp/>callbacks</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">SocksClient.createConnection()<sp/>optionally<sp/>accepts<sp/>a<sp/>callback<sp/>function<sp/>as<sp/>a<sp/>second<sp/>parameter.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Note:**<sp/>If<sp/>a<sp/>callback<sp/>function<sp/>is<sp/>provided,<sp/>a<sp/>Promise<sp/>is<sp/>still<sp/>returned<sp/>from<sp/>the<sp/>function,<sp/>but<sp/>the<sp/>promise<sp/>will<sp/>always<sp/>resolve<sp/>regardless<sp/>of<sp/>if<sp/>there<sp/>was<sp/>en<sp/>error.<sp/>(tldr:<sp/>Do<sp/>not<sp/>mix<sp/>callbacks<sp/>and<sp/>Promises).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```typescript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>SocksClient<sp/>=<sp/>require(&apos;socks&apos;).SocksClient;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>options<sp/><sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>proxy:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>ipaddress:<sp/>&apos;104.131.124.203&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>1081,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>type:<sp/>5</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>destination:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;ip-api.com&apos;,<sp/>//<sp/>host<sp/>names<sp/>are<sp/>supported<sp/>with<sp/>SOCKS<sp/>v4a<sp/>and<sp/>SOCKS<sp/>v5.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>80</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>command:<sp/>&apos;connect&apos;</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">SocksClient.createConnection(options,<sp/>(err,<sp/>info)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>handle<sp/>errors</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}<sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(info.socket);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>&lt;Socket<sp/>...&gt;<sp/><sp/>(this<sp/>is<sp/>a<sp/>raw<sp/>net.Socket<sp/>that<sp/>is<sp/>established<sp/>to<sp/>the<sp/>destination<sp/>host<sp/>through<sp/>the<sp/>given<sp/>proxy<sp/>servers)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>info.socket.write(&apos;GET<sp/>/json<sp/>HTTP/1.1\nHost:<sp/>ip-api.com\n\n&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>info.socket.on(&apos;data&apos;,<sp/>(data)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>console.log(data.toString());<sp/>//<sp/>ip-api.com<sp/>sees<sp/>that<sp/>the<sp/>last<sp/>proxy<sp/>(104.131.124.203)<sp/>is<sp/>connected<sp/>to<sp/>it<sp/>and<sp/>not<sp/>the<sp/>origin<sp/>client<sp/>(you).</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>/*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>HTTP/1.1<sp/>200<sp/>OK</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Access-Control-Allow-Origin:<sp/>*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Content-Type:<sp/>application/json;<sp/>charset=utf-8</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Date:<sp/>Sun,<sp/>24<sp/>Dec<sp/>2017<sp/>03:47:51<sp/>GMT</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Content-Length:<sp/>300</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;as&quot;:&quot;AS14061<sp/>Digital<sp/>Ocean,<sp/>Inc.&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;city&quot;:&quot;Clifton&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;country&quot;:&quot;United<sp/>States&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;countryCode&quot;:&quot;US&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;isp&quot;:&quot;Digital<sp/>Ocean&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;lat&quot;:40.8326,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;lon&quot;:-74.1307,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;org&quot;:&quot;Digital<sp/>Ocean&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;query&quot;:&quot;104.131.124.203&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;region&quot;:&quot;NJ&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;regionName&quot;:&quot;New<sp/>Jersey&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;status&quot;:&quot;success&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;timezone&quot;:&quot;America/New_York&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;zip&quot;:&quot;07014&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Using<sp/>event<sp/>handlers</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">SocksClient<sp/>also<sp/>supports<sp/>instance<sp/>creation<sp/>of<sp/>a<sp/>SocksClient.<sp/>This<sp/>allows<sp/>for<sp/>event<sp/>based<sp/>flow<sp/>control.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```typescript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>SocksClient<sp/>=<sp/>require(&apos;socks&apos;).SocksClient;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>options<sp/><sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>proxy:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>ipaddress:<sp/>&apos;104.131.124.203&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>1081,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>type:<sp/>5</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>destination:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;ip-api.com&apos;,<sp/>//<sp/>host<sp/>names<sp/>are<sp/>supported<sp/>with<sp/>SOCKS<sp/>v4a<sp/>and<sp/>SOCKS<sp/>v5.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>80</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>command:<sp/>&apos;connect&apos;</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>client<sp/>=<sp/>new<sp/>SocksClient(options);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">client.on(&apos;established&apos;,<sp/>(info)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(info.socket);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>&lt;Socket<sp/>...&gt;<sp/><sp/>(this<sp/>is<sp/>a<sp/>raw<sp/>net.Socket<sp/>that<sp/>is<sp/>established<sp/>to<sp/>the<sp/>destination<sp/>host<sp/>through<sp/>the<sp/>given<sp/>proxy<sp/>servers)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>info.socket.write(&apos;GET<sp/>/json<sp/>HTTP/1.1\nHost:<sp/>ip-api.com\n\n&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>info.socket.on(&apos;data&apos;,<sp/>(data)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(data.toString());<sp/>//<sp/>ip-api.com<sp/>sees<sp/>that<sp/>the<sp/>last<sp/>proxy<sp/>(104.131.124.203)<sp/>is<sp/>connected<sp/>to<sp/>it<sp/>and<sp/>not<sp/>the<sp/>origin<sp/>client<sp/>(you).</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>/*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>HTTP/1.1<sp/>200<sp/>OK</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Access-Control-Allow-Origin:<sp/>*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Content-Type:<sp/>application/json;<sp/>charset=utf-8</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Date:<sp/>Sun,<sp/>24<sp/>Dec<sp/>2017<sp/>03:47:51<sp/>GMT</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Content-Length:<sp/>300</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;as&quot;:&quot;AS14061<sp/>Digital<sp/>Ocean,<sp/>Inc.&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;city&quot;:&quot;Clifton&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;country&quot;:&quot;United<sp/>States&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;countryCode&quot;:&quot;US&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;isp&quot;:&quot;Digital<sp/>Ocean&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;lat&quot;:40.8326,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;lon&quot;:-74.1307,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;org&quot;:&quot;Digital<sp/>Ocean&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;query&quot;:&quot;104.131.124.203&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;region&quot;:&quot;NJ&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;regionName&quot;:&quot;New<sp/>Jersey&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;status&quot;:&quot;success&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;timezone&quot;:&quot;America/New_York&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;zip&quot;:&quot;07014&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Failed<sp/>to<sp/>establish<sp/>proxy<sp/>connection<sp/>to<sp/>destination.</highlight></codeline>
+<codeline><highlight class="normal">client.on(&apos;error&apos;,<sp/>()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Handle<sp/>errors</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/socks/docs/examples/javascript/connectExample.md"/>
+  </compounddef>
+</doxygen>

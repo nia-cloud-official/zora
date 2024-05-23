@@ -1,0 +1,213 @@
+.TH "gyp.MSVSSettings_test.TestSequenceFunctions" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gyp.MSVSSettings_test.TestSequenceFunctions
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits unittest\&.TestCase\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBsetUp\fP (self)"
+.br
+.ti -1c
+.RI "\fBtestValidateMSVSSettings_tool_names\fP (self)"
+.br
+.ti -1c
+.RI "\fBtestValidateMSVSSettings_settings\fP (self)"
+.br
+.ti -1c
+.RI "\fBtestValidateMSBuildSettings_settings\fP (self)"
+.br
+.ti -1c
+.RI "\fBtestConvertToMSBuildSettings_empty\fP (self)"
+.br
+.ti -1c
+.RI "\fBtestConvertToMSBuildSettings_minimal\fP (self)"
+.br
+.ti -1c
+.RI "\fBtestConvertToMSBuildSettings_warnings\fP (self)"
+.br
+.ti -1c
+.RI "\fBtestConvertToMSBuildSettings_full_synthetic\fP (self)"
+.br
+.ti -1c
+.RI "\fBtestConvertToMSBuildSettings_actual\fP (self)"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBstderr\fP"
+.br
+.ti -1c
+.RI "\fBmaxDiff\fP"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fB_ExpectedWarnings\fP (self, expected)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line \fB15\fP of file \fBMSVSSettings_test\&.py\fP\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "gyp\&.MSVSSettings_test\&.TestSequenceFunctions\&._ExpectedWarnings ( self,  expected)\fR [protected]\fP"
+
+.PP
+.nf
+Compares recorded lines to expected warnings\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB19\fP of file \fBMSVSSettings_test\&.py\fP\&.
+.SS "gyp\&.MSVSSettings_test\&.TestSequenceFunctions\&.setUp ( self)"
+
+.PP
+Definition at line \fB16\fP of file \fBMSVSSettings_test\&.py\fP\&.
+.SS "gyp\&.MSVSSettings_test\&.TestSequenceFunctions\&.testConvertToMSBuildSettings_actual ( self)"
+
+.PP
+.nf
+Tests the conversion of an actual project\&.
+
+A VS2008 project with most of the options defined was created through the
+VS2008 IDE\&.  It was then converted to VS2010\&.  The tool settings found in
+the \&.vcproj and \&.vcxproj files were converted to the two dictionaries
+msvs_settings and expected_msbuild_settings\&.
+
+Note that for many settings, the VS2010 converter adds macros like
+%(AdditionalIncludeDirectories) to make sure than inherited values are
+included\&.  Since the Gyp projects we generate do not use inheritance,
+we removed these macros\&.  They were:
+ClCompile:
+    AdditionalIncludeDirectories:  ';%(AdditionalIncludeDirectories)'
+    AdditionalOptions:  ' %(AdditionalOptions)'
+    AdditionalUsingDirectories:  ';%(AdditionalUsingDirectories)'
+    DisableSpecificWarnings: ';%(DisableSpecificWarnings)',
+    ForcedIncludeFiles:  ';%(ForcedIncludeFiles)',
+    ForcedUsingFiles:  ';%(ForcedUsingFiles)',
+    PreprocessorDefinitions:  ';%(PreprocessorDefinitions)',
+    UndefinePreprocessorDefinitions:
+        ';%(UndefinePreprocessorDefinitions)',
+Link:
+    AdditionalDependencies:  ';%(AdditionalDependencies)',
+    AdditionalLibraryDirectories:  ';%(AdditionalLibraryDirectories)',
+    AdditionalManifestDependencies:
+        ';%(AdditionalManifestDependencies)',
+    AdditionalOptions:  ' %(AdditionalOptions)',
+    AddModuleNamesToAssembly:  ';%(AddModuleNamesToAssembly)',
+    AssemblyLinkResource:  ';%(AssemblyLinkResource)',
+    DelayLoadDLLs:  ';%(DelayLoadDLLs)',
+    EmbedManagedResourceFile:  ';%(EmbedManagedResourceFile)',
+    ForceSymbolReferences:  ';%(ForceSymbolReferences)',
+    IgnoreSpecificDefaultLibraries:
+        ';%(IgnoreSpecificDefaultLibraries)',
+ResourceCompile:
+    AdditionalIncludeDirectories:  ';%(AdditionalIncludeDirectories)',
+    AdditionalOptions:  ' %(AdditionalOptions)',
+    PreprocessorDefinitions:  ';%(PreprocessorDefinitions)',
+Manifest:
+    AdditionalManifestFiles:  ';%(AdditionalManifestFiles)',
+    AdditionalOptions:  ' %(AdditionalOptions)',
+    InputResourceManifests:  ';%(InputResourceManifests)',
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1143\fP of file \fBMSVSSettings_test\&.py\fP\&.
+.SS "gyp\&.MSVSSettings_test\&.TestSequenceFunctions\&.testConvertToMSBuildSettings_empty ( self)"
+
+.PP
+.nf
+Tests an empty conversion\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB589\fP of file \fBMSVSSettings_test\&.py\fP\&.
+.SS "gyp\&.MSVSSettings_test\&.TestSequenceFunctions\&.testConvertToMSBuildSettings_full_synthetic ( self)"
+
+.PP
+.nf
+Tests conversion of all the MSBuild settings\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB692\fP of file \fBMSVSSettings_test\&.py\fP\&.
+.SS "gyp\&.MSVSSettings_test\&.TestSequenceFunctions\&.testConvertToMSBuildSettings_minimal ( self)"
+
+.PP
+.nf
+Tests a minimal conversion\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB599\fP of file \fBMSVSSettings_test\&.py\fP\&.
+.SS "gyp\&.MSVSSettings_test\&.TestSequenceFunctions\&.testConvertToMSBuildSettings_warnings ( self)"
+
+.PP
+.nf
+Tests conversion that generates warnings\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB631\fP of file \fBMSVSSettings_test\&.py\fP\&.
+.SS "gyp\&.MSVSSettings_test\&.TestSequenceFunctions\&.testValidateMSBuildSettings_settings ( self)"
+
+.PP
+.nf
+Tests that for invalid MSBuild settings\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB298\fP of file \fBMSVSSettings_test\&.py\fP\&.
+.SS "gyp\&.MSVSSettings_test\&.TestSequenceFunctions\&.testValidateMSVSSettings_settings ( self)"
+
+.PP
+.nf
+Tests that for invalid MSVS settings\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB45\fP of file \fBMSVSSettings_test\&.py\fP\&.
+.SS "gyp\&.MSVSSettings_test\&.TestSequenceFunctions\&.testValidateMSVSSettings_tool_names ( self)"
+
+.PP
+.nf
+Tests that only MSVS tool names are allowed\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB26\fP of file \fBMSVSSettings_test\&.py\fP\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "gyp\&.MSVSSettings_test\&.TestSequenceFunctions\&.maxDiff"
+
+.PP
+Definition at line \fB1136\fP of file \fBMSVSSettings_test\&.py\fP\&.
+.SS "gyp\&.MSVSSettings_test\&.TestSequenceFunctions\&.stderr"
+
+.PP
+Definition at line \fB17\fP of file \fBMSVSSettings_test\&.py\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

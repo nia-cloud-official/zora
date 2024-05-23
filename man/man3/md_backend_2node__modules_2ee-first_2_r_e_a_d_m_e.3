@@ -1,0 +1,58 @@
+.TH "md_backend_2node__modules_2ee-first_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2ee-first_2_r_e_a_d_m_e \- EE First 
+.PP
+ \fR\fP \fR\fP \fR\fP \fB\fP \fR\fP \fR\fP
+.PP
+Get the first event in a set of event emitters and event pairs, then clean up after itself\&.
+.SH "Install"
+.PP
+.PP
+.nf
+$ npm install ee\-first
+.fi
+.PP
+.SH "API"
+.PP
+.PP
+.nf
+var first = require('ee\-first')
+.fi
+.PP
+.SS "first(arr, listener)"
+Invoke \fRlistener\fP on the first event from the list specified in \fRarr\fP\&. \fRarr\fP is an array of arrays, with each array in the format \fR[ee, \&.\&.\&.event]\fP\&. \fRlistener\fP will be called only once, the first time any of the given events are emitted\&. If \fRerror\fP is one of the listened events, then if that fires first, the \fRlistener\fP will be given the \fRerr\fP argument\&.
+.PP
+The \fRlistener\fP is invoked as \fRlistener(err, ee, event, args)\fP, where \fRerr\fP is the first argument emitted from an \fRerror\fP event, if applicable; \fRee\fP is the event emitter that fired; \fRevent\fP is the string event name that fired; and \fRargs\fP is an array of the arguments that were emitted on the event\&.
+.PP
+.PP
+.nf
+var ee1 = new EventEmitter()
+var ee2 = new EventEmitter()
+
+first([
+  [ee1, 'close', 'end', 'error'],
+  [ee2, 'error']
+], function (err, ee, event, args) {
+  // listener invoked
+})
+.fi
+.PP
+.SS "\&.cancel()"
+The group of listeners can be cancelled before being invoked and have all the event listeners removed from the underlying event emitters\&.
+.PP
+.PP
+.nf
+var thunk = first([
+  [ee1, 'close', 'end', 'error'],
+  [ee2, 'error']
+], function (err, ee, event, args) {
+  // listener invoked
+})
+
+// cancel and clean up
+thunk\&.cancel()
+.fi
+.PP
+ 

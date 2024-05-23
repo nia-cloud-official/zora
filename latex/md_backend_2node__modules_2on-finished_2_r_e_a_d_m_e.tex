@@ -1,0 +1,102 @@
+\chapter{on-\/finished}
+\hypertarget{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e}\index{on-\/finished@{on-\/finished}}
+\label{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2626}%
+\Hypertarget{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2626}%
+ \href{https://npmjs.org/package/on-finished}{\texttt{ }} \href{https://npmjs.org/package/on-finished}{\texttt{ }} \href{https://nodejs.org/en/download}{\texttt{ }} \href{https://github.com/jshttp/on-finished/actions/workflows/ci.yml}{\texttt{ }} \href{https://coveralls.io/r/jshttp/on-finished?branch=master}{\texttt{ }}
+
+Execute a callback when a HTTP request closes, finishes, or errors.\hypertarget{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2627}{}\doxysection{\texorpdfstring{Install}{Install}}\label{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2627}
+This is a \href{https://nodejs.org/en/}{\texttt{ Node.\+js}} module available through the \href{https://www.npmjs.com/}{\texttt{ npm registry}}. Installation is done using the \href{https://docs.npmjs.com/getting-started/installing-npm-packages-locally}{\texttt{ {\ttfamily npm install} command}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ on-\/finished}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2628}{}\doxysection{\texorpdfstring{API}{API}}\label{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2628}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ onFinished\ =\ require('on-\/finished')}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2629}{}\doxysubsection{\texorpdfstring{on\+Finished(res, listener)}{on\+Finished(res, listener)}}\label{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2629}
+Attach a listener to listen for the response to finish. The listener will be invoked only once when the response finished. If the response finished to an error, the first argument will contain the error. If the response has already finished, the listener will be invoked.
+
+Listening to the end of a response would be used to close things associated with the response, like open files.
+
+Listener is invoked as {\ttfamily listener(err, res)}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{onFinished(res,\ function\ (err,\ res)\ \{}
+\DoxyCodeLine{\ \ //\ clean\ up\ open\ fds,\ etc.}
+\DoxyCodeLine{\ \ //\ err\ contains\ the\ error\ if\ request\ error'd}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2630}{}\doxysubsection{\texorpdfstring{on\+Finished(req, listener)}{on\+Finished(req, listener)}}\label{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2630}
+Attach a listener to listen for the request to finish. The listener will be invoked only once when the request finished. If the request finished to an error, the first argument will contain the error. If the request has already finished, the listener will be invoked.
+
+Listening to the end of a request would be used to know when to continue after reading the data.
+
+Listener is invoked as {\ttfamily listener(err, req)}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ data\ =\ ''}
+\DoxyCodeLine{}
+\DoxyCodeLine{req.setEncoding('utf8')}
+\DoxyCodeLine{req.on('data',\ function\ (str)\ \{}
+\DoxyCodeLine{\ \ data\ +=\ str}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{onFinished(req,\ function\ (err,\ req)\ \{}
+\DoxyCodeLine{\ \ //\ data\ is\ read\ unless\ there\ is\ err}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2631}{}\doxysubsection{\texorpdfstring{on\+Finished.\+is\+Finished(res)}{on\+Finished.\+is\+Finished(res)}}\label{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2631}
+Determine if {\ttfamily res} is already finished. This would be useful to check and not even start certain operations if the response has already finished.\hypertarget{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2632}{}\doxysubsection{\texorpdfstring{on\+Finished.\+is\+Finished(req)}{on\+Finished.\+is\+Finished(req)}}\label{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2632}
+Determine if {\ttfamily req} is already finished. This would be useful to check and not even start certain operations if the request has already finished.\hypertarget{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2633}{}\doxysection{\texorpdfstring{Special Node.\+js requests}{Special Node.\+js requests}}\label{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2633}
+\hypertarget{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2634}{}\doxysubsection{\texorpdfstring{HTTP CONNECT method}{HTTP CONNECT method}}\label{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2634}
+The meaning of the {\ttfamily CONNECT} method from RFC 7231, section 4.\+3.\+6\+:
+
+\begin{quote}
+The CONNECT method requests that the recipient establish a tunnel to the destination origin server identified by the request-\/target and, if successful, thereafter restrict its behavior to blind forwarding of packets, in both directions, until the tunnel is closed. Tunnels are commonly used to create an end-\/to-\/end virtual connection, through one or more proxies, which can then be secured using TLS (Transport Layer Security, \mbox{[}RFC5246\mbox{]}). \end{quote}
+
+
+In Node.\+js, these request objects come from the `\textquotesingle{}connect'\`{} event on the HTTP server.
+
+When this module is used on a HTTP {\ttfamily CONNECT} request, the request is considered "{}finished"{} immediately, {\bfseries{due to limitations in the Node.\+js interface}}. This means if the {\ttfamily CONNECT} request contains a request entity, the request will be considered "{}finished"{} even before it has been read.
+
+There is no such thing as a response object to a {\ttfamily CONNECT} request in Node.\+js, so there is no support for one.\hypertarget{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2635}{}\doxysubsection{\texorpdfstring{HTTP Upgrade request}{HTTP Upgrade request}}\label{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2635}
+The meaning of the {\ttfamily Upgrade} header from RFC 7230, section 6.\+1\+:
+
+\begin{quote}
+The "{}\+Upgrade"{} header field is intended to provide a simple mechanism for transitioning from HTTP/1.\+1 to some other protocol on the same connection. \end{quote}
+
+
+In Node.\+js, these request objects come from the `\textquotesingle{}upgrade'\`{} event on the HTTP server.
+
+When this module is used on a HTTP request with an {\ttfamily Upgrade} header, the request is considered "{}finished"{} immediately, {\bfseries{due to limitations in the Node.\+js interface}}. This means if the {\ttfamily Upgrade} request contains a request entity, the request will be considered "{}finished"{} even before it has been read.
+
+There is no such thing as a response object to a {\ttfamily Upgrade} request in Node.\+js, so there is no support for one.\hypertarget{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2636}{}\doxysection{\texorpdfstring{Example}{Example}}\label{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2636}
+The following code ensures that file descriptors are always closed once the response finishes.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ destroy\ =\ require('destroy')}
+\DoxyCodeLine{var\ fs\ =\ require('fs')}
+\DoxyCodeLine{var\ http\ =\ require('http')}
+\DoxyCodeLine{var\ onFinished\ =\ require('on-\/finished')}
+\DoxyCodeLine{}
+\DoxyCodeLine{http.createServer(function\ onRequest\ (req,\ res)\ \{}
+\DoxyCodeLine{\ \ var\ stream\ =\ fs.createReadStream('package.json')}
+\DoxyCodeLine{\ \ stream.pipe(res)}
+\DoxyCodeLine{\ \ onFinished(res,\ function\ ()\ \{}
+\DoxyCodeLine{\ \ \ \ destroy(stream)}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2637}{}\doxysection{\texorpdfstring{License}{License}}\label{md_backend_2node__modules_2on-finished_2_r_e_a_d_m_e_autotoc_md2637}
+\mbox{[}MIT\mbox{]}(LICENSE) 

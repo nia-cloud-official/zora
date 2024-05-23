@@ -1,0 +1,113 @@
+.TH "md_backend_2node__modules_2content-disposition_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2content-disposition_2_r_e_a_d_m_e \- content-disposition 
+.PP
+ \fR\fP \fR\fP \fR\fP \fR\fP \fR\fP
+.PP
+Create and parse HTTP \fRContent-Disposition\fP header
+.SH "Installation"
+.PP
+.PP
+.nf
+$ npm install content\-disposition
+.fi
+.PP
+.SH "API"
+.PP
+.PP
+.nf
+var contentDisposition = require('content\-disposition')
+.fi
+.PP
+.SS "contentDisposition(filename, options)"
+Create an attachment \fRContent-Disposition\fP header value using the given file name, if supplied\&. The \fRfilename\fP is optional and if no file name is desired, but you want to specify \fRoptions\fP, set \fRfilename\fP to \fRundefined\fP\&.
+.PP
+.PP
+.nf
+res\&.setHeader('Content\-Disposition', contentDisposition('∫ maths\&.pdf'))
+.fi
+.PP
+.PP
+\fBnote\fP HTTP headers are of the ISO-8859-1 character set\&. If you are writing this header through a means different from \fRsetHeader\fP in Node\&.js, you'll want to specify the `'binary'` encoding in Node\&.js\&.
+.SS "Options"
+\fRcontentDisposition\fP accepts these properties in the options object\&.
+.SS "fallback"
+If the \fRfilename\fP option is outside ISO-8859-1, then the file name is actually stored in a supplemental field for clients that support Unicode file names and a ISO-8859-1 version of the file name is automatically generated\&.
+.PP
+This specifies the ISO-8859-1 file name to override the automatic generation or disables the generation all together, defaults to \fRtrue\fP\&.
+.PP
+.IP "\(bu" 2
+A string will specify the ISO-8859-1 file name to use in place of automatic generation\&.
+.IP "\(bu" 2
+\fRfalse\fP will disable including a ISO-8859-1 file name and only include the Unicode version (unless the file name is already ISO-8859-1)\&.
+.IP "\(bu" 2
+\fRtrue\fP will enable automatic generation if the file name is outside ISO-8859-1\&.
+.PP
+.PP
+If the \fRfilename\fP option is ISO-8859-1 and this option is specified and has a different value, then the \fRfilename\fP option is encoded in the extended field and this set as the fallback field, even though they are both ISO-8859-1\&.
+.SS "type"
+Specifies the disposition type, defaults to \fR'attachment'\fP\&. This can also be \fR'inline'\fP, or any other value (all values except inline are treated like \fRattachment\fP, but can convey additional information if both parties agree to it)\&. The type is normalized to lower-case\&.
+.SS "contentDisposition\&.parse(string)"
+.PP
+.nf
+var disposition = contentDisposition\&.parse('attachment; filename="EURO rates\&.txt"; filename*=UTF\-8\\'\\'%e2%82%ac%20rates\&.txt')
+.fi
+.PP
+.PP
+Parse a \fRContent-Disposition\fP header string\&. This automatically handles extended ('Unicode') parameters by decoding them and providing them under the standard parameter name\&. This will return an object with the following properties (examples are shown for the string `'attachment; filename='EURO rates\&.txt'; filename*=UTF-8&rsquo;\\'e2%82ac%20rates\&.txt'`):
+.PP
+.IP "\(bu" 2
+\fRtype\fP: The disposition type (always lower case)\&. Example: `'attachment'`
+.IP "\(bu" 2
+\fRparameters\fP: An object of the parameters in the disposition (name of parameter always lower case and extended versions replace non-extended versions)\&. Example: \fR{filename: '€ rates\&.txt'}\fP
+.PP
+.SH "Examples"
+.PP
+.SS "Send a file for download"
+.PP
+.nf
+var contentDisposition = require('content\-disposition')
+var destroy = require('destroy')
+var fs = require('fs')
+var http = require('http')
+var onFinished = require('on\-finished')
+
+var filePath = '/path/to/public/plans\&.pdf'
+
+http\&.createServer(function onRequest (req, res) {
+  // set headers
+  res\&.setHeader('Content\-Type', 'application/pdf')
+  res\&.setHeader('Content\-Disposition', contentDisposition(filePath))
+
+  // send file
+  var stream = fs\&.createReadStream(filePath)
+  stream\&.pipe(res)
+  onFinished(res, function () {
+    destroy(stream)
+  })
+})
+.fi
+.PP
+.SH "Testing"
+.PP
+.PP
+.nf
+$ npm test
+.fi
+.PP
+.SH "References"
+.PP
+.IP "\(bu" 2
+\fRRFC 2616: Hypertext Transfer Protocol -- HTTP/1\&.1\fP
+.IP "\(bu" 2
+\fRRFC 5987: Character Set and Language Encoding for Hypertext Transfer Protocol (HTTP) Header Field Parameters\fP
+.IP "\(bu" 2
+\fRRFC 6266: Use of the Content-Disposition Header Field in the Hypertext Transfer Protocol (HTTP)\fP
+.IP "\(bu" 2
+\fRTest Cases for HTTP Content-Disposition header field (RFC 6266) and the Encodings defined in RFCs 2047, 2231 and 5987\fP
+.PP
+.SH "License"
+.PP
+[MIT](LICENSE) 

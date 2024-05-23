@@ -1,0 +1,260 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2bl_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>bl<sp/>*(BufferList)*</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![Build<sp/>Status](https://api.travis-ci.com/rvagg/bl.svg?branch=master)](https://travis-ci.com/rvagg/bl/)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**A<sp/>Node.js<sp/>Buffer<sp/>list<sp/>collector,<sp/>reader<sp/>and<sp/>streamer<sp/>thingy.**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![NPM](https://nodei.co/npm/bl.svg)](https://nodei.co/npm/bl/)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**bl**<sp/>is<sp/>a<sp/>storage<sp/>object<sp/>for<sp/>collections<sp/>of<sp/>Node<sp/>Buffers,<sp/>exposing<sp/>them<sp/>with<sp/>the<sp/>main<sp/>Buffer<sp/>readable<sp/>API.<sp/>Also<sp/>works<sp/>as<sp/>a<sp/>duplex<sp/>stream<sp/>so<sp/>you<sp/>can<sp/>collect<sp/>buffers<sp/>from<sp/>a<sp/>stream<sp/>that<sp/>emits<sp/>them<sp/>and<sp/>emit<sp/>buffers<sp/>to<sp/>a<sp/>stream<sp/>that<sp/>consumes<sp/>them!</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>original<sp/>buffers<sp/>are<sp/>kept<sp/>intact<sp/>and<sp/>copies<sp/>are<sp/>only<sp/>done<sp/>as<sp/>necessary.<sp/>Any<sp/>reads<sp/>that<sp/>require<sp/>the<sp/>use<sp/>of<sp/>a<sp/>single<sp/>original<sp/>buffer<sp/>will<sp/>return<sp/>a<sp/>slice<sp/>of<sp/>that<sp/>buffer<sp/>only<sp/>(which<sp/>references<sp/>the<sp/>same<sp/>memory<sp/>as<sp/>the<sp/>original<sp/>buffer).<sp/>Reads<sp/>that<sp/>span<sp/>buffers<sp/>perform<sp/>concatenation<sp/>as<sp/>required<sp/>and<sp/>return<sp/>the<sp/>results<sp/>transparently.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>BufferList<sp/>}<sp/>=<sp/>require(&apos;bl&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>bl<sp/>=<sp/>new<sp/>BufferList()</highlight></codeline>
+<codeline><highlight class="normal">bl.append(Buffer.from(&apos;abcd&apos;))</highlight></codeline>
+<codeline><highlight class="normal">bl.append(Buffer.from(&apos;efg&apos;))</highlight></codeline>
+<codeline><highlight class="normal">bl.append(&apos;hi&apos;)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>bl<sp/>will<sp/>also<sp/>accept<sp/>&amp;<sp/>convert<sp/>Strings</highlight></codeline>
+<codeline><highlight class="normal">bl.append(Buffer.from(&apos;j&apos;))</highlight></codeline>
+<codeline><highlight class="normal">bl.append(Buffer.from([<sp/>0x3,<sp/>0x4<sp/>]))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">console.log(bl.length)<sp/>//<sp/>12</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">console.log(bl.slice(0,<sp/>10).toString(&apos;ascii&apos;))<sp/>//<sp/>&apos;abcdefghij&apos;</highlight></codeline>
+<codeline><highlight class="normal">console.log(bl.slice(3,<sp/>10).toString(&apos;ascii&apos;))<sp/>//<sp/>&apos;defghij&apos;</highlight></codeline>
+<codeline><highlight class="normal">console.log(bl.slice(3,<sp/>6).toString(&apos;ascii&apos;))<sp/><sp/>//<sp/>&apos;def&apos;</highlight></codeline>
+<codeline><highlight class="normal">console.log(bl.slice(3,<sp/>8).toString(&apos;ascii&apos;))<sp/><sp/>//<sp/>&apos;defgh&apos;</highlight></codeline>
+<codeline><highlight class="normal">console.log(bl.slice(5,<sp/>10).toString(&apos;ascii&apos;))<sp/>//<sp/>&apos;fghij&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">console.log(bl.indexOf(&apos;def&apos;))<sp/>//<sp/>3</highlight></codeline>
+<codeline><highlight class="normal">console.log(bl.indexOf(&apos;asdf&apos;))<sp/>//<sp/>-1</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>or<sp/>just<sp/>use<sp/>toString!</highlight></codeline>
+<codeline><highlight class="normal">console.log(bl.toString())<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>&apos;abcdefghij\u0003\u0004&apos;</highlight></codeline>
+<codeline><highlight class="normal">console.log(bl.toString(&apos;ascii&apos;,<sp/>3,<sp/>8))<sp/><sp/>//<sp/>&apos;defgh&apos;</highlight></codeline>
+<codeline><highlight class="normal">console.log(bl.toString(&apos;ascii&apos;,<sp/>5,<sp/>10))<sp/>//<sp/>&apos;fghij&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>other<sp/>standard<sp/>Buffer<sp/>readables</highlight></codeline>
+<codeline><highlight class="normal">console.log(bl.readUInt16BE(10))<sp/>//<sp/>0x0304</highlight></codeline>
+<codeline><highlight class="normal">console.log(bl.readUInt16LE(10))<sp/>//<sp/>0x0403</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Give<sp/>it<sp/>a<sp/>callback<sp/>in<sp/>the<sp/>constructor<sp/>and<sp/>use<sp/>it<sp/>just<sp/>like<sp/>**[concat-stream](https://github.com/maxogden/node-concat-stream)**:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>BufferListStream<sp/>}<sp/>=<sp/>require(&apos;bl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>fs<sp/>=<sp/>require(&apos;fs&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">fs.createReadStream(&apos;README.md&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>.pipe(BufferListStream((err,<sp/>data)<sp/>=&gt;<sp/>{<sp/>//<sp/>note<sp/>&apos;new&apos;<sp/>isn&apos;t<sp/>strictly<sp/>required</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>`data`<sp/>is<sp/>a<sp/>complete<sp/>Buffer<sp/>object<sp/>containing<sp/>the<sp/>full<sp/>data</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(data.toString())</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}))</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note<sp/>that<sp/>when<sp/>you<sp/>use<sp/>the<sp/>*callback*<sp/>method<sp/>like<sp/>this,<sp/>the<sp/>resulting<sp/>`data`<sp/>parameter<sp/>is<sp/>a<sp/>concatenation<sp/>of<sp/>all<sp/>`Buffer`<sp/>objects<sp/>in<sp/>the<sp/>list.<sp/>If<sp/>you<sp/>want<sp/>to<sp/>avoid<sp/>the<sp/>overhead<sp/>of<sp/>this<sp/>concatenation<sp/>(in<sp/>cases<sp/>of<sp/>extreme<sp/>performance<sp/>consciousness),<sp/>then<sp/>avoid<sp/>the<sp/>*callback*<sp/>method<sp/>and<sp/>just<sp/>listen<sp/>to<sp/>`&apos;end&apos;`<sp/>instead,<sp/>like<sp/>a<sp/>standard<sp/>Stream.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Or<sp/>to<sp/>fetch<sp/>a<sp/>URL<sp/>using<sp/>[hyperquest](https://github.com/substack/hyperquest)<sp/>(should<sp/>work<sp/>with<sp/>[request](http://github.com/mikeal/request)<sp/>and<sp/>even<sp/>plain<sp/>Node<sp/>http<sp/>too!):</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>hyperquest<sp/>=<sp/>require(&apos;hyperquest&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>BufferListStream<sp/>}<sp/>=<sp/>require(&apos;bl&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>url<sp/>=<sp/>&apos;https://raw.github.com/rvagg/bl/master/README.md&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">hyperquest(url).pipe(BufferListStream((err,<sp/>data)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(data.toString())</highlight></codeline>
+<codeline><highlight class="normal">}))</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Or,<sp/>use<sp/>it<sp/>as<sp/>a<sp/>readable<sp/>stream<sp/>to<sp/>recompose<sp/>a<sp/>list<sp/>of<sp/>Buffers<sp/>to<sp/>an<sp/>output<sp/>source:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>BufferListStream<sp/>}<sp/>=<sp/>require(&apos;bl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>fs<sp/>=<sp/>require(&apos;fs&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>bl<sp/>=<sp/>new<sp/>BufferListStream()</highlight></codeline>
+<codeline><highlight class="normal">bl.append(Buffer.from(&apos;abcd&apos;))</highlight></codeline>
+<codeline><highlight class="normal">bl.append(Buffer.from(&apos;efg&apos;))</highlight></codeline>
+<codeline><highlight class="normal">bl.append(Buffer.from(&apos;hi&apos;))</highlight></codeline>
+<codeline><highlight class="normal">bl.append(Buffer.from(&apos;j&apos;))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">bl.pipe(fs.createWriteStream(&apos;gibberish.txt&apos;))</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>API</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>&lt;a<sp/>href=&quot;#ctor&quot;&gt;&lt;code&gt;&lt;b&gt;new<sp/>BufferList([<sp/>buf<sp/>])&lt;/b&gt;&lt;/code&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>&lt;a<sp/>href=&quot;#isBufferList&quot;&gt;&lt;code&gt;&lt;b&gt;BufferList.isBufferList(obj)&lt;/b&gt;&lt;/code&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>&lt;a<sp/>href=&quot;#length&quot;&gt;&lt;code&gt;bl.&lt;b&gt;length&lt;/b&gt;&lt;/code&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>&lt;a<sp/>href=&quot;#append&quot;&gt;&lt;code&gt;bl.&lt;b&gt;append(buffer)&lt;/b&gt;&lt;/code&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>&lt;a<sp/>href=&quot;#get&quot;&gt;&lt;code&gt;bl.&lt;b&gt;get(index)&lt;/b&gt;&lt;/code&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>&lt;a<sp/>href=&quot;#indexOf&quot;&gt;&lt;code&gt;bl.&lt;b&gt;indexOf(value[,<sp/>byteOffset][,<sp/>encoding])&lt;/b&gt;&lt;/code&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>&lt;a<sp/>href=&quot;#slice&quot;&gt;&lt;code&gt;bl.&lt;b&gt;slice([<sp/>start[,<sp/>end<sp/>]<sp/>])&lt;/b&gt;&lt;/code&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>&lt;a<sp/>href=&quot;#shallowSlice&quot;&gt;&lt;code&gt;bl.&lt;b&gt;shallowSlice([<sp/>start[,<sp/>end<sp/>]<sp/>])&lt;/b&gt;&lt;/code&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>&lt;a<sp/>href=&quot;#copy&quot;&gt;&lt;code&gt;bl.&lt;b&gt;copy(dest,<sp/>[<sp/>destStart,<sp/>[<sp/>srcStart<sp/>[,<sp/>srcEnd<sp/>]<sp/>]<sp/>])&lt;/b&gt;&lt;/code&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>&lt;a<sp/>href=&quot;#duplicate&quot;&gt;&lt;code&gt;bl.&lt;b&gt;duplicate()&lt;/b&gt;&lt;/code&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>&lt;a<sp/>href=&quot;#consume&quot;&gt;&lt;code&gt;bl.&lt;b&gt;consume(bytes)&lt;/b&gt;&lt;/code&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>&lt;a<sp/>href=&quot;#toString&quot;&gt;&lt;code&gt;bl.&lt;b&gt;toString([encoding,<sp/>[<sp/>start,<sp/>[<sp/>end<sp/>]]])&lt;/b&gt;&lt;/code&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>&lt;a<sp/>href=&quot;#readXX&quot;&gt;&lt;code&gt;bl.&lt;b&gt;readDoubleBE()&lt;/b&gt;&lt;/code&gt;,<sp/>&lt;code&gt;bl.&lt;b&gt;readDoubleLE()&lt;/b&gt;&lt;/code&gt;,<sp/>&lt;code&gt;bl.&lt;b&gt;readFloatBE()&lt;/b&gt;&lt;/code&gt;,<sp/>&lt;code&gt;bl.&lt;b&gt;readFloatLE()&lt;/b&gt;&lt;/code&gt;,<sp/>&lt;code&gt;bl.&lt;b&gt;readInt32BE()&lt;/b&gt;&lt;/code&gt;,<sp/>&lt;code&gt;bl.&lt;b&gt;readInt32LE()&lt;/b&gt;&lt;/code&gt;,<sp/>&lt;code&gt;bl.&lt;b&gt;readUInt32BE()&lt;/b&gt;&lt;/code&gt;,<sp/>&lt;code&gt;bl.&lt;b&gt;readUInt32LE()&lt;/b&gt;&lt;/code&gt;,<sp/>&lt;code&gt;bl.&lt;b&gt;readInt16BE()&lt;/b&gt;&lt;/code&gt;,<sp/>&lt;code&gt;bl.&lt;b&gt;readInt16LE()&lt;/b&gt;&lt;/code&gt;,<sp/>&lt;code&gt;bl.&lt;b&gt;readUInt16BE()&lt;/b&gt;&lt;/code&gt;,<sp/>&lt;code&gt;bl.&lt;b&gt;readUInt16LE()&lt;/b&gt;&lt;/code&gt;,<sp/>&lt;code&gt;bl.&lt;b&gt;readInt8()&lt;/b&gt;&lt;/code&gt;,<sp/>&lt;code&gt;bl.&lt;b&gt;readUInt8()&lt;/b&gt;&lt;/code&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>&lt;a<sp/>href=&quot;#ctorStream&quot;&gt;&lt;code&gt;&lt;b&gt;new<sp/>BufferListStream([<sp/>callback<sp/>])&lt;/b&gt;&lt;/code&gt;&lt;/a&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">--------------------------------------------------------</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;ctor&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>new<sp/>BufferList([<sp/>Buffer<sp/>|<sp/>Buffer<sp/>array<sp/>|<sp/>BufferList<sp/>|<sp/>BufferList<sp/>array<sp/>|<sp/>String<sp/>])</highlight></codeline>
+<codeline><highlight class="normal">No<sp/>arguments<sp/>are<sp/>_required_<sp/>for<sp/>the<sp/>constructor,<sp/>but<sp/>you<sp/>can<sp/>initialise<sp/>the<sp/>list<sp/>by<sp/>passing<sp/>in<sp/>a<sp/>single<sp/>`Buffer`<sp/>object<sp/>or<sp/>an<sp/>array<sp/>of<sp/>`Buffer`<sp/>objects.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`new`<sp/>is<sp/>not<sp/>strictly<sp/>required,<sp/>if<sp/>you<sp/>don&apos;t<sp/>instantiate<sp/>a<sp/>new<sp/>object,<sp/>it<sp/>will<sp/>be<sp/>done<sp/>automatically<sp/>for<sp/>you<sp/>so<sp/>you<sp/>can<sp/>create<sp/>a<sp/>new<sp/>instance<sp/>simply<sp/>with:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>BufferList<sp/>}<sp/>=<sp/>require(&apos;bl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>bl<sp/>=<sp/>BufferList()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>equivalent<sp/>to:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>BufferList<sp/>}<sp/>=<sp/>require(&apos;bl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>bl<sp/>=<sp/>new<sp/>BufferList()</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">--------------------------------------------------------</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;isBufferList&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>BufferList.isBufferList(obj)</highlight></codeline>
+<codeline><highlight class="normal">Determines<sp/>if<sp/>the<sp/>passed<sp/>object<sp/>is<sp/>a<sp/>`BufferList`.<sp/>It<sp/>will<sp/>return<sp/>`true`<sp/>if<sp/>the<sp/>passed<sp/>object<sp/>is<sp/>an<sp/>instance<sp/>of<sp/>`BufferList`<sp/>**or**<sp/>`BufferListStream`<sp/>and<sp/>`false`<sp/>otherwise.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">N.B.<sp/>this<sp/>won&apos;t<sp/>return<sp/>`true`<sp/>for<sp/>`BufferList`<sp/>or<sp/>`BufferListStream`<sp/>instances<sp/>created<sp/>by<sp/>versions<sp/>of<sp/>this<sp/>library<sp/>before<sp/>this<sp/>static<sp/>method<sp/>was<sp/>added.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">--------------------------------------------------------</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;length&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>bl.length</highlight></codeline>
+<codeline><highlight class="normal">Get<sp/>the<sp/>length<sp/>of<sp/>the<sp/>list<sp/>in<sp/>bytes.<sp/>This<sp/>is<sp/>the<sp/>sum<sp/>of<sp/>the<sp/>lengths<sp/>of<sp/>all<sp/>of<sp/>the<sp/>buffers<sp/>contained<sp/>in<sp/>the<sp/>list,<sp/>minus<sp/>any<sp/>initial<sp/>offset<sp/>for<sp/>a<sp/>semi-consumed<sp/>buffer<sp/>at<sp/>the<sp/>beginning.<sp/>Should<sp/>accurately<sp/>represent<sp/>the<sp/>total<sp/>number<sp/>of<sp/>bytes<sp/>that<sp/>can<sp/>be<sp/>read<sp/>from<sp/>the<sp/>list.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">--------------------------------------------------------</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;append&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>bl.append(Buffer<sp/>|<sp/>Buffer<sp/>array<sp/>|<sp/>BufferList<sp/>|<sp/>BufferList<sp/>array<sp/>|<sp/>String)</highlight></codeline>
+<codeline><highlight class="normal">`append(buffer)`<sp/>adds<sp/>an<sp/>additional<sp/>buffer<sp/>or<sp/>BufferList<sp/>to<sp/>the<sp/>internal<sp/>list.<sp/>`this`<sp/>is<sp/>returned<sp/>so<sp/>it<sp/>can<sp/>be<sp/>chained.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">--------------------------------------------------------</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;get&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>bl.get(index)</highlight></codeline>
+<codeline><highlight class="normal">`get()`<sp/>will<sp/>return<sp/>the<sp/>byte<sp/>at<sp/>the<sp/>specified<sp/>index.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">--------------------------------------------------------</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;indexOf&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>bl.indexOf(value[,<sp/>byteOffset][,<sp/>encoding])</highlight></codeline>
+<codeline><highlight class="normal">`get()`<sp/>will<sp/>return<sp/>the<sp/>byte<sp/>at<sp/>the<sp/>specified<sp/>index.</highlight></codeline>
+<codeline><highlight class="normal">`indexOf()`<sp/>method<sp/>returns<sp/>the<sp/>first<sp/>index<sp/>at<sp/>which<sp/>a<sp/>given<sp/>element<sp/>can<sp/>be<sp/>found<sp/>in<sp/>the<sp/>BufferList,<sp/>or<sp/>-1<sp/>if<sp/>it<sp/>is<sp/>not<sp/>present.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">--------------------------------------------------------</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;slice&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>bl.slice([<sp/>start,<sp/>[<sp/>end<sp/>]<sp/>])</highlight></codeline>
+<codeline><highlight class="normal">`slice()`<sp/>returns<sp/>a<sp/>new<sp/>`Buffer`<sp/>object<sp/>containing<sp/>the<sp/>bytes<sp/>within<sp/>the<sp/>range<sp/>specified.<sp/>Both<sp/>`start`<sp/>and<sp/>`end`<sp/>are<sp/>optional<sp/>and<sp/>will<sp/>default<sp/>to<sp/>the<sp/>beginning<sp/>and<sp/>end<sp/>of<sp/>the<sp/>list<sp/>respectively.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>the<sp/>requested<sp/>range<sp/>spans<sp/>a<sp/>single<sp/>internal<sp/>buffer<sp/>then<sp/>a<sp/>slice<sp/>of<sp/>that<sp/>buffer<sp/>will<sp/>be<sp/>returned<sp/>which<sp/>shares<sp/>the<sp/>original<sp/>memory<sp/>range<sp/>of<sp/>that<sp/>Buffer.<sp/>If<sp/>the<sp/>range<sp/>spans<sp/>multiple<sp/>buffers<sp/>then<sp/>copy<sp/>operations<sp/>will<sp/>likely<sp/>occur<sp/>to<sp/>give<sp/>you<sp/>a<sp/>uniform<sp/>Buffer.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">--------------------------------------------------------</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;shallowSlice&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>bl.shallowSlice([<sp/>start,<sp/>[<sp/>end<sp/>]<sp/>])</highlight></codeline>
+<codeline><highlight class="normal">`shallowSlice()`<sp/>returns<sp/>a<sp/>new<sp/>`BufferList`<sp/>object<sp/>containing<sp/>the<sp/>bytes<sp/>within<sp/>the<sp/>range<sp/>specified.<sp/>Both<sp/>`start`<sp/>and<sp/>`end`<sp/>are<sp/>optional<sp/>and<sp/>will<sp/>default<sp/>to<sp/>the<sp/>beginning<sp/>and<sp/>end<sp/>of<sp/>the<sp/>list<sp/>respectively.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">No<sp/>copies<sp/>will<sp/>be<sp/>performed.<sp/>All<sp/>buffers<sp/>in<sp/>the<sp/>result<sp/>share<sp/>memory<sp/>with<sp/>the<sp/>original<sp/>list.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">--------------------------------------------------------</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;copy&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>bl.copy(dest,<sp/>[<sp/>destStart,<sp/>[<sp/>srcStart<sp/>[,<sp/>srcEnd<sp/>]<sp/>]<sp/>])</highlight></codeline>
+<codeline><highlight class="normal">`copy()`<sp/>copies<sp/>the<sp/>content<sp/>of<sp/>the<sp/>list<sp/>in<sp/>the<sp/>`dest`<sp/>buffer,<sp/>starting<sp/>from<sp/>`destStart`<sp/>and<sp/>containing<sp/>the<sp/>bytes<sp/>within<sp/>the<sp/>range<sp/>specified<sp/>with<sp/>`srcStart`<sp/>to<sp/>`srcEnd`.<sp/>`destStart`,<sp/>`start`<sp/>and<sp/>`end`<sp/>are<sp/>optional<sp/>and<sp/>will<sp/>default<sp/>to<sp/>the<sp/>beginning<sp/>of<sp/>the<sp/>`dest`<sp/>buffer,<sp/>and<sp/>the<sp/>beginning<sp/>and<sp/>end<sp/>of<sp/>the<sp/>list<sp/>respectively.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">--------------------------------------------------------</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;duplicate&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>bl.duplicate()</highlight></codeline>
+<codeline><highlight class="normal">`duplicate()`<sp/>performs<sp/>a<sp/>**shallow-copy**<sp/>of<sp/>the<sp/>list.<sp/>The<sp/>internal<sp/>Buffers<sp/>remains<sp/>the<sp/>same,<sp/>so<sp/>if<sp/>you<sp/>change<sp/>the<sp/>underlying<sp/>Buffers,<sp/>the<sp/>change<sp/>will<sp/>be<sp/>reflected<sp/>in<sp/>both<sp/>the<sp/>original<sp/>and<sp/>the<sp/>duplicate.<sp/>This<sp/>method<sp/>is<sp/>needed<sp/>if<sp/>you<sp/>want<sp/>to<sp/>call<sp/>`consume()`<sp/>or<sp/>`pipe()`<sp/>and<sp/>still<sp/>keep<sp/>the<sp/>original<sp/>list.Example:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>bl<sp/>=<sp/>new<sp/>BufferListStream()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">bl.append(&apos;hello&apos;)</highlight></codeline>
+<codeline><highlight class="normal">bl.append(&apos;<sp/>world&apos;)</highlight></codeline>
+<codeline><highlight class="normal">bl.append(&apos;\n&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">bl.duplicate().pipe(process.stdout,<sp/>{<sp/>end:<sp/>false<sp/>})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">console.log(bl.toString())</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">--------------------------------------------------------</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;consume&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>bl.consume(bytes)</highlight></codeline>
+<codeline><highlight class="normal">`consume()`<sp/>will<sp/>shift<sp/>bytes<sp/>*off<sp/>the<sp/>start<sp/>of<sp/>the<sp/>list*.<sp/>The<sp/>number<sp/>of<sp/>bytes<sp/>consumed<sp/>don&apos;t<sp/>need<sp/>to<sp/>line<sp/>up<sp/>with<sp/>the<sp/>sizes<sp/>of<sp/>the<sp/>internal<sp/>Buffers&amp;mdash;initial<sp/>offsets<sp/>will<sp/>be<sp/>calculated<sp/>accordingly<sp/>in<sp/>order<sp/>to<sp/>give<sp/>you<sp/>a<sp/>consistent<sp/>view<sp/>of<sp/>the<sp/>data.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">--------------------------------------------------------</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;toString&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>bl.toString([encoding,<sp/>[<sp/>start,<sp/>[<sp/>end<sp/>]]])</highlight></codeline>
+<codeline><highlight class="normal">`toString()`<sp/>will<sp/>return<sp/>a<sp/>string<sp/>representation<sp/>of<sp/>the<sp/>buffer.<sp/>The<sp/>optional<sp/>`start`<sp/>and<sp/>`end`<sp/>arguments<sp/>are<sp/>passed<sp/>on<sp/>to<sp/>`slice()`,<sp/>while<sp/>the<sp/>`encoding`<sp/>is<sp/>passed<sp/>on<sp/>to<sp/>`toString()`<sp/>of<sp/>the<sp/>resulting<sp/>Buffer.<sp/>See<sp/>the<sp/>[Buffer#toString()](http://nodejs.org/docs/latest/api/buffer.html#buffer_buf_tostring_encoding_start_end)<sp/>documentation<sp/>for<sp/>more<sp/>information.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">--------------------------------------------------------</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;readXX&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>bl.readDoubleBE(),<sp/>bl.readDoubleLE(),<sp/>bl.readFloatBE(),<sp/>bl.readFloatLE(),<sp/>bl.readInt32BE(),<sp/>bl.readInt32LE(),<sp/>bl.readUInt32BE(),<sp/>bl.readUInt32LE(),<sp/>bl.readInt16BE(),<sp/>bl.readInt16LE(),<sp/>bl.readUInt16BE(),<sp/>bl.readUInt16LE(),<sp/>bl.readInt8(),<sp/>bl.readUInt8()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">All<sp/>of<sp/>the<sp/>standard<sp/>byte-reading<sp/>methods<sp/>of<sp/>the<sp/>`Buffer`<sp/>interface<sp/>are<sp/>implemented<sp/>and<sp/>will<sp/>operate<sp/>across<sp/>internal<sp/>Buffer<sp/>boundaries<sp/>transparently.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">See<sp/>the<sp/>&lt;b&gt;&lt;code&gt;[Buffer](http://nodejs.org/docs/latest/api/buffer.html)&lt;/code&gt;&lt;/b&gt;<sp/>documentation<sp/>for<sp/>how<sp/>these<sp/>work.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">--------------------------------------------------------</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;ctorStream&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>new<sp/>BufferListStream([<sp/>callback<sp/>|<sp/>Buffer<sp/>|<sp/>Buffer<sp/>array<sp/>|<sp/>BufferList<sp/>|<sp/>BufferList<sp/>array<sp/>|<sp/>String<sp/>])</highlight></codeline>
+<codeline><highlight class="normal">**BufferListStream**<sp/>is<sp/>a<sp/>Node<sp/>**[Duplex<sp/>Stream](http://nodejs.org/docs/latest/api/stream.html#stream_class_stream_duplex)**,<sp/>so<sp/>it<sp/>can<sp/>be<sp/>read<sp/>from<sp/>and<sp/>written<sp/>to<sp/>like<sp/>a<sp/>standard<sp/>Node<sp/>stream.<sp/>You<sp/>can<sp/>also<sp/>`pipe()`<sp/>to<sp/>and<sp/>from<sp/>a<sp/>**BufferListStream**<sp/>instance.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>constructor<sp/>takes<sp/>an<sp/>optional<sp/>callback,<sp/>if<sp/>supplied,<sp/>the<sp/>callback<sp/>will<sp/>be<sp/>called<sp/>with<sp/>an<sp/>error<sp/>argument<sp/>followed<sp/>by<sp/>a<sp/>reference<sp/>to<sp/>the<sp/>**bl**<sp/>instance,<sp/>when<sp/>`bl.end()`<sp/>is<sp/>called<sp/>(i.e.<sp/>from<sp/>a<sp/>piped<sp/>stream).<sp/>This<sp/>is<sp/>a<sp/>convenient<sp/>method<sp/>of<sp/>collecting<sp/>the<sp/>entire<sp/>contents<sp/>of<sp/>a<sp/>stream,<sp/>particularly<sp/>when<sp/>the<sp/>stream<sp/>is<sp/>*chunky*,<sp/>such<sp/>as<sp/>a<sp/>network<sp/>stream.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Normally,<sp/>no<sp/>arguments<sp/>are<sp/>required<sp/>for<sp/>the<sp/>constructor,<sp/>but<sp/>you<sp/>can<sp/>initialise<sp/>the<sp/>list<sp/>by<sp/>passing<sp/>in<sp/>a<sp/>single<sp/>`Buffer`<sp/>object<sp/>or<sp/>an<sp/>array<sp/>of<sp/>`Buffer`<sp/>object.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`new`<sp/>is<sp/>not<sp/>strictly<sp/>required,<sp/>if<sp/>you<sp/>don&apos;t<sp/>instantiate<sp/>a<sp/>new<sp/>object,<sp/>it<sp/>will<sp/>be<sp/>done<sp/>automatically<sp/>for<sp/>you<sp/>so<sp/>you<sp/>can<sp/>create<sp/>a<sp/>new<sp/>instance<sp/>simply<sp/>with:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>BufferListStream<sp/>}<sp/>=<sp/>require(&apos;bl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>bl<sp/>=<sp/>BufferListStream()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>equivalent<sp/>to:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>BufferListStream<sp/>}<sp/>=<sp/>require(&apos;bl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>bl<sp/>=<sp/>new<sp/>BufferListStream()</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">N.B.<sp/>For<sp/>backwards<sp/>compatibility<sp/>reasons,<sp/>`BufferListStream`<sp/>is<sp/>the<sp/>**default**<sp/>export<sp/>when<sp/>you<sp/>`require(&apos;bl&apos;)`:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>BufferListStream<sp/>}<sp/>=<sp/>require(&apos;bl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>equivalent<sp/>to:</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>BufferListStream<sp/>=<sp/>require(&apos;bl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">--------------------------------------------------------</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Contributors</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**bl**<sp/>is<sp/>brought<sp/>to<sp/>you<sp/>by<sp/>the<sp/>following<sp/>hackers:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>[Rod<sp/>Vagg](https://github.com/rvagg)</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>[Matteo<sp/>Collina](https://github.com/mcollina)</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>[Jarett<sp/>Cruger](https://github.com/jcrugzz)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;license&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">##<sp/>License<sp/>&amp;amp;<sp/>copyright</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Copyright<sp/>(c)<sp/>2013-2019<sp/>bl<sp/>contributors<sp/>(listed<sp/>above).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">bl<sp/>is<sp/>licensed<sp/>under<sp/>the<sp/>MIT<sp/>license.<sp/>All<sp/>rights<sp/>not<sp/>explicitly<sp/>granted<sp/>in<sp/>the<sp/>MIT<sp/>license<sp/>are<sp/>reserved.<sp/>See<sp/>the<sp/>included<sp/>LICENSE.md<sp/>file<sp/>for<sp/>more<sp/>details.</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/bl/README.md"/>
+  </compounddef>
+</doxygen>

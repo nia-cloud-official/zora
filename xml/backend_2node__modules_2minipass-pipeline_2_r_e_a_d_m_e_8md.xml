@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2minipass-pipeline_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>minipass-pipeline</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Create<sp/>a<sp/>pipeline<sp/>of<sp/>streams<sp/>using<sp/>Minipass.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Calls<sp/>`.pipe()`<sp/>on<sp/>all<sp/>the<sp/>streams<sp/>in<sp/>the<sp/>list.<sp/><sp/>Returns<sp/>a<sp/>stream<sp/>where</highlight></codeline>
+<codeline><highlight class="normal">writes<sp/>got<sp/>to<sp/>the<sp/>first<sp/>pipe<sp/>in<sp/>the<sp/>chain,<sp/>and<sp/>reads<sp/>are<sp/>from<sp/>the<sp/>last.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Errors<sp/>are<sp/>proxied<sp/>along<sp/>the<sp/>chain<sp/>and<sp/>emitted<sp/>on<sp/>the<sp/>Pipeline<sp/>stream.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>USAGE</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>Pipeline<sp/>=<sp/>require(&apos;minipass-pipeline&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>the<sp/>list<sp/>of<sp/>streams<sp/>to<sp/>pipeline<sp/>together,</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>a<sp/>bit<sp/>like<sp/>`input<sp/>|<sp/>transform<sp/>|<sp/>output`<sp/>in<sp/>bash</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>p<sp/>=<sp/>new<sp/>Pipeline(input,<sp/>transform,<sp/>output)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">p.write(&apos;foo&apos;)<sp/>//<sp/>writes<sp/>to<sp/>input</highlight></codeline>
+<codeline><highlight class="normal">p.on(&apos;data&apos;,<sp/>chunk<sp/>=&gt;<sp/>doSomething())<sp/>//<sp/>reads<sp/>from<sp/>output<sp/>stream</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>less<sp/>contrived<sp/>example<sp/>(but<sp/>still<sp/>pretty<sp/>contrived)...</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>decode<sp/>=<sp/>new<sp/>bunzipDecoder()</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>unpack<sp/>=<sp/>tar.extract({<sp/>cwd:<sp/>&apos;target-dir&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>tbz<sp/>=<sp/>new<sp/>Pipeline(decode,<sp/>unpack)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">fs.createReadStream(&apos;archive.tbz&apos;).pipe(tbz)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>specify<sp/>any<sp/>minipass<sp/>options<sp/>if<sp/>you<sp/>like,<sp/>as<sp/>the<sp/>first<sp/>argument</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>it&apos;ll<sp/>only<sp/>try<sp/>to<sp/>pipeline<sp/>event<sp/>emitters<sp/>with<sp/>a<sp/>.pipe()<sp/>method</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>p<sp/>=<sp/>new<sp/>Pipeline({<sp/>objectMode:<sp/>true<sp/>},<sp/>input,<sp/>transform,<sp/>output)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>If<sp/>you<sp/>don&apos;t<sp/>know<sp/>the<sp/>things<sp/>to<sp/>pipe<sp/>in<sp/>right<sp/>away,<sp/>that&apos;s<sp/>fine.</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>use<sp/>p.push(stream)<sp/>to<sp/>add<sp/>to<sp/>the<sp/>end,<sp/>or<sp/>p.unshift(stream)<sp/>to<sp/>the<sp/>front</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>databaseDecoderStreamDoohickey<sp/>=<sp/>(connectionInfo)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>const<sp/>p<sp/>=<sp/>new<sp/>Pipeline()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>logIntoDatabase(connectionInfo).then(connection<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>initializeDecoderRing(connectionInfo).then(decoderRing<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>p.push(connection,<sp/>decoderRing)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>getUpstreamSource(upstream<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>p.unshift(upstream)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>return<sp/>to<sp/>caller<sp/>right<sp/>away</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>emitted<sp/>data<sp/>will<sp/>be<sp/>upstream<sp/>-&gt;<sp/>connection<sp/>-&gt;<sp/>decoderRing<sp/>pipeline</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>p</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Pipeline<sp/>is<sp/>a<sp/>[minipass](http://npm.im/minipass)<sp/>stream,<sp/>so<sp/>it&apos;s<sp/>as</highlight></codeline>
+<codeline><highlight class="normal">synchronous<sp/>as<sp/>the<sp/>streams<sp/>it<sp/>wraps.<sp/><sp/>It<sp/>will<sp/>buffer<sp/>data<sp/>until<sp/>there<sp/>is<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">reader,<sp/>but<sp/>no<sp/>longer,<sp/>so<sp/>make<sp/>sure<sp/>to<sp/>attach<sp/>your<sp/>listeners<sp/>before<sp/>you</highlight></codeline>
+<codeline><highlight class="normal">pipe<sp/>it<sp/>somewhere<sp/>else.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>`new<sp/>Pipeline(opts<sp/>=<sp/>{},<sp/>...streams)`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Create<sp/>a<sp/>new<sp/>Pipeline<sp/>with<sp/>the<sp/>specified<sp/>Minipass<sp/>options<sp/>and<sp/>any<sp/>streams</highlight></codeline>
+<codeline><highlight class="normal">provided.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>`pipeline.push(stream,<sp/>...)`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Attach<sp/>one<sp/>or<sp/>more<sp/>streams<sp/>to<sp/>the<sp/>pipeline<sp/>at<sp/>the<sp/>end<sp/>(read)<sp/>side<sp/>of<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">pipe<sp/>chain.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>`pipeline.unshift(stream,<sp/>...)`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Attach<sp/>one<sp/>or<sp/>more<sp/>streams<sp/>to<sp/>the<sp/>pipeline<sp/>at<sp/>the<sp/>start<sp/>(write)<sp/>side<sp/>of<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">pipe<sp/>chain.</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/minipass-pipeline/README.md"/>
+  </compounddef>
+</doxygen>

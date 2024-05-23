@@ -1,0 +1,444 @@
+.TH "md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e \- make-fetch-happen 
+.PP
+\fR\fP \fR\fP \fR\fP \fR\fP
+.PP
+\fR\fRmake-fetch-happen\fP\fP is a Node\&.js library that wraps \fR\fRminipass-fetch\fP\fP with additional features \fR\fRminipass-fetch\fP\fP doesn't intend to include, including HTTP Cache support, request pooling, proxies, retries, \fBand more\fP!
+.SH "Install"
+.PP
+\fR$ npm install --save make-fetch-happen\fP
+.SH "Table of Contents"
+.PP
+.IP "\(bu" 2
+\fBExample\fP
+.IP "\(bu" 2
+\fBFeatures\fP
+.IP "\(bu" 2
+\fBContributing\fP
+.IP "\(bu" 2
+\fBAPI\fP
+.IP "  \(bu" 4
+\fB`fetch`\fP
+.IP "  \(bu" 4
+\fB`fetch\&.defaults`\fP
+.IP "  \(bu" 4
+\fB`minipass-fetch` options\fP
+.IP "  \(bu" 4
+\fB`make-fetch-happen` options\fP
+.IP "    \(bu" 6
+\fB`opts\&.cachePath`\fP
+.IP "    \(bu" 6
+\fB`opts\&.cache`\fP
+.IP "    \(bu" 6
+\fB`opts\&.proxy`\fP
+.IP "    \(bu" 6
+\fB`opts\&.noProxy`\fP
+.IP "    \(bu" 6
+\fB`opts\&.ca, opts\&.cert, opts\&.key`\fP
+.IP "    \(bu" 6
+\fB`opts\&.maxSockets`\fP
+.IP "    \(bu" 6
+\fB`opts\&.retry`\fP
+.IP "    \(bu" 6
+\fB`opts\&.onRetry`\fP
+.IP "    \(bu" 6
+\fB`opts\&.integrity`\fP
+.PP
+
+.PP
+
+.IP "\(bu" 2
+\fBMessage From Our Sponsors\fP
+.PP
+.SS "Example"
+.PP
+.nf
+const fetch = require('make\-fetch\-happen')\&.defaults({
+  cachePath: '\&./my\-cache' // path where cache will be written (and read)
+})
+
+fetch('https://registry\&.npmjs\&.org/make\-fetch\-happen')\&.then(res => {
+  return res\&.json() // download the body as JSON
+})\&.then(body => {
+  console\&.log(`got ${body\&.name} from web`)
+  return fetch('https://registry\&.npmjs\&.org/make\-fetch\-happen', {
+    cache: 'no\-cache' // forces a conditional request
+  })
+})\&.then(res => {
+  console\&.log(res\&.status) // 304! cache validated!
+  return res\&.json()\&.then(body => {
+    console\&.log(`got ${body\&.name} from cache`)
+  })
+})
+.fi
+.PP
+.SS "Features"
+.IP "\(bu" 2
+Builds around \fR\fRminipass-fetch\fP\fP for the core \fR\fRfetch\fP API\fP implementation
+.IP "\(bu" 2
+Request pooling out of the box
+.IP "\(bu" 2
+Quite fast, really
+.IP "\(bu" 2
+Automatic HTTP-semantics-aware request retries
+.IP "\(bu" 2
+Cache-fallback automatic 'offline mode'
+.IP "\(bu" 2
+Proxy support (http, https, socks, socks4, socks5)
+.IP "\(bu" 2
+Built-in request caching following full HTTP caching rules (\fRCache-Control\fP, \fRETag\fP, \fR304\fPs, cache fallback on error, etc)\&.
+.IP "\(bu" 2
+Customize cache storage with any \fRCache API\fP-compliant \fRCache\fP instance\&. Cache to Redis!
+.IP "\(bu" 2
+Node\&.js Stream support
+.IP "\(bu" 2
+Transparent gzip and deflate support
+.IP "\(bu" 2
+\fRSubresource Integrity\fP support
+.IP "\(bu" 2
+Literally punches nazis
+.IP "\(bu" 2
+(PENDING) Range request caching and resuming
+.PP
+.SS "Contributing"
+The make-fetch-happen team enthusiastically welcomes contributions and project participation! There's a bunch of things you can do if you want to contribute! The \fRContributor Guide\fP outlines the process for community interaction and contribution\&. Please don't hesitate to jump in if you'd like to, or even ask us questions if something isn't clear\&.
+.PP
+All participants and maintainers in this project are expected to follow the \fRnpm Code of Conduct\fP, and just generally be excellent to each other\&.
+.PP
+Please refer to the \fBChangelog\fP for project history details, too\&.
+.PP
+Happy hacking!
+.SS "API"
+.SS " \fR> fetch(uriOrRequest, [opts]) -> Promise<Response>\fP"
+This function implements most of the \fR\fRfetch\fP API\fP: given a \fRuri\fP string or a \fRRequest\fP instance, it will fire off an http request and return a Promise containing the relevant response\&.
+.PP
+If \fRopts\fP is provided, the \fB`minipass-fetch`-specific options\fP will be passed to that library\&. There are also \fBadditional options\fP specific to make-fetch-happen that add various features, such as HTTP caching, integrity verification, proxy support, and more\&.
+.SS "Example"
+.PP
+.nf
+fetch('https://google\&.com')\&.then(res => res\&.buffer())
+.fi
+.PP
+.SS " \fR> fetch\&.defaults([defaultUrl], [defaultOpts])\fP"
+Returns a new \fRfetch\fP function that will call \fRmake-fetch-happen\fP using \fRdefaultUrl\fP and \fRdefaultOpts\fP as default values to any calls\&.
+.PP
+A defaulted \fRfetch\fP will also have a \fR\&.defaults()\fP method, so they can be chained\&.
+.SS "Example"
+.PP
+.nf
+const fetch = require('make\-fetch\-happen')\&.defaults({
+  cachePath: '\&./my\-local\-cache'
+})
+
+fetch('https://registry\&.npmjs\&.org/make\-fetch\-happen') // will always use the cache
+.fi
+.PP
+.SS " \fR> minipass-fetch options\fP"
+The following options for \fRminipass-fetch\fP are used as-is:
+.PP
+.IP "\(bu" 2
+method
+.IP "\(bu" 2
+body
+.IP "\(bu" 2
+redirect
+.IP "\(bu" 2
+follow
+.IP "\(bu" 2
+timeout
+.IP "\(bu" 2
+compress
+.IP "\(bu" 2
+size
+.PP
+.PP
+These other options are modified or augmented by make-fetch-happen:
+.PP
+.IP "\(bu" 2
+headers - Default \fRUser-Agent\fP set to make-fetch happen\&. \fRConnection\fP is set to \fRkeep-alive\fP or \fRclose\fP automatically depending on \fRopts\&.agent\fP\&.
+.IP "\(bu" 2
+agent
+.IP "  \(bu" 4
+If agent is null, an http or https Agent will be automatically used\&. By default, these will be \fRhttp\&.globalAgent\fP and \fRhttps\&.globalAgent\fP\&.
+.IP "  \(bu" 4
+If \fB`opts\&.proxy`\fP is provided and \fRopts\&.agent\fP is null, the agent will be set to an appropriate proxy-handling agent\&.
+.IP "  \(bu" 4
+If \fRopts\&.agent\fP is an object, it will be used as the request-pooling agent argument for this request\&.
+.IP "  \(bu" 4
+If \fRopts\&.agent\fP is \fRfalse\fP, it will be passed as-is to the underlying request library\&. This causes a new Agent to be spawned for every request\&.
+.PP
+
+.PP
+.PP
+For more details, see \fRthe documentation for \fRminipass-fetch\fP itself\fP\&.
+.SS " \fR> make-fetch-happen options\fP"
+make-fetch-happen augments the \fRminipass-fetch\fP API with additional features available through extra options\&. The following extra options are available:
+.PP
+.IP "\(bu" 2
+\fB`opts\&.cachePath`\fP - Cache target to read/write
+.IP "\(bu" 2
+\fB`opts\&.cache`\fP - \fRfetch\fP cache mode\&. Controls cache \fIbehavior\fP\&.
+.IP "\(bu" 2
+\fB`opts\&.proxy`\fP - Proxy agent
+.IP "\(bu" 2
+\fB`opts\&.noProxy`\fP - Domain segments to disable proxying for\&.
+.IP "\(bu" 2
+\fB`opts\&.ca, opts\&.cert, opts\&.key, opts\&.strictSSL`\fP
+.IP "\(bu" 2
+\fB`opts\&.localAddress`\fP
+.IP "\(bu" 2
+\fB`opts\&.maxSockets`\fP
+.IP "\(bu" 2
+\fB`opts\&.retry`\fP - Request retry settings
+.IP "\(bu" 2
+\fB`opts\&.onRetry`\fP - a function called whenever a retry is attempted
+.IP "\(bu" 2
+\fB`opts\&.integrity`\fP - \fRSubresource Integrity\fP metadata\&.
+.PP
+.SS " \fR> opts\&.cachePath\fP"
+A string \fRPath\fP to be used as the cache root for \fR\fRcacache\fP\fP\&.
+.PP
+\fBNOTE\fP: Requests will not be cached unless their response bodies are consumed\&. You will need to use one of the \fRres\&.json()\fP, \fRres\&.buffer()\fP, etc methods on the response, or drain the \fRres\&.body\fP stream, in order for it to be written\&.
+.PP
+The default cache manager also adds the following headers to cached responses:
+.PP
+.IP "\(bu" 2
+\fRX-Local-Cache\fP: Path to the cache the content was found in
+.IP "\(bu" 2
+\fRX-Local-Cache-Key\fP: Unique cache entry key for this response
+.IP "\(bu" 2
+\fRX-Local-Cache-Mode\fP: Either \fRstream\fP or \fRbuffer\fP to indicate how the response was read from cacache
+.IP "\(bu" 2
+\fRX-Local-Cache-Hash\fP: Specific integrity hash for the cached entry
+.IP "\(bu" 2
+\fRX-Local-Cache-Status\fP: One of \fRmiss\fP, \fRhit\fP, \fRstale\fP, \fRrevalidated\fP, \fRupdated\fP, or \fRskip\fP to signal how the response was created
+.IP "\(bu" 2
+\fRX-Local-Cache-Time\fP: UTCString of the cache insertion time for the entry
+.PP
+.PP
+Using \fR\fRcacache\fP\fP, a call like this may be used to manually fetch the cached entry:
+.PP
+.PP
+.nf
+const h = response\&.headers
+cacache\&.get(h\&.get('x\-local\-cache'), h\&.get('x\-local\-cache\-key'))
+
+// grab content only, directly:
+cacache\&.get\&.byDigest(h\&.get('x\-local\-cache'), h\&.get('x\-local\-cache\-hash'))
+.fi
+.PP
+.SS "Example"
+.PP
+.nf
+fetch('https://registry\&.npmjs\&.org/make\-fetch\-happen', {
+  cachePath: '\&./my\-local\-cache'
+}) // \-> 200\-level response will be written to disk
+.fi
+.PP
+.PP
+A possible (minimal) implementation for \fRMyCustomRedisCache\fP:
+.PP
+.PP
+.nf
+const bluebird = require('bluebird')
+const redis = require("redis")
+bluebird\&.promisifyAll(redis\&.RedisClient\&.prototype)
+class MyCustomRedisCache {
+  constructor (opts) {
+    this\&.redis = redis\&.createClient(opts)
+  }
+  match (req) {
+    return this\&.redis\&.getAsync(req\&.url)\&.then(res => {
+      if (res) {
+        const parsed = JSON\&.parse(res)
+        return new fetch\&.Response(parsed\&.body, {
+          url: req\&.url,
+          headers: parsed\&.headers,
+          status: 200
+        })
+      }
+    })
+  }
+  put (req, res) {
+    return res\&.buffer()\&.then(body => {
+      return this\&.redis\&.setAsync(req\&.url, JSON\&.stringify({
+        body: body,
+        headers: res\&.headers\&.raw()
+      }))
+    })\&.then(() => {
+      // return the response itself
+      return res
+    })
+  }
+  'delete' (req) {
+    return this\&.redis\&.unlinkAsync(req\&.url)
+  }
+}
+.fi
+.PP
+.SS " \fR> opts\&.cache\fP"
+This option follows the standard \fRfetch\fP API cache option\&. This option will do nothing if \fB`opts\&.cachePath`\fP is null\&. The following values are accepted (as strings):
+.PP
+.IP "\(bu" 2
+\fRdefault\fP - Fetch will inspect the HTTP cache on the way to the network\&. If there is a fresh response it will be used\&. If there is a stale response a conditional request will be created, and a normal request otherwise\&. It then updates the HTTP cache with the response\&. If the revalidation request fails (for example, on a 500 or if you're offline), the stale response will be returned\&.
+.IP "\(bu" 2
+\fRno-store\fP - Fetch behaves as if there is no HTTP cache at all\&.
+.IP "\(bu" 2
+\fRreload\fP - Fetch behaves as if there is no HTTP cache on the way to the network\&. Ergo, it creates a normal request and updates the HTTP cache with the response\&.
+.IP "\(bu" 2
+\fRno-cache\fP - Fetch creates a conditional request if there is a response in the HTTP cache and a normal request otherwise\&. It then updates the HTTP cache with the response\&.
+.IP "\(bu" 2
+\fRforce-cache\fP - Fetch uses any response in the HTTP cache matching the request, not paying attention to staleness\&. If there was no response, it creates a normal request and updates the HTTP cache with the response\&.
+.IP "\(bu" 2
+\fRonly-if-cached\fP - Fetch uses any response in the HTTP cache matching the request, not paying attention to staleness\&. If there was no response, it returns a network error\&. (Can only be used when request’s mode is 'same-origin'\&. Any cached redirects will be followed assuming request’s redirect mode is 'follow' and the redirects do not violate request’s mode\&.)
+.PP
+.PP
+(Note: option descriptions are taken from https://fetch.spec.whatwg.org/#http-network-or-cache-fetch)
+.SS "Example"
+.PP
+.nf
+const fetch = require('make\-fetch\-happen')\&.defaults({
+  cachePath: '\&./my\-cache'
+})
+
+// Will error with ENOTCACHED if we haven't already cached this url
+fetch('https://registry\&.npmjs\&.org/make\-fetch\-happen', {
+  cache: 'only\-if\-cached'
+})
+
+// Will refresh any local content and cache the new response
+fetch('https://registry\&.npmjs\&.org/make\-fetch\-happen', {
+  cache: 'reload'
+})
+
+// Will use any local data, even if stale\&. Otherwise, will hit network\&.
+fetch('https://registry\&.npmjs\&.org/make\-fetch\-happen', {
+  cache: 'force\-cache'
+})
+.fi
+.PP
+.SS " \fR> opts\&.proxy\fP"
+A string or \fRnew url\&.URL()\fP-d URI to proxy through\&. Different Proxy handlers will be used depending on the proxy's protocol\&.
+.PP
+Additionally, \fRprocess\&.env\&.HTTP_PROXY\fP, \fRprocess\&.env\&.HTTPS_PROXY\fP, and \fRprocess\&.env\&.PROXY\fP are used if present and no \fRopts\&.proxy\fP value is provided\&.
+.PP
+(Pending) \fRprocess\&.env\&.NO_PROXY\fP may also be configured to skip proxying requests for all, or specific domains\&.
+.SS "Example"
+.PP
+.nf
+fetch('https://registry\&.npmjs\&.org/make\-fetch\-happen', {
+  proxy: 'https://corporate\&.yourcompany\&.proxy:4445'
+})
+
+fetch('https://registry\&.npmjs\&.org/make\-fetch\-happen', {
+  proxy: {
+    protocol: 'https:',
+    hostname: 'corporate\&.yourcompany\&.proxy',
+    port: 4445
+  }
+})
+.fi
+.PP
+.SS " \fR> opts\&.noProxy\fP"
+If present, should be a comma-separated string or an array of domain extensions that a proxy should \fInot\fP be used for\&.
+.PP
+This option may also be provided through \fRprocess\&.env\&.NO_PROXY\fP\&.
+.SS " \fR> opts\&.ca, opts\&.cert, opts\&.key, opts\&.strictSSL\fP"
+These values are passed in directly to the HTTPS agent and will be used for both proxied and unproxied outgoing HTTPS requests\&. They mostly correspond to the same options the \fRhttps\fP module accepts, which will be themselves passed to \fRtls\&.connect()\fP\&. \fRopts\&.strictSSL\fP corresponds to \fRrejectUnauthorized\fP\&.
+.SS " \fR> opts\&.localAddress\fP"
+Passed directly to \fRhttp\fP and \fRhttps\fP request calls\&. Determines the local address to bind to\&.
+.SS " \fR> opts\&.maxSockets\fP"
+Default: 15
+.PP
+Maximum number of active concurrent sockets to use for the underlying Http/Https/Proxy agents\&. This setting applies once per spawned agent\&.
+.PP
+15 is probably a \fIpretty good value\fP for most use-cases, and balances speed with, uh, not knocking out people's routers\&. 🤓
+.SS " \fR> opts\&.retry\fP"
+An object that can be used to tune request retry settings\&. Retries will only be attempted on the following conditions:
+.PP
+.IP "\(bu" 2
+Request method is NOT \fRPOST\fP AND
+.IP "\(bu" 2
+Request status is one of: \fR408\fP, \fR420\fP, \fR429\fP, or any status in the 500-range\&. OR
+.IP "\(bu" 2
+Request errored with \fRECONNRESET\fP, \fRECONNREFUSED\fP, \fREADDRINUSE\fP, \fRETIMEDOUT\fP, or the \fRfetch\fP error \fRrequest-timeout\fP\&.
+.PP
+.PP
+The following are worth noting as explicitly not retried:
+.PP
+.IP "\(bu" 2
+\fRgetaddrinfo ENOTFOUND\fP and will be assumed to be either an unreachable domain or the user will be assumed offline\&. If a response is cached, it will be returned immediately\&.
+.PP
+.PP
+If \fRopts\&.retry\fP is \fRfalse\fP, it is equivalent to \fR{retries: 0}\fP
+.PP
+If \fRopts\&.retry\fP is a number, it is equivalent to \fR{retries: num}\fP
+.PP
+The following retry options are available if you want more control over it:
+.PP
+.IP "\(bu" 2
+retries
+.IP "\(bu" 2
+factor
+.IP "\(bu" 2
+minTimeout
+.IP "\(bu" 2
+maxTimeout
+.IP "\(bu" 2
+randomize
+.PP
+.PP
+For details on what each of these do, refer to the \fR\fRretry\fP\fP documentation\&.
+.SS "Example"
+.PP
+.nf
+fetch('https://flaky\&.site\&.com', {
+  retry: {
+    retries: 10,
+    randomize: true
+  }
+})
+
+fetch('http://reliable\&.site\&.com', {
+  retry: false
+})
+
+fetch('http://one\-more\&.site\&.com', {
+  retry: 3
+})
+.fi
+.PP
+.SS " \fR> opts\&.onRetry\fP"
+A function called whenever a retry is attempted\&.
+.SS "Example"
+.PP
+.nf
+fetch('https://flaky\&.site\&.com', {
+  onRetry() {
+    console\&.log('we will retry!')
+  }
+})
+.fi
+.PP
+.SS " \fR> opts\&.integrity\fP"
+Matches the response body against the given \fRSubresource Integrity\fP metadata\&. If verification fails, the request will fail with an \fREINTEGRITY\fP error\&.
+.PP
+\fRintegrity\fP may either be a string or an \fR\fRssri\fP\fP \fRIntegrity\fP-like\&.
+.SS "Example"
+.PP
+.nf
+fetch('https://registry\&.npmjs\&.org/make\-fetch\-happen/\-/make\-fetch\-happen\-1\&.0\&.0\&.tgz', {
+  integrity: 'sha1\-o47j7zAYnedYFn1dF/fR9OV3z8Q='
+}) // \-> ok
+
+fetch('https://malicious\-registry\&.org/make\-fetch\-happen/\-/make\-fetch\-happen\-1\&.0\&.0\&.tgz', {
+  integrity: 'sha1\-o47j7zAYnedYFn1dF/fR9OV3z8Q='
+}) // Error: EINTEGRITY
+.fi
+.PP
+.SS " Message From Our Sponsors"
+.PP
+ 

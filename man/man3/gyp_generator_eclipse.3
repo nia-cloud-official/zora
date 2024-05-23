@@ -1,0 +1,229 @@
+.TH "gyp.generator.eclipse" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gyp.generator.eclipse
+.SH SYNOPSIS
+.br
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBCalculateVariables\fP (default_variables, params)"
+.br
+.ti -1c
+.RI "\fBCalculateGeneratorInputInfo\fP (params)"
+.br
+.ti -1c
+.RI "\fBGetAllIncludeDirectories\fP (target_list, target_dicts, shared_intermediate_dirs, config_name, params, compiler_path)"
+.br
+.ti -1c
+.RI "\fBGetCompilerPath\fP (target_list, data, options)"
+.br
+.ti -1c
+.RI "\fBGetAllDefines\fP (target_list, target_dicts, data, config_name, params, compiler_path)"
+.br
+.ti -1c
+.RI "\fBWriteIncludePaths\fP (out, eclipse_langs, include_dirs)"
+.br
+.ti -1c
+.RI "\fBWriteMacros\fP (out, eclipse_langs, defines)"
+.br
+.ti -1c
+.RI "\fBGenerateOutputForConfig\fP (target_list, target_dicts, data, params, config_name)"
+.br
+.ti -1c
+.RI "\fBGenerateCdtSettingsFile\fP (target_list, target_dicts, data, params, config_name, out_name, options, shared_intermediate_dirs)"
+.br
+.ti -1c
+.RI "\fBGenerateClasspathFile\fP (target_list, target_dicts, toplevel_dir, toplevel_build, out_name)"
+.br
+.ti -1c
+.RI "\fBGetJavaJars\fP (target_list, target_dicts, toplevel_dir)"
+.br
+.ti -1c
+.RI "\fBGetJavaSourceDirs\fP (target_list, target_dicts, toplevel_dir)"
+.br
+.ti -1c
+.RI "\fBGenerateOutput\fP (target_list, target_dicts, data, params)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "bool \fBgenerator_wants_static_library_dependencies_adjusted\fP = False"
+.br
+.ti -1c
+.RI "dict \fBgenerator_default_variables\fP = {}"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.PP
+.nf
+GYP backend that generates Eclipse CDT settings files\&.
+
+This backend DOES NOT generate Eclipse CDT projects\&. Instead, it generates XML
+files that can be imported into an Eclipse CDT project\&. The XML file contains a
+list of include paths and symbols (i\&.e\&. defines)\&.
+
+Because a full \&.cproject definition is not created by this generator, it's not
+possible to properly define the include dirs and symbols for each file
+individually\&.  Instead, one set of includes/symbols is generated for the entire
+project\&.  This works fairly well (and is a vast improvement in general), but may
+still result in a few indexer issues here and there\&.
+
+This generator has no automated tests, so expect it to be broken\&.
+
+.fi
+.PP
+ 
+.SH "Function Documentation"
+.PP 
+.SS "gyp\&.generator\&.eclipse\&.CalculateGeneratorInputInfo ( params)"
+
+.PP
+.nf
+Calculate the generator specific info that gets fed to input (called by
+gyp)\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB69\fP of file \fBeclipse\&.py\fP\&.
+.SS "gyp\&.generator\&.eclipse\&.CalculateVariables ( default_variables,  params)"
+
+.PP
+Definition at line \fB59\fP of file \fBeclipse\&.py\fP\&.
+.SS "gyp\&.generator\&.eclipse\&.GenerateCdtSettingsFile ( target_list,  target_dicts,  data,  params,  config_name,  out_name,  options,  shared_intermediate_dirs)"
+
+.PP
+Definition at line \fB333\fP of file \fBeclipse\&.py\fP\&.
+.SS "gyp\&.generator\&.eclipse\&.GenerateClasspathFile ( target_list,  target_dicts,  toplevel_dir,  toplevel_build,  out_name)"
+
+.PP
+.nf
+Generates a classpath file suitable for symbol navigation and code
+completion of Java code (such as in Android projects) by finding all
+\&.java and \&.jar files used as action inputs\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB374\fP of file \fBeclipse\&.py\fP\&.
+.SS "gyp\&.generator\&.eclipse\&.GenerateOutput ( target_list,  target_dicts,  data,  params)"
+
+.PP
+.nf
+Generate an XML settings file that can be imported into a CDT project\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB450\fP of file \fBeclipse\&.py\fP\&.
+.SS "gyp\&.generator\&.eclipse\&.GenerateOutputForConfig ( target_list,  target_dicts,  data,  params,  config_name)"
+
+.PP
+Definition at line \fB298\fP of file \fBeclipse\&.py\fP\&.
+.SS "gyp\&.generator\&.eclipse\&.GetAllDefines ( target_list,  target_dicts,  data,  config_name,  params,  compiler_path)"
+
+.PP
+.nf
+Calculate the defines for a project\&.
+
+Returns:
+A dict that includes explicit defines declared in gyp files along with all
+of the default defines that the compiler uses\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB201\fP of file \fBeclipse\&.py\fP\&.
+.SS "gyp\&.generator\&.eclipse\&.GetAllIncludeDirectories ( target_list,  target_dicts,  shared_intermediate_dirs,  config_name,  params,  compiler_path)"
+
+.PP
+.nf
+Calculate the set of include directories to be used\&.
+
+Returns:
+A list including all the include_dir's specified for every target followed
+by any include directories that were added as cflag compiler options\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB78\fP of file \fBeclipse\&.py\fP\&.
+.SS "gyp\&.generator\&.eclipse\&.GetCompilerPath ( target_list,  data,  options)"
+
+.PP
+.nf
+Determine a command that can be used to invoke the compiler\&.
+
+Returns:
+If this is a gyp project that has explicit make settings, try to determine
+the compiler from that\&.  Otherwise, see if a compiler was specified via the
+CC_target environment variable\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB177\fP of file \fBeclipse\&.py\fP\&.
+.SS "gyp\&.generator\&.eclipse\&.GetJavaJars ( target_list,  target_dicts,  toplevel_dir)"
+
+.PP
+.nf
+Generates a sequence of all \&.jars used as inputs\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB409\fP of file \fBeclipse\&.py\fP\&.
+.SS "gyp\&.generator\&.eclipse\&.GetJavaSourceDirs ( target_list,  target_dicts,  toplevel_dir)"
+
+.PP
+.nf
+Generates a sequence of all likely java package root directories\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB422\fP of file \fBeclipse\&.py\fP\&.
+.SS "gyp\&.generator\&.eclipse\&.WriteIncludePaths ( out,  eclipse_langs,  include_dirs)"
+
+.PP
+.nf
+Write the includes section of a CDT settings export file\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB260\fP of file \fBeclipse\&.py\fP\&.
+.SS "gyp\&.generator\&.eclipse\&.WriteMacros ( out,  eclipse_langs,  defines)"
+
+.PP
+.nf
+Write the macros section of a CDT settings export file\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB279\fP of file \fBeclipse\&.py\fP\&.
+.SH "Variable Documentation"
+.PP 
+.SS "dict gyp\&.generator\&.eclipse\&.generator_default_variables = {}"
+
+.PP
+Definition at line \fB31\fP of file \fBeclipse\&.py\fP\&.
+.SS "bool gyp\&.generator\&.eclipse\&.generator_wants_static_library_dependencies_adjusted = False"
+
+.PP
+Definition at line \fB29\fP of file \fBeclipse\&.py\fP\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2color-support_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>color-support</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>module<sp/>which<sp/>will<sp/>endeavor<sp/>to<sp/>guess<sp/>your<sp/>terminal&apos;s<sp/>level<sp/>of<sp/>color</highlight></codeline>
+<codeline><highlight class="normal">support.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![Build<sp/>Status](https://travis-ci.org/isaacs/color-support.svg?branch=master)](https://travis-ci.org/isaacs/color-support)<sp/>[![Coverage<sp/>Status](https://coveralls.io/repos/github/isaacs/color-support/badge.svg?branch=master)](https://coveralls.io/github/isaacs/color-support?branch=master)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>similar<sp/>to<sp/>`supports-color`,<sp/>but<sp/>it<sp/>does<sp/>not<sp/>read</highlight></codeline>
+<codeline><highlight class="normal">`process.argv`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">1.<sp/>If<sp/>not<sp/>in<sp/>a<sp/>node<sp/>environment,<sp/>not<sp/>supported.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">2.<sp/>If<sp/>stdout<sp/>is<sp/>not<sp/>a<sp/>TTY,<sp/>not<sp/>supported,<sp/>unless<sp/>the<sp/>`ignoreTTY`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>option<sp/>is<sp/>set.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">3.<sp/>If<sp/>the<sp/>`TERM`<sp/>environ<sp/>is<sp/>`dumb`,<sp/>not<sp/>supported,<sp/>unless<sp/>the</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>`ignoreDumb`<sp/>option<sp/>is<sp/>set.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">4.<sp/>If<sp/>on<sp/>Windows,<sp/>then<sp/>support<sp/>16<sp/>colors.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">5.<sp/>If<sp/>using<sp/>Tmux,<sp/>then<sp/>support<sp/>256<sp/>colors.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">7.<sp/>Handle<sp/>continuous-integration<sp/>servers.<sp/><sp/>If<sp/>`CI`<sp/>or</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>`TEAMCITY_VERSION`<sp/>are<sp/>set<sp/>in<sp/>the<sp/>environment,<sp/>and<sp/>`TRAVIS`<sp/>is<sp/>not</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>set,<sp/>then<sp/>color<sp/>is<sp/>not<sp/>supported,<sp/>unless<sp/>`ignoreCI`<sp/>option<sp/>is<sp/>set.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">6.<sp/>Guess<sp/>based<sp/>on<sp/>the<sp/>`TERM_PROGRAM`<sp/>environ.<sp/><sp/>These<sp/>terminals<sp/>support</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>16m<sp/>colors:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/>`iTerm.app`<sp/>version<sp/>3.x<sp/>supports<sp/>16m<sp/>colors,<sp/>below<sp/>support<sp/>256</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/>`MacTerm`<sp/>supports<sp/>16m<sp/>colors</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/>`Apple_Terminal`<sp/>supports<sp/>256<sp/>colors</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/>Have<sp/>more<sp/>things<sp/>that<sp/>belong<sp/>on<sp/>this<sp/>list?<sp/><sp/>Send<sp/>a<sp/>PR!</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">8.<sp/>Make<sp/>a<sp/>guess<sp/>based<sp/>on<sp/>the<sp/>`TERM`<sp/>environment<sp/>variable.<sp/><sp/>Any</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>`xterm-256color`<sp/>will<sp/>get<sp/>256<sp/>colors.<sp/><sp/>Any<sp/>screen,<sp/>xterm,<sp/>vt100,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>color,<sp/>ansi,<sp/>cygwin,<sp/>or<sp/>linux<sp/>`TERM`<sp/>will<sp/>get<sp/>16<sp/>colors.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">9.<sp/>If<sp/>`COLORTERM`<sp/>environment<sp/>variable<sp/>is<sp/>set,<sp/>then<sp/>support<sp/>16<sp/>colors.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">10.<sp/>At<sp/>this<sp/>point,<sp/>we<sp/>assume<sp/>that<sp/>color<sp/>is<sp/>not<sp/>supported.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>USAGE</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>testColorSupport<sp/>=<sp/>require(&apos;color-support&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>colorSupport<sp/>=<sp/>testColorSupport(/*<sp/>options<sp/>object<sp/>*/)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">if<sp/>(!colorSupport)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;color<sp/>is<sp/>not<sp/>supported&apos;)</highlight></codeline>
+<codeline><highlight class="normal">}<sp/>else<sp/>if<sp/>(colorSupport.has16m)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;\x1b[38;2;102;194;255m16m<sp/>colors\x1b[0m&apos;)</highlight></codeline>
+<codeline><highlight class="normal">}<sp/>else<sp/>if<sp/>(colorSupport.has256)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;\x1b[38;5;119m256<sp/>colors\x1b[0m&apos;)</highlight></codeline>
+<codeline><highlight class="normal">}<sp/>else<sp/>if<sp/>(colorSupport.hasBasic)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;\x1b[31mbasic<sp/>colors\x1b[0m&apos;)</highlight></codeline>
+<codeline><highlight class="normal">}<sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;this<sp/>is<sp/>impossible,<sp/>but<sp/>colors<sp/>are<sp/>not<sp/>supported&apos;)</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>don&apos;t<sp/>have<sp/>any<sp/>options<sp/>to<sp/>set,<sp/>you<sp/>can<sp/>also<sp/>just<sp/>look<sp/>at<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">flags<sp/>which<sp/>will<sp/>all<sp/>be<sp/>set<sp/>on<sp/>the<sp/>test<sp/>function<sp/>itself.<sp/><sp/>(Of<sp/>course,</highlight></codeline>
+<codeline><highlight class="normal">this<sp/>doesn&apos;t<sp/>return<sp/>a<sp/>falsey<sp/>value<sp/>when<sp/>colors<sp/>aren&apos;t<sp/>supported,<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">doesn&apos;t<sp/>allow<sp/>you<sp/>to<sp/>set<sp/>options.)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>colorSupport<sp/>=<sp/>require(&apos;color-support&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">if<sp/>(colorSupport.has16m)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;\x1b[38;2;102;194;255m16m<sp/>colors\x1b[0m&apos;)</highlight></codeline>
+<codeline><highlight class="normal">}<sp/>else<sp/>if<sp/>(colorSupport.has256)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;\x1b[38;5;119m256<sp/>colors\x1b[0m&apos;)</highlight></codeline>
+<codeline><highlight class="normal">}<sp/>else<sp/>if<sp/>(colorSupport.hasBasic)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;\x1b[31mbasic<sp/>colors\x1b[0m&apos;)</highlight></codeline>
+<codeline><highlight class="normal">}<sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;colors<sp/>are<sp/>not<sp/>supported&apos;)</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Options</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>pass<sp/>in<sp/>the<sp/>following<sp/>options.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>ignoreTTY<sp/>-<sp/>default<sp/>false.<sp/><sp/>Ignore<sp/>the<sp/>`isTTY`<sp/>check.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>ignoreDumb<sp/>-<sp/>default<sp/>false.<sp/><sp/>Ignore<sp/>`TERM=dumb`<sp/>environ<sp/>check.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>ignoreCI<sp/>-<sp/>default<sp/>false.<sp/><sp/>Ignore<sp/>`CI`<sp/>environ<sp/>check.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>env<sp/>-<sp/>Object<sp/>for<sp/>environment<sp/>vars.<sp/>Defaults<sp/>to<sp/>`process.env`.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>stream<sp/>-<sp/>Stream<sp/>for<sp/>`isTTY`<sp/>check.<sp/>Defaults<sp/>to<sp/>`process.stdout`.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>term<sp/>-<sp/>String<sp/>for<sp/>`TERM`<sp/>checking.<sp/>Defaults<sp/>to<sp/>`env.TERM`.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>alwaysReturn<sp/>-<sp/>default<sp/>false.<sp/><sp/>Return<sp/>an<sp/>object<sp/>when<sp/>colors<sp/>aren&apos;t</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>supported<sp/>(instead<sp/>of<sp/>returning<sp/>`false`).</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>level<sp/>-<sp/>A<sp/>number<sp/>from<sp/>0<sp/>to<sp/>3.<sp/><sp/>This<sp/>will<sp/>return<sp/>a<sp/>result<sp/>for<sp/>the</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>specified<sp/>level.<sp/><sp/>This<sp/>is<sp/>useful<sp/>if<sp/>you<sp/>want<sp/>to<sp/>be<sp/>able<sp/>to<sp/>set<sp/>the</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>color<sp/>support<sp/>level<sp/>explicitly<sp/>as<sp/>a<sp/>number<sp/>in<sp/>an<sp/>environment</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>variable<sp/>or<sp/>config,<sp/>but<sp/>then<sp/>use<sp/>the<sp/>object<sp/>flags<sp/>in<sp/>your<sp/>program.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Except<sp/>for<sp/>`alwaysReturn`<sp/>to<sp/>return<sp/>an<sp/>object<sp/>for<sp/>level<sp/>0,<sp/>all<sp/>other</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>options<sp/>are<sp/>ignored,<sp/>since<sp/>no<sp/>checking<sp/>is<sp/>done<sp/>if<sp/>a<sp/>level<sp/>is</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>explicitly<sp/>set.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Return<sp/>Value</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>no<sp/>color<sp/>support<sp/>is<sp/>available,<sp/>then<sp/>`false`<sp/>is<sp/>returned<sp/>by<sp/>default,</highlight></codeline>
+<codeline><highlight class="normal">unless<sp/>the<sp/>`alwaysReturn`<sp/>flag<sp/>is<sp/>set<sp/>to<sp/>`true`.<sp/><sp/>This<sp/>is<sp/>so<sp/>that<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">simple<sp/>question<sp/>of<sp/>&quot;can<sp/>I<sp/>use<sp/>colors<sp/>or<sp/>not&quot;<sp/>can<sp/>treat<sp/>any<sp/>truthy</highlight></codeline>
+<codeline><highlight class="normal">return<sp/>as<sp/>&quot;yes&quot;.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Otherwise,<sp/>the<sp/>return<sp/>object<sp/>has<sp/>the<sp/>following<sp/>fields:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`level`<sp/>-<sp/>A<sp/>number<sp/>from<sp/>0<sp/>to<sp/>3</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>`0`<sp/>-<sp/>No<sp/>color<sp/>support</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>`1`<sp/>-<sp/>Basic<sp/>(16)<sp/>color<sp/>support</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>`2`<sp/>-<sp/>256<sp/>color<sp/>support</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>`3`<sp/>-<sp/>16<sp/>million<sp/>(true)<sp/>color<sp/>support</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`hasBasic`<sp/>-<sp/>Boolean</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`has256`<sp/>-<sp/>Boolean</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`has16m`<sp/>-<sp/>Boolean</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>CLI</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>run<sp/>the<sp/>`color-support`<sp/>bin<sp/>from<sp/>the<sp/>command<sp/>line<sp/>which<sp/>will</highlight></codeline>
+<codeline><highlight class="normal">just<sp/>dump<sp/>the<sp/>values<sp/>as<sp/>this<sp/>module<sp/>calculates<sp/>them<sp/>in<sp/>whatever<sp/>env</highlight></codeline>
+<codeline><highlight class="normal">it&apos;s<sp/>run.<sp/><sp/>It<sp/>takes<sp/>no<sp/>command<sp/>line<sp/>arguments.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Credits</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>a<sp/>spiritual,<sp/>if<sp/>not<sp/>actual,<sp/>fork<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">[supports-color](http://npm.im/supports-color)<sp/>by<sp/>the<sp/>ever<sp/>prolific</highlight></codeline>
+<codeline><highlight class="normal">[Sindre<sp/>Sorhus](http://npm.im/~sindresorhus).</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/color-support/README.md"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,220 @@
+\chapter{rc}
+\hypertarget{md_backend_2node__modules_2rc_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2rc_2_r_e_a_d_m_e}\index{rc@{rc}}
+\label{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2953}%
+\Hypertarget{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2953}%
+ The non-\/configurable configuration loader for lazy people.\hypertarget{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2954}{}\doxysection{\texorpdfstring{Usage}{Usage}}\label{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2954}
+The only option is to pass rc the name of your app, and your default configuration.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ conf\ =\ require('rc')(appname,\ \{}
+\DoxyCodeLine{\ \ //defaults\ go\ here.}
+\DoxyCodeLine{\ \ port:\ 2468,}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //defaults\ which\ are\ objects\ will\ be\ merged,\ not\ replaced}
+\DoxyCodeLine{\ \ views:\ \{}
+\DoxyCodeLine{\ \ \ \ engine:\ 'jade'}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+{\ttfamily rc} will return your configuration options merged with the defaults you specify. If you pass in a predefined defaults object, it will be mutated\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ conf\ =\ \{\};}
+\DoxyCodeLine{require('rc')(appname,\ conf);}
+
+\end{DoxyCode}
+
+
+If {\ttfamily rc} finds any config files for your app, the returned config object will have a {\ttfamily configs} array containing their paths\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ appCfg\ =\ require('rc')(appname,\ conf);}
+\DoxyCodeLine{appCfg.configs[0]\ //\ /etc/appnamerc}
+\DoxyCodeLine{appCfg.configs[1]\ //\ /home/dominictarr/.config/appname}
+\DoxyCodeLine{appCfg.config\ //\ same\ as\ appCfg.configs[appCfg.configs.length\ -\/\ 1]}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2955}{}\doxysection{\texorpdfstring{Standards}{Standards}}\label{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2955}
+Given your application name ({\ttfamily appname}), rc will look in all the obvious places for configuration.
+
+
+\begin{DoxyItemize}
+\item command line arguments, parsed by minimist \+\_\+(e.\+g. {\ttfamily -\/-\/foo baz}, also nested\+: {\ttfamily -\/-\/foo.\+bar=baz})\+\_\+
+\item environment variables prefixed with {\ttfamily \$\{appname\}\+\_\+}
+\begin{DoxyItemize}
+\item or use "{}\textbackslash{}\+\_\+\textbackslash{}\+\_\+"{} to indicate nested properties ~\newline
+ \+\_\+(e.\+g. {\ttfamily appname\+\_\+foo\+\_\+\+\_\+bar\+\_\+\+\_\+baz} =\texorpdfstring{$>$}{>} {\ttfamily foo.\+bar.\+baz})\+\_\+
+\end{DoxyItemize}
+\item if you passed an option {\ttfamily -\/-\/config file} then from that file
+\item a local {\ttfamily .\$\{appname\}rc} or the first found looking in {\ttfamily ./ ../ ../../ ../../../} etc.
+\item {\ttfamily \$HOME/.\$\{appname\}rc}
+\item {\ttfamily \$HOME/.\$\{appname\}/config}
+\item {\ttfamily \$HOME/.config/\$\{appname\}}
+\item {\ttfamily \$HOME/.config/\$\{appname\}/config}
+\item {\ttfamily /etc/\$\{appname\}rc}
+\item {\ttfamily /etc/\$\{appname\}/config}
+\item the defaults object you passed in.
+\end{DoxyItemize}
+
+All configuration sources that were found will be flattened into one object, so that sources {\bfseries{earlier}} in this list override later ones.\hypertarget{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2956}{}\doxysection{\texorpdfstring{Configuration File Formats}{Configuration File Formats}}\label{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2956}
+Configuration files (e.\+g. {\ttfamily .appnamerc}) may be in either \href{http://json.org/example}{\texttt{ json}} or \href{http://en.wikipedia.org/wiki/INI_file}{\texttt{ ini}} format. {\bfseries{No}} file extension ({\ttfamily .json} or {\ttfamily .ini}) should be used. The example configurations below are equivalent\+:\hypertarget{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2957}{}\doxysubsubsection{\texorpdfstring{Formatted as {\ttfamily ini}}{Formatted as {\ttfamily ini}}}\label{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2957}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{;\ You\ can\ include\ comments\ in\ \`{}ini`\ format\ if\ you\ want.}
+\DoxyCodeLine{}
+\DoxyCodeLine{dependsOn=0.10.0}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{;\ \`{}rc`\ has\ built-\/in\ support\ for\ ini\ sections,\ see?}
+\DoxyCodeLine{}
+\DoxyCodeLine{[commands]}
+\DoxyCodeLine{\ \ www\ \ \ \ \ =\ ./commands/www}
+\DoxyCodeLine{\ \ console\ =\ ./commands/repl}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{;\ You\ can\ even\ do\ nested\ sections}
+\DoxyCodeLine{}
+\DoxyCodeLine{[generators.options]}
+\DoxyCodeLine{\ \ engine\ \ =\ ejs}
+\DoxyCodeLine{}
+\DoxyCodeLine{[generators.modules]}
+\DoxyCodeLine{\ \ new\ \ \ \ \ =\ generate-\/new}
+\DoxyCodeLine{\ \ engine\ \ =\ generate-\/backend}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2958}{}\doxysubsubsection{\texorpdfstring{Formatted as {\ttfamily json}}{Formatted as {\ttfamily json}}}\label{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2958}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ //\ You\ can\ even\ comment\ your\ JSON,\ if\ you\ want}
+\DoxyCodeLine{\ \ "{}dependsOn"{}:\ "{}0.10.0"{},}
+\DoxyCodeLine{\ \ "{}commands"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ "{}www"{}:\ "{}./commands/www"{},}
+\DoxyCodeLine{\ \ \ \ "{}console"{}:\ "{}./commands/repl"{}}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ "{}generators"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ "{}options"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}engine"{}:\ "{}ejs"{}}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ "{}modules"{}:\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}new"{}:\ "{}generate-\/new"{},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}backend"{}:\ "{}generate-\/backend"{}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Comments are stripped from JSON config via \href{https://github.com/sindresorhus/strip-json-comments}{\texttt{ strip-\/json-\/comments}}.
+
+\begin{quote}
+Since ini, and env variables do not have a standard for types, your application needs be prepared for strings. \end{quote}
+
+
+To ensure that string representations of booleans and numbers are always converted into their proper types (especially useful if you intend to do strict {\ttfamily ===} comparisons), consider using a module such as \href{https://github.com/anselanza/parse-strings-in-object}{\texttt{ parse-\/strings-\/in-\/object}} to wrap the config object returned from rc.\hypertarget{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2959}{}\doxysection{\texorpdfstring{Simple example demonstrating precedence}{Simple example demonstrating precedence}}\label{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2959}
+Assume you have an application like this (notice the hard-\/coded defaults passed to rc)\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ conf\ =\ require('rc')('myapp',\ \{}
+\DoxyCodeLine{\ \ \ \ port:\ 12345,}
+\DoxyCodeLine{\ \ \ \ mode:\ 'test'}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(JSON.stringify(conf,\ null,\ 2));}
+
+\end{DoxyCode}
+ You also have a file {\ttfamily config.\+json}, with these contents\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}port"{}:\ 9000,}
+\DoxyCodeLine{\ \ "{}foo"{}:\ "{}from\ config\ json"{},}
+\DoxyCodeLine{\ \ "{}something"{}:\ "{}else"{}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ And a file {\ttfamily .myapprc} in the same folder, with these contents\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}port"{}:\ "{}3001"{},}
+\DoxyCodeLine{\ \ "{}foo"{}:\ "{}bar"{}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ Here is the expected output from various commands\+:
+
+{\ttfamily node .} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}port"{}:\ "{}3001"{},}
+\DoxyCodeLine{\ \ "{}mode"{}:\ "{}test"{},}
+\DoxyCodeLine{\ \ "{}foo"{}:\ "{}bar"{},}
+\DoxyCodeLine{\ \ "{}\_"{}:\ [],}
+\DoxyCodeLine{\ \ "{}configs"{}:\ [}
+\DoxyCodeLine{\ \ \ \ "{}/Users/stephen/repos/conftest/.myapprc"{}}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ "{}config"{}:\ "{}/Users/stephen/repos/conftest/.myapprc"{}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ {\itshape Default {\ttfamily mode} from hard-\/coded object is retained, but port is overridden by {\ttfamily .myapprc} file (automatically found based on appname match), and {\ttfamily foo} is added.}
+
+{\ttfamily node . -\/-\/foo baz} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}port"{}:\ "{}3001"{},}
+\DoxyCodeLine{\ \ "{}mode"{}:\ "{}test"{},}
+\DoxyCodeLine{\ \ "{}foo"{}:\ "{}baz"{},}
+\DoxyCodeLine{\ \ "{}\_"{}:\ [],}
+\DoxyCodeLine{\ \ "{}configs"{}:\ [}
+\DoxyCodeLine{\ \ \ \ "{}/Users/stephen/repos/conftest/.myapprc"{}}
+\DoxyCodeLine{\ \ ],}
+\DoxyCodeLine{\ \ "{}config"{}:\ "{}/Users/stephen/repos/conftest/.myapprc"{}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ {\itshape Same result as above but {\ttfamily foo} is overridden because command-\/line arguments take precedence over {\ttfamily .myapprc} file.}
+
+{\ttfamily node . -\/-\/foo barbar -\/-\/config config.\+json} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}port"{}:\ 9000,}
+\DoxyCodeLine{\ \ "{}mode"{}:\ "{}test"{},}
+\DoxyCodeLine{\ \ "{}foo"{}:\ "{}barbar"{},}
+\DoxyCodeLine{\ \ "{}something"{}:\ "{}else"{},}
+\DoxyCodeLine{\ \ "{}\_"{}:\ [],}
+\DoxyCodeLine{\ \ "{}config"{}:\ "{}config.json"{},}
+\DoxyCodeLine{\ \ "{}configs"{}:\ [}
+\DoxyCodeLine{\ \ \ \ "{}/Users/stephen/repos/conftest/.myapprc"{},}
+\DoxyCodeLine{\ \ \ \ "{}config.json"{}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ {\itshape Now the {\ttfamily port} comes from the {\ttfamily config.\+json} file specified (overriding the value from {\ttfamily .myapprc}), and {\ttfamily foo} value is overriden by command-\/line despite also being specified in the {\ttfamily config.\+json} file.}\hypertarget{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2960}{}\doxysection{\texorpdfstring{Advanced Usage}{Advanced Usage}}\label{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2960}
+\hypertarget{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2961}{}\doxysubsubsection{\texorpdfstring{Pass in your own {\ttfamily argv}}{Pass in your own {\ttfamily argv}}}\label{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2961}
+You may pass in your own {\ttfamily argv} as the third argument to {\ttfamily rc}. This is in case you want to \href{https://github.com/dominictarr/rc/pull/12}{\texttt{ use your own command-\/line opts parser}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{require('rc')(appname,\ defaults,\ customArgvParser);}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2962}{}\doxysection{\texorpdfstring{Pass in your own parser}{Pass in your own parser}}\label{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2962}
+If you have a special need to use a non-\/standard parser, you can do so by passing in the parser as the 4th argument. (leave the 3rd as null to get the default args parser)
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{require('rc')(appname,\ defaults,\ null,\ parser);}
+
+\end{DoxyCode}
+
+
+This may also be used to force a more strict format, such as strict, valid JSON only.\hypertarget{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2963}{}\doxysection{\texorpdfstring{Note on Performance}{Note on Performance}}\label{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2963}
+{\ttfamily rc} is running {\ttfamily fs.\+stat\+Sync}-- so make sure you don\textquotesingle{}t use it in a hot code path (e.\+g. a request handler)\hypertarget{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2964}{}\doxysection{\texorpdfstring{License}{License}}\label{md_backend_2node__modules_2rc_2_r_e_a_d_m_e_autotoc_md2964}
+Multi-\/licensed under the two-\/clause BSD License, MIT License, or Apache License, version 2.\+0 

@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2node-addon-api_2tools_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>Tools</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>clang-format</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>clang-format<sp/>checking<sp/>tools<sp/>is<sp/>designed<sp/>to<sp/>check<sp/>changed<sp/>lines<sp/>of<sp/>code<sp/>compared<sp/>to<sp/>given<sp/>git-refs.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Migration<sp/>Script</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>migration<sp/>tool<sp/>is<sp/>designed<sp/>to<sp/>reduce<sp/>repetitive<sp/>work<sp/>in<sp/>the<sp/>migration<sp/>process.<sp/>However,<sp/>the<sp/>script<sp/>is<sp/>not<sp/>aiming<sp/>to<sp/>convert<sp/>every<sp/>thing<sp/>for<sp/>you.<sp/>There<sp/>are<sp/>usually<sp/>some<sp/>small<sp/>fixes<sp/>and<sp/>major<sp/>reconstruction<sp/>required.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>How<sp/>To<sp/>Use</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>run<sp/>the<sp/>conversion<sp/>script,<sp/>first<sp/>make<sp/>sure<sp/>you<sp/>have<sp/>the<sp/>latest<sp/>`node-addon-api`<sp/>in<sp/>your<sp/>`node_modules`<sp/>directory.</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>install<sp/>node-addon-api</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Then<sp/>run<sp/>the<sp/>script<sp/>passing<sp/>your<sp/>project<sp/>directory</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">node<sp/>./node_modules/node-addon-api/tools/conversion.js<sp/>./</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">After<sp/>finish,<sp/>recompile<sp/>and<sp/>debug<sp/>things<sp/>that<sp/>are<sp/>missed<sp/>by<sp/>the<sp/>script.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Quick<sp/>Fixes</highlight></codeline>
+<codeline><highlight class="normal">Here<sp/>is<sp/>the<sp/>list<sp/>of<sp/>things<sp/>that<sp/>can<sp/>be<sp/>fixed<sp/>easily.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>1.<sp/>Change<sp/>your<sp/>methods&apos;<sp/>return<sp/>value<sp/>to<sp/>void<sp/>if<sp/>it<sp/>doesn&apos;t<sp/>return<sp/>value<sp/>to<sp/>JavaScript.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>2.<sp/>Use<sp/>`.`<sp/>to<sp/>access<sp/>attribute<sp/>or<sp/>to<sp/>invoke<sp/>member<sp/>function<sp/>in<sp/>Napi::Object<sp/>instead<sp/>of<sp/>`-&gt;`.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>3.<sp/>`Napi::New(env,<sp/>value);`<sp/>to<sp/>`Napi::[Type]::New(env,<sp/>value);</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Major<sp/>Reconstructions</highlight></codeline>
+<codeline><highlight class="normal">The<sp/>implementation<sp/>of<sp/>`Napi::ObjectWrap`<sp/>is<sp/>significantly<sp/>different<sp/>from<sp/>NAN&apos;s.<sp/>`Napi::ObjectWrap`<sp/>takes<sp/>a<sp/>pointer<sp/>to<sp/>the<sp/>wrapped<sp/>object<sp/>and<sp/>creates<sp/>a<sp/>reference<sp/>to<sp/>the<sp/>wrapped<sp/>object<sp/>inside<sp/>ObjectWrap<sp/>constructor.<sp/>`Napi::ObjectWrap`<sp/>also<sp/>associates<sp/>wrapped<sp/>object&apos;s<sp/>instance<sp/>methods<sp/>to<sp/>Javascript<sp/>module<sp/>instead<sp/>of<sp/>static<sp/>methods<sp/>like<sp/>NAN.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">So<sp/>if<sp/>you<sp/>use<sp/>Nan::ObjectWrap<sp/>in<sp/>your<sp/>module,<sp/>you<sp/>will<sp/>need<sp/>to<sp/>execute<sp/>the<sp/>following<sp/>steps.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>1.<sp/>Convert<sp/>your<sp/>[ClassName]::New<sp/>function<sp/>to<sp/>a<sp/>constructor<sp/>function<sp/>that<sp/>takes<sp/>a<sp/>`Napi::CallbackInfo`.<sp/>Declare<sp/>it<sp/>as</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">[ClassName](const<sp/>Napi::CallbackInfo&amp;<sp/>info);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>define<sp/>it<sp/>as</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">[ClassName]::[ClassName](const<sp/>Napi::CallbackInfo&amp;<sp/>info)<sp/>:<sp/>Napi::ObjectWrap&lt;[ClassName]&gt;(info){</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>...</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">This<sp/>way,<sp/>the<sp/>`Napi::ObjectWrap`<sp/>constructor<sp/>will<sp/>be<sp/>invoked<sp/>after<sp/>the<sp/>object<sp/>has<sp/>been<sp/>instantiated<sp/>and<sp/>`Napi::ObjectWrap`<sp/>can<sp/>use<sp/>the<sp/>`this`<sp/>pointer<sp/>to<sp/>create<sp/>a<sp/>reference<sp/>to<sp/>the<sp/>wrapped<sp/>object.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>2.<sp/>Move<sp/>your<sp/>original<sp/>constructor<sp/>code<sp/>into<sp/>the<sp/>new<sp/>constructor.<sp/>Delete<sp/>your<sp/>original<sp/>constructor.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>3.<sp/>In<sp/>your<sp/>class<sp/>initialization<sp/>function,<sp/>associate<sp/>native<sp/>methods<sp/>in<sp/>the<sp/>following<sp/>way.</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">Napi::FunctionReference<sp/>constructor;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">void<sp/>[ClassName]::Init(Napi::Env<sp/>env,<sp/>Napi::Object<sp/>exports,<sp/>Napi::Object<sp/>module)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Napi::HandleScope<sp/>scope(env);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Napi::Function<sp/>ctor<sp/>=<sp/>DefineClass(env,<sp/>&quot;Canvas&quot;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>InstanceMethod&lt;&amp;[ClassName]::Func1&gt;(&quot;Func1&quot;),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>InstanceMethod&lt;&amp;[ClassName]::Func2&gt;(&quot;Func2&quot;),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>InstanceAccessor&lt;&amp;[ClassName]::ValueGetter&gt;(&quot;Value&quot;),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>StaticMethod&lt;&amp;[ClassName]::StaticMethod&gt;(&quot;MethodName&quot;),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>InstanceValue(&quot;Value&quot;,<sp/>Napi::[Type]::New(env,<sp/>value)),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>constructor<sp/>=<sp/>Napi::Persistent(ctor);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>constructor<sp/>.SuppressDestruct();</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>exports.Set(&quot;[ClassName]&quot;,<sp/>ctor);</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>4.<sp/>In<sp/>function<sp/>where<sp/>you<sp/>need<sp/>to<sp/>Unwrap<sp/>the<sp/>ObjectWrap<sp/>in<sp/>NAN<sp/>like<sp/>`[ClassName]*<sp/>native<sp/>=<sp/>Nan::ObjectWrap::Unwrap&lt;[ClassName]&gt;(info.This());`,<sp/>use<sp/>`this`<sp/>pointer<sp/>directly<sp/>as<sp/>the<sp/>unwrapped<sp/>object<sp/>as<sp/>each<sp/>ObjectWrap<sp/>instance<sp/>is<sp/>associated<sp/>with<sp/>a<sp/>unique<sp/>object<sp/>instance.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>still<sp/>find<sp/>issues<sp/>after<sp/>following<sp/>this<sp/>guide,<sp/>please<sp/>leave<sp/>us<sp/>an<sp/>issue<sp/>describing<sp/>your<sp/>problem<sp/>and<sp/>we<sp/>will<sp/>try<sp/>to<sp/>resolve<sp/>it.</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/node-addon-api/tools/README.md"/>
+  </compounddef>
+</doxygen>

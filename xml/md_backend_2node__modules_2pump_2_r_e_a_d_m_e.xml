@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2pump_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2pump_2_r_e_a_d_m_e</compoundname>
+    <title>pump</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2pump_2_r_e_a_d_m_e_1autotoc_md2778"/> pump is a small node module that pipes streams together and destroys all of them if one of them closes.</para>
+<para><programlisting><codeline><highlight class="normal">npm<sp/>install<sp/>pump</highlight></codeline>
+</programlisting></para>
+<para><ulink url="http://travis-ci.org/mafintosh/pump"><image type="html" name="http://img.shields.io/travis/mafintosh/pump.svg?style=flat" alt="build status" inline="yes"></image>
+</ulink></para>
+<sect1 id="md_backend_2node__modules_2pump_2_r_e_a_d_m_e_1autotoc_md2779">
+<title>What problem does it solve?</title><para>When using standard <computeroutput>source.pipe(dest)</computeroutput> source will <emphasis>not</emphasis> be destroyed if dest emits close or an error. You are also not able to provide a callback to tell when then pipe has finished.</para>
+<para>pump does these two things for you</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2pump_2_r_e_a_d_m_e_1autotoc_md2780">
+<title>Usage</title><para>Simply pass the streams you want to pipe together to pump and add an optional callback</para>
+<para><programlisting><codeline><highlight class="normal"><sp/>js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>pump<sp/>=<sp/>require(&apos;pump&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>fs<sp/>=<sp/>require(&apos;fs&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>source<sp/>=<sp/>fs.createReadStream(&apos;/dev/random&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>dest<sp/>=<sp/>fs.createWriteStream(&apos;/dev/null&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">pump(source,<sp/>dest,<sp/>function(err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;pipe<sp/>finished&apos;,<sp/>err)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">setTimeout(function()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>dest.destroy()<sp/>//<sp/>when<sp/>dest<sp/>is<sp/>closed<sp/>pump<sp/>will<sp/>destroy<sp/>source</highlight></codeline>
+<codeline><highlight class="normal">},<sp/>1000)</highlight></codeline>
+</programlisting></para>
+<para>You can use pump to pipe more than two streams together as well</para>
+<para><programlisting><codeline><highlight class="normal"><sp/>js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>transform<sp/>=<sp/>someTransformStream()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">pump(source,<sp/>transform,<sp/>anotherTransform,<sp/>dest,<sp/>function(err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;pipe<sp/>finished&apos;,<sp/>err)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+<para>If <computeroutput>source</computeroutput>, <computeroutput>transform</computeroutput>, <computeroutput>anotherTransform</computeroutput> or <computeroutput>dest</computeroutput> closes all of them will be destroyed.</para>
+<para>Similarly to <computeroutput>stream.pipe()</computeroutput>, <computeroutput>pump()</computeroutput> returns the last stream passed in, so you can do:</para>
+<para><programlisting><codeline><highlight class="normal">return<sp/>pump(s1,<sp/>s2)<sp/>//<sp/>returns<sp/>s2</highlight></codeline>
+</programlisting></para>
+<para>If you want to return a stream that combines <emphasis>both</emphasis> s1 and s2 to a single stream use <ulink url="https://github.com/mafintosh/pumpify">pumpify</ulink> instead.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2pump_2_r_e_a_d_m_e_1autotoc_md2781">
+<title>License</title><para>MIT</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2pump_2_r_e_a_d_m_e_1autotoc_md2782">
+<title>Related</title><para><computeroutput>pump</computeroutput> is part of the <ulink url="https://github.com/maxogden/mississippi">mississippi stream utility collection</ulink> which includes more useful stream modules similar to this one. </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/pump/README.md"/>
+  </compounddef>
+</doxygen>

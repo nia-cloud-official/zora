@@ -1,0 +1,167 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2depd_2_readme" kind="page">
+    <compoundname>md_backend_2node__modules_2depd_2_readme</compoundname>
+    <title>depd</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2depd_2_readme_1autotoc_md769"/> <ulink url="https://npmjs.org/package/depd"><image type="html" name="https://badgen.net/npm/v/depd" alt="NPM Version" inline="yes"></image>
+</ulink> <ulink url="https://npmjs.org/package/depd"><image type="html" name="https://badgen.net/npm/dm/depd" alt="NPM Downloads" inline="yes"></image>
+</ulink> <ulink url="https://nodejs.org/en/download/"><image type="html" name="https://badgen.net/npm/node/depd" alt="Node.js Version" inline="yes"></image>
+</ulink> <ulink url="https://travis-ci.org/dougwilson/nodejs-depd"><image type="html" name="https://badgen.net/travis/dougwilson/nodejs-depd/master?label=linux" alt="Linux Build" inline="yes"></image>
+</ulink> <ulink url="https://ci.appveyor.com/project/dougwilson/nodejs-depd"><image type="html" name="https://badgen.net/appveyor/ci/dougwilson/nodejs-depd/master?label=windows" alt="Windows Build" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/r/dougwilson/nodejs-depd?branch=master"><image type="html" name="https://badgen.net/coveralls/c/github/dougwilson/nodejs-depd/master" alt="Coverage Status" inline="yes"></image>
+</ulink></para>
+<para>Deprecate all the things</para>
+<para><blockquote><para><zwj/>With great modules comes great responsibility; mark things deprecated! </para>
+</blockquote></para>
+<sect1 id="md_backend_2node__modules_2depd_2_readme_1autotoc_md770">
+<title>Install</title><para>This module is installed directly using <computeroutput>npm</computeroutput>:</para>
+<para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>depd</highlight></codeline>
+</programlisting></para>
+<para>This module can also be bundled with systems like <ulink url="http://browserify.org/">Browserify</ulink> or <ulink url="https://webpack.github.io/">webpack</ulink>, though by default this module will alter it&apos;s API to no longer display or track deprecations.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2depd_2_readme_1autotoc_md771">
+<title>API</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>deprecate<sp/>=<sp/>require(&apos;depd&apos;)(&apos;my-module&apos;)</highlight></codeline>
+</programlisting></para>
+<para>This library allows you to display deprecation messages to your users. This library goes above and beyond with deprecation warnings by introspection of the call stack (but only the bits that it is interested in).</para>
+<para>Instead of just warning on the first invocation of a deprecated function and never again, this module will warn on the first invocation of a deprecated function per unique call site, making it ideal to alert users of all deprecated uses across the code base, rather than just whatever happens to execute first.</para>
+<para>The deprecation warnings from this module also include the file and line information for the call into the module that the deprecated function was in.</para>
+<para><bold>NOTE</bold> this library has a similar interface to the <computeroutput>debug</computeroutput> module, and this module uses the calling file to get the boundary for the call stacks, so you should always create a new <computeroutput>deprecate</computeroutput> object in each file and not within some central file.</para>
+<sect2 id="md_backend_2node__modules_2depd_2_readme_1autotoc_md772">
+<title>depd(namespace)</title><para>Create a new deprecate function that uses the given namespace name in the messages and will display the call site prior to the stack entering the file this function was called from. It is highly suggested you use the name of your module as the namespace.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2depd_2_readme_1autotoc_md773">
+<title>deprecate(message)</title><para>Call this function from deprecated code to display a deprecation message. This message will appear once per unique caller site. Caller site is the first call site in the stack in a different file from the caller of this function.</para>
+<para>If the message is omitted, a message is generated for you based on the site of the <computeroutput>deprecate()</computeroutput> call and will display the name of the function called, similar to the name displayed in a stack trace.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2depd_2_readme_1autotoc_md774">
+<title>deprecate.function(fn, message)</title><para>Call this function to wrap a given function in a deprecation message on any call to the function. An optional message can be supplied to provide a custom message.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2depd_2_readme_1autotoc_md775">
+<title>deprecate.property(obj, prop, message)</title><para>Call this function to wrap a given property on object in a deprecation message on any accessing or setting of the property. An optional message can be supplied to provide a custom message.</para>
+<para>The method must be called on the object where the property belongs (not inherited from the prototype).</para>
+<para>If the property is a data descriptor, it will be converted to an accessor descriptor in order to display the deprecation message.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2depd_2_readme_1autotoc_md776">
+<title>process.on(&apos;deprecation&apos;, fn)</title><para>This module will allow easy capturing of deprecation errors by emitting the errors as the type &quot;deprecation&quot; on the global <computeroutput>process</computeroutput>. If there are no listeners for this type, the errors are written to STDERR as normal, but if there are any listeners, nothing will be written to STDERR and instead only emitted. From there, you can write the errors in a different format or to a logging source.</para>
+<para>The error represents the deprecation and is emitted only once with the same rules as writing to STDERR. The error has the following properties:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>message</computeroutput> - This is the message given by the library</para>
+</listitem><listitem><para><computeroutput>name</computeroutput> - This is always <lsquo/>&apos;DeprecationError<rsquo/><computeroutput> -</computeroutput>namespace<computeroutput>- This is the namespace the deprecation came from -</computeroutput>stack` - This is the stack of the call to the deprecated thing</para>
+</listitem></itemizedlist>
+</para>
+<para>Example <computeroutput>error.stack</computeroutput> output:</para>
+<para><programlisting><codeline><highlight class="normal">DeprecationError:<sp/>my-cool-module<sp/>deprecated<sp/>oldfunction</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>Object.&lt;anonymous&gt;<sp/>([eval]-wrapper:6:22)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>Module._compile<sp/>(module.js:456:26)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>evalScript<sp/>(node.js:532:25)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>startup<sp/>(node.js:80:7)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>node.js:902:3</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2depd_2_readme_1autotoc_md777">
+<title>process.env.NO_DEPRECATION</title><para>As a user of modules that are deprecated, the environment variable <computeroutput>NO_DEPRECATION</computeroutput> is provided as a quick solution to silencing deprecation warnings from being output. The format of this is similar to that of <computeroutput>DEBUG</computeroutput>:</para>
+<para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>NO_DEPRECATION=my-module,othermod<sp/>node<sp/>app.js</highlight></codeline>
+</programlisting></para>
+<para>This will suppress deprecations from being output for &quot;my-module&quot; and &quot;othermod&quot;. The value is a list of comma-separated namespaces. To suppress every warning across all namespaces, use the value <computeroutput>*</computeroutput> for a namespace.</para>
+<para>Providing the argument <computeroutput>--no-deprecation</computeroutput> to the <computeroutput>node</computeroutput> executable will suppress all deprecations (only available in Node.js 0.8 or higher).</para>
+<para><bold>NOTE</bold> This will not suppress the deperecations given to any &quot;deprecation&quot; event listeners, just the output to STDERR.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2depd_2_readme_1autotoc_md778">
+<title>process.env.TRACE_DEPRECATION</title><para>As a user of modules that are deprecated, the environment variable <computeroutput>TRACE_DEPRECATION</computeroutput> is provided as a solution to getting more detailed location information in deprecation warnings by including the entire stack trace. The format of this is the same as <computeroutput>NO_DEPRECATION</computeroutput>:</para>
+<para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>TRACE_DEPRECATION=my-module,othermod<sp/>node<sp/>app.js</highlight></codeline>
+</programlisting></para>
+<para>This will include stack traces for deprecations being output for &quot;my-module&quot; and &quot;othermod&quot;. The value is a list of comma-separated namespaces. To trace every warning across all namespaces, use the value <computeroutput>*</computeroutput> for a namespace.</para>
+<para>Providing the argument <computeroutput>--trace-deprecation</computeroutput> to the <computeroutput>node</computeroutput> executable will trace all deprecations (only available in Node.js 0.8 or higher).</para>
+<para><bold>NOTE</bold> This will not trace the deperecations silenced by <computeroutput>NO_DEPRECATION</computeroutput>.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2depd_2_readme_1autotoc_md779">
+<title>Display</title><para><image type="html" name="files/message.png" alt="message" inline="yes"></image>
+</para>
+<para>When a user calls a function in your library that you mark deprecated, they will see the following written to STDERR (in the given colors, similar colors and layout to the <computeroutput>debug</computeroutput> module):</para>
+<para><programlisting><codeline><highlight class="normal">bright<sp/>cyan<sp/><sp/><sp/><sp/>bright<sp/>yellow</highlight></codeline>
+<codeline><highlight class="normal">|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reset<sp/><sp/><sp/><sp/><sp/><sp/><sp/>cyan</highlight></codeline>
+<codeline><highlight class="normal">|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal">▼<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>▼<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>▼<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>▼</highlight></codeline>
+<codeline><highlight class="normal">my-cool-module<sp/>deprecated<sp/>oldfunction<sp/>[eval]-wrapper:6:22</highlight></codeline>
+<codeline><highlight class="normal">▲<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>▲<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>▲<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>▲</highlight></codeline>
+<codeline><highlight class="normal">|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal">namespace<sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>location<sp/>of<sp/>mycoolmod.oldfunction()<sp/>call</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>deprecation<sp/>message</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>the<sp/>word<sp/>&quot;deprecated&quot;</highlight></codeline>
+</programlisting></para>
+<para>If the user redirects their STDERR to a file or somewhere that does not support colors, they see (similar layout to the <computeroutput>debug</computeroutput> module):</para>
+<para><programlisting><codeline><highlight class="normal">Sun,<sp/>15<sp/>Jun<sp/>2014<sp/>05:21:37<sp/>GMT<sp/>my-cool-module<sp/>deprecated<sp/>oldfunction<sp/>at<sp/>[eval]-wrapper:6:22</highlight></codeline>
+<codeline><highlight class="normal">▲<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>▲<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>▲<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>▲<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>▲</highlight></codeline>
+<codeline><highlight class="normal">|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal">timestamp<sp/>of<sp/>message<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>namespace<sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>location<sp/>of<sp/>mycoolmod.oldfunction()<sp/>call</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>deprecation<sp/>message</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>the<sp/>word<sp/>&quot;deprecated&quot;</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2depd_2_readme_1autotoc_md780">
+<title>Examples</title><sect2 id="md_backend_2node__modules_2depd_2_readme_1autotoc_md781">
+<title>Deprecating all calls to a function</title><para>This will display a deprecated message about &quot;oldfunction&quot; being deprecated from &quot;my-module&quot; on STDERR.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>deprecate<sp/>=<sp/>require(&apos;depd&apos;)(&apos;my-cool-module&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>message<sp/>automatically<sp/>derived<sp/>from<sp/>function<sp/>name</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Object.oldfunction</highlight></codeline>
+<codeline><highlight class="normal">exports.oldfunction<sp/>=<sp/>deprecate.function(function<sp/>oldfunction<sp/>()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>all<sp/>calls<sp/>to<sp/>function<sp/>are<sp/>deprecated</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>specific<sp/>message</highlight></codeline>
+<codeline><highlight class="normal">exports.oldfunction<sp/>=<sp/>deprecate.function(function<sp/>()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>all<sp/>calls<sp/>to<sp/>function<sp/>are<sp/>deprecated</highlight></codeline>
+<codeline><highlight class="normal">},<sp/>&apos;oldfunction&apos;)</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2depd_2_readme_1autotoc_md782">
+<title>Conditionally deprecating a function call</title><para>This will display a deprecated message about &quot;weirdfunction&quot; being deprecated from &quot;my-module&quot; on STDERR when called with less than 2 arguments.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>deprecate<sp/>=<sp/>require(&apos;depd&apos;)(&apos;my-cool-module&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">exports.weirdfunction<sp/>=<sp/>function<sp/>()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(arguments.length<sp/>&lt;<sp/>2)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>calls<sp/>with<sp/>0<sp/>or<sp/>1<sp/>args<sp/>are<sp/>deprecated</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>deprecate(&apos;weirdfunction<sp/>args<sp/>&lt;<sp/>2&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+<para>When calling <computeroutput>deprecate</computeroutput> as a function, the warning is counted per call site within your own module, so you can display different deprecations depending on different situations and the users will still get all the warnings:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>deprecate<sp/>=<sp/>require(&apos;depd&apos;)(&apos;my-cool-module&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">exports.weirdfunction<sp/>=<sp/>function<sp/>()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(arguments.length<sp/>&lt;<sp/>2)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>calls<sp/>with<sp/>0<sp/>or<sp/>1<sp/>args<sp/>are<sp/>deprecated</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>deprecate(&apos;weirdfunction<sp/>args<sp/>&lt;<sp/>2&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}<sp/>else<sp/>if<sp/>(typeof<sp/>arguments[0]<sp/>!==<sp/>&apos;string&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>calls<sp/>with<sp/>non-string<sp/>first<sp/>argument<sp/>are<sp/>deprecated</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>deprecate(&apos;weirdfunction<sp/>non-string<sp/>first<sp/>arg&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2depd_2_readme_1autotoc_md783">
+<title>Deprecating property access</title><para>This will display a deprecated message about &quot;oldprop&quot; being deprecated from &quot;my-module&quot; on STDERR when accessed. A deprecation will be displayed when setting the value and when getting the value.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>deprecate<sp/>=<sp/>require(&apos;depd&apos;)(&apos;my-cool-module&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">exports.oldprop<sp/>=<sp/>&apos;something&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>message<sp/>automatically<sp/>derives<sp/>from<sp/>property<sp/>name</highlight></codeline>
+<codeline><highlight class="normal">deprecate.property(exports,<sp/>&apos;oldprop&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>explicit<sp/>message</highlight></codeline>
+<codeline><highlight class="normal">deprecate.property(exports,<sp/>&apos;oldprop&apos;,<sp/>&apos;oldprop<sp/>&gt;=<sp/>0.10&apos;)</highlight></codeline>
+</programlisting></para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2depd_2_readme_1autotoc_md784">
+<title>License</title><para>[MIT](LICENSE) </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/depd/Readme.md"/>
+  </compounddef>
+</doxygen>

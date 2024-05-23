@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2minipass-collect_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>minipass-collect</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>Minipass<sp/>stream<sp/>that<sp/>collects<sp/>all<sp/>the<sp/>data<sp/>into<sp/>a<sp/>single<sp/>chunk</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note<sp/>that<sp/>this<sp/>buffers<sp/>ALL<sp/>data<sp/>written<sp/>to<sp/>it,<sp/>so<sp/>it&apos;s<sp/>only<sp/>good<sp/>for</highlight></codeline>
+<codeline><highlight class="normal">situations<sp/>where<sp/>you<sp/>are<sp/>sure<sp/>the<sp/>entire<sp/>stream<sp/>fits<sp/>in<sp/>memory.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note:<sp/>this<sp/>is<sp/>primarily<sp/>useful<sp/>for<sp/>the<sp/>`Collect.PassThrough`<sp/>class,<sp/>since</highlight></codeline>
+<codeline><highlight class="normal">Minipass<sp/>streams<sp/>already<sp/>have<sp/>a<sp/>`.collect()`<sp/>method<sp/>which<sp/>returns<sp/>a<sp/>promise</highlight></codeline>
+<codeline><highlight class="normal">that<sp/>resolves<sp/>to<sp/>the<sp/>array<sp/>of<sp/>chunks,<sp/>and<sp/>a<sp/>`.concat()`<sp/>method<sp/>that<sp/>returns</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>data<sp/>concatenated<sp/>into<sp/>a<sp/>single<sp/>Buffer<sp/>or<sp/>String.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>USAGE</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>Collect<sp/>=<sp/>require(&apos;minipass-collect&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>collector<sp/>=<sp/>new<sp/>Collect()</highlight></codeline>
+<codeline><highlight class="normal">collector.on(&apos;data&apos;,<sp/>allTheData<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;all<sp/>the<sp/>data!&apos;,<sp/>allTheData)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">someSourceOfData.pipe(collector)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>note<sp/>that<sp/>you<sp/>can<sp/>also<sp/>simply<sp/>do:</highlight></codeline>
+<codeline><highlight class="normal">someSourceOfData.pipe(new<sp/>Minipass()).concat().then(data<sp/>=&gt;<sp/>...)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>or<sp/>even,<sp/>if<sp/>someSourceOfData<sp/>is<sp/>a<sp/>Minipass:</highlight></codeline>
+<codeline><highlight class="normal">someSourceOfData.concat().then(data<sp/>=&gt;<sp/>...)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>but<sp/>you<sp/>might<sp/>prefer<sp/>to<sp/>have<sp/>it<sp/>stream-shaped<sp/>rather<sp/>than</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Promise-shaped<sp/>in<sp/>some<sp/>scenarios.</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>want<sp/>to<sp/>collect<sp/>the<sp/>data,<sp/>but<sp/>_also_<sp/>act<sp/>as<sp/>a<sp/>passthrough<sp/>stream,</highlight></codeline>
+<codeline><highlight class="normal">then<sp/>use<sp/>`Collect.PassThrough`<sp/>instead<sp/>(for<sp/>example<sp/>to<sp/>memoize<sp/>streaming</highlight></codeline>
+<codeline><highlight class="normal">responses),<sp/>and<sp/>listen<sp/>on<sp/>the<sp/>`collect`<sp/>event.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>Collect<sp/>=<sp/>require(&apos;minipass-collect&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>collector<sp/>=<sp/>new<sp/>Collect.PassThrough()</highlight></codeline>
+<codeline><highlight class="normal">collector.on(&apos;collect&apos;,<sp/>allTheData<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;all<sp/>the<sp/>data!&apos;,<sp/>allTheData)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">someSourceOfData.pipe(collector).pipe(someOtherStream)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">All<sp/>[minipass<sp/>options](http://npm.im/minipass)<sp/>are<sp/>supported.</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/minipass-collect/README.md"/>
+  </compounddef>
+</doxygen>

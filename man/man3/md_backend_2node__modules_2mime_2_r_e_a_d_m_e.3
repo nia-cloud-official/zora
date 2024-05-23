@@ -1,0 +1,111 @@
+.TH "md_backend_2node__modules_2mime_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2mime_2_r_e_a_d_m_e \- mime 
+.PP
+ Comprehensive MIME type mapping API based on mime-db module\&.
+.SH "Install"
+.PP
+Install with \fRnpm\fP: 
+.PP
+.nf
+npm install mime
+
+.fi
+.PP
+ 
+.SH "Contributing / Testing"
+.PP
+.PP
+.nf
+npm run test
+.fi
+.PP
+ 
+.SH "Command Line"
+.PP
+.PP
+.nf
+mime [path_string]
+.fi
+.PP
+ E\&.g\&. 
+.PP
+.nf
+> mime scripts/jquery\&.js
+application/javascript
+
+.fi
+.PP
+ 
+.SH "API - Queries"
+.PP
+.SS "mime\&.lookup(path)"
+Get the mime type associated with a file, if no mime type is found \fRapplication/octet-stream\fP is returned\&. Performs a case-insensitive lookup using the extension in \fRpath\fP (the substring after the last '/' or '\&.')\&. E\&.g\&.
+.PP
+.PP
+.nf
+var mime = require('mime');
+
+mime\&.lookup('/path/to/file\&.txt');         // => 'text/plain'
+mime\&.lookup('file\&.txt');                  // => 'text/plain'
+mime\&.lookup('\&.TXT');                      // => 'text/plain'
+mime\&.lookup('htm');                       // => 'text/html'
+.fi
+.PP
+.SS "mime\&.default_type"
+Sets the mime type returned when \fRmime\&.lookup\fP fails to find the extension searched for\&. (Default is \fRapplication/octet-stream\fP\&.)
+.SS "mime\&.extension(type)"
+Get the default extension for \fRtype\fP
+.PP
+.PP
+.nf
+mime\&.extension('text/html');                 // => 'html'
+mime\&.extension('application/octet\-stream');  // => 'bin'
+.fi
+.PP
+.SS "mime\&.charsets\&.lookup()"
+Map mime-type to charset
+.PP
+.PP
+.nf
+mime\&.charsets\&.lookup('text/plain');        // => 'UTF\-8'
+.fi
+.PP
+.PP
+(The logic for charset lookups is pretty rudimentary\&. Feel free to suggest improvements\&.)
+.SH "API - Defining Custom Types"
+.PP
+Custom type mappings can be added on a per-project basis via the following APIs\&.
+.SS "mime\&.define()"
+Add custom mime/extension mappings
+.PP
+.PP
+.nf
+mime\&.define({
+    'text/x\-some\-format': ['x\-sf', 'x\-sft', 'x\-sfml'],
+    'application/x\-my\-type': ['x\-mt', 'x\-mtt'],
+    // etc \&.\&.\&.
+});
+
+mime\&.lookup('x\-sft');                 // => 'text/x\-some\-format'
+.fi
+.PP
+.PP
+The first entry in the extensions array is returned by \fRmime\&.extension()\fP\&. E\&.g\&.
+.PP
+.PP
+.nf
+mime\&.extension('text/x\-some\-format'); // => 'x\-sf'
+.fi
+.PP
+.SS "mime\&.load(filepath)"
+Load mappings from an Apache '\&.types' format file
+.PP
+.PP
+.nf
+mime\&.load('\&./my_project\&.types');
+.fi
+.PP
+ The \&.types file format is simple - See the \fRtypes\fP dir for examples\&. 

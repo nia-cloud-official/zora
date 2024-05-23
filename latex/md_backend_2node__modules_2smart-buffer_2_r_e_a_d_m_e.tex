@@ -1,0 +1,671 @@
+\chapter{smart-\/buffer \texorpdfstring{$<$}{<}a href="{}https\+://travis-\/ci.\+org/\+Josh\+Glazebrook/smart-\/buffer"{} \texorpdfstring{$>$}{>}\texorpdfstring{$<$}{<}img src="{}https\+://travis-\/ci.\+org/\+Josh\+Glazebrook/smart-\/buffer.\+svg?branch=master"{} alt="{}\+Build Status"{}/\texorpdfstring{$>$}{>}\texorpdfstring{$<$}{<}/a\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}a href="{}https\+://coveralls.\+io/github/\+Josh\+Glazebrook/smart-\/buffer?branch=master"{} \texorpdfstring{$>$}{>}\texorpdfstring{$<$}{<}img src="{}https\+://coveralls.\+io/repos/github/\+Josh\+Glazebrook/smart-\/buffer/badge.\+svg?branch=master"{} alt="{}\+Coverage Status"{}/\texorpdfstring{$>$}{>}\texorpdfstring{$<$}{<}/a\texorpdfstring{$>$}{>}}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e}\index{smart-\/buffer  $<$a href="{}https://travis-\/ci.org/JoshGlazebrook/smart-\/buffer"{} $>$$<$img src="{}https://travis-\/ci.org/JoshGlazebrook/smart-\/buffer.svg?branch=master"{} alt="{}Build Status"{}/$>$$<$/a$>$  $<$a href="{}https://coveralls.io/github/JoshGlazebrook/smart-\/buffer?branch=master"{} $>$$<$img src="{}https://coveralls.io/repos/github/JoshGlazebrook/smart-\/buffer/badge.svg?branch=master"{} alt="{}Coverage Status"{}/$>$$<$/a$>$@{smart-\/buffer  $<$a href=""https://travis-\/ci.org/JoshGlazebrook/smart-\/buffer"" $>$$<$img src=""https://travis-\/ci.org/JoshGlazebrook/smart-\/buffer.svg?branch=master"" alt=""Build Status""/$>$$<$/a$>$  $<$a href=""https://coveralls.io/github/JoshGlazebrook/smart-\/buffer?branch=master"" $>$$<$img src=""https://coveralls.io/repos/github/JoshGlazebrook/smart-\/buffer/badge.svg?branch=master"" alt=""Coverage Status""/$>$$<$/a$>$}}
+smart-\/buffer is a Buffer wrapper that adds automatic read \& write offset tracking, string operations, data insertions, and more.
+
+
+
+{\bfseries{Key Features}}\+:
+\begin{DoxyItemize}
+\item Proxies all of the Buffer write and read functions
+\item Keeps track of read and write offsets automatically
+\item Grows the internal Buffer as needed
+\item Useful string operations. (Null terminating strings)
+\item Allows for inserting values at specific points in the Buffer
+\item Built in Type\+Script
+\item Type Definitions Provided
+\item Browser Support (using Webpack/\+Browserify)
+\item Full test coverage
+\end{DoxyItemize}
+
+{\bfseries{Requirements}}\+:
+\begin{DoxyItemize}
+\item Node v4.\+0+ is supported at this time. (Versions prior to 2.\+0 will work on node 0.\+10)
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3385}{}\doxysection{\texorpdfstring{Breaking Changes in v4.\+0}{Breaking Changes in v4.\+0}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3385}
+
+\begin{DoxyItemize}
+\item Old constructor patterns have been completely removed. It\textquotesingle{}s now required to use the Smart\+Buffer.\+from\+XXX() factory constructors.
+\item rewind(), skip(), move\+To() have been removed. (see offsets)
+\item Internal private properties are now prefixed with underscores (\+\_\+)
+\item {\bfseries{All}} write\+XXX() methods that are given an offset will now {\bfseries{overwrite data}} instead of insert. (see write vs insert)
+\item insert\+XXX() methods have been added for when you want to insert data at a specific offset (this replaces the old behavior of write\+XXX() when an offset was provided)
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3386}{}\doxysection{\texorpdfstring{Looking for v3 docs?}{Looking for v3 docs?}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3386}
+Legacy documentation for version 3 and prior can be found \href{https://github.com/JoshGlazebrook/smart-buffer/blob/master/docs/README_v3.md}{\texttt{ here}}.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3387}{}\doxysection{\texorpdfstring{Installing\+:}{Installing\+:}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3387}
+{\ttfamily yarn add smart-\/buffer}
+
+or
+
+{\ttfamily npm install smart-\/buffer}
+
+Note\+: The published NPM package includes the built javascript library. If you cloned this repo and wish to build the library manually use\+:
+
+{\ttfamily npm run build}\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3388}{}\doxysection{\texorpdfstring{Using smart-\/buffer}{Using smart-\/buffer}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3388}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Javascript}
+\DoxyCodeLine{const\ SmartBuffer\ =\ require('smart-\/buffer').SmartBuffer;}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Typescript}
+\DoxyCodeLine{import\ \{\ SmartBuffer,\ SmartBufferOptions\}\ from\ 'smart-\/buffer';}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3389}{}\doxysubsection{\texorpdfstring{Simple Example}{Simple Example}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3389}
+Building a packet that uses the following protocol specification\+:
+
+{\ttfamily \mbox{[}Packet\+Type\+:2\mbox{]}\mbox{[}Packet\+Length\+:2\mbox{]}\mbox{[}Data\+:XX\mbox{]}}
+
+To build this packet using the vanilla Buffer class, you would have to count up the length of the data payload beforehand. You would also need to keep track of the current "{}cursor"{} position in your Buffer so you write everything in the right places. With smart-\/buffer you don\textquotesingle{}t have to do either of those things.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ createLoginPacket(username,\ password,\ age,\ country)\ \{}
+\DoxyCodeLine{\ \ \ \ const\ packet\ =\ new\ SmartBuffer();}
+\DoxyCodeLine{\ \ \ \ packet.writeUInt16LE(0x0060);\ //\ Some\ packet\ type}
+\DoxyCodeLine{\ \ \ \ packet.writeStringNT(username);}
+\DoxyCodeLine{\ \ \ \ packet.writeStringNT(password);}
+\DoxyCodeLine{\ \ \ \ packet.writeUInt8(age);}
+\DoxyCodeLine{\ \ \ \ packet.writeStringNT(country);}
+\DoxyCodeLine{\ \ \ \ packet.insertUInt16LE(packet.length\ -\/\ 2,\ 2);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ return\ packet.toBuffer();}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ With the above function, you now can do this\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ login\ =\ createLoginPacket("{}Josh"{},\ "{}secret123"{},\ 22,\ "{}United\ States"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ <Buffer\ 60\ 00\ 1e\ 00\ 4a\ 6f\ 73\ 68\ 00\ 73\ 65\ 63\ 72\ 65\ 74\ 31\ 32\ 33\ 00\ 16\ 55\ 6e\ 69\ 74\ 65\ 64\ 20\ 53\ 74\ 61\ 74\ 65\ 73\ 00>}
+
+\end{DoxyCode}
+ Notice that the {\ttfamily \mbox{[}Packet\+Length\+:2\mbox{]}} value (1e 00) was inserted at position 2.
+
+Reading back the packet we created above is just as easy\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ reader\ =\ SmartBuffer.fromBuffer(login);}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ logininfo\ =\ \{}
+\DoxyCodeLine{\ \ \ \ packetType:\ reader.readUInt16LE(),}
+\DoxyCodeLine{\ \ \ \ packetLength:\ reader.readUInt16LE(),}
+\DoxyCodeLine{\ \ \ \ username:\ reader.readStringNT(),}
+\DoxyCodeLine{\ \ \ \ password:\ reader.readStringNT(),}
+\DoxyCodeLine{\ \ \ \ age:\ reader.readUInt8(),}
+\DoxyCodeLine{\ \ \ \ country:\ reader.readStringNT()}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{/*}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ packetType:\ 96,\ (0x0060)}
+\DoxyCodeLine{\ \ \ \ packetLength:\ 30,}
+\DoxyCodeLine{\ \ \ \ username:\ 'Josh',}
+\DoxyCodeLine{\ \ \ \ password:\ 'secret123',}
+\DoxyCodeLine{\ \ \ \ age:\ 22,}
+\DoxyCodeLine{\ \ \ \ country:\ 'United\ States'}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{*/}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3390}{}\doxysection{\texorpdfstring{Write vs Insert}{Write vs Insert}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3390}
+In prior versions of Smart\+Buffer, .write\+XXX(value, offset) calls would insert data when an offset was provided. In version 4, this will now overwrite the data at the offset position. To insert data there are now corresponding .insert\+XXX(value, offset) methods.
+
+{\bfseries{Smart\+Buffer v3}}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ buff\ =\ SmartBuffer.fromBuffer(new\ Buffer([1,2,3,4,5,6]));}
+\DoxyCodeLine{buff.writeInt8(7,\ 2);}
+\DoxyCodeLine{console.log(buff.toBuffer())}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ <Buffer\ 01\ 02\ 07\ 03\ 04\ 05\ 06>}
+
+\end{DoxyCode}
+
+
+{\bfseries{Smart\+Buffer v4}}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ buff\ =\ SmartBuffer.fromBuffer(new\ Buffer([1,2,3,4,5,6]));}
+\DoxyCodeLine{buff.writeInt8(7,\ 2);}
+\DoxyCodeLine{console.log(buff.toBuffer());}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ <Buffer\ 01\ 02\ 07\ 04\ 05\ 06>}
+
+\end{DoxyCode}
+
+
+To insert you instead should use\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ buff\ =\ SmartBuffer.fromBuffer(new\ Buffer([1,2,3,4,5,6]));}
+\DoxyCodeLine{buff.insertInt8(7,\ 2);}
+\DoxyCodeLine{console.log(buff.toBuffer());}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ <Buffer\ 01\ 02\ 07\ 03\ 04\ 05\ 06>}
+
+\end{DoxyCode}
+
+
+{\bfseries{Note\+:}} Insert/\+Writing to a position beyond the currently tracked internal Buffer will zero pad to your offset.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3391}{}\doxysection{\texorpdfstring{Constructing a smart-\/buffer}{Constructing a smart-\/buffer}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3391}
+There are a few different ways to construct a Smart\+Buffer instance.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Creating\ SmartBuffer\ from\ existing\ Buffer}
+\DoxyCodeLine{const\ buff\ =\ SmartBuffer.fromBuffer(buffer);\ //\ Creates\ instance\ from\ buffer.\ (Uses\ default\ utf8\ encoding)}
+\DoxyCodeLine{const\ buff\ =\ SmartBuffer.fromBuffer(buffer,\ 'ascii');\ //\ Creates\ instance\ from\ buffer\ with\ ascii\ encoding\ for\ strings.}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Creating\ SmartBuffer\ with\ specified\ internal\ Buffer\ size.\ (Note:\ this\ is\ not\ a\ hard\ cap,\ the\ internal\ buffer\ will\ grow\ as\ needed).}
+\DoxyCodeLine{const\ buff\ =\ SmartBuffer.fromSize(1024);\ //\ Creates\ instance\ with\ internal\ Buffer\ size\ of\ 1024.}
+\DoxyCodeLine{const\ buff\ =\ SmartBuffer.fromSize(1024,\ 'utf8');\ //\ Creates\ instance\ with\ internal\ Buffer\ size\ of\ 1024,\ and\ utf8\ encoding\ for\ strings.}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Creating\ SmartBuffer\ with\ options\ object.\ This\ one\ specifies\ size\ and\ encoding.}
+\DoxyCodeLine{const\ buff\ =\ SmartBuffer.fromOptions(\{}
+\DoxyCodeLine{\ \ \ \ size:\ 1024,}
+\DoxyCodeLine{\ \ \ \ encoding:\ 'ascii'}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Creating\ SmartBuffer\ with\ options\ object.\ This\ one\ specified\ an\ existing\ Buffer.}
+\DoxyCodeLine{const\ buff\ =\ SmartBuffer.fromOptions(\{}
+\DoxyCodeLine{\ \ \ \ buff:\ buffer}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Creating\ SmartBuffer\ from\ a\ string.}
+\DoxyCodeLine{const\ buff\ =\ SmartBuffer.fromBuffer(Buffer.from('some\ string',\ 'utf8'));}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Just\ want\ a\ regular\ SmartBuffer\ with\ all\ default\ options?}
+\DoxyCodeLine{const\ buff\ =\ new\ SmartBuffer();}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3392}{}\doxysection{\texorpdfstring{Api Reference\+:}{Api Reference\+:}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3392}
+{\bfseries{Note\+:}} Smart\+Buffer is fully documented with Typescript definitions as well as jsdocs so your favorite editor/\+IDE will have intellisense.
+
+{\bfseries{Table of Contents}}
+
+
+\begin{DoxyEnumerate}
+\item Constructing
+\item {\bfseries{Numbers}}
+\begin{DoxyEnumerate}
+\item Integers
+\item Floating Points
+\end{DoxyEnumerate}
+\item {\bfseries{Strings}}
+\begin{DoxyEnumerate}
+\item Strings
+\item Null Terminated Strings
+\end{DoxyEnumerate}
+\item Buffers
+\item Offsets
+\item Other
+\end{DoxyEnumerate}\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3393}{}\doxysubsection{\texorpdfstring{Constructing}{Constructing}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3393}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3394}{}\doxysubsubsection{\texorpdfstring{constructor()}{constructor()}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3394}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3395}{}\doxysubsubsection{\texorpdfstring{constructor(\mbox{[}options\mbox{]})}{constructor(\mbox{[}options\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3395}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} \texorpdfstring{$\ast$}{*}\{Smart\+Buffer\+Options\}\texorpdfstring{$\ast$}{*} An optional options object to construct a Smart\+Buffer with.
+\end{DoxyItemize}
+
+Examples\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ buff\ =\ new\ SmartBuffer();}
+\DoxyCodeLine{const\ buff\ =\ new\ SmartBuffer(\{}
+\DoxyCodeLine{\ \ \ \ size:\ 1024,}
+\DoxyCodeLine{\ \ \ \ encoding:\ 'ascii'}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3396}{}\doxysubsubsection{\texorpdfstring{Class Method\+: from\+Buffer(buffer\mbox{[}, encoding\mbox{]})}{Class Method\+: from\+Buffer(buffer\mbox{[}, encoding\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3396}
+
+\begin{DoxyItemize}
+\item {\ttfamily buffer} \texorpdfstring{$\ast$}{*}\{Buffer\}\texorpdfstring{$\ast$}{*} The Buffer instance to wrap.
+\item {\ttfamily encoding} \texorpdfstring{$\ast$}{*}\{string\}\texorpdfstring{$\ast$}{*} The string encoding to use. {\ttfamily Default\+: \textquotesingle{}utf8\textquotesingle{}}
+\end{DoxyItemize}
+
+Examples\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ someBuffer\ =\ Buffer.from('some\ string');}
+\DoxyCodeLine{const\ buff\ =\ SmartBuffer.fromBuffer(someBuffer);\ //\ Defaults\ to\ utf8}
+\DoxyCodeLine{const\ buff\ =\ SmartBuffer.fromBuffer(someBuffer,\ 'ascii');}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3397}{}\doxysubsubsection{\texorpdfstring{Class Method\+: from\+Size(size\mbox{[}, encoding\mbox{]})}{Class Method\+: from\+Size(size\mbox{[}, encoding\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3397}
+
+\begin{DoxyItemize}
+\item {\ttfamily size} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The size to initialize the internal Buffer.
+\item {\ttfamily encoding} \texorpdfstring{$\ast$}{*}\{string\}\texorpdfstring{$\ast$}{*} The string encoding to use. {\ttfamily Default\+: \textquotesingle{}utf8\textquotesingle{}}
+\end{DoxyItemize}
+
+Examples\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ buff\ =\ SmartBuffer.fromSize(1024);\ //\ Defaults\ to\ utf8}
+\DoxyCodeLine{const\ buff\ =\ SmartBuffer.fromSize(1024,\ 'ascii');}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3398}{}\doxysubsubsection{\texorpdfstring{Class Method\+: from\+Options(options)}{Class Method\+: from\+Options(options)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3398}
+
+\begin{DoxyItemize}
+\item {\ttfamily options} \texorpdfstring{$\ast$}{*}\{Smart\+Buffer\+Options\}\texorpdfstring{$\ast$}{*} The Buffer instance to wrap.
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interface\ SmartBufferOptions\ \{}
+\DoxyCodeLine{\ \ \ \ encoding?:\ BufferEncoding;\ //\ Defaults\ to\ utf8}
+\DoxyCodeLine{\ \ \ \ size?:\ number;\ //\ Defaults\ to\ 4096}
+\DoxyCodeLine{\ \ \ \ buff?:\ Buffer;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Examples\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ buff\ =\ SmartBuffer.fromOptions(\{}
+\DoxyCodeLine{\ \ \ \ size:\ 1024}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{const\ buff\ =\ SmartBuffer.fromOptions(\{}
+\DoxyCodeLine{\ \ \ \ size:\ 1024,}
+\DoxyCodeLine{\ \ \ \ encoding:\ 'utf8'}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{const\ buff\ =\ SmartBuffer.fromOptions(\{}
+\DoxyCodeLine{\ \ \ \ encoding:\ 'utf8'}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ someBuff\ =\ Buffer.from('some\ string',\ 'utf8');}
+\DoxyCodeLine{const\ buff\ =\ SmartBuffer.fromOptions(\{}
+\DoxyCodeLine{\ \ \ \ buffer:\ someBuff,}
+\DoxyCodeLine{\ \ \ \ encoding:\ 'utf8'}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3399}{}\doxysubsection{\texorpdfstring{Integers}{Integers}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3399}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3400}{}\doxysubsubsection{\texorpdfstring{buff.\+read\+Int8(\mbox{[}offset\mbox{]})}{buff.\+read\+Int8(\mbox{[}offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3400}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3401}{}\doxysubsubsection{\texorpdfstring{buff.\+read\+UInt8(\mbox{[}offset\mbox{]})}{buff.\+read\+UInt8(\mbox{[}offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3401}
+
+\begin{DoxyItemize}
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} Optional position to start reading data from. {\bfseries{Default}}\+: {\ttfamily Auto managed offset}
+\item Returns \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*}
+\end{DoxyItemize}
+
+Read a Int8 value.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3402}{}\doxysubsubsection{\texorpdfstring{buff.\+read\+Int16\+BE(\mbox{[}offset\mbox{]})}{buff.\+read\+Int16\+BE(\mbox{[}offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3402}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3403}{}\doxysubsubsection{\texorpdfstring{buff.\+read\+Int16\+LE(\mbox{[}offset\mbox{]})}{buff.\+read\+Int16\+LE(\mbox{[}offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3403}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3404}{}\doxysubsubsection{\texorpdfstring{buff.\+read\+UInt16\+BE(\mbox{[}offset\mbox{]})}{buff.\+read\+UInt16\+BE(\mbox{[}offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3404}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3405}{}\doxysubsubsection{\texorpdfstring{buff.\+read\+UInt16\+LE(\mbox{[}offset\mbox{]})}{buff.\+read\+UInt16\+LE(\mbox{[}offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3405}
+
+\begin{DoxyItemize}
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} Optional position to start reading data from. {\bfseries{Default}}\+: {\ttfamily Auto managed offset}
+\item Returns \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*}
+\end{DoxyItemize}
+
+Read a 16 bit integer value.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3406}{}\doxysubsubsection{\texorpdfstring{buff.\+read\+Int32\+BE(\mbox{[}offset\mbox{]})}{buff.\+read\+Int32\+BE(\mbox{[}offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3406}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3407}{}\doxysubsubsection{\texorpdfstring{buff.\+read\+Int32\+LE(\mbox{[}offset\mbox{]})}{buff.\+read\+Int32\+LE(\mbox{[}offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3407}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3408}{}\doxysubsubsection{\texorpdfstring{buff.\+read\+UInt32\+BE(\mbox{[}offset\mbox{]})}{buff.\+read\+UInt32\+BE(\mbox{[}offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3408}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3409}{}\doxysubsubsection{\texorpdfstring{buff.\+read\+UInt32\+LE(\mbox{[}offset\mbox{]})}{buff.\+read\+UInt32\+LE(\mbox{[}offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3409}
+
+\begin{DoxyItemize}
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} Optional position to start reading data from. {\bfseries{Default}}\+: {\ttfamily Auto managed offset}
+\item Returns \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*}
+\end{DoxyItemize}
+
+Read a 32 bit integer value.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3410}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+Int8(value\mbox{[}, offset\mbox{]})}{buff.\+write\+Int8(value\mbox{[}, offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3410}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3411}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+UInt8(value\mbox{[}, offset\mbox{]})}{buff.\+write\+UInt8(value\mbox{[}, offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3411}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The value to write.
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} An optional offset to write this value to. {\bfseries{Default\+:}} {\ttfamily Auto managed offset}
+\item Returns \texorpdfstring{$\ast$}{*}\{this\}\texorpdfstring{$\ast$}{*}
+\end{DoxyItemize}
+
+Write a Int8 value.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3412}{}\doxysubsubsection{\texorpdfstring{buff.\+insert\+Int8(value, offset)}{buff.\+insert\+Int8(value, offset)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3412}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3413}{}\doxysubsubsection{\texorpdfstring{buff.\+insert\+UInt8(value, offset)}{buff.\+insert\+UInt8(value, offset)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3413}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The value to insert.
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The offset to insert this data at.
+\item Returns \texorpdfstring{$\ast$}{*}\{this\}\texorpdfstring{$\ast$}{*}
+\end{DoxyItemize}
+
+Insert a Int8 value.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3414}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+Int16\+BE(value\mbox{[}, offset\mbox{]})}{buff.\+write\+Int16\+BE(value\mbox{[}, offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3414}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3415}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+Int16\+LE(value\mbox{[}, offset\mbox{]})}{buff.\+write\+Int16\+LE(value\mbox{[}, offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3415}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3416}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+UInt16\+BE(value\mbox{[}, offset\mbox{]})}{buff.\+write\+UInt16\+BE(value\mbox{[}, offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3416}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3417}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+UInt16\+LE(value\mbox{[}, offset\mbox{]})}{buff.\+write\+UInt16\+LE(value\mbox{[}, offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3417}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The value to write.
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} An optional offset to write this value to. {\bfseries{Default\+:}} {\ttfamily Auto managed offset}
+\item Returns \texorpdfstring{$\ast$}{*}\{this\}\texorpdfstring{$\ast$}{*}
+\end{DoxyItemize}
+
+Write a 16 bit integer value.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3418}{}\doxysubsubsection{\texorpdfstring{buff.\+insert\+Int16\+BE(value, offset)}{buff.\+insert\+Int16\+BE(value, offset)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3418}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3419}{}\doxysubsubsection{\texorpdfstring{buff.\+insert\+Int16\+LE(value, offset)}{buff.\+insert\+Int16\+LE(value, offset)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3419}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3420}{}\doxysubsubsection{\texorpdfstring{buff.\+insert\+UInt16\+BE(value, offset)}{buff.\+insert\+UInt16\+BE(value, offset)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3420}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3421}{}\doxysubsubsection{\texorpdfstring{buff.\+insert\+UInt16\+LE(value, offset)}{buff.\+insert\+UInt16\+LE(value, offset)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3421}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The value to insert.
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The offset to insert this data at.
+\item Returns \texorpdfstring{$\ast$}{*}\{this\}\texorpdfstring{$\ast$}{*}
+\end{DoxyItemize}
+
+Insert a 16 bit integer value.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3422}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+Int32\+BE(value\mbox{[}, offset\mbox{]})}{buff.\+write\+Int32\+BE(value\mbox{[}, offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3422}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3423}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+Int32\+LE(value\mbox{[}, offset\mbox{]})}{buff.\+write\+Int32\+LE(value\mbox{[}, offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3423}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3424}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+UInt32\+BE(value\mbox{[}, offset\mbox{]})}{buff.\+write\+UInt32\+BE(value\mbox{[}, offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3424}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3425}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+UInt32\+LE(value\mbox{[}, offset\mbox{]})}{buff.\+write\+UInt32\+LE(value\mbox{[}, offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3425}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The value to write.
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} An optional offset to write this value to. {\bfseries{Default\+:}} {\ttfamily Auto managed offset}
+\item Returns \texorpdfstring{$\ast$}{*}\{this\}\texorpdfstring{$\ast$}{*}
+\end{DoxyItemize}
+
+Write a 32 bit integer value.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3426}{}\doxysubsubsection{\texorpdfstring{buff.\+insert\+Int32\+BE(value, offset)}{buff.\+insert\+Int32\+BE(value, offset)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3426}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3427}{}\doxysubsubsection{\texorpdfstring{buff.\+insert\+Int32\+LE(value, offset)}{buff.\+insert\+Int32\+LE(value, offset)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3427}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3428}{}\doxysubsubsection{\texorpdfstring{buff.\+insert\+UInt32\+BE(value, offset)}{buff.\+insert\+UInt32\+BE(value, offset)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3428}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3429}{}\doxysubsubsection{\texorpdfstring{buff.\+nsert\+UInt32\+LE(value, offset)}{buff.\+nsert\+UInt32\+LE(value, offset)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3429}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The value to insert.
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The offset to insert this data at.
+\item Returns \texorpdfstring{$\ast$}{*}\{this\}\texorpdfstring{$\ast$}{*}
+\end{DoxyItemize}
+
+Insert a 32 bit integer value.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3430}{}\doxysubsection{\texorpdfstring{Floating Point Numbers}{Floating Point Numbers}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3430}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3431}{}\doxysubsubsection{\texorpdfstring{buff.\+read\+Float\+BE(\mbox{[}offset\mbox{]})}{buff.\+read\+Float\+BE(\mbox{[}offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3431}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3432}{}\doxysubsubsection{\texorpdfstring{buff.\+read\+Float\+LE(\mbox{[}offset\mbox{]})}{buff.\+read\+Float\+LE(\mbox{[}offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3432}
+
+\begin{DoxyItemize}
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} Optional position to start reading data from. {\bfseries{Default}}\+: {\ttfamily Auto managed offset}
+\item Returns \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*}
+\end{DoxyItemize}
+
+Read a Float value.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3433}{}\doxysubsubsection{\texorpdfstring{buff.\+read\+Double\+BE(\mbox{[}offset\mbox{]})}{buff.\+read\+Double\+BE(\mbox{[}offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3433}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3434}{}\doxysubsubsection{\texorpdfstring{buff.\+read\+Double\+LE(\mbox{[}offset\mbox{]})}{buff.\+read\+Double\+LE(\mbox{[}offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3434}
+
+\begin{DoxyItemize}
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} Optional position to start reading data from. {\bfseries{Default}}\+: {\ttfamily Auto managed offset}
+\item Returns \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*}
+\end{DoxyItemize}
+
+Read a Double value.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3435}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+Float\+BE(value\mbox{[}, offset\mbox{]})}{buff.\+write\+Float\+BE(value\mbox{[}, offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3435}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3436}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+Float\+LE(value\mbox{[}, offset\mbox{]})}{buff.\+write\+Float\+LE(value\mbox{[}, offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3436}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The value to write.
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} An optional offset to write this value to. {\bfseries{Default\+:}} {\ttfamily Auto managed offset}
+\item Returns \texorpdfstring{$\ast$}{*}\{this\}\texorpdfstring{$\ast$}{*}
+\end{DoxyItemize}
+
+Write a Float value.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3437}{}\doxysubsubsection{\texorpdfstring{buff.\+insert\+Float\+BE(value, offset)}{buff.\+insert\+Float\+BE(value, offset)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3437}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3438}{}\doxysubsubsection{\texorpdfstring{buff.\+insert\+Float\+LE(value, offset)}{buff.\+insert\+Float\+LE(value, offset)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3438}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The value to insert.
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The offset to insert this data at.
+\item Returns \texorpdfstring{$\ast$}{*}\{this\}\texorpdfstring{$\ast$}{*}
+\end{DoxyItemize}
+
+Insert a Float value.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3439}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+Double\+BE(value\mbox{[}, offset\mbox{]})}{buff.\+write\+Double\+BE(value\mbox{[}, offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3439}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3440}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+Double\+LE(value\mbox{[}, offset\mbox{]})}{buff.\+write\+Double\+LE(value\mbox{[}, offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3440}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The value to write.
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} An optional offset to write this value to. {\bfseries{Default\+:}} {\ttfamily Auto managed offset}
+\item Returns \texorpdfstring{$\ast$}{*}\{this\}\texorpdfstring{$\ast$}{*}
+\end{DoxyItemize}
+
+Write a Double value.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3441}{}\doxysubsubsection{\texorpdfstring{buff.\+insert\+Double\+BE(value, offset)}{buff.\+insert\+Double\+BE(value, offset)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3441}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3442}{}\doxysubsubsection{\texorpdfstring{buff.\+insert\+Double\+LE(value, offset)}{buff.\+insert\+Double\+LE(value, offset)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3442}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The value to insert.
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The offset to insert this data at.
+\item Returns \texorpdfstring{$\ast$}{*}\{this\}\texorpdfstring{$\ast$}{*}
+\end{DoxyItemize}
+
+Insert a Double value.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3443}{}\doxysubsection{\texorpdfstring{Strings}{Strings}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3443}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3444}{}\doxysubsubsection{\texorpdfstring{buff.\+read\+String()}{buff.\+read\+String()}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3444}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3445}{}\doxysubsubsection{\texorpdfstring{buff.\+read\+String(size\mbox{[}, encoding\mbox{]})}{buff.\+read\+String(size\mbox{[}, encoding\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3445}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3446}{}\doxysubsubsection{\texorpdfstring{buff.\+read\+String(encoding)}{buff.\+read\+String(encoding)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3446}
+
+\begin{DoxyItemize}
+\item {\ttfamily size} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The number of bytes to read. {\bfseries{Default\+:}} {\ttfamily Reads to the end of the Buffer.}
+\item {\ttfamily encoding} \texorpdfstring{$\ast$}{*}\{string\}\texorpdfstring{$\ast$}{*} The string encoding to use. {\bfseries{Default\+:}} {\ttfamily utf8}.
+\end{DoxyItemize}
+
+Read a string value.
+
+Examples\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ buff\ =\ SmartBuffer.fromBuffer(Buffer.from('hello\ there',\ 'utf8'));}
+\DoxyCodeLine{buff.readString();\ //\ 'hello\ there'}
+\DoxyCodeLine{buff.readString(2);\ //\ 'he'}
+\DoxyCodeLine{buff.readString(2,\ 'utf8');\ //\ 'he'}
+\DoxyCodeLine{buff.readString('utf8');\ //\ 'hello\ there'}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3447}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+String(value)}{buff.\+write\+String(value)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3447}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3448}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+String(value\mbox{[}, offset\mbox{]})}{buff.\+write\+String(value\mbox{[}, offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3448}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3449}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+String(value\mbox{[}, encoding\mbox{]})}{buff.\+write\+String(value\mbox{[}, encoding\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3449}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3450}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+String(value\mbox{[}, offset\mbox{[}, encoding\mbox{]}\mbox{]})}{buff.\+write\+String(value\mbox{[}, offset\mbox{[}, encoding\mbox{]}\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3450}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} \texorpdfstring{$\ast$}{*}\{string\}\texorpdfstring{$\ast$}{*} The string value to write.
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The offset to write this value to. {\bfseries{Default\+:}} {\ttfamily Auto managed offset}
+\item {\ttfamily encoding} \texorpdfstring{$\ast$}{*}\{string\}\texorpdfstring{$\ast$}{*} An optional string encoding to use. {\bfseries{Default\+:}} {\ttfamily utf8}
+\end{DoxyItemize}
+
+Write a string value.
+
+Examples\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{buff.writeString('hello');\ //\ Auto\ managed\ offset}
+\DoxyCodeLine{buff.writeString('hello',\ 2);}
+\DoxyCodeLine{buff.writeString('hello',\ 'utf8')\ //\ Auto\ managed\ offset}
+\DoxyCodeLine{buff.writeString('hello',\ 2,\ 'utf8');}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3451}{}\doxysubsubsection{\texorpdfstring{buff.\+insert\+String(value, offset\mbox{[}, encoding\mbox{]})}{buff.\+insert\+String(value, offset\mbox{[}, encoding\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3451}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} \texorpdfstring{$\ast$}{*}\{string\}\texorpdfstring{$\ast$}{*} The string value to write.
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The offset to write this value to.
+\item {\ttfamily encoding} \texorpdfstring{$\ast$}{*}\{string\}\texorpdfstring{$\ast$}{*} An optional string encoding to use. {\bfseries{Default\+:}} {\ttfamily utf8}
+\end{DoxyItemize}
+
+Insert a string value.
+
+Examples\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{buff.insertString('hello',\ 2);}
+\DoxyCodeLine{buff.insertString('hello',\ 2,\ 'utf8');}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3452}{}\doxysubsection{\texorpdfstring{Null Terminated Strings}{Null Terminated Strings}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3452}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3453}{}\doxysubsubsection{\texorpdfstring{buff.\+read\+String\+NT()}{buff.\+read\+String\+NT()}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3453}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3454}{}\doxysubsubsection{\texorpdfstring{buff.\+read\+String\+NT(encoding)}{buff.\+read\+String\+NT(encoding)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3454}
+
+\begin{DoxyItemize}
+\item {\ttfamily encoding} \texorpdfstring{$\ast$}{*}\{string\}\texorpdfstring{$\ast$}{*} The string encoding to use. {\bfseries{Default\+:}} {\ttfamily utf8}.
+\end{DoxyItemize}
+
+Read a null terminated string value. (If a null is not found, it will read to the end of the Buffer).
+
+Examples\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ buff\ =\ SmartBuffer.fromBuffer(Buffer.from('hello\(\backslash\)0\ there',\ 'utf8'));}
+\DoxyCodeLine{buff.readStringNT();\ //\ 'hello'}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ If\ we\ called\ this\ again:}
+\DoxyCodeLine{buff.readStringNT();\ //\ '\ there'}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3455}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+String\+NT(value)}{buff.\+write\+String\+NT(value)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3455}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3456}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+String\+NT(value\mbox{[}, offset\mbox{]})}{buff.\+write\+String\+NT(value\mbox{[}, offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3456}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3457}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+String\+NT(value\mbox{[}, encoding\mbox{]})}{buff.\+write\+String\+NT(value\mbox{[}, encoding\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3457}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3458}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+String\+NT(value\mbox{[}, offset\mbox{[}, encoding\mbox{]}\mbox{]})}{buff.\+write\+String\+NT(value\mbox{[}, offset\mbox{[}, encoding\mbox{]}\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3458}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} \texorpdfstring{$\ast$}{*}\{string\}\texorpdfstring{$\ast$}{*} The string value to write.
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The offset to write this value to. {\bfseries{Default\+:}} {\ttfamily Auto managed offset}
+\item {\ttfamily encoding} \texorpdfstring{$\ast$}{*}\{string\}\texorpdfstring{$\ast$}{*} An optional string encoding to use. {\bfseries{Default\+:}} {\ttfamily utf8}
+\end{DoxyItemize}
+
+Write a null terminated string value.
+
+Examples\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{buff.writeStringNT('hello');\ //\ Auto\ managed\ offset\ \ \ <Buffer\ 68\ 65\ 6c\ 6c\ 6f\ 00>}
+\DoxyCodeLine{buff.writeStringNT('hello',\ 2);\ //\ <Buffer\ 00\ 00\ 68\ 65\ 6c\ 6c\ 6f\ 00>}
+\DoxyCodeLine{buff.writeStringNT('hello',\ 'utf8')\ //\ Auto\ managed\ offset}
+\DoxyCodeLine{buff.writeStringNT('hello',\ 2,\ 'utf8');}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3459}{}\doxysubsubsection{\texorpdfstring{buff.\+insert\+String\+NT(value, offset\mbox{[}, encoding\mbox{]})}{buff.\+insert\+String\+NT(value, offset\mbox{[}, encoding\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3459}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} \texorpdfstring{$\ast$}{*}\{string\}\texorpdfstring{$\ast$}{*} The string value to write.
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The offset to write this value to.
+\item {\ttfamily encoding} \texorpdfstring{$\ast$}{*}\{string\}\texorpdfstring{$\ast$}{*} An optional string encoding to use. {\bfseries{Default\+:}} {\ttfamily utf8}
+\end{DoxyItemize}
+
+Insert a null terminated string value.
+
+Examples\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{buff.insertStringNT('hello',\ 2);}
+\DoxyCodeLine{buff.insertStringNT('hello',\ 2,\ 'utf8');}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3460}{}\doxysubsection{\texorpdfstring{Buffers}{Buffers}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3460}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3461}{}\doxysubsubsection{\texorpdfstring{buff.\+read\+Buffer(\mbox{[}length\mbox{]})}{buff.\+read\+Buffer(\mbox{[}length\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3461}
+
+\begin{DoxyItemize}
+\item {\ttfamily length} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The number of bytes to read into a Buffer. {\bfseries{Default\+:}} {\ttfamily Reads to the end of the Buffer}
+\end{DoxyItemize}
+
+Read a Buffer of a specified size.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3462}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+Buffer(value\mbox{[}, offset\mbox{]})}{buff.\+write\+Buffer(value\mbox{[}, offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3462}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} \texorpdfstring{$\ast$}{*}\{Buffer\}\texorpdfstring{$\ast$}{*} The buffer value to write.
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} An optional offset to write the value to. {\bfseries{Default\+:}} {\ttfamily Auto managed offset}
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3463}{}\doxysubsubsection{\texorpdfstring{buff.\+insert\+Buffer(value, offset)}{buff.\+insert\+Buffer(value, offset)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3463}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} \texorpdfstring{$\ast$}{*}\{Buffer\}\texorpdfstring{$\ast$}{*} The buffer value to write.
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The offset to write the value to.
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3464}{}\doxysubsubsection{\texorpdfstring{buff.\+read\+Buffer\+NT()}{buff.\+read\+Buffer\+NT()}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3464}
+Read a null terminated Buffer.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3465}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+Buffer\+NT(value\mbox{[}, offset\mbox{]})}{buff.\+write\+Buffer\+NT(value\mbox{[}, offset\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3465}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} \texorpdfstring{$\ast$}{*}\{Buffer\}\texorpdfstring{$\ast$}{*} The buffer value to write.
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} An optional offset to write the value to. {\bfseries{Default\+:}} {\ttfamily Auto managed offset}
+\end{DoxyItemize}
+
+Write a null terminated Buffer.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3466}{}\doxysubsubsection{\texorpdfstring{buff.\+insert\+Buffer\+NT(value, offset)}{buff.\+insert\+Buffer\+NT(value, offset)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3466}
+
+\begin{DoxyItemize}
+\item {\ttfamily value} \texorpdfstring{$\ast$}{*}\{Buffer\}\texorpdfstring{$\ast$}{*} The buffer value to write.
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The offset to write the value to.
+\end{DoxyItemize}
+
+Insert a null terminated Buffer.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3467}{}\doxysubsection{\texorpdfstring{Offsets}{Offsets}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3467}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3468}{}\doxysubsubsection{\texorpdfstring{buff.\+read\+Offset}{buff.\+read\+Offset}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3468}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3469}{}\doxysubsubsection{\texorpdfstring{buff.\+read\+Offset(offset)}{buff.\+read\+Offset(offset)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3469}
+
+\begin{DoxyItemize}
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The new read offset value to set.
+\item Returns\+: {\ttfamily The current read offset}
+\end{DoxyItemize}
+
+Gets or sets the current read offset.
+
+Examples\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ currentOffset\ =\ buff.readOffset;\ //\ 5}
+\DoxyCodeLine{}
+\DoxyCodeLine{buff.readOffset\ =\ 10;}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(buff.readOffset)\ //\ 10}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3470}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+Offset}{buff.\+write\+Offset}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3470}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3471}{}\doxysubsubsection{\texorpdfstring{buff.\+write\+Offset(offset)}{buff.\+write\+Offset(offset)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3471}
+
+\begin{DoxyItemize}
+\item {\ttfamily offset} \texorpdfstring{$\ast$}{*}\{number\}\texorpdfstring{$\ast$}{*} The new write offset value to set.
+\item Returns\+: {\ttfamily The current write offset}
+\end{DoxyItemize}
+
+Gets or sets the current write offset.
+
+Examples\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ currentOffset\ =\ buff.writeOffset;\ //\ 5}
+\DoxyCodeLine{}
+\DoxyCodeLine{buff.writeOffset\ =\ 10;}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(buff.writeOffset)\ //\ 10}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3472}{}\doxysubsubsection{\texorpdfstring{buff.\+encoding}{buff.\+encoding}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3472}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3473}{}\doxysubsubsection{\texorpdfstring{buff.\+encoding(encoding)}{buff.\+encoding(encoding)}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3473}
+
+\begin{DoxyItemize}
+\item {\ttfamily encoding} \texorpdfstring{$\ast$}{*}\{string\}\texorpdfstring{$\ast$}{*} The new string encoding to set.
+\item Returns\+: {\ttfamily The current string encoding}
+\end{DoxyItemize}
+
+Gets or sets the current string encoding.
+
+Examples\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ currentEncoding\ =\ buff.encoding;\ //\ 'utf8'}
+\DoxyCodeLine{}
+\DoxyCodeLine{buff.encoding\ =\ 'ascii';}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(buff.encoding)\ //\ 'ascii'}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3474}{}\doxysubsection{\texorpdfstring{Other}{Other}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3474}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3475}{}\doxysubsubsection{\texorpdfstring{buff.\+clear()}{buff.\+clear()}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3475}
+Clear and resets the Smart\+Buffer instance.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3476}{}\doxysubsubsection{\texorpdfstring{buff.\+remaining()}{buff.\+remaining()}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3476}
+
+\begin{DoxyItemize}
+\item Returns {\ttfamily Remaining data left to be read}
+\end{DoxyItemize}
+
+Gets the number of remaining bytes to be read.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3477}{}\doxysubsubsection{\texorpdfstring{buff.\+internal\+Buffer}{buff.\+internal\+Buffer}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3477}
+
+\begin{DoxyItemize}
+\item Returns\+: \texorpdfstring{$\ast$}{*}\{Buffer\}\texorpdfstring{$\ast$}{*}
+\end{DoxyItemize}
+
+Gets the internally managed Buffer (Includes unmanaged data).
+
+Examples\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ buff\ =\ SmartBuffer.fromSize(16);}
+\DoxyCodeLine{buff.writeString('hello');}
+\DoxyCodeLine{console.log(buff.InternalBuffer);\ //\ <Buffer\ 68\ 65\ 6c\ 6c\ 6f\ 00\ 00\ 00\ 00\ 00\ 00\ 00\ 00\ 00\ 00\ 00>}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3478}{}\doxysubsubsection{\texorpdfstring{buff.\+to\+Buffer()}{buff.\+to\+Buffer()}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3478}
+
+\begin{DoxyItemize}
+\item Returns\+: \texorpdfstring{$\ast$}{*}\{Buffer\}\texorpdfstring{$\ast$}{*}
+\end{DoxyItemize}
+
+Gets a sliced Buffer instance of the internally managed Buffer. (Only includes managed data)
+
+Examples\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ buff\ =\ SmartBuffer.fromSize(16);}
+\DoxyCodeLine{buff.writeString('hello');}
+\DoxyCodeLine{console.log(buff.toBuffer());\ //\ <Buffer\ 68\ 65\ 6c\ 6c\ 6f>}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3479}{}\doxysubsubsection{\texorpdfstring{buff.\+to\+String(\mbox{[}encoding\mbox{]})}{buff.\+to\+String(\mbox{[}encoding\mbox{]})}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3479}
+
+\begin{DoxyItemize}
+\item {\ttfamily encoding} \texorpdfstring{$\ast$}{*}\{string\}\texorpdfstring{$\ast$}{*} The string encoding to use when converting to a string. {\bfseries{Default\+:}} {\ttfamily utf8}
+\item Returns \texorpdfstring{$\ast$}{*}\{string\}\texorpdfstring{$\ast$}{*}
+\end{DoxyItemize}
+
+Gets a string representation of all data in the Smart\+Buffer.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3480}{}\doxysubsubsection{\texorpdfstring{buff.\+destroy()}{buff.\+destroy()}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3480}
+Destroys the Smart\+Buffer instance.\hypertarget{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3481}{}\doxysubsection{\texorpdfstring{License}{License}}\label{md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_autotoc_md3481}
+This work is licensed under the \href{http://en.wikipedia.org/wiki/MIT_License}{\texttt{ MIT license}}. 

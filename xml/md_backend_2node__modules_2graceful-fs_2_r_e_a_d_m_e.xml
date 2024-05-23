@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2graceful-fs_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2graceful-fs_2_r_e_a_d_m_e</compoundname>
+    <title>graceful-fs</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2graceful-fs_2_r_e_a_d_m_e_1autotoc_md1444"/> graceful-fs functions as a drop-in replacement for the fs module, making various improvements.</para>
+<para>The improvements are meant to normalize behavior across different platforms and environments, and to make filesystem access more resilient to errors.</para>
+<sect1 id="md_backend_2node__modules_2graceful-fs_2_r_e_a_d_m_e_1autotoc_md1445">
+<title>Improvements over <ulink url="https://nodejs.org/api/fs.html">fs module</ulink></title><para><itemizedlist>
+<listitem><para>Queues up <computeroutput>open</computeroutput> and <computeroutput>readdir</computeroutput> calls, and retries them once something closes if there is an EMFILE error from too many file descriptors.</para>
+</listitem><listitem><para>fixes <computeroutput>lchmod</computeroutput> for Node versions prior to 0.6.2.</para>
+</listitem><listitem><para>implements <computeroutput>fs.lutimes</computeroutput> if possible. Otherwise it becomes a noop.</para>
+</listitem><listitem><para>ignores <computeroutput>EINVAL</computeroutput> and <computeroutput>EPERM</computeroutput> errors in <computeroutput>chown</computeroutput>, <computeroutput>fchown</computeroutput> or <computeroutput>lchown</computeroutput> if the user isn&apos;t root.</para>
+</listitem><listitem><para>makes <computeroutput>lchmod</computeroutput> and <computeroutput>lchown</computeroutput> become noops, if not available.</para>
+</listitem><listitem><para>retries reading a file if <computeroutput>read</computeroutput> results in EAGAIN error.</para>
+</listitem></itemizedlist>
+</para>
+<para>On Windows, it retries renaming a file for up to one second if <computeroutput>EACCESS</computeroutput> or <computeroutput>EPERM</computeroutput> error occurs, likely because antivirus software has locked the directory.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2graceful-fs_2_r_e_a_d_m_e_1autotoc_md1446">
+<title>USAGE</title><para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>use<sp/>just<sp/>like<sp/>fs</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>fs<sp/>=<sp/>require(&apos;graceful-fs&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>now<sp/>go<sp/>and<sp/>do<sp/>stuff<sp/>with<sp/>it...</highlight></codeline>
+<codeline><highlight class="normal">fs.readFile(&apos;some-file-or-whatever&apos;,<sp/>(err,<sp/>data)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Do<sp/>stuff<sp/>here.</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2graceful-fs_2_r_e_a_d_m_e_1autotoc_md1447">
+<title>Sync methods</title><para>This module cannot intercept or handle <computeroutput>EMFILE</computeroutput> or <computeroutput>ENFILE</computeroutput> errors from sync methods. If you use sync methods which open file descriptors then you are responsible for dealing with any errors.</para>
+<para>This is a known limitation, not a bug.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2graceful-fs_2_r_e_a_d_m_e_1autotoc_md1448">
+<title>Global Patching</title><para>If you want to patch the global fs module (or any other fs-like module) you can do this:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>Make<sp/>sure<sp/>to<sp/>read<sp/>the<sp/>caveat<sp/>below.</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>realFs<sp/>=<sp/>require(&apos;fs&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>gracefulFs<sp/>=<sp/>require(&apos;graceful-fs&apos;)</highlight></codeline>
+<codeline><highlight class="normal">gracefulFs.gracefulify(realFs)</highlight></codeline>
+</programlisting></para>
+<para>This should only ever be done at the top-level application layer, in order to delay on EMFILE errors from any fs-using dependencies. You should <bold>not</bold> do this in a library, because it can cause unexpected delays in other parts of the program.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2graceful-fs_2_r_e_a_d_m_e_1autotoc_md1449">
+<title>Changes</title><para>This module is fairly stable at this point, and used by a lot of things. That being said, because it implements a subtle behavior change in a core part of the node API, even modest changes can be extremely breaking, and the versioning is thus biased towards bumping the major when in doubt.</para>
+<para>The main change between major versions has been switching between providing a fully-patched <computeroutput>fs</computeroutput> module vs monkey-patching the node core builtin, and the approach by which a non-monkey-patched <computeroutput>fs</computeroutput> was created.</para>
+<para>The goal is to trade <computeroutput>EMFILE</computeroutput> errors for slower fs operations. So, if you try to open a zillion files, rather than crashing, <computeroutput>open</computeroutput> operations will be queued up and wait for something else to <computeroutput>close</computeroutput>.</para>
+<para>There are advantages to each approach. Monkey-patching the fs means that no <computeroutput>EMFILE</computeroutput> errors can possibly occur anywhere in your application, because everything is using the same core <computeroutput>fs</computeroutput> module, which is patched. However, it can also obviously cause undesirable side-effects, especially if the module is loaded multiple times.</para>
+<para>Implementing a separate-but-identical patched <computeroutput>fs</computeroutput> module is more surgical (and doesn&apos;t run the risk of patching multiple times), but also imposes the challenge of keeping in sync with the core module.</para>
+<para>The current approach loads the <computeroutput>fs</computeroutput> module, and then creates a lookalike object that has all the same methods, except a few that are patched. It is safe to use in all versions of Node from 0.8 through 7.0.</para>
+<sect2 id="md_backend_2node__modules_2graceful-fs_2_r_e_a_d_m_e_1autotoc_md1450">
+<title>v4</title><para><itemizedlist>
+<listitem><para>Do not monkey-patch the fs module. This module may now be used as a drop-in dep, and users can opt into monkey-patching the fs builtin if their app requires it.</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2graceful-fs_2_r_e_a_d_m_e_1autotoc_md1451">
+<title>v3</title><para><itemizedlist>
+<listitem><para>Monkey-patch fs, because the eval approach no longer works on recent node.</para>
+</listitem><listitem><para>fixed possible type-error throw if rename fails on windows</para>
+</listitem><listitem><para>verify that we <emphasis>never</emphasis> get EMFILE errors</para>
+</listitem><listitem><para>Ignore ENOSYS from chmod/chown</para>
+</listitem><listitem><para>clarify that graceful-fs must be used as a drop-in</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2graceful-fs_2_r_e_a_d_m_e_1autotoc_md1452">
+<title>v2.1.0</title><para><itemizedlist>
+<listitem><para>Use eval rather than monkey-patching fs.</para>
+</listitem><listitem><para>readdir: Always sort the results</para>
+</listitem><listitem><para>win32: requeue a file if error has an OK status</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2graceful-fs_2_r_e_a_d_m_e_1autotoc_md1453">
+<title>v2.0</title><para><itemizedlist>
+<listitem><para>A return to monkey patching</para>
+</listitem><listitem><para>wrap process.cwd</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2graceful-fs_2_r_e_a_d_m_e_1autotoc_md1454">
+<title>v1.1</title><para><itemizedlist>
+<listitem><para>wrap readFile</para>
+</listitem><listitem><para>Wrap fs.writeFile.</para>
+</listitem><listitem><para>readdir protection</para>
+</listitem><listitem><para>Don&apos;t clobber the fs builtin</para>
+</listitem><listitem><para>Handle fs.read EAGAIN errors by trying again</para>
+</listitem><listitem><para>Expose the curOpen counter</para>
+</listitem><listitem><para>No-op lchown/lchmod if not implemented</para>
+</listitem><listitem><para>fs.rename patch only for win32</para>
+</listitem><listitem><para>Patch fs.rename to handle AV software on Windows</para>
+</listitem><listitem><para>Close #4 Chown should not fail on einval or eperm if non-root</para>
+</listitem><listitem><para>Fix isaacs/fstream#1 Only wrap fs one time</para>
+</listitem><listitem><para>Fix #3 Start at 1024 max files, then back off on EMFILE</para>
+</listitem><listitem><para>lutimes that doens&apos;t blow up on Linux</para>
+</listitem><listitem><para>A full on-rewrite using a queue instead of just swallowing the EMFILE error</para>
+</listitem><listitem><para>Wrap Read/Write streams as well</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2graceful-fs_2_r_e_a_d_m_e_1autotoc_md1455">
+<title>1.0</title><para><itemizedlist>
+<listitem><para>Update engines for node 0.6</para>
+</listitem><listitem><para>Be lstat-graceful on Windows</para>
+</listitem><listitem><para>first </para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/graceful-fs/README.md"/>
+  </compounddef>
+</doxygen>

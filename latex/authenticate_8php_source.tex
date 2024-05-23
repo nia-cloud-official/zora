@@ -1,0 +1,46 @@
+\doxysection{authenticate.\+php}
+\hypertarget{authenticate_8php_source}{}\label{authenticate_8php_source}\mbox{\hyperlink{authenticate_8php}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00001}00001\ <?php}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00002}00002\ session\_start();}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00003}00003\ \textcolor{comment}{//\ Change\ this\ to\ your\ connection\ info.}}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00004}\mbox{\hyperlink{authenticate_8php_a9ec944afb63bf131a4cbda887907c836}{00004}}\ \mbox{\hyperlink{authenticate_8php_a9ec944afb63bf131a4cbda887907c836}{\$DATABASE\_HOST}}\ =\ \textcolor{stringliteral}{'localhost'};}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00005}\mbox{\hyperlink{authenticate_8php_adfdf4bbc1f8066e64d5e0f5e4eefdc57}{00005}}\ \mbox{\hyperlink{authenticate_8php_adfdf4bbc1f8066e64d5e0f5e4eefdc57}{\$DATABASE\_USER}}\ =\ \textcolor{stringliteral}{'root'};}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00006}\mbox{\hyperlink{authenticate_8php_ae858da3f69b9d402e0a063e6a7fc2f5b}{00006}}\ \mbox{\hyperlink{authenticate_8php_ae858da3f69b9d402e0a063e6a7fc2f5b}{\$DATABASE\_PASS}}\ =\ \textcolor{stringliteral}{''};}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00007}\mbox{\hyperlink{authenticate_8php_a584a643ec0e542b8bf6f042ab5ecc9d2}{00007}}\ \mbox{\hyperlink{authenticate_8php_a584a643ec0e542b8bf6f042ab5ecc9d2}{\$DATABASE\_NAME}}\ =\ \textcolor{stringliteral}{'academy'};}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00008}\mbox{\hyperlink{authenticate_8php_ac6cc09120cec3f6a3d87b9692749d6b1}{00008}}\ \mbox{\hyperlink{authenticate_8php_ac6cc09120cec3f6a3d87b9692749d6b1}{\$usernae}}\ =\ \$\_POST[\textcolor{stringliteral}{'username'}];}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00010}00010\ error\_reporting(1000);}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00011}00011\ \textcolor{comment}{//\ Try\ and\ connect\ using\ the\ info\ above.}}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00012}\mbox{\hyperlink{authenticate_8php_a0debe10448ec56a57b5509648408a549}{00012}}\ \mbox{\hyperlink{authenticate_8php_a0debe10448ec56a57b5509648408a549}{\$con}}\ =\ mysqli\_connect(\mbox{\hyperlink{authenticate_8php_a9ec944afb63bf131a4cbda887907c836}{\$DATABASE\_HOST}},\ \mbox{\hyperlink{authenticate_8php_adfdf4bbc1f8066e64d5e0f5e4eefdc57}{\$DATABASE\_USER}},\ \mbox{\hyperlink{authenticate_8php_ae858da3f69b9d402e0a063e6a7fc2f5b}{\$DATABASE\_PASS}},\ \mbox{\hyperlink{authenticate_8php_a584a643ec0e542b8bf6f042ab5ecc9d2}{\$DATABASE\_NAME}});}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00013}00013\ \textcolor{keywordflow}{if}\ (\ mysqli\_connect\_errno()\ )\ \{}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00014}00014\ \ \ \ \ \textcolor{comment}{//\ If\ there\ is\ an\ error\ with\ the\ connection,\ stop\ the\ script\ and\ display\ the\ error.}}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00015}00015\ \ \ \ \ exit(\textcolor{stringliteral}{'Failed\ to\ connect\ to\ MySQL:\ '}\ .\ mysqli\_connect\_error());}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00016}00016\ \}}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00017}00017\ \textcolor{comment}{//\ Now\ we\ check\ if\ the\ data\ from\ the\ login\ form\ was\ submitted,\ isset()\ will\ check\ if\ the\ data\ exists.}}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00018}00018\ \textcolor{keywordflow}{if}\ (\ !isset(\$\_POST[\textcolor{stringliteral}{'username'}],\ \$\_POST[\textcolor{stringliteral}{'password'}])\ )\ \{}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00019}00019\ \ \ \ \ \textcolor{comment}{//\ Could\ not\ get\ the\ data\ that\ should\ have\ been\ sent.}}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00020}00020\ \ \ \ \ exit(\textcolor{stringliteral}{'Please\ fill\ both\ the\ username\ and\ password\ fields!'});}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00021}00021\ \}}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00022}\mbox{\hyperlink{authenticate_8php_a888153ba43bbd2cd3be19c24c6c30ef7}{00022}}\ \mbox{\hyperlink{authenticate_8php_a888153ba43bbd2cd3be19c24c6c30ef7}{\$query}}\ =\ \textcolor{stringliteral}{"{}SELECT\ \`{}username`\ FROM\ academy.\$usernae"{}};}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00025}00025\ \textcolor{keywordflow}{if}(\mbox{\hyperlink{code_8php_ab2fc40d43824ea3e1ce5d86dee0d763b}{\$name}}\ =\ \mbox{\hyperlink{authenticate_8php_a0debe10448ec56a57b5509648408a549}{\$con}}-\/>prepare(\mbox{\hyperlink{authenticate_8php_a888153ba43bbd2cd3be19c24c6c30ef7}{\$query}}))\ \{\ }
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00026}00026\ \mbox{\hyperlink{code_8php_ab2fc40d43824ea3e1ce5d86dee0d763b}{\$name}}-\/>execute();}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00027}00027\ \mbox{\hyperlink{code_8php_ab2fc40d43824ea3e1ce5d86dee0d763b}{\$name}}-\/>bind\_result(\$field1);}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00028}00028\ \textcolor{keywordflow}{while}\ (\mbox{\hyperlink{code_8php_ab2fc40d43824ea3e1ce5d86dee0d763b}{\$name}}-\/>fetch())\ \{}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00029}00029\ \ \ \ \ \$\_SESSION[\textcolor{stringliteral}{'loggedin'}]\ =\ TRUE;}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00030}00030\ \ \ \ \ \$\_SESSION[\textcolor{stringliteral}{'name'}]\ =\ \$\_POST[\textcolor{stringliteral}{'username'}];}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00031}00031\ \ \ \ \ \$\_SESSION[\textcolor{stringliteral}{'email'}]\ =\ \mbox{\hyperlink{code_8php_ad634f418b20382e2802f80532d76d3cd}{\$email}};}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00032}00032\ \ \ \ \ header(\textcolor{stringliteral}{'Location:\ ./dashboard/index.php'});}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00033}00033\ \}}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00034}\mbox{\hyperlink{authenticate_8php_a48ff3a56e03a4d82cfa1bced55d32ff0}{00034}}\ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Incorrect\ password}}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00036}00036\ \ \ \ \ \ \ \ \ \ \ \ \ echo\ \textcolor{stringliteral}{'Incorrect\ username\ and/or\ password!'};}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00037}00037\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00040}00040\ \ \ \ \ \mbox{\hyperlink{code_8php_ab2fc40d43824ea3e1ce5d86dee0d763b}{\$name}}-\/>close();}
+\DoxyCodeLine{\Hypertarget{authenticate_8php_source_l00041}00041\ ?>}
+
+\end{DoxyCode}

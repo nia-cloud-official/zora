@@ -1,0 +1,95 @@
+\doxysection{gypd.\+py}
+\hypertarget{gypd_8py_source}{}\label{gypd_8py_source}\index{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/generator/gypd.py@{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/generator/gypd.py}}
+\mbox{\hyperlink{gypd_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00001}\mbox{\hyperlink{namespacegyp_1_1generator_1_1gypd}{00001}}\ \textcolor{comment}{\#\ Copyright\ (c)\ 2011\ Google\ Inc.\ All\ rights\ reserved.}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00002}00002\ \textcolor{comment}{\#\ Use\ of\ this\ source\ code\ is\ governed\ by\ a\ BSD-\/style\ license\ that\ can\ be}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00003}00003\ \textcolor{comment}{\#\ found\ in\ the\ LICENSE\ file.}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00005}00005\ \textcolor{stringliteral}{"{}"{}"{}gypd\ output\ module}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00006}00006\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00007}00007\ \textcolor{stringliteral}{This\ module\ produces\ gyp\ input\ as\ its\ output.\ \ Output\ files\ are\ given\ the}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00008}00008\ \textcolor{stringliteral}{.gypd\ extension\ to\ avoid\ overwriting\ the\ .gyp\ files\ that\ they\ are\ generated}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00009}00009\ \textcolor{stringliteral}{from.\ \ Internal\ references\ to\ .gyp\ files\ (such\ as\ those\ found\ in}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00010}00010\ \textcolor{stringliteral}{"{}dependencies"{}\ sections)\ are\ not\ adjusted\ to\ point\ to\ .gypd\ files\ instead;}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00011}00011\ \textcolor{stringliteral}{unlike\ other\ paths,\ which\ are\ relative\ to\ the\ .gyp\ or\ .gypd\ file,\ such\ paths}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00012}00012\ \textcolor{stringliteral}{are\ relative\ to\ the\ directory\ from\ which\ gyp\ was\ run\ to\ create\ the\ .gypd\ file.}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00013}00013\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00014}00014\ \textcolor{stringliteral}{This\ generator\ module\ is\ intended\ to\ be\ a\ sample\ and\ a\ debugging\ aid,\ hence}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00015}00015\ \textcolor{stringliteral}{the\ "{}d"{}\ for\ "{}debug"{}\ in\ .gypd.\ \ It\ is\ useful\ to\ inspect\ the\ results\ of\ the}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00016}00016\ \textcolor{stringliteral}{various\ merges,\ expansions,\ and\ conditional\ evaluations\ performed\ by\ gyp}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00017}00017\ \textcolor{stringliteral}{and\ to\ see\ a\ representation\ of\ what\ would\ be\ fed\ to\ a\ generator\ module.}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00018}00018\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00019}00019\ \textcolor{stringliteral}{It's\ not\ advisable\ to\ rename\ .gypd\ files\ produced\ by\ this\ module\ to\ .gyp,}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00020}00020\ \textcolor{stringliteral}{because\ they\ will\ have\ all\ merges,\ expansions,\ and\ evaluations\ already}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00021}00021\ \textcolor{stringliteral}{performed\ and\ the\ relevant\ constructs\ not\ present\ in\ the\ output;\ paths\ to}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00022}00022\ \textcolor{stringliteral}{dependencies\ may\ be\ wrong;\ and\ various\ sections\ that\ do\ not\ belong\ in\ .gyp}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00023}00023\ \textcolor{stringliteral}{files\ such\ as\ such\ as\ "{}included\_files"{}\ and\ "{}*\_excluded"{}\ will\ be\ present.}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00024}00024\ \textcolor{stringliteral}{Output\ will\ also\ be\ stripped\ of\ comments.\ \ This\ is\ not\ intended\ to\ be\ a}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00025}00025\ \textcolor{stringliteral}{general-\/purpose\ gyp\ pretty-\/printer;\ for\ that,\ you\ probably\ just\ want\ to}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00026}00026\ \textcolor{stringliteral}{run\ "{}pprint.pprint(eval(open('source.gyp').read()))"{},\ which\ will\ still\ strip}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00027}00027\ \textcolor{stringliteral}{comments\ but\ won't\ do\ all\ of\ the\ other\ things\ done\ to\ this\ module's\ output.}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00028}00028\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00029}00029\ \textcolor{stringliteral}{The\ specific\ formatting\ of\ the\ output\ generated\ by\ this\ module\ is\ subject}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00030}00030\ \textcolor{stringliteral}{to\ change.}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00031}00031\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00034}00034\ \textcolor{keyword}{import}\ \mbox{\hyperlink{namespacegyp_1_1common}{gyp.common}}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00035}00035\ \textcolor{keyword}{import}\ pprint}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00038}00038\ \textcolor{comment}{\#\ These\ variables\ should\ just\ be\ spit\ back\ out\ as\ variable\ references.}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00039}\mbox{\hyperlink{namespacegyp_1_1generator_1_1gypd_ac25c87a879f78dc786f900ba0bd70a3a}{00039}}\ \_generator\_identity\_variables\ =\ [}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00040}00040\ \ \ \ \ \textcolor{stringliteral}{"{}CONFIGURATION\_NAME"{}},}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00041}00041\ \ \ \ \ \textcolor{stringliteral}{"{}EXECUTABLE\_PREFIX"{}},}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00042}00042\ \ \ \ \ \textcolor{stringliteral}{"{}EXECUTABLE\_SUFFIX"{}},}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00043}00043\ \ \ \ \ \textcolor{stringliteral}{"{}INTERMEDIATE\_DIR"{}},}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00044}00044\ \ \ \ \ \textcolor{stringliteral}{"{}LIB\_DIR"{}},}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00045}00045\ \ \ \ \ \textcolor{stringliteral}{"{}PRODUCT\_DIR"{}},}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00046}00046\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_ROOT"{}},}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00047}00047\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_DIRNAME"{}},}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00048}00048\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_EXT"{}},}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00049}00049\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_NAME"{}},}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00050}00050\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_PATH"{}},}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00051}00051\ \ \ \ \ \textcolor{stringliteral}{"{}SHARED\_INTERMEDIATE\_DIR"{}},}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00052}00052\ \ \ \ \ \textcolor{stringliteral}{"{}SHARED\_LIB\_DIR"{}},}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00053}00053\ \ \ \ \ \textcolor{stringliteral}{"{}SHARED\_LIB\_PREFIX"{}},}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00054}00054\ \ \ \ \ \textcolor{stringliteral}{"{}SHARED\_LIB\_SUFFIX"{}},}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00055}00055\ \ \ \ \ \textcolor{stringliteral}{"{}STATIC\_LIB\_PREFIX"{}},}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00056}00056\ \ \ \ \ \textcolor{stringliteral}{"{}STATIC\_LIB\_SUFFIX"{}},}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00057}00057\ ]}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00059}00059\ \textcolor{comment}{\#\ gypd\ doesn't\ define\ a\ default\ value\ for\ OS\ like\ many\ other\ generator}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00060}00060\ \textcolor{comment}{\#\ modules.\ \ Specify\ "{}-\/D\ OS=whatever"{}\ on\ the\ command\ line\ to\ provide\ a\ value.}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00061}\mbox{\hyperlink{namespacegyp_1_1generator_1_1gypd_a12308fac2839284cf29f48d63a8989ca}{00061}}\ generator\_default\_variables\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00063}00063\ \textcolor{comment}{\#\ gypd\ supports\ multiple\ toolsets}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00064}\mbox{\hyperlink{namespacegyp_1_1generator_1_1gypd_a6031a22d628e35cee9e94955d0a6f255}{00064}}\ generator\_supports\_multiple\_toolsets\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00066}00066\ \textcolor{comment}{\#\ TODO(mark):\ This\ always\ uses\ <,\ which\ isn't\ right.\ \ The\ input\ module\ should}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00067}00067\ \textcolor{comment}{\#\ notify\ the\ generator\ to\ tell\ it\ which\ phase\ it\ is\ operating\ in,\ and\ this}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00068}00068\ \textcolor{comment}{\#\ module\ should\ use\ <\ for\ the\ early\ phase\ and\ then\ switch\ to\ >\ for\ the\ late}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00069}00069\ \textcolor{comment}{\#\ phase.\ \ Bonus\ points\ for\ carrying\ @\ back\ into\ the\ output\ too.}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00070}00070\ \textcolor{keywordflow}{for}\ v\ \textcolor{keywordflow}{in}\ \_generator\_identity\_variables:}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00071}00071\ \ \ \ \ generator\_default\_variables[v]\ =\ \textcolor{stringliteral}{"{}<(\%s)"{}}\ \%\ v}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00074}\mbox{\hyperlink{namespacegyp_1_1generator_1_1gypd_ad47dfac600823cef66075602e0b5fb0f}{00074}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1gypd_ad47dfac600823cef66075602e0b5fb0f}{GenerateOutput}}(target\_list,\ target\_dicts,\ data,\ params):}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00075}00075\ \ \ \ \ output\_files\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00076}00076\ \ \ \ \ \textcolor{keywordflow}{for}\ qualified\_target\ \textcolor{keywordflow}{in}\ target\_list:}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ [input\_file,\ target]\ =\ \mbox{\hyperlink{namespacegyp_1_1common_a51180f038e57ff79c30f6231d1d7958f}{gyp.common.ParseQualifiedTarget}}(qualified\_target)[0:2]}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ input\_file[-\/4:]\ !=\ \textcolor{stringliteral}{"{}.gyp"{}}:}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ input\_file\_stem\ =\ input\_file[:-\/4]}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ output\_file\ =\ input\_file\_stem\ +\ params[\textcolor{stringliteral}{"{}options"{}}].suffix\ +\ \textcolor{stringliteral}{"{}.gypd"{}}}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ output\_files[output\_file]\ =\ output\_files.get(output\_file,\ input\_file)}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00086}00086\ \ \ \ \ \textcolor{keywordflow}{for}\ output\_file,\ input\_file\ \textcolor{keywordflow}{in}\ output\_files.items():}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ output\ =\ open(output\_file,\ \textcolor{stringliteral}{"{}w"{}})}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ pprint.pprint(data[input\_file],\ output)}
+\DoxyCodeLine{\Hypertarget{gypd_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ output.close()}
+
+\end{DoxyCode}

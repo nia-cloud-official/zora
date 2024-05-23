@@ -1,0 +1,125 @@
+.TH "md_backend_2node__modules_2finalhandler_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2finalhandler_2_r_e_a_d_m_e \- finalhandler 
+.PP
+ \fR\fP \fR\fP \fR\fP \fR\fP \fR\fP
+.PP
+Node\&.js function to invoke as the final step to respond to HTTP request\&.
+.SH "Installation"
+.PP
+This is a \fRNode\&.js\fP module available through the \fRnpm registry\fP\&. Installation is done using the \fR\fRnpm install\fP command\fP:
+.PP
+.PP
+.nf
+$ npm install finalhandler
+.fi
+.PP
+.SH "API"
+.PP
+.PP
+.nf
+var finalhandler = require('finalhandler')
+.fi
+.PP
+.SS "finalhandler(req, res, [options])"
+Returns function to be invoked as the final step for the given \fRreq\fP and \fRres\fP\&. This function is to be invoked as \fRfn(err)\fP\&. If \fRerr\fP is falsy, the handler will write out a 404 response to the \fRres\fP\&. If it is truthy, an error response will be written out to the \fRres\fP or \fRres\fP will be terminated if a response has already started\&.
+.PP
+When an error is written, the following information is added to the response:
+.PP
+.IP "\(bu" 2
+The \fRres\&.statusCode\fP is set from \fRerr\&.status\fP (or \fRerr\&.statusCode\fP)\&. If this value is outside the 4xx or 5xx range, it will be set to 500\&.
+.IP "\(bu" 2
+The \fRres\&.statusMessage\fP is set according to the status code\&.
+.IP "\(bu" 2
+The body will be the HTML of the status code message if \fRenv\fP is `'production'\fR, otherwise will be\fPerr\&.stack\fR\&.\fP
+.IP "\(bu" 2
+\fRAny headers specified in an\fPerr\&.headers` object\&.
+.PP
+.PP
+The final handler will also unpipe anything from \fRreq\fP when it is invoked\&.
+.SS "options\&.env"
+By default, the environment is determined by \fRNODE_ENV\fP variable, but it can be overridden by this option\&.
+.SS "options\&.onerror"
+Provide a function to be called with the \fRerr\fP when it exists\&. Can be used for writing errors to a central location without excessive function generation\&. Called as \fRonerror(err, req, res)\fP\&.
+.SH "Examples"
+.PP
+.SS "always 404"
+.PP
+.nf
+var finalhandler = require('finalhandler')
+var http = require('http')
+
+var server = http\&.createServer(function (req, res) {
+  var done = finalhandler(req, res)
+  done()
+})
+
+server\&.listen(3000)
+.fi
+.PP
+.SS "perform simple action"
+.PP
+.nf
+var finalhandler = require('finalhandler')
+var fs = require('fs')
+var http = require('http')
+
+var server = http\&.createServer(function (req, res) {
+  var done = finalhandler(req, res)
+
+  fs\&.readFile('index\&.html', function (err, buf) {
+    if (err) return done(err)
+    res\&.setHeader('Content\-Type', 'text/html')
+    res\&.end(buf)
+  })
+})
+
+server\&.listen(3000)
+.fi
+.PP
+.SS "use with middleware-style functions"
+.PP
+.nf
+var finalhandler = require('finalhandler')
+var http = require('http')
+var serveStatic = require('serve\-static')
+
+var serve = serveStatic('public')
+
+var server = http\&.createServer(function (req, res) {
+  var done = finalhandler(req, res)
+  serve(req, res, done)
+})
+
+server\&.listen(3000)
+.fi
+.PP
+.SS "keep log of all errors"
+.PP
+.nf
+var finalhandler = require('finalhandler')
+var fs = require('fs')
+var http = require('http')
+
+var server = http\&.createServer(function (req, res) {
+  var done = finalhandler(req, res, { onerror: logerror })
+
+  fs\&.readFile('index\&.html', function (err, buf) {
+    if (err) return done(err)
+    res\&.setHeader('Content\-Type', 'text/html')
+    res\&.end(buf)
+  })
+})
+
+server\&.listen(3000)
+
+function logerror (err) {
+  console\&.error(err\&.stack || err\&.toString())
+}
+.fi
+.PP
+.SH "License"
+.PP
+[MIT](LICENSE) 

@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2pump_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>pump</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">pump<sp/>is<sp/>a<sp/>small<sp/>node<sp/>module<sp/>that<sp/>pipes<sp/>streams<sp/>together<sp/>and<sp/>destroys<sp/>all<sp/>of<sp/>them<sp/>if<sp/>one<sp/>of<sp/>them<sp/>closes.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>install<sp/>pump</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![build<sp/>status](http://img.shields.io/travis/mafintosh/pump.svg?style=flat)](http://travis-ci.org/mafintosh/pump)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>What<sp/>problem<sp/>does<sp/>it<sp/>solve?</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>using<sp/>standard<sp/>`source.pipe(dest)`<sp/>source<sp/>will<sp/>_not_<sp/>be<sp/>destroyed<sp/>if<sp/>dest<sp/>emits<sp/>close<sp/>or<sp/>an<sp/>error.</highlight></codeline>
+<codeline><highlight class="normal">You<sp/>are<sp/>also<sp/>not<sp/>able<sp/>to<sp/>provide<sp/>a<sp/>callback<sp/>to<sp/>tell<sp/>when<sp/>then<sp/>pipe<sp/>has<sp/>finished.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">pump<sp/>does<sp/>these<sp/>two<sp/>things<sp/>for<sp/>you</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Usage</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Simply<sp/>pass<sp/>the<sp/>streams<sp/>you<sp/>want<sp/>to<sp/>pipe<sp/>together<sp/>to<sp/>pump<sp/>and<sp/>add<sp/>an<sp/>optional<sp/>callback</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>pump<sp/>=<sp/>require(&apos;pump&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>fs<sp/>=<sp/>require(&apos;fs&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>source<sp/>=<sp/>fs.createReadStream(&apos;/dev/random&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>dest<sp/>=<sp/>fs.createWriteStream(&apos;/dev/null&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">pump(source,<sp/>dest,<sp/>function(err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;pipe<sp/>finished&apos;,<sp/>err)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">setTimeout(function()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>dest.destroy()<sp/>//<sp/>when<sp/>dest<sp/>is<sp/>closed<sp/>pump<sp/>will<sp/>destroy<sp/>source</highlight></codeline>
+<codeline><highlight class="normal">},<sp/>1000)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>use<sp/>pump<sp/>to<sp/>pipe<sp/>more<sp/>than<sp/>two<sp/>streams<sp/>together<sp/>as<sp/>well</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>transform<sp/>=<sp/>someTransformStream()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">pump(source,<sp/>transform,<sp/>anotherTransform,<sp/>dest,<sp/>function(err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;pipe<sp/>finished&apos;,<sp/>err)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`source`,<sp/>`transform`,<sp/>`anotherTransform`<sp/>or<sp/>`dest`<sp/>closes<sp/>all<sp/>of<sp/>them<sp/>will<sp/>be<sp/>destroyed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Similarly<sp/>to<sp/>`stream.pipe()`,<sp/>`pump()`<sp/>returns<sp/>the<sp/>last<sp/>stream<sp/>passed<sp/>in,<sp/>so<sp/>you<sp/>can<sp/>do:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">return<sp/>pump(s1,<sp/>s2)<sp/>//<sp/>returns<sp/>s2</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>want<sp/>to<sp/>return<sp/>a<sp/>stream<sp/>that<sp/>combines<sp/>*both*<sp/>s1<sp/>and<sp/>s2<sp/>to<sp/>a<sp/>single<sp/>stream<sp/>use</highlight></codeline>
+<codeline><highlight class="normal">[pumpify](https://github.com/mafintosh/pumpify)<sp/>instead.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>License</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">MIT</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Related</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`pump`<sp/>is<sp/>part<sp/>of<sp/>the<sp/>[mississippi<sp/>stream<sp/>utility<sp/>collection](https://github.com/maxogden/mississippi)<sp/>which<sp/>includes<sp/>more<sp/>useful<sp/>stream<sp/>modules<sp/>similar<sp/>to<sp/>this<sp/>one.</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/pump/README.md"/>
+  </compounddef>
+</doxygen>

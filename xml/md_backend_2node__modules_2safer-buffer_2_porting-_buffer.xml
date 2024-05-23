@@ -1,0 +1,179 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2safer-buffer_2_porting-_buffer" kind="page">
+    <compoundname>md_backend_2node__modules_2safer-buffer_2_porting-_buffer</compoundname>
+    <title>Porting to the Buffer.from/Buffer.alloc API</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1autotoc_md3045"/> <anchor id="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1overview"/> </para>
+<sect1 id="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1autotoc_md3046">
+<title>Overview</title><para><itemizedlist>
+<listitem><para><ref refid="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1variant-1" kindref="member">Variant 1: Drop support for Node.js ≤ 4.4.x and 5.0.0 — 5.9.x.</ref> (<emphasis>recommended</emphasis>)</para>
+</listitem><listitem><para><ref refid="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1variant-2" kindref="member">Variant 2: Use a polyfill</ref></para>
+</listitem><listitem><para><ref refid="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1variant-3" kindref="member">Variant 3: manual detection, with safeguards</ref></para>
+</listitem></itemizedlist>
+</para>
+<sect2 id="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1autotoc_md3047">
+<title>Finding problematic bits of code using grep</title><para>Just run <lsquo/>grep -nrE <rsquo/>[^a-zA-Z](Slow)?Buffer\s*(&apos; <ndash/>exclude-dir node_modules`.</para>
+<para>It will find all the potentially unsafe places in your own code (with some considerably unlikely exceptions).</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1autotoc_md3048">
+<title>Finding problematic bits of code using Node.js 8</title><para>If you’re using Node.js ≥ 8.0.0 (which is recommended), Node.js exposes multiple options that help with finding the relevant pieces of code:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>--trace-warnings</computeroutput> will make Node.js show a stack trace for this warning and other warnings that are printed by Node.js.</para>
+</listitem><listitem><para><computeroutput>--trace-deprecation</computeroutput> does the same thing, but only for deprecation warnings.</para>
+</listitem><listitem><para><computeroutput>--pending-deprecation</computeroutput> will show more types of deprecation warnings. In particular, it will show the <computeroutput>Buffer()</computeroutput> deprecation warning, even on Node.js 8.</para>
+</listitem></itemizedlist>
+</para>
+<para>You can set these flags using an environment variable:</para>
+<para><programlisting filename=".console"><codeline><highlight class="normal">$<sp/>export<sp/>NODE_OPTIONS=&apos;--trace-warnings<sp/>--pending-deprecation&apos;</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>cat<sp/>example.js</highlight></codeline>
+<codeline><highlight class="normal">&apos;use<sp/>strict&apos;;</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>foo<sp/>=<sp/>new<sp/>Buffer(&apos;foo&apos;);</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>node<sp/>example.js</highlight></codeline>
+<codeline><highlight class="normal">(node:7147)<sp/>[DEP0005]<sp/>DeprecationWarning:<sp/>The<sp/>Buffer()<sp/>and<sp/>new<sp/>Buffer()<sp/>constructors<sp/>are<sp/>not<sp/>recommended<sp/>for<sp/>use<sp/>due<sp/>to<sp/>security<sp/>and<sp/>usability<sp/>concerns.<sp/>Please<sp/>use<sp/>the<sp/>new<sp/>Buffer.alloc(),<sp/>Buffer.allocUnsafe(),<sp/>or<sp/>Buffer.from()<sp/>construction<sp/>methods<sp/>instead.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>showFlaggedDeprecation<sp/>(buffer.js:127:13)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>new<sp/>Buffer<sp/>(buffer.js:148:3)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>Object.&lt;anonymous&gt;<sp/>(/path/to/example.js:2:13)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>[...<sp/>more<sp/>stack<sp/>trace<sp/>lines<sp/>...]</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1autotoc_md3049">
+<title>Finding problematic bits of code using linters</title><para>Eslint rules <ulink url="https://eslint.org/docs/rules/no-buffer-constructor">no-buffer-constructor</ulink> or <ulink url="https://github.com/mysticatea/eslint-plugin-node/blob/master/docs/rules/no-deprecated-api.md">node/no-deprecated-api</ulink> also find calls to deprecated <computeroutput>Buffer()</computeroutput> API. Those rules are included in some pre-sets.</para>
+<para>There is a drawback, though, that it doesn&apos;t always <ulink url="https://github.com/chalker/safer-buffer#why-not-safe-buffer">work correctly</ulink> when <computeroutput>Buffer</computeroutput> is overriden e.g. with a polyfill, so recommended is a combination of this and some other method described above.</para>
+<para><anchor id="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1variant-1"/> </para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1autotoc_md3050">
+<title>Variant 1: Drop support for Node.js ≤ 4.4.x and 5.0.0 — 5.9.x.</title><para>This is the recommended solution nowadays that would imply only minimal overhead.</para>
+<para>The Node.js 5.x release line has been unsupported since July 2016, and the Node.js 4.x release line reaches its End of Life in April 2018 (→ <ulink url="https://github.com/nodejs/Release#release-schedule">Schedule</ulink>). This means that these versions of Node.js will <emphasis>not</emphasis> receive any updates, even in case of security issues, so using these release lines should be avoided, if at all possible.</para>
+<para>What you would do in this case is to convert all <computeroutput>new Buffer()</computeroutput> or <computeroutput>Buffer()</computeroutput> calls to use <computeroutput>Buffer.alloc()</computeroutput> or <computeroutput>Buffer.from()</computeroutput>, in the following way:</para>
+<para><itemizedlist>
+<listitem><para>For <computeroutput>new Buffer(number)</computeroutput>, replace it with <computeroutput>Buffer.alloc(number)</computeroutput>.</para>
+</listitem><listitem><para>For <computeroutput>new Buffer(string)</computeroutput> (or <computeroutput>new Buffer(string, encoding)</computeroutput>), replace it with <computeroutput>Buffer.from(string)</computeroutput> (or <computeroutput>Buffer.from(string, encoding)</computeroutput>).</para>
+</listitem><listitem><para>For all other combinations of arguments (these are much rarer), also replace <computeroutput>new Buffer(...arguments)</computeroutput> with <computeroutput>Buffer.from(...arguments)</computeroutput>.</para>
+</listitem></itemizedlist>
+</para>
+<para>Note that <computeroutput>Buffer.alloc()</computeroutput> is also <emphasis>faster</emphasis> on the current Node.js versions than <computeroutput>new Buffer(size).fill(0)</computeroutput>, which is what you would otherwise need to ensure zero-filling.</para>
+<para>Enabling eslint rule <ulink url="https://eslint.org/docs/rules/no-buffer-constructor">no-buffer-constructor</ulink> or <ulink url="https://github.com/mysticatea/eslint-plugin-node/blob/master/docs/rules/no-deprecated-api.md">node/no-deprecated-api</ulink> is recommended to avoid accidential unsafe Buffer API usage.</para>
+<para>There is also a <ulink url="https://github.com/joyeecheung/node-dep-codemod#dep005">JSCodeshift codemod</ulink> for automatically migrating Buffer constructors to <computeroutput>Buffer.alloc()</computeroutput> or <computeroutput>Buffer.from()</computeroutput>. Note that it currently only works with cases where the arguments are literals or where the constructor is invoked with two arguments.</para>
+<para><emphasis>If you currently support those older Node.js versions and dropping them would be a semver-major change for you, or if you support older branches of your packages, consider using <ref refid="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1variant-2" kindref="member">Variant 2</ref> or <ref refid="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1variant-3" kindref="member">Variant 3</ref> on older branches, so people using those older branches will also receive the fix. That way, you will eradicate potential issues caused by unguarded Buffer API usage and your users will not observe a runtime deprecation warning when running your code on Node.js 10.</emphasis></para>
+<para><anchor id="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1variant-2"/> </para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1autotoc_md3051">
+<title>Variant 2: Use a polyfill</title><para>Utilize <ulink url="https://www.npmjs.com/package/safer-buffer">safer-buffer</ulink> as a polyfill to support older Node.js versions.</para>
+<para>You would take exacly the same steps as in <ref refid="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1variant-1" kindref="member">Variant 1</ref>, but with a polyfill <lsquo/>const Buffer = require(&apos;safer-buffer<rsquo/>).Buffer<computeroutput>in all files where you use the new</computeroutput>Buffer` api.</para>
+<para>Make sure that you do not use old <computeroutput>new Buffer</computeroutput> API — in any files where the line above is added, using old <computeroutput>new Buffer()</computeroutput> API will <emphasis>throw</emphasis>. It will be easy to notice that in CI, though.</para>
+<para>Alternatively, you could use <ulink url="https://www.npmjs.com/package/buffer-from">buffer-from</ulink> and/or <ulink url="https://www.npmjs.com/package/buffer-alloc">buffer-alloc</ulink> <ulink url="https://ponyfill.com/">ponyfills</ulink> — those are great, the only downsides being 4 deps in the tree and slightly more code changes to migrate off them (as you would be using e.g. <computeroutput>Buffer.from</computeroutput> under a different name). If you need only <computeroutput>Buffer.from</computeroutput> polyfilled — <computeroutput>buffer-from</computeroutput> alone which comes with no extra dependencies.</para>
+<para><emphasis>Alternatively, you could use <ulink url="https://www.npmjs.com/package/safe-buffer">safe-buffer</ulink> — it also provides a polyfill, but takes a different approach which has <ulink url="https://github.com/chalker/safer-buffer#why-not-safe-buffer">it&apos;s drawbacks</ulink>. It will allow you to also use the older <computeroutput>new Buffer()</computeroutput> API in your code, though — but that&apos;s arguably a benefit, as it is problematic, can cause issues in your code, and will start emitting runtime deprecation warnings starting with Node.js 10.</emphasis></para>
+<para>Note that in either case, it is important that you also remove all calls to the old Buffer API manually — just throwing in <computeroutput>safe-buffer</computeroutput> doesn&apos;t fix the problem by itself, it just provides a polyfill for the new API. I have seen people doing that mistake.</para>
+<para>Enabling eslint rule <ulink url="https://eslint.org/docs/rules/no-buffer-constructor">no-buffer-constructor</ulink> or <ulink url="https://github.com/mysticatea/eslint-plugin-node/blob/master/docs/rules/no-deprecated-api.md">node/no-deprecated-api</ulink> is recommended.</para>
+<para><emphasis>Don&apos;t forget to drop the polyfill usage once you drop support for Node.js &lt; 4.5.0.</emphasis></para>
+<para><anchor id="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1variant-3"/> </para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1autotoc_md3052">
+<title>Variant 3 — manual detection, with safeguards</title><para>This is useful if you create Buffer instances in only a few places (e.g. one), or you have your own wrapper around them.</para>
+<sect2 id="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1autotoc_md3053">
+<title>Buffer(0)</title><para>This special case for creating empty buffers can be safely replaced with <computeroutput>Buffer.concat([])</computeroutput>, which returns the same result all the way down to Node.js 0.8.x.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1autotoc_md3054">
+<title>Buffer(notNumber)</title><para>Before:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>buf<sp/>=<sp/>new<sp/>Buffer(notNumber,<sp/>encoding);</highlight></codeline>
+</programlisting></para>
+<para>After:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>buf;</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>(Buffer.from<sp/>&amp;&amp;<sp/>Buffer.from<sp/>!==<sp/>Uint8Array.from)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>buf<sp/>=<sp/>Buffer.from(notNumber,<sp/>encoding);</highlight></codeline>
+<codeline><highlight class="normal">}<sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(typeof<sp/>notNumber<sp/>===<sp/>&apos;number&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>throw<sp/>new<sp/>Error(&apos;The<sp/>&quot;size&quot;<sp/>argument<sp/>must<sp/>be<sp/>of<sp/>type<sp/>number.&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>buf<sp/>=<sp/>new<sp/>Buffer(notNumber,<sp/>encoding);</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+<para><computeroutput>encoding</computeroutput> is optional.</para>
+<para>Note that the <computeroutput>typeof notNumber</computeroutput> before <computeroutput>new Buffer</computeroutput> is required (for cases when <computeroutput>notNumber</computeroutput> argument is not hard-coded) and <emphasis>is not caused by the deprecation of Buffer constructor</emphasis> — it&apos;s exactly <emphasis>why</emphasis> the Buffer constructor is deprecated. Ecosystem packages lacking this type-check caused numereous security issues — situations when unsanitized user input could end up in the <computeroutput>Buffer(arg)</computeroutput> create problems ranging from DoS to leaking sensitive information to the attacker from the process memory.</para>
+<para>When <computeroutput>notNumber</computeroutput> argument is hardcoded (e.g. literal <computeroutput>&quot;abc&quot;</computeroutput> or <computeroutput>[0,1,2]</computeroutput>), the <computeroutput>typeof</computeroutput> check can be omitted.</para>
+<para>Also note that using TypeScript does not fix this problem for you — when libs written in <computeroutput>TypeScript</computeroutput> are used from JS, or when user input ends up there — it behaves exactly as pure JS, as all type checks are translation-time only and are not present in the actual JS code which TS compiles to.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1autotoc_md3055">
+<title>Buffer(number)</title><para>For Node.js 0.10.x (and below) support:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>buf;</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>(Buffer.alloc)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>buf<sp/>=<sp/>Buffer.alloc(number);</highlight></codeline>
+<codeline><highlight class="normal">}<sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>buf<sp/>=<sp/>new<sp/>Buffer(number);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>buf.fill(0);</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+<para>Otherwise (Node.js ≥ 0.12.x):</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>buf<sp/>=<sp/>Buffer.alloc<sp/>?<sp/>Buffer.alloc(number)<sp/>:<sp/>new<sp/>Buffer(number).fill(0);</highlight></codeline>
+</programlisting></para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1autotoc_md3056">
+<title>Regarding Buffer.allocUnsafe</title><para>Be extra cautious when using <computeroutput>Buffer.allocUnsafe</computeroutput>:<itemizedlist>
+<listitem><para>Don&apos;t use it if you don&apos;t have a good reason to<itemizedlist>
+<listitem><para>e.g. you probably won&apos;t ever see a performance difference for small buffers, in fact, those might be even faster with <computeroutput>Buffer.alloc()</computeroutput>,</para>
+</listitem><listitem><para>if your code is not in the hot code path — you also probably won&apos;t notice a difference,</para>
+</listitem><listitem><para>keep in mind that zero-filling minimizes the potential risks.</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para>If you use it, make sure that you never return the buffer in a partially-filled state,<itemizedlist>
+<listitem><para>if you are writing to it sequentially — always truncate it to the actuall written length</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+<para>Errors in handling buffers allocated with <computeroutput>Buffer.allocUnsafe</computeroutput> could result in various issues, ranged from undefined behaviour of your code to sensitive data (user input, passwords, certs) leaking to the remote attacker.</para>
+<para><emphasis>Note that the same applies to <computeroutput>new Buffer</computeroutput> usage without zero-filling, depending on the Node.js version (and lacking type checks also adds DoS to the list of potential problems).</emphasis></para>
+<para><anchor id="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1faq"/> </para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1autotoc_md3057">
+<title>FAQ</title><para><anchor id="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1design-flaws"/> </para>
+<sect2 id="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1autotoc_md3058">
+<title>What is wrong with the <computeroutput>Buffer</computeroutput> constructor?</title><para>The <computeroutput>Buffer</computeroutput> constructor could be used to create a buffer in many different ways:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>new Buffer(42)</computeroutput> creates a <computeroutput>Buffer</computeroutput> of 42 bytes. Before Node.js 8, this buffer contained <emphasis>arbitrary memory</emphasis> for performance reasons, which could include anything ranging from program source code to passwords and encryption keys.</para>
+</listitem><listitem><para><lsquo/>new Buffer(&apos;abc<rsquo/>)<computeroutput>creates a</computeroutput>Buffer<computeroutput>that contains the UTF-8-encoded version of the string</computeroutput>&apos;abc&apos;<computeroutput>. A second argument could specify another encoding: For example, </computeroutput>new Buffer(string, &apos;base64&apos;)` could be used to convert a Base64 string into the original sequence of bytes that it represents.</para>
+</listitem><listitem><para>There are several other combinations of arguments.</para>
+</listitem></itemizedlist>
+</para>
+<para>This meant that, in code like <computeroutput>var buffer = new Buffer(foo);</computeroutput>, <emphasis>it is not possible to tell what exactly the contents of the generated buffer are</emphasis> without knowing the type of <computeroutput>foo</computeroutput>.</para>
+<para>Sometimes, the value of <computeroutput>foo</computeroutput> comes from an external source. For example, this function could be exposed as a service on a web server, converting a UTF-8 string into its Base64 form:</para>
+<para><programlisting><codeline><highlight class="normal">function<sp/>stringToBase64(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>The<sp/>request<sp/>body<sp/>should<sp/>have<sp/>the<sp/>format<sp/>of<sp/>`{<sp/>string:<sp/>&apos;foobar&apos;<sp/>}`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>const<sp/>rawBytes<sp/>=<sp/>new<sp/>Buffer(req.body.string)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>const<sp/>encoded<sp/>=<sp/>rawBytes.toString(&apos;base64&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.end({<sp/>encoded:<sp/>encoded<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+<para>Note that this code does <emphasis>not</emphasis> validate the type of <computeroutput>req.body.string</computeroutput>:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>req.body.string</computeroutput> is expected to be a string. If this is the case, all goes well.</para>
+</listitem><listitem><para><computeroutput>req.body.string</computeroutput> is controlled by the client that sends the request.</para>
+</listitem><listitem><para>If <computeroutput>req.body.string</computeroutput> is the <emphasis>number</emphasis> <computeroutput>50</computeroutput>, the <computeroutput>rawBytes</computeroutput> would be 50 bytes:<itemizedlist>
+<listitem><para>Before Node.js 8, the content would be uninitialized</para>
+</listitem><listitem><para>After Node.js 8, the content would be <computeroutput>50</computeroutput> bytes with the value <computeroutput>0</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+<para>Because of the missing type check, an attacker could intentionally send a number as part of the request. Using this, they can either:</para>
+<para><itemizedlist>
+<listitem><para>Read uninitialized memory. This <bold>will</bold> leak passwords, encryption keys and other kinds of sensitive information. (Information leak)</para>
+</listitem><listitem><para>Force the program to allocate a large amount of memory. For example, when specifying <computeroutput>500000000</computeroutput> as the input value, each request will allocate 500MB of memory. This can be used to either exhaust the memory available of a program completely and make it crash, or slow it down significantly. (Denial of Service)</para>
+</listitem></itemizedlist>
+</para>
+<para>Both of these scenarios are considered serious security issues in a real-world web server context.</para>
+<para>when using <computeroutput>Buffer.from(req.body.string)</computeroutput> instead, passing a number will always throw an exception instead, giving a controlled behaviour that can always be handled by the program.</para>
+<para><anchor id="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1ecosystem-usage"/> </para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2safer-buffer_2_porting-_buffer_1autotoc_md3059">
+<title>The <computeroutput>Buffer()</computeroutput> constructor has been deprecated for a while. Is this really an issue?</title><para>Surveys of code in the <computeroutput>npm</computeroutput> ecosystem have shown that the <computeroutput>Buffer()</computeroutput> constructor is still widely used. This includes new code, and overall usage of such code has actually been <emphasis>increasing</emphasis>. </para>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/safer-buffer/Porting-Buffer.md"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,237 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2send_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2send_2_r_e_a_d_m_e</compoundname>
+    <title>send</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3135"/> <ulink url="https://npmjs.org/package/send"><image type="html" name="https://badgen.net/npm/v/send" alt="NPM Version" inline="yes"></image>
+</ulink> <ulink url="https://npmjs.org/package/send"><image type="html" name="https://badgen.net/npm/dm/send" alt="NPM Downloads" inline="yes"></image>
+</ulink> <ulink url="https://github.com/pillarjs/send/actions/workflows/ci.yml"><image type="html" name="https://badgen.net/github/checks/pillarjs/send/master?label=linux" alt="Linux Build" inline="yes"></image>
+</ulink> <ulink url="https://ci.appveyor.com/project/dougwilson/send"><image type="html" name="https://badgen.net/appveyor/ci/dougwilson/send/master?label=windows" alt="Windows Build" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/r/pillarjs/send?branch=master"><image type="html" name="https://badgen.net/coveralls/c/github/pillarjs/send/master" alt="Test Coverage" inline="yes"></image>
+</ulink></para>
+<para>Send is a library for streaming files from the file system as a http response supporting partial responses (Ranges), conditional-GET negotiation (If-Match, If-Unmodified-Since, If-None-Match, If-Modified-Since), high test coverage, and granular events which may be leveraged to take appropriate actions in your application or framework.</para>
+<para>Looking to serve up entire folders mapped to URLs? Try <ulink url="https://www.npmjs.org/package/serve-static">serve-static</ulink>.</para>
+<sect1 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3136">
+<title>Installation</title><para>This is a <ulink url="https://nodejs.org/en/">Node.js</ulink> module available through the <ulink url="https://www.npmjs.com/">npm registry</ulink>. Installation is done using the <ulink url="https://docs.npmjs.com/getting-started/installing-npm-packages-locally"><computeroutput>npm install</computeroutput> command</ulink>:</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>send</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3137">
+<title>API</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>send<sp/>=<sp/>require(&apos;send&apos;)</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3138">
+<title>send(req, path, [options])</title><para>Create a new <computeroutput>SendStream</computeroutput> for the given path to send to a <computeroutput>res</computeroutput>. The <computeroutput>req</computeroutput> is the Node.js HTTP request and the <computeroutput>path</computeroutput> is a urlencoded path to send (urlencoded, not the actual file-system path).</para>
+<sect3 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3139">
+<title>Options</title><sect4 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3140">
+<title>acceptRanges</title><para>Enable or disable accepting ranged requests, defaults to true. Disabling this will not send <computeroutput>Accept-Ranges</computeroutput> and ignore the contents of the <computeroutput>Range</computeroutput> request header.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3141">
+<title>cacheControl</title><para>Enable or disable setting <computeroutput>Cache-Control</computeroutput> response header, defaults to true. Disabling this will ignore the <computeroutput>immutable</computeroutput> and <computeroutput>maxAge</computeroutput> options.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3142">
+<title>dotfiles</title><para>Set how &quot;dotfiles&quot; are treated when encountered. A dotfile is a file or directory that begins with a dot (&quot;.&quot;). Note this check is done on the path itself without checking if the path actually exists on the disk. If <computeroutput>root</computeroutput> is specified, only the dotfiles above the root are checked (i.e. the root itself can be within a dotfile when when set to &quot;deny&quot;).</para>
+<para><itemizedlist>
+<listitem><para><lsquo/>&apos;allow<rsquo/><computeroutput>No special treatment for dotfiles. -</computeroutput>&apos;deny&apos;<computeroutput>Send a 403 for any request for a dotfile. -</computeroutput>&apos;ignore&apos;` Pretend like the dotfile does not exist and 404.</para>
+</listitem></itemizedlist>
+</para>
+<para>The default value is <emphasis>similar</emphasis> to <lsquo/>&apos;ignore<rsquo/>`, with the exception that this default will not ignore the files within a directory that begins with a dot, for backward-compatibility.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3143">
+<title>end</title><para>Byte offset at which the stream ends, defaults to the length of the file minus 1. The end is inclusive in the stream, meaning <computeroutput>end: 3</computeroutput> will include the 4th byte in the stream.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3144">
+<title>etag</title><para>Enable or disable etag generation, defaults to true.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3145">
+<title>extensions</title><para>If a given file doesn&apos;t exist, try appending one of the given extensions, in the given order. By default, this is disabled (set to <computeroutput>false</computeroutput>). An example value that will serve extension-less HTML files: <lsquo/>[&apos;html<rsquo/>, &apos;htm&apos;]`. This is skipped if the requested file already has an extension.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3146">
+<title>immutable</title><para>Enable or disable the <computeroutput>immutable</computeroutput> directive in the <computeroutput>Cache-Control</computeroutput> response header, defaults to <computeroutput>false</computeroutput>. If set to <computeroutput>true</computeroutput>, the <computeroutput>maxAge</computeroutput> option should also be specified to enable caching. The <computeroutput>immutable</computeroutput> directive will prevent supported clients from making conditional requests during the life of the <computeroutput>maxAge</computeroutput> option to check if the file has changed.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3147">
+<title>index</title><para>By default send supports &quot;index.html&quot; files, to disable this set <computeroutput>false</computeroutput> or to supply a new index pass a string or an array in preferred order.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3148">
+<title>lastModified</title><para>Enable or disable <computeroutput>Last-Modified</computeroutput> header, defaults to true. Uses the file system&apos;s last modified value.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3149">
+<title>maxAge</title><para>Provide a max-age in milliseconds for http caching, defaults to 0. This can also be a string accepted by the <ulink url="https://www.npmjs.org/package/ms#readme">ms</ulink> module.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3150">
+<title>root</title><para>Serve files relative to <computeroutput>path</computeroutput>.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3151">
+<title>start</title><para>Byte offset at which the stream starts, defaults to 0. The start is inclusive, meaning <computeroutput>start: 2</computeroutput> will include the 3rd byte in the stream.</para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3152">
+<title>Events</title><para>The <computeroutput>SendStream</computeroutput> is an event emitter and will emit the following events:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>error</computeroutput> an error occurred <computeroutput>(err)</computeroutput></para>
+</listitem><listitem><para><computeroutput>directory</computeroutput> a directory was requested <computeroutput>(res, path)</computeroutput></para>
+</listitem><listitem><para><computeroutput>file</computeroutput> a file was requested <computeroutput>(path, stat)</computeroutput></para>
+</listitem><listitem><para><computeroutput>headers</computeroutput> the headers are about to be set on a file <computeroutput>(res, path, stat)</computeroutput></para>
+</listitem><listitem><para><computeroutput>stream</computeroutput> file streaming has started <computeroutput>(stream)</computeroutput></para>
+</listitem><listitem><para><computeroutput>end</computeroutput> streaming has completed</para>
+</listitem></itemizedlist>
+</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3153">
+<title>.pipe</title><para>The <computeroutput>pipe</computeroutput> method is used to pipe the response into the Node.js HTTP response object, typically <computeroutput>send(req, path, options).pipe(res)</computeroutput>.</para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3154">
+<title>.mime</title><para>The <computeroutput>mime</computeroutput> export is the global instance of of the <ulink url="https://www.npmjs.com/package/mime"><computeroutput>mime</computeroutput> npm module</ulink>.</para>
+<para>This is used to configure the MIME types that are associated with file extensions as well as other options for how to resolve the MIME type of a file (like the default type to use for an unknown file extension).</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3155">
+<title>Error-handling</title><para>By default when no <computeroutput>error</computeroutput> listeners are present an automatic response will be made, otherwise you have full control over the response, aka you may show a 5xx page etc.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3156">
+<title>Caching</title><para>It does <emphasis>not</emphasis> perform internal caching, you should use a reverse proxy cache such as Varnish for this, or those fancy things called CDNs. If your application is small enough that it would benefit from single-node memory caching, it&apos;s small enough that it does not need caching at all ;).</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3157">
+<title>Debugging</title><para>To enable <computeroutput>debug()</computeroutput> instrumentation output export <bold>DEBUG</bold>:</para>
+<para><programlisting><codeline><highlight class="normal">$<sp/>DEBUG=send<sp/>node<sp/>app</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3158">
+<title>Running tests</title><para><programlisting><codeline><highlight class="normal">$<sp/>npm<sp/>install</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>test</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3159">
+<title>Examples</title><sect2 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3160">
+<title>Serve a specific file</title><para>This simple example will send a specific file to all requests.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>send<sp/>=<sp/>require(&apos;send&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>server<sp/>=<sp/>http.createServer(function<sp/>onRequest<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>send(req,<sp/>&apos;/path/to/index.html&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.pipe(res)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">server.listen(3000)</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3161">
+<title>Serve all files from a directory</title><para>This simple example will just serve up all the files in a given directory as the top-level. For example, a request <computeroutput>GET /foo.txt</computeroutput> will send back <computeroutput>/www/public/foo.txt</computeroutput>.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>parseUrl<sp/>=<sp/>require(&apos;parseurl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>send<sp/>=<sp/>require(&apos;send&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>server<sp/>=<sp/>http.createServer(function<sp/>onRequest<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>send(req,<sp/>parseUrl(req).pathname,<sp/>{<sp/>root:<sp/>&apos;/www/public&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.pipe(res)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">server.listen(3000)</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3162">
+<title>Custom file types</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>parseUrl<sp/>=<sp/>require(&apos;parseurl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>send<sp/>=<sp/>require(&apos;send&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Default<sp/>unknown<sp/>types<sp/>to<sp/>text/plain</highlight></codeline>
+<codeline><highlight class="normal">send.mime.default_type<sp/>=<sp/>&apos;text/plain&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Add<sp/>a<sp/>custom<sp/>type</highlight></codeline>
+<codeline><highlight class="normal">send.mime.define({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&apos;application/x-my-type&apos;:<sp/>[&apos;x-mt&apos;,<sp/>&apos;x-mtt&apos;]</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>server<sp/>=<sp/>http.createServer(function<sp/>onRequest<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>send(req,<sp/>parseUrl(req).pathname,<sp/>{<sp/>root:<sp/>&apos;/www/public&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.pipe(res)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">server.listen(3000)</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3163">
+<title>Custom directory index view</title><para>This is a example of serving up a structure of directories with a custom function to render a listing of a directory.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>fs<sp/>=<sp/>require(&apos;fs&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>parseUrl<sp/>=<sp/>require(&apos;parseurl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>send<sp/>=<sp/>require(&apos;send&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Transfer<sp/>arbitrary<sp/>files<sp/>from<sp/>within<sp/>/www/example.com/public/*</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>with<sp/>a<sp/>custom<sp/>handler<sp/>for<sp/>directory<sp/>listing</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>server<sp/>=<sp/>http.createServer(function<sp/>onRequest<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>send(req,<sp/>parseUrl(req).pathname,<sp/>{<sp/>index:<sp/>false,<sp/>root:<sp/>&apos;/www/public&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.once(&apos;directory&apos;,<sp/>directory)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.pipe(res)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">server.listen(3000)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Custom<sp/>directory<sp/>handler</highlight></codeline>
+<codeline><highlight class="normal">function<sp/>directory<sp/>(res,<sp/>path)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>stream<sp/>=<sp/>this</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>redirect<sp/>to<sp/>trailing<sp/>slash<sp/>for<sp/>consistent<sp/>url</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(!stream.hasTrailingSlash())<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>stream.redirect(path)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>get<sp/>directory<sp/>list</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fs.readdir(path,<sp/>function<sp/>onReaddir<sp/>(err,<sp/>list)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(err)<sp/>return<sp/>stream.error(err)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>render<sp/>an<sp/>index<sp/>for<sp/>the<sp/>directory</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.setHeader(&apos;Content-Type&apos;,<sp/>&apos;text/plain;<sp/>charset=UTF-8&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.end(list.join(&apos;\n&apos;)<sp/>+<sp/>&apos;\n&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3164">
+<title>Serving from a root directory with custom error-handling</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>parseUrl<sp/>=<sp/>require(&apos;parseurl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>send<sp/>=<sp/>require(&apos;send&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>server<sp/>=<sp/>http.createServer(function<sp/>onRequest<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>your<sp/>custom<sp/>error-handling<sp/>logic:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>function<sp/>error<sp/>(err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.statusCode<sp/>=<sp/>err.status<sp/>||<sp/>500</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.end(err.message)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>your<sp/>custom<sp/>headers</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>function<sp/>headers<sp/>(res,<sp/>path,<sp/>stat)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>serve<sp/>all<sp/>files<sp/>for<sp/>download</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.setHeader(&apos;Content-Disposition&apos;,<sp/>&apos;attachment&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>your<sp/>custom<sp/>directory<sp/>handling<sp/>logic:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>function<sp/>redirect<sp/>()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.statusCode<sp/>=<sp/>301</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.setHeader(&apos;Location&apos;,<sp/>req.url<sp/>+<sp/>&apos;/&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.end(&apos;Redirecting<sp/>to<sp/>&apos;<sp/>+<sp/>req.url<sp/>+<sp/>&apos;/&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>transfer<sp/>arbitrary<sp/>files<sp/>from<sp/>within</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>/www/example.com/public/*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>send(req,<sp/>parseUrl(req).pathname,<sp/>{<sp/>root:<sp/>&apos;/www/public&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.on(&apos;error&apos;,<sp/>error)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.on(&apos;directory&apos;,<sp/>redirect)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.on(&apos;headers&apos;,<sp/>headers)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.pipe(res)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">server.listen(3000)</highlight></codeline>
+</programlisting></para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2send_2_r_e_a_d_m_e_1autotoc_md3165">
+<title>License</title><para>[MIT](LICENSE) </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/send/README.md"/>
+  </compounddef>
+</doxygen>

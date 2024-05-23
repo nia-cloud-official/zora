@@ -1,0 +1,142 @@
+.TH "md_backend_2node__modules_2graceful-fs_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2graceful-fs_2_r_e_a_d_m_e \- graceful-fs 
+.PP
+ graceful-fs functions as a drop-in replacement for the fs module, making various improvements\&.
+.PP
+The improvements are meant to normalize behavior across different platforms and environments, and to make filesystem access more resilient to errors\&.
+.SH "Improvements over \fRfs module\fP"
+.PP
+.IP "\(bu" 2
+Queues up \fRopen\fP and \fRreaddir\fP calls, and retries them once something closes if there is an EMFILE error from too many file descriptors\&.
+.IP "\(bu" 2
+fixes \fRlchmod\fP for Node versions prior to 0\&.6\&.2\&.
+.IP "\(bu" 2
+implements \fRfs\&.lutimes\fP if possible\&. Otherwise it becomes a noop\&.
+.IP "\(bu" 2
+ignores \fREINVAL\fP and \fREPERM\fP errors in \fRchown\fP, \fRfchown\fP or \fRlchown\fP if the user isn't root\&.
+.IP "\(bu" 2
+makes \fRlchmod\fP and \fRlchown\fP become noops, if not available\&.
+.IP "\(bu" 2
+retries reading a file if \fRread\fP results in EAGAIN error\&.
+.PP
+.PP
+On Windows, it retries renaming a file for up to one second if \fREACCESS\fP or \fREPERM\fP error occurs, likely because antivirus software has locked the directory\&.
+.SH "USAGE"
+.PP
+.PP
+.nf
+// use just like fs
+var fs = require('graceful\-fs')
+
+// now go and do stuff with it\&.\&.\&.
+fs\&.readFile('some\-file\-or\-whatever', (err, data) => {
+  // Do stuff here\&.
+})
+.fi
+.PP
+.SH "Sync methods"
+.PP
+This module cannot intercept or handle \fREMFILE\fP or \fRENFILE\fP errors from sync methods\&. If you use sync methods which open file descriptors then you are responsible for dealing with any errors\&.
+.PP
+This is a known limitation, not a bug\&.
+.SH "Global Patching"
+.PP
+If you want to patch the global fs module (or any other fs-like module) you can do this:
+.PP
+.PP
+.nf
+// Make sure to read the caveat below\&.
+var realFs = require('fs')
+var gracefulFs = require('graceful\-fs')
+gracefulFs\&.gracefulify(realFs)
+.fi
+.PP
+.PP
+This should only ever be done at the top-level application layer, in order to delay on EMFILE errors from any fs-using dependencies\&. You should \fBnot\fP do this in a library, because it can cause unexpected delays in other parts of the program\&.
+.SH "Changes"
+.PP
+This module is fairly stable at this point, and used by a lot of things\&. That being said, because it implements a subtle behavior change in a core part of the node API, even modest changes can be extremely breaking, and the versioning is thus biased towards bumping the major when in doubt\&.
+.PP
+The main change between major versions has been switching between providing a fully-patched \fRfs\fP module vs monkey-patching the node core builtin, and the approach by which a non-monkey-patched \fRfs\fP was created\&.
+.PP
+The goal is to trade \fREMFILE\fP errors for slower fs operations\&. So, if you try to open a zillion files, rather than crashing, \fRopen\fP operations will be queued up and wait for something else to \fRclose\fP\&.
+.PP
+There are advantages to each approach\&. Monkey-patching the fs means that no \fREMFILE\fP errors can possibly occur anywhere in your application, because everything is using the same core \fRfs\fP module, which is patched\&. However, it can also obviously cause undesirable side-effects, especially if the module is loaded multiple times\&.
+.PP
+Implementing a separate-but-identical patched \fRfs\fP module is more surgical (and doesn't run the risk of patching multiple times), but also imposes the challenge of keeping in sync with the core module\&.
+.PP
+The current approach loads the \fRfs\fP module, and then creates a lookalike object that has all the same methods, except a few that are patched\&. It is safe to use in all versions of Node from 0\&.8 through 7\&.0\&.
+.SS "v4"
+.IP "\(bu" 2
+Do not monkey-patch the fs module\&. This module may now be used as a drop-in dep, and users can opt into monkey-patching the fs builtin if their app requires it\&.
+.PP
+.SS "v3"
+.IP "\(bu" 2
+Monkey-patch fs, because the eval approach no longer works on recent node\&.
+.IP "\(bu" 2
+fixed possible type-error throw if rename fails on windows
+.IP "\(bu" 2
+verify that we \fInever\fP get EMFILE errors
+.IP "\(bu" 2
+Ignore ENOSYS from chmod/chown
+.IP "\(bu" 2
+clarify that graceful-fs must be used as a drop-in
+.PP
+.SS "v2\&.1\&.0"
+.IP "\(bu" 2
+Use eval rather than monkey-patching fs\&.
+.IP "\(bu" 2
+readdir: Always sort the results
+.IP "\(bu" 2
+win32: requeue a file if error has an OK status
+.PP
+.SS "v2\&.0"
+.IP "\(bu" 2
+A return to monkey patching
+.IP "\(bu" 2
+wrap process\&.cwd
+.PP
+.SS "v1\&.1"
+.IP "\(bu" 2
+wrap readFile
+.IP "\(bu" 2
+Wrap fs\&.writeFile\&.
+.IP "\(bu" 2
+readdir protection
+.IP "\(bu" 2
+Don't clobber the fs builtin
+.IP "\(bu" 2
+Handle fs\&.read EAGAIN errors by trying again
+.IP "\(bu" 2
+Expose the curOpen counter
+.IP "\(bu" 2
+No-op lchown/lchmod if not implemented
+.IP "\(bu" 2
+fs\&.rename patch only for win32
+.IP "\(bu" 2
+Patch fs\&.rename to handle AV software on Windows
+.IP "\(bu" 2
+Close #4 Chown should not fail on einval or eperm if non-root
+.IP "\(bu" 2
+Fix isaacs/fstream#1 Only wrap fs one time
+.IP "\(bu" 2
+Fix #3 Start at 1024 max files, then back off on EMFILE
+.IP "\(bu" 2
+lutimes that doens't blow up on Linux
+.IP "\(bu" 2
+A full on-rewrite using a queue instead of just swallowing the EMFILE error
+.IP "\(bu" 2
+Wrap Read/Write streams as well
+.PP
+.SS "1\&.0"
+.IP "\(bu" 2
+Update engines for node 0\&.6
+.IP "\(bu" 2
+Be lstat-graceful on Windows
+.IP "\(bu" 2
+first 
+.PP
+

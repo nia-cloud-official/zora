@@ -1,0 +1,476 @@
+.TH "gyp.generator.analyzer" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gyp.generator.analyzer
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBConfig\fP"
+.br
+.ti -1c
+.RI "class \fBTarget\fP"
+.br
+.ti -1c
+.RI "class \fBTargetCalculator\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fB_ToGypPath\fP (path)"
+.br
+.ti -1c
+.RI "\fB_ResolveParent\fP (path, base_path_components)"
+.br
+.ti -1c
+.RI "\fB_AddSources\fP (sources, base_path, base_path_components, result)"
+.br
+.ti -1c
+.RI "\fB_ExtractSourcesFromAction\fP (action, base_path, base_path_components, results)"
+.br
+.ti -1c
+.RI "\fB_ToLocalPath\fP (toplevel_dir, path)"
+.br
+.ti -1c
+.RI "\fB_ExtractSources\fP (target, target_dict, toplevel_dir)"
+.br
+.ti -1c
+.RI "\fB_WasBuildFileModified\fP (build_file, data, files, toplevel_dir)"
+.br
+.ti -1c
+.RI "\fB_GetOrCreateTargetByName\fP (targets, target_name)"
+.br
+.ti -1c
+.RI "\fB_DoesTargetTypeRequireBuild\fP (target_dict)"
+.br
+.ti -1c
+.RI "\fB_GenerateTargets\fP (data, target_list, target_dicts, toplevel_dir, files, build_files)"
+.br
+.ti -1c
+.RI "\fB_GetUnqualifiedToTargetMapping\fP (all_targets, to_find)"
+.br
+.ti -1c
+.RI "\fB_DoesTargetDependOnMatchingTargets\fP (target)"
+.br
+.ti -1c
+.RI "\fB_GetTargetsDependingOnMatchingTargets\fP (possible_targets)"
+.br
+.ti -1c
+.RI "\fB_AddCompileTargets\fP (target, roots, add_if_no_ancestor, result)"
+.br
+.ti -1c
+.RI "\fB_GetCompileTargets\fP (matching_targets, supplied_targets)"
+.br
+.ti -1c
+.RI "\fB_WriteOutput\fP (params, **values)"
+.br
+.ti -1c
+.RI "\fB_WasGypIncludeFileModified\fP (params, files)"
+.br
+.ti -1c
+.RI "\fB_NamesNotIn\fP (names, mapping)"
+.br
+.ti -1c
+.RI "\fB_LookupTargets\fP (names, mapping)"
+.br
+.ti -1c
+.RI "\fBCalculateVariables\fP (default_variables, params)"
+.br
+.ti -1c
+.RI "\fBGenerateOutput\fP (target_list, target_dicts, data, params)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "bool \fBdebug\fP = False"
+.br
+.ti -1c
+.RI "str \fBfound_dependency_string\fP = 'Found dependency'"
+.br
+.ti -1c
+.RI "str \fBno_dependency_string\fP = 'No dependencies'"
+.br
+.ti -1c
+.RI "str \fBall_changed_string\fP = 'Found dependency (all)'"
+.br
+.ti -1c
+.RI "int \fBMATCH_STATUS_MATCHES\fP = 1"
+.br
+.ti -1c
+.RI "int \fBMATCH_STATUS_MATCHES_BY_DEPENDENCY\fP = 2"
+.br
+.ti -1c
+.RI "int \fBMATCH_STATUS_DOESNT_MATCH\fP = 3"
+.br
+.ti -1c
+.RI "int \fBMATCH_STATUS_TBD\fP = 4"
+.br
+.ti -1c
+.RI "\fBgenerator_supports_multiple_toolsets\fP = \fBgyp\&.common\&.CrossCompileRequested\fP()"
+.br
+.ti -1c
+.RI "bool \fBgenerator_wants_static_library_dependencies_adjusted\fP = False"
+.br
+.ti -1c
+.RI "dict \fBgenerator_default_variables\fP = {}"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.PP
+.nf
+This script is intended for use as a GYP_GENERATOR\&. It takes as input (by way of
+the generator flag config_path) the path of a json file that dictates the files
+and targets to search for\&. The following keys are supported:
+files: list of paths (relative) of the files to search for\&.
+test_targets: unqualified target names to search for\&. Any target in this list
+that depends upon a file in |files| is output regardless of the type of target
+or chain of dependencies\&.
+additional_compile_targets: Unqualified targets to search for in addition to
+test_targets\&. Targets in the combined list that depend upon a file in |files|
+are not necessarily output\&. For example, if the target is of type none then the
+target is not output (but one of the descendants of the target will be)\&.
+
+The following is output:
+error: only supplied if there is an error\&.
+compile_targets: minimal set of targets that directly or indirectly (for
+  targets of type none) depend on the files in |files| and is one of the
+  supplied targets or a target that one of the supplied targets depends on\&.
+  The expectation is this set of targets is passed into a build step\&. This list
+  always contains the output of test_targets as well\&.
+test_targets: set of targets from the supplied |test_targets| that either
+  directly or indirectly depend upon a file in |files|\&. This list if useful
+  if additional processing needs to be done for certain targets after the
+  build, such as running tests\&.
+status: outputs one of three values: none of the supplied files were found,
+  one of the include files changed so that it should be assumed everything
+  changed (in this case test_targets and compile_targets are not output) or at
+  least one file was found\&.
+invalid_targets: list of supplied targets that were not found\&.
+
+Example:
+Consider a graph like the following:
+  A     D
+ / \\
+B   C
+A depends upon both B and C, A is of type none and B and C are executables\&.
+D is an executable, has no dependencies and nothing depends on it\&.
+If |additional_compile_targets| = ['A'], |test_targets| = ['B', 'C'] and
+files = ['b\&.cc', 'd\&.cc'] (B depends upon b\&.cc and D depends upon d\&.cc), then
+the following is output:
+|compile_targets| = ['B'] B must built as it depends upon the changed file b\&.cc
+and the supplied target A depends upon it\&. A is not output as a build_target
+as it is of type none with no rules and actions\&.
+|test_targets| = ['B'] B directly depends upon the change file b\&.cc\&.
+
+Even though the file d\&.cc, which D depends upon, has changed D is not output
+as it was not supplied by way of |additional_compile_targets| or |test_targets|\&.
+
+If the generator flag analyzer_output_path is specified, output is written
+there\&. Otherwise output is written to stdout\&.
+
+In Gyp the 'all' target is shorthand for the root targets in the files passed
+to gyp\&. For example, if file 'a\&.gyp' contains targets 'a1' and
+'a2', and file 'b\&.gyp' contains targets 'b1' and 'b2' and 'a2' has a dependency
+on 'b2' and gyp is supplied 'a\&.gyp' then 'all' consists of 'a1' and 'a2'\&.
+Notice that 'b1' and 'b2' are not in the 'all' target as 'b\&.gyp' was not
+directly supplied to gyp\&. OTOH if both 'a\&.gyp' and 'b\&.gyp' are supplied to gyp
+then the 'all' target includes 'b1' and 'b2'\&.
+
+.fi
+.PP
+ 
+.SH "Function Documentation"
+.PP 
+.SS "gyp\&.generator\&.analyzer\&._AddCompileTargets ( target,  roots,  add_if_no_ancestor,  result)\fR [protected]\fP"
+
+.PP
+.nf
+Recurses through all targets that depend on |target|, adding all targets
+that need to be built (and are in |roots|) to |result|\&.
+roots: set of root targets\&.
+add_if_no_ancestor: If true and there are no ancestors of |target| then add
+|target| to |result|\&. |target| must still be in |roots|\&.
+result: targets that need to be built are added here\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB480\fP of file \fBanalyzer\&.py\fP\&.
+.SS "gyp\&.generator\&.analyzer\&._AddSources ( sources,  base_path,  base_path_components,  result)\fR [protected]\fP"
+
+.PP
+.nf
+Extracts valid sources from |sources| and adds them to |result|\&. Each
+source file is relative to |base_path|, but may contain '\&.\&.'\&. To make
+resolving '\&.\&.' easier |base_path_components| contains each of the
+directories in |base_path|\&. Additionally each source may contain variables\&.
+Such sources are ignored as it is assumed dependencies on them are expressed
+and tracked in some other means\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB151\fP of file \fBanalyzer\&.py\fP\&.
+.SS "gyp\&.generator\&.analyzer\&._DoesTargetDependOnMatchingTargets ( target)\fR [protected]\fP"
+
+.PP
+.nf
+Returns true if |target| or any of its dependencies is one of the
+targets containing the files supplied as input to analyzer\&. This updates
+|matches| of the Targets as it recurses\&.
+target: the Target to look for\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB446\fP of file \fBanalyzer\&.py\fP\&.
+.SS "gyp\&.generator\&.analyzer\&._DoesTargetTypeRequireBuild ( target_dict)\fR [protected]\fP"
+
+.PP
+.nf
+Returns true if the target type is such that it needs to be built\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB330\fP of file \fBanalyzer\&.py\fP\&.
+.SS "gyp\&.generator\&.analyzer\&._ExtractSources ( target,  target_dict,  toplevel_dir)\fR [protected]\fP"
+
+.PP
+Definition at line \fB189\fP of file \fBanalyzer\&.py\fP\&.
+.SS "gyp\&.generator\&.analyzer\&._ExtractSourcesFromAction ( action,  base_path,  base_path_components,  results)\fR [protected]\fP"
+
+.PP
+Definition at line \fB175\fP of file \fBanalyzer\&.py\fP\&.
+.SS "gyp\&.generator\&.analyzer\&._GenerateTargets ( data,  target_list,  target_dicts,  toplevel_dir,  files,  build_files)\fR [protected]\fP"
+
+.PP
+.nf
+Returns a tuple of the following:
+\&. A dictionary mapping from fully qualified name to Target\&.
+\&. A list of the targets that have a source file in |files|\&.
+\&. Targets that constitute the 'all' target\&. See description at top of file
+for details on the 'all' target\&.
+This sets the |match_status| of the targets that contain any of the source
+files in |files| to MATCH_STATUS_MATCHES\&.
+|toplevel_dir| is the root of the source tree\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB340\fP of file \fBanalyzer\&.py\fP\&.
+.SS "gyp\&.generator\&.analyzer\&._GetCompileTargets ( matching_targets,  supplied_targets)\fR [protected]\fP"
+
+.PP
+.nf
+Returns the set of Targets that require a build\&.
+matching_targets: targets that changed and need to be built\&.
+supplied_targets: set of targets supplied to analyzer to search from\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB537\fP of file \fBanalyzer\&.py\fP\&.
+.SS "gyp\&.generator\&.analyzer\&._GetOrCreateTargetByName ( targets,  target_name)\fR [protected]\fP"
+
+.PP
+.nf
+Creates or returns the Target at targets[target_name]\&. If there is no
+Target for |target_name| one is created\&. Returns a tuple of whether a new
+Target was created and the Target\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB319\fP of file \fBanalyzer\&.py\fP\&.
+.SS "gyp\&.generator\&.analyzer\&._GetTargetsDependingOnMatchingTargets ( possible_targets)\fR [protected]\fP"
+
+.PP
+.nf
+Returns the list of Targets in |possible_targets| that depend (either
+directly on indirectly) on at least one of the targets containing the files
+supplied as input to analyzer\&.
+possible_targets: targets to search from\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB467\fP of file \fBanalyzer\&.py\fP\&.
+.SS "gyp\&.generator\&.analyzer\&._GetUnqualifiedToTargetMapping ( all_targets,  to_find)\fR [protected]\fP"
+
+.PP
+.nf
+Returns a tuple of the following:
+\&. mapping (dictionary) from unqualified name to Target for all the
+Targets in |to_find|\&.
+\&. any target names not found\&. If this is empty all targets were found\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB427\fP of file \fBanalyzer\&.py\fP\&.
+.SS "gyp\&.generator\&.analyzer\&._LookupTargets ( names,  mapping)\fR [protected]\fP"
+
+.PP
+.nf
+Returns a list of the mapping[name] for each value in |names| that is in
+|mapping|\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB608\fP of file \fBanalyzer\&.py\fP\&.
+.SS "gyp\&.generator\&.analyzer\&._NamesNotIn ( names,  mapping)\fR [protected]\fP"
+
+.PP
+.nf
+Returns a list of the values in |names| that are not in |mapping|\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB603\fP of file \fBanalyzer\&.py\fP\&.
+.SS "gyp\&.generator\&.analyzer\&._ResolveParent ( path,  base_path_components)\fR [protected]\fP"
+
+.PP
+.nf
+Resolves |path|, which starts with at least one '\&.\&./'\&. Returns an empty
+string if the path shouldn't be considered\&. See _AddSources() for a
+description of |base_path_components|\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB130\fP of file \fBanalyzer\&.py\fP\&.
+.SS "gyp\&.generator\&.analyzer\&._ToGypPath ( path)\fR [protected]\fP"
+
+.PP
+.nf
+Converts a path to the format used by gyp\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB123\fP of file \fBanalyzer\&.py\fP\&.
+.SS "gyp\&.generator\&.analyzer\&._ToLocalPath ( toplevel_dir,  path)\fR [protected]\fP"
+
+.PP
+.nf
+Converts |path| to a path relative to |toplevel_dir|\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB180\fP of file \fBanalyzer\&.py\fP\&.
+.SS "gyp\&.generator\&.analyzer\&._WasBuildFileModified ( build_file,  data,  files,  toplevel_dir)\fR [protected]\fP"
+
+.PP
+.nf
+Returns true if the build file |build_file| is either in |files| or
+one of the files included by |build_file| is in |files|\&. |toplevel_dir| is
+the root of the source tree\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB289\fP of file \fBanalyzer\&.py\fP\&.
+.SS "gyp\&.generator\&.analyzer\&._WasGypIncludeFileModified ( params,  files)\fR [protected]\fP"
+
+.PP
+.nf
+Returns true if one of the files in |files| is in the set of included
+files\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB592\fP of file \fBanalyzer\&.py\fP\&.
+.SS "gyp\&.generator\&.analyzer\&._WriteOutput ( params, ** values)\fR [protected]\fP"
+
+.PP
+.nf
+Writes the output, either to stdout or a file is specified\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB548\fP of file \fBanalyzer\&.py\fP\&.
+.SS "gyp\&.generator\&.analyzer\&.CalculateVariables ( default_variables,  params)"
+
+.PP
+.nf
+Calculate additional variables for use in the build (called by gyp)\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB614\fP of file \fBanalyzer\&.py\fP\&.
+.SS "gyp\&.generator\&.analyzer\&.GenerateOutput ( target_list,  target_dicts,  data,  params)"
+
+.PP
+.nf
+Called by gyp as the final stage\&. Outputs results\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB746\fP of file \fBanalyzer\&.py\fP\&.
+.SH "Variable Documentation"
+.PP 
+.SS "str gyp\&.generator\&.analyzer\&.all_changed_string = 'Found dependency (all)'"
+
+.PP
+Definition at line \fB76\fP of file \fBanalyzer\&.py\fP\&.
+.SS "bool gyp\&.generator\&.analyzer\&.debug = False"
+
+.PP
+Definition at line \fB71\fP of file \fBanalyzer\&.py\fP\&.
+.SS "str gyp\&.generator\&.analyzer\&.found_dependency_string = 'Found dependency'"
+
+.PP
+Definition at line \fB73\fP of file \fBanalyzer\&.py\fP\&.
+.SS "dict gyp\&.generator\&.analyzer\&.generator_default_variables = {}"
+
+.PP
+Definition at line \fB96\fP of file \fBanalyzer\&.py\fP\&.
+.SS "gyp\&.generator\&.analyzer\&.generator_supports_multiple_toolsets = \fBgyp\&.common\&.CrossCompileRequested\fP()"
+
+.PP
+Definition at line \fB92\fP of file \fBanalyzer\&.py\fP\&.
+.SS "bool gyp\&.generator\&.analyzer\&.generator_wants_static_library_dependencies_adjusted = False"
+
+.PP
+Definition at line \fB94\fP of file \fBanalyzer\&.py\fP\&.
+.SS "int gyp\&.generator\&.analyzer\&.MATCH_STATUS_DOESNT_MATCH = 3"
+
+.PP
+Definition at line \fB87\fP of file \fBanalyzer\&.py\fP\&.
+.SS "int gyp\&.generator\&.analyzer\&.MATCH_STATUS_MATCHES = 1"
+
+.PP
+Definition at line \fB81\fP of file \fBanalyzer\&.py\fP\&.
+.SS "int gyp\&.generator\&.analyzer\&.MATCH_STATUS_MATCHES_BY_DEPENDENCY = 2"
+
+.PP
+Definition at line \fB84\fP of file \fBanalyzer\&.py\fP\&.
+.SS "int gyp\&.generator\&.analyzer\&.MATCH_STATUS_TBD = 4"
+
+.PP
+Definition at line \fB90\fP of file \fBanalyzer\&.py\fP\&.
+.SS "str gyp\&.generator\&.analyzer\&.no_dependency_string = 'No dependencies'"
+
+.PP
+Definition at line \fB74\fP of file \fBanalyzer\&.py\fP\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

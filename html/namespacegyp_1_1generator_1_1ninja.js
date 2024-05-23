@@ -1,0 +1,27 @@
+var namespacegyp_1_1generator_1_1ninja =
+[
+    [ "NinjaWriter", "classgyp_1_1generator_1_1ninja_1_1_ninja_writer.html", "classgyp_1_1generator_1_1ninja_1_1_ninja_writer" ],
+    [ "Target", "classgyp_1_1generator_1_1ninja_1_1_target.html", "classgyp_1_1generator_1_1ninja_1_1_target" ],
+    [ "_AddWinLinkRules", "namespacegyp_1_1generator_1_1ninja.html#a0863c37b45278a14886fffe9c08892b6", null ],
+    [ "_GetWinLinkRuleNameSuffix", "namespacegyp_1_1generator_1_1ninja.html#ab1c232b7ca3caf129bd5653555e65a69", null ],
+    [ "AddArch", "namespacegyp_1_1generator_1_1ninja.html#a5ca28e466b74dd6596e81c1066a74bc3", null ],
+    [ "CalculateGeneratorInputInfo", "namespacegyp_1_1generator_1_1ninja.html#a993e473eb4c2bfc6dbf2f650fdf790ef", null ],
+    [ "CalculateVariables", "namespacegyp_1_1generator_1_1ninja.html#aab39b9a58a8eaac20b277114c061df1f", null ],
+    [ "CallGenerateOutputForConfig", "namespacegyp_1_1generator_1_1ninja.html#af507181e3cec515e9d31e4744a614af2", null ],
+    [ "CommandWithWrapper", "namespacegyp_1_1generator_1_1ninja.html#a8870939cd395f1926ee40a197e379b00", null ],
+    [ "ComputeOutputDir", "namespacegyp_1_1generator_1_1ninja.html#a7c1f50d1b8493a9c6b2f7ce07ef4bb2b", null ],
+    [ "Define", "namespacegyp_1_1generator_1_1ninja.html#a63b6b82c8e1606325886eb7a5c98b8a9", null ],
+    [ "GenerateOutput", "namespacegyp_1_1generator_1_1ninja.html#aaaff503be15aaede183a37e4681ef7ca", null ],
+    [ "GenerateOutputForConfig", "namespacegyp_1_1generator_1_1ninja.html#ae725b232455eaaa660dee42d4a8050dd", null ],
+    [ "GetDefaultConcurrentLinks", "namespacegyp_1_1generator_1_1ninja.html#aadef163d1bd093dd5b10fc0ea9cc4941", null ],
+    [ "OpenOutput", "namespacegyp_1_1generator_1_1ninja.html#a92eeb5cfd026631615c5678afa54d162", null ],
+    [ "PerformBuild", "namespacegyp_1_1generator_1_1ninja.html#af477cd6918a226053da6b9220d3dcfc7", null ],
+    [ "QuoteShellArgument", "namespacegyp_1_1generator_1_1ninja.html#aa997d1d8d8219f59a8eca516eab874b0", null ],
+    [ "StripPrefix", "namespacegyp_1_1generator_1_1ninja.html#a077fb57e7b20c9ab7fcd3d4ec962ad94", null ],
+    [ "generator_additional_non_configuration_keys", "namespacegyp_1_1generator_1_1ninja.html#ad5a340bfdf0f07eebc2435505a57b26d", null ],
+    [ "generator_additional_path_sections", "namespacegyp_1_1generator_1_1ninja.html#a1962853adab3f54633a27f7fde2ec473", null ],
+    [ "generator_default_variables", "namespacegyp_1_1generator_1_1ninja.html#ac460e6ab1b781201e56480bbfc18a6f3", null ],
+    [ "generator_extra_sources_for_rules", "namespacegyp_1_1generator_1_1ninja.html#aed8fbce493c0603bb28adcdd2c9f7083", null ],
+    [ "generator_filelist_paths", "namespacegyp_1_1generator_1_1ninja.html#a2c88ab0fbc0add758cb7930b2bcf71bf", null ],
+    [ "generator_supports_multiple_toolsets", "namespacegyp_1_1generator_1_1ninja.html#aa2a4612ae51e9a4092252a6168603cb5", null ]
+];

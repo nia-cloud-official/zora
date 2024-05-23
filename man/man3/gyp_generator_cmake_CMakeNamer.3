@@ -1,0 +1,76 @@
+.TH "gyp.generator.cmake.CMakeNamer" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gyp.generator.cmake.CMakeNamer
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fB__init__\fP (self, target_list)"
+.br
+.ti -1c
+.RI "\fBCreateCMakeTargetName\fP (self, qualified_target)"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBcmake_target_base_names_conficting\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.PP
+.nf
+Converts Gyp target names into CMake target names\&.
+
+CMake requires that target names be globally unique\&. One way to ensure
+this is to fully qualify the names of the targets\&. Unfortunately, this
+ends up with all targets looking like 'chrome_chrome_gyp_chrome' instead
+of just 'chrome'\&. If this generator were only interested in building, it
+would be possible to fully qualify all target names, then create
+unqualified target names which depend on all qualified targets which
+should have had that name\&. This is more or less what the 'make' generator
+does with aliases\&. However, one goal of this generator is to create CMake
+files for use with IDEs, and fully qualified names are not as user
+friendly\&.
+
+Since target name collision is rare, we do the above only when required\&.
+
+Toolset variants are always qualified from the base, as this is required for
+building\&. However, it also makes sense for an IDE, as it is possible for
+defines to be different\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB584\fP of file \fBcmake\&.py\fP\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "gyp\&.generator\&.cmake\&.CMakeNamer\&.__init__ ( self,  target_list)"
+
+.PP
+Definition at line \fB605\fP of file \fBcmake\&.py\fP\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "gyp\&.generator\&.cmake\&.CMakeNamer\&.CreateCMakeTargetName ( self,  qualified_target)"
+
+.PP
+Definition at line \fB617\fP of file \fBcmake\&.py\fP\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "gyp\&.generator\&.cmake\&.CMakeNamer\&.cmake_target_base_names_conficting"
+
+.PP
+Definition at line \fB606\fP of file \fBcmake\&.py\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

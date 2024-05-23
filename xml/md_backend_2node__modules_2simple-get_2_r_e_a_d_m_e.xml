@@ -1,0 +1,284 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e</compoundname>
+    <title>simple-get &lt;a href=&quot;https://github.com/feross/simple-get/actions&quot; &gt;&lt;img src=&quot;https://img.shields.io/github/workflow/status/feross/simple-get/ci/master&quot; alt=&quot;ci&quot;/&gt;&lt;/a&gt; &lt;a href=&quot;https://npmjs.org/package/simple-get&quot; &gt;&lt;img src=&quot;https://img.shields.io/npm/v/simple-get.svg&quot; alt=&quot;npm&quot;/&gt;&lt;/a&gt; &lt;a href=&quot;https://npmjs.org/package/simple-get&quot; &gt;&lt;img src=&quot;https://img.shields.io/npm/dm/simple-get.svg&quot; alt=&quot;downloads&quot;/&gt;&lt;/a&gt; &lt;a href=&quot;https://standardjs.com&quot; &gt;&lt;img src=&quot;https://img.shields.io/badge/code_style-standard-brightgreen.svg&quot; alt=&quot;javascript style guide&quot;/&gt;&lt;/a&gt;</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e_1autotoc_md3304"/></para>
+<sect2 id="md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e_1autotoc_md3305">
+<title>Simplest way to make http get requests</title></sect2>
+<sect1 id="md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e_1autotoc_md3306">
+<title>features</title><para>This module is the lightest possible wrapper on top of node.js <computeroutput>http</computeroutput>, but supporting these essential features:</para>
+<para><itemizedlist>
+<listitem><para>follows redirects</para>
+</listitem><listitem><para>automatically handles gzip/deflate responses</para>
+</listitem><listitem><para>supports HTTPS</para>
+</listitem><listitem><para>supports specifying a timeout</para>
+</listitem><listitem><para>supports convenience <computeroutput>url</computeroutput> key so there&apos;s no need to use <computeroutput>url.parse</computeroutput> on the url when specifying options</para>
+</listitem><listitem><para>composes well with npm packages for features like cookies, proxies, form data, &amp; OAuth</para>
+</listitem></itemizedlist>
+</para>
+<para>All this in &lt; 100 lines of code.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e_1autotoc_md3307">
+<title>install</title><para><programlisting><codeline><highlight class="normal">npm<sp/>install<sp/>simple-get</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e_1autotoc_md3308">
+<title>usage</title><para>Note, all these examples also work in the browser with <ulink url="http://browserify.org/">browserify</ulink>.</para>
+<sect2 id="md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e_1autotoc_md3309">
+<title>simple GET request</title><para>Doesn&apos;t get easier than this:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>get<sp/>=<sp/>require(&apos;simple-get&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">get(&apos;http://example.com&apos;,<sp/>function<sp/>(err,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(err)<sp/>throw<sp/>err</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(res.statusCode)<sp/>//<sp/>200</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.pipe(process.stdout)<sp/>//<sp/>`res`<sp/>is<sp/>a<sp/>stream</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e_1autotoc_md3310">
+<title>even simpler GET request</title><para>If you just want the data, and don&apos;t want to deal with streams:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>get<sp/>=<sp/>require(&apos;simple-get&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">get.concat(&apos;http://example.com&apos;,<sp/>function<sp/>(err,<sp/>res,<sp/>data)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(err)<sp/>throw<sp/>err</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(res.statusCode)<sp/>//<sp/>200</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(data)<sp/>//<sp/>Buffer(&apos;this<sp/>is<sp/>the<sp/>server<sp/>response&apos;)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e_1autotoc_md3311">
+<title>POST, PUT, PATCH, HEAD, DELETE support</title><para>For <computeroutput>POST</computeroutput>, call <computeroutput>get.post</computeroutput> or use option <lsquo/>{ method: &apos;POST<rsquo/> }`.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>get<sp/>=<sp/>require(&apos;simple-get&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>opts<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>url:<sp/>&apos;http://example.com&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>body:<sp/>&apos;this<sp/>is<sp/>the<sp/>POST<sp/>body&apos;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">get.post(opts,<sp/>function<sp/>(err,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(err)<sp/>throw<sp/>err</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.pipe(process.stdout)<sp/>//<sp/>`res`<sp/>is<sp/>a<sp/>stream</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+<sect3 id="md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e_1autotoc_md3312">
+<title>A more complex example:</title><para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>get<sp/>=<sp/>require(&apos;simple-get&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">get({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>url:<sp/>&apos;http://example.com&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>method:<sp/>&apos;POST&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>body:<sp/>&apos;this<sp/>is<sp/>the<sp/>POST<sp/>body&apos;,</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>simple-get<sp/>accepts<sp/>all<sp/>options<sp/>that<sp/>node.js<sp/>`http`<sp/>accepts</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>See:<sp/>http://nodejs.org/api/http.html#http_http_request_options_callback</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>headers:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&apos;user-agent&apos;:<sp/>&apos;my<sp/>cool<sp/>app&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">},<sp/>function<sp/>(err,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(err)<sp/>throw<sp/>err</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>All<sp/>properties/methods<sp/>from<sp/>http.IncomingResponse<sp/>are<sp/>available,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>even<sp/>if<sp/>a<sp/>gunzip/inflate<sp/>transform<sp/>stream<sp/>was<sp/>returned.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>See:<sp/>http://nodejs.org/api/http.html#http_http_incomingmessage</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.setTimeout(10000)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(res.headers)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.on(&apos;data&apos;,<sp/>function<sp/>(chunk)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>`chunk`<sp/>is<sp/>the<sp/>decoded<sp/>response,<sp/>after<sp/>it&apos;s<sp/>been<sp/>gunzipped<sp/>or<sp/>inflated</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>(if<sp/>applicable)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(&apos;got<sp/>a<sp/>chunk<sp/>of<sp/>the<sp/>response:<sp/>&apos;<sp/>+<sp/>chunk)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e_1autotoc_md3313">
+<title>JSON</title><para>You can serialize/deserialize request and response with JSON:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>get<sp/>=<sp/>require(&apos;simple-get&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>opts<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>method:<sp/>&apos;POST&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>url:<sp/>&apos;http://example.com&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>body:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>key:<sp/>&apos;value&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>json:<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">get.concat(opts,<sp/>function<sp/>(err,<sp/>res,<sp/>data)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(err)<sp/>throw<sp/>err</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(data.key)<sp/>//<sp/>`data`<sp/>is<sp/>an<sp/>object</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e_1autotoc_md3314">
+<title>Timeout</title><para>You can set a timeout (in milliseconds) on the request with the <computeroutput>timeout</computeroutput> option. If the request takes longer than <computeroutput>timeout</computeroutput> to complete, then the entire request will fail with an <computeroutput>Error</computeroutput>.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>get<sp/>=<sp/>require(&apos;simple-get&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>opts<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>url:<sp/>&apos;http://example.com&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>timeout:<sp/>2000<sp/>//<sp/>2<sp/>second<sp/>timeout</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">get(opts,<sp/>function<sp/>(err,<sp/>res)<sp/>{})</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e_1autotoc_md3315">
+<title>One Quick Tip</title><para>It&apos;s a good idea to set the <lsquo/>&apos;user-agent<rsquo/>` header so the provider can more easily see how their resource is used.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>get<sp/>=<sp/>require(&apos;simple-get&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>pkg<sp/>=<sp/>require(&apos;./package.json&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">get(&apos;http://example.com&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>headers:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&apos;user-agent&apos;:<sp/>`my-module/${pkg.version}<sp/>(https://github.com/username/my-module)`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e_1autotoc_md3316">
+<title>Proxies</title><para>You can use the <ulink url="https://github.com/koichik/node-tunnel"><computeroutput>tunnel</computeroutput></ulink> module with the <computeroutput>agent</computeroutput> option to work with proxies:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>get<sp/>=<sp/>require(&apos;simple-get&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>tunnel<sp/>=<sp/>require(&apos;tunnel&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>opts<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>url:<sp/>&apos;http://example.com&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>agent:<sp/>tunnel.httpOverHttp({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>proxy:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>host:<sp/>&apos;localhost&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">get(opts,<sp/>function<sp/>(err,<sp/>res)<sp/>{})</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e_1autotoc_md3317">
+<title>Cookies</title><para>You can use the <ulink url="https://github.com/jshttp/cookie"><computeroutput>cookie</computeroutput></ulink> module to include cookies in a request:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>get<sp/>=<sp/>require(&apos;simple-get&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>cookie<sp/>=<sp/>require(&apos;cookie&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>opts<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>url:<sp/>&apos;http://example.com&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>headers:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>cookie:<sp/>cookie.serialize(&apos;foo&apos;,<sp/>&apos;bar&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">get(opts,<sp/>function<sp/>(err,<sp/>res)<sp/>{})</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e_1autotoc_md3318">
+<title>Form data</title><para>You can use the <ulink url="https://github.com/form-data/form-data"><computeroutput>form-data</computeroutput></ulink> module to create POST request with form data:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>fs<sp/>=<sp/>require(&apos;fs&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>get<sp/>=<sp/>require(&apos;simple-get&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>FormData<sp/>=<sp/>require(&apos;form-data&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>form<sp/>=<sp/>new<sp/>FormData()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">form.append(&apos;my_file&apos;,<sp/>fs.createReadStream(&apos;/foo/bar.jpg&apos;))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>opts<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>url:<sp/>&apos;http://example.com&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>body:<sp/>form</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">get.post(opts,<sp/>function<sp/>(err,<sp/>res)<sp/>{})</highlight></codeline>
+</programlisting></para>
+<sect3 id="md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e_1autotoc_md3319">
+<title>Or, include <computeroutput>application/x-www-form-urlencoded</computeroutput> form data manually:</title><para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>get<sp/>=<sp/>require(&apos;simple-get&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>opts<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>url:<sp/>&apos;http://example.com&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>form:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>key:<sp/>&apos;value&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">get.post(opts,<sp/>function<sp/>(err,<sp/>res)<sp/>{})</highlight></codeline>
+</programlisting></para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e_1autotoc_md3320">
+<title>Specifically disallowing redirects</title><para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>get<sp/>=<sp/>require(&apos;simple-get&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>opts<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>url:<sp/>&apos;http://example.com/will-redirect-elsewhere&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>followRedirects:<sp/>false</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>res.statusCode<sp/>will<sp/>be<sp/>301,<sp/>no<sp/>error<sp/>thrown</highlight></codeline>
+<codeline><highlight class="normal">get(opts,<sp/>function<sp/>(err,<sp/>res)<sp/>{})</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e_1autotoc_md3321">
+<title>Basic Auth</title><para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>user<sp/>=<sp/>&apos;someuser&apos;</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>pass<sp/>=<sp/>&apos;pa$$word&apos;</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>encodedAuth<sp/>=<sp/>Buffer.from(`${user}:${pass}`).toString(&apos;base64&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">get(&apos;http://example.com&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>headers:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>authorization:<sp/>`Basic<sp/>${encodedAuth}`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e_1autotoc_md3322">
+<title>OAuth</title><para>You can use the <ulink url="https://github.com/ddo/oauth-1.0a"><computeroutput>oauth-1.0a</computeroutput></ulink> module to create a signed OAuth request:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>get<sp/>=<sp/>require(&apos;simple-get&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>crypto<sp/><sp/>=<sp/>require(&apos;crypto&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>OAuth<sp/>=<sp/>require(&apos;oauth-1.0a&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>oauth<sp/>=<sp/>OAuth({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>consumer:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>key:<sp/>process.env.CONSUMER_KEY,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>secret:<sp/>process.env.CONSUMER_SECRET</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>signature_method:<sp/>&apos;HMAC-SHA1&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>hash_function:<sp/>(baseString,<sp/>key)<sp/>=&gt;<sp/>crypto.createHmac(&apos;sha1&apos;,<sp/>key).update(baseString).digest(&apos;base64&apos;)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>token<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>key:<sp/>process.env.ACCESS_TOKEN,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>secret:<sp/>process.env.ACCESS_TOKEN_SECRET</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>url<sp/>=<sp/>&apos;https://api.twitter.com/1.1/statuses/home_timeline.json&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>opts<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>url:<sp/>url,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>headers:<sp/>oauth.toHeader(oauth.authorize({url,<sp/>method:<sp/>&apos;GET&apos;},<sp/>token)),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>json:<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">get(opts,<sp/>function<sp/>(err,<sp/>res)<sp/>{})</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e_1autotoc_md3323">
+<title>Throttle requests</title><para>You can use <ulink url="https://github.com/jhurliman/node-rate-limiter">limiter</ulink> to throttle requests. This is useful when calling an API that is rate limited.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>simpleGet<sp/>=<sp/>require(&apos;simple-get&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>RateLimiter<sp/>=<sp/>require(&apos;limiter&apos;).RateLimiter</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>limiter<sp/>=<sp/>new<sp/>RateLimiter(1,<sp/>&apos;second&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>get<sp/>=<sp/>(opts,<sp/>cb)<sp/>=&gt;<sp/>limiter.removeTokens(1,<sp/>()<sp/>=&gt;<sp/>simpleGet(opts,<sp/>cb))</highlight></codeline>
+<codeline><highlight class="normal">get.concat<sp/>=<sp/>(opts,<sp/>cb)<sp/>=&gt;<sp/>limiter.removeTokens(1,<sp/>()<sp/>=&gt;<sp/>simpleGet.concat(opts,<sp/>cb))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>opts<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>url:<sp/>&apos;http://example.com&apos;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">get.concat(opts,<sp/>processResult)</highlight></codeline>
+<codeline><highlight class="normal">get.concat(opts,<sp/>processResult)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>processResult<sp/>(err,<sp/>res,<sp/>data)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(err)<sp/>throw<sp/>err</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(data.toString())</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2simple-get_2_r_e_a_d_m_e_1autotoc_md3324">
+<title>license</title><para>MIT. Copyright (c) <ulink url="http://feross.org">Feross Aboukhadijeh</ulink>. </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/simple-get/README.md"/>
+  </compounddef>
+</doxygen>

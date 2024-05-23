@@ -1,0 +1,82 @@
+.TH "md_backend_2node__modules_2emoji-regex_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2emoji-regex_2_r_e_a_d_m_e \- emoji-regex \fR\fP 
+.PP
+ \fIemoji-regex\fP offers a regular expression to match all emoji symbols (including textual representations of emoji) as per the Unicode Standard\&.
+.PP
+This repository contains a script that generates this regular expression based on \fRthe data from Unicode v12\fP\&. Because of this, the regular expression can easily be updated whenever new emoji are added to the Unicode standard\&.
+.SH "Installation"
+.PP
+Via \fRnpm\fP:
+.PP
+.PP
+.nf
+npm install emoji\-regex
+.fi
+.PP
+.PP
+In \fRNode\&.js\fP:
+.PP
+.PP
+.nf
+const emojiRegex = require('emoji\-regex');
+// Note: because the regular expression has the global flag set, this module
+// exports a function that returns the regex rather than exporting the regular
+// expression itself, to make it impossible to (accidentally) mutate the
+// original regular expression\&.
+
+const text = `
+\\u{231A}: ⌚ default emoji presentation character (Emoji_Presentation)
+\\u{2194}\\u{FE0F}: ↔️ default text presentation character rendered as emoji
+\\u{1F469}: 👩 emoji modifier base (Emoji_Modifier_Base)
+\\u{1F469}\\u{1F3FF}: 👩🏿 emoji modifier base followed by a modifier
+`;
+
+const regex = emojiRegex();
+let match;
+while (match = regex\&.exec(text)) {
+  const emoji = match[0];
+  console\&.log(`Matched sequence ${ emoji } — code points: ${ [\&.\&.\&.emoji]\&.length }`);
+}
+.fi
+.PP
+.PP
+Console output:
+.PP
+.PP
+.nf
+Matched sequence ⌚ — code points: 1
+Matched sequence ⌚ — code points: 1
+Matched sequence ↔️ — code points: 2
+Matched sequence ↔️ — code points: 2
+Matched sequence 👩 — code points: 1
+Matched sequence 👩 — code points: 1
+Matched sequence 👩🏿 — code points: 2
+Matched sequence 👩🏿 — code points: 2
+.fi
+.PP
+.PP
+To match emoji in their textual representation as well (i\&.e\&. emoji that are not \fREmoji_Presentation\fP symbols and that aren’t forced to render as emoji by a variation selector), \fRrequire\fP the other regex:
+.PP
+.PP
+.nf
+const emojiRegex = require('emoji\-regex/text\&.js');
+.fi
+.PP
+.PP
+Additionally, in environments which support ES2015 Unicode escapes, you may \fRrequire\fP ES2015-style versions of the regexes:
+.PP
+.PP
+.nf
+const emojiRegex = require('emoji\-regex/es2015/index\&.js');
+const emojiRegexText = require('emoji\-regex/es2015/text\&.js');
+.fi
+.PP
+.SH "Author"
+.PP
+\fR\fP    \fRMathias Bynens\fP   
+.SH "License"
+.PP
+\fIemoji-regex\fP is available under the \fRMIT\fP license\&. 

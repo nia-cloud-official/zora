@@ -1,0 +1,667 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e</compoundname>
+    <title>smart-buffer  &lt;a href=&quot;https://travis-ci.org/JoshGlazebrook/smart-buffer&quot; &gt;&lt;img src=&quot;https://travis-ci.org/JoshGlazebrook/smart-buffer.svg?branch=master&quot; alt=&quot;Build Status&quot;/&gt;&lt;/a&gt;  &lt;a href=&quot;https://coveralls.io/github/JoshGlazebrook/smart-buffer?branch=master&quot; &gt;&lt;img src=&quot;https://coveralls.io/repos/github/JoshGlazebrook/smart-buffer/badge.svg?branch=master&quot; alt=&quot;Coverage Status&quot;/&gt;&lt;/a&gt;</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>smart-buffer is a Buffer wrapper that adds automatic read &amp; write offset tracking, string operations, data insertions, and more.</para>
+<para><image type="html" name="https://nodei.co/npm/smart-buffer.png?downloads=true&amp;downloadRank=true&amp;stars=true" alt="stats" inline="yes"></image>
+</para>
+<para><bold>Key Features</bold>:<itemizedlist>
+<listitem><para>Proxies all of the Buffer write and read functions</para>
+</listitem><listitem><para>Keeps track of read and write offsets automatically</para>
+</listitem><listitem><para>Grows the internal Buffer as needed</para>
+</listitem><listitem><para>Useful string operations. (Null terminating strings)</para>
+</listitem><listitem><para>Allows for inserting values at specific points in the Buffer</para>
+</listitem><listitem><para>Built in TypeScript</para>
+</listitem><listitem><para>Type Definitions Provided</para>
+</listitem><listitem><para>Browser Support (using Webpack/Browserify)</para>
+</listitem><listitem><para>Full test coverage</para>
+</listitem></itemizedlist>
+</para>
+<para><bold>Requirements</bold>:<itemizedlist>
+<listitem><para>Node v4.0+ is supported at this time. (Versions prior to 2.0 will work on node 0.10)</para>
+</listitem></itemizedlist>
+</para>
+<sect1 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3385">
+<title>Breaking Changes in v4.0</title><para><itemizedlist>
+<listitem><para>Old constructor patterns have been completely removed. It&apos;s now required to use the SmartBuffer.fromXXX() factory constructors.</para>
+</listitem><listitem><para>rewind(), skip(), moveTo() have been removed. (see offsets)</para>
+</listitem><listitem><para>Internal private properties are now prefixed with underscores (_)</para>
+</listitem><listitem><para><bold>All</bold> writeXXX() methods that are given an offset will now <bold>overwrite data</bold> instead of insert. (see write vs insert)</para>
+</listitem><listitem><para>insertXXX() methods have been added for when you want to insert data at a specific offset (this replaces the old behavior of writeXXX() when an offset was provided)</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3386">
+<title>Looking for v3 docs?</title><para>Legacy documentation for version 3 and prior can be found <ulink url="https://github.com/JoshGlazebrook/smart-buffer/blob/master/docs/README_v3.md">here</ulink>.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3387">
+<title>Installing:</title><para><computeroutput>yarn add smart-buffer</computeroutput></para>
+<para>or</para>
+<para><computeroutput>npm install smart-buffer</computeroutput></para>
+<para>Note: The published NPM package includes the built javascript library. If you cloned this repo and wish to build the library manually use:</para>
+<para><computeroutput>npm run build</computeroutput></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3388">
+<title>Using smart-buffer</title><para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>Javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>SmartBuffer<sp/>=<sp/>require(&apos;smart-buffer&apos;).SmartBuffer;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Typescript</highlight></codeline>
+<codeline><highlight class="normal">import<sp/>{<sp/>SmartBuffer,<sp/>SmartBufferOptions}<sp/>from<sp/>&apos;smart-buffer&apos;;</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3389">
+<title>Simple Example</title><para>Building a packet that uses the following protocol specification:</para>
+<para><computeroutput>[PacketType:2][PacketLength:2][Data:XX]</computeroutput></para>
+<para>To build this packet using the vanilla Buffer class, you would have to count up the length of the data payload beforehand. You would also need to keep track of the current &quot;cursor&quot; position in your Buffer so you write everything in the right places. With smart-buffer you don&apos;t have to do either of those things.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">function<sp/>createLoginPacket(username,<sp/>password,<sp/>age,<sp/>country)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>const<sp/>packet<sp/>=<sp/>new<sp/>SmartBuffer();</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.writeUInt16LE(0x0060);<sp/>//<sp/>Some<sp/>packet<sp/>type</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.writeStringNT(username);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.writeStringNT(password);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.writeUInt8(age);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.writeStringNT(country);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.insertUInt16LE(packet.length<sp/>-<sp/>2,<sp/>2);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>packet.toBuffer();</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> With the above function, you now can do this: <programlisting filename=".js"><codeline><highlight class="normal">const<sp/>login<sp/>=<sp/>createLoginPacket(&quot;Josh&quot;,<sp/>&quot;secret123&quot;,<sp/>22,<sp/>&quot;United<sp/>States&quot;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>&lt;Buffer<sp/>60<sp/>00<sp/>1e<sp/>00<sp/>4a<sp/>6f<sp/>73<sp/>68<sp/>00<sp/>73<sp/>65<sp/>63<sp/>72<sp/>65<sp/>74<sp/>31<sp/>32<sp/>33<sp/>00<sp/>16<sp/>55<sp/>6e<sp/>69<sp/>74<sp/>65<sp/>64<sp/>20<sp/>53<sp/>74<sp/>61<sp/>74<sp/>65<sp/>73<sp/>00&gt;</highlight></codeline>
+</programlisting> Notice that the <computeroutput>[PacketLength:2]</computeroutput> value (1e 00) was inserted at position 2.</para>
+<para>Reading back the packet we created above is just as easy: <programlisting filename=".js"><codeline><highlight class="normal">const<sp/>reader<sp/>=<sp/>SmartBuffer.fromBuffer(login);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>logininfo<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packetType:<sp/>reader.readUInt16LE(),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packetLength:<sp/>reader.readUInt16LE(),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>username:<sp/>reader.readStringNT(),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>password:<sp/>reader.readStringNT(),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>age:<sp/>reader.readUInt8(),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>country:<sp/>reader.readStringNT()</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">/*</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packetType:<sp/>96,<sp/>(0x0060)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packetLength:<sp/>30,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>username:<sp/>&apos;Josh&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>password:<sp/>&apos;secret123&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>age:<sp/>22,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>country:<sp/>&apos;United<sp/>States&apos;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">*/</highlight></codeline>
+</programlisting></para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3390">
+<title>Write vs Insert</title><para>In prior versions of SmartBuffer, .writeXXX(value, offset) calls would insert data when an offset was provided. In version 4, this will now overwrite the data at the offset position. To insert data there are now corresponding .insertXXX(value, offset) methods.</para>
+<para><bold>SmartBuffer v3</bold>: <programlisting filename=".js"><codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(new<sp/>Buffer([1,2,3,4,5,6]));</highlight></codeline>
+<codeline><highlight class="normal">buff.writeInt8(7,<sp/>2);</highlight></codeline>
+<codeline><highlight class="normal">console.log(buff.toBuffer())</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>&lt;Buffer<sp/>01<sp/>02<sp/>07<sp/>03<sp/>04<sp/>05<sp/>06&gt;</highlight></codeline>
+</programlisting></para>
+<para><bold>SmartBuffer v4</bold>: <programlisting filename=".js"><codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(new<sp/>Buffer([1,2,3,4,5,6]));</highlight></codeline>
+<codeline><highlight class="normal">buff.writeInt8(7,<sp/>2);</highlight></codeline>
+<codeline><highlight class="normal">console.log(buff.toBuffer());</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>&lt;Buffer<sp/>01<sp/>02<sp/>07<sp/>04<sp/>05<sp/>06&gt;</highlight></codeline>
+</programlisting></para>
+<para>To insert you instead should use: <programlisting filename=".js"><codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(new<sp/>Buffer([1,2,3,4,5,6]));</highlight></codeline>
+<codeline><highlight class="normal">buff.insertInt8(7,<sp/>2);</highlight></codeline>
+<codeline><highlight class="normal">console.log(buff.toBuffer());</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>&lt;Buffer<sp/>01<sp/>02<sp/>07<sp/>03<sp/>04<sp/>05<sp/>06&gt;</highlight></codeline>
+</programlisting></para>
+<para><bold>Note:</bold> Insert/Writing to a position beyond the currently tracked internal Buffer will zero pad to your offset.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3391">
+<title>Constructing a smart-buffer</title><para>There are a few different ways to construct a SmartBuffer instance.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>Creating<sp/>SmartBuffer<sp/>from<sp/>existing<sp/>Buffer</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(buffer);<sp/>//<sp/>Creates<sp/>instance<sp/>from<sp/>buffer.<sp/>(Uses<sp/>default<sp/>utf8<sp/>encoding)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(buffer,<sp/>&apos;ascii&apos;);<sp/>//<sp/>Creates<sp/>instance<sp/>from<sp/>buffer<sp/>with<sp/>ascii<sp/>encoding<sp/>for<sp/>strings.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Creating<sp/>SmartBuffer<sp/>with<sp/>specified<sp/>internal<sp/>Buffer<sp/>size.<sp/>(Note:<sp/>this<sp/>is<sp/>not<sp/>a<sp/>hard<sp/>cap,<sp/>the<sp/>internal<sp/>buffer<sp/>will<sp/>grow<sp/>as<sp/>needed).</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromSize(1024);<sp/>//<sp/>Creates<sp/>instance<sp/>with<sp/>internal<sp/>Buffer<sp/>size<sp/>of<sp/>1024.</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromSize(1024,<sp/>&apos;utf8&apos;);<sp/>//<sp/>Creates<sp/>instance<sp/>with<sp/>internal<sp/>Buffer<sp/>size<sp/>of<sp/>1024,<sp/>and<sp/>utf8<sp/>encoding<sp/>for<sp/>strings.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Creating<sp/>SmartBuffer<sp/>with<sp/>options<sp/>object.<sp/>This<sp/>one<sp/>specifies<sp/>size<sp/>and<sp/>encoding.</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromOptions({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>size:<sp/>1024,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>encoding:<sp/>&apos;ascii&apos;</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Creating<sp/>SmartBuffer<sp/>with<sp/>options<sp/>object.<sp/>This<sp/>one<sp/>specified<sp/>an<sp/>existing<sp/>Buffer.</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromOptions({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>buff:<sp/>buffer</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Creating<sp/>SmartBuffer<sp/>from<sp/>a<sp/>string.</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(Buffer.from(&apos;some<sp/>string&apos;,<sp/>&apos;utf8&apos;));</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Just<sp/>want<sp/>a<sp/>regular<sp/>SmartBuffer<sp/>with<sp/>all<sp/>default<sp/>options?</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>new<sp/>SmartBuffer();</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3392">
+<title>Api Reference:</title><para><bold>Note:</bold> SmartBuffer is fully documented with Typescript definitions as well as jsdocs so your favorite editor/IDE will have intellisense.</para>
+<para><bold>Table of Contents</bold></para>
+<para><orderedlist>
+<listitem><para>Constructing</para>
+</listitem><listitem><para><bold>Numbers</bold><orderedlist>
+<listitem><para>Integers</para>
+</listitem><listitem><para>Floating Points</para>
+</listitem></orderedlist>
+</para>
+</listitem><listitem><para><bold>Strings</bold><orderedlist>
+<listitem><para>Strings</para>
+</listitem><listitem><para>Null Terminated Strings</para>
+</listitem></orderedlist>
+</para>
+</listitem><listitem><para>Buffers</para>
+</listitem><listitem><para>Offsets</para>
+</listitem><listitem><para>Other</para>
+</listitem></orderedlist>
+</para>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3393">
+<title>Constructing</title><sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3394">
+<title>constructor()</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3395">
+<title>constructor([options])</title><para><itemizedlist>
+<listitem><para><computeroutput>options</computeroutput> *{SmartBufferOptions}* An optional options object to construct a SmartBuffer with.</para>
+</listitem></itemizedlist>
+</para>
+<para>Examples: <programlisting filename=".js"><codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>new<sp/>SmartBuffer();</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>new<sp/>SmartBuffer({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>size:<sp/>1024,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>encoding:<sp/>&apos;ascii&apos;</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3396">
+<title>Class Method: fromBuffer(buffer[, encoding])</title><para><itemizedlist>
+<listitem><para><computeroutput>buffer</computeroutput> *{Buffer}* The Buffer instance to wrap.</para>
+</listitem><listitem><para><computeroutput>encoding</computeroutput> *{string}* The string encoding to use. <computeroutput>Default: &apos;utf8&apos;</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+<para>Examples: <programlisting filename=".js"><codeline><highlight class="normal">const<sp/>someBuffer<sp/>=<sp/>Buffer.from(&apos;some<sp/>string&apos;);</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(someBuffer);<sp/>//<sp/>Defaults<sp/>to<sp/>utf8</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(someBuffer,<sp/>&apos;ascii&apos;);</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3397">
+<title>Class Method: fromSize(size[, encoding])</title><para><itemizedlist>
+<listitem><para><computeroutput>size</computeroutput> *{number}* The size to initialize the internal Buffer.</para>
+</listitem><listitem><para><computeroutput>encoding</computeroutput> *{string}* The string encoding to use. <computeroutput>Default: &apos;utf8&apos;</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+<para>Examples: <programlisting filename=".js"><codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromSize(1024);<sp/>//<sp/>Defaults<sp/>to<sp/>utf8</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromSize(1024,<sp/>&apos;ascii&apos;);</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3398">
+<title>Class Method: fromOptions(options)</title><para><itemizedlist>
+<listitem><para><computeroutput>options</computeroutput> *{SmartBufferOptions}* The Buffer instance to wrap.</para>
+</listitem></itemizedlist>
+</para>
+<para><programlisting filename=".typescript"><codeline><highlight class="normal">interface<sp/>SmartBufferOptions<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>encoding?:<sp/>BufferEncoding;<sp/>//<sp/>Defaults<sp/>to<sp/>utf8</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>size?:<sp/>number;<sp/>//<sp/>Defaults<sp/>to<sp/>4096</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>buff?:<sp/>Buffer;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+<para>Examples: <programlisting filename=".js"><codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromOptions({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>size:<sp/>1024</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromOptions({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>size:<sp/>1024,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>encoding:<sp/>&apos;utf8&apos;</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromOptions({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>encoding:<sp/>&apos;utf8&apos;</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>someBuff<sp/>=<sp/>Buffer.from(&apos;some<sp/>string&apos;,<sp/>&apos;utf8&apos;);</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromOptions({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>buffer:<sp/>someBuff,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>encoding:<sp/>&apos;utf8&apos;</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+</programlisting></para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3399">
+<title>Integers</title><sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3400">
+<title>buff.readInt8([offset])</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3401">
+<title>buff.readUInt8([offset])</title><para><itemizedlist>
+<listitem><para><computeroutput>offset</computeroutput> *{number}* Optional position to start reading data from. <bold>Default</bold>: <computeroutput>Auto managed offset</computeroutput></para>
+</listitem><listitem><para>Returns *{number}*</para>
+</listitem></itemizedlist>
+</para>
+<para>Read a Int8 value.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3402">
+<title>buff.readInt16BE([offset])</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3403">
+<title>buff.readInt16LE([offset])</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3404">
+<title>buff.readUInt16BE([offset])</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3405">
+<title>buff.readUInt16LE([offset])</title><para><itemizedlist>
+<listitem><para><computeroutput>offset</computeroutput> *{number}* Optional position to start reading data from. <bold>Default</bold>: <computeroutput>Auto managed offset</computeroutput></para>
+</listitem><listitem><para>Returns *{number}*</para>
+</listitem></itemizedlist>
+</para>
+<para>Read a 16 bit integer value.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3406">
+<title>buff.readInt32BE([offset])</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3407">
+<title>buff.readInt32LE([offset])</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3408">
+<title>buff.readUInt32BE([offset])</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3409">
+<title>buff.readUInt32LE([offset])</title><para><itemizedlist>
+<listitem><para><computeroutput>offset</computeroutput> *{number}* Optional position to start reading data from. <bold>Default</bold>: <computeroutput>Auto managed offset</computeroutput></para>
+</listitem><listitem><para>Returns *{number}*</para>
+</listitem></itemizedlist>
+</para>
+<para>Read a 32 bit integer value.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3410">
+<title>buff.writeInt8(value[, offset])</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3411">
+<title>buff.writeUInt8(value[, offset])</title><para><itemizedlist>
+<listitem><para><computeroutput>value</computeroutput> *{number}* The value to write.</para>
+</listitem><listitem><para><computeroutput>offset</computeroutput> *{number}* An optional offset to write this value to. <bold>Default:</bold> <computeroutput>Auto managed offset</computeroutput></para>
+</listitem><listitem><para>Returns *{this}*</para>
+</listitem></itemizedlist>
+</para>
+<para>Write a Int8 value.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3412">
+<title>buff.insertInt8(value, offset)</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3413">
+<title>buff.insertUInt8(value, offset)</title><para><itemizedlist>
+<listitem><para><computeroutput>value</computeroutput> *{number}* The value to insert.</para>
+</listitem><listitem><para><computeroutput>offset</computeroutput> *{number}* The offset to insert this data at.</para>
+</listitem><listitem><para>Returns *{this}*</para>
+</listitem></itemizedlist>
+</para>
+<para>Insert a Int8 value.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3414">
+<title>buff.writeInt16BE(value[, offset])</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3415">
+<title>buff.writeInt16LE(value[, offset])</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3416">
+<title>buff.writeUInt16BE(value[, offset])</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3417">
+<title>buff.writeUInt16LE(value[, offset])</title><para><itemizedlist>
+<listitem><para><computeroutput>value</computeroutput> *{number}* The value to write.</para>
+</listitem><listitem><para><computeroutput>offset</computeroutput> *{number}* An optional offset to write this value to. <bold>Default:</bold> <computeroutput>Auto managed offset</computeroutput></para>
+</listitem><listitem><para>Returns *{this}*</para>
+</listitem></itemizedlist>
+</para>
+<para>Write a 16 bit integer value.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3418">
+<title>buff.insertInt16BE(value, offset)</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3419">
+<title>buff.insertInt16LE(value, offset)</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3420">
+<title>buff.insertUInt16BE(value, offset)</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3421">
+<title>buff.insertUInt16LE(value, offset)</title><para><itemizedlist>
+<listitem><para><computeroutput>value</computeroutput> *{number}* The value to insert.</para>
+</listitem><listitem><para><computeroutput>offset</computeroutput> *{number}* The offset to insert this data at.</para>
+</listitem><listitem><para>Returns *{this}*</para>
+</listitem></itemizedlist>
+</para>
+<para>Insert a 16 bit integer value.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3422">
+<title>buff.writeInt32BE(value[, offset])</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3423">
+<title>buff.writeInt32LE(value[, offset])</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3424">
+<title>buff.writeUInt32BE(value[, offset])</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3425">
+<title>buff.writeUInt32LE(value[, offset])</title><para><itemizedlist>
+<listitem><para><computeroutput>value</computeroutput> *{number}* The value to write.</para>
+</listitem><listitem><para><computeroutput>offset</computeroutput> *{number}* An optional offset to write this value to. <bold>Default:</bold> <computeroutput>Auto managed offset</computeroutput></para>
+</listitem><listitem><para>Returns *{this}*</para>
+</listitem></itemizedlist>
+</para>
+<para>Write a 32 bit integer value.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3426">
+<title>buff.insertInt32BE(value, offset)</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3427">
+<title>buff.insertInt32LE(value, offset)</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3428">
+<title>buff.insertUInt32BE(value, offset)</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3429">
+<title>buff.nsertUInt32LE(value, offset)</title><para><itemizedlist>
+<listitem><para><computeroutput>value</computeroutput> *{number}* The value to insert.</para>
+</listitem><listitem><para><computeroutput>offset</computeroutput> *{number}* The offset to insert this data at.</para>
+</listitem><listitem><para>Returns *{this}*</para>
+</listitem></itemizedlist>
+</para>
+<para>Insert a 32 bit integer value.</para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3430">
+<title>Floating Point Numbers</title><sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3431">
+<title>buff.readFloatBE([offset])</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3432">
+<title>buff.readFloatLE([offset])</title><para><itemizedlist>
+<listitem><para><computeroutput>offset</computeroutput> *{number}* Optional position to start reading data from. <bold>Default</bold>: <computeroutput>Auto managed offset</computeroutput></para>
+</listitem><listitem><para>Returns *{number}*</para>
+</listitem></itemizedlist>
+</para>
+<para>Read a Float value.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3433">
+<title>buff.readDoubleBE([offset])</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3434">
+<title>buff.readDoubleLE([offset])</title><para><itemizedlist>
+<listitem><para><computeroutput>offset</computeroutput> *{number}* Optional position to start reading data from. <bold>Default</bold>: <computeroutput>Auto managed offset</computeroutput></para>
+</listitem><listitem><para>Returns *{number}*</para>
+</listitem></itemizedlist>
+</para>
+<para>Read a Double value.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3435">
+<title>buff.writeFloatBE(value[, offset])</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3436">
+<title>buff.writeFloatLE(value[, offset])</title><para><itemizedlist>
+<listitem><para><computeroutput>value</computeroutput> *{number}* The value to write.</para>
+</listitem><listitem><para><computeroutput>offset</computeroutput> *{number}* An optional offset to write this value to. <bold>Default:</bold> <computeroutput>Auto managed offset</computeroutput></para>
+</listitem><listitem><para>Returns *{this}*</para>
+</listitem></itemizedlist>
+</para>
+<para>Write a Float value.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3437">
+<title>buff.insertFloatBE(value, offset)</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3438">
+<title>buff.insertFloatLE(value, offset)</title><para><itemizedlist>
+<listitem><para><computeroutput>value</computeroutput> *{number}* The value to insert.</para>
+</listitem><listitem><para><computeroutput>offset</computeroutput> *{number}* The offset to insert this data at.</para>
+</listitem><listitem><para>Returns *{this}*</para>
+</listitem></itemizedlist>
+</para>
+<para>Insert a Float value.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3439">
+<title>buff.writeDoubleBE(value[, offset])</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3440">
+<title>buff.writeDoubleLE(value[, offset])</title><para><itemizedlist>
+<listitem><para><computeroutput>value</computeroutput> *{number}* The value to write.</para>
+</listitem><listitem><para><computeroutput>offset</computeroutput> *{number}* An optional offset to write this value to. <bold>Default:</bold> <computeroutput>Auto managed offset</computeroutput></para>
+</listitem><listitem><para>Returns *{this}*</para>
+</listitem></itemizedlist>
+</para>
+<para>Write a Double value.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3441">
+<title>buff.insertDoubleBE(value, offset)</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3442">
+<title>buff.insertDoubleLE(value, offset)</title><para><itemizedlist>
+<listitem><para><computeroutput>value</computeroutput> *{number}* The value to insert.</para>
+</listitem><listitem><para><computeroutput>offset</computeroutput> *{number}* The offset to insert this data at.</para>
+</listitem><listitem><para>Returns *{this}*</para>
+</listitem></itemizedlist>
+</para>
+<para>Insert a Double value.</para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3443">
+<title>Strings</title><sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3444">
+<title>buff.readString()</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3445">
+<title>buff.readString(size[, encoding])</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3446">
+<title>buff.readString(encoding)</title><para><itemizedlist>
+<listitem><para><computeroutput>size</computeroutput> *{number}* The number of bytes to read. <bold>Default:</bold> <computeroutput>Reads to the end of the Buffer.</computeroutput></para>
+</listitem><listitem><para><computeroutput>encoding</computeroutput> *{string}* The string encoding to use. <bold>Default:</bold> <computeroutput>utf8</computeroutput>.</para>
+</listitem></itemizedlist>
+</para>
+<para>Read a string value.</para>
+<para>Examples: <programlisting filename=".js"><codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(Buffer.from(&apos;hello<sp/>there&apos;,<sp/>&apos;utf8&apos;));</highlight></codeline>
+<codeline><highlight class="normal">buff.readString();<sp/>//<sp/>&apos;hello<sp/>there&apos;</highlight></codeline>
+<codeline><highlight class="normal">buff.readString(2);<sp/>//<sp/>&apos;he&apos;</highlight></codeline>
+<codeline><highlight class="normal">buff.readString(2,<sp/>&apos;utf8&apos;);<sp/>//<sp/>&apos;he&apos;</highlight></codeline>
+<codeline><highlight class="normal">buff.readString(&apos;utf8&apos;);<sp/>//<sp/>&apos;hello<sp/>there&apos;</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3447">
+<title>buff.writeString(value)</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3448">
+<title>buff.writeString(value[, offset])</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3449">
+<title>buff.writeString(value[, encoding])</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3450">
+<title>buff.writeString(value[, offset[, encoding]])</title><para><itemizedlist>
+<listitem><para><computeroutput>value</computeroutput> *{string}* The string value to write.</para>
+</listitem><listitem><para><computeroutput>offset</computeroutput> *{number}* The offset to write this value to. <bold>Default:</bold> <computeroutput>Auto managed offset</computeroutput></para>
+</listitem><listitem><para><computeroutput>encoding</computeroutput> *{string}* An optional string encoding to use. <bold>Default:</bold> <computeroutput>utf8</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+<para>Write a string value.</para>
+<para>Examples: <programlisting filename=".js"><codeline><highlight class="normal">buff.writeString(&apos;hello&apos;);<sp/>//<sp/>Auto<sp/>managed<sp/>offset</highlight></codeline>
+<codeline><highlight class="normal">buff.writeString(&apos;hello&apos;,<sp/>2);</highlight></codeline>
+<codeline><highlight class="normal">buff.writeString(&apos;hello&apos;,<sp/>&apos;utf8&apos;)<sp/>//<sp/>Auto<sp/>managed<sp/>offset</highlight></codeline>
+<codeline><highlight class="normal">buff.writeString(&apos;hello&apos;,<sp/>2,<sp/>&apos;utf8&apos;);</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3451">
+<title>buff.insertString(value, offset[, encoding])</title><para><itemizedlist>
+<listitem><para><computeroutput>value</computeroutput> *{string}* The string value to write.</para>
+</listitem><listitem><para><computeroutput>offset</computeroutput> *{number}* The offset to write this value to.</para>
+</listitem><listitem><para><computeroutput>encoding</computeroutput> *{string}* An optional string encoding to use. <bold>Default:</bold> <computeroutput>utf8</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+<para>Insert a string value.</para>
+<para>Examples: <programlisting filename=".js"><codeline><highlight class="normal">buff.insertString(&apos;hello&apos;,<sp/>2);</highlight></codeline>
+<codeline><highlight class="normal">buff.insertString(&apos;hello&apos;,<sp/>2,<sp/>&apos;utf8&apos;);</highlight></codeline>
+</programlisting></para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3452">
+<title>Null Terminated Strings</title><sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3453">
+<title>buff.readStringNT()</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3454">
+<title>buff.readStringNT(encoding)</title><para><itemizedlist>
+<listitem><para><computeroutput>encoding</computeroutput> *{string}* The string encoding to use. <bold>Default:</bold> <computeroutput>utf8</computeroutput>.</para>
+</listitem></itemizedlist>
+</para>
+<para>Read a null terminated string value. (If a null is not found, it will read to the end of the Buffer).</para>
+<para>Examples: <programlisting filename=".js"><codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(Buffer.from(&apos;hello\0<sp/>there&apos;,<sp/>&apos;utf8&apos;));</highlight></codeline>
+<codeline><highlight class="normal">buff.readStringNT();<sp/>//<sp/>&apos;hello&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>If<sp/>we<sp/>called<sp/>this<sp/>again:</highlight></codeline>
+<codeline><highlight class="normal">buff.readStringNT();<sp/>//<sp/>&apos;<sp/>there&apos;</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3455">
+<title>buff.writeStringNT(value)</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3456">
+<title>buff.writeStringNT(value[, offset])</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3457">
+<title>buff.writeStringNT(value[, encoding])</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3458">
+<title>buff.writeStringNT(value[, offset[, encoding]])</title><para><itemizedlist>
+<listitem><para><computeroutput>value</computeroutput> *{string}* The string value to write.</para>
+</listitem><listitem><para><computeroutput>offset</computeroutput> *{number}* The offset to write this value to. <bold>Default:</bold> <computeroutput>Auto managed offset</computeroutput></para>
+</listitem><listitem><para><computeroutput>encoding</computeroutput> *{string}* An optional string encoding to use. <bold>Default:</bold> <computeroutput>utf8</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+<para>Write a null terminated string value.</para>
+<para>Examples: <programlisting filename=".js"><codeline><highlight class="normal">buff.writeStringNT(&apos;hello&apos;);<sp/>//<sp/>Auto<sp/>managed<sp/>offset<sp/><sp/><sp/>&lt;Buffer<sp/>68<sp/>65<sp/>6c<sp/>6c<sp/>6f<sp/>00&gt;</highlight></codeline>
+<codeline><highlight class="normal">buff.writeStringNT(&apos;hello&apos;,<sp/>2);<sp/>//<sp/>&lt;Buffer<sp/>00<sp/>00<sp/>68<sp/>65<sp/>6c<sp/>6c<sp/>6f<sp/>00&gt;</highlight></codeline>
+<codeline><highlight class="normal">buff.writeStringNT(&apos;hello&apos;,<sp/>&apos;utf8&apos;)<sp/>//<sp/>Auto<sp/>managed<sp/>offset</highlight></codeline>
+<codeline><highlight class="normal">buff.writeStringNT(&apos;hello&apos;,<sp/>2,<sp/>&apos;utf8&apos;);</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3459">
+<title>buff.insertStringNT(value, offset[, encoding])</title><para><itemizedlist>
+<listitem><para><computeroutput>value</computeroutput> *{string}* The string value to write.</para>
+</listitem><listitem><para><computeroutput>offset</computeroutput> *{number}* The offset to write this value to.</para>
+</listitem><listitem><para><computeroutput>encoding</computeroutput> *{string}* An optional string encoding to use. <bold>Default:</bold> <computeroutput>utf8</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+<para>Insert a null terminated string value.</para>
+<para>Examples: <programlisting filename=".js"><codeline><highlight class="normal">buff.insertStringNT(&apos;hello&apos;,<sp/>2);</highlight></codeline>
+<codeline><highlight class="normal">buff.insertStringNT(&apos;hello&apos;,<sp/>2,<sp/>&apos;utf8&apos;);</highlight></codeline>
+</programlisting></para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3460">
+<title>Buffers</title><sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3461">
+<title>buff.readBuffer([length])</title><para><itemizedlist>
+<listitem><para><computeroutput>length</computeroutput> *{number}* The number of bytes to read into a Buffer. <bold>Default:</bold> <computeroutput>Reads to the end of the Buffer</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+<para>Read a Buffer of a specified size.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3462">
+<title>buff.writeBuffer(value[, offset])</title><para><itemizedlist>
+<listitem><para><computeroutput>value</computeroutput> *{Buffer}* The buffer value to write.</para>
+</listitem><listitem><para><computeroutput>offset</computeroutput> *{number}* An optional offset to write the value to. <bold>Default:</bold> <computeroutput>Auto managed offset</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3463">
+<title>buff.insertBuffer(value, offset)</title><para><itemizedlist>
+<listitem><para><computeroutput>value</computeroutput> *{Buffer}* The buffer value to write.</para>
+</listitem><listitem><para><computeroutput>offset</computeroutput> *{number}* The offset to write the value to.</para>
+</listitem></itemizedlist>
+</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3464">
+<title>buff.readBufferNT()</title><para>Read a null terminated Buffer.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3465">
+<title>buff.writeBufferNT(value[, offset])</title><para><itemizedlist>
+<listitem><para><computeroutput>value</computeroutput> *{Buffer}* The buffer value to write.</para>
+</listitem><listitem><para><computeroutput>offset</computeroutput> *{number}* An optional offset to write the value to. <bold>Default:</bold> <computeroutput>Auto managed offset</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+<para>Write a null terminated Buffer.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3466">
+<title>buff.insertBufferNT(value, offset)</title><para><itemizedlist>
+<listitem><para><computeroutput>value</computeroutput> *{Buffer}* The buffer value to write.</para>
+</listitem><listitem><para><computeroutput>offset</computeroutput> *{number}* The offset to write the value to.</para>
+</listitem></itemizedlist>
+</para>
+<para>Insert a null terminated Buffer.</para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3467">
+<title>Offsets</title><sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3468">
+<title>buff.readOffset</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3469">
+<title>buff.readOffset(offset)</title><para><itemizedlist>
+<listitem><para><computeroutput>offset</computeroutput> *{number}* The new read offset value to set.</para>
+</listitem><listitem><para>Returns: <computeroutput>The current read offset</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+<para>Gets or sets the current read offset.</para>
+<para>Examples: <programlisting filename=".js"><codeline><highlight class="normal">const<sp/>currentOffset<sp/>=<sp/>buff.readOffset;<sp/>//<sp/>5</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">buff.readOffset<sp/>=<sp/>10;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">console.log(buff.readOffset)<sp/>//<sp/>10</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3470">
+<title>buff.writeOffset</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3471">
+<title>buff.writeOffset(offset)</title><para><itemizedlist>
+<listitem><para><computeroutput>offset</computeroutput> *{number}* The new write offset value to set.</para>
+</listitem><listitem><para>Returns: <computeroutput>The current write offset</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+<para>Gets or sets the current write offset.</para>
+<para>Examples: <programlisting filename=".js"><codeline><highlight class="normal">const<sp/>currentOffset<sp/>=<sp/>buff.writeOffset;<sp/>//<sp/>5</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">buff.writeOffset<sp/>=<sp/>10;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">console.log(buff.writeOffset)<sp/>//<sp/>10</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3472">
+<title>buff.encoding</title></sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3473">
+<title>buff.encoding(encoding)</title><para><itemizedlist>
+<listitem><para><computeroutput>encoding</computeroutput> *{string}* The new string encoding to set.</para>
+</listitem><listitem><para>Returns: <computeroutput>The current string encoding</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+<para>Gets or sets the current string encoding.</para>
+<para>Examples: <programlisting filename=".js"><codeline><highlight class="normal">const<sp/>currentEncoding<sp/>=<sp/>buff.encoding;<sp/>//<sp/>&apos;utf8&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">buff.encoding<sp/>=<sp/>&apos;ascii&apos;;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">console.log(buff.encoding)<sp/>//<sp/>&apos;ascii&apos;</highlight></codeline>
+</programlisting></para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3474">
+<title>Other</title><sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3475">
+<title>buff.clear()</title><para>Clear and resets the SmartBuffer instance.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3476">
+<title>buff.remaining()</title><para><itemizedlist>
+<listitem><para>Returns <computeroutput>Remaining data left to be read</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+<para>Gets the number of remaining bytes to be read.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3477">
+<title>buff.internalBuffer</title><para><itemizedlist>
+<listitem><para>Returns: *{Buffer}*</para>
+</listitem></itemizedlist>
+</para>
+<para>Gets the internally managed Buffer (Includes unmanaged data).</para>
+<para>Examples: <programlisting filename=".js"><codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromSize(16);</highlight></codeline>
+<codeline><highlight class="normal">buff.writeString(&apos;hello&apos;);</highlight></codeline>
+<codeline><highlight class="normal">console.log(buff.InternalBuffer);<sp/>//<sp/>&lt;Buffer<sp/>68<sp/>65<sp/>6c<sp/>6c<sp/>6f<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00&gt;</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3478">
+<title>buff.toBuffer()</title><para><itemizedlist>
+<listitem><para>Returns: *{Buffer}*</para>
+</listitem></itemizedlist>
+</para>
+<para>Gets a sliced Buffer instance of the internally managed Buffer. (Only includes managed data)</para>
+<para>Examples: <programlisting filename=".js"><codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromSize(16);</highlight></codeline>
+<codeline><highlight class="normal">buff.writeString(&apos;hello&apos;);</highlight></codeline>
+<codeline><highlight class="normal">console.log(buff.toBuffer());<sp/>//<sp/>&lt;Buffer<sp/>68<sp/>65<sp/>6c<sp/>6c<sp/>6f&gt;</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3479">
+<title>buff.toString([encoding])</title><para><itemizedlist>
+<listitem><para><computeroutput>encoding</computeroutput> *{string}* The string encoding to use when converting to a string. <bold>Default:</bold> <computeroutput>utf8</computeroutput></para>
+</listitem><listitem><para>Returns *{string}*</para>
+</listitem></itemizedlist>
+</para>
+<para>Gets a string representation of all data in the SmartBuffer.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3480">
+<title>buff.destroy()</title><para>Destroys the SmartBuffer instance.</para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_1autotoc_md3481">
+<title>License</title><para>This work is licensed under the <ulink url="http://en.wikipedia.org/wiki/MIT_License">MIT license</ulink>. </para>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/smart-buffer/README.md"/>
+  </compounddef>
+</doxygen>

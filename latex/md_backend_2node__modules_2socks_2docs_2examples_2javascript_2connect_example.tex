@@ -1,0 +1,259 @@
+\chapter{socks examples}
+\hypertarget{md_backend_2node__modules_2socks_2docs_2examples_2javascript_2connect_example}{}\label{md_backend_2node__modules_2socks_2docs_2examples_2javascript_2connect_example}\index{socks examples@{socks examples}}
+\label{md_backend_2node__modules_2socks_2docs_2examples_2javascript_2connect_example_autotoc_md3531}%
+\Hypertarget{md_backend_2node__modules_2socks_2docs_2examples_2javascript_2connect_example_autotoc_md3531}%
+ \hypertarget{md_backend_2node__modules_2socks_2docs_2examples_2javascript_2connect_example_autotoc_md3532}{}\doxysection{\texorpdfstring{Example for SOCKS \textquotesingle{}connect\textquotesingle{} command}{Example for SOCKS \textquotesingle{}connect\textquotesingle{} command}}\label{md_backend_2node__modules_2socks_2docs_2examples_2javascript_2connect_example_autotoc_md3532}
+The connect command is the most common use-\/case for a SOCKS proxy. This establishes a direct connection to a destination host through a proxy server. The destination host only has knowledge of the proxy server connecting to it and does not know about the origin client (you).
+
+{\bfseries{Origin Client (you) \texorpdfstring{$<$}{<}-\/\texorpdfstring{$>$}{>} Proxy Server \texorpdfstring{$<$}{<}-\/\texorpdfstring{$>$}{>} Destination Server}}
+
+In this example, we are connecting to a web server on port 80, and sending a very basic HTTP request to receive a response. It\textquotesingle{}s worth noting that there are many socks-\/http-\/agents that can be used with the node http module (and libraries such as request.\+js) to make this easier. This HTTP request is used as a simple example.
+
+The \textquotesingle{}connect\textquotesingle{} command can be used via the Socks\+Client.\+create\+Connection() factory function as well as by creating a Socks\+Client instance and using event handlers.\hypertarget{md_backend_2node__modules_2socks_2docs_2examples_2javascript_2connect_example_autotoc_md3533}{}\doxysubsection{\texorpdfstring{Using create\+Connection with async/await}{Using create\+Connection with async/await}}\label{md_backend_2node__modules_2socks_2docs_2examples_2javascript_2connect_example_autotoc_md3533}
+Since Socks\+Client.\+create\+Connection returns a Promise, we can easily use async/await for flow control.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ SocksClient\ =\ require('socks').SocksClient;}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ options\ \ =\ \{}
+\DoxyCodeLine{\ \ proxy:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ '104.131.124.203',}
+\DoxyCodeLine{\ \ \ \ port:\ 1081,}
+\DoxyCodeLine{\ \ \ \ type:\ 5}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ destination:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ 'ip-\/api.com',\ //\ host\ names\ are\ supported\ with\ SOCKS\ v4a\ and\ SOCKS\ v5.}
+\DoxyCodeLine{\ \ \ \ port:\ 80}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ command:\ 'connect'}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{async\ function\ start()\ \{}
+\DoxyCodeLine{\ \ try\ \{}
+\DoxyCodeLine{\ \ \ \ const\ info\ =\ await\ SocksClient.createConnection(options);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ console.log(info.socket);}
+\DoxyCodeLine{\ \ \ \ //\ <Socket\ ...>\ \ (this\ is\ a\ raw\ net.Socket\ that\ is\ established\ to\ the\ destination\ host\ through\ the\ given\ proxy\ servers)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ info.socket.write('GET\ /json\ HTTP/1.1\(\backslash\)nHost:\ ip-\/api.com\(\backslash\)n\(\backslash\)n');}
+\DoxyCodeLine{\ \ \ \ info.socket.on('data',\ (data)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ console.log(data.toString());\ //\ ip-\/api.com\ sees\ that\ the\ last\ proxy\ (104.131.124.203)\ is\ connected\ to\ it\ and\ not\ the\ origin\ client\ (you).}
+\DoxyCodeLine{\ \ \ \ \ \ /*}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ HTTP/1.1\ 200\ OK}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ Access-\/Control-\/Allow-\/Origin:\ *}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ Content-\/Type:\ application/json;\ charset=utf-\/8}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ Date:\ Sun,\ 24\ Dec\ 2017\ 03:47:51\ GMT}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ Content-\/Length:\ 300}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}as"{}:"{}AS14061\ Digital\ Ocean,\ Inc."{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}city"{}:"{}Clifton"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}country"{}:"{}United\ States"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}countryCode"{}:"{}US"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}isp"{}:"{}Digital\ Ocean"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}lat"{}:40.8326,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}lon"{}:-\/74.1307,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}org"{}:"{}Digital\ Ocean"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}query"{}:"{}104.131.124.203"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}region"{}:"{}NJ"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}regionName"{}:"{}New\ Jersey"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}status"{}:"{}success"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}timezone"{}:"{}America/New\_York"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}zip"{}:"{}07014"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ */}
+\DoxyCodeLine{\ \ \}\ catch\ (err)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ Handle\ errors}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{start();}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2socks_2docs_2examples_2javascript_2connect_example_autotoc_md3534}{}\doxysubsection{\texorpdfstring{Using create\+Connection with Promises}{Using create\+Connection with Promises}}\label{md_backend_2node__modules_2socks_2docs_2examples_2javascript_2connect_example_autotoc_md3534}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ SocksClient\ =\ require('socks').SocksClient;}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ options\ \ =\ \{}
+\DoxyCodeLine{\ \ proxy:\ \{}
+\DoxyCodeLine{\ \ \ \ ipaddress:\ '104.131.124.203',}
+\DoxyCodeLine{\ \ \ \ port:\ 1081,}
+\DoxyCodeLine{\ \ \ \ type:\ 5}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ destination:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ 'ip-\/api.com',\ //\ host\ names\ are\ supported\ with\ SOCKS\ v4a\ and\ SOCKS\ v5.}
+\DoxyCodeLine{\ \ \ \ port:\ 80}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ command:\ 'connect'}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{SocksClient.createConnection(options)}
+\DoxyCodeLine{.then(info\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(info.socket);}
+\DoxyCodeLine{\ \ //\ <Socket\ ...>\ \ (this\ is\ a\ raw\ net.Socket\ that\ is\ established\ to\ the\ destination\ host\ through\ the\ given\ proxy\ servers)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ info.socket.write('GET\ /json\ HTTP/1.1\(\backslash\)nHost:\ ip-\/api.com\(\backslash\)n\(\backslash\)n');}
+\DoxyCodeLine{\ \ info.socket.on('data',\ (data)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(data.toString());\ //\ ip-\/api.com\ sees\ that\ the\ last\ proxy\ (104.131.124.203)\ is\ connected\ to\ it\ and\ not\ the\ origin\ client\ (you).}
+\DoxyCodeLine{\ \ \ \ /*}
+\DoxyCodeLine{\ \ \ \ \ \ HTTP/1.1\ 200\ OK}
+\DoxyCodeLine{\ \ \ \ \ \ Access-\/Control-\/Allow-\/Origin:\ *}
+\DoxyCodeLine{\ \ \ \ \ \ Content-\/Type:\ application/json;\ charset=utf-\/8}
+\DoxyCodeLine{\ \ \ \ \ \ Date:\ Sun,\ 24\ Dec\ 2017\ 03:47:51\ GMT}
+\DoxyCodeLine{\ \ \ \ \ \ Content-\/Length:\ 300}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}as"{}:"{}AS14061\ Digital\ Ocean,\ Inc."{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}city"{}:"{}Clifton"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}country"{}:"{}United\ States"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}countryCode"{}:"{}US"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}isp"{}:"{}Digital\ Ocean"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}lat"{}:40.8326,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}lon"{}:-\/74.1307,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}org"{}:"{}Digital\ Ocean"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}query"{}:"{}104.131.124.203"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}region"{}:"{}NJ"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}regionName"{}:"{}New\ Jersey"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}status"{}:"{}success"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}timezone"{}:"{}America/New\_York"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}zip"{}:"{}07014"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ */}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{.catch(err\ =>\ \{}
+\DoxyCodeLine{\ \ //\ handle\ errors}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2socks_2docs_2examples_2javascript_2connect_example_autotoc_md3535}{}\doxysubsection{\texorpdfstring{Using create\+Connection with callbacks}{Using create\+Connection with callbacks}}\label{md_backend_2node__modules_2socks_2docs_2examples_2javascript_2connect_example_autotoc_md3535}
+Socks\+Client.\+create\+Connection() optionally accepts a callback function as a second parameter.
+
+{\bfseries{Note\+:}} If a callback function is provided, a Promise is still returned from the function, but the promise will always resolve regardless of if there was en error. (tldr\+: Do not mix callbacks and Promises).
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ SocksClient\ =\ require('socks').SocksClient;}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ options\ \ =\ \{}
+\DoxyCodeLine{\ \ proxy:\ \{}
+\DoxyCodeLine{\ \ \ \ ipaddress:\ '104.131.124.203',}
+\DoxyCodeLine{\ \ \ \ port:\ 1081,}
+\DoxyCodeLine{\ \ \ \ type:\ 5}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ destination:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ 'ip-\/api.com',\ //\ host\ names\ are\ supported\ with\ SOCKS\ v4a\ and\ SOCKS\ v5.}
+\DoxyCodeLine{\ \ \ \ port:\ 80}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ command:\ 'connect'}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{SocksClient.createConnection(options,\ (err,\ info)\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (err)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ handle\ errors}
+\DoxyCodeLine{\ \ \}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(info.socket);}
+\DoxyCodeLine{\ \ \ \ //\ <Socket\ ...>\ \ (this\ is\ a\ raw\ net.Socket\ that\ is\ established\ to\ the\ destination\ host\ through\ the\ given\ proxy\ servers)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ info.socket.write('GET\ /json\ HTTP/1.1\(\backslash\)nHost:\ ip-\/api.com\(\backslash\)n\(\backslash\)n');}
+\DoxyCodeLine{\ \ \ \ info.socket.on('data',\ (data)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ console.log(data.toString());\ //\ ip-\/api.com\ sees\ that\ the\ last\ proxy\ (104.131.124.203)\ is\ connected\ to\ it\ and\ not\ the\ origin\ client\ (you).}
+\DoxyCodeLine{\ \ \ \ \ \ /*}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ HTTP/1.1\ 200\ OK}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ Access-\/Control-\/Allow-\/Origin:\ *}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ Content-\/Type:\ application/json;\ charset=utf-\/8}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ Date:\ Sun,\ 24\ Dec\ 2017\ 03:47:51\ GMT}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ Content-\/Length:\ 300}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}as"{}:"{}AS14061\ Digital\ Ocean,\ Inc."{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}city"{}:"{}Clifton"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}country"{}:"{}United\ States"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}countryCode"{}:"{}US"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}isp"{}:"{}Digital\ Ocean"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}lat"{}:40.8326,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}lon"{}:-\/74.1307,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}org"{}:"{}Digital\ Ocean"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}query"{}:"{}104.131.124.203"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}region"{}:"{}NJ"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}regionName"{}:"{}New\ Jersey"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}status"{}:"{}success"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}timezone"{}:"{}America/New\_York"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}zip"{}:"{}07014"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ */}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2socks_2docs_2examples_2javascript_2connect_example_autotoc_md3536}{}\doxysubsection{\texorpdfstring{Using event handlers}{Using event handlers}}\label{md_backend_2node__modules_2socks_2docs_2examples_2javascript_2connect_example_autotoc_md3536}
+Socks\+Client also supports instance creation of a Socks\+Client. This allows for event based flow control.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ SocksClient\ =\ require('socks').SocksClient;}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ options\ \ =\ \{}
+\DoxyCodeLine{\ \ proxy:\ \{}
+\DoxyCodeLine{\ \ \ \ ipaddress:\ '104.131.124.203',}
+\DoxyCodeLine{\ \ \ \ port:\ 1081,}
+\DoxyCodeLine{\ \ \ \ type:\ 5}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ destination:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ 'ip-\/api.com',\ //\ host\ names\ are\ supported\ with\ SOCKS\ v4a\ and\ SOCKS\ v5.}
+\DoxyCodeLine{\ \ \ \ port:\ 80}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ command:\ 'connect'}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ client\ =\ new\ SocksClient(options);}
+\DoxyCodeLine{}
+\DoxyCodeLine{client.on('established',\ (info)\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(info.socket);}
+\DoxyCodeLine{\ \ //\ <Socket\ ...>\ \ (this\ is\ a\ raw\ net.Socket\ that\ is\ established\ to\ the\ destination\ host\ through\ the\ given\ proxy\ servers)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ info.socket.write('GET\ /json\ HTTP/1.1\(\backslash\)nHost:\ ip-\/api.com\(\backslash\)n\(\backslash\)n');}
+\DoxyCodeLine{\ \ info.socket.on('data',\ (data)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(data.toString());\ //\ ip-\/api.com\ sees\ that\ the\ last\ proxy\ (104.131.124.203)\ is\ connected\ to\ it\ and\ not\ the\ origin\ client\ (you).}
+\DoxyCodeLine{\ \ \ \ /*}
+\DoxyCodeLine{\ \ \ \ \ \ HTTP/1.1\ 200\ OK}
+\DoxyCodeLine{\ \ \ \ \ \ Access-\/Control-\/Allow-\/Origin:\ *}
+\DoxyCodeLine{\ \ \ \ \ \ Content-\/Type:\ application/json;\ charset=utf-\/8}
+\DoxyCodeLine{\ \ \ \ \ \ Date:\ Sun,\ 24\ Dec\ 2017\ 03:47:51\ GMT}
+\DoxyCodeLine{\ \ \ \ \ \ Content-\/Length:\ 300}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}as"{}:"{}AS14061\ Digital\ Ocean,\ Inc."{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}city"{}:"{}Clifton"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}country"{}:"{}United\ States"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}countryCode"{}:"{}US"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}isp"{}:"{}Digital\ Ocean"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}lat"{}:40.8326,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}lon"{}:-\/74.1307,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}org"{}:"{}Digital\ Ocean"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}query"{}:"{}104.131.124.203"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}region"{}:"{}NJ"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}regionName"{}:"{}New\ Jersey"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}status"{}:"{}success"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}timezone"{}:"{}America/New\_York"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}zip"{}:"{}07014"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ */}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Failed\ to\ establish\ proxy\ connection\ to\ destination.}
+\DoxyCodeLine{client.on('error',\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ //\ Handle\ errors}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+ 

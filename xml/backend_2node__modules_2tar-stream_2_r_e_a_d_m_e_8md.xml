@@ -1,0 +1,181 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2tar-stream_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>tar-stream</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">tar-stream<sp/>is<sp/>a<sp/>streaming<sp/>tar<sp/>parser<sp/>and<sp/>generator<sp/>and<sp/>nothing<sp/>else.<sp/>It<sp/>is<sp/>streams2<sp/>and<sp/>operates<sp/>purely<sp/>using<sp/>streams<sp/>which<sp/>means<sp/>you<sp/>can<sp/>easily<sp/>extract/parse<sp/>tarballs<sp/>without<sp/>ever<sp/>hitting<sp/>the<sp/>file<sp/>system.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note<sp/>that<sp/>you<sp/>still<sp/>need<sp/>to<sp/>gunzip<sp/>your<sp/>data<sp/>if<sp/>you<sp/>have<sp/>a<sp/>`.tar.gz`.<sp/>We<sp/>recommend<sp/>using<sp/>[gunzip-maybe](https://github.com/mafintosh/gunzip-maybe)<sp/>in<sp/>conjunction<sp/>with<sp/>this.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>install<sp/>tar-stream</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![build<sp/>status](https://secure.travis-ci.org/mafintosh/tar-stream.png)](http://travis-ci.org/mafintosh/tar-stream)</highlight></codeline>
+<codeline><highlight class="normal">[![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Usage</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">tar-stream<sp/>exposes<sp/>two<sp/>streams,<sp/>[pack](https://github.com/mafintosh/tar-stream#packing)<sp/>which<sp/>creates<sp/>tarballs<sp/>and<sp/>[extract](https://github.com/mafintosh/tar-stream#extracting)<sp/>which<sp/>extracts<sp/>tarballs.<sp/>To<sp/>[modify<sp/>an<sp/>existing<sp/>tarball](https://github.com/mafintosh/tar-stream#modifying-existing-tarballs)<sp/>use<sp/>both.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It<sp/>implementes<sp/>USTAR<sp/>with<sp/>additional<sp/>support<sp/>for<sp/>pax<sp/>extended<sp/>headers.<sp/>It<sp/>should<sp/>be<sp/>compatible<sp/>with<sp/>all<sp/>popular<sp/>tar<sp/>distributions<sp/>out<sp/>there<sp/>(gnutar,<sp/>bsdtar<sp/>etc)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Related</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>want<sp/>to<sp/>pack/unpack<sp/>directories<sp/>on<sp/>the<sp/>file<sp/>system<sp/>check<sp/>out<sp/>[tar-fs](https://github.com/mafintosh/tar-fs)<sp/>which<sp/>provides<sp/>file<sp/>system<sp/>bindings<sp/>to<sp/>this<sp/>module.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Packing</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>create<sp/>a<sp/>pack<sp/>stream<sp/>use<sp/>`tar.pack()`<sp/>and<sp/>call<sp/>`pack.entry(header,<sp/>[callback])`<sp/>to<sp/>add<sp/>tar<sp/>entries.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>tar<sp/>=<sp/>require(&apos;tar-stream&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>pack<sp/>=<sp/>tar.pack()<sp/>//<sp/>pack<sp/>is<sp/>a<sp/>streams2<sp/>stream</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>add<sp/>a<sp/>file<sp/>called<sp/>my-test.txt<sp/>with<sp/>the<sp/>content<sp/>&quot;Hello<sp/>World!&quot;</highlight></codeline>
+<codeline><highlight class="normal">pack.entry({<sp/>name:<sp/>&apos;my-test.txt&apos;<sp/>},<sp/>&apos;Hello<sp/>World!&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>add<sp/>a<sp/>file<sp/>called<sp/>my-stream-test.txt<sp/>from<sp/>a<sp/>stream</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>entry<sp/>=<sp/>pack.entry({<sp/>name:<sp/>&apos;my-stream-test.txt&apos;,<sp/>size:<sp/>11<sp/>},<sp/>function(err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>the<sp/>stream<sp/>was<sp/>added</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>no<sp/>more<sp/>entries</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>pack.finalize()</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">entry.write(&apos;hello&apos;)</highlight></codeline>
+<codeline><highlight class="normal">entry.write(&apos;<sp/>&apos;)</highlight></codeline>
+<codeline><highlight class="normal">entry.write(&apos;world&apos;)</highlight></codeline>
+<codeline><highlight class="normal">entry.end()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>pipe<sp/>the<sp/>pack<sp/>stream<sp/>somewhere</highlight></codeline>
+<codeline><highlight class="normal">pack.pipe(process.stdout)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Extracting</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>extract<sp/>a<sp/>stream<sp/>use<sp/>`tar.extract()`<sp/>and<sp/>listen<sp/>for<sp/>`extract.on(&apos;entry&apos;,<sp/>(header,<sp/>stream,<sp/>next)<sp/>)`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>extract<sp/>=<sp/>tar.extract()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">extract.on(&apos;entry&apos;,<sp/>function(header,<sp/>stream,<sp/>next)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>header<sp/>is<sp/>the<sp/>tar<sp/>header</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>stream<sp/>is<sp/>the<sp/>content<sp/>body<sp/>(might<sp/>be<sp/>an<sp/>empty<sp/>stream)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>call<sp/>next<sp/>when<sp/>you<sp/>are<sp/>done<sp/>with<sp/>this<sp/>entry</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>stream.on(&apos;end&apos;,<sp/>function()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>next()<sp/>//<sp/>ready<sp/>for<sp/>next<sp/>entry</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>stream.resume()<sp/>//<sp/>just<sp/>auto<sp/>drain<sp/>the<sp/>stream</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">extract.on(&apos;finish&apos;,<sp/>function()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>all<sp/>entries<sp/>read</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">pack.pipe(extract)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>tar<sp/>archive<sp/>is<sp/>streamed<sp/>sequentially,<sp/>meaning<sp/>you<sp/>**must**<sp/>drain<sp/>each<sp/>entry&apos;s<sp/>stream<sp/>as<sp/>you<sp/>get<sp/>them<sp/>or<sp/>else<sp/>the<sp/>main<sp/>extract<sp/>stream<sp/>will<sp/>receive<sp/>backpressure<sp/>and<sp/>stop<sp/>reading.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Headers</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>header<sp/>object<sp/>using<sp/>in<sp/>`entry`<sp/>should<sp/>contain<sp/>the<sp/>following<sp/>properties.</highlight></codeline>
+<codeline><highlight class="normal">Most<sp/>of<sp/>these<sp/>values<sp/>can<sp/>be<sp/>found<sp/>by<sp/>stat&apos;ing<sp/>a<sp/>file.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>js</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>name:<sp/>&apos;path/to/this/entry.txt&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>size:<sp/>1314,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>entry<sp/>size.<sp/>defaults<sp/>to<sp/>0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>mode:<sp/>0o644,<sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>entry<sp/>mode.<sp/>defaults<sp/>to<sp/>to<sp/>0o755<sp/>for<sp/>dirs<sp/>and<sp/>0o644<sp/>otherwise</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>mtime:<sp/>new<sp/>Date(),<sp/>//<sp/>last<sp/>modified<sp/>date<sp/>for<sp/>entry.<sp/>defaults<sp/>to<sp/>now.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>type:<sp/>&apos;file&apos;,<sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>type<sp/>of<sp/>entry.<sp/>defaults<sp/>to<sp/>file.<sp/>can<sp/>be:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>file<sp/>|<sp/>link<sp/>|<sp/>symlink<sp/>|<sp/>directory<sp/>|<sp/>block-device</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>character-device<sp/>|<sp/>fifo<sp/>|<sp/>contiguous-file</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>linkname:<sp/>&apos;path&apos;,<sp/><sp/>//<sp/>linked<sp/>file<sp/>name</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>uid:<sp/>0,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>uid<sp/>of<sp/>entry<sp/>owner.<sp/>defaults<sp/>to<sp/>0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>gid:<sp/>0,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>gid<sp/>of<sp/>entry<sp/>owner.<sp/>defaults<sp/>to<sp/>0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>uname:<sp/>&apos;maf&apos;,<sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>uname<sp/>of<sp/>entry<sp/>owner.<sp/>defaults<sp/>to<sp/>null</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>gname:<sp/>&apos;staff&apos;,<sp/><sp/><sp/><sp/>//<sp/>gname<sp/>of<sp/>entry<sp/>owner.<sp/>defaults<sp/>to<sp/>null</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>devmajor:<sp/>0,<sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>device<sp/>major<sp/>version.<sp/>defaults<sp/>to<sp/>0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>devminor:<sp/>0<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>device<sp/>minor<sp/>version.<sp/>defaults<sp/>to<sp/>0</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Modifying<sp/>existing<sp/>tarballs</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Using<sp/>tar-stream<sp/>it<sp/>is<sp/>easy<sp/>to<sp/>rewrite<sp/>paths<sp/>/<sp/>change<sp/>modes<sp/>etc<sp/>in<sp/>an<sp/>existing<sp/>tarball.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>extract<sp/>=<sp/>tar.extract()</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>pack<sp/>=<sp/>tar.pack()</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>path<sp/>=<sp/>require(&apos;path&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">extract.on(&apos;entry&apos;,<sp/>function(header,<sp/>stream,<sp/>callback)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>let&apos;s<sp/>prefix<sp/>all<sp/>names<sp/>with<sp/>&apos;tmp&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>header.name<sp/>=<sp/>path.join(&apos;tmp&apos;,<sp/>header.name)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>write<sp/>the<sp/>new<sp/>entry<sp/>to<sp/>the<sp/>pack<sp/>stream</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>stream.pipe(pack.entry(header,<sp/>callback))</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">extract.on(&apos;finish&apos;,<sp/>function()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>all<sp/>entries<sp/>done<sp/>-<sp/>lets<sp/>finalize<sp/>it</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>pack.finalize()</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>pipe<sp/>the<sp/>old<sp/>tarball<sp/>to<sp/>the<sp/>extractor</highlight></codeline>
+<codeline><highlight class="normal">oldTarballStream.pipe(extract)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>pipe<sp/>the<sp/>new<sp/>tarball<sp/>the<sp/>another<sp/>stream</highlight></codeline>
+<codeline><highlight class="normal">pack.pipe(newTarballStream)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Saving<sp/>tarball<sp/>to<sp/>fs</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>fs<sp/>=<sp/>require(&apos;fs&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>tar<sp/>=<sp/>require(&apos;tar-stream&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>pack<sp/>=<sp/>tar.pack()<sp/>//<sp/>pack<sp/>is<sp/>a<sp/>streams2<sp/>stream</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>path<sp/>=<sp/>&apos;YourTarBall.tar&apos;</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>yourTarball<sp/>=<sp/>fs.createWriteStream(path)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>add<sp/>a<sp/>file<sp/>called<sp/>YourFile.txt<sp/>with<sp/>the<sp/>content<sp/>&quot;Hello<sp/>World!&quot;</highlight></codeline>
+<codeline><highlight class="normal">pack.entry({name:<sp/>&apos;YourFile.txt&apos;},<sp/>&apos;Hello<sp/>World!&apos;,<sp/>function<sp/>(err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(err)<sp/>throw<sp/>err</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>pack.finalize()</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>pipe<sp/>the<sp/>pack<sp/>stream<sp/>to<sp/>your<sp/>file</highlight></codeline>
+<codeline><highlight class="normal">pack.pipe(yourTarball)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">yourTarball.on(&apos;close&apos;,<sp/>function<sp/>()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(path<sp/>+<sp/>&apos;<sp/>has<sp/>been<sp/>written&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fs.stat(path,<sp/>function(err,<sp/>stats)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(err)<sp/>throw<sp/>err</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(stats)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(&apos;Got<sp/>file<sp/>info<sp/>successfully!&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Performance</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[See<sp/>tar-fs<sp/>for<sp/>a<sp/>performance<sp/>comparison<sp/>with<sp/>node-tar](https://github.com/mafintosh/tar-fs/blob/master/README.md#performance)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>License</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">MIT</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/tar-stream/README.md"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,572 @@
+\chapter{minipass}
+\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e}\index{minipass@{minipass}}
+\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3792}%
+\Hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3792}%
+ A {\itshape very} minimal implementation of a \href{https://nodejs.org/api/stream.html\#stream_class_stream_passthrough}{\texttt{ Pass\+Through stream}}
+
+\href{https://docs.google.com/spreadsheets/d/1K_HR5oh3r80b8WVMWCPPjfuWXUgfkmhlX7FGI6JJ8tY/edit?usp=sharing}{\texttt{ It\textquotesingle{}s very fast}} for objects, strings, and buffers.
+
+Supports {\ttfamily pipe()}ing (including multi-\/{\ttfamily pipe()} and backpressure transmission), buffering data until either a {\ttfamily data} event handler or {\ttfamily pipe()} is added (so you don\textquotesingle{}t lose the first chunk), and most other cases where Pass\+Through is a good idea.
+
+There is a {\ttfamily read()} method, but it\textquotesingle{}s much more efficient to consume data from this stream via `\textquotesingle{}data'{\ttfamily events or by calling }pipe(){\ttfamily into some other stream. Calling}read()\`{} requires the buffer to be flattened in some cases, which requires copying memory.
+
+If you set {\ttfamily object\+Mode\+: true} in the options, then whatever is written will be emitted. Otherwise, it\textquotesingle{}ll do a minimal amount of Buffer copying to ensure proper Streams semantics when {\ttfamily read(n)} is called.
+
+{\ttfamily object\+Mode} can also be set by doing {\ttfamily stream.\+object\+Mode = true}, or by writing any non-\/string/non-\/buffer data. {\ttfamily object\+Mode} cannot be set to false once it is set.
+
+This is not a {\ttfamily through} or {\ttfamily through2} stream. It doesn\textquotesingle{}t transform the data, it just passes it right through. If you want to transform the data, extend the class, and override the {\ttfamily write()} method. Once you\textquotesingle{}re done transforming the data however you want, call {\ttfamily super.\+write()} with the transform output.
+
+For some examples of streams that extend Minipass in various ways, check out\+:
+
+
+\begin{DoxyItemize}
+\item \href{http://npm.im/minizlib}{\texttt{ minizlib}}
+\item \href{http://npm.im/fs-minipass}{\texttt{ fs-\/minipass}}
+\item \href{http://npm.im/tar}{\texttt{ tar}}
+\item \href{http://npm.im/minipass-collect}{\texttt{ minipass-\/collect}}
+\item \href{http://npm.im/minipass-flush}{\texttt{ minipass-\/flush}}
+\item \href{http://npm.im/minipass-pipeline}{\texttt{ minipass-\/pipeline}}
+\item \href{http://npm.im/tap}{\texttt{ tap}}
+\item \href{http://npm.im/tap-parser}{\texttt{ tap-\/parser}}
+\item \href{http://npm.im/treport}{\texttt{ treport}}
+\item \href{http://npm.im/minipass-fetch}{\texttt{ minipass-\/fetch}}
+\item \href{http://npm.im/pacote}{\texttt{ pacote}}
+\item \href{http://npm.im/make-fetch-happen}{\texttt{ make-\/fetch-\/happen}}
+\item \href{http://npm.im/cacache}{\texttt{ cacache}}
+\item \href{http://npm.im/ssri}{\texttt{ ssri}}
+\item \href{http://npm.im/npm-registry-fetch}{\texttt{ npm-\/registry-\/fetch}}
+\item \href{http://npm.im/minipass-json-stream}{\texttt{ minipass-\/json-\/stream}}
+\item \href{http://npm.im/minipass-sized}{\texttt{ minipass-\/sized}}
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3793}{}\doxysection{\texorpdfstring{Differences from Node.\+js Streams}{Differences from Node.\+js Streams}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3793}
+There are several things that make Minipass streams different from (and in some ways superior to) Node.\+js core streams.
+
+Please read these caveats if you are familiar with node-\/core streams and intend to use Minipass streams in your programs.
+
+You can avoid most of these differences entirely (for a very small performance penalty) by setting {\ttfamily \{async\+: true\}} in the constructor options.\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3794}{}\doxysubsection{\texorpdfstring{Timing}{Timing}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3794}
+Minipass streams are designed to support synchronous use-\/cases. Thus, data is emitted as soon as it is available, always. It is buffered until read, but no longer. Another way to look at it is that Minipass streams are exactly as synchronous as the logic that writes into them.
+
+This can be surprising if your code relies on {\ttfamily Pass\+Through.\+write()} always providing data on the next tick rather than the current one, or being able to call {\ttfamily resume()} and not have the entire buffer disappear immediately.
+
+However, without this synchronicity guarantee, there would be no way for Minipass to achieve the speeds it does, or support the synchronous use cases that it does. Simply put, waiting takes time.
+
+This non-\/deferring approach makes Minipass streams much easier to reason about, especially in the context of Promises and other flow-\/control mechanisms.
+
+Example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ hybrid\ module,\ either\ works}
+\DoxyCodeLine{import\ \{\ Minipass\ \}\ from\ 'minipass'}
+\DoxyCodeLine{//\ or:}
+\DoxyCodeLine{const\ \{\ Minipass\ \}\ =\ require('minipass')}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ stream\ =\ new\ Minipass()}
+\DoxyCodeLine{stream.on('data',\ ()\ =>\ console.log('data\ event'))}
+\DoxyCodeLine{console.log('before\ write')}
+\DoxyCodeLine{stream.write('hello')}
+\DoxyCodeLine{console.log('after\ write')}
+\DoxyCodeLine{//\ output:}
+\DoxyCodeLine{//\ before\ write}
+\DoxyCodeLine{//\ data\ event}
+\DoxyCodeLine{//\ after\ write}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3795}{}\doxysubsection{\texorpdfstring{Exception\+: Async Opt-\/\+In}{Exception\+: Async Opt-\/\+In}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3795}
+If you wish to have a Minipass stream with behavior that more closely mimics Node.\+js core streams, you can set the stream in async mode either by setting {\ttfamily async\+: true} in the constructor options, or by setting {\ttfamily stream.\+async = true} later on.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ hybrid\ module,\ either\ works}
+\DoxyCodeLine{import\ \{\ Minipass\ \}\ from\ 'minipass'}
+\DoxyCodeLine{//\ or:}
+\DoxyCodeLine{const\ \{\ Minipass\ \}\ =\ require('minipass')}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ asyncStream\ =\ new\ Minipass(\{\ async:\ true\ \})}
+\DoxyCodeLine{asyncStream.on('data',\ ()\ =>\ console.log('data\ event'))}
+\DoxyCodeLine{console.log('before\ write')}
+\DoxyCodeLine{asyncStream.write('hello')}
+\DoxyCodeLine{console.log('after\ write')}
+\DoxyCodeLine{//\ output:}
+\DoxyCodeLine{//\ before\ write}
+\DoxyCodeLine{//\ after\ write}
+\DoxyCodeLine{//\ data\ event\ <-\/-\/\ this\ is\ deferred\ until\ the\ next\ tick}
+
+\end{DoxyCode}
+
+
+Switching {\itshape out} of async mode is unsafe, as it could cause data corruption, and so is not enabled. Example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Minipass\ \}\ from\ 'minipass'}
+\DoxyCodeLine{const\ stream\ =\ new\ Minipass(\{\ encoding:\ 'utf8'\ \})}
+\DoxyCodeLine{stream.on('data',\ chunk\ =>\ console.log(chunk))}
+\DoxyCodeLine{stream.async\ =\ true}
+\DoxyCodeLine{console.log('before\ writes')}
+\DoxyCodeLine{stream.write('hello')}
+\DoxyCodeLine{setStreamSyncAgainSomehow(stream)\ //\ <-\/-\/\ this\ doesn't\ actually\ exist!}
+\DoxyCodeLine{stream.write('world')}
+\DoxyCodeLine{console.log('after\ writes')}
+\DoxyCodeLine{//\ hypothetical\ output\ would\ be:}
+\DoxyCodeLine{//\ before\ writes}
+\DoxyCodeLine{//\ world}
+\DoxyCodeLine{//\ after\ writes}
+\DoxyCodeLine{//\ hello}
+\DoxyCodeLine{//\ NOT\ GOOD!}
+
+\end{DoxyCode}
+
+
+To avoid this problem, once set into async mode, any attempt to make the stream sync again will be ignored.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ Minipass\ \}\ =\ require('minipass')}
+\DoxyCodeLine{const\ stream\ =\ new\ Minipass(\{\ encoding:\ 'utf8'\ \})}
+\DoxyCodeLine{stream.on('data',\ chunk\ =>\ console.log(chunk))}
+\DoxyCodeLine{stream.async\ =\ true}
+\DoxyCodeLine{console.log('before\ writes')}
+\DoxyCodeLine{stream.write('hello')}
+\DoxyCodeLine{stream.async\ =\ false\ //\ <-\/-\/\ no-\/op,\ stream\ already\ async}
+\DoxyCodeLine{stream.write('world')}
+\DoxyCodeLine{console.log('after\ writes')}
+\DoxyCodeLine{//\ actual\ output:}
+\DoxyCodeLine{//\ before\ writes}
+\DoxyCodeLine{//\ after\ writes}
+\DoxyCodeLine{//\ hello}
+\DoxyCodeLine{//\ world}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3796}{}\doxysubsection{\texorpdfstring{No High/\+Low Water Marks}{No High/\+Low Water Marks}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3796}
+Node.\+js core streams will optimistically fill up a buffer, returning {\ttfamily true} on all writes until the limit is hit, even if the data has nowhere to go. Then, they will not attempt to draw more data in until the buffer size dips below a minimum value.
+
+Minipass streams are much simpler. The {\ttfamily write()} method will return {\ttfamily true} if the data has somewhere to go (which is to say, given the timing guarantees, that the data is already there by the time {\ttfamily write()} returns).
+
+If the data has nowhere to go, then {\ttfamily write()} returns false, and the data sits in a buffer, to be drained out immediately as soon as anyone consumes it.
+
+Since nothing is ever buffered unnecessarily, there is much less copying data, and less bookkeeping about buffer capacity levels.\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3797}{}\doxysubsection{\texorpdfstring{Hazards of Buffering (or\+: Why Minipass Is So Fast)}{Hazards of Buffering (or\+: Why Minipass Is So Fast)}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3797}
+Since data written to a Minipass stream is immediately written all the way through the pipeline, and {\ttfamily write()} always returns true/false based on whether the data was fully flushed, backpressure is communicated immediately to the upstream caller. This minimizes buffering.
+
+Consider this case\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ \{\ PassThrough\ \}\ =\ require('stream')}
+\DoxyCodeLine{const\ p1\ =\ new\ PassThrough(\{\ highWaterMark:\ 1024\ \})}
+\DoxyCodeLine{const\ p2\ =\ new\ PassThrough(\{\ highWaterMark:\ 1024\ \})}
+\DoxyCodeLine{const\ p3\ =\ new\ PassThrough(\{\ highWaterMark:\ 1024\ \})}
+\DoxyCodeLine{const\ p4\ =\ new\ PassThrough(\{\ highWaterMark:\ 1024\ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{p1.pipe(p2).pipe(p3).pipe(p4)}
+\DoxyCodeLine{p4.on('data',\ ()\ =>\ console.log('made\ it\ through'))}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ this\ returns\ false\ and\ buffers,\ then\ writes\ to\ p2\ on\ next\ tick\ (1)}
+\DoxyCodeLine{//\ p2\ returns\ false\ and\ buffers,\ pausing\ p1,\ then\ writes\ to\ p3\ on\ next\ tick\ (2)}
+\DoxyCodeLine{//\ p3\ returns\ false\ and\ buffers,\ pausing\ p2,\ then\ writes\ to\ p4\ on\ next\ tick\ (3)}
+\DoxyCodeLine{//\ p4\ returns\ false\ and\ buffers,\ pausing\ p3,\ then\ emits\ 'data'\ and\ 'drain'}
+\DoxyCodeLine{//\ on\ next\ tick\ (4)}
+\DoxyCodeLine{//\ p3\ sees\ p4's\ 'drain'\ event,\ and\ calls\ resume(),\ emitting\ 'resume'\ and}
+\DoxyCodeLine{//\ 'drain'\ on\ next\ tick\ (5)}
+\DoxyCodeLine{//\ p2\ sees\ p3's\ 'drain',\ calls\ resume(),\ emits\ 'resume'\ and\ 'drain'\ on\ next\ tick\ (6)}
+\DoxyCodeLine{//\ p1\ sees\ p2's\ 'drain',\ calls\ resume(),\ emits\ 'resume'\ and\ 'drain'\ on\ next}
+\DoxyCodeLine{//\ tick\ (7)}
+\DoxyCodeLine{}
+\DoxyCodeLine{p1.write(Buffer.alloc(2048))\ //\ returns\ false}
+
+\end{DoxyCode}
+
+
+Along the way, the data was buffered and deferred at each stage, and multiple event deferrals happened, for an unblocked pipeline where it was perfectly safe to write all the way through!
+
+Furthermore, setting a {\ttfamily high\+Water\+Mark} of {\ttfamily 1024} might lead someone reading the code to think an advisory maximum of 1KiB is being set for the pipeline. However, the actual advisory buffering level is the {\itshape sum} of {\ttfamily high\+Water\+Mark} values, since each one has its own bucket.
+
+Consider the Minipass case\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ m1\ =\ new\ Minipass()}
+\DoxyCodeLine{const\ m2\ =\ new\ Minipass()}
+\DoxyCodeLine{const\ m3\ =\ new\ Minipass()}
+\DoxyCodeLine{const\ m4\ =\ new\ Minipass()}
+\DoxyCodeLine{}
+\DoxyCodeLine{m1.pipe(m2).pipe(m3).pipe(m4)}
+\DoxyCodeLine{m4.on('data',\ ()\ =>\ console.log('made\ it\ through'))}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ m1\ is\ flowing,\ so\ it\ writes\ the\ data\ to\ m2\ immediately}
+\DoxyCodeLine{//\ m2\ is\ flowing,\ so\ it\ writes\ the\ data\ to\ m3\ immediately}
+\DoxyCodeLine{//\ m3\ is\ flowing,\ so\ it\ writes\ the\ data\ to\ m4\ immediately}
+\DoxyCodeLine{//\ m4\ is\ flowing,\ so\ it\ fires\ the\ 'data'\ event\ immediately,\ returns\ true}
+\DoxyCodeLine{//\ m4's\ write\ returned\ true,\ so\ m3\ is\ still\ flowing,\ returns\ true}
+\DoxyCodeLine{//\ m3's\ write\ returned\ true,\ so\ m2\ is\ still\ flowing,\ returns\ true}
+\DoxyCodeLine{//\ m2's\ write\ returned\ true,\ so\ m1\ is\ still\ flowing,\ returns\ true}
+\DoxyCodeLine{//\ No\ event\ deferrals\ or\ buffering\ along\ the\ way!}
+\DoxyCodeLine{}
+\DoxyCodeLine{m1.write(Buffer.alloc(2048))\ //\ returns\ true}
+
+\end{DoxyCode}
+
+
+It is extremely unlikely that you {\itshape don\textquotesingle{}t} want to buffer any data written, or {\itshape ever} buffer data that can be flushed all the way through. Neither node-\/core streams nor Minipass ever fail to buffer written data, but node-\/core streams do a lot of unnecessary buffering and pausing.
+
+As always, the faster implementation is the one that does less stuff and waits less time to do it.\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3798}{}\doxysubsection{\texorpdfstring{Immediately emit {\ttfamily end} for empty streams (when not paused)}{Immediately emit {\ttfamily end} for empty streams (when not paused)}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3798}
+If a stream is not paused, and {\ttfamily end()} is called before writing any data into it, then it will emit {\ttfamily end} immediately.
+
+If you have logic that occurs on the {\ttfamily end} event which you don\textquotesingle{}t want to potentially happen immediately (for example, closing file descriptors, moving on to the next entry in an archive parse stream, etc.) then be sure to call {\ttfamily stream.\+pause()} on creation, and then {\ttfamily stream.\+resume()} once you are ready to respond to the {\ttfamily end} event.
+
+However, this is {\itshape usually} not a problem because\+:\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3799}{}\doxysubsection{\texorpdfstring{Emit {\ttfamily end} When Asked}{Emit {\ttfamily end} When Asked}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3799}
+One hazard of immediately emitting `\textquotesingle{}end'{\ttfamily is that you may not yet have had a chance to add a listener. In order to avoid this hazard, Minipass streams safely re-\/emit the}\textquotesingle{}end\textquotesingle{}{\ttfamily event if a new listener is added after}\textquotesingle{}end\textquotesingle{}\`{} has been emitted.
+
+Ie, if you do `stream.\+on(\textquotesingle{}end', some\+Function){\ttfamily , and the stream has already emitted}end{\ttfamily , then it will call the handler right away. (You can think of this somewhat like attaching a new }.then(fn)\`{} to a previously-\/resolved Promise.)
+
+To prevent calling handlers multiple times who would not expect multiple ends to occur, all listeners are removed from the `\textquotesingle{}end'\`{} event whenever it is emitted.\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3800}{}\doxysubsection{\texorpdfstring{Emit {\ttfamily error} When Asked}{Emit {\ttfamily error} When Asked}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3800}
+The most recent error object passed to the `\textquotesingle{}error'{\ttfamily event is stored on the stream. If a new}\textquotesingle{}error\textquotesingle{}{\ttfamily event handler is added, and an error was previously emitted, then the event handler will be called immediately (or on}process.\+next\+Tick\`{} in the case of async streams).
+
+This makes it much more difficult to end up trying to interact with a broken stream, if the error handler is added after an error was previously emitted.\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3801}{}\doxysubsection{\texorpdfstring{Impact of "{}immediate flow"{} on Tee-\/streams}{Impact of "{}immediate flow"{} on Tee-\/streams}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3801}
+A "{}tee stream"{} is a stream piping to multiple destinations\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ tee\ =\ new\ Minipass()}
+\DoxyCodeLine{t.pipe(dest1)}
+\DoxyCodeLine{t.pipe(dest2)}
+\DoxyCodeLine{t.write('foo')\ //\ goes\ to\ both\ destinations}
+
+\end{DoxyCode}
+
+
+Since Minipass streams {\itshape immediately} process any pending data through the pipeline when a new pipe destination is added, this can have surprising effects, especially when a stream comes in from some other function and may or may not have data in its buffer.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ WARNING!\ WILL\ LOSE\ DATA!}
+\DoxyCodeLine{const\ src\ =\ new\ Minipass()}
+\DoxyCodeLine{src.write('foo')}
+\DoxyCodeLine{src.pipe(dest1)\ //\ 'foo'\ chunk\ flows\ to\ dest1\ immediately,\ and\ is\ gone}
+\DoxyCodeLine{src.pipe(dest2)\ //\ gets\ nothing!}
+
+\end{DoxyCode}
+
+
+One solution is to create a dedicated tee-\/stream junction that pipes to both locations, and then pipe to {\itshape that} instead.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Safe\ example:\ tee\ to\ both\ places}
+\DoxyCodeLine{const\ src\ =\ new\ Minipass()}
+\DoxyCodeLine{src.write('foo')}
+\DoxyCodeLine{const\ tee\ =\ new\ Minipass()}
+\DoxyCodeLine{tee.pipe(dest1)}
+\DoxyCodeLine{tee.pipe(dest2)}
+\DoxyCodeLine{src.pipe(tee)\ //\ tee\ gets\ 'foo',\ pipes\ to\ both\ locations}
+
+\end{DoxyCode}
+
+
+The same caveat applies to `on(\textquotesingle{}data')\`{} event listeners. The first one added will {\itshape immediately} receive all of the data, leaving nothing for the second\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ WARNING!\ WILL\ LOSE\ DATA!}
+\DoxyCodeLine{const\ src\ =\ new\ Minipass()}
+\DoxyCodeLine{src.write('foo')}
+\DoxyCodeLine{src.on('data',\ handler1)\ //\ receives\ 'foo'\ right\ away}
+\DoxyCodeLine{src.on('data',\ handler2)\ //\ nothing\ to\ see\ here!}
+
+\end{DoxyCode}
+
+
+Using a dedicated tee-\/stream can be used in this case as well\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Safe\ example:\ tee\ to\ both\ data\ handlers}
+\DoxyCodeLine{const\ src\ =\ new\ Minipass()}
+\DoxyCodeLine{src.write('foo')}
+\DoxyCodeLine{const\ tee\ =\ new\ Minipass()}
+\DoxyCodeLine{tee.on('data',\ handler1)}
+\DoxyCodeLine{tee.on('data',\ handler2)}
+\DoxyCodeLine{src.pipe(tee)}
+
+\end{DoxyCode}
+
+
+All of the hazards in this section are avoided by setting {\ttfamily \{ async\+: true \}} in the Minipass constructor, or by setting {\ttfamily stream.\+async = true} afterwards. Note that this does add some overhead, so should only be done in cases where you are willing to lose a bit of performance in order to avoid having to refactor program logic.\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3802}{}\doxysection{\texorpdfstring{USAGE}{USAGE}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3802}
+It\textquotesingle{}s a stream! Use it like a stream and it\textquotesingle{}ll most likely do what you want.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ \{\ Minipass\ \}\ from\ 'minipass'}
+\DoxyCodeLine{const\ mp\ =\ new\ Minipass(options)\ //\ optional:\ \{\ encoding,\ objectMode\ \}}
+\DoxyCodeLine{mp.write('foo')}
+\DoxyCodeLine{mp.pipe(someOtherStream)}
+\DoxyCodeLine{mp.end('bar')}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3803}{}\doxysubsection{\texorpdfstring{OPTIONS}{OPTIONS}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3803}
+
+\begin{DoxyItemize}
+\item {\ttfamily encoding} How would you like the data coming {\itshape out} of the stream to be encoded? Accepts any values that can be passed to {\ttfamily Buffer.\+to\+String()}.
+\item {\ttfamily object\+Mode} Emit data exactly as it comes in. This will be flipped on by default if you write() something other than a string or Buffer at any point. Setting {\ttfamily object\+Mode\+: true} will prevent setting any encoding value.
+\item {\ttfamily async} Defaults to {\ttfamily false}. Set to {\ttfamily true} to defer data emission until next tick. This reduces performance slightly, but makes Minipass streams use timing behavior closer to Node core streams. See Timing for more details.
+\item {\ttfamily signal} An {\ttfamily Abort\+Signal} that will cause the stream to unhook itself from everything and become as inert as possible. Note that providing a {\ttfamily signal} parameter will make `\textquotesingle{}error'\`{} events no longer throw if they are unhandled, but they will still be emitted to handlers if any are attached.
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3804}{}\doxysubsection{\texorpdfstring{API}{API}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3804}
+Implements the user-\/facing portions of Node.\+js\textquotesingle{}s {\ttfamily Readable} and {\ttfamily Writable} streams.\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3805}{}\doxysubsection{\texorpdfstring{Methods}{Methods}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3805}
+
+\begin{DoxyItemize}
+\item {\ttfamily write(chunk, \mbox{[}encoding\mbox{]}, \mbox{[}callback\mbox{]})} -\/ Put data in. (Note that, in the base Minipass class, the same data will come out.) Returns {\ttfamily false} if the stream will buffer the next write, or true if it\textquotesingle{}s still in "{}flowing"{} mode.
+\item {\ttfamily end(\mbox{[}chunk, \mbox{[}encoding\mbox{]}\mbox{]}, \mbox{[}callback\mbox{]})} -\/ Signal that you have no more data to write. This will queue an {\ttfamily end} event to be fired when all the data has been consumed.
+\item {\ttfamily set\+Encoding(encoding)} -\/ Set the encoding for data coming of the stream. This can only be done once.
+\item {\ttfamily pause()} -\/ No more data for a while, please. This also prevents {\ttfamily end} from being emitted for empty streams until the stream is resumed.
+\item {\ttfamily resume()} -\/ Resume the stream. If there\textquotesingle{}s data in the buffer, it is all discarded. Any buffered events are immediately emitted.
+\item {\ttfamily pipe(dest)} -\/ Send all output to the stream provided. When data is emitted, it is immediately written to any and all pipe destinations. (Or written on next tick in {\ttfamily async} mode.)
+\item {\ttfamily unpipe(dest)} -\/ Stop piping to the destination stream. This is immediate, meaning that any asynchronously queued data will {\itshape not} make it to the destination when running in {\ttfamily async} mode.
+\begin{DoxyItemize}
+\item {\ttfamily options.\+end} -\/ Boolean, end the destination stream when the source stream ends. Default {\ttfamily true}.
+\item {\ttfamily options.\+proxy\+Errors} -\/ Boolean, proxy {\ttfamily error} events from the source stream to the destination stream. Note that errors are {\itshape not} proxied after the pipeline terminates, either due to the source emitting `\textquotesingle{}end'{\ttfamily or manually unpiping with }src.\+unpipe(dest){\ttfamily . Default}false{\ttfamily . -\/}on(ev, fn){\ttfamily ,}emit(ev, fn){\ttfamily -\/ Minipass streams are Event\+Emitters. Some events are given special treatment, however. (See below under "{}events"{}.) -\/}promise(){\ttfamily -\/ Returns a Promise that resolves when the stream emits}end{\ttfamily , or rejects if the stream emits}error{\ttfamily . -\/}collect(){\ttfamily -\/ Return a Promise that resolves on}end{\ttfamily with an array containing each chunk of data that was emitted, or rejects if the stream emits}error{\ttfamily . Note that this consumes the stream data. -\/}concat(){\ttfamily -\/ Same as}collect(){\ttfamily , but concatenates the data into a single Buffer object. Will reject the returned promise if the stream is in object\+Mode, or if it goes into object\+Mode by the end of the data. -\/}read(n){\ttfamily -\/ Consume}n{\ttfamily bytes of data out of the buffer. If}n{\ttfamily  is not provided, then consume all of it. If}n{\ttfamily bytes are not available, then it returns null. \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\+Note\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*} consuming streams in this way is less efficient, and can lead to unnecessary Buffer copying. -\/}destroy(\mbox{[}er\mbox{]}){\ttfamily -\/ Destroy the stream. If an error is provided, then an}\textquotesingle{}error\textquotesingle{}{\ttfamily event is emitted. If the stream has a }close(){\ttfamily method, and has not emitted a}\textquotesingle{}close\textquotesingle{}{\ttfamily event yet, then}stream.\+close(){\ttfamily will be called. Any Promises returned by }.promise(){\ttfamily ,}.collect(){\ttfamily or}.concat()\`{} will be rejected. After being destroyed, writing to the stream will emit an error. No more data will be emitted if the stream is destroyed, even if it was previously buffered.
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3806}{}\doxysubsection{\texorpdfstring{Properties}{Properties}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3806}
+
+\begin{DoxyItemize}
+\item {\ttfamily buffer\+Length} Read-\/only. Total number of bytes buffered, or in the case of object\+Mode, the total number of objects.
+\item {\ttfamily encoding} The encoding that has been set. (Setting this is equivalent to calling {\ttfamily set\+Encoding(enc)} and has the same prohibition against setting multiple times.)
+\item {\ttfamily flowing} Read-\/only. Boolean indicating whether a chunk written to the stream will be immediately emitted.
+\item {\ttfamily emitted\+End} Read-\/only. Boolean indicating whether the end-\/ish events (ie, {\ttfamily end}, {\ttfamily prefinish}, {\ttfamily finish}) have been emitted. Note that listening on any end-\/ish event will immediateyl re-\/emit it if it has already been emitted.
+\item {\ttfamily writable} Whether the stream is writable. Default {\ttfamily true}. Set to {\ttfamily false} when {\ttfamily end()}
+\item {\ttfamily readable} Whether the stream is readable. Default {\ttfamily true}.
+\item {\ttfamily pipes} An array of Pipe objects referencing streams that this stream is piping into.
+\item {\ttfamily destroyed} A getter that indicates whether the stream was destroyed.
+\item {\ttfamily paused} True if the stream has been explicitly paused, otherwise false.
+\item {\ttfamily object\+Mode} Indicates whether the stream is in {\ttfamily object\+Mode}. Once set to {\ttfamily true}, it cannot be set to {\ttfamily false}.
+\item {\ttfamily aborted} Readonly property set when the {\ttfamily Abort\+Signal} dispatches an {\ttfamily abort} event.
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3807}{}\doxysubsection{\texorpdfstring{Events}{Events}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3807}
+
+\begin{DoxyItemize}
+\item {\ttfamily data} Emitted when there\textquotesingle{}s data to read. Argument is the data to read. This is never emitted while not flowing. If a listener is attached, that will resume the stream.
+\item {\ttfamily end} Emitted when there\textquotesingle{}s no more data to read. This will be emitted immediately for empty streams when {\ttfamily end()} is called. If a listener is attached, and {\ttfamily end} was already emitted, then it will be emitted again. All listeners are removed when {\ttfamily end} is emitted.
+\item {\ttfamily prefinish} An end-\/ish event that follows the same logic as {\ttfamily end} and is emitted in the same conditions where {\ttfamily end} is emitted. Emitted after `\textquotesingle{}end'{\ttfamily . -\/}finish{\ttfamily An end-\/ish event that follows the same logic as}end{\ttfamily  and is emitted in the same conditions where}end{\ttfamily is emitted. Emitted after}\textquotesingle{}prefinish\textquotesingle{}{\ttfamily . -\/}close{\ttfamily An indication that an underlying resource has been released. Minipass does not emit this event, but will defer it until after}end{\ttfamily has been emitted, since it throws off some stream libraries otherwise. -\/}drain{\ttfamily Emitted when the internal buffer empties, and it is again suitable to}write(){\ttfamily into the stream. -\/}readable{\ttfamily Emitted when data is buffered and ready to be read by a consumer. -\/}resume{\ttfamily Emitted when stream changes state from buffering to flowing mode. (Ie, when}resume{\ttfamily is called,}pipe{\ttfamily is called, or a}data\`{} event listener is added.)
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3808}{}\doxysubsection{\texorpdfstring{Static Methods}{Static Methods}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3808}
+
+\begin{DoxyItemize}
+\item {\ttfamily Minipass.\+is\+Stream(stream)} Returns {\ttfamily true} if the argument is a stream, and false otherwise. To be considered a stream, the object must be either an instance of Minipass, or an Event\+Emitter that has either a {\ttfamily pipe()} method, or both {\ttfamily write()} and {\ttfamily end()} methods. (Pretty much any stream in node-\/land will return {\ttfamily true} for this.)
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3809}{}\doxysection{\texorpdfstring{EXAMPLES}{EXAMPLES}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3809}
+Here are some examples of things you can do with Minipass streams.\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3810}{}\doxysubsection{\texorpdfstring{simple "{}are you done yet"{} promise}{simple "{}are you done yet"{} promise}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3810}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mp.promise().then(}
+\DoxyCodeLine{\ \ ()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ stream\ is\ finished}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ er\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ stream\ emitted\ an\ error}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{)}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3811}{}\doxysubsection{\texorpdfstring{collecting}{collecting}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3811}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mp.collect().then(all\ =>\ \{}
+\DoxyCodeLine{\ \ //\ all\ is\ an\ array\ of\ all\ the\ data\ emitted}
+\DoxyCodeLine{\ \ //\ encoding\ is\ supported\ in\ this\ case,\ so}
+\DoxyCodeLine{\ \ //\ so\ the\ result\ will\ be\ a\ collection\ of\ strings\ if}
+\DoxyCodeLine{\ \ //\ an\ encoding\ is\ specified,\ or\ buffers/objects\ if\ not.}
+\DoxyCodeLine{\ \ //}
+\DoxyCodeLine{\ \ //\ In\ an\ async\ function,\ you\ may\ do}
+\DoxyCodeLine{\ \ //\ const\ data\ =\ await\ stream.collect()}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3812}{}\doxysubsection{\texorpdfstring{collecting into a single blob}{collecting into a single blob}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3812}
+This is a bit slower because it concatenates the data into one chunk for you, but if you\textquotesingle{}re going to do it yourself anyway, it\textquotesingle{}s convenient this way\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mp.concat().then(onebigchunk\ =>\ \{}
+\DoxyCodeLine{\ \ //\ onebigchunk\ is\ a\ string\ if\ the\ stream}
+\DoxyCodeLine{\ \ //\ had\ an\ encoding\ set,\ or\ a\ buffer\ otherwise.}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3813}{}\doxysubsection{\texorpdfstring{iteration}{iteration}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3813}
+You can iterate over streams synchronously or asynchronously in platforms that support it.
+
+Synchronous iteration will end when the currently available data is consumed, even if the {\ttfamily end} event has not been reached. In string and buffer mode, the data is concatenated, so unless multiple writes are occurring in the same tick as the {\ttfamily read()}, sync iteration loops will generally only have a single iteration.
+
+To consume chunks in this way exactly as they have been written, with no flattening, create the stream with the {\ttfamily \{ object\+Mode\+: true \}} option.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ mp\ =\ new\ Minipass(\{\ objectMode:\ true\ \})}
+\DoxyCodeLine{mp.write('a')}
+\DoxyCodeLine{mp.write('b')}
+\DoxyCodeLine{for\ (let\ letter\ of\ mp)\ \{}
+\DoxyCodeLine{\ \ console.log(letter)\ //\ a,\ b}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{mp.write('c')}
+\DoxyCodeLine{mp.write('d')}
+\DoxyCodeLine{for\ (let\ letter\ of\ mp)\ \{}
+\DoxyCodeLine{\ \ console.log(letter)\ //\ c,\ d}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{mp.write('e')}
+\DoxyCodeLine{mp.end()}
+\DoxyCodeLine{for\ (let\ letter\ of\ mp)\ \{}
+\DoxyCodeLine{\ \ console.log(letter)\ //\ e}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{for\ (let\ letter\ of\ mp)\ \{}
+\DoxyCodeLine{\ \ console.log(letter)\ //\ nothing}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Asynchronous iteration will continue until the end event is reached, consuming all of the data.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ mp\ =\ new\ Minipass(\{\ encoding:\ 'utf8'\ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ some\ source\ of\ some\ data}
+\DoxyCodeLine{let\ i\ =\ 5}
+\DoxyCodeLine{const\ inter\ =\ setInterval(()\ =>\ \{}
+\DoxyCodeLine{\ \ if\ (i-\/-\/\ >\ 0)\ mp.write(Buffer.from('foo\(\backslash\)n',\ 'utf8'))}
+\DoxyCodeLine{\ \ else\ \{}
+\DoxyCodeLine{\ \ \ \ mp.end()}
+\DoxyCodeLine{\ \ \ \ clearInterval(inter)}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\},\ 100)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ consume\ the\ data\ with\ asynchronous\ iteration}
+\DoxyCodeLine{async\ function\ consume()\ \{}
+\DoxyCodeLine{\ \ for\ await\ (let\ chunk\ of\ mp)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(chunk)}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ return\ 'ok'}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{consume().then(res\ =>\ console.log(res))}
+\DoxyCodeLine{//\ logs\ \`{}foo\(\backslash\)n`\ 5\ times,\ and\ then\ \`{}ok`}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3814}{}\doxysubsection{\texorpdfstring{subclass that {\ttfamily console.\+log()}s everything written into it}{subclass that {\ttfamily console.\+log()}s everything written into it}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3814}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{class\ Logger\ extends\ Minipass\ \{}
+\DoxyCodeLine{\ \ write(chunk,\ encoding,\ callback)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log('WRITE',\ chunk,\ encoding)}
+\DoxyCodeLine{\ \ \ \ return\ super.write(chunk,\ encoding,\ callback)}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ end(chunk,\ encoding,\ callback)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log('END',\ chunk,\ encoding)}
+\DoxyCodeLine{\ \ \ \ return\ super.end(chunk,\ encoding,\ callback)}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{someSource.pipe(new\ Logger()).pipe(someDest)}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3815}{}\doxysubsection{\texorpdfstring{same thing, but using an inline anonymous class}{same thing, but using an inline anonymous class}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3815}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ js\ classes\ are\ fun}
+\DoxyCodeLine{someSource}
+\DoxyCodeLine{\ \ .pipe(}
+\DoxyCodeLine{\ \ \ \ new\ (class\ extends\ Minipass\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ emit(ev,\ ...data)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ let's\ also\ log\ events,\ because\ debugging\ some\ weird\ thing}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ console.log('EMIT',\ ev)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ super.emit(ev,\ ...data)}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ write(chunk,\ encoding,\ callback)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ console.log('WRITE',\ chunk,\ encoding)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ super.write(chunk,\ encoding,\ callback)}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ end(chunk,\ encoding,\ callback)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ console.log('END',\ chunk,\ encoding)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ super.end(chunk,\ encoding,\ callback)}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \})()}
+\DoxyCodeLine{\ \ )}
+\DoxyCodeLine{\ \ .pipe(someDest)}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3816}{}\doxysubsection{\texorpdfstring{subclass that defers \textquotesingle{}end\textquotesingle{} for some reason}{subclass that defers \textquotesingle{}end\textquotesingle{} for some reason}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3816}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{class\ SlowEnd\ extends\ Minipass\ \{}
+\DoxyCodeLine{\ \ emit(ev,\ ...args)\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (ev\ ===\ 'end')\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ console.log('going\ to\ end,\ hold\ on\ a\ sec')}
+\DoxyCodeLine{\ \ \ \ \ \ setTimeout(()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ console.log('ok,\ ready\ to\ end\ now')}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ super.emit('end',\ ...args)}
+\DoxyCodeLine{\ \ \ \ \ \ \},\ 100)}
+\DoxyCodeLine{\ \ \ \ \}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ super.emit(ev,\ ...args)}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3817}{}\doxysubsection{\texorpdfstring{transform that creates newline-\/delimited JSON}{transform that creates newline-\/delimited JSON}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3817}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{class\ NDJSONEncode\ extends\ Minipass\ \{}
+\DoxyCodeLine{\ \ write(obj,\ cb)\ \{}
+\DoxyCodeLine{\ \ \ \ try\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ JSON.stringify\ can\ throw,\ emit\ an\ error\ on\ that}
+\DoxyCodeLine{\ \ \ \ \ \ return\ super.write(JSON.stringify(obj)\ +\ '\(\backslash\)n',\ 'utf8',\ cb)}
+\DoxyCodeLine{\ \ \ \ \}\ catch\ (er)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ this.emit('error',\ er)}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ end(obj,\ cb)\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (typeof\ obj\ ===\ 'function')\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ cb\ =\ obj}
+\DoxyCodeLine{\ \ \ \ \ \ obj\ =\ undefined}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ if\ (obj\ !==\ undefined)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ this.write(obj)}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ return\ super.end(cb)}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3818}{}\doxysubsection{\texorpdfstring{transform that parses newline-\/delimited JSON}{transform that parses newline-\/delimited JSON}}\label{md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_autotoc_md3818}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{class\ NDJSONDecode\ extends\ Minipass\ \{}
+\DoxyCodeLine{\ \ constructor\ (options)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ always\ be\ in\ object\ mode,\ as\ far\ as\ Minipass\ is\ concerned}
+\DoxyCodeLine{\ \ \ \ super(\{\ objectMode:\ true\ \})}
+\DoxyCodeLine{\ \ \ \ this.\_jsonBuffer\ =\ ''}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ write\ (chunk,\ encoding,\ cb)\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (typeof\ chunk\ ===\ 'string'\ \&\&}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ typeof\ encoding\ ===\ 'string'\ \&\&}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ encoding\ !==\ 'utf8')\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ chunk\ =\ Buffer.from(chunk,\ encoding).toString()}
+\DoxyCodeLine{\ \ \ \ \}\ else\ if\ (Buffer.isBuffer(chunk))\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ chunk\ =\ chunk.toString()}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ if\ (typeof\ encoding\ ===\ 'function')\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ cb\ =\ encoding}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ const\ jsonData\ =\ (this.\_jsonBuffer\ +\ chunk).split('\(\backslash\)n')}
+\DoxyCodeLine{\ \ \ \ this.\_jsonBuffer\ =\ jsonData.pop()}
+\DoxyCodeLine{\ \ \ \ for\ (let\ i\ =\ 0;\ i\ <\ jsonData.length;\ i++)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ try\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ //\ JSON.parse\ can\ throw,\ emit\ an\ error\ on\ that}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ super.write(JSON.parse(jsonData[i]))}
+\DoxyCodeLine{\ \ \ \ \ \ \}\ catch\ (er)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ this.emit('error',\ er)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ continue}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ if\ (cb)}
+\DoxyCodeLine{\ \ \ \ \ \ cb()}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ 

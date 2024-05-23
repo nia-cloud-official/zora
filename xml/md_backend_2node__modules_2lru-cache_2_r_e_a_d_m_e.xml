@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2lru-cache_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2lru-cache_2_r_e_a_d_m_e</compoundname>
+    <title>lru cache</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2lru-cache_2_r_e_a_d_m_e_1autotoc_md1804"/> A cache object that deletes the least-recently-used items.</para>
+<para><ulink url="https://travis-ci.org/isaacs/node-lru-cache"><image type="html" name="https://travis-ci.org/isaacs/node-lru-cache.svg?branch=master" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/github/isaacs/node-lru-cache"><image type="html" name="https://coveralls.io/repos/isaacs/node-lru-cache/badge.svg?service=github" alt="Coverage Status" inline="yes"></image>
+</ulink></para>
+<sect1 id="md_backend_2node__modules_2lru-cache_2_r_e_a_d_m_e_1autotoc_md1805">
+<title>Installation:</title><para><programlisting filename=".js"><codeline><highlight class="normal">npm<sp/>install<sp/>lru-cache<sp/>--save</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2lru-cache_2_r_e_a_d_m_e_1autotoc_md1806">
+<title>Usage:</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>LRU<sp/>=<sp/>require(&quot;lru-cache&quot;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>,<sp/>options<sp/>=<sp/>{<sp/>max:<sp/>500</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>length:<sp/>function<sp/>(n,<sp/>key)<sp/>{<sp/>return<sp/>n<sp/>*<sp/>2<sp/>+<sp/>key.length<sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>dispose:<sp/>function<sp/>(key,<sp/>n)<sp/>{<sp/>n.close()<sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>maxAge:<sp/>1000<sp/>*<sp/>60<sp/>*<sp/>60<sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>,<sp/>cache<sp/>=<sp/>new<sp/>LRU(options)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>,<sp/>otherCache<sp/>=<sp/>new<sp/>LRU(50)<sp/>//<sp/>sets<sp/>just<sp/>the<sp/>max<sp/>size</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">cache.set(&quot;key&quot;,<sp/>&quot;value&quot;)</highlight></codeline>
+<codeline><highlight class="normal">cache.get(&quot;key&quot;)<sp/>//<sp/>&quot;value&quot;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>non-string<sp/>keys<sp/>ARE<sp/>fully<sp/>supported</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>but<sp/>note<sp/>that<sp/>it<sp/>must<sp/>be<sp/>THE<sp/>SAME<sp/>object,<sp/>not</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>just<sp/>a<sp/>JSON-equivalent<sp/>object.</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>someObject<sp/>=<sp/>{<sp/>a:<sp/>1<sp/>}</highlight></codeline>
+<codeline><highlight class="normal">cache.set(someObject,<sp/>&apos;a<sp/>value&apos;)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Object<sp/>keys<sp/>are<sp/>not<sp/>toString()-ed</highlight></codeline>
+<codeline><highlight class="normal">cache.set(&apos;[object<sp/>Object]&apos;,<sp/>&apos;a<sp/>different<sp/>value&apos;)</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(cache.get(someObject),<sp/>&apos;a<sp/>value&apos;)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>A<sp/>similar<sp/>object<sp/>with<sp/>same<sp/>keys/values<sp/>won&apos;t<sp/>work,</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>because<sp/>it&apos;s<sp/>a<sp/>different<sp/>object<sp/>identity</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(cache.get({<sp/>a:<sp/>1<sp/>}),<sp/>undefined)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">cache.reset()<sp/><sp/><sp/><sp/>//<sp/>empty<sp/>the<sp/>cache</highlight></codeline>
+</programlisting></para>
+<para>If you put more stuff in it, then items will fall out.</para>
+<para>If you try to put an oversized thing in it, then it&apos;ll fall out right away.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2lru-cache_2_r_e_a_d_m_e_1autotoc_md1807">
+<title>Options</title><para><itemizedlist>
+<listitem><para><computeroutput>max</computeroutput> The maximum size of the cache, checked by applying the length function to all values in the cache. Not setting this is kind of silly, since that&apos;s the whole purpose of this lib, but it defaults to <computeroutput>Infinity</computeroutput>. Setting it to a non-number or negative number will throw a <computeroutput>TypeError</computeroutput>. Setting it to 0 makes it be <computeroutput>Infinity</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>maxAge</computeroutput> Maximum age in ms. Items are not pro-actively pruned out as they age, but if you try to get an item that is too old, it&apos;ll drop it and return undefined instead of giving it to you. Setting this to a negative value will make everything seem old! Setting it to a non-number will throw a <computeroutput>TypeError</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>length</computeroutput> Function that is used to calculate the length of stored items. If you&apos;re storing strings or buffers, then you probably want to do something like <computeroutput>function(n, key){return n.length}</computeroutput>. The default is <computeroutput>function(){return 1}</computeroutput>, which is fine if you want to store <computeroutput>max</computeroutput> like-sized things. The item is passed as the first argument, and the key is passed as the second argumnet.</para>
+</listitem><listitem><para><computeroutput>dispose</computeroutput> Function that is called on items when they are dropped from the cache. This can be handy if you want to close file descriptors or do other cleanup tasks when items are no longer accessible. Called with <computeroutput>key, value</computeroutput>. It&apos;s called <emphasis>before</emphasis> actually removing the item from the internal cache, so if you want to immediately put it back in, you&apos;ll have to do that in a <computeroutput>nextTick</computeroutput> or <computeroutput>setTimeout</computeroutput> callback or it won&apos;t do anything.</para>
+</listitem><listitem><para><computeroutput>stale</computeroutput> By default, if you set a <computeroutput>maxAge</computeroutput>, it&apos;ll only actually pull stale items out of the cache when you <computeroutput>get(key)</computeroutput>. (That is, it&apos;s not pre-emptively doing a <computeroutput>setTimeout</computeroutput> or anything.) If you set <computeroutput>stale:true</computeroutput>, it&apos;ll return the stale value before deleting it. If you don&apos;t set this, then it&apos;ll return <computeroutput>undefined</computeroutput> when you try to get a stale entry, as if it had already been deleted.</para>
+</listitem><listitem><para><computeroutput>noDisposeOnSet</computeroutput> By default, if you set a <computeroutput>dispose()</computeroutput> method, then it&apos;ll be called whenever a <computeroutput>set()</computeroutput> operation overwrites an existing key. If you set this option, <computeroutput>dispose()</computeroutput> will only be called when a key falls out of the cache, not when it is overwritten.</para>
+</listitem><listitem><para><computeroutput>updateAgeOnGet</computeroutput> When using time-expiring entries with <computeroutput>maxAge</computeroutput>, setting this to <computeroutput>true</computeroutput> will make each item&apos;s effective time update to the current time whenever it is retrieved from cache, causing it to not expire. (It can still fall out of cache based on recency of use, of course.)</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2lru-cache_2_r_e_a_d_m_e_1autotoc_md1808">
+<title>API</title><para><itemizedlist>
+<listitem><para><computeroutput>set(key, value, maxAge)</computeroutput></para>
+</listitem><listitem><para><computeroutput>get(key) =&gt; value</computeroutput></para>
+<para>Both of these will update the &quot;recently used&quot;-ness of the key. They do what you think. <computeroutput>maxAge</computeroutput> is optional and overrides the cache <computeroutput>maxAge</computeroutput> option if provided.</para>
+<para>If the key is not found, <computeroutput>get()</computeroutput> will return <computeroutput>undefined</computeroutput>.</para>
+<para>The key and val can be any value.</para>
+</listitem><listitem><para><computeroutput>peek(key)</computeroutput></para>
+<para>Returns the key value (or <computeroutput>undefined</computeroutput> if not found) without updating the &quot;recently used&quot;-ness of the key.</para>
+<para>(If you find yourself using this a lot, you <emphasis>might</emphasis> be using the wrong sort of data structure, but there are some use cases where it&apos;s handy.)</para>
+</listitem><listitem><para><computeroutput>del(key)</computeroutput></para>
+<para>Deletes a key out of the cache.</para>
+</listitem><listitem><para><computeroutput>reset()</computeroutput></para>
+<para>Clear the cache entirely, throwing away all values.</para>
+</listitem><listitem><para><computeroutput>has(key)</computeroutput></para>
+<para>Check if a key is in the cache, without updating the recent-ness or deleting it for being stale.</para>
+</listitem><listitem><para><computeroutput>forEach(function(value,key,cache), [thisp])</computeroutput></para>
+<para>Just like <computeroutput>Array.prototype.forEach</computeroutput>. Iterates over all the keys in the cache, in order of recent-ness. (Ie, more recently used items are iterated over first.)</para>
+</listitem><listitem><para><computeroutput>rforEach(function(value,key,cache), [thisp])</computeroutput></para>
+<para>The same as <computeroutput>cache.forEach(...)</computeroutput> but items are iterated over in reverse order. (ie, less recently used items are iterated over first.)</para>
+</listitem><listitem><para><computeroutput>keys()</computeroutput></para>
+<para>Return an array of the keys in the cache.</para>
+</listitem><listitem><para><computeroutput>values()</computeroutput></para>
+<para>Return an array of the values in the cache.</para>
+</listitem><listitem><para><computeroutput>length</computeroutput></para>
+<para>Return total length of objects in cache taking into account <computeroutput>length</computeroutput> options function.</para>
+</listitem><listitem><para><computeroutput>itemCount</computeroutput></para>
+<para>Return total quantity of objects currently in cache. Note, that <computeroutput>stale</computeroutput> (see options) items are returned as part of this item count.</para>
+</listitem><listitem><para><computeroutput>dump()</computeroutput></para>
+<para>Return an array of the cache entries ready for serialization and usage with &apos;destinationCache.load(arr)`.</para>
+</listitem><listitem><para><computeroutput>load(cacheEntriesArray)</computeroutput></para>
+<para>Loads another cache entries array, obtained with <computeroutput>sourceCache.dump()</computeroutput>, into the cache. The destination cache is reset before loading new entries</para>
+</listitem><listitem><para><computeroutput>prune()</computeroutput></para>
+<para>Manually iterates over the entire cache proactively pruning old entries </para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/lru-cache/README.md"/>
+  </compounddef>
+</doxygen>

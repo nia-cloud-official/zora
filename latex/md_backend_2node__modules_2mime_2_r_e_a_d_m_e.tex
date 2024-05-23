@@ -1,0 +1,83 @@
+\chapter{mime}
+\hypertarget{md_backend_2node__modules_2mime_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2mime_2_r_e_a_d_m_e}\index{mime@{mime}}
+\label{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2040}%
+\Hypertarget{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2040}%
+ Comprehensive MIME type mapping API based on mime-\/db module.\hypertarget{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2041}{}\doxysection{\texorpdfstring{Install}{Install}}\label{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2041}
+Install with \href{http://github.com/isaacs/npm}{\texttt{ npm}}\+: \begin{DoxyVerb}npm install mime
+\end{DoxyVerb}
+ \hypertarget{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2042}{}\doxysection{\texorpdfstring{Contributing / Testing}{Contributing / Testing}}\label{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2042}
+\begin{DoxyVerb}npm run test
+\end{DoxyVerb}
+ \hypertarget{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2043}{}\doxysection{\texorpdfstring{Command Line}{Command Line}}\label{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2043}
+\begin{DoxyVerb}mime [path_string]
+\end{DoxyVerb}
+ E.\+g. \begin{DoxyVerb}> mime scripts/jquery.js
+application/javascript
+\end{DoxyVerb}
+ \hypertarget{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2044}{}\doxysection{\texorpdfstring{API -\/ Queries}{API -\/ Queries}}\label{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2044}
+\hypertarget{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2045}{}\doxysubsection{\texorpdfstring{mime.\+lookup(path)}{mime.\+lookup(path)}}\label{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2045}
+Get the mime type associated with a file, if no mime type is found {\ttfamily application/octet-\/stream} is returned. Performs a case-\/insensitive lookup using the extension in {\ttfamily path} (the substring after the last \textquotesingle{}/\textquotesingle{} or \textquotesingle{}.\textquotesingle{}). E.\+g.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ mime\ =\ require('mime');}
+\DoxyCodeLine{}
+\DoxyCodeLine{mime.lookup('/path/to/file.txt');\ \ \ \ \ \ \ \ \ //\ =>\ 'text/plain'}
+\DoxyCodeLine{mime.lookup('file.txt');\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ =>\ 'text/plain'}
+\DoxyCodeLine{mime.lookup('.TXT');\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ =>\ 'text/plain'}
+\DoxyCodeLine{mime.lookup('htm');\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ =>\ 'text/html'}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2046}{}\doxysubsection{\texorpdfstring{mime.\+default\+\_\+type}{mime.\+default\+\_\+type}}\label{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2046}
+Sets the mime type returned when {\ttfamily mime.\+lookup} fails to find the extension searched for. (Default is {\ttfamily application/octet-\/stream}.)\hypertarget{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2047}{}\doxysubsection{\texorpdfstring{mime.\+extension(type)}{mime.\+extension(type)}}\label{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2047}
+Get the default extension for {\ttfamily type}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mime.extension('text/html');\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ =>\ 'html'}
+\DoxyCodeLine{mime.extension('application/octet-\/stream');\ \ //\ =>\ 'bin'}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2048}{}\doxysubsection{\texorpdfstring{mime.\+charsets.\+lookup()}{mime.\+charsets.\+lookup()}}\label{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2048}
+Map mime-\/type to charset
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mime.charsets.lookup('text/plain');\ \ \ \ \ \ \ \ //\ =>\ 'UTF-\/8'}
+
+\end{DoxyCode}
+
+
+(The logic for charset lookups is pretty rudimentary. Feel free to suggest improvements.)\hypertarget{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2049}{}\doxysection{\texorpdfstring{API -\/ Defining Custom Types}{API -\/ Defining Custom Types}}\label{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2049}
+Custom type mappings can be added on a per-\/project basis via the following APIs.\hypertarget{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2050}{}\doxysubsection{\texorpdfstring{mime.\+define()}{mime.\+define()}}\label{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2050}
+Add custom mime/extension mappings
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mime.define(\{}
+\DoxyCodeLine{\ \ \ \ 'text/x-\/some-\/format':\ ['x-\/sf',\ 'x-\/sft',\ 'x-\/sfml'],}
+\DoxyCodeLine{\ \ \ \ 'application/x-\/my-\/type':\ ['x-\/mt',\ 'x-\/mtt'],}
+\DoxyCodeLine{\ \ \ \ //\ etc\ ...}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{mime.lookup('x-\/sft');\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ =>\ 'text/x-\/some-\/format'}
+
+\end{DoxyCode}
+
+
+The first entry in the extensions array is returned by {\ttfamily mime.\+extension()}. E.\+g.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mime.extension('text/x-\/some-\/format');\ //\ =>\ 'x-\/sf'}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2051}{}\doxysubsection{\texorpdfstring{mime.\+load(filepath)}{mime.\+load(filepath)}}\label{md_backend_2node__modules_2mime_2_r_e_a_d_m_e_autotoc_md2051}
+Load mappings from an Apache "{}.\+types"{} format file
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mime.load('./my\_project.types');}
+
+\end{DoxyCode}
+ The .types file format is simple -\/ See the {\ttfamily types} dir for examples. 

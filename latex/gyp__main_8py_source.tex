@@ -1,0 +1,51 @@
+\doxysection{gyp\+\_\+main.\+py}
+\hypertarget{gyp__main_8py_source}{}\label{gyp__main_8py_source}\index{backend/node\_modules/node-\/gyp/gyp/gyp\_main.py@{backend/node\_modules/node-\/gyp/gyp/gyp\_main.py}}
+\mbox{\hyperlink{gyp__main_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00001}\mbox{\hyperlink{namespacegyp__main}{00001}}\ \textcolor{comment}{\#!/usr/bin/env\ python3}}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00003}00003\ \textcolor{comment}{\#\ Copyright\ (c)\ 2009\ Google\ Inc.\ All\ rights\ reserved.}}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00004}00004\ \textcolor{comment}{\#\ Use\ of\ this\ source\ code\ is\ governed\ by\ a\ BSD-\/style\ license\ that\ can\ be}}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00005}00005\ \textcolor{comment}{\#\ found\ in\ the\ LICENSE\ file.}}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00007}00007\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00008}00008\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00009}00009\ \textcolor{keyword}{import}\ subprocess}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00012}\mbox{\hyperlink{namespacegyp__main_a85f1140a75fd05bf342f48851e15a823}{00012}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp__main_a85f1140a75fd05bf342f48851e15a823}{IsCygwin}}():}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00013}00013\ \ \ \ \ \textcolor{comment}{\#\ Function\ copied\ from\ pylib/gyp/common.py}}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00014}00014\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00015}00015\ \ \ \ \ \ \ \ \ out\ =\ subprocess.Popen(}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00016}00016\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}uname"{}},\ stdout=subprocess.PIPE,\ stderr=subprocess.STDOUT}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00017}00017\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00018}00018\ \ \ \ \ \ \ \ \ stdout,\ \_\ =\ out.communicate()}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00019}00019\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}CYGWIN"{}}\ \textcolor{keywordflow}{in}\ stdout.decode(\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00020}00020\ \ \ \ \ \textcolor{keywordflow}{except}\ Exception:}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00021}00021\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00024}\mbox{\hyperlink{namespacegyp__main_abdcb36fb700a639e13d7744c58051e38}{00024}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp__main_abdcb36fb700a639e13d7744c58051e38}{UnixifyPath}}(path):}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00025}00025\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00026}00026\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ \mbox{\hyperlink{namespacegyp__main_a85f1140a75fd05bf342f48851e15a823}{IsCygwin}}():}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00027}00027\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ path}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00028}00028\ \ \ \ \ \ \ \ \ out\ =\ subprocess.Popen(}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00029}00029\ \ \ \ \ \ \ \ \ \ \ \ \ [\textcolor{stringliteral}{"{}cygpath"{}},\ \textcolor{stringliteral}{"{}-\/u"{}},\ path],\ stdout=subprocess.PIPE,\ stderr=subprocess.STDOUT}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00030}00030\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00031}00031\ \ \ \ \ \ \ \ \ stdout,\ \_\ =\ out.communicate()}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00032}00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ stdout.decode(\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00033}00033\ \ \ \ \ \textcolor{keywordflow}{except}\ Exception:}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00034}00034\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ path}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00037}00037\ \textcolor{comment}{\#\ Make\ sure\ we're\ using\ the\ version\ of\ pylib\ in\ this\ repo,\ not\ one\ installed}}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00038}00038\ \textcolor{comment}{\#\ elsewhere\ on\ the\ system.\ Also\ convert\ to\ Unix\ style\ path\ on\ Cygwin\ systems,}}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00039}00039\ \textcolor{comment}{\#\ else\ the\ 'gyp'\ library\ will\ not\ be\ found}}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00040}\mbox{\hyperlink{namespacegyp__main_a0d50a1d3926a41b7e4f518b055affaea}{00040}}\ path\ =\ \mbox{\hyperlink{namespacegyp__main_abdcb36fb700a639e13d7744c58051e38}{UnixifyPath}}(sys.argv[0])}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00041}00041\ sys.path.insert(0,\ os.path.join(os.path.dirname(path),\ \textcolor{stringliteral}{"{}pylib"{}}))}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00042}00042\ \textcolor{keyword}{import}\ gyp\ \ \textcolor{comment}{\#\ noqa:\ E402}}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00044}00044\ \textcolor{keywordflow}{if}\ \_\_name\_\_\ ==\ \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
+\DoxyCodeLine{\Hypertarget{gyp__main_8py_source_l00045}00045\ \ \ \ \ sys.exit(\mbox{\hyperlink{namespacegyp_a4fedb308a9d4d652b1f2dd06c9bc0a50}{gyp.script\_main}}())}
+
+\end{DoxyCode}

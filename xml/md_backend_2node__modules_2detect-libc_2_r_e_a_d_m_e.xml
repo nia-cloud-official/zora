@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2detect-libc_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2detect-libc_2_r_e_a_d_m_e</compoundname>
+    <title>detect-libc</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2detect-libc_2_r_e_a_d_m_e_1autotoc_md789"/> Node.js module to detect details of the C standard library (libc) implementation provided by a given Linux system.</para>
+<para>Currently supports detection of GNU glibc and MUSL libc.</para>
+<para>Provides asychronous and synchronous functions for the family (e.g. <computeroutput>glibc</computeroutput>, <computeroutput>musl</computeroutput>) and version (e.g. <computeroutput>1.23</computeroutput>, <computeroutput>1.2.3</computeroutput>).</para>
+<para>The version numbers of libc implementations are not guaranteed to be semver-compliant.</para>
+<para>For previous v1.x releases, please see the <ulink url="https://github.com/lovell/detect-libc/tree/v1">v1</ulink> branch.</para>
+<sect1 id="md_backend_2node__modules_2detect-libc_2_r_e_a_d_m_e_1autotoc_md790">
+<title>Install</title><para><programlisting filename=".sh"><codeline><highlight class="normal">npm<sp/>install<sp/>detect-libc</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2detect-libc_2_r_e_a_d_m_e_1autotoc_md791">
+<title>API</title><sect2 id="md_backend_2node__modules_2detect-libc_2_r_e_a_d_m_e_1autotoc_md792">
+<title>GLIBC</title><para><programlisting filename=".ts"><codeline><highlight class="normal">const<sp/>GLIBC:<sp/>string<sp/>=<sp/>&apos;glibc&apos;;</highlight></codeline>
+</programlisting></para>
+<para>A String constant containing the value <computeroutput>glibc</computeroutput>.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2detect-libc_2_r_e_a_d_m_e_1autotoc_md793">
+<title>MUSL</title><para><programlisting filename=".ts"><codeline><highlight class="normal">const<sp/>MUSL:<sp/>string<sp/>=<sp/>&apos;musl&apos;;</highlight></codeline>
+</programlisting></para>
+<para>A String constant containing the value <computeroutput>musl</computeroutput>.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2detect-libc_2_r_e_a_d_m_e_1autotoc_md794">
+<title>family</title><para><programlisting filename=".ts"><codeline><highlight class="normal">function<sp/>family():<sp/>Promise&lt;string<sp/>|<sp/>null&gt;;</highlight></codeline>
+</programlisting></para>
+<para>Resolves asychronously with:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>glibc</computeroutput> or <computeroutput>musl</computeroutput> when the libc family can be determined</para>
+</listitem><listitem><para><computeroutput>null</computeroutput> when the libc family cannot be determined</para>
+</listitem><listitem><para><computeroutput>null</computeroutput> when run on a non-Linux platform</para>
+</listitem></itemizedlist>
+</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>{<sp/>family,<sp/>GLIBC,<sp/>MUSL<sp/>}<sp/>=<sp/>require(&apos;detect-libc&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">switch<sp/>(await<sp/>family())<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>case<sp/>GLIBC:<sp/>...</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>case<sp/>MUSL:<sp/>...</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>case<sp/>null:<sp/>...</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2detect-libc_2_r_e_a_d_m_e_1autotoc_md795">
+<title>familySync</title><para><programlisting filename=".ts"><codeline><highlight class="normal">function<sp/>familySync():<sp/>string<sp/>|<sp/>null;</highlight></codeline>
+</programlisting></para>
+<para>Synchronous version of <computeroutput>family()</computeroutput>.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>{<sp/>familySync,<sp/>GLIBC,<sp/>MUSL<sp/>}<sp/>=<sp/>require(&apos;detect-libc&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">switch<sp/>(familySync())<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>case<sp/>GLIBC:<sp/>...</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>case<sp/>MUSL:<sp/>...</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>case<sp/>null:<sp/>...</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2detect-libc_2_r_e_a_d_m_e_1autotoc_md796">
+<title>version</title><para><programlisting filename=".ts"><codeline><highlight class="normal">function<sp/>version():<sp/>Promise&lt;string<sp/>|<sp/>null&gt;;</highlight></codeline>
+</programlisting></para>
+<para>Resolves asychronously with:</para>
+<para><itemizedlist>
+<listitem><para>The version when it can be determined</para>
+</listitem><listitem><para><computeroutput>null</computeroutput> when the libc family cannot be determined</para>
+</listitem><listitem><para><computeroutput>null</computeroutput> when run on a non-Linux platform</para>
+</listitem></itemizedlist>
+</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>{<sp/>version<sp/>}<sp/>=<sp/>require(&apos;detect-libc&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>v<sp/>=<sp/>await<sp/>version();</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>(v)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>const<sp/>[major,<sp/>minor,<sp/>patch]<sp/>=<sp/>v.split(&apos;.&apos;);</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2detect-libc_2_r_e_a_d_m_e_1autotoc_md797">
+<title>versionSync</title><para><programlisting filename=".ts"><codeline><highlight class="normal">function<sp/>versionSync():<sp/>string<sp/>|<sp/>null;</highlight></codeline>
+</programlisting></para>
+<para>Synchronous version of <computeroutput>version()</computeroutput>.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>{<sp/>versionSync<sp/>}<sp/>=<sp/>require(&apos;detect-libc&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>v<sp/>=<sp/>versionSync();</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>(v)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>const<sp/>[major,<sp/>minor,<sp/>patch]<sp/>=<sp/>v.split(&apos;.&apos;);</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2detect-libc_2_r_e_a_d_m_e_1autotoc_md798">
+<title>isNonGlibcLinux</title><para><programlisting filename=".ts"><codeline><highlight class="normal">function<sp/>isNonGlibcLinux():<sp/>Promise&lt;boolean&gt;;</highlight></codeline>
+</programlisting></para>
+<para>Resolves asychronously with:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>false</computeroutput> when the libc family is <computeroutput>glibc</computeroutput></para>
+</listitem><listitem><para><computeroutput>true</computeroutput> when the libc family is not <computeroutput>glibc</computeroutput></para>
+</listitem><listitem><para><computeroutput>false</computeroutput> when run on a non-Linux platform</para>
+</listitem></itemizedlist>
+</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>{<sp/>isNonGlibcLinux<sp/>}<sp/>=<sp/>require(&apos;detect-libc&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">if<sp/>(await<sp/>isNonGlibcLinux())<sp/>{<sp/>...<sp/>}</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2detect-libc_2_r_e_a_d_m_e_1autotoc_md799">
+<title>isNonGlibcLinuxSync</title><para><programlisting filename=".ts"><codeline><highlight class="normal">function<sp/>isNonGlibcLinuxSync():<sp/>boolean;</highlight></codeline>
+</programlisting></para>
+<para>Synchronous version of <computeroutput>isNonGlibcLinux()</computeroutput>.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>{<sp/>isNonGlibcLinuxSync<sp/>}<sp/>=<sp/>require(&apos;detect-libc&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">if<sp/>(isNonGlibcLinuxSync())<sp/>{<sp/>...<sp/>}</highlight></codeline>
+</programlisting></para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2detect-libc_2_r_e_a_d_m_e_1autotoc_md800">
+<title>Licensing</title><para>Copyright 2017 Lovell Fuller and others.</para>
+<para>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not use this file except in compliance with the License. You may obtain a copy of the License at <ulink url="http://www.apache.org/licenses/LICENSE-2.0.html">http://www.apache.org/licenses/LICENSE-2.0</ulink></para>
+<para>Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License. </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/detect-libc/README.md"/>
+  </compounddef>
+</doxygen>

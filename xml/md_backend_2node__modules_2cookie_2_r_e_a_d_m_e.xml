@@ -1,0 +1,227 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2cookie_2_r_e_a_d_m_e</compoundname>
+    <title>cookie</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e_1autotoc_md615"/> <ulink url="https://npmjs.org/package/cookie"><image type="html" name="https://badgen.net/npm/v/cookie" alt="NPM Version" inline="yes"></image>
+</ulink> <ulink url="https://npmjs.org/package/cookie"><image type="html" name="https://badgen.net/npm/dm/cookie" alt="NPM Downloads" inline="yes"></image>
+</ulink> <ulink url="https://nodejs.org/en/download"><image type="html" name="https://badgen.net/npm/node/cookie" alt="Node.js Version" inline="yes"></image>
+</ulink> <ulink url="https://github.com/jshttp/cookie/actions/workflows/ci.yml"><image type="html" name="https://badgen.net/github/checks/jshttp/cookie/master?label=ci" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/r/jshttp/cookie?branch=master"><image type="html" name="https://badgen.net/coveralls/c/github/jshttp/cookie/master" alt="Coverage Status" inline="yes"></image>
+</ulink></para>
+<para>Basic HTTP cookie parser and serializer for HTTP servers.</para>
+<sect1 id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e_1autotoc_md616">
+<title>Installation</title><para>This is a <ulink url="https://nodejs.org/en/">Node.js</ulink> module available through the <ulink url="https://www.npmjs.com/">npm registry</ulink>. Installation is done using the <ulink url="https://docs.npmjs.com/getting-started/installing-npm-packages-locally"><computeroutput>npm install</computeroutput> command</ulink>:</para>
+<para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>cookie</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e_1autotoc_md617">
+<title>API</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>cookie<sp/>=<sp/>require(&apos;cookie&apos;);</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e_1autotoc_md618">
+<title>cookie.parse(str, options)</title><para>Parse an HTTP <computeroutput>Cookie</computeroutput> header string and returning an object of all cookie name-value pairs. The <computeroutput>str</computeroutput> argument is the string representing a <computeroutput>Cookie</computeroutput> header value and <computeroutput>options</computeroutput> is an optional object containing additional parsing options.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>cookies<sp/>=<sp/>cookie.parse(&apos;foo=bar;<sp/>equation=E%3Dmc%5E2&apos;);</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>{<sp/>foo:<sp/>&apos;bar&apos;,<sp/>equation:<sp/>&apos;E=mc^2&apos;<sp/>}</highlight></codeline>
+</programlisting></para>
+<sect3 id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e_1autotoc_md619">
+<title>Options</title><para><computeroutput>cookie.parse</computeroutput> accepts these properties in the options object.</para>
+<sect4 id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e_1autotoc_md620">
+<title>decode</title><para>Specifies a function that will be used to decode a cookie&apos;s value. Since the value of a cookie has a limited character set (and must be a simple string), this function can be used to decode a previously-encoded cookie value into a JavaScript string or other object.</para>
+<para>The default function is the global <computeroutput>decodeURIComponent</computeroutput>, which will decode any URL-encoded sequences into their byte representations.</para>
+<para><bold>note</bold> if an error is thrown from this function, the original, non-decoded cookie value will be returned as the cookie&apos;s value.</para>
+</sect4>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e_1autotoc_md621">
+<title>cookie.serialize(name, value, options)</title><para>Serialize a cookie name-value pair into a <computeroutput>Set-Cookie</computeroutput> header string. The <computeroutput>name</computeroutput> argument is the name for the cookie, the <computeroutput>value</computeroutput> argument is the value to set the cookie to, and the <computeroutput>options</computeroutput> argument is an optional object containing additional serialization options.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>setCookie<sp/>=<sp/>cookie.serialize(&apos;foo&apos;,<sp/>&apos;bar&apos;);</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>foo=bar</highlight></codeline>
+</programlisting></para>
+<sect3 id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e_1autotoc_md622">
+<title>Options</title><para><computeroutput>cookie.serialize</computeroutput> accepts these properties in the options object.</para>
+<sect4 id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e_1autotoc_md623">
+<title>domain</title><para>Specifies the value for the <ulink url="https://tools.ietf.org/html/rfc6265#section-5.2.3"><computeroutput>Domain</computeroutput> <computeroutput>Set-Cookie</computeroutput> attribute</ulink>. By default, no domain is set, and most clients will consider the cookie to apply to only the current domain.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e_1autotoc_md624">
+<title>encode</title><para>Specifies a function that will be used to encode a cookie&apos;s value. Since value of a cookie has a limited character set (and must be a simple string), this function can be used to encode a value into a string suited for a cookie&apos;s value.</para>
+<para>The default function is the global <computeroutput>encodeURIComponent</computeroutput>, which will encode a JavaScript string into UTF-8 byte sequences and then URL-encode any that fall outside of the cookie range.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e_1autotoc_md625">
+<title>expires</title><para>Specifies the <computeroutput>Date</computeroutput> object to be the value for the <ulink url="https://tools.ietf.org/html/rfc6265#section-5.2.1"><computeroutput>Expires</computeroutput> <computeroutput>Set-Cookie</computeroutput> attribute</ulink>. By default, no expiration is set, and most clients will consider this a &quot;non-persistent cookie&quot; and will delete it on a condition like exiting a web browser application.</para>
+<para><bold>note</bold> the <ulink url="https://tools.ietf.org/html/rfc6265#section-5.3">cookie storage model specification</ulink> states that if both <computeroutput>expires</computeroutput> and <computeroutput>maxAge</computeroutput> are set, then <computeroutput>maxAge</computeroutput> takes precedence, but it is possible not all clients by obey this, so if both are set, they should point to the same date and time.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e_1autotoc_md626">
+<title>httpOnly</title><para>Specifies the <computeroutput>boolean</computeroutput> value for the <ulink url="https://tools.ietf.org/html/rfc6265#section-5.2.6"><computeroutput>HttpOnly</computeroutput> <computeroutput>Set-Cookie</computeroutput> attribute</ulink>. When truthy, the <computeroutput>HttpOnly</computeroutput> attribute is set, otherwise it is not. By default, the <computeroutput>HttpOnly</computeroutput> attribute is not set.</para>
+<para><bold>note</bold> be careful when setting this to <computeroutput>true</computeroutput>, as compliant clients will not allow client-side JavaScript to see the cookie in <computeroutput>document.cookie</computeroutput>.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e_1autotoc_md627">
+<title>maxAge</title><para>Specifies the <computeroutput>number</computeroutput> (in seconds) to be the value for the <ulink url="https://tools.ietf.org/html/rfc6265#section-5.2.2"><computeroutput>Max-Age</computeroutput> <computeroutput>Set-Cookie</computeroutput> attribute</ulink>. The given number will be converted to an integer by rounding down. By default, no maximum age is set.</para>
+<para><bold>note</bold> the <ulink url="https://tools.ietf.org/html/rfc6265#section-5.3">cookie storage model specification</ulink> states that if both <computeroutput>expires</computeroutput> and <computeroutput>maxAge</computeroutput> are set, then <computeroutput>maxAge</computeroutput> takes precedence, but it is possible not all clients by obey this, so if both are set, they should point to the same date and time.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e_1autotoc_md628">
+<title>partitioned</title><para>Specifies the <computeroutput>boolean</computeroutput> value for the [<computeroutput>Partitioned</computeroutput> <computeroutput>Set-Cookie</computeroutput>](rfc-cutler-httpbis-partitioned-cookies) attribute. When truthy, the <computeroutput>Partitioned</computeroutput> attribute is set, otherwise it is not. By default, the <computeroutput>Partitioned</computeroutput> attribute is not set.</para>
+<para><bold>note</bold> This is an attribute that has not yet been fully standardized, and may change in the future. This also means many clients may ignore this attribute until they understand it.</para>
+<para>More information about can be found in <ulink url="https://github.com/privacycg/CHIPS">the proposal</ulink>.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e_1autotoc_md629">
+<title>path</title><para>Specifies the value for the <ulink url="https://tools.ietf.org/html/rfc6265#section-5.2.4"><computeroutput>Path</computeroutput> <computeroutput>Set-Cookie</computeroutput> attribute</ulink>. By default, the path is considered the <ulink url="https://tools.ietf.org/html/rfc6265#section-5.1.4">&quot;default path&quot;</ulink>.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e_1autotoc_md630">
+<title>priority</title><para>Specifies the <computeroutput>string</computeroutput> to be the value for the <ulink url="https://tools.ietf.org/html/draft-west-cookie-priority-00#section-4.1"><computeroutput>Priority</computeroutput> <computeroutput>Set-Cookie</computeroutput> attribute</ulink>.</para>
+<para><itemizedlist>
+<listitem><para><lsquo/>&apos;low<rsquo/><computeroutput>will set the</computeroutput>Priority<computeroutput>attribute to</computeroutput>Low<computeroutput>. -</computeroutput>&apos;medium&apos;<computeroutput>will set the</computeroutput>Priority<computeroutput>attribute to</computeroutput>Medium<computeroutput>, the default priority when not set. -</computeroutput>&apos;high&apos;<computeroutput>will set the</computeroutput>Priority<computeroutput>attribute to</computeroutput>High`.</para>
+</listitem></itemizedlist>
+</para>
+<para>More information about the different priority levels can be found in <ulink url="https://tools.ietf.org/html/draft-west-cookie-priority-00#section-4.1">the specification</ulink>.</para>
+<para><bold>note</bold> This is an attribute that has not yet been fully standardized, and may change in the future. This also means many clients may ignore this attribute until they understand it.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e_1autotoc_md631">
+<title>sameSite</title><para>Specifies the <computeroutput>boolean</computeroutput> or <computeroutput>string</computeroutput> to be the value for the <ulink url="https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-09#section-5.4.7"><computeroutput>SameSite</computeroutput> <computeroutput>Set-Cookie</computeroutput> attribute</ulink>.</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>true</computeroutput> will set the <computeroutput>SameSite</computeroutput> attribute to <computeroutput>Strict</computeroutput> for strict same site enforcement.</para>
+</listitem><listitem><para><computeroutput>false</computeroutput> will not set the <computeroutput>SameSite</computeroutput> attribute.</para>
+</listitem><listitem><para><lsquo/>&apos;lax<rsquo/><computeroutput>will set the</computeroutput>SameSite<computeroutput>attribute to</computeroutput>Lax<computeroutput>for lax same site enforcement. -</computeroutput>&apos;none&apos;<computeroutput>will set the</computeroutput>SameSite<computeroutput>attribute to</computeroutput>None<computeroutput>for an explicit cross-site cookie. -</computeroutput>&apos;strict&apos;<computeroutput>will set the</computeroutput>SameSite<computeroutput>attribute to</computeroutput>Strict` for strict same site enforcement.</para>
+</listitem></itemizedlist>
+</para>
+<para>More information about the different enforcement levels can be found in <ulink url="https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-09#section-5.4.7">the specification</ulink>.</para>
+<para><bold>note</bold> This is an attribute that has not yet been fully standardized, and may change in the future. This also means many clients may ignore this attribute until they understand it.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e_1autotoc_md632">
+<title>secure</title><para>Specifies the <computeroutput>boolean</computeroutput> value for the <ulink url="https://tools.ietf.org/html/rfc6265#section-5.2.5"><computeroutput>Secure</computeroutput> <computeroutput>Set-Cookie</computeroutput> attribute</ulink>. When truthy, the <computeroutput>Secure</computeroutput> attribute is set, otherwise it is not. By default, the <computeroutput>Secure</computeroutput> attribute is not set.</para>
+<para><bold>note</bold> be careful when setting this to <computeroutput>true</computeroutput>, as compliant clients will not send the cookie back to the server in the future if the browser does not have an HTTPS connection.</para>
+</sect4>
+</sect3>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e_1autotoc_md633">
+<title>Example</title><para>The following example uses this module in conjunction with the Node.js core HTTP server to prompt a user for their name and display it back on future visits.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>cookie<sp/>=<sp/>require(&apos;cookie&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>escapeHtml<sp/>=<sp/>require(&apos;escape-html&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>url<sp/>=<sp/>require(&apos;url&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>onRequest(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Parse<sp/>the<sp/>query<sp/>string</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>query<sp/>=<sp/>url.parse(req.url,<sp/>true,<sp/>true).query;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(query<sp/>&amp;&amp;<sp/>query.name)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Set<sp/>a<sp/>new<sp/>cookie<sp/>with<sp/>the<sp/>name</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.setHeader(&apos;Set-Cookie&apos;,<sp/>cookie.serialize(&apos;name&apos;,<sp/>String(query.name),<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>httpOnly:<sp/>true,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>maxAge:<sp/>60<sp/>*<sp/>60<sp/>*<sp/>24<sp/>*<sp/>7<sp/>//<sp/>1<sp/>week</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}));</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Redirect<sp/>back<sp/>after<sp/>setting<sp/>cookie</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.statusCode<sp/>=<sp/>302;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.setHeader(&apos;Location&apos;,<sp/>req.headers.referer<sp/>||<sp/>&apos;/&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.end();</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Parse<sp/>the<sp/>cookies<sp/>on<sp/>the<sp/>request</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>cookies<sp/>=<sp/>cookie.parse(req.headers.cookie<sp/>||<sp/>&apos;&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Get<sp/>the<sp/>visitor<sp/>name<sp/>set<sp/>in<sp/>the<sp/>cookie</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>name<sp/>=<sp/>cookies.name;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.setHeader(&apos;Content-Type&apos;,<sp/>&apos;text/html;<sp/>charset=UTF-8&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(name)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.write(&apos;&lt;p&gt;Welcome<sp/>back,<sp/>&lt;b&gt;&apos;<sp/>+<sp/>escapeHtml(name)<sp/>+<sp/>&apos;&lt;/b&gt;!&lt;/p&gt;&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}<sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.write(&apos;&lt;p&gt;Hello,<sp/>new<sp/>visitor!&lt;/p&gt;&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.write(&apos;&lt;form<sp/>method=&quot;GET&quot;&gt;&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.write(&apos;&lt;input<sp/>placeholder=&quot;enter<sp/>your<sp/>name&quot;<sp/>name=&quot;name&quot;&gt;<sp/>&lt;input<sp/>type=&quot;submit&quot;<sp/>value=&quot;Set<sp/>Name&quot;&gt;&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.end(&apos;&lt;/form&gt;&apos;);</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">http.createServer(onRequest).listen(3000);</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e_1autotoc_md634">
+<title>Testing</title><para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>npm<sp/>test</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e_1autotoc_md635">
+<title>Benchmark</title><para><programlisting><codeline><highlight class="normal">$<sp/>npm<sp/>run<sp/>bench</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>cookie@0.5.0<sp/>bench</highlight></codeline>
+<codeline><highlight class="normal">&gt;<sp/>node<sp/>benchmark/index.js</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>node@18.18.2</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>acorn@8.10.0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>ada@2.6.0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>ares@1.19.1</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>brotli@1.0.9</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cldr@43.1</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>icu@73.2</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>llhttp@6.0.11</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>modules@108</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>napi@9</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nghttp2@1.57.0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nghttp3@0.7.0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>ngtcp2@0.8.1</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>openssl@3.0.10+quic</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>simdutf@3.2.14</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>tz@2023c</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>undici@5.26.3</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>unicode@15.0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>uv@1.44.2</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>uvwasi@0.0.18</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>v8@10.2.154.26-node.26</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>zlib@1.2.13.1-motley</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>node<sp/>benchmark/parse-top.js</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cookie.parse<sp/>-<sp/>top<sp/>sites</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>14<sp/>tests<sp/>completed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>accounts.google.com<sp/>x<sp/>2,588,913<sp/>ops/sec<sp/>±0.74%<sp/>(186<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>apple.com<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>2,370,002<sp/>ops/sec<sp/>±0.69%<sp/>(186<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>cloudflare.com<sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>2,213,102<sp/>ops/sec<sp/>±0.88%<sp/>(188<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>docs.google.com<sp/><sp/><sp/><sp/><sp/>x<sp/>2,194,157<sp/>ops/sec<sp/>±1.03%<sp/>(184<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>drive.google.com<sp/><sp/><sp/><sp/>x<sp/>2,265,084<sp/>ops/sec<sp/>±0.79%<sp/>(187<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>en.wikipedia.org<sp/><sp/><sp/><sp/>x<sp/><sp/><sp/>457,099<sp/>ops/sec<sp/>±0.81%<sp/>(186<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>linkedin.com<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/><sp/><sp/>504,407<sp/>ops/sec<sp/>±0.89%<sp/>(186<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>maps.google.com<sp/><sp/><sp/><sp/><sp/>x<sp/>1,230,959<sp/>ops/sec<sp/>±0.98%<sp/>(186<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>microsoft.com<sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/><sp/><sp/>926,294<sp/>ops/sec<sp/>±0.88%<sp/>(184<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>play.google.com<sp/><sp/><sp/><sp/><sp/>x<sp/>2,311,338<sp/>ops/sec<sp/>±0.83%<sp/>(185<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>support.google.com<sp/><sp/>x<sp/>1,508,850<sp/>ops/sec<sp/>±0.86%<sp/>(186<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>www.google.com<sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>1,022,582<sp/>ops/sec<sp/>±1.32%<sp/>(182<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>youtu.be<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/><sp/><sp/>332,136<sp/>ops/sec<sp/>±1.02%<sp/>(185<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>youtube.com<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/><sp/><sp/>323,833<sp/>ops/sec<sp/>±0.77%<sp/>(183<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>node<sp/>benchmark/parse.js</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cookie.parse<sp/>-<sp/>generic</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>6<sp/>tests<sp/>completed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>simple<sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>3,214,032<sp/>ops/sec<sp/>±1.61%<sp/>(183<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>decode<sp/><sp/><sp/><sp/><sp/><sp/>x<sp/><sp/><sp/>587,237<sp/>ops/sec<sp/>±1.16%<sp/>(187<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>unquote<sp/><sp/><sp/><sp/><sp/>x<sp/>2,954,618<sp/>ops/sec<sp/>±1.35%<sp/>(183<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>duplicates<sp/><sp/>x<sp/><sp/><sp/>857,008<sp/>ops/sec<sp/>±0.89%<sp/>(187<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>10<sp/>cookies<sp/><sp/>x<sp/><sp/><sp/>292,133<sp/>ops/sec<sp/>±0.89%<sp/>(187<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>100<sp/>cookies<sp/>x<sp/><sp/><sp/><sp/>22,610<sp/>ops/sec<sp/>±0.68%<sp/>(187<sp/>runs<sp/>sampled)</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e_1autotoc_md636">
+<title>References</title><para><itemizedlist>
+<listitem><para><ulink url="https://tools.ietf.org/html/rfc6265">RFC 6265: HTTP State Management Mechanism</ulink></para>
+</listitem><listitem><para><ulink url="https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-09#section-5.4.7">Same-site Cookies</ulink></para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2cookie_2_r_e_a_d_m_e_1autotoc_md637">
+<title>License</title><para>[MIT](LICENSE) </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/cookie/README.md"/>
+  </compounddef>
+</doxygen>

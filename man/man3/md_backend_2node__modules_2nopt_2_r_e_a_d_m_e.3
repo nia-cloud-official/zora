@@ -1,0 +1,181 @@
+.TH "md_backend_2node__modules_2nopt_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2nopt_2_r_e_a_d_m_e \- README 
+.PP
+If you want to write an option parser, and have it be good, there are two ways to do it\&. The Right Way, and the Wrong Way\&.
+.PP
+The Wrong Way is to sit down and write an option parser\&. We've all done that\&.
+.PP
+The Right Way is to write some complex configurable program with so many options that you hit the limit of your frustration just trying to manage them all, and defer it with duct-tape solutions until you see exactly to the core of the problem, and finally snap and write an awesome option parser\&.
+.PP
+If you want to write an option parser, don't write an option parser\&. Write a package manager, or a source control system, or a service restarter, or an operating system\&. You probably won't end up with a good one of those, but if you don't give up, and you are relentless and diligent enough in your procrastination, you may just end up with a very nice option parser\&.
+.SS "USAGE"
+.PP
+.nf
+// my\-program\&.js
+var nopt = require("nopt")
+  , Stream = require("stream")\&.Stream
+  , path = require("path")
+  , knownOpts = { "foo" : [String, null]
+                , "bar" : [Stream, Number]
+                , "baz" : path
+                , "bloo" : [ "big", "medium", "small" ]
+                , "flag" : Boolean
+                , "pick" : Boolean
+                , "many1" : [String, Array]
+                , "many2" : [path, Array]
+                }
+  , shortHands = { "foofoo" : ["\-\-foo", "Mr\&. Foo"]
+                 , "b7" : ["\-\-bar", "7"]
+                 , "m" : ["\-\-bloo", "medium"]
+                 , "p" : ["\-\-pick"]
+                 , "f" : ["\-\-flag"]
+                 }
+             // everything is optional\&.
+             // knownOpts and shorthands default to {}
+             // arg list defaults to process\&.argv
+             // slice defaults to 2
+  , parsed = nopt(knownOpts, shortHands, process\&.argv, 2)
+console\&.log(parsed)
+.fi
+.PP
+.PP
+This would give you support for any of the following:
+.PP
+.PP
+.nf
+$ node my\-program\&.js \-\-foo "blerp" \-\-no\-flag
+{ "foo" : "blerp", "flag" : false }
+
+$ node my\-program\&.js \-\-\-bar 7 \-\-foo "Mr\&. Hand" \-\-flag
+{ bar: 7, foo: "Mr\&. Hand", flag: true }
+
+$ node my\-program\&.js \-\-foo "blerp" \-f \-\-\-\-\-p
+{ foo: "blerp", flag: true, pick: true }
+
+$ node my\-program\&.js \-fp \-\-foofoo
+{ foo: "Mr\&. Foo", flag: true, pick: true }
+
+$ node my\-program\&.js \-\-foofoo \-\- \-fp  # \-\- stops the flag parsing\&.
+{ foo: "Mr\&. Foo", argv: { remain: ["\-fp"] } }
+
+$ node my\-program\&.js \-\-blatzk \-fp # unknown opts are ok\&.
+{ blatzk: true, flag: true, pick: true }
+
+$ node my\-program\&.js \-\-blatzk=1000 \-fp # but you need to use = if they have a value
+{ blatzk: 1000, flag: true, pick: true }
+
+$ node my\-program\&.js \-\-no\-blatzk \-fp # unless they start with "no\-"
+{ blatzk: false, flag: true, pick: true }
+
+$ node my\-program\&.js \-\-baz b/a/z # known paths are resolved\&.
+{ baz: "/Users/isaacs/b/a/z" }
+
+# if Array is one of the types, then it can take many
+# values, and will always be an array\&.  The other types provided
+# specify what types are allowed in the list\&.
+
+$ node my\-program\&.js \-\-many1 5 \-\-many1 null \-\-many1 foo
+{ many1: ["5", "null", "foo"] }
+
+$ node my\-program\&.js \-\-many2 foo \-\-many2 bar
+{ many2: ["/path/to/foo", "path/to/bar"] }
+.fi
+.PP
+.PP
+Read the tests at the bottom of \fRlib/nopt\&.js\fP for more examples of what this puppy can do\&.
+.SS "Types"
+The following types are supported, and defined on \fRnopt\&.typeDefs\fP
+.PP
+.IP "\(bu" 2
+String: A normal string\&. No parsing is done\&.
+.IP "\(bu" 2
+path: A file system path\&. Gets resolved against cwd if not absolute\&.
+.IP "\(bu" 2
+url: A url\&. If it doesn't parse, it isn't accepted\&.
+.IP "\(bu" 2
+Number: Must be numeric\&.
+.IP "\(bu" 2
+Date: Must parse as a date\&. If it does, and \fRDate\fP is one of the options, then it will return a Date object, not a string\&.
+.IP "\(bu" 2
+Boolean: Must be either \fRtrue\fP or \fRfalse\fP\&. If an option is a boolean, then it does not need a value, and its presence will imply \fRtrue\fP as the value\&. To negate boolean flags, do \fR--no-whatever\fP or \fR--whatever false\fP
+.IP "\(bu" 2
+NaN: Means that the option is strictly not allowed\&. Any value will fail\&.
+.IP "\(bu" 2
+Stream: An object matching the 'Stream' class in node\&. Valuable for use when validating programmatically\&. (npm uses this to let you supply any WriteStream on the \fRoutfd\fP and \fRlogfd\fP config options\&.)
+.IP "\(bu" 2
+Array: If \fRArray\fP is specified as one of the types, then the value will be parsed as a list of options\&. This means that multiple values can be specified, and that the value will always be an array\&.
+.PP
+.PP
+If a type is an array of values not on this list, then those are considered valid values\&. For instance, in the example above, the \fR--bloo\fP option can only be one of \fR'big'\fP, \fR'medium'\fP, or \fR'small'\fP, and any other value will be rejected\&.
+.PP
+When parsing unknown fields, \fR'true'\fP, \fR'false'\fP, and \fR'null'\fP will be interpreted as their JavaScript equivalents\&.
+.PP
+You can also mix types and values, or multiple types, in a list\&. For instance \fR{ blah: [Number, null] }\fP would allow a value to be set to either a Number or null\&. When types are ordered, this implies a preference, and the first type that can be used to properly interpret the value will be used\&.
+.PP
+To define a new type, add it to \fRnopt\&.typeDefs\fP\&. Each item in that hash is an object with a \fRtype\fP member and a \fRvalidate\fP method\&. The \fRtype\fP member is an object that matches what goes in the type list\&. The \fRvalidate\fP method is a function that gets called with \fRvalidate(data,
+key, val)\fP\&. Validate methods should assign \fRdata[key]\fP to the valid value of \fRval\fP if it can be handled properly, or return boolean \fRfalse\fP if it cannot\&.
+.PP
+You can also call \fRnopt\&.clean(data, types, typeDefs)\fP to clean up a config object and remove its invalid properties\&.
+.SS "Error Handling"
+By default, nopt outputs a warning to standard error when invalid values for known options are found\&. You can change this behavior by assigning a method to \fRnopt\&.invalidHandler\fP\&. This method will be called with the offending \fRnopt\&.invalidHandler(key, val, types)\fP\&.
+.PP
+If no \fRnopt\&.invalidHandler\fP is assigned, then it will console\&.error its whining\&. If it is assigned to boolean \fRfalse\fP then the warning is suppressed\&.
+.SS "Abbreviations"
+Yes, they are supported\&. If you define options like this:
+.PP
+.PP
+.nf
+{ "foolhardyelephants" : Boolean
+, "pileofmonkeys" : Boolean }
+.fi
+.PP
+.PP
+Then this will work:
+.PP
+.PP
+.nf
+node program\&.js \-\-foolhar \-\-pil
+node program\&.js \-\-no\-f \-\-pileofmon
+# etc\&.
+.fi
+.PP
+.SS "Shorthands"
+Shorthands are a hash of shorter option names to a snippet of args that they expand to\&.
+.PP
+If multiple one-character shorthands are all combined, and the combination does not unambiguously match any other option or shorthand, then they will be broken up into their constituent parts\&. For example:
+.PP
+.PP
+.nf
+{ "s" : ["\-\-loglevel", "silent"]
+, "g" : "\-\-global"
+, "f" : "\-\-force"
+, "p" : "\-\-parseable"
+, "l" : "\-\-long"
+}
+.fi
+.PP
+.PP
+.PP
+.nf
+npm ls \-sgflp
+# just like doing this:
+npm ls \-\-loglevel silent \-\-global \-\-force \-\-long \-\-parseable
+.fi
+.PP
+.SS "The Rest of the args"
+The config object returned by nopt is given a special member called \fRargv\fP, which is an object with the following fields:
+.PP
+.IP "\(bu" 2
+\fRremain\fP: The remaining args after all the parsing has occurred\&.
+.IP "\(bu" 2
+\fRoriginal\fP: The args as they originally appeared\&.
+.IP "\(bu" 2
+\fRcooked\fP: The args after flags and shorthands are expanded\&.
+.PP
+.SS "Slicing"
+Node programs are called with more or less the exact argv as it appears in C land, after the v8 and node-specific options have been plucked off\&. As such, \fRargv[0]\fP is always \fRnode\fP and \fRargv[1]\fP is always the JavaScript program being run\&.
+.PP
+That's usually not very useful to you\&. So they're sliced off by default\&. If you want them, then you can pass in \fR0\fP as the last argument, or any other number that you'd like to slice off the start of the list\&. 

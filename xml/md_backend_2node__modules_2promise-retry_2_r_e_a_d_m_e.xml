@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2promise-retry_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2promise-retry_2_r_e_a_d_m_e</compoundname>
+    <title>node-promise-retry</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2promise-retry_2_r_e_a_d_m_e_1autotoc_md2736"/> <ulink url="https://npmjs.org/package/promise-retry"><image type="html" name="http://img.shields.io/npm/v/promise-retry.svg" alt="NPM version" inline="yes"></image>
+</ulink> <ulink url="https://npmjs.org/package/promise-retry"><image type="html" name="http://img.shields.io/npm/dm/promise-retry.svg" alt="Downloads" inline="yes"></image>
+</ulink> <ulink url="https://travis-ci.org/IndigoUnited/node-promise-retry"><image type="html" name="http://img.shields.io/travis/IndigoUnited/node-promise-retry/master.svg" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://david-dm.org/IndigoUnited/node-promise-retry"><image type="html" name="https://img.shields.io/david/IndigoUnited/node-promise-retry.svg" alt="Dependency status" inline="yes"></image>
+</ulink> <ulink url="https://david-dm.org/IndigoUnited/node-promise-retry?type=dev"><image type="html" name="https://img.shields.io/david/dev/IndigoUnited/node-promise-retry.svg" alt="Dev Dependency status" inline="yes"></image>
+</ulink> <ulink url="https://greenkeeper.io/"><image type="html" name="https://badges.greenkeeper.io/IndigoUnited/node-promise-retry.svg" alt="Greenkeeper badge" inline="yes"></image>
+</ulink></para>
+<para>Retries a function that returns a promise, leveraging the power of the <ulink url="https://github.com/tim-kos/node-retry">retry</ulink> module to the promises world.</para>
+<para>There&apos;s already some modules that are able to retry functions that return promises but they were rather difficult to use or do not offer an easy way to do conditional retries.</para>
+<sect1 id="md_backend_2node__modules_2promise-retry_2_r_e_a_d_m_e_1autotoc_md2737">
+<title>Installation</title><para><computeroutput>$ npm install promise-retry</computeroutput></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2promise-retry_2_r_e_a_d_m_e_1autotoc_md2738">
+<title>Usage</title><sect2 id="md_backend_2node__modules_2promise-retry_2_r_e_a_d_m_e_1autotoc_md2739">
+<title>promiseRetry(fn, [options])</title><para>Calls <computeroutput>fn</computeroutput> until the returned promise ends up fulfilled or rejected with an error different than a <computeroutput>retry</computeroutput> error. <linebreak/>
+ The <computeroutput>options</computeroutput> argument is an object which maps to the <ulink url="https://github.com/tim-kos/node-retry">retry</ulink> module options:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>retries</computeroutput>: The maximum amount of times to retry the operation. Default is <computeroutput>10</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>factor</computeroutput>: The exponential factor to use. Default is <computeroutput>2</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>minTimeout</computeroutput>: The number of milliseconds before starting the first retry. Default is <computeroutput>1000</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>maxTimeout</computeroutput>: The maximum number of milliseconds between two retries. Default is <computeroutput>Infinity</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>randomize</computeroutput>: Randomizes the timeouts by multiplying with a factor between <computeroutput>1</computeroutput> to <computeroutput>2</computeroutput>. Default is <computeroutput>false</computeroutput>.</para>
+</listitem></itemizedlist>
+</para>
+<para>The <computeroutput>fn</computeroutput> function will receive a <computeroutput>retry</computeroutput> function as its first argument that should be called with an error whenever you want to retry <computeroutput>fn</computeroutput>. The <computeroutput>retry</computeroutput> function will always throw an error. <linebreak/>
+ If there are retries left, it will throw a special <computeroutput>retry</computeroutput> error that will be handled internally to call <computeroutput>fn</computeroutput> again. If there are no retries left, it will throw the actual error passed to it.</para>
+<para>If you prefer, you can pass the options first using the alternative function signature <computeroutput>promiseRetry([options], fn)</computeroutput>.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2promise-retry_2_r_e_a_d_m_e_1autotoc_md2740">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>promiseRetry<sp/>=<sp/>require(&apos;promise-retry&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Simple<sp/>example</highlight></codeline>
+<codeline><highlight class="normal">promiseRetry(function<sp/>(retry,<sp/>number)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(&apos;attempt<sp/>number&apos;,<sp/>number);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>doSomething()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.catch(retry);</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">.then(function<sp/>(value)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>..</highlight></codeline>
+<codeline><highlight class="normal">},<sp/>function<sp/>(err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>..</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Conditional<sp/>example</highlight></codeline>
+<codeline><highlight class="normal">promiseRetry(function<sp/>(retry,<sp/>number)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(&apos;attempt<sp/>number&apos;,<sp/>number);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>doSomething()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.catch(function<sp/>(err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>if<sp/>(err.code<sp/>===<sp/>&apos;ETIMEDOUT&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>retry(err);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>throw<sp/>err;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>});</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">.then(function<sp/>(value)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>..</highlight></codeline>
+<codeline><highlight class="normal">},<sp/>function<sp/>(err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>..</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2promise-retry_2_r_e_a_d_m_e_1autotoc_md2741">
+<title>Tests</title><para><computeroutput>$ npm test</computeroutput></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2promise-retry_2_r_e_a_d_m_e_1autotoc_md2742">
+<title>License</title><para>Released under the <ulink url="http://www.opensource.org/licenses/mit-license.php">MIT License</ulink>. </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/promise-retry/README.md"/>
+  </compounddef>
+</doxygen>

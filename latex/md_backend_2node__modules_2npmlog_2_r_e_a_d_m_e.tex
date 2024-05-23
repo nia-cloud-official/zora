@@ -1,0 +1,152 @@
+\chapter{npmlog}
+\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e}\index{npmlog@{npmlog}}
+\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2495}%
+\Hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2495}%
+ The logger util that npm uses.
+
+This logger is very basic. It does the logging for npm. It supports custom levels and colored output.
+
+By default, logs are written to stderr. If you want to send log messages to outputs other than streams, then you can change the {\ttfamily log.\+stream} member, or you can just listen to the events that it emits, and do whatever you want with them.\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2496}{}\doxysection{\texorpdfstring{Installation}{Installation}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2496}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ npmlog\ -\/-\/save}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2497}{}\doxysection{\texorpdfstring{Basic Usage}{Basic Usage}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2497}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ log\ =\ require('npmlog')}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ additional\ stuff\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/+}
+\DoxyCodeLine{//\ message\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ |}
+\DoxyCodeLine{//\ prefix\ -\/-\/-\/-\/+\ \ \ \ \ \ |\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ |}
+\DoxyCodeLine{//\ level\ -\/+\ \ \ |\ \ \ \ \ \ |\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ |}
+\DoxyCodeLine{//\ \ \ \ \ \ \ \ v\ \ \ v\ \ \ \ \ \ v\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v}
+\DoxyCodeLine{\ \ \ \ log.info('fyi',\ 'I\ have\ a\ kitty\ cat:\ \%j',\ myKittyCat)}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2498}{}\doxysubsection{\texorpdfstring{log.\+level}{log.\+level}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2498}
+
+\begin{DoxyItemize}
+\item \{String\}
+\end{DoxyItemize}
+
+The level to display logs at. Any logs at or above this level will be displayed. The special level {\ttfamily silent} will prevent anything from being displayed ever.\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2499}{}\doxysubsection{\texorpdfstring{log.\+record}{log.\+record}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2499}
+
+\begin{DoxyItemize}
+\item \{Array\}
+\end{DoxyItemize}
+
+An array of all the log messages that have been entered.\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2500}{}\doxysubsection{\texorpdfstring{log.\+max\+Record\+Size}{log.\+max\+Record\+Size}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2500}
+
+\begin{DoxyItemize}
+\item \{Number\}
+\end{DoxyItemize}
+
+The maximum number of records to keep. If log.\+record gets bigger than 10\% over this value, then it is sliced down to 90\% of this value.
+
+The reason for the 10\% window is so that it doesn\textquotesingle{}t have to resize a large array on every log entry.\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2501}{}\doxysubsection{\texorpdfstring{log.\+prefix\+Style}{log.\+prefix\+Style}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2501}
+
+\begin{DoxyItemize}
+\item \{Object\}
+\end{DoxyItemize}
+
+A style object that specifies how prefixes are styled. (See below)\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2502}{}\doxysubsection{\texorpdfstring{log.\+heading\+Style}{log.\+heading\+Style}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2502}
+
+\begin{DoxyItemize}
+\item \{Object\}
+\end{DoxyItemize}
+
+A style object that specifies how the heading is styled. (See below)\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2503}{}\doxysubsection{\texorpdfstring{log.\+heading}{log.\+heading}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2503}
+
+\begin{DoxyItemize}
+\item \{String\} Default\+: "{}"{}
+\end{DoxyItemize}
+
+If set, a heading that is printed at the start of every line.\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2504}{}\doxysubsection{\texorpdfstring{log.\+stream}{log.\+stream}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2504}
+
+\begin{DoxyItemize}
+\item \{Stream\} Default\+: {\ttfamily process.\+stderr}
+\end{DoxyItemize}
+
+The stream where output is written.\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2505}{}\doxysubsection{\texorpdfstring{log.\+enable\+Color()}{log.\+enable\+Color()}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2505}
+Force colors to be used on all messages, regardless of the output stream.\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2506}{}\doxysubsection{\texorpdfstring{log.\+disable\+Color()}{log.\+disable\+Color()}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2506}
+Disable colors on all messages.\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2507}{}\doxysubsection{\texorpdfstring{log.\+enable\+Progress()}{log.\+enable\+Progress()}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2507}
+Enable the display of log activity spinner and progress bar\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2508}{}\doxysubsection{\texorpdfstring{log.\+disable\+Progress()}{log.\+disable\+Progress()}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2508}
+Disable the display of a progress bar\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2509}{}\doxysubsection{\texorpdfstring{log.\+enable\+Unicode()}{log.\+enable\+Unicode()}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2509}
+Force the unicode theme to be used for the progress bar.\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2510}{}\doxysubsection{\texorpdfstring{log.\+disable\+Unicode()}{log.\+disable\+Unicode()}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2510}
+Disable the use of unicode in the progress bar.\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2511}{}\doxysubsection{\texorpdfstring{log.\+set\+Gauge\+Template(template)}{log.\+set\+Gauge\+Template(template)}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2511}
+Set a template for outputting the progress bar. See the \href{https://npmjs.com/package/gauge}{\texttt{ gauge documentation}} for details.\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2512}{}\doxysubsection{\texorpdfstring{log.\+set\+Gauge\+Themeset(themes)}{log.\+set\+Gauge\+Themeset(themes)}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2512}
+Select a themeset to pick themes from for the progress bar. See the \href{https://npmjs.com/package/gauge}{\texttt{ gauge documentation}} for details.\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2513}{}\doxysubsection{\texorpdfstring{log.\+pause()}{log.\+pause()}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2513}
+Stop emitting messages to the stream, but do not drop them.\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2514}{}\doxysubsection{\texorpdfstring{log.\+resume()}{log.\+resume()}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2514}
+Emit all buffered messages that were written while paused.\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2515}{}\doxysubsection{\texorpdfstring{log.\+log(level, prefix, message, ...)}{log.\+log(level, prefix, message, ...)}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2515}
+
+\begin{DoxyItemize}
+\item {\ttfamily level} \{String\} The level to emit the message at
+\item {\ttfamily prefix} \{String\} A string prefix. Set to "{}"{} to skip.
+\item {\ttfamily message...} Arguments to {\ttfamily util.\+format}
+\end{DoxyItemize}
+
+Emit a log message at the specified level.\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2516}{}\doxysubsection{\texorpdfstring{log\mbox{[}level\mbox{]}(prefix, message, ...)}{log\mbox{[}level\mbox{]}(prefix, message, ...)}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2516}
+For example,
+
+
+\begin{DoxyItemize}
+\item log.\+silly(prefix, message, ...)
+\item log.\+verbose(prefix, message, ...)
+\item log.\+info(prefix, message, ...)
+\item log.\+http(prefix, message, ...)
+\item log.\+warn(prefix, message, ...)
+\item log.\+error(prefix, message, ...)
+\end{DoxyItemize}
+
+Like {\ttfamily log.\+log(level, prefix, message, ...)}. In this way, each level is given a shorthand, so you can do {\ttfamily log.\+info(prefix, message)}.\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2517}{}\doxysubsection{\texorpdfstring{log.\+add\+Level(level, n, style, disp)}{log.\+add\+Level(level, n, style, disp)}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2517}
+
+\begin{DoxyItemize}
+\item {\ttfamily level} \{String\} Level indicator
+\item {\ttfamily n} \{Number\} The numeric level
+\item {\ttfamily style} \{Object\} Object with fg, bg, inverse, etc.
+\item {\ttfamily disp} \{String\} Optional replacement for {\ttfamily level} in the output.
+\end{DoxyItemize}
+
+Sets up a new level with a shorthand function and so forth.
+
+Note that if the number is {\ttfamily Infinity}, then setting the level to that will cause all log messages to be suppressed. If the number is {\ttfamily -\/Infinity}, then the only way to show it is to enable all log messages.\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2518}{}\doxysubsection{\texorpdfstring{log.\+new\+Item(name, todo, weight)}{log.\+new\+Item(name, todo, weight)}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2518}
+
+\begin{DoxyItemize}
+\item {\ttfamily name} \{String\} Optional; progress item name.
+\item {\ttfamily todo} \{Number\} Optional; total amount of work to be done. Default 0.
+\item {\ttfamily weight} \{Number\} Optional; the weight of this item relative to others. Default 1.
+\end{DoxyItemize}
+
+This adds a new {\ttfamily are-\/we-\/there-\/yet} item tracker to the progress tracker. The object returned has the {\ttfamily log\mbox{[}level\mbox{]}} methods but is otherwise an {\ttfamily are-\/we-\/there-\/yet} {\ttfamily Tracker} object.\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2519}{}\doxysubsection{\texorpdfstring{log.\+new\+Stream(name, todo, weight)}{log.\+new\+Stream(name, todo, weight)}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2519}
+This adds a new {\ttfamily are-\/we-\/there-\/yet} stream tracker to the progress tracker. The object returned has the {\ttfamily log\mbox{[}level\mbox{]}} methods but is otherwise an {\ttfamily are-\/we-\/there-\/yet} {\ttfamily Tracker\+Stream} object.\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2520}{}\doxysubsection{\texorpdfstring{log.\+new\+Group(name, weight)}{log.\+new\+Group(name, weight)}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2520}
+This adds a new {\ttfamily are-\/we-\/there-\/yet} tracker group to the progress tracker. The object returned has the {\ttfamily log\mbox{[}level\mbox{]}} methods but is otherwise an {\ttfamily are-\/we-\/there-\/yet} {\ttfamily Tracker\+Group} object.\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2521}{}\doxysection{\texorpdfstring{Events}{Events}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2521}
+Events are all emitted with the message object.
+
+
+\begin{DoxyItemize}
+\item {\ttfamily log} Emitted for all messages
+\item {\ttfamily log.\texorpdfstring{$<$}{<}level\texorpdfstring{$>$}{>}} Emitted for all messages with the {\ttfamily \texorpdfstring{$<$}{<}level\texorpdfstring{$>$}{>}} level.
+\item {\ttfamily \texorpdfstring{$<$}{<}prefix\texorpdfstring{$>$}{>}} Messages with prefixes also emit their prefix as an event.
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2522}{}\doxysection{\texorpdfstring{Style Objects}{Style Objects}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2522}
+Style objects can have the following fields\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily fg} \{String\} Color for the foreground text
+\item {\ttfamily bg} \{String\} Color for the background
+\item {\ttfamily bold}, {\ttfamily inverse}, {\ttfamily underline} \{Boolean\} Set the associated property
+\item {\ttfamily bell} \{Boolean\} Make a noise (This is pretty annoying, probably.)
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2523}{}\doxysection{\texorpdfstring{Message Objects}{Message Objects}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2523}
+Every log event is emitted with a message object, and the {\ttfamily log.\+record} list contains all of them that have been created. They have the following fields\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily id} \{Number\}
+\item {\ttfamily level} \{String\}
+\item {\ttfamily prefix} \{String\}
+\item {\ttfamily message} \{String\} Result of {\ttfamily util.\+format()}
+\item {\ttfamily message\+Raw} \{Array\} Arguments to {\ttfamily util.\+format()}
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2524}{}\doxysection{\texorpdfstring{Blocking TTYs}{Blocking TTYs}}\label{md_backend_2node__modules_2npmlog_2_r_e_a_d_m_e_autotoc_md2524}
+We use \href{https://npmjs.com/package/set-blocking}{\texttt{ {\ttfamily set-\/blocking}}} to set stderr and stdout blocking if they are tty\textquotesingle{}s and have the set\+Blocking call. This is a work around for an issue in early versions of Node.\+js 6.\+x, which made stderr and stdout non-\/blocking on OSX. (They are always blocking Windows and were never blocking on Linux.) {\ttfamily npmlog} needs them to be blocking so that it can allow output to stdout and stderr to be interlaced. 

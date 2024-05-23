@@ -1,0 +1,945 @@
+\doxysection{statement.\+cc}
+\hypertarget{statement_8cc_source}{}\label{statement_8cc_source}\index{backend/node\_modules/sqlite3/src/statement.cc@{backend/node\_modules/sqlite3/src/statement.cc}}
+\mbox{\hyperlink{statement_8cc}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00001}00001\ \textcolor{preprocessor}{\#include\ <cstring>}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00002}00002\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{napi_8h}{napi.h}}>}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00003}00003\ \textcolor{preprocessor}{\#include\ <uv.h>}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{macros_8h}{macros.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{backend_2node__modules_2sqlite3_2src_2database_8h}{database.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{statement_8h}{statement.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00009}00009\ \textcolor{keyword}{using\ namespace\ }\mbox{\hyperlink{namespacenode__sqlite3}{node\_sqlite3}};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00011}\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a167e7038d13728bab030a8206472b6ec}{00011}}\ \mbox{\hyperlink{class_napi_1_1_object}{Napi::Object}}\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a167e7038d13728bab030a8206472b6ec}{Statement::Init}}(\mbox{\hyperlink{class_napi_1_1_env}{Napi::Env}}\ env,\ \mbox{\hyperlink{class_napi_1_1_object}{Napi::Object}}\ exports)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00012}00012\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00014}00014\ \ \ \ \ \textcolor{comment}{//\ declare\ napi\_default\_method\ here\ as\ it\ is\ only\ available\ in\ Node\ v14.12.0+}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00015}00015\ \ \ \ \ \textcolor{keyword}{auto}\ napi\_default\_method\ =\ \textcolor{keyword}{static\_cast<}napi\_property\_attributes\textcolor{keyword}{>}(napi\_writable\ |\ napi\_configurable);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00017}00017\ \ \ \ \ \textcolor{keyword}{auto}\ t\ =\ \mbox{\hyperlink{class_napi_1_1_object_wrap_a0951856129efcd16c5db43efd7eb5528}{DefineClass}}(env,\ \textcolor{stringliteral}{"{}Statement"{}},\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00018}00018\ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_instance_wrap_afc90b95e3e63c0130a424b1e4a0f7899}{InstanceMethod}}(\textcolor{stringliteral}{"{}bind"{}},\ \&\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a3329249cd95736fe74f2ae1ff6e846ec}{Statement::Bind}},\ napi\_default\_method),}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00019}00019\ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_instance_wrap_afc90b95e3e63c0130a424b1e4a0f7899}{InstanceMethod}}(\textcolor{stringliteral}{"{}get"{}},\ \&Statement::Get,\ napi\_default\_method),}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00020}00020\ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_instance_wrap_afc90b95e3e63c0130a424b1e4a0f7899}{InstanceMethod}}(\textcolor{stringliteral}{"{}run"{}},\ \&Statement::Run,\ napi\_default\_method),}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00021}00021\ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_instance_wrap_afc90b95e3e63c0130a424b1e4a0f7899}{InstanceMethod}}(\textcolor{stringliteral}{"{}all"{}},\ \&Statement::All,\ napi\_default\_method),}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00022}00022\ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_instance_wrap_afc90b95e3e63c0130a424b1e4a0f7899}{InstanceMethod}}(\textcolor{stringliteral}{"{}each"{}},\ \&Statement::Each,\ napi\_default\_method),}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00023}00023\ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_instance_wrap_afc90b95e3e63c0130a424b1e4a0f7899}{InstanceMethod}}(\textcolor{stringliteral}{"{}reset"{}},\ \&\mbox{\hyperlink{class_napi_1_1_reference_ac73acbd590af4c097f457a315c5f24c6}{Statement::Reset}},\ napi\_default\_method),}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00024}00024\ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_instance_wrap_afc90b95e3e63c0130a424b1e4a0f7899}{InstanceMethod}}(\textcolor{stringliteral}{"{}finalize"{}},\ \&\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a66a3160a30ee1843fa7f433872bba45f}{Statement::Finalize\_}},\ napi\_default\_method),}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00025}00025\ \ \ \ \ \});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00027}00027\ \ \ \ \ exports.\mbox{\hyperlink{class_napi_1_1_object_ab58533f930d4f81b41cc5ef6e96ce589}{Set}}(\textcolor{stringliteral}{"{}Statement"{}},\ t);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00028}00028\ \ \ \ \ \textcolor{keywordflow}{return}\ exports;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00029}00029\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00031}00031\ \textcolor{comment}{//\ A\ Napi\ InstanceOf\ for\ Javascript\ Objects\ "{}Date"{}\ and\ "{}RegExp"{}}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00032}\mbox{\hyperlink{statement_8cc_a4ee960416c1771c8ab6436efc1fbdf8d}{00032}}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{statement_8cc_a4ee960416c1771c8ab6436efc1fbdf8d}{OtherInstanceOf}}(\mbox{\hyperlink{class_napi_1_1_object}{Napi::Object}}\ source,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ object\_type)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00033}00033\ \ \ \ \ \textcolor{keywordflow}{if}\ (strncmp(object\_type,\ \textcolor{stringliteral}{"{}Date"{}},\ 4)\ ==\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00034}00034\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ source.\mbox{\hyperlink{class_napi_1_1_object_a109697df6456b29ab46c8c9e381e5ecc}{InstanceOf}}(source.\mbox{\hyperlink{class_napi_1_1_value_a1e1930afac70f2811a222c363d892a42}{Env}}().\mbox{\hyperlink{class_napi_1_1_env_a06f210136f1381a31046e1118dbc5c90}{Global}}().\mbox{\hyperlink{class_napi_1_1_object_a4cc2ecc864b3e98b3b1f13393a7cdfdf}{Get}}(\textcolor{stringliteral}{"{}Date"{}}).As<\mbox{\hyperlink{class_napi_1_1_function}{Function}}>());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00035}00035\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (strncmp(object\_type,\ \textcolor{stringliteral}{"{}RegExp"{}},\ 6)\ ==\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00036}00036\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ source.\mbox{\hyperlink{class_napi_1_1_object_a109697df6456b29ab46c8c9e381e5ecc}{InstanceOf}}(source.\mbox{\hyperlink{class_napi_1_1_value_a1e1930afac70f2811a222c363d892a42}{Env}}().\mbox{\hyperlink{class_napi_1_1_env_a06f210136f1381a31046e1118dbc5c90}{Global}}().\mbox{\hyperlink{class_napi_1_1_object_a4cc2ecc864b3e98b3b1f13393a7cdfdf}{Get}}(\textcolor{stringliteral}{"{}RegExp"{}}).As<\mbox{\hyperlink{class_napi_1_1_function}{Function}}>());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00037}00037\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00039}00039\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00040}00040\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00042}\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a5a5dd29a15ef0b520c2090a66ea171e8}{00042}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a5a5dd29a15ef0b520c2090a66ea171e8}{Statement::Process}}()\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00043}00043\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a677f22f1fbd79bdb3b3bfe48dc38ffc0}{finalized}}\ \&\&\ !\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a840de47e20471f70d8fc5a68b3a76257}{queue}}.empty())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00044}00044\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a46dbbfaebdd6b1384a7a81eb7bda834d}{CleanQueue}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00045}00045\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00047}00047\ \ \ \ \ \textcolor{keywordflow}{while}\ (\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a64c74690dc8cd990dec5c0053c4ca3bb}{prepared}}\ \&\&\ !\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a9eb44ed3676a768cc300652d27382fec}{locked}}\ \&\&\ !\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a840de47e20471f70d8fc5a68b3a76257}{queue}}.empty())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00048}00048\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ call\ =\ std::unique\_ptr<Call>(\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a840de47e20471f70d8fc5a68b3a76257}{queue}}.front());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00049}00049\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a840de47e20471f70d8fc5a68b3a76257}{queue}}.pop();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00051}00051\ \ \ \ \ \ \ \ \ call-\/>callback(call-\/>baton);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00052}00052\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00053}00053\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00055}\mbox{\hyperlink{classnode__sqlite3_1_1_statement_aac131bf3323141eb3876061811d6c284}{00055}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_aac131bf3323141eb3876061811d6c284}{Statement::Schedule}}(Work\_Callback\ callback,\ \mbox{\hyperlink{structnode__sqlite3_1_1_statement_1_1_baton}{Baton}}*\ baton)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00056}00056\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a677f22f1fbd79bdb3b3bfe48dc38ffc0}{finalized}})\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00057}00057\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a840de47e20471f70d8fc5a68b3a76257}{queue}}.emplace(\textcolor{keyword}{new}\ \mbox{\hyperlink{structnode__sqlite3_1_1_statement_1_1_call}{Call}}(callback,\ baton));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00058}00058\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a46dbbfaebdd6b1384a7a81eb7bda834d}{CleanQueue}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00059}00059\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00060}00060\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a64c74690dc8cd990dec5c0053c4ca3bb}{prepared}}\ ||\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a9eb44ed3676a768cc300652d27382fec}{locked}})\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00061}00061\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a840de47e20471f70d8fc5a68b3a76257}{queue}}.emplace(\textcolor{keyword}{new}\ \mbox{\hyperlink{structnode__sqlite3_1_1_statement_1_1_call}{Call}}(callback,\ baton));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00062}00062\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00063}00063\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00064}00064\ \ \ \ \ \ \ \ \ callback(baton);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00065}00065\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00066}00066\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00068}\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a0adc30a125bb274dab2b66ce34bce2ae}{00068}}\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a0adc30a125bb274dab2b66ce34bce2ae}{Statement::Error}}(T*\ baton)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00069}00069\ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement}{Statement}}*\ stmt\ =\ baton-\/>stmt;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00070}00070\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00071}00071\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ stmt-\/>\mbox{\hyperlink{class_napi_1_1_reference_a145936a59e9db2c455542576e76773ac}{Env}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00072}00072\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00074}00074\ \ \ \ \ \textcolor{comment}{//\ Fail\ hard\ on\ logic\ errors.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00075}00075\ \ \ \ \ assert(stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ !=\ 0);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00076}00076\ \ \ \ \ \mbox{\hyperlink{macros_8h_a3311c5dacb4b8acfdc913e57bda331cc}{EXCEPTION}}(\mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a1a004a745db92a46df56636b2e79c805}{message}}.c\_str()),\ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}},\ exception);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00078}00078\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}\ cb\ =\ baton-\/>callback.\mbox{\hyperlink{class_napi_1_1_value_a91352891b563fb744683240949e458e4}{Value}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00080}00080\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{macros_8h_a95903770efc550331a040da389d5a911}{IS\_FUNCTION}}(cb))\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00081}00081\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[]\ =\ \{\ exception\ \};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00082}00082\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(stmt-\/>\mbox{\hyperlink{class_napi_1_1_reference_ae7f2d23d1f33cdbcfb4aa1b89193c5ae}{Value}}(),\ cb,\ 1,\ argv);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00083}00083\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00084}00084\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00085}00085\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[]\ =\ \{\ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}error"{}}),\ exception\ \};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00086}00086\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a892be17d1363eec9b638cc05d901d0cf}{EMIT\_EVENT}}(stmt-\/>\mbox{\hyperlink{class_napi_1_1_reference_ae7f2d23d1f33cdbcfb4aa1b89193c5ae}{Value}}(),\ 2,\ argv);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00087}00087\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00088}00088\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00090}00090\ \textcolor{comment}{//\ \{\ Database\ db,\ String\ sql,\ Array\ params,\ Function\ callback\ \}}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00091}\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a44a25df6ae24c70d0a13279687113666}{00091}}\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a44a25df6ae24c70d0a13279687113666}{Statement::Statement}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_napi_1_1_callback_info}{Napi::CallbackInfo}}\&\ info)\ :\ \mbox{\hyperlink{namespace_napi}{Napi}}::\mbox{\hyperlink{class_napi_1_1_object_wrap}{ObjectWrap}}<\mbox{\hyperlink{classnode__sqlite3_1_1_statement}{Statement}}>(info)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00092}00092\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_af5dda76cc6b32aa6816f60437249fa5c}{Env}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00093}00093\ \ \ \ \ \textcolor{keywordtype}{int}\ length\ =\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_a2450a932822d15c570762a4a0d321fd8}{Length}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00095}00095\ \ \ \ \ \textcolor{keywordflow}{if}\ (length\ <=\ 0\ ||\ !\mbox{\hyperlink{classnode__sqlite3_1_1_database_ae0f3eaca6a75e3a7c4c7683a6e1d1da3}{Database::HasInstance}}(info[0]))\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00096}00096\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_type_error_a61771d5e0220d480f810097af673da92}{Napi::TypeError::New}}(env,\ \textcolor{stringliteral}{"{}Database\ object\ expected"{}}).\mbox{\hyperlink{class_napi_1_1_error_af657bb938d951eccca6cf9e4983601d9}{ThrowAsJavaScriptException}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00097}00097\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00098}00098\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00099}00099\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (length\ <=\ 1\ ||\ !info[1].IsString())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00100}00100\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_type_error_a61771d5e0220d480f810097af673da92}{Napi::TypeError::New}}(env,\ \textcolor{stringliteral}{"{}SQL\ query\ expected"{}}).\mbox{\hyperlink{class_napi_1_1_error_af657bb938d951eccca6cf9e4983601d9}{ThrowAsJavaScriptException}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00101}00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00102}00102\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00103}00103\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (length\ >\ 2\ \&\&\ !info[2].IsUndefined()\ \&\&\ !info[2].IsFunction())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00104}00104\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_type_error_a61771d5e0220d480f810097af673da92}{Napi::TypeError::New}}(env,\ \textcolor{stringliteral}{"{}Callback\ expected"{}}).\mbox{\hyperlink{class_napi_1_1_error_af657bb938d951eccca6cf9e4983601d9}{ThrowAsJavaScriptException}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00105}00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00106}00106\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00107}00107\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00108}00108\ \ \ \ \ this-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a15a1f32e06de8ee1db4822bcea72b813}{db}}\ =\ \mbox{\hyperlink{class_napi_1_1_object_wrap_a01b0c689b46db5e5e8df49da100e6d32}{Napi::ObjectWrap<Database>::Unwrap}}(info[0].As<Napi::Object>());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00109}00109\ \ \ \ \ this-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a15a1f32e06de8ee1db4822bcea72b813}{db}}-\/>\mbox{\hyperlink{class_napi_1_1_reference_aa4a691ce6ed68117e5a4fabb1b594c75}{Ref}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00111}00111\ \ \ \ \ \textcolor{keyword}{auto}\ sql\ =\ info[1].As<\mbox{\hyperlink{class_napi_1_1_string}{Napi::String}}>();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00112}00112\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00113}00113\ \ \ \ \ info.\mbox{\hyperlink{class_napi_1_1_callback_info_a216112c90346f2d3701b2d8cc14591c9}{This}}().\mbox{\hyperlink{class_napi_1_1_value_a9c1a9c4eca9617b0aafbe311c946982a}{As}}<\mbox{\hyperlink{class_napi_1_1_object}{Napi::Object}}>().DefineProperty(\mbox{\hyperlink{class_napi_1_1_property_descriptor_a30be11ee835fe628990a240e9df48002}{Napi::PropertyDescriptor::Value}}(\textcolor{stringliteral}{"{}sql"{}},\ sql,\ napi\_default));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00116}00116\ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement}{Statement}}*\ stmt\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00118}00118\ \ \ \ \ \textcolor{keyword}{auto}*\ baton\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{structnode__sqlite3_1_1_statement_1_1_prepare_baton}{PrepareBaton}}(this-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a15a1f32e06de8ee1db4822bcea72b813}{db}},\ info[2].As<Napi::Function>(),\ stmt);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00119}00119\ \ \ \ \ baton-\/>sql\ =\ std::string(sql.As<\mbox{\hyperlink{class_napi_1_1_string}{Napi::String}}>().\mbox{\hyperlink{class_napi_1_1_string_a37fa0f5e1f6f0681049e3e3a3dc46132}{Utf8Value}}().c\_str());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00120}00120\ \ \ \ \ this-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a15a1f32e06de8ee1db4822bcea72b813}{db}}-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_database_a0f7143c8b39176377f7c732477d5d734}{Schedule}}(\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a343c5241538d0a8222fd531c2103f413}{Work\_BeginPrepare}},\ baton);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00121}00121\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00123}\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a343c5241538d0a8222fd531c2103f413}{00123}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a343c5241538d0a8222fd531c2103f413}{Statement::Work\_BeginPrepare}}(\mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_baton}{Database::Baton}}*\ baton)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00124}00124\ \ \ \ \ assert(baton-\/>\mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_baton_a0c9263f218d236fe3910b1cd59844c86}{db}}-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_database_a1d4a84bf7166fe9d6d9de920e3b9f41d}{open}});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00125}00125\ \ \ \ \ baton-\/>\mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_baton_a0c9263f218d236fe3910b1cd59844c86}{db}}-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_database_abb549757669e26351497d04f1bb205cd}{pending}}++;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00126}00126\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00127}00127\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ baton-\/>\mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_baton_a0c9263f218d236fe3910b1cd59844c86}{db}}-\/>\mbox{\hyperlink{class_napi_1_1_reference_a145936a59e9db2c455542576e76773ac}{Env}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00128}00128\ \ \ \ \ \mbox{\hyperlink{macros_8h_af3b5fe6fbecd04ffb353562501539572}{CREATE\_WORK}}(\textcolor{stringliteral}{"{}sqlite3.Statement.Prepare"{}},\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a2be4b001145ca66b25ff3b30a4ddab81}{Work\_Prepare}},\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a3711cd1b1bcb86622663acb3077a1249}{Work\_AfterPrepare}});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00129}00129\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00130}00130\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00131}\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a2be4b001145ca66b25ff3b30a4ddab81}{00131}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a2be4b001145ca66b25ff3b30a4ddab81}{Statement::Work\_Prepare}}(napi\_env\ e,\ \textcolor{keywordtype}{void}*\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00132}00132\ \ \ \ \ \mbox{\hyperlink{macros_8h_a7baaea79b5361b7c196fba5e5da360da}{STATEMENT\_INIT}}(\mbox{\hyperlink{structnode__sqlite3_1_1_statement_1_1_prepare_baton}{PrepareBaton}});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00133}00133\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00134}00134\ \ \ \ \ \textcolor{comment}{//\ In\ case\ preparing\ fails,\ we\ use\ a\ mutex\ to\ make\ sure\ we\ get\ the\ associated}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00135}00135\ \ \ \ \ \textcolor{comment}{//\ error\ message.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00136}00136\ \ \ \ \ \mbox{\hyperlink{macros_8h_ab3e70e665355ba3f4771de53a2bf0bb4}{STATEMENT\_MUTEX}}(mtx);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00137}00137\ \ \ \ \ sqlite3\_mutex\_enter(mtx);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00138}00138\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00139}00139\ \ \ \ \ stmt-\/>status\ =\ sqlite3\_prepare\_v2(}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00140}00140\ \ \ \ \ \ \ \ \ baton-\/>db-\/>\_handle,}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00141}00141\ \ \ \ \ \ \ \ \ baton-\/>sql.c\_str(),}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00142}00142\ \ \ \ \ \ \ \ \ baton-\/>sql.size(),}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00143}00143\ \ \ \ \ \ \ \ \ \&stmt-\/>\_handle,}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00144}00144\ \ \ \ \ \ \ \ \ NULL}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00145}00145\ \ \ \ \ );}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00146}00146\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00147}00147\ \ \ \ \ \textcolor{keywordflow}{if}\ (stmt-\/>status\ !=\ SQLITE\_OK)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00148}00148\ \ \ \ \ \ \ \ \ stmt-\/>message\ =\ std::string(sqlite3\_errmsg(baton-\/>db-\/>\_handle));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00149}00149\ \ \ \ \ \ \ \ \ stmt-\/>\_handle\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00150}00150\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00151}00151\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00152}00152\ \ \ \ \ sqlite3\_mutex\_leave(mtx);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00153}00153\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00154}00154\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00155}\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a3711cd1b1bcb86622663acb3077a1249}{00155}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a3711cd1b1bcb86622663acb3077a1249}{Statement::Work\_AfterPrepare}}(napi\_env\ e,\ napi\_status\ status,\ \textcolor{keywordtype}{void}*\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00156}00156\ \ \ \ \ std::unique\_ptr<PrepareBaton>\ baton(\textcolor{keyword}{static\_cast<}\mbox{\hyperlink{structnode__sqlite3_1_1_statement_1_1_prepare_baton}{PrepareBaton}}*\textcolor{keyword}{>}(data));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00157}00157\ \ \ \ \ \textcolor{keyword}{auto}*\ stmt\ =\ baton-\/>stmt;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00158}00158\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00159}00159\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ stmt-\/>Env();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00160}00160\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00161}00161\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00162}00162\ \ \ \ \ \textcolor{keywordflow}{if}\ (stmt-\/>status\ !=\ SQLITE\_OK)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00163}00163\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a0adc30a125bb274dab2b66ce34bce2ae}{Error}}(baton.get());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00164}00164\ \ \ \ \ \ \ \ \ stmt-\/>Finalize\_();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00165}00165\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00166}00166\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00167}00167\ \ \ \ \ \ \ \ \ stmt-\/>prepared\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00168}00168\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!baton-\/>callback.IsEmpty()\ \&\&\ baton-\/>callback.Value().IsFunction())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}\ cb\ =\ baton-\/>callback.\mbox{\hyperlink{class_napi_1_1_value_a91352891b563fb744683240949e458e4}{Value}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[]\ =\ \{\ env.Null()\ \};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(stmt-\/>Value(),\ cb,\ 1,\ argv);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00172}00172\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00173}00173\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00174}00174\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00175}00175\ \ \ \ \ \mbox{\hyperlink{macros_8h_a88b8d6e5423126908adc3336d1cea66f}{STATEMENT\_END}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00176}00176\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00177}00177\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00178}00178\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>\ std::unique\_ptr<Values::Field>}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00179}\mbox{\hyperlink{classnode__sqlite3_1_1_statement_ad8cc5e99e8296a07db48bbb1678050b1}{00179}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_ad8cc5e99e8296a07db48bbb1678050b1}{Statement::BindParameter}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ source,\ T\ pos)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00180}00180\ \ \ \ \ \textcolor{keywordflow}{if}\ (source.\mbox{\hyperlink{class_napi_1_1_value_a4f62ef1c00bdd6ec33ef6bc53bd40954}{IsString}}())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00181}00181\ \ \ \ \ \ \ \ \ std::string\ val\ =\ source.\mbox{\hyperlink{class_napi_1_1_value_a9c1a9c4eca9617b0aafbe311c946982a}{As}}<\mbox{\hyperlink{class_napi_1_1_string}{Napi::String}}>().Utf8Value();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00182}00182\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_unique<Values::Text>(pos,\ val.length(),\ val.c\_str());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00183}00183\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00184}00184\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{statement_8cc_a4ee960416c1771c8ab6436efc1fbdf8d}{OtherInstanceOf}}(source.\mbox{\hyperlink{class_napi_1_1_value_a9c1a9c4eca9617b0aafbe311c946982a}{As}}<\mbox{\hyperlink{class_napi_1_1_object}{Object}}>(),\ \textcolor{stringliteral}{"{}RegExp"{}}))\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00185}00185\ \ \ \ \ \ \ \ \ std::string\ val\ =\ source.\mbox{\hyperlink{class_napi_1_1_value_ae38ce41d7a0b7241975d0676e4fbb30b}{ToString}}().Utf8Value();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00186}00186\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_unique<Values::Text>(pos,\ val.length(),\ val.c\_str());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00187}00187\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00188}00188\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (source.\mbox{\hyperlink{class_napi_1_1_value_a55b70b6e71b4e3eb5eda4ef6da44fb61}{IsNumber}}())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00189}00189\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{macros_8h_a9a9cd9f3fd280cc03b0c9612b88c6ccb}{OtherIsInt}}(source.\mbox{\hyperlink{class_napi_1_1_value_a9c1a9c4eca9617b0aafbe311c946982a}{As}}<\mbox{\hyperlink{class_napi_1_1_number}{Napi::Number}}>()))\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_unique<Values::Integer>(pos,\ source.\mbox{\hyperlink{class_napi_1_1_value_a9c1a9c4eca9617b0aafbe311c946982a}{As}}<\mbox{\hyperlink{class_napi_1_1_number}{Napi::Number}}>().\mbox{\hyperlink{class_napi_1_1_number_abdf11072936503eb2de3f64eb6cfb2e1}{Int32Value}}());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00191}00191\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_unique<Values::Float>(pos,\ source.\mbox{\hyperlink{class_napi_1_1_value_a9c1a9c4eca9617b0aafbe311c946982a}{As}}<\mbox{\hyperlink{class_napi_1_1_number}{Napi::Number}}>().\mbox{\hyperlink{class_napi_1_1_number_a2ba41b7408f886aada8d8f36282dd001}{DoubleValue}}());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00193}00193\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00194}00194\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00195}00195\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (source.\mbox{\hyperlink{class_napi_1_1_value_ae876a79e6ac45840cb76fbdb5d5f0e71}{IsBoolean}}())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00196}00196\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_unique<Values::Integer>(pos,\ source.\mbox{\hyperlink{class_napi_1_1_value_a9c1a9c4eca9617b0aafbe311c946982a}{As}}<\mbox{\hyperlink{class_napi_1_1_boolean}{Napi::Boolean}}>().\mbox{\hyperlink{class_napi_1_1_boolean_a61590574cb1a8cb148475c970a5a014f}{Value}}()\ ?\ 1\ :\ 0);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00197}00197\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00198}00198\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (source.\mbox{\hyperlink{class_napi_1_1_value_adc11fc44a7ee5204535387369f1fa787}{IsNull}}())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00199}00199\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_unique<Values::Null>(pos);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00200}00200\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00201}00201\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (source.\mbox{\hyperlink{class_napi_1_1_value_a7ae7ce9bb0c81e08285aa36f810b3257}{IsBuffer}}())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00202}00202\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_buffer}{Napi::Buffer<char>}}\ buffer\ =\ source.\mbox{\hyperlink{class_napi_1_1_value_a9c1a9c4eca9617b0aafbe311c946982a}{As}}<\mbox{\hyperlink{class_napi_1_1_buffer}{Napi::Buffer<char>}}>();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00203}00203\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_unique<Values::Blob>(pos,\ buffer.\mbox{\hyperlink{class_napi_1_1_buffer_ade57d8705b750d1b75c1369ea918b871}{Length}}(),\ buffer.\mbox{\hyperlink{class_napi_1_1_buffer_afd8b335c213def978f78d54bba77902f}{Data}}());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00204}00204\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00205}00205\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{statement_8cc_a4ee960416c1771c8ab6436efc1fbdf8d}{OtherInstanceOf}}(source.\mbox{\hyperlink{class_napi_1_1_value_a9c1a9c4eca9617b0aafbe311c946982a}{As}}<\mbox{\hyperlink{class_napi_1_1_object}{Object}}>(),\ \textcolor{stringliteral}{"{}Date"{}}))\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00206}00206\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_unique<Values::Float>(pos,\ source.\mbox{\hyperlink{class_napi_1_1_value_a531c0bf83f10b3abf11355cc440e1409}{ToNumber}}().DoubleValue());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00207}00207\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00208}00208\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (source.\mbox{\hyperlink{class_napi_1_1_value_ae5bd652acc39256b28fe89e23720c164}{IsObject}}())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00209}00209\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ napiVal\ =\ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(source.\mbox{\hyperlink{class_napi_1_1_value_a1e1930afac70f2811a222c363d892a42}{Env}}(),\ \textcolor{stringliteral}{"{}[object\ Object]"{}});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00210}00210\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Check\ whether\ toString\ returned\ a\ value\ that\ is\ not\ undefined.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00211}00211\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(napiVal.Type()\ ==\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00212}00212\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00213}00213\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00214}00214\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00215}00215\ \ \ \ \ \ \ \ \ std::string\ val\ =\ napiVal.Utf8Value();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00216}00216\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_unique<Values::Text>(pos,\ val.length(),\ val.c\_str());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00217}00217\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00218}00218\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00219}00219\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00220}00220\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00221}00221\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00222}00222\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00223}\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a3329249cd95736fe74f2ae1ff6e846ec}{00223}}\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>\ T*\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a3329249cd95736fe74f2ae1ff6e846ec}{Statement::Bind}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_napi_1_1_callback_info}{Napi::CallbackInfo}}\&\ info,\ \textcolor{keywordtype}{int}\ start,\ \textcolor{keywordtype}{int}\ last)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00224}00224\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_af5dda76cc6b32aa6816f60437249fa5c}{Env}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00225}00225\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00226}00226\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00227}00227\ \ \ \ \ \textcolor{keywordflow}{if}\ (last\ <\ 0)\ last\ =\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_a2450a932822d15c570762a4a0d321fd8}{Length}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00228}00228\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}\ callback;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00229}00229\ \ \ \ \ \textcolor{keywordflow}{if}\ (last\ >\ start\ \&\&\ info[last\ -\/\ 1].IsFunction())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00230}00230\ \ \ \ \ \ \ \ \ callback\ =\ info[last\ -\/\ 1].As<\mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}>();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00231}00231\ \ \ \ \ \ \ \ \ last-\/-\/;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00232}00232\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00233}00233\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00234}00234\ \ \ \ \ \textcolor{keyword}{auto}\ *baton\ =\ \textcolor{keyword}{new}\ T(\textcolor{keyword}{this},\ callback);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00235}00235\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00236}00236\ \ \ \ \ \textcolor{keywordflow}{if}\ (start\ <\ last)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00237}00237\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (info[start].IsArray())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00238}00238\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ array\ =\ info[start].As<\mbox{\hyperlink{class_napi_1_1_array}{Napi::Array}}>();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00239}00239\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ length\ =\ array.\mbox{\hyperlink{class_napi_1_1_array_a555d779be326dc29df310cc1e4ecb168}{Length}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00240}00240\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Note:\ bind\ parameters\ start\ with\ 1.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00241}00241\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0,\ pos\ =\ 1;\ i\ <\ length;\ i++,\ pos++)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00242}00242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ baton-\/>parameters.emplace\_back(\mbox{\hyperlink{classnode__sqlite3_1_1_statement_ad8cc5e99e8296a07db48bbb1678050b1}{BindParameter}}((array).Get(i),\ i\ +\ 1));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00243}00243\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00244}00244\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00245}00245\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (!info[start].IsObject()\ ||\ \mbox{\hyperlink{statement_8cc_a4ee960416c1771c8ab6436efc1fbdf8d}{OtherInstanceOf}}(info[start].As<Object>(),\ \textcolor{stringliteral}{"{}RegExp"{}})\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00246}00246\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ||\ \mbox{\hyperlink{statement_8cc_a4ee960416c1771c8ab6436efc1fbdf8d}{OtherInstanceOf}}(info[start].As<Object>(),\ \textcolor{stringliteral}{"{}Date"{}})\ ||\ info[start].IsBuffer())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00247}00247\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Parameters\ directly\ in\ array.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00248}00248\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Note:\ bind\ parameters\ start\ with\ 1.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00249}00249\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ start,\ pos\ =\ 1;\ i\ <\ last;\ i++,\ pos++)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00250}00250\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ baton-\/>parameters.emplace\_back(\mbox{\hyperlink{classnode__sqlite3_1_1_statement_ad8cc5e99e8296a07db48bbb1678050b1}{BindParameter}}(info[i],\ pos));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00251}00251\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00252}00252\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00253}00253\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (info[start].IsObject())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00254}00254\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ \textcolor{keywordtype}{object}\ =\ info[start].As<\mbox{\hyperlink{class_napi_1_1_object}{Napi::Object}}>();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00255}00255\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ array\ =\ \textcolor{keywordtype}{object}.\mbox{\hyperlink{class_napi_1_1_object_a1e8b87c148b5e4973c8a24dfca336531}{GetPropertyNames}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00256}00256\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ length\ =\ array.Length();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00257}00257\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ length;\ i++)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00258}00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ name\ =\ (array).Get(i);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00259}00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_number}{Napi::Number}}\ num\ =\ name.ToNumber();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00260}00260\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (num.\mbox{\hyperlink{class_napi_1_1_number_abdf11072936503eb2de3f64eb6cfb2e1}{Int32Value}}()\ ==\ num.\mbox{\hyperlink{class_napi_1_1_number_a2ba41b7408f886aada8d8f36282dd001}{DoubleValue}}())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ baton-\/>parameters.emplace\_back(}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00263}00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_ad8cc5e99e8296a07db48bbb1678050b1}{BindParameter}}((\textcolor{keywordtype}{object}).Get(name),\ num.\mbox{\hyperlink{class_napi_1_1_number_abdf11072936503eb2de3f64eb6cfb2e1}{Int32Value}}()));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00264}00264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00265}00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00266}00266\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ baton-\/>parameters.emplace\_back(\mbox{\hyperlink{classnode__sqlite3_1_1_statement_ad8cc5e99e8296a07db48bbb1678050b1}{BindParameter}}((\textcolor{keywordtype}{object}).Get(name),}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ name.As<\mbox{\hyperlink{class_napi_1_1_string}{Napi::String}}>().Utf8Value().c\_str()));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00270}00270\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00271}00271\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00273}00273\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00274}00274\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00275}00275\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00276}00276\ \ \ \ \ \textcolor{keywordflow}{return}\ baton;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00277}00277\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00278}00278\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00279}\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a6680234d2efdb8970a6c68d42d40a52f}{00279}}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a3329249cd95736fe74f2ae1ff6e846ec}{Statement::Bind}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{namespacenode__sqlite3_a54719665b28bde59870695566c24a826}{Parameters}}\ \&\ parameters)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00280}00280\ \ \ \ \ \textcolor{keywordflow}{if}\ (parameters.empty())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00281}00281\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00282}00282\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00283}00283\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00284}00284\ \ \ \ \ sqlite3\_reset(\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a09d4fa81a45d6ff549807c09bcf87620}{\_handle}});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00285}00285\ \ \ \ \ sqlite3\_clear\_bindings(\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a09d4fa81a45d6ff549807c09bcf87620}{\_handle}});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00286}00286\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00287}00287\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ field\ :\ parameters)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00288}00288\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (field\ ==\ NULL)}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00289}00289\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00290}00290\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00291}00291\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ pos;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00292}00292\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (field-\/>index\ >\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00293}00293\ \ \ \ \ \ \ \ \ \ \ \ \ pos\ =\ field-\/>index;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00294}00294\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00295}00295\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00296}00296\ \ \ \ \ \ \ \ \ \ \ \ \ pos\ =\ sqlite3\_bind\_parameter\_index(\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a09d4fa81a45d6ff549807c09bcf87620}{\_handle}},\ field-\/>name.c\_str());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00297}00297\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00298}00298\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00299}00299\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (field-\/>type)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00300}00300\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_INTEGER:\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00301}00301\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ =\ sqlite3\_bind\_int(\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a09d4fa81a45d6ff549807c09bcf87620}{\_handle}},\ pos,}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{static\_cast<}\mbox{\hyperlink{structnode__sqlite3_1_1_values_1_1_integer}{Values::Integer}}*\textcolor{keyword}{>}(field.get()))-\/>value);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00304}00304\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_FLOAT:\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00305}00305\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ =\ sqlite3\_bind\_double(\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a09d4fa81a45d6ff549807c09bcf87620}{\_handle}},\ pos,}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00306}00306\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{static\_cast<}\mbox{\hyperlink{structnode__sqlite3_1_1_values_1_1_float}{Values::Float}}*\textcolor{keyword}{>}(field.get()))-\/>value);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00307}00307\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00308}00308\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_TEXT:\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00309}00309\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ =\ sqlite3\_bind\_text(\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a09d4fa81a45d6ff549807c09bcf87620}{\_handle}},\ pos,}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{static\_cast<}\mbox{\hyperlink{structnode__sqlite3_1_1_values_1_1_text}{Values::Text}}*\textcolor{keyword}{>}(field.get()))-\/>value.c\_str(),}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{static\_cast<}\mbox{\hyperlink{structnode__sqlite3_1_1_values_1_1_text}{Values::Text}}*\textcolor{keyword}{>}(field.get()))-\/>value.size(),\ SQLITE\_TRANSIENT);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00312}00312\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_BLOB:\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00314}00314\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ =\ sqlite3\_bind\_blob(\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a09d4fa81a45d6ff549807c09bcf87620}{\_handle}},\ pos,}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00315}00315\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{static\_cast<}\mbox{\hyperlink{structnode__sqlite3_1_1_values_1_1_blob}{Values::Blob}}*\textcolor{keyword}{>}(field.get()))-\/>value,}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{static\_cast<}\mbox{\hyperlink{structnode__sqlite3_1_1_values_1_1_blob}{Values::Blob}}*\textcolor{keyword}{>}(field.get()))-\/>length,\ SQLITE\_TRANSIENT);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_NULL:\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ =\ sqlite3\_bind\_null(\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a09d4fa81a45d6ff549807c09bcf87620}{\_handle}},\ pos);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00320}00320\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00321}00321\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00322}00322\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00323}00323\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ !=\ SQLITE\_OK)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00324}00324\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a1a004a745db92a46df56636b2e79c805}{message}}\ =\ std::string(sqlite3\_errmsg(\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a15a1f32e06de8ee1db4822bcea72b813}{db}}-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_database_a14b5f93b5c80440f44f60943dd026be1}{\_handle}}));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00325}00325\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00326}00326\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00327}00327\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00328}00328\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00329}00329\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00330}00330\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00331}00331\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00332}00332\ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a3329249cd95736fe74f2ae1ff6e846ec}{Statement::Bind}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_napi_1_1_callback_info}{Napi::CallbackInfo}}\&\ info)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00333}00333\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_af5dda76cc6b32aa6816f60437249fa5c}{Env}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00334}00334\ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement}{Statement}}*\ stmt\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00335}00335\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00336}00336\ \ \ \ \ \textcolor{keyword}{auto}\ baton\ =\ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a3329249cd95736fe74f2ae1ff6e846ec}{Bind}}<Baton>(info);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00337}00337\ \ \ \ \ \textcolor{keywordflow}{if}\ (baton\ ==\ NULL)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00338}00338\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_type_error_a61771d5e0220d480f810097af673da92}{Napi::TypeError::New}}(env,\ \textcolor{stringliteral}{"{}Data\ type\ is\ not\ supported"{}}).\mbox{\hyperlink{class_napi_1_1_error_af657bb938d951eccca6cf9e4983601d9}{ThrowAsJavaScriptException}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00339}00339\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ env.Null();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00340}00340\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00341}00341\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00342}00342\ \ \ \ \ \ \ \ \ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_aac131bf3323141eb3876061811d6c284}{Schedule}}(Work\_BeginBind,\ baton);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00343}00343\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_a216112c90346f2d3701b2d8cc14591c9}{This}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00344}00344\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00345}00345\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00346}00346\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00347}00347\ \textcolor{keywordtype}{void}\ Statement::Work\_BeginBind(Baton*\ baton)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00348}00348\ \ \ \ \ \mbox{\hyperlink{macros_8h_a6a89ac510a0d47e1a442b1b19f748b23}{STATEMENT\_BEGIN}}(\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a3329249cd95736fe74f2ae1ff6e846ec}{Bind}});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00349}00349\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00350}00350\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00351}00351\ \textcolor{keywordtype}{void}\ Statement::Work\_Bind(napi\_env\ e,\ \textcolor{keywordtype}{void}*\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00352}00352\ \ \ \ \ \mbox{\hyperlink{macros_8h_a7baaea79b5361b7c196fba5e5da360da}{STATEMENT\_INIT}}(Baton);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00353}00353\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00354}00354\ \ \ \ \ \mbox{\hyperlink{macros_8h_ab3e70e665355ba3f4771de53a2bf0bb4}{STATEMENT\_MUTEX}}(mtx);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00355}00355\ \ \ \ \ sqlite3\_mutex\_enter(mtx);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00356}00356\ \ \ \ \ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a3329249cd95736fe74f2ae1ff6e846ec}{Bind}}(baton-\/>parameters);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00357}00357\ \ \ \ \ sqlite3\_mutex\_leave(mtx);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00358}00358\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00359}00359\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00360}00360\ \textcolor{keywordtype}{void}\ Statement::Work\_AfterBind(napi\_env\ e,\ napi\_status\ status,\ \textcolor{keywordtype}{void}*\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00361}00361\ \ \ \ \ std::unique\_ptr<Baton>\ baton(\textcolor{keyword}{static\_cast<}Baton*\textcolor{keyword}{>}(data));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00362}00362\ \ \ \ \ \textcolor{keyword}{auto}*\ stmt\ =\ baton-\/>stmt;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00363}00363\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00364}00364\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ stmt-\/>\mbox{\hyperlink{class_napi_1_1_reference_a145936a59e9db2c455542576e76773ac}{Env}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00365}00365\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00366}00366\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00367}00367\ \ \ \ \ \textcolor{keywordflow}{if}\ (stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ !=\ SQLITE\_OK)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00368}00368\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a0adc30a125bb274dab2b66ce34bce2ae}{Error}}(baton.get());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00369}00369\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00370}00370\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00371}00371\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Fire\ callbacks.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00372}00372\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}\ cb\ =\ baton-\/>callback.\mbox{\hyperlink{class_napi_1_1_value_a91352891b563fb744683240949e458e4}{Value}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00373}00373\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{macros_8h_a95903770efc550331a040da389d5a911}{IS\_FUNCTION}}(cb))\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00374}00374\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[]\ =\ \{\ env.Null()\ \};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00375}00375\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(stmt-\/>\mbox{\hyperlink{class_napi_1_1_reference_ae7f2d23d1f33cdbcfb4aa1b89193c5ae}{Value}}(),\ cb,\ 1,\ argv);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00376}00376\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00377}00377\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00378}00378\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00379}00379\ \ \ \ \ \mbox{\hyperlink{macros_8h_a88b8d6e5423126908adc3336d1cea66f}{STATEMENT\_END}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00380}00380\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00381}00381\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00382}00382\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00383}00383\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00384}00384\ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ Statement::Get(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_napi_1_1_callback_info}{Napi::CallbackInfo}}\&\ info)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00385}00385\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_af5dda76cc6b32aa6816f60437249fa5c}{Env}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00386}00386\ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement}{Statement}}*\ stmt\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00387}00387\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00388}00388\ \ \ \ \ Baton*\ baton\ =\ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a3329249cd95736fe74f2ae1ff6e846ec}{Bind}}<RowBaton>(info);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00389}00389\ \ \ \ \ \textcolor{keywordflow}{if}\ (baton\ ==\ NULL)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00390}00390\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_error_a6a0571d56b4fcedf862b934a507a58ed}{Napi::Error::New}}(env,\ \textcolor{stringliteral}{"{}Data\ type\ is\ not\ supported"{}}).\mbox{\hyperlink{class_napi_1_1_error_af657bb938d951eccca6cf9e4983601d9}{ThrowAsJavaScriptException}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00391}00391\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ env.Null();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00392}00392\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00393}00393\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00394}00394\ \ \ \ \ \ \ \ \ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_aac131bf3323141eb3876061811d6c284}{Schedule}}(Work\_BeginGet,\ baton);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00395}00395\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_a216112c90346f2d3701b2d8cc14591c9}{This}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00396}00396\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00397}00397\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00398}00398\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00399}00399\ \textcolor{keywordtype}{void}\ Statement::Work\_BeginGet(Baton*\ baton)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00400}00400\ \ \ \ \ \mbox{\hyperlink{macros_8h_a6a89ac510a0d47e1a442b1b19f748b23}{STATEMENT\_BEGIN}}(Get);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00401}00401\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00402}00402\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00403}00403\ \textcolor{keywordtype}{void}\ Statement::Work\_Get(napi\_env\ e,\ \textcolor{keywordtype}{void}*\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00404}00404\ \ \ \ \ \mbox{\hyperlink{macros_8h_a7baaea79b5361b7c196fba5e5da360da}{STATEMENT\_INIT}}(RowBaton);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00405}00405\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00406}00406\ \ \ \ \ \textcolor{keywordflow}{if}\ (stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ !=\ SQLITE\_DONE\ ||\ baton-\/>parameters.size())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00407}00407\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ab3e70e665355ba3f4771de53a2bf0bb4}{STATEMENT\_MUTEX}}(mtx);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00408}00408\ \ \ \ \ \ \ \ \ sqlite3\_mutex\_enter(mtx);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00409}00409\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00410}00410\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a3329249cd95736fe74f2ae1ff6e846ec}{Bind}}(baton-\/>parameters))\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00411}00411\ \ \ \ \ \ \ \ \ \ \ \ \ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ =\ sqlite3\_step(stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a09d4fa81a45d6ff549807c09bcf87620}{\_handle}});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00412}00412\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00413}00413\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!(stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ ==\ SQLITE\_ROW\ ||\ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ ==\ SQLITE\_DONE))\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00414}00414\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a1a004a745db92a46df56636b2e79c805}{message}}\ =\ std::string(sqlite3\_errmsg(stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a15a1f32e06de8ee1db4822bcea72b813}{db}}-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_database_a14b5f93b5c80440f44f60943dd026be1}{\_handle}}));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00415}00415\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00416}00416\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00417}00417\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00418}00418\ \ \ \ \ \ \ \ \ sqlite3\_mutex\_leave(mtx);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00419}00419\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00420}00420\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ ==\ SQLITE\_ROW)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00421}00421\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Acquire\ one\ result\ row\ before\ returning.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00422}00422\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_ac613bb1bfdc491af969a735ad6794b56}{GetRow}}(\&baton-\/>row,\ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a09d4fa81a45d6ff549807c09bcf87620}{\_handle}});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00423}00423\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00424}00424\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00425}00425\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00426}00426\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00427}00427\ \textcolor{keywordtype}{void}\ Statement::Work\_AfterGet(napi\_env\ e,\ napi\_status\ status,\ \textcolor{keywordtype}{void}*\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00428}00428\ \ \ \ \ std::unique\_ptr<RowBaton>\ baton(\textcolor{keyword}{static\_cast<}RowBaton*\textcolor{keyword}{>}(data));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00429}00429\ \ \ \ \ \textcolor{keyword}{auto}*\ stmt\ =\ baton-\/>stmt;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00430}00430\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00431}00431\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ stmt-\/>\mbox{\hyperlink{class_napi_1_1_reference_a145936a59e9db2c455542576e76773ac}{Env}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00432}00432\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00433}00433\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00434}00434\ \ \ \ \ \textcolor{keywordflow}{if}\ (stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ !=\ SQLITE\_ROW\ \&\&\ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ !=\ SQLITE\_DONE)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00435}00435\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a0adc30a125bb274dab2b66ce34bce2ae}{Error}}(baton.get());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00436}00436\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00437}00437\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00438}00438\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Fire\ callbacks.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00439}00439\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}\ cb\ =\ baton-\/>callback.\mbox{\hyperlink{class_napi_1_1_value_a91352891b563fb744683240949e458e4}{Value}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00440}00440\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{macros_8h_a95903770efc550331a040da389d5a911}{IS\_FUNCTION}}(cb))\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00441}00441\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ ==\ SQLITE\_ROW)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00442}00442\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Create\ the\ result\ array\ from\ the\ data\ we\ acquired.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00443}00443\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[]\ =\ \{\ env.Null(),\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a8c164d1a5ab4c2c3bb38f0ccaecba9f9}{RowToJS}}(env,\ \&baton-\/>row)\ \};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00444}00444\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(stmt-\/>\mbox{\hyperlink{class_napi_1_1_reference_ae7f2d23d1f33cdbcfb4aa1b89193c5ae}{Value}}(),\ cb,\ 2,\ argv);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00445}00445\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00446}00446\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00447}00447\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[]\ =\ \{\ env.Null()\ \};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00448}00448\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(stmt-\/>\mbox{\hyperlink{class_napi_1_1_reference_ae7f2d23d1f33cdbcfb4aa1b89193c5ae}{Value}}(),\ cb,\ 1,\ argv);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00449}00449\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00450}00450\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00451}00451\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00452}00452\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00453}00453\ \ \ \ \ \mbox{\hyperlink{macros_8h_a88b8d6e5423126908adc3336d1cea66f}{STATEMENT\_END}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00454}00454\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00455}00455\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00456}00456\ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ Statement::Run(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_napi_1_1_callback_info}{Napi::CallbackInfo}}\&\ info)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00457}00457\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_af5dda76cc6b32aa6816f60437249fa5c}{Env}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00458}00458\ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement}{Statement}}*\ stmt\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00459}00459\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00460}00460\ \ \ \ \ Baton*\ baton\ =\ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a3329249cd95736fe74f2ae1ff6e846ec}{Bind}}<RunBaton>(info);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00461}00461\ \ \ \ \ \textcolor{keywordflow}{if}\ (baton\ ==\ NULL)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00462}00462\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_error_a6a0571d56b4fcedf862b934a507a58ed}{Napi::Error::New}}(env,\ \textcolor{stringliteral}{"{}Data\ type\ is\ not\ supported"{}}).\mbox{\hyperlink{class_napi_1_1_error_af657bb938d951eccca6cf9e4983601d9}{ThrowAsJavaScriptException}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00463}00463\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ env.Null();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00464}00464\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00465}00465\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00466}00466\ \ \ \ \ \ \ \ \ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_aac131bf3323141eb3876061811d6c284}{Schedule}}(Work\_BeginRun,\ baton);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00467}00467\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_a216112c90346f2d3701b2d8cc14591c9}{This}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00468}00468\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00469}00469\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00470}00470\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00471}00471\ \textcolor{keywordtype}{void}\ Statement::Work\_BeginRun(Baton*\ baton)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00472}00472\ \ \ \ \ \mbox{\hyperlink{macros_8h_a6a89ac510a0d47e1a442b1b19f748b23}{STATEMENT\_BEGIN}}(Run);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00473}00473\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00474}00474\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00475}00475\ \textcolor{keywordtype}{void}\ Statement::Work\_Run(napi\_env\ e,\ \textcolor{keywordtype}{void}*\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00476}00476\ \ \ \ \ \mbox{\hyperlink{macros_8h_a7baaea79b5361b7c196fba5e5da360da}{STATEMENT\_INIT}}(RunBaton);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00477}00477\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00478}00478\ \ \ \ \ \mbox{\hyperlink{macros_8h_ab3e70e665355ba3f4771de53a2bf0bb4}{STATEMENT\_MUTEX}}(mtx);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00479}00479\ \ \ \ \ sqlite3\_mutex\_enter(mtx);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00480}00480\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00481}00481\ \ \ \ \ \textcolor{comment}{//\ Make\ sure\ that\ we\ also\ reset\ when\ there\ are\ no\ parameters.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00482}00482\ \ \ \ \ \textcolor{keywordflow}{if}\ (!baton-\/>parameters.size())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00483}00483\ \ \ \ \ \ \ \ \ sqlite3\_reset(stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a09d4fa81a45d6ff549807c09bcf87620}{\_handle}});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00484}00484\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00485}00485\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00486}00486\ \ \ \ \ \textcolor{keywordflow}{if}\ (stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a3329249cd95736fe74f2ae1ff6e846ec}{Bind}}(baton-\/>parameters))\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00487}00487\ \ \ \ \ \ \ \ \ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ =\ sqlite3\_step(stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a09d4fa81a45d6ff549807c09bcf87620}{\_handle}});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00488}00488\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00489}00489\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!(stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ ==\ SQLITE\_ROW\ ||\ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ ==\ SQLITE\_DONE))\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00490}00490\ \ \ \ \ \ \ \ \ \ \ \ \ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a1a004a745db92a46df56636b2e79c805}{message}}\ =\ std::string(sqlite3\_errmsg(stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a15a1f32e06de8ee1db4822bcea72b813}{db}}-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_database_a14b5f93b5c80440f44f60943dd026be1}{\_handle}}));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00491}00491\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00492}00492\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00493}00493\ \ \ \ \ \ \ \ \ \ \ \ \ baton-\/>inserted\_id\ =\ sqlite3\_last\_insert\_rowid(stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a15a1f32e06de8ee1db4822bcea72b813}{db}}-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_database_a14b5f93b5c80440f44f60943dd026be1}{\_handle}});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00494}00494\ \ \ \ \ \ \ \ \ \ \ \ \ baton-\/>changes\ =\ sqlite3\_changes(stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a15a1f32e06de8ee1db4822bcea72b813}{db}}-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_database_a14b5f93b5c80440f44f60943dd026be1}{\_handle}});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00495}00495\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00496}00496\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00497}00497\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00498}00498\ \ \ \ \ sqlite3\_mutex\_leave(mtx);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00499}00499\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00500}00500\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00501}00501\ \textcolor{keywordtype}{void}\ Statement::Work\_AfterRun(napi\_env\ e,\ napi\_status\ status,\ \textcolor{keywordtype}{void}*\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00502}00502\ \ \ \ \ std::unique\_ptr<RunBaton>\ baton(\textcolor{keyword}{static\_cast<}RunBaton*\textcolor{keyword}{>}(data));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00503}00503\ \ \ \ \ \textcolor{keyword}{auto}*\ stmt\ =\ baton-\/>stmt;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00504}00504\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00505}00505\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ stmt-\/>\mbox{\hyperlink{class_napi_1_1_reference_a145936a59e9db2c455542576e76773ac}{Env}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00506}00506\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00507}00507\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00508}00508\ \ \ \ \ \textcolor{keywordflow}{if}\ (stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ !=\ SQLITE\_ROW\ \&\&\ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ !=\ SQLITE\_DONE)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00509}00509\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a0adc30a125bb274dab2b66ce34bce2ae}{Error}}(baton.get());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00510}00510\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00511}00511\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00512}00512\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Fire\ callbacks.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00513}00513\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}\ cb\ =\ baton-\/>callback.\mbox{\hyperlink{class_napi_1_1_value_a91352891b563fb744683240949e458e4}{Value}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00514}00514\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{macros_8h_a95903770efc550331a040da389d5a911}{IS\_FUNCTION}}(cb))\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00515}00515\ \ \ \ \ \ \ \ \ \ \ \ \ (stmt-\/>\mbox{\hyperlink{class_napi_1_1_reference_ae7f2d23d1f33cdbcfb4aa1b89193c5ae}{Value}}()).Set(\mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}lastID"{}}),\ \mbox{\hyperlink{class_napi_1_1_number_aeaf0a68807d700eb5b765e24025af147}{Napi::Number::New}}(env,\ baton-\/>inserted\_id));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00516}00516\ \ \ \ \ \ \ \ \ \ \ \ \ (stmt-\/>\mbox{\hyperlink{class_napi_1_1_reference_ae7f2d23d1f33cdbcfb4aa1b89193c5ae}{Value}}()).Set(\ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}changes"{}}),\ \mbox{\hyperlink{class_napi_1_1_number_aeaf0a68807d700eb5b765e24025af147}{Napi::Number::New}}(env,\ baton-\/>changes));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00517}00517\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00518}00518\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[]\ =\ \{\ env.Null()\ \};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00519}00519\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(stmt-\/>\mbox{\hyperlink{class_napi_1_1_reference_ae7f2d23d1f33cdbcfb4aa1b89193c5ae}{Value}}(),\ cb,\ 1,\ argv);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00520}00520\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00521}00521\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00522}00522\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00523}00523\ \ \ \ \ \mbox{\hyperlink{macros_8h_a88b8d6e5423126908adc3336d1cea66f}{STATEMENT\_END}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00524}00524\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00525}00525\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00526}00526\ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ Statement::All(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_napi_1_1_callback_info}{Napi::CallbackInfo}}\&\ info)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00527}00527\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_af5dda76cc6b32aa6816f60437249fa5c}{Env}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00528}00528\ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement}{Statement}}*\ stmt\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00529}00529\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00530}00530\ \ \ \ \ Baton*\ baton\ =\ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a3329249cd95736fe74f2ae1ff6e846ec}{Bind}}<RowsBaton>(info);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00531}00531\ \ \ \ \ \textcolor{keywordflow}{if}\ (baton\ ==\ NULL)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00532}00532\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_error_a6a0571d56b4fcedf862b934a507a58ed}{Napi::Error::New}}(env,\ \textcolor{stringliteral}{"{}Data\ type\ is\ not\ supported"{}}).\mbox{\hyperlink{class_napi_1_1_error_af657bb938d951eccca6cf9e4983601d9}{ThrowAsJavaScriptException}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00533}00533\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ env.Null();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00534}00534\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00535}00535\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00536}00536\ \ \ \ \ \ \ \ \ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_aac131bf3323141eb3876061811d6c284}{Schedule}}(Work\_BeginAll,\ baton);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00537}00537\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_a216112c90346f2d3701b2d8cc14591c9}{This}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00538}00538\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00539}00539\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00540}00540\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00541}00541\ \textcolor{keywordtype}{void}\ Statement::Work\_BeginAll(Baton*\ baton)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00542}00542\ \ \ \ \ \mbox{\hyperlink{macros_8h_a6a89ac510a0d47e1a442b1b19f748b23}{STATEMENT\_BEGIN}}(All);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00543}00543\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00544}00544\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00545}00545\ \textcolor{keywordtype}{void}\ Statement::Work\_All(napi\_env\ e,\ \textcolor{keywordtype}{void}*\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00546}00546\ \ \ \ \ \mbox{\hyperlink{macros_8h_a7baaea79b5361b7c196fba5e5da360da}{STATEMENT\_INIT}}(RowsBaton);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00547}00547\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00548}00548\ \ \ \ \ \mbox{\hyperlink{macros_8h_ab3e70e665355ba3f4771de53a2bf0bb4}{STATEMENT\_MUTEX}}(mtx);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00549}00549\ \ \ \ \ sqlite3\_mutex\_enter(mtx);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00550}00550\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00551}00551\ \ \ \ \ \textcolor{comment}{//\ Make\ sure\ that\ we\ also\ reset\ when\ there\ are\ no\ parameters.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00552}00552\ \ \ \ \ \textcolor{keywordflow}{if}\ (!baton-\/>parameters.size())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00553}00553\ \ \ \ \ \ \ \ \ sqlite3\_reset(stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a09d4fa81a45d6ff549807c09bcf87620}{\_handle}});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00554}00554\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00555}00555\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00556}00556\ \ \ \ \ \textcolor{keywordflow}{if}\ (stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a3329249cd95736fe74f2ae1ff6e846ec}{Bind}}(baton-\/>parameters))\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00557}00557\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ ((stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ =\ sqlite3\_step(stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a09d4fa81a45d6ff549807c09bcf87620}{\_handle}}))\ ==\ SQLITE\_ROW)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00558}00558\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ row\ =\ std::make\_unique<Row>();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00559}00559\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_ac613bb1bfdc491af969a735ad6794b56}{GetRow}}(row.get(),\ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a09d4fa81a45d6ff549807c09bcf87620}{\_handle}});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00560}00560\ \ \ \ \ \ \ \ \ \ \ \ \ baton-\/>rows.emplace\_back(std::move(row));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00561}00561\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00562}00562\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00563}00563\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ !=\ SQLITE\_DONE)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00564}00564\ \ \ \ \ \ \ \ \ \ \ \ \ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a1a004a745db92a46df56636b2e79c805}{message}}\ =\ std::string(sqlite3\_errmsg(stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a15a1f32e06de8ee1db4822bcea72b813}{db}}-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_database_a14b5f93b5c80440f44f60943dd026be1}{\_handle}}));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00565}00565\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00566}00566\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00567}00567\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00568}00568\ \ \ \ \ sqlite3\_mutex\_leave(mtx);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00569}00569\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00570}00570\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00571}00571\ \textcolor{keywordtype}{void}\ Statement::Work\_AfterAll(napi\_env\ e,\ napi\_status\ status,\ \textcolor{keywordtype}{void}*\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00572}00572\ \ \ \ \ std::unique\_ptr<RowsBaton>\ baton(\textcolor{keyword}{static\_cast<}RowsBaton*\textcolor{keyword}{>}(data));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00573}00573\ \ \ \ \ \textcolor{keyword}{auto}*\ stmt\ =\ baton-\/>stmt;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00574}00574\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00575}00575\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ stmt-\/>\mbox{\hyperlink{class_napi_1_1_reference_a145936a59e9db2c455542576e76773ac}{Env}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00576}00576\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00577}00577\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00578}00578\ \ \ \ \ \textcolor{keywordflow}{if}\ (stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ !=\ SQLITE\_DONE)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00579}00579\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a0adc30a125bb274dab2b66ce34bce2ae}{Error}}(baton.get());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00580}00580\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00581}00581\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00582}00582\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Fire\ callbacks.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00583}00583\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}\ cb\ =\ baton-\/>callback.\mbox{\hyperlink{class_napi_1_1_value_a91352891b563fb744683240949e458e4}{Value}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00584}00584\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{macros_8h_a95903770efc550331a040da389d5a911}{IS\_FUNCTION}}(cb))\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00585}00585\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (baton-\/>rows.size())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00586}00586\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Create\ the\ result\ array\ from\ the\ data\ we\ acquired.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00587}00587\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_array}{Napi::Array}}\ result(\mbox{\hyperlink{class_napi_1_1_array_a3c1450a2cf09961e56073b8686a4706e}{Napi::Array::New}}(env,\ baton-\/>rows.size()));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00588}00588\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ \textcolor{keyword}{static\_cast<}Rows::const\_iterator\textcolor{keyword}{>}(baton-\/>rows.begin());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00589}00589\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{decltype}(it)\ end\ =\ baton-\/>rows.end();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00590}00590\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ it\ <\ end;\ ++it,\ i++)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00591}00591\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (result).Set(i,\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a8c164d1a5ab4c2c3bb38f0ccaecba9f9}{RowToJS}}(env,\ it-\/>get()));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00592}00592\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00593}00593\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00594}00594\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[]\ =\ \{\ env.Null(),\ result\ \};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00595}00595\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(stmt-\/>\mbox{\hyperlink{class_napi_1_1_reference_ae7f2d23d1f33cdbcfb4aa1b89193c5ae}{Value}}(),\ cb,\ 2,\ argv);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00596}00596\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00597}00597\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00598}00598\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ There\ were\ no\ result\ rows.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00599}00599\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[]\ =\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00600}00600\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ env.Null(),}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00601}00601\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_array_a3c1450a2cf09961e56073b8686a4706e}{Napi::Array::New}}(env,\ 0)}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00602}00602\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00603}00603\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(stmt-\/>\mbox{\hyperlink{class_napi_1_1_reference_ae7f2d23d1f33cdbcfb4aa1b89193c5ae}{Value}}(),\ cb,\ 2,\ argv);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00604}00604\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00605}00605\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00606}00606\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00607}00607\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00608}00608\ \ \ \ \ \mbox{\hyperlink{macros_8h_a88b8d6e5423126908adc3336d1cea66f}{STATEMENT\_END}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00609}00609\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00610}00610\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00611}00611\ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ Statement::Each(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_napi_1_1_callback_info}{Napi::CallbackInfo}}\&\ info)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00612}00612\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_af5dda76cc6b32aa6816f60437249fa5c}{Env}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00613}00613\ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement}{Statement}}*\ stmt\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00614}00614\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00615}00615\ \ \ \ \ \textcolor{keywordtype}{int}\ last\ =\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_a2450a932822d15c570762a4a0d321fd8}{Length}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00616}00616\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00617}00617\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}\ completed;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00618}00618\ \ \ \ \ \textcolor{keywordflow}{if}\ (last\ >=\ 2\ \&\&\ info[last\ -\/\ 1].IsFunction()\ \&\&\ info[last\ -\/\ 2].IsFunction())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00619}00619\ \ \ \ \ \ \ \ \ completed\ =\ info[-\/-\/last].As<\mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}>();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00620}00620\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00621}00621\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00622}00622\ \ \ \ \ \textcolor{keyword}{auto}\ baton\ =\ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a3329249cd95736fe74f2ae1ff6e846ec}{Bind}}<EachBaton>(info,\ 0,\ last);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00623}00623\ \ \ \ \ \textcolor{keywordflow}{if}\ (baton\ ==\ NULL)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00624}00624\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_error_a6a0571d56b4fcedf862b934a507a58ed}{Napi::Error::New}}(env,\ \textcolor{stringliteral}{"{}Data\ type\ is\ not\ supported"{}}).\mbox{\hyperlink{class_napi_1_1_error_af657bb938d951eccca6cf9e4983601d9}{ThrowAsJavaScriptException}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00625}00625\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ env.Null();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00626}00626\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00627}00627\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00628}00628\ \ \ \ \ \ \ \ \ baton-\/>completed.Reset(completed,\ 1);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00629}00629\ \ \ \ \ \ \ \ \ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_aac131bf3323141eb3876061811d6c284}{Schedule}}(Work\_BeginEach,\ baton);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00630}00630\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ info.This();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00631}00631\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00632}00632\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00633}00633\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00634}00634\ \textcolor{keywordtype}{void}\ Statement::Work\_BeginEach(Baton*\ baton)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00635}00635\ \ \ \ \ \textcolor{comment}{//\ Only\ create\ the\ Async\ object\ when\ we're\ actually\ going\ into}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00636}00636\ \ \ \ \ \textcolor{comment}{//\ the\ event\ loop.\ This\ prevents\ dangling\ events.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00637}00637\ \ \ \ \ \textcolor{keyword}{auto}*\ each\_baton\ =\ \textcolor{keyword}{static\_cast<}EachBaton*\textcolor{keyword}{>}(baton);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00638}00638\ \ \ \ \ each\_baton-\/>async\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_async}{Async}}(each\_baton-\/>stmt,\ \textcolor{keyword}{reinterpret\_cast<}uv\_async\_cb\textcolor{keyword}{>}(\mbox{\hyperlink{classnode__sqlite3_1_1_statement_ae23ecb3967888e48225dfa3a7a5fc51b}{AsyncEach}}));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00639}00639\ \ \ \ \ each\_baton-\/>async-\/>item\_cb.Reset(each\_baton-\/>callback.Value(),\ 1);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00640}00640\ \ \ \ \ each\_baton-\/>async-\/>completed\_cb.Reset(each\_baton-\/>completed.Value(),\ 1);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00641}00641\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00642}00642\ \ \ \ \ \mbox{\hyperlink{macros_8h_a6a89ac510a0d47e1a442b1b19f748b23}{STATEMENT\_BEGIN}}(Each);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00643}00643\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00644}00644\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00645}00645\ \textcolor{keywordtype}{void}\ Statement::Work\_Each(napi\_env\ e,\ \textcolor{keywordtype}{void}*\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00646}00646\ \ \ \ \ \mbox{\hyperlink{macros_8h_a7baaea79b5361b7c196fba5e5da360da}{STATEMENT\_INIT}}(EachBaton);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00647}00647\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00648}00648\ \ \ \ \ \textcolor{keyword}{auto}*\ async\ =\ baton-\/>async;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00649}00649\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00650}00650\ \ \ \ \ \mbox{\hyperlink{macros_8h_ab3e70e665355ba3f4771de53a2bf0bb4}{STATEMENT\_MUTEX}}(mtx);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00651}00651\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00652}00652\ \ \ \ \ \textcolor{comment}{//\ Make\ sure\ that\ we\ also\ reset\ when\ there\ are\ no\ parameters.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00653}00653\ \ \ \ \ \textcolor{keywordflow}{if}\ (!baton-\/>parameters.size())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00654}00654\ \ \ \ \ \ \ \ \ sqlite3\_reset(stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a09d4fa81a45d6ff549807c09bcf87620}{\_handle}});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00655}00655\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00656}00656\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00657}00657\ \ \ \ \ \textcolor{keywordflow}{if}\ (stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a3329249cd95736fe74f2ae1ff6e846ec}{Bind}}(baton-\/>parameters))\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00658}00658\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (\textcolor{keyword}{true})\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00659}00659\ \ \ \ \ \ \ \ \ \ \ \ \ sqlite3\_mutex\_enter(mtx);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00660}00660\ \ \ \ \ \ \ \ \ \ \ \ \ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ =\ sqlite3\_step(stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a09d4fa81a45d6ff549807c09bcf87620}{\_handle}});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00661}00661\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ ==\ SQLITE\_ROW)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00662}00662\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sqlite3\_mutex\_leave(mtx);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00663}00663\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ row\ =\ std::make\_unique<Row>();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00664}00664\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_ac613bb1bfdc491af969a735ad6794b56}{GetRow}}(row.get(),\ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a09d4fa81a45d6ff549807c09bcf87620}{\_handle}});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00665}00665\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{threading_8h_a373d70119d7e38056f381220da609ad0}{NODE\_SQLITE3\_MUTEX\_LOCK}}(\&async-\/>mutex)}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00666}00666\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ async-\/>data.emplace\_back(std::move(row));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00667}00667\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{threading_8h_ac466d044e1fce6081aa2f74a28d956cf}{NODE\_SQLITE3\_MUTEX\_UNLOCK}}(\&async-\/>mutex)}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00668}00668\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00669}00669\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uv\_async\_send(\&async-\/>watcher);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00670}00670\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00671}00671\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{authenticate_8php_a48ff3a56e03a4d82cfa1bced55d32ff0}{else}}\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00672}00672\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ !=\ SQLITE\_DONE)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00673}00673\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a1a004a745db92a46df56636b2e79c805}{message}}\ =\ std::string(sqlite3\_errmsg(stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a15a1f32e06de8ee1db4822bcea72b813}{db}}-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_database_a14b5f93b5c80440f44f60943dd026be1}{\_handle}}));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00674}00674\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00675}00675\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sqlite3\_mutex\_leave(mtx);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00676}00676\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00677}00677\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00678}00678\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00679}00679\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00680}00680\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00681}00681\ \ \ \ \ async-\/>completed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00682}00682\ \ \ \ \ uv\_async\_send(\&async-\/>watcher);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00683}00683\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00684}00684\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00685}\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a87ff1830640cb879f323bea0fe3c8e8e}{00685}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a87ff1830640cb879f323bea0fe3c8e8e}{Statement::CloseCallback}}(uv\_handle\_t*\ handle)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00686}00686\ \ \ \ \ assert(handle\ !=\ NULL);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00687}00687\ \ \ \ \ assert(handle-\/>data\ !=\ NULL);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00688}00688\ \ \ \ \ \textcolor{keyword}{auto}*\ async\ =\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{structnode__sqlite3_1_1_statement_1_1_async}{Async}}*\textcolor{keyword}{>}(handle-\/>data);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00689}00689\ \ \ \ \ \textcolor{keyword}{delete}\ async;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00690}00690\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00691}00691\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00692}\mbox{\hyperlink{classnode__sqlite3_1_1_statement_ae23ecb3967888e48225dfa3a7a5fc51b}{00692}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_ae23ecb3967888e48225dfa3a7a5fc51b}{Statement::AsyncEach}}(uv\_async\_t*\ handle)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00693}00693\ \ \ \ \ \textcolor{keyword}{auto}*\ async\ =\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{structnode__sqlite3_1_1_statement_1_1_async}{Async}}*\textcolor{keyword}{>}(handle-\/>data);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00694}00694\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00695}00695\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ async-\/>\mbox{\hyperlink{structnode__sqlite3_1_1_statement_1_1_async_a5dc8639837750e2fadbad8b821ae560e}{stmt}}-\/>\mbox{\hyperlink{class_napi_1_1_reference_a145936a59e9db2c455542576e76773ac}{Env}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00696}00696\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00697}00697\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00698}00698\ \ \ \ \ \textcolor{keywordflow}{while}\ (\textcolor{keyword}{true})\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00699}00699\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ the\ contents\ out\ of\ the\ data\ cache\ for\ us\ to\ process\ in\ the\ JS\ callback.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00700}00700\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacenode__sqlite3_a2b739536b6b913f0a40e2e3d11c96443}{Rows}}\ rows;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00701}00701\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{threading_8h_a373d70119d7e38056f381220da609ad0}{NODE\_SQLITE3\_MUTEX\_LOCK}}(\&async-\/>mutex)}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00702}00702\ \ \ \ \ \ \ \ \ rows.swap(async-\/>data);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00703}00703\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{threading_8h_ac466d044e1fce6081aa2f74a28d956cf}{NODE\_SQLITE3\_MUTEX\_UNLOCK}}(\&async-\/>mutex)}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00704}00704\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00705}00705\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rows.empty())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00706}00706\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00707}00707\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00708}00708\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00709}00709\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}\ cb\ =\ async-\/>item\_cb.\mbox{\hyperlink{class_napi_1_1_value_a91352891b563fb744683240949e458e4}{Value}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00710}00710\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{macros_8h_a95903770efc550331a040da389d5a911}{IS\_FUNCTION}}(cb))\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00711}00711\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[2];}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00712}00712\ \ \ \ \ \ \ \ \ \ \ \ \ argv[0]\ =\ env.Null();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00713}00713\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00714}00714\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ row\ :\ rows)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00715}00715\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ argv[1]\ =\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a8c164d1a5ab4c2c3bb38f0ccaecba9f9}{RowToJS}}(env,row.get());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00716}00716\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ async-\/>retrieved++;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00717}00717\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(async-\/>stmt-\/>Value(),\ cb,\ 2,\ argv);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00718}00718\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00719}00719\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00720}00720\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00721}00721\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00722}00722\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}\ cb\ =\ async-\/>completed\_cb.\mbox{\hyperlink{class_napi_1_1_value_a91352891b563fb744683240949e458e4}{Value}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00723}00723\ \ \ \ \ \textcolor{keywordflow}{if}\ (async-\/>completed)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00724}00724\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!cb.\mbox{\hyperlink{class_napi_1_1_value_a988bdb3e9806beb7761b4ea864461005}{IsEmpty}}()\ \&\&}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00725}00725\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cb.\mbox{\hyperlink{class_napi_1_1_value_ae8a76974575d2a58c7aa69e43b6bc70a}{IsFunction}}())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00726}00726\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[]\ =\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00727}00727\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ env.Null(),}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00728}00728\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_number_aeaf0a68807d700eb5b765e24025af147}{Napi::Number::New}}(env,\ async-\/>retrieved)}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00729}00729\ \ \ \ \ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00730}00730\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(async-\/>stmt-\/>Value(),\ cb,\ 2,\ argv);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00731}00731\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00732}00732\ \ \ \ \ \ \ \ \ uv\_close(\textcolor{keyword}{reinterpret\_cast<}uv\_handle\_t*\textcolor{keyword}{>}(handle),\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a87ff1830640cb879f323bea0fe3c8e8e}{CloseCallback}});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00733}00733\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00734}00734\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00735}00735\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00736}00736\ \textcolor{keywordtype}{void}\ Statement::Work\_AfterEach(napi\_env\ e,\ napi\_status\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}},\ \textcolor{keywordtype}{void}*\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00737}00737\ \ \ \ \ std::unique\_ptr<EachBaton>\ baton(\textcolor{keyword}{static\_cast<}EachBaton*\textcolor{keyword}{>}(data));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00738}00738\ \ \ \ \ \textcolor{keyword}{auto}*\ stmt\ =\ baton-\/>stmt;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00739}00739\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00740}00740\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ stmt-\/>\mbox{\hyperlink{class_napi_1_1_reference_a145936a59e9db2c455542576e76773ac}{Env}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00741}00741\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00742}00742\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00743}00743\ \ \ \ \ \textcolor{keywordflow}{if}\ (stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ !=\ SQLITE\_DONE)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00744}00744\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a0adc30a125bb274dab2b66ce34bce2ae}{Error}}(baton.get());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00745}00745\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00746}00746\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00747}00747\ \ \ \ \ \mbox{\hyperlink{macros_8h_a88b8d6e5423126908adc3336d1cea66f}{STATEMENT\_END}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00748}00748\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00749}00749\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00750}00750\ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ \mbox{\hyperlink{class_napi_1_1_reference_ac73acbd590af4c097f457a315c5f24c6}{Statement::Reset}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_napi_1_1_callback_info}{Napi::CallbackInfo}}\&\ info)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00751}00751\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_af5dda76cc6b32aa6816f60437249fa5c}{Env}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00752}00752\ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement}{Statement}}*\ stmt\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00753}00753\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00754}00754\ \ \ \ \ \mbox{\hyperlink{macros_8h_a0761db826ced391996c38485f138d0a0}{OPTIONAL\_ARGUMENT\_FUNCTION}}(0,\ callback);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00755}00755\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00756}00756\ \ \ \ \ \textcolor{keyword}{auto}*\ baton\ =\ \textcolor{keyword}{new}\ Baton(stmt,\ callback);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00757}00757\ \ \ \ \ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_aac131bf3323141eb3876061811d6c284}{Schedule}}(Work\_BeginReset,\ baton);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00758}00758\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00759}00759\ \ \ \ \ \textcolor{keywordflow}{return}\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_a216112c90346f2d3701b2d8cc14591c9}{This}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00760}00760\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00761}00761\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00762}00762\ \textcolor{keywordtype}{void}\ Statement::Work\_BeginReset(Baton*\ baton)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00763}00763\ \ \ \ \ \mbox{\hyperlink{macros_8h_a6a89ac510a0d47e1a442b1b19f748b23}{STATEMENT\_BEGIN}}(\mbox{\hyperlink{class_napi_1_1_reference_ac73acbd590af4c097f457a315c5f24c6}{Reset}});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00764}00764\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00765}00765\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00766}00766\ \textcolor{keywordtype}{void}\ Statement::Work\_Reset(napi\_env\ e,\ \textcolor{keywordtype}{void}*\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00767}00767\ \ \ \ \ \mbox{\hyperlink{macros_8h_a7baaea79b5361b7c196fba5e5da360da}{STATEMENT\_INIT}}(Baton);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00768}00768\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00769}00769\ \ \ \ \ sqlite3\_reset(stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a09d4fa81a45d6ff549807c09bcf87620}{\_handle}});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00770}00770\ \ \ \ \ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}}\ =\ SQLITE\_OK;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00771}00771\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00772}00772\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00773}00773\ \textcolor{keywordtype}{void}\ Statement::Work\_AfterReset(napi\_env\ e,\ napi\_status\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a95060b08e81ebab0494c441d85e7add9}{status}},\ \textcolor{keywordtype}{void}*\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00774}00774\ \ \ \ \ std::unique\_ptr<Baton>\ baton(\textcolor{keyword}{static\_cast<}Baton*\textcolor{keyword}{>}(data));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00775}00775\ \ \ \ \ \textcolor{keyword}{auto}*\ stmt\ =\ baton-\/>stmt;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00776}00776\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00777}00777\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ stmt-\/>\mbox{\hyperlink{class_napi_1_1_reference_a145936a59e9db2c455542576e76773ac}{Env}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00778}00778\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00779}00779\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00780}00780\ \ \ \ \ \textcolor{comment}{//\ Fire\ callbacks.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00781}00781\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}\ cb\ =\ baton-\/>callback.\mbox{\hyperlink{class_napi_1_1_value_a91352891b563fb744683240949e458e4}{Value}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00782}00782\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{macros_8h_a95903770efc550331a040da389d5a911}{IS\_FUNCTION}}(cb))\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00783}00783\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[]\ =\ \{\ env.Null()\ \};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00784}00784\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(stmt-\/>\mbox{\hyperlink{class_napi_1_1_reference_ae7f2d23d1f33cdbcfb4aa1b89193c5ae}{Value}}(),\ cb,\ 1,\ argv);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00785}00785\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00786}00786\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00787}00787\ \ \ \ \ \mbox{\hyperlink{macros_8h_a88b8d6e5423126908adc3336d1cea66f}{STATEMENT\_END}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00788}00788\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00789}00789\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00790}\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a8c164d1a5ab4c2c3bb38f0ccaecba9f9}{00790}}\ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a8c164d1a5ab4c2c3bb38f0ccaecba9f9}{Statement::RowToJS}}(\mbox{\hyperlink{class_napi_1_1_env}{Napi::Env}}\ env,\ \mbox{\hyperlink{namespacenode__sqlite3_a9870d74350d2e6a0927da5ef9cd8b242}{Row}}*\ row)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00791}00791\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_escapable_handle_scope}{Napi::EscapableHandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00792}00792\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00793}00793\ \ \ \ \ \textcolor{keyword}{auto}\ result\ =\ \mbox{\hyperlink{class_napi_1_1_object_aa92b5f3a7c5b1735312133993d6d1a9b}{Napi::Object::New}}(env);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00794}00794\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00795}00795\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ field\ :\ *row)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00796}00796\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00797}00797\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ value;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00798}00798\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00799}00799\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (field-\/>type)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00800}00800\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_INTEGER:\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00801}00801\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value\ =\ \mbox{\hyperlink{class_napi_1_1_number_aeaf0a68807d700eb5b765e24025af147}{Napi::Number::New}}(env,\ (\textcolor{keyword}{static\_cast<}\mbox{\hyperlink{structnode__sqlite3_1_1_values_1_1_integer}{Values::Integer}}*\textcolor{keyword}{>}(field.get()))-\/>value);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00802}00802\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00803}00803\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_FLOAT:\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00804}00804\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value\ =\ \mbox{\hyperlink{class_napi_1_1_number_aeaf0a68807d700eb5b765e24025af147}{Napi::Number::New}}(env,\ (\textcolor{keyword}{static\_cast<}\mbox{\hyperlink{structnode__sqlite3_1_1_values_1_1_float}{Values::Float}}*\textcolor{keyword}{>}(field.get()))-\/>value);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00805}00805\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00806}00806\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_TEXT:\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00807}00807\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value\ =\ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ (\textcolor{keyword}{static\_cast<}\mbox{\hyperlink{structnode__sqlite3_1_1_values_1_1_text}{Values::Text}}*\textcolor{keyword}{>}(field.get()))-\/>value.c\_str(),\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00808}00808\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{static\_cast<}\mbox{\hyperlink{structnode__sqlite3_1_1_values_1_1_text}{Values::Text}}*\textcolor{keyword}{>}(field.get()))-\/>value.size());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00809}00809\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00810}00810\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_BLOB:\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00811}00811\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value\ =\ \mbox{\hyperlink{class_napi_1_1_buffer_a46f84613e15efdbc18f5ff0e67986477}{Napi::Buffer<char>::Copy}}(env,\ (\textcolor{keyword}{static\_cast<}\mbox{\hyperlink{structnode__sqlite3_1_1_values_1_1_blob}{Values::Blob}}*\textcolor{keyword}{>}(field.get()))-\/>value,\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00812}00812\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{static\_cast<}\mbox{\hyperlink{structnode__sqlite3_1_1_values_1_1_blob}{Values::Blob}}*\textcolor{keyword}{>}(field.get()))-\/>length);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00813}00813\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00814}00814\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_NULL:\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00815}00815\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value\ =\ env.\mbox{\hyperlink{class_napi_1_1_env_a410a8ef1c496cafe1a767f3f09810f9c}{Null}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00816}00816\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00817}00817\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00818}00818\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00819}00819\ \ \ \ \ \ \ \ \ result.Set(field-\/>name,\ value);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00820}00820\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00821}00821\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00822}00822\ \ \ \ \ \textcolor{keywordflow}{return}\ scope.\mbox{\hyperlink{class_napi_1_1_escapable_handle_scope_a3d278b44f79ed180083cbdfa75a3f058}{Escape}}(result);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00823}00823\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00824}00824\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00825}\mbox{\hyperlink{classnode__sqlite3_1_1_statement_ac613bb1bfdc491af969a735ad6794b56}{00825}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_ac613bb1bfdc491af969a735ad6794b56}{Statement::GetRow}}(\mbox{\hyperlink{namespacenode__sqlite3_a9870d74350d2e6a0927da5ef9cd8b242}{Row}}*\ row,\ sqlite3\_stmt*\ stmt)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00826}00826\ \ \ \ \ \textcolor{keywordtype}{int}\ cols\ =\ sqlite3\_column\_count(stmt);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00827}00827\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00828}00828\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ cols;\ i++)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00829}00829\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ type\ =\ sqlite3\_column\_type(stmt,\ i);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00830}00830\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name\ =\ sqlite3\_column\_name(stmt,\ i);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00831}00831\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (name\ ==\ NULL)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00832}00832\ \ \ \ \ \ \ \ \ \ \ \ \ assert(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00833}00833\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00834}00834\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00835}00835\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (type)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00836}00836\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_INTEGER:\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00837}00837\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ row-\/>emplace\_back(std::make\_unique<Values::Integer>(name,\ sqlite3\_column\_int64(stmt,\ i)));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00838}00838\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00839}00839\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_FLOAT:\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00840}00840\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ row-\/>emplace\_back(std::make\_unique<Values::Float>(name,\ sqlite3\_column\_double(stmt,\ i)));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00841}00841\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00842}00842\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_TEXT:\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00843}00843\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ text\ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*)sqlite3\_column\_text(stmt,\ i);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00844}00844\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ length\ =\ sqlite3\_column\_bytes(stmt,\ i);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00845}00845\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ row-\/>emplace\_back(std::make\_unique<Values::Text>(name,\ length,\ text));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00846}00846\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00847}00847\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_BLOB:\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00848}00848\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ blob\ =\ sqlite3\_column\_blob(stmt,\ i);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00849}00849\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ length\ =\ sqlite3\_column\_bytes(stmt,\ i);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00850}00850\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ row-\/>emplace\_back(std::make\_unique<Values::Blob>(name,\ length,\ blob));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00851}00851\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00852}00852\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_NULL:\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00853}00853\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ row-\/>emplace\_back(std::make\_unique<Values::Null>(name));}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00854}00854\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00855}00855\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00856}00856\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assert(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00857}00857\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00858}00858\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00859}00859\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00860}00860\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00861}\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a7847c358d0e0f28b4e512a6e827b34b4}{00861}}\ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a66a3160a30ee1843fa7f433872bba45f}{Statement::Finalize\_}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_napi_1_1_callback_info}{Napi::CallbackInfo}}\&\ info)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00862}00862\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_af5dda76cc6b32aa6816f60437249fa5c}{Env}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00863}00863\ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement}{Statement}}*\ stmt\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00864}00864\ \ \ \ \ \mbox{\hyperlink{macros_8h_a0761db826ced391996c38485f138d0a0}{OPTIONAL\_ARGUMENT\_FUNCTION}}(0,\ callback);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00865}00865\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00866}00866\ \ \ \ \ \textcolor{keyword}{auto}\ *baton\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{structnode__sqlite3_1_1_statement_1_1_baton}{Baton}}(stmt,\ callback);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00867}00867\ \ \ \ \ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_aac131bf3323141eb3876061811d6c284}{Schedule}}(\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a66a3160a30ee1843fa7f433872bba45f}{Finalize\_}},\ baton);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00868}00868\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00869}00869\ \ \ \ \ \textcolor{keywordflow}{return}\ stmt-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a15a1f32e06de8ee1db4822bcea72b813}{db}}-\/>\mbox{\hyperlink{class_napi_1_1_reference_ae7f2d23d1f33cdbcfb4aa1b89193c5ae}{Value}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00870}00870\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00871}00871\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00872}\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a06312883ef7b3dc83f4025d2024c27a7}{00872}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a66a3160a30ee1843fa7f433872bba45f}{Statement::Finalize\_}}(\mbox{\hyperlink{structnode__sqlite3_1_1_statement_1_1_baton}{Baton}}*\ b)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00873}00873\ \ \ \ \ \textcolor{keyword}{auto}\ baton\ =\ std::unique\_ptr<Baton>(b);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00874}00874\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ baton-\/>stmt-\/>Env();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00875}00875\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00876}00876\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00877}00877\ \ \ \ \ baton-\/>stmt-\/>Finalize\_();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00878}00878\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00879}00879\ \ \ \ \ \textcolor{comment}{//\ Fire\ callback\ in\ case\ there\ was\ one.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00880}00880\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}\ cb\ =\ baton-\/>callback.\mbox{\hyperlink{class_napi_1_1_value_a91352891b563fb744683240949e458e4}{Value}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00881}00881\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{macros_8h_a95903770efc550331a040da389d5a911}{IS\_FUNCTION}}(cb))\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00882}00882\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(baton-\/>stmt-\/>Value(),\ cb,\ 0,\ NULL);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00883}00883\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00884}00884\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00885}00885\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00886}\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a66a3160a30ee1843fa7f433872bba45f}{00886}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a66a3160a30ee1843fa7f433872bba45f}{Statement::Finalize\_}}()\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00887}00887\ \ \ \ \ assert(!\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a677f22f1fbd79bdb3b3bfe48dc38ffc0}{finalized}});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00888}00888\ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a677f22f1fbd79bdb3b3bfe48dc38ffc0}{finalized}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00889}00889\ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a46dbbfaebdd6b1384a7a81eb7bda834d}{CleanQueue}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00890}00890\ \ \ \ \ \textcolor{comment}{//\ Finalize\ returns\ the\ status\ code\ of\ the\ last\ operation.\ We\ already\ fired}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00891}00891\ \ \ \ \ \textcolor{comment}{//\ error\ events\ in\ case\ those\ failed.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00892}00892\ \ \ \ \ sqlite3\_finalize(\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a09d4fa81a45d6ff549807c09bcf87620}{\_handle}});}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00893}00893\ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a09d4fa81a45d6ff549807c09bcf87620}{\_handle}}\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00894}00894\ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a15a1f32e06de8ee1db4822bcea72b813}{db}}-\/>\mbox{\hyperlink{class_napi_1_1_reference_a0350ecff614582dc9a38e41a37289261}{Unref}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00895}00895\ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00896}00896\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00897}\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a46dbbfaebdd6b1384a7a81eb7bda834d}{00897}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a46dbbfaebdd6b1384a7a81eb7bda834d}{Statement::CleanQueue}}()\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00898}00898\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ this-\/>\mbox{\hyperlink{class_napi_1_1_reference_a145936a59e9db2c455542576e76773ac}{Env}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00899}00899\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00900}00900\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00901}00901\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a64c74690dc8cd990dec5c0053c4ca3bb}{prepared}}\ \&\&\ !\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a840de47e20471f70d8fc5a68b3a76257}{queue}}.empty())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00902}00902\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ statement\ has\ already\ been\ prepared\ and\ is\ now\ finalized.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00903}00903\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Fire\ error\ for\ all\ remaining\ items\ in\ the\ queue.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00904}00904\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a3311c5dacb4b8acfdc913e57bda331cc}{EXCEPTION}}(\mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}Statement\ is\ already\ finalized"{}}),\ SQLITE\_MISUSE,\ exception);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00905}00905\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[]\ =\ \{\ exception\ \};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00906}00906\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ called\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00907}00907\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00908}00908\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Clear\ out\ the\ queue\ so\ that\ this\ object\ can\ get\ GC'ed.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00909}00909\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (!\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a840de47e20471f70d8fc5a68b3a76257}{queue}}.empty())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00910}00910\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ call\ =\ std::unique\_ptr<Call>(\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a840de47e20471f70d8fc5a68b3a76257}{queue}}.front());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00911}00911\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a840de47e20471f70d8fc5a68b3a76257}{queue}}.pop();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00912}00912\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00913}00913\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ baton\ =\ std::unique\_ptr<Baton>(call-\/>baton);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00914}00914\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}\ cb\ =\ baton-\/>callback.\mbox{\hyperlink{class_napi_1_1_value_a91352891b563fb744683240949e458e4}{Value}}();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00915}00915\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00916}00916\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a64c74690dc8cd990dec5c0053c4ca3bb}{prepared}}\ \&\&\ !cb.\mbox{\hyperlink{class_napi_1_1_value_a988bdb3e9806beb7761b4ea864461005}{IsEmpty}}()\ \&\&}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00917}00917\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cb.\mbox{\hyperlink{class_napi_1_1_value_ae8a76974575d2a58c7aa69e43b6bc70a}{IsFunction}}())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00918}00918\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(\mbox{\hyperlink{class_napi_1_1_reference_ae7f2d23d1f33cdbcfb4aa1b89193c5ae}{Value}}(),\ cb,\ 1,\ argv);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00919}00919\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ called\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00920}00920\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00921}00921\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00922}00922\ }
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00923}00923\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ When\ we\ couldn't\ call\ a\ callback\ function,\ emit\ an\ error\ on\ the}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00924}00924\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Statement\ object.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00925}00925\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!called)\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00926}00926\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ info[]\ =\ \{\ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}error"{}}),\ exception\ \};}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00927}00927\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a892be17d1363eec9b638cc05d901d0cf}{EMIT\_EVENT}}(\mbox{\hyperlink{class_napi_1_1_reference_ae7f2d23d1f33cdbcfb4aa1b89193c5ae}{Value}}(),\ 2,\ info);}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00928}00928\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00929}00929\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00930}00930\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{while}\ (!\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a840de47e20471f70d8fc5a68b3a76257}{queue}}.empty())\ \{}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00931}00931\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Just\ delete\ all\ items\ in\ the\ queue;\ we\ already\ fired\ an\ event\ when}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00932}00932\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ preparing\ the\ statement\ failed.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00933}00933\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ call\ =\ std::unique\_ptr<Call>(\mbox{\hyperlink{classnode__sqlite3_1_1_statement_a840de47e20471f70d8fc5a68b3a76257}{queue}}.front());}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00934}00934\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a840de47e20471f70d8fc5a68b3a76257}{queue}}.pop();}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00935}00935\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ don't\ call\ the\ actual\ callback,\ so\ we\ have\ to\ make\ sure\ that}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00936}00936\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ baton\ gets\ destroyed.}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00937}00937\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ call-\/>baton;}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00938}00938\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{statement_8cc_source_l00939}00939\ \}}
+
+\end{DoxyCode}

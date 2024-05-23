@@ -1,0 +1,55 @@
+\chapter{minipass-\/pipeline}
+\hypertarget{md_backend_2node__modules_2minipass-pipeline_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2minipass-pipeline_2_r_e_a_d_m_e}\index{minipass-\/pipeline@{minipass-\/pipeline}}
+\label{md_backend_2node__modules_2minipass-pipeline_2_r_e_a_d_m_e_autotoc_md2163}%
+\Hypertarget{md_backend_2node__modules_2minipass-pipeline_2_r_e_a_d_m_e_autotoc_md2163}%
+ Create a pipeline of streams using Minipass.
+
+Calls {\ttfamily .pipe()} on all the streams in the list. Returns a stream where writes got to the first pipe in the chain, and reads are from the last.
+
+Errors are proxied along the chain and emitted on the Pipeline stream.\hypertarget{md_backend_2node__modules_2minipass-pipeline_2_r_e_a_d_m_e_autotoc_md2164}{}\doxysection{\texorpdfstring{USAGE}{USAGE}}\label{md_backend_2node__modules_2minipass-pipeline_2_r_e_a_d_m_e_autotoc_md2164}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Pipeline\ =\ require('minipass-\/pipeline')}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ the\ list\ of\ streams\ to\ pipeline\ together,}
+\DoxyCodeLine{//\ a\ bit\ like\ \`{}input\ |\ transform\ |\ output`\ in\ bash}
+\DoxyCodeLine{const\ p\ =\ new\ Pipeline(input,\ transform,\ output)}
+\DoxyCodeLine{}
+\DoxyCodeLine{p.write('foo')\ //\ writes\ to\ input}
+\DoxyCodeLine{p.on('data',\ chunk\ =>\ doSomething())\ //\ reads\ from\ output\ stream}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ less\ contrived\ example\ (but\ still\ pretty\ contrived)...}
+\DoxyCodeLine{const\ decode\ =\ new\ bunzipDecoder()}
+\DoxyCodeLine{const\ unpack\ =\ tar.extract(\{\ cwd:\ 'target-\/dir'\ \})}
+\DoxyCodeLine{const\ tbz\ =\ new\ Pipeline(decode,\ unpack)}
+\DoxyCodeLine{}
+\DoxyCodeLine{fs.createReadStream('archive.tbz').pipe(tbz)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ specify\ any\ minipass\ options\ if\ you\ like,\ as\ the\ first\ argument}
+\DoxyCodeLine{//\ it'll\ only\ try\ to\ pipeline\ event\ emitters\ with\ a\ .pipe()\ method}
+\DoxyCodeLine{const\ p\ =\ new\ Pipeline(\{\ objectMode:\ true\ \},\ input,\ transform,\ output)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ If\ you\ don't\ know\ the\ things\ to\ pipe\ in\ right\ away,\ that's\ fine.}
+\DoxyCodeLine{//\ use\ p.push(stream)\ to\ add\ to\ the\ end,\ or\ p.unshift(stream)\ to\ the\ front}
+\DoxyCodeLine{const\ databaseDecoderStreamDoohickey\ =\ (connectionInfo)\ =>\ \{}
+\DoxyCodeLine{\ \ const\ p\ =\ new\ Pipeline()}
+\DoxyCodeLine{\ \ logIntoDatabase(connectionInfo).then(connection\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ initializeDecoderRing(connectionInfo).then(decoderRing\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ p.push(connection,\ decoderRing)}
+\DoxyCodeLine{\ \ \ \ \ \ getUpstreamSource(upstream\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ p.unshift(upstream)}
+\DoxyCodeLine{\ \ \ \ \ \ \})}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\ \ //\ return\ to\ caller\ right\ away}
+\DoxyCodeLine{\ \ //\ emitted\ data\ will\ be\ upstream\ -\/>\ connection\ -\/>\ decoderRing\ pipeline}
+\DoxyCodeLine{\ \ return\ p}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Pipeline is a \href{http://npm.im/minipass}{\texttt{ minipass}} stream, so it\textquotesingle{}s as synchronous as the streams it wraps. It will buffer data until there is a reader, but no longer, so make sure to attach your listeners before you pipe it somewhere else.\hypertarget{md_backend_2node__modules_2minipass-pipeline_2_r_e_a_d_m_e_autotoc_md2165}{}\doxysection{\texorpdfstring{{\ttfamily new Pipeline(opts = \{\}, ...streams)}}{{\ttfamily new Pipeline(opts = \{\}, ...streams)}}}\label{md_backend_2node__modules_2minipass-pipeline_2_r_e_a_d_m_e_autotoc_md2165}
+Create a new Pipeline with the specified Minipass options and any streams provided.\hypertarget{md_backend_2node__modules_2minipass-pipeline_2_r_e_a_d_m_e_autotoc_md2166}{}\doxysection{\texorpdfstring{{\ttfamily pipeline.\+push(stream, ...)}}{{\ttfamily pipeline.\+push(stream, ...)}}}\label{md_backend_2node__modules_2minipass-pipeline_2_r_e_a_d_m_e_autotoc_md2166}
+Attach one or more streams to the pipeline at the end (read) side of the pipe chain.\hypertarget{md_backend_2node__modules_2minipass-pipeline_2_r_e_a_d_m_e_autotoc_md2167}{}\doxysection{\texorpdfstring{{\ttfamily pipeline.\+unshift(stream, ...)}}{{\ttfamily pipeline.\+unshift(stream, ...)}}}\label{md_backend_2node__modules_2minipass-pipeline_2_r_e_a_d_m_e_autotoc_md2167}
+Attach one or more streams to the pipeline at the start (write) side of the pipe chain. 

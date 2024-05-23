@@ -1,0 +1,240 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2rc_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>rc</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>non-configurable<sp/>configuration<sp/>loader<sp/>for<sp/>lazy<sp/>people.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Usage</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>only<sp/>option<sp/>is<sp/>to<sp/>pass<sp/>rc<sp/>the<sp/>name<sp/>of<sp/>your<sp/>app,<sp/>and<sp/>your<sp/>default<sp/>configuration.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>conf<sp/>=<sp/>require(&apos;rc&apos;)(appname,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//defaults<sp/>go<sp/>here.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>port:<sp/>2468,</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//defaults<sp/>which<sp/>are<sp/>objects<sp/>will<sp/>be<sp/>merged,<sp/>not<sp/>replaced</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>views:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>engine:<sp/>&apos;jade&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`rc`<sp/>will<sp/>return<sp/>your<sp/>configuration<sp/>options<sp/>merged<sp/>with<sp/>the<sp/>defaults<sp/>you<sp/>specify.</highlight></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>pass<sp/>in<sp/>a<sp/>predefined<sp/>defaults<sp/>object,<sp/>it<sp/>will<sp/>be<sp/>mutated:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>conf<sp/>=<sp/>{};</highlight></codeline>
+<codeline><highlight class="normal">require(&apos;rc&apos;)(appname,<sp/>conf);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`rc`<sp/>finds<sp/>any<sp/>config<sp/>files<sp/>for<sp/>your<sp/>app,<sp/>the<sp/>returned<sp/>config<sp/>object<sp/>will<sp/>have</highlight></codeline>
+<codeline><highlight class="normal">a<sp/>`configs`<sp/>array<sp/>containing<sp/>their<sp/>paths:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>appCfg<sp/>=<sp/>require(&apos;rc&apos;)(appname,<sp/>conf);</highlight></codeline>
+<codeline><highlight class="normal">appCfg.configs[0]<sp/>//<sp/>/etc/appnamerc</highlight></codeline>
+<codeline><highlight class="normal">appCfg.configs[1]<sp/>//<sp/>/home/dominictarr/.config/appname</highlight></codeline>
+<codeline><highlight class="normal">appCfg.config<sp/>//<sp/>same<sp/>as<sp/>appCfg.configs[appCfg.configs.length<sp/>-<sp/>1]</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Standards</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Given<sp/>your<sp/>application<sp/>name<sp/>(`appname`),<sp/>rc<sp/>will<sp/>look<sp/>in<sp/>all<sp/>the<sp/>obvious<sp/>places<sp/>for<sp/>configuration.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>command<sp/>line<sp/>arguments,<sp/>parsed<sp/>by<sp/>minimist<sp/>_(e.g.<sp/>`--foo<sp/>baz`,<sp/>also<sp/>nested:<sp/>`--foo.bar=baz`)_</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>environment<sp/>variables<sp/>prefixed<sp/>with<sp/>`${appname}_`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>or<sp/>use<sp/>&quot;\_\_&quot;<sp/>to<sp/>indicate<sp/>nested<sp/>properties<sp/>&lt;br/&gt;<sp/>_(e.g.<sp/>`appname_foo__bar__baz`<sp/>=&gt;<sp/>`foo.bar.baz`)_</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>if<sp/>you<sp/>passed<sp/>an<sp/>option<sp/>`--config<sp/>file`<sp/>then<sp/>from<sp/>that<sp/>file</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>a<sp/>local<sp/>`.${appname}rc`<sp/>or<sp/>the<sp/>first<sp/>found<sp/>looking<sp/>in<sp/>`./<sp/>../<sp/>../../<sp/>../../../`<sp/>etc.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`$HOME/.${appname}rc`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`$HOME/.${appname}/config`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`$HOME/.config/${appname}`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`$HOME/.config/${appname}/config`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`/etc/${appname}rc`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`/etc/${appname}/config`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>the<sp/>defaults<sp/>object<sp/>you<sp/>passed<sp/>in.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">All<sp/>configuration<sp/>sources<sp/>that<sp/>were<sp/>found<sp/>will<sp/>be<sp/>flattened<sp/>into<sp/>one<sp/>object,</highlight></codeline>
+<codeline><highlight class="normal">so<sp/>that<sp/>sources<sp/>**earlier**<sp/>in<sp/>this<sp/>list<sp/>override<sp/>later<sp/>ones.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Configuration<sp/>File<sp/>Formats</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Configuration<sp/>files<sp/>(e.g.<sp/>`.appnamerc`)<sp/>may<sp/>be<sp/>in<sp/>either<sp/>[json](http://json.org/example)<sp/>or<sp/>[ini](http://en.wikipedia.org/wiki/INI_file)<sp/>format.<sp/>**No**<sp/>file<sp/>extension<sp/>(`.json`<sp/>or<sp/>`.ini`)<sp/>should<sp/>be<sp/>used.<sp/>The<sp/>example<sp/>configurations<sp/>below<sp/>are<sp/>equivalent:</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Formatted<sp/>as<sp/>`ini`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">;<sp/>You<sp/>can<sp/>include<sp/>comments<sp/>in<sp/>`ini`<sp/>format<sp/>if<sp/>you<sp/>want.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">dependsOn=0.10.0</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">;<sp/>`rc`<sp/>has<sp/>built-in<sp/>support<sp/>for<sp/>ini<sp/>sections,<sp/>see?</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[commands]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>www<sp/><sp/><sp/><sp/><sp/>=<sp/>./commands/www</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console<sp/>=<sp/>./commands/repl</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">;<sp/>You<sp/>can<sp/>even<sp/>do<sp/>nested<sp/>sections</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[generators.options]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>engine<sp/><sp/>=<sp/>ejs</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[generators.modules]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>new<sp/><sp/><sp/><sp/><sp/>=<sp/>generate-new</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>engine<sp/><sp/>=<sp/>generate-backend</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Formatted<sp/>as<sp/>`json`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>You<sp/>can<sp/>even<sp/>comment<sp/>your<sp/>JSON,<sp/>if<sp/>you<sp/>want</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;dependsOn&quot;:<sp/>&quot;0.10.0&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;commands&quot;:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;www&quot;:<sp/>&quot;./commands/www&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;console&quot;:<sp/>&quot;./commands/repl&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;generators&quot;:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;options&quot;:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>&quot;engine&quot;:<sp/>&quot;ejs&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;modules&quot;:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>&quot;new&quot;:<sp/>&quot;generate-new&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>&quot;backend&quot;:<sp/>&quot;generate-backend&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Comments<sp/>are<sp/>stripped<sp/>from<sp/>JSON<sp/>config<sp/>via<sp/>[strip-json-comments](https://github.com/sindresorhus/strip-json-comments).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>Since<sp/>ini,<sp/>and<sp/>env<sp/>variables<sp/>do<sp/>not<sp/>have<sp/>a<sp/>standard<sp/>for<sp/>types,<sp/>your<sp/>application<sp/>needs<sp/>be<sp/>prepared<sp/>for<sp/>strings.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>ensure<sp/>that<sp/>string<sp/>representations<sp/>of<sp/>booleans<sp/>and<sp/>numbers<sp/>are<sp/>always<sp/>converted<sp/>into<sp/>their<sp/>proper<sp/>types<sp/>(especially<sp/>useful<sp/>if<sp/>you<sp/>intend<sp/>to<sp/>do<sp/>strict<sp/>`===`<sp/>comparisons),<sp/>consider<sp/>using<sp/>a<sp/>module<sp/>such<sp/>as<sp/>[parse-strings-in-object](https://github.com/anselanza/parse-strings-in-object)<sp/>to<sp/>wrap<sp/>the<sp/>config<sp/>object<sp/>returned<sp/>from<sp/>rc.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Simple<sp/>example<sp/>demonstrating<sp/>precedence</highlight></codeline>
+<codeline><highlight class="normal">Assume<sp/>you<sp/>have<sp/>an<sp/>application<sp/>like<sp/>this<sp/>(notice<sp/>the<sp/>hard-coded<sp/>defaults<sp/>passed<sp/>to<sp/>rc):</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>conf<sp/>=<sp/>require(&apos;rc&apos;)(&apos;myapp&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>12345,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>mode:<sp/>&apos;test&apos;</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">console.log(JSON.stringify(conf,<sp/>null,<sp/>2));</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">You<sp/>also<sp/>have<sp/>a<sp/>file<sp/>`config.json`,<sp/>with<sp/>these<sp/>contents:</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;port&quot;:<sp/>9000,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;foo&quot;:<sp/>&quot;from<sp/>config<sp/>json&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;something&quot;:<sp/>&quot;else&quot;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">And<sp/>a<sp/>file<sp/>`.myapprc`<sp/>in<sp/>the<sp/>same<sp/>folder,<sp/>with<sp/>these<sp/>contents:</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;port&quot;:<sp/>&quot;3001&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;foo&quot;:<sp/>&quot;bar&quot;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">Here<sp/>is<sp/>the<sp/>expected<sp/>output<sp/>from<sp/>various<sp/>commands:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`node<sp/>.`</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;port&quot;:<sp/>&quot;3001&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;mode&quot;:<sp/>&quot;test&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;foo&quot;:<sp/>&quot;bar&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;_&quot;:<sp/>[],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;configs&quot;:<sp/>[</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;/Users/stephen/repos/conftest/.myapprc&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;config&quot;:<sp/>&quot;/Users/stephen/repos/conftest/.myapprc&quot;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">*Default<sp/>`mode`<sp/>from<sp/>hard-coded<sp/>object<sp/>is<sp/>retained,<sp/>but<sp/>port<sp/>is<sp/>overridden<sp/>by<sp/>`.myapprc`<sp/>file<sp/>(automatically<sp/>found<sp/>based<sp/>on<sp/>appname<sp/>match),<sp/>and<sp/>`foo`<sp/>is<sp/>added.*</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`node<sp/>.<sp/>--foo<sp/>baz`</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;port&quot;:<sp/>&quot;3001&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;mode&quot;:<sp/>&quot;test&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;foo&quot;:<sp/>&quot;baz&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;_&quot;:<sp/>[],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;configs&quot;:<sp/>[</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;/Users/stephen/repos/conftest/.myapprc&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;config&quot;:<sp/>&quot;/Users/stephen/repos/conftest/.myapprc&quot;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">*Same<sp/>result<sp/>as<sp/>above<sp/>but<sp/>`foo`<sp/>is<sp/>overridden<sp/>because<sp/>command-line<sp/>arguments<sp/>take<sp/>precedence<sp/>over<sp/>`.myapprc`<sp/>file.*</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`node<sp/>.<sp/>--foo<sp/>barbar<sp/>--config<sp/>config.json`</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;port&quot;:<sp/>9000,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;mode&quot;:<sp/>&quot;test&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;foo&quot;:<sp/>&quot;barbar&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;something&quot;:<sp/>&quot;else&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;_&quot;:<sp/>[],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;config&quot;:<sp/>&quot;config.json&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;configs&quot;:<sp/>[</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;/Users/stephen/repos/conftest/.myapprc&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;config.json&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>]</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">*Now<sp/>the<sp/>`port`<sp/>comes<sp/>from<sp/>the<sp/>`config.json`<sp/>file<sp/>specified<sp/>(overriding<sp/>the<sp/>value<sp/>from<sp/>`.myapprc`),<sp/>and<sp/>`foo`<sp/>value<sp/>is<sp/>overriden<sp/>by<sp/>command-line<sp/>despite<sp/>also<sp/>being<sp/>specified<sp/>in<sp/>the<sp/>`config.json`<sp/>file.*</highlight></codeline>
+<codeline><highlight class="normal"><sp/></highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Advanced<sp/>Usage</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Pass<sp/>in<sp/>your<sp/>own<sp/>`argv`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>may<sp/>pass<sp/>in<sp/>your<sp/>own<sp/>`argv`<sp/>as<sp/>the<sp/>third<sp/>argument<sp/>to<sp/>`rc`.<sp/><sp/>This<sp/>is<sp/>in<sp/>case<sp/>you<sp/>want<sp/>to<sp/>[use<sp/>your<sp/>own<sp/>command-line<sp/>opts<sp/>parser](https://github.com/dominictarr/rc/pull/12).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">require(&apos;rc&apos;)(appname,<sp/>defaults,<sp/>customArgvParser);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Pass<sp/>in<sp/>your<sp/>own<sp/>parser</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>have<sp/>a<sp/>special<sp/>need<sp/>to<sp/>use<sp/>a<sp/>non-standard<sp/>parser,</highlight></codeline>
+<codeline><highlight class="normal">you<sp/>can<sp/>do<sp/>so<sp/>by<sp/>passing<sp/>in<sp/>the<sp/>parser<sp/>as<sp/>the<sp/>4th<sp/>argument.</highlight></codeline>
+<codeline><highlight class="normal">(leave<sp/>the<sp/>3rd<sp/>as<sp/>null<sp/>to<sp/>get<sp/>the<sp/>default<sp/>args<sp/>parser)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">require(&apos;rc&apos;)(appname,<sp/>defaults,<sp/>null,<sp/>parser);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>may<sp/>also<sp/>be<sp/>used<sp/>to<sp/>force<sp/>a<sp/>more<sp/>strict<sp/>format,</highlight></codeline>
+<codeline><highlight class="normal">such<sp/>as<sp/>strict,<sp/>valid<sp/>JSON<sp/>only.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Note<sp/>on<sp/>Performance</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`rc`<sp/>is<sp/>running<sp/>`fs.statSync`--<sp/>so<sp/>make<sp/>sure<sp/>you<sp/>don&apos;t<sp/>use<sp/>it<sp/>in<sp/>a<sp/>hot<sp/>code<sp/>path<sp/>(e.g.<sp/>a<sp/>request<sp/>handler)<sp/></highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>License</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Multi-licensed<sp/>under<sp/>the<sp/>two-clause<sp/>BSD<sp/>License,<sp/>MIT<sp/>License,<sp/>or<sp/>Apache<sp/>License,<sp/>version<sp/>2.0</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/rc/README.md"/>
+  </compounddef>
+</doxygen>

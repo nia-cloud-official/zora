@@ -1,0 +1,332 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">NOTE:<sp/>The<sp/>default<sp/>branch<sp/>has<sp/>been<sp/>renamed!</highlight></codeline>
+<codeline><highlight class="normal">master<sp/>is<sp/>now<sp/>named<sp/>main</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>have<sp/>a<sp/>local<sp/>clone,<sp/>you<sp/>can<sp/>update<sp/>it<sp/>by<sp/>running:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```shell</highlight></codeline>
+<codeline><highlight class="normal">git<sp/>branch<sp/>-m<sp/>master<sp/>main</highlight></codeline>
+<codeline><highlight class="normal">git<sp/>fetch<sp/>origin</highlight></codeline>
+<codeline><highlight class="normal">git<sp/>branch<sp/>-u<sp/>origin/main<sp/>main</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>**node-addon-api<sp/>module**</highlight></codeline>
+<codeline><highlight class="normal">This<sp/>module<sp/>contains<sp/><sp/>**header-only<sp/>C++<sp/>wrapper<sp/>classes**<sp/>which<sp/>simplify</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>use<sp/>of<sp/>the<sp/>C<sp/>based<sp/>[Node-API](https://nodejs.org/dist/latest/docs/api/n-api.html)</highlight></codeline>
+<codeline><highlight class="normal">provided<sp/>by<sp/>Node.js<sp/>when<sp/>using<sp/>C++.<sp/>It<sp/>provides<sp/>a<sp/>C++<sp/>object<sp/>model</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>exception<sp/>handling<sp/>semantics<sp/>with<sp/>low<sp/>overhead.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">There<sp/>are<sp/>three<sp/>options<sp/>for<sp/>implementing<sp/>addons:<sp/>Node-API,<sp/>nan,<sp/>or<sp/>direct</highlight></codeline>
+<codeline><highlight class="normal">use<sp/>of<sp/>internal<sp/>V8,<sp/>libuv,<sp/>and<sp/>Node.js<sp/>libraries.<sp/>Unless<sp/>there<sp/>is<sp/>a<sp/>need<sp/>for</highlight></codeline>
+<codeline><highlight class="normal">direct<sp/>access<sp/>to<sp/>functionality<sp/>that<sp/>is<sp/>not<sp/>exposed<sp/>by<sp/>Node-API<sp/>as<sp/>outlined</highlight></codeline>
+<codeline><highlight class="normal">in<sp/>[C/C++<sp/>addons](https://nodejs.org/dist/latest/docs/api/addons.html)</highlight></codeline>
+<codeline><highlight class="normal">in<sp/>Node.js<sp/>core,<sp/>use<sp/>Node-API.<sp/>Refer<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">[C/C++<sp/>addons<sp/>with<sp/>Node-API](https://nodejs.org/dist/latest/docs/api/n-api.html)</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>more<sp/>information<sp/>on<sp/>Node-API.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Node-API<sp/>is<sp/>an<sp/>ABI<sp/>stable<sp/>C<sp/>interface<sp/>provided<sp/>by<sp/>Node.js<sp/>for<sp/>building<sp/>native</highlight></codeline>
+<codeline><highlight class="normal">addons.<sp/>It<sp/>is<sp/>independent<sp/>of<sp/>the<sp/>underlying<sp/>JavaScript<sp/>runtime<sp/>(e.g.<sp/>V8<sp/>or<sp/>ChakraCore)</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>is<sp/>maintained<sp/>as<sp/>part<sp/>of<sp/>Node.js<sp/>itself.<sp/>It<sp/>is<sp/>intended<sp/>to<sp/>insulate</highlight></codeline>
+<codeline><highlight class="normal">native<sp/>addons<sp/>from<sp/>changes<sp/>in<sp/>the<sp/>underlying<sp/>JavaScript<sp/>engine<sp/>and<sp/>allow</highlight></codeline>
+<codeline><highlight class="normal">modules<sp/>compiled<sp/>for<sp/>one<sp/>version<sp/>to<sp/>run<sp/>on<sp/>later<sp/>versions<sp/>of<sp/>Node.js<sp/>without</highlight></codeline>
+<codeline><highlight class="normal">recompilation.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`node-addon-api`<sp/>module,<sp/>which<sp/>is<sp/>not<sp/>part<sp/>of<sp/>Node.js,<sp/>preserves<sp/>the<sp/>benefits</highlight></codeline>
+<codeline><highlight class="normal">of<sp/>the<sp/>Node-API<sp/>as<sp/>it<sp/>consists<sp/>only<sp/>of<sp/>inline<sp/>code<sp/>that<sp/>depends<sp/>only<sp/>on<sp/>the<sp/>stable<sp/>API</highlight></codeline>
+<codeline><highlight class="normal">provided<sp/>by<sp/>Node-API.<sp/>As<sp/>such,<sp/>modules<sp/>built<sp/>against<sp/>one<sp/>version<sp/>of<sp/>Node.js</highlight></codeline>
+<codeline><highlight class="normal">using<sp/>node-addon-api<sp/>should<sp/>run<sp/>without<sp/>having<sp/>to<sp/>be<sp/>rebuilt<sp/>with<sp/>newer<sp/>versions</highlight></codeline>
+<codeline><highlight class="normal">of<sp/>Node.js.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It<sp/>is<sp/>important<sp/>to<sp/>remember<sp/>that<sp/>*other*<sp/>Node.js<sp/>interfaces<sp/>such<sp/>as</highlight></codeline>
+<codeline><highlight class="normal">`libuv`<sp/>(included<sp/>in<sp/>a<sp/>project<sp/>via<sp/>`#include<sp/>&lt;uv.h&gt;`)<sp/>are<sp/>not<sp/>ABI-stable<sp/>across</highlight></codeline>
+<codeline><highlight class="normal">Node.js<sp/>major<sp/>versions.<sp/>Thus,<sp/>an<sp/>addon<sp/>must<sp/>use<sp/>Node-API<sp/>and/or<sp/>`node-addon-api`</highlight></codeline>
+<codeline><highlight class="normal">exclusively<sp/>and<sp/>build<sp/>against<sp/>a<sp/>version<sp/>of<sp/>Node.js<sp/>that<sp/>includes<sp/>an</highlight></codeline>
+<codeline><highlight class="normal">implementation<sp/>of<sp/>Node-API<sp/>(meaning<sp/>an<sp/>active<sp/>LTS<sp/>version<sp/>of<sp/>Node.js)<sp/>in</highlight></codeline>
+<codeline><highlight class="normal">order<sp/>to<sp/>benefit<sp/>from<sp/>ABI<sp/>stability<sp/>across<sp/>Node.js<sp/>major<sp/>versions.<sp/>Node.js</highlight></codeline>
+<codeline><highlight class="normal">provides<sp/>an<sp/>[ABI<sp/>stability<sp/>guide][]<sp/>containing<sp/>a<sp/>detailed<sp/>explanation<sp/>of<sp/>ABI</highlight></codeline>
+<codeline><highlight class="normal">stability<sp/>in<sp/>general,<sp/>and<sp/>the<sp/>Node-API<sp/>ABI<sp/>stability<sp/>guarantee<sp/>in<sp/>particular.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">As<sp/>new<sp/>APIs<sp/>are<sp/>added<sp/>to<sp/>Node-API,<sp/>node-addon-api<sp/>must<sp/>be<sp/>updated<sp/>to<sp/>provide</highlight></codeline>
+<codeline><highlight class="normal">wrappers<sp/>for<sp/>those<sp/>new<sp/>APIs.<sp/>For<sp/>this<sp/>reason,<sp/>node-addon-api<sp/>provides</highlight></codeline>
+<codeline><highlight class="normal">methods<sp/>that<sp/>allow<sp/>callers<sp/>to<sp/>obtain<sp/>the<sp/>underlying<sp/>Node-API<sp/>handles<sp/>so</highlight></codeline>
+<codeline><highlight class="normal">direct<sp/>calls<sp/>to<sp/>Node-API<sp/>and<sp/>the<sp/>use<sp/>of<sp/>the<sp/>objects/methods<sp/>provided<sp/>by</highlight></codeline>
+<codeline><highlight class="normal">node-addon-api<sp/>can<sp/>be<sp/>used<sp/>together.<sp/>For<sp/>example,<sp/>in<sp/>order<sp/>to<sp/>be<sp/>able</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>use<sp/>an<sp/>API<sp/>for<sp/>which<sp/>the<sp/>node-addon-api<sp/>does<sp/>not<sp/>yet<sp/>provide<sp/>a<sp/>wrapper.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">APIs<sp/>exposed<sp/>by<sp/>node-addon-api<sp/>are<sp/>generally<sp/>used<sp/>to<sp/>create<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">manipulate<sp/>JavaScript<sp/>values.<sp/>Concepts<sp/>and<sp/>operations<sp/>generally<sp/>map</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>ideas<sp/>specified<sp/>in<sp/>the<sp/>**ECMA262<sp/>Language<sp/>Specification**.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>[Node-API<sp/>Resource](https://nodejs.github.io/node-addon-examples/)<sp/>offers<sp/>an</highlight></codeline>
+<codeline><highlight class="normal">excellent<sp/>orientation<sp/>and<sp/>tips<sp/>for<sp/>developers<sp/>just<sp/>getting<sp/>started<sp/>with<sp/>Node-API</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>node-addon-api.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>**[Setup](#setup)**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**[API<sp/>Documentation](#api)**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**[Examples](#examples)**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**[Tests](#tests)**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**[More<sp/>resource<sp/>and<sp/>info<sp/>about<sp/>native<sp/>Addons](#resources)**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**[Badges](#badges)**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**[Code<sp/>of<sp/>Conduct](CODE_OF_CONDUCT.md)**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**[Contributors](#contributors)**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**[License](#license)**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>**Current<sp/>version:<sp/>7.1.0**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">(See<sp/>[CHANGELOG.md](CHANGELOG.md)<sp/>for<sp/>complete<sp/>Changelog)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![NPM](https://nodei.co/npm/node-addon-api.png?downloads=true&amp;downloadRank=true)](https://nodei.co/npm/node-addon-api/)<sp/>[![NPM](https://nodei.co/npm-dl/node-addon-api.png?months=6&amp;height=1)](https://nodei.co/npm/node-addon-api/)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;setup&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">node-addon-api<sp/>is<sp/>based<sp/>on<sp/>[Node-API](https://nodejs.org/api/n-api.html)<sp/>and<sp/>supports<sp/>using<sp/>different<sp/>Node-API<sp/>versions.</highlight></codeline>
+<codeline><highlight class="normal">This<sp/>allows<sp/>addons<sp/>built<sp/>with<sp/>it<sp/>to<sp/>run<sp/>with<sp/>Node.js<sp/>versions<sp/>which<sp/>support<sp/>the<sp/>targeted<sp/>Node-API<sp/>version.</highlight></codeline>
+<codeline><highlight class="normal">**However**<sp/>the<sp/>node-addon-api<sp/>support<sp/>model<sp/>is<sp/>to<sp/>support<sp/>only<sp/>the<sp/>active<sp/>LTS<sp/>Node.js<sp/>versions.<sp/>This<sp/>means<sp/>that</highlight></codeline>
+<codeline><highlight class="normal">every<sp/>year<sp/>there<sp/>will<sp/>be<sp/>a<sp/>new<sp/>major<sp/>which<sp/>drops<sp/>support<sp/>for<sp/>the<sp/>Node.js<sp/>LTS<sp/>version<sp/>which<sp/>has<sp/>gone<sp/>out<sp/>of<sp/>service.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>oldest<sp/>Node.js<sp/>version<sp/>supported<sp/>by<sp/>the<sp/>current<sp/>version<sp/>of<sp/>node-addon-api<sp/>is<sp/>Node.js<sp/>16.x.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Setup</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>[Installation<sp/>and<sp/>usage](doc/setup.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>[node-gyp](doc/node-gyp.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>[cmake-js](doc/cmake-js.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>[Conversion<sp/>tool](doc/conversion-tool.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>[Checker<sp/>tool](doc/checker-tool.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>[Generator](doc/generator.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>[Prebuild<sp/>tools](doc/prebuild_tools.md)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;api&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>**API<sp/>Documentation**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>following<sp/>is<sp/>the<sp/>documentation<sp/>for<sp/>node-addon-api.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/>-<sp/>[Full<sp/>Class<sp/>Hierarchy](doc/hierarchy.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/>-<sp/>[Addon<sp/>Structure](doc/addon.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/>-<sp/>Data<sp/>Types:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/>[Env](doc/env.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/>[CallbackInfo](doc/callbackinfo.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/>[Reference](doc/reference.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/>[Value](doc/value.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-<sp/>[Name](doc/name.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-<sp/>[Symbol](doc/symbol.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-<sp/>[String](doc/string.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-<sp/>[Number](doc/number.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-<sp/>[Date](doc/date.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-<sp/>[BigInt](doc/bigint.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-<sp/>[Boolean](doc/boolean.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-<sp/>[External](doc/external.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-<sp/>[Object](doc/object.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-<sp/>[Array](doc/array.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-<sp/>[ObjectReference](doc/object_reference.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/>[PropertyDescriptor](doc/property_descriptor.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/>[Function](doc/function.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-<sp/>[FunctionReference](doc/function_reference.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/>[ObjectWrap](doc/object_wrap.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-<sp/>[ClassPropertyDescriptor](doc/class_property_descriptor.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/>[Buffer](doc/buffer.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/>[ArrayBuffer](doc/array_buffer.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/>[TypedArray](doc/typed_array.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>-<sp/>[TypedArrayOf](doc/typed_array_of.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/>[DataView](doc/dataview.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/>-<sp/>[Error<sp/>Handling](doc/error_handling.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/>[Error](doc/error.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>-<sp/>[TypeError](doc/type_error.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>-<sp/>[RangeError](doc/range_error.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>-<sp/>[SyntaxError](doc/syntax_error.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/>-<sp/>[Object<sp/>Lifetime<sp/>Management](doc/object_lifetime_management.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/>[HandleScope](doc/handle_scope.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/>[EscapableHandleScope](doc/escapable_handle_scope.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/>-<sp/>[Memory<sp/>Management](doc/memory_management.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/>-<sp/>[Async<sp/>Operations](doc/async_operations.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/>[AsyncWorker](doc/async_worker.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/>[AsyncContext](doc/async_context.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/>[AsyncWorker<sp/>Variants](doc/async_worker_variants.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/>-<sp/>[Thread-safe<sp/>Functions](doc/threadsafe.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/>[ThreadSafeFunction](doc/threadsafe_function.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-<sp/>[TypedThreadSafeFunction](doc/typed_threadsafe_function.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/>-<sp/>[Promises](doc/promises.md)</highlight></codeline>
+<codeline><highlight class="normal"><sp/>-<sp/>[Version<sp/>management](doc/version_management.md)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;examples&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>**Examples**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Are<sp/>you<sp/>new<sp/>to<sp/>**node-addon-api**?<sp/>Take<sp/>a<sp/>look<sp/>at<sp/>our<sp/>**[examples](https://github.com/nodejs/node-addon-examples)**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>**[Hello<sp/>World](https://github.com/nodejs/node-addon-examples/tree/main/src/1-getting-started/1_hello_world)**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**[Pass<sp/>arguments<sp/>to<sp/>a<sp/>function](https://github.com/nodejs/node-addon-examples/tree/main/src/1-getting-started/2_function_arguments/node-addon-api)**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**[Callbacks](https://github.com/nodejs/node-addon-examples/tree/main/src/1-getting-started/3_callbacks/node-addon-api)**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**[Object<sp/>factory](https://github.com/nodejs/node-addon-examples/tree/main/src/1-getting-started/4_object_factory/node-addon-api)**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**[Function<sp/>factory](https://github.com/nodejs/node-addon-examples/tree/main/src/1-getting-started/5_function_factory/node-addon-api)**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**[Wrapping<sp/>C++<sp/>Object](https://github.com/nodejs/node-addon-examples/tree/main/src/1-getting-started/6_object_wrap/node-addon-api)**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**[Factory<sp/>of<sp/>wrapped<sp/>object](https://github.com/nodejs/node-addon-examples/tree/main/src/1-getting-started/7_factory_wrap/node-addon-api)**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**[Passing<sp/>wrapped<sp/>object<sp/>around](https://github.com/nodejs/node-addon-examples/tree/main/src/2-js-to-native-conversion/8_passing_wrapped/node-addon-api)**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;tests&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>**Tests**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>run<sp/>the<sp/>**node-addon-api**<sp/>tests<sp/>do:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>install</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>test</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>avoid<sp/>testing<sp/>the<sp/>deprecated<sp/>portions<sp/>of<sp/>the<sp/>API<sp/>run</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>install</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>test<sp/>--disable-deprecated</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>run<sp/>the<sp/>tests<sp/>targeting<sp/>a<sp/>specific<sp/>version<sp/>of<sp/>Node-API<sp/>run</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>install</highlight></codeline>
+<codeline><highlight class="normal">export<sp/>NAPI_VERSION=X</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>test<sp/>--NAPI_VERSION=X</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">where<sp/>X<sp/>is<sp/>the<sp/>version<sp/>of<sp/>Node-API<sp/>you<sp/>want<sp/>to<sp/>target.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>run<sp/>a<sp/>specific<sp/>unit<sp/>test,<sp/>filter<sp/>conditions<sp/>are<sp/>available</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Example:**</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>compile<sp/>and<sp/>run<sp/>only<sp/>tests<sp/>on<sp/>objectwrap.cc<sp/>and<sp/>objectwrap.js</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>```</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>npm<sp/>run<sp/>unit<sp/>--filter=objectwrap</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Multiple<sp/>unit<sp/>tests<sp/>cane<sp/>be<sp/>selected<sp/>with<sp/>wildcards</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Example:**</highlight></codeline>
+<codeline><highlight class="normal">compile<sp/>and<sp/>run<sp/>all<sp/>test<sp/>files<sp/>ending<sp/>with<sp/>&quot;reference&quot;<sp/>-&gt;<sp/>function_reference.cc,<sp/>object_reference.cc,<sp/>reference.cc</highlight></codeline>
+<codeline><highlight class="normal"><sp/>```</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>npm<sp/>run<sp/>unit<sp/>--filter=*reference</highlight></codeline>
+<codeline><highlight class="normal"><sp/>```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Multiple<sp/>filter<sp/>conditions<sp/>can<sp/>be<sp/>joined<sp/>to<sp/>broaden<sp/>the<sp/>test<sp/>selection</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Example:**</highlight></codeline>
+<codeline><highlight class="normal"><sp/>compile<sp/>and<sp/>run<sp/>all<sp/>tests<sp/>under<sp/>folders<sp/>threadsafe_function<sp/>and<sp/>typed_threadsafe_function<sp/>and<sp/>also<sp/>the<sp/>objectwrap.cc<sp/>file</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>npm<sp/>run<sp/>unit<sp/>--filter=&apos;*function<sp/>objectwrap&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>**Debug**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>run<sp/>the<sp/>**node-addon-api**<sp/>tests<sp/>with<sp/>`--debug`<sp/>option:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>run-script<sp/>dev</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>want<sp/>a<sp/>faster<sp/>build,<sp/>you<sp/>might<sp/>use<sp/>the<sp/>following<sp/>option:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>run-script<sp/>dev:incremental</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Take<sp/>a<sp/>look<sp/>and<sp/>get<sp/>inspired<sp/>by<sp/>our<sp/>**[test<sp/>suite](https://github.com/nodejs/node-addon-api/tree/HEAD/test)**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>**Benchmarks**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>run<sp/>the<sp/>available<sp/>benchmarks<sp/>using<sp/>the<sp/>following<sp/>command:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>run-script<sp/>benchmark</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">See<sp/>[benchmark/README.md](benchmark/README.md)<sp/>for<sp/>more<sp/>details<sp/>about<sp/>running<sp/>and<sp/>adding<sp/>benchmarks.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;resources&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>**More<sp/>resource<sp/>and<sp/>info<sp/>about<sp/>native<sp/>Addons**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**[C++<sp/>Addons](https://nodejs.org/dist/latest/docs/api/addons.html)**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**[Node-API](https://nodejs.org/dist/latest/docs/api/n-api.html)**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**[Node-API<sp/>-<sp/>Next<sp/>Generation<sp/>Node<sp/>API<sp/>for<sp/>Native<sp/>Modules](https://youtu.be/-Oniup60Afs)**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**[How<sp/>We<sp/>Migrated<sp/>Realm<sp/>JavaScript<sp/>From<sp/>NAN<sp/>to<sp/>Node-API](https://developer.mongodb.com/article/realm-javascript-nan-to-n-api)**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">As<sp/>node-addon-api&apos;s<sp/>core<sp/>mission<sp/>is<sp/>to<sp/>expose<sp/>the<sp/>plain<sp/>C<sp/>Node-API<sp/>as<sp/>C++</highlight></codeline>
+<codeline><highlight class="normal">wrappers,<sp/>tools<sp/>that<sp/>facilitate<sp/>n-api/node-addon-api<sp/>providing<sp/>more</highlight></codeline>
+<codeline><highlight class="normal">convenient<sp/>patterns<sp/>for<sp/>developing<sp/>a<sp/>Node.js<sp/>add-on<sp/>with<sp/>n-api/node-addon-api</highlight></codeline>
+<codeline><highlight class="normal">can<sp/>be<sp/>published<sp/>to<sp/>NPM<sp/>as<sp/>standalone<sp/>packages.<sp/>It<sp/>is<sp/>also<sp/>recommended<sp/>to<sp/>tag</highlight></codeline>
+<codeline><highlight class="normal">such<sp/>packages<sp/>with<sp/>`node-addon-api`<sp/>to<sp/>provide<sp/>more<sp/>visibility<sp/>to<sp/>the<sp/>community.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Quick<sp/>links<sp/>to<sp/>NPM<sp/>searches:<sp/>[keywords:node-addon-api](https://www.npmjs.com/search?q=keywords%3Anode-addon-api).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;other-bindings&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>**Other<sp/>bindings**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>**[napi-rs](https://napi.rs)**<sp/>-<sp/>(`Rust`)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;badges&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>**Badges**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>use<sp/>of<sp/>badges<sp/>is<sp/>recommended<sp/>to<sp/>indicate<sp/>the<sp/>minimum<sp/>version<sp/>of<sp/>Node-API</highlight></codeline>
+<codeline><highlight class="normal">required<sp/>for<sp/>the<sp/>module.<sp/>This<sp/>helps<sp/>to<sp/>determine<sp/>which<sp/>Node.js<sp/>major<sp/>versions<sp/>are</highlight></codeline>
+<codeline><highlight class="normal">supported.<sp/>Addon<sp/>maintainers<sp/>can<sp/>consult<sp/>the<sp/>[Node-API<sp/>support<sp/>matrix][]<sp/>to<sp/>determine</highlight></codeline>
+<codeline><highlight class="normal">which<sp/>Node.js<sp/>versions<sp/>provide<sp/>a<sp/>given<sp/>Node-API<sp/>version.<sp/>The<sp/>following<sp/>badges<sp/>are</highlight></codeline>
+<codeline><highlight class="normal">available:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">![Node-API<sp/>v1<sp/>Badge](https://github.com/nodejs/abi-stable-node/blob/doc/assets/Node-API%20v1%20Badge.svg)</highlight></codeline>
+<codeline><highlight class="normal">![Node-API<sp/>v2<sp/>Badge](https://github.com/nodejs/abi-stable-node/blob/doc/assets/Node-API%20v2%20Badge.svg)</highlight></codeline>
+<codeline><highlight class="normal">![Node-API<sp/>v3<sp/>Badge](https://github.com/nodejs/abi-stable-node/blob/doc/assets/Node-API%20v3%20Badge.svg)</highlight></codeline>
+<codeline><highlight class="normal">![Node-API<sp/>v4<sp/>Badge](https://github.com/nodejs/abi-stable-node/blob/doc/assets/Node-API%20v4%20Badge.svg)</highlight></codeline>
+<codeline><highlight class="normal">![Node-API<sp/>v5<sp/>Badge](https://github.com/nodejs/abi-stable-node/blob/doc/assets/Node-API%20v5%20Badge.svg)</highlight></codeline>
+<codeline><highlight class="normal">![Node-API<sp/>v6<sp/>Badge](https://github.com/nodejs/abi-stable-node/blob/doc/assets/Node-API%20v6%20Badge.svg)</highlight></codeline>
+<codeline><highlight class="normal">![Node-API<sp/>v7<sp/>Badge](https://github.com/nodejs/abi-stable-node/blob/doc/assets/Node-API%20v7%20Badge.svg)</highlight></codeline>
+<codeline><highlight class="normal">![Node-API<sp/>v8<sp/>Badge](https://github.com/nodejs/abi-stable-node/blob/doc/assets/Node-API%20v8%20Badge.svg)</highlight></codeline>
+<codeline><highlight class="normal">![Node-API<sp/>v9<sp/>Badge](https://github.com/nodejs/abi-stable-node/blob/doc/assets/Node-API%20v9%20Badge.svg)</highlight></codeline>
+<codeline><highlight class="normal">![Node-API<sp/>Experimental<sp/>Version<sp/>Badge](https://github.com/nodejs/abi-stable-node/blob/doc/assets/Node-API%20Experimental%20Version%20Badge.svg)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>**Contributing**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">We<sp/>love<sp/>contributions<sp/>from<sp/>the<sp/>community<sp/>to<sp/>**node-addon-api**!</highlight></codeline>
+<codeline><highlight class="normal">See<sp/>[CONTRIBUTING.md](CONTRIBUTING.md)<sp/>for<sp/>more<sp/>details<sp/>on<sp/>our<sp/>philosophy<sp/>around<sp/>extending<sp/>this<sp/>module.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;contributors&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Team<sp/>members</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Active</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Name<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>GitHub<sp/>Link<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>-------------------<sp/>|<sp/>-----------------------------------------------------<sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Anna<sp/>Henningsen<sp/><sp/><sp/><sp/><sp/>|<sp/>[addaleax](https://github.com/addaleax)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Chengzhong<sp/>Wu<sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>[legendecas](https://github.com/legendecas)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Jack<sp/>Xia<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>[JckXia](https://github.com/JckXia)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Kevin<sp/>Eady<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>[KevinEady](https://github.com/KevinEady)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Michael<sp/>Dawson<sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>[mhdawson](https://github.com/mhdawson)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Nicola<sp/>Del<sp/>Gobbo<sp/><sp/><sp/><sp/>|<sp/>[NickNaso](https://github.com/NickNaso)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Vladimir<sp/>Morozov<sp/><sp/><sp/><sp/>|<sp/>[vmoroz](https://github.com/vmoroz)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Emeritus</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Name<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>GitHub<sp/>Link<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>-------------------<sp/>|<sp/>-----------------------------------------------------<sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Arunesh<sp/>Chandra<sp/><sp/><sp/><sp/><sp/>|<sp/>[aruneshchandra](https://github.com/aruneshchandra)<sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Benjamin<sp/>Byholm<sp/><sp/><sp/><sp/><sp/>|<sp/>[kkoopa](https://github.com/kkoopa)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Gabriel<sp/>Schulhof<sp/><sp/><sp/><sp/>|<sp/>[gabrielschulhof](https://github.com/gabrielschulhof)<sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Hitesh<sp/>Kanwathirtha<sp/>|<sp/>[digitalinfinity](https://github.com/digitalinfinity)<sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Jason<sp/>Ginchereau<sp/><sp/><sp/><sp/>|<sp/>[jasongin](https://github.com/jasongin)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Jim<sp/>Schlight<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>[jschlight](https://github.com/jschlight)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Sampson<sp/>Gao<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>[sampsongao](https://github.com/sampsongao)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Taylor<sp/>Woll<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>[boingoing](https://github.com/boingoing)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>name=&quot;license&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Licensed<sp/>under<sp/>[MIT](./LICENSE.md)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[ABI<sp/>stability<sp/>guide]:<sp/>https://nodejs.org/en/docs/guides/abi-stability/</highlight></codeline>
+<codeline><highlight class="normal">[Node-API<sp/>support<sp/>matrix]:<sp/>https://nodejs.org/dist/latest/docs/api/n-api.html#n_api_n_api_version_matrix</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/node-addon-api/README.md"/>
+  </compounddef>
+</doxygen>

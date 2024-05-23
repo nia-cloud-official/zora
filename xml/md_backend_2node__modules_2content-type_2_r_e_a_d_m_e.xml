@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2content-type_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2content-type_2_r_e_a_d_m_e</compoundname>
+    <title>content-type</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2content-type_2_r_e_a_d_m_e_1autotoc_md574"/> <ulink url="https://npmjs.org/package/content-type"><image type="html" name="https://badgen.net/npm/v/content-type" alt="NPM Version" inline="yes"></image>
+</ulink> <ulink url="https://npmjs.org/package/content-type"><image type="html" name="https://badgen.net/npm/dm/content-type" alt="NPM Downloads" inline="yes"></image>
+</ulink> <ulink url="https://nodejs.org/en/download"><image type="html" name="https://badgen.net/npm/node/content-type" alt="Node.js Version" inline="yes"></image>
+</ulink> <ulink url="https://github.com/jshttp/content-type/actions/workflows/ci.yml"><image type="html" name="https://badgen.net/github/checks/jshttp/content-type/master?label=ci" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/r/jshttp/content-type?branch=master"><image type="html" name="https://badgen.net/coveralls/c/github/jshttp/content-type/master" alt="Coverage Status" inline="yes"></image>
+</ulink></para>
+<para>Create and parse HTTP Content-Type header according to RFC 7231</para>
+<sect1 id="md_backend_2node__modules_2content-type_2_r_e_a_d_m_e_1autotoc_md575">
+<title>Installation</title><para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>content-type</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2content-type_2_r_e_a_d_m_e_1autotoc_md576">
+<title>API</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>contentType<sp/>=<sp/>require(&apos;content-type&apos;)</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2content-type_2_r_e_a_d_m_e_1autotoc_md577">
+<title>contentType.parse(string)</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>obj<sp/>=<sp/>contentType.parse(&apos;image/svg+xml;<sp/>charset=utf-8&apos;)</highlight></codeline>
+</programlisting></para>
+<para>Parse a <computeroutput>Content-Type</computeroutput> header. This will return an object with the following properties (examples are shown for the string <lsquo/>&apos;image/svg+xml; charset=utf-8<rsquo/>`):</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>type</computeroutput>: The media type (the type and subtype, always lower case). Example: <lsquo/>&apos;image/svg+xml<rsquo/>`</para>
+</listitem><listitem><para><computeroutput>parameters</computeroutput>: An object of the parameters in the media type (name of parameter always lower case). Example: <lsquo/>{charset: &apos;utf-8<rsquo/>}`</para>
+</listitem></itemizedlist>
+</para>
+<para>Throws a <computeroutput>TypeError</computeroutput> if the string is missing or invalid.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2content-type_2_r_e_a_d_m_e_1autotoc_md578">
+<title>contentType.parse(req)</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>obj<sp/>=<sp/>contentType.parse(req)</highlight></codeline>
+</programlisting></para>
+<para>Parse the <computeroutput>Content-Type</computeroutput> header from the given <computeroutput>req</computeroutput>. Short-cut for <lsquo/>contentType.parse(req.headers[&apos;content-type<rsquo/>])`.</para>
+<para>Throws a <computeroutput>TypeError</computeroutput> if the <computeroutput>Content-Type</computeroutput> header is missing or invalid.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2content-type_2_r_e_a_d_m_e_1autotoc_md579">
+<title>contentType.parse(res)</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>obj<sp/>=<sp/>contentType.parse(res)</highlight></codeline>
+</programlisting></para>
+<para>Parse the <computeroutput>Content-Type</computeroutput> header set on the given <computeroutput>res</computeroutput>. Short-cut for <lsquo/>contentType.parse(res.getHeader(&apos;content-type<rsquo/>))`.</para>
+<para>Throws a <computeroutput>TypeError</computeroutput> if the <computeroutput>Content-Type</computeroutput> header is missing or invalid.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2content-type_2_r_e_a_d_m_e_1autotoc_md580">
+<title>contentType.format(obj)</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>str<sp/>=<sp/>contentType.format({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>type:<sp/>&apos;image/svg+xml&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parameters:<sp/>{<sp/>charset:<sp/>&apos;utf-8&apos;<sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+<para>Format an object into a <computeroutput>Content-Type</computeroutput> header. This will return a string of the content type for the given object with the following properties (examples are shown that produce the string <lsquo/>&apos;image/svg+xml; charset=utf-8<rsquo/>`):</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>type</computeroutput>: The media type (will be lower-cased). Example: <lsquo/>&apos;image/svg+xml<rsquo/>`</para>
+</listitem><listitem><para><computeroutput>parameters</computeroutput>: An object of the parameters in the media type (name of the parameter will be lower-cased). Example: <lsquo/>{charset: &apos;utf-8<rsquo/>}`</para>
+</listitem></itemizedlist>
+</para>
+<para>Throws a <computeroutput>TypeError</computeroutput> if the object contains an invalid type or parameter names.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2content-type_2_r_e_a_d_m_e_1autotoc_md581">
+<title>License</title><para>[MIT](LICENSE) </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/content-type/README.md"/>
+  </compounddef>
+</doxygen>

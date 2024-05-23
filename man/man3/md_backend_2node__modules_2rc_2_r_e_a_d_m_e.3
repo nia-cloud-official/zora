@@ -1,0 +1,257 @@
+.TH "md_backend_2node__modules_2rc_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2rc_2_r_e_a_d_m_e \- rc 
+.PP
+ The non-configurable configuration loader for lazy people\&.
+.SH "Usage"
+.PP
+The only option is to pass rc the name of your app, and your default configuration\&.
+.PP
+.PP
+.nf
+var conf = require('rc')(appname, {
+  //defaults go here\&.
+  port: 2468,
+
+  //defaults which are objects will be merged, not replaced
+  views: {
+    engine: 'jade'
+  }
+});
+.fi
+.PP
+.PP
+\fRrc\fP will return your configuration options merged with the defaults you specify\&. If you pass in a predefined defaults object, it will be mutated:
+.PP
+.PP
+.nf
+var conf = {};
+require('rc')(appname, conf);
+.fi
+.PP
+.PP
+If \fRrc\fP finds any config files for your app, the returned config object will have a \fRconfigs\fP array containing their paths:
+.PP
+.PP
+.nf
+var appCfg = require('rc')(appname, conf);
+appCfg\&.configs[0] // /etc/appnamerc
+appCfg\&.configs[1] // /home/dominictarr/\&.config/appname
+appCfg\&.config // same as appCfg\&.configs[appCfg\&.configs\&.length \- 1]
+.fi
+.PP
+.SH "Standards"
+.PP
+Given your application name (\fRappname\fP), rc will look in all the obvious places for configuration\&.
+.PP
+.IP "\(bu" 2
+command line arguments, parsed by minimist _(e\&.g\&. \fR--foo baz\fP, also nested: \fR--foo\&.bar=baz\fP)_
+.IP "\(bu" 2
+environment variables prefixed with \fR${appname}_\fP
+.IP "  \(bu" 4
+or use '\\_\\_' to indicate nested properties 
+.br
+ _(e\&.g\&. \fRappname_foo__bar__baz\fP => \fRfoo\&.bar\&.baz\fP)_
+.PP
+
+.IP "\(bu" 2
+if you passed an option \fR--config file\fP then from that file
+.IP "\(bu" 2
+a local \fR\&.${appname}rc\fP or the first found looking in \fR\&./ \&.\&./ \&.\&./\&.\&./ \&.\&./\&.\&./\&.\&./\fP etc\&.
+.IP "\(bu" 2
+\fR$HOME/\&.${appname}rc\fP
+.IP "\(bu" 2
+\fR$HOME/\&.${appname}/config\fP
+.IP "\(bu" 2
+\fR$HOME/\&.config/${appname}\fP
+.IP "\(bu" 2
+\fR$HOME/\&.config/${appname}/config\fP
+.IP "\(bu" 2
+\fR/etc/${appname}rc\fP
+.IP "\(bu" 2
+\fR/etc/${appname}/config\fP
+.IP "\(bu" 2
+the defaults object you passed in\&.
+.PP
+.PP
+All configuration sources that were found will be flattened into one object, so that sources \fBearlier\fP in this list override later ones\&.
+.SH "Configuration File Formats"
+.PP
+Configuration files (e\&.g\&. \fR\&.appnamerc\fP) may be in either \fRjson\fP or \fRini\fP format\&. \fBNo\fP file extension (\fR\&.json\fP or \fR\&.ini\fP) should be used\&. The example configurations below are equivalent:
+.SS "Formatted as \fRini\fP"
+.PP
+.nf
+; You can include comments in `ini` format if you want\&.
+
+dependsOn=0\&.10\&.0
+
+
+; `rc` has built\-in support for ini sections, see?
+
+[commands]
+  www     = \&./commands/www
+  console = \&./commands/repl
+
+
+; You can even do nested sections
+
+[generators\&.options]
+  engine  = ejs
+
+[generators\&.modules]
+  new     = generate\-new
+  engine  = generate\-backend
+.fi
+.PP
+.SS "Formatted as \fRjson\fP"
+.PP
+.nf
+{
+  // You can even comment your JSON, if you want
+  "dependsOn": "0\&.10\&.0",
+  "commands": {
+    "www": "\&./commands/www",
+    "console": "\&./commands/repl"
+  },
+  "generators": {
+    "options": {
+      "engine": "ejs"
+    },
+    "modules": {
+      "new": "generate\-new",
+      "backend": "generate\-backend"
+    }
+  }
+}
+.fi
+.PP
+.PP
+Comments are stripped from JSON config via \fRstrip-json-comments\fP\&.
+.PP
+.RS 4
+Since ini, and env variables do not have a standard for types, your application needs be prepared for strings\&. 
+.RE
+.PP
+.PP
+To ensure that string representations of booleans and numbers are always converted into their proper types (especially useful if you intend to do strict \fR===\fP comparisons), consider using a module such as \fRparse-strings-in-object\fP to wrap the config object returned from rc\&.
+.SH "Simple example demonstrating precedence"
+.PP
+Assume you have an application like this (notice the hard-coded defaults passed to rc): 
+.PP
+.nf
+const conf = require('rc')('myapp', {
+    port: 12345,
+    mode: 'test'
+});
+
+console\&.log(JSON\&.stringify(conf, null, 2));
+
+.fi
+.PP
+ You also have a file \fRconfig\&.json\fP, with these contents: 
+.PP
+.nf
+{
+  "port": 9000,
+  "foo": "from config json",
+  "something": "else"
+}
+
+.fi
+.PP
+ And a file \fR\&.myapprc\fP in the same folder, with these contents: 
+.PP
+.nf
+{
+  "port": "3001",
+  "foo": "bar"
+}
+
+.fi
+.PP
+ Here is the expected output from various commands:
+.PP
+\fRnode \&.\fP 
+.PP
+.nf
+{
+  "port": "3001",
+  "mode": "test",
+  "foo": "bar",
+  "_": [],
+  "configs": [
+    "/Users/stephen/repos/conftest/\&.myapprc"
+  ],
+  "config": "/Users/stephen/repos/conftest/\&.myapprc"
+}
+
+.fi
+.PP
+ \fIDefault \fRmode\fP from hard-coded object is retained, but port is overridden by \fR\&.myapprc\fP file (automatically found based on appname match), and \fRfoo\fP is added\&.\fP
+.PP
+\fRnode \&. --foo baz\fP 
+.PP
+.nf
+{
+  "port": "3001",
+  "mode": "test",
+  "foo": "baz",
+  "_": [],
+  "configs": [
+    "/Users/stephen/repos/conftest/\&.myapprc"
+  ],
+  "config": "/Users/stephen/repos/conftest/\&.myapprc"
+}
+
+.fi
+.PP
+ \fISame result as above but \fRfoo\fP is overridden because command-line arguments take precedence over \fR\&.myapprc\fP file\&.\fP
+.PP
+\fRnode \&. --foo barbar --config config\&.json\fP 
+.PP
+.nf
+{
+  "port": 9000,
+  "mode": "test",
+  "foo": "barbar",
+  "something": "else",
+  "_": [],
+  "config": "config\&.json",
+  "configs": [
+    "/Users/stephen/repos/conftest/\&.myapprc",
+    "config\&.json"
+  ]
+}
+
+.fi
+.PP
+ \fINow the \fRport\fP comes from the \fRconfig\&.json\fP file specified (overriding the value from \fR\&.myapprc\fP), and \fRfoo\fP value is overriden by command-line despite also being specified in the \fRconfig\&.json\fP file\&.\fP
+.SH "Advanced Usage"
+.PP
+.SS "Pass in your own \fRargv\fP"
+You may pass in your own \fRargv\fP as the third argument to \fRrc\fP\&. This is in case you want to \fRuse your own command-line opts parser\fP\&.
+.PP
+.PP
+.nf
+require('rc')(appname, defaults, customArgvParser);
+.fi
+.PP
+.SH "Pass in your own parser"
+.PP
+If you have a special need to use a non-standard parser, you can do so by passing in the parser as the 4th argument\&. (leave the 3rd as null to get the default args parser)
+.PP
+.PP
+.nf
+require('rc')(appname, defaults, null, parser);
+.fi
+.PP
+.PP
+This may also be used to force a more strict format, such as strict, valid JSON only\&.
+.SH "Note on Performance"
+.PP
+\fRrc\fP is running \fRfs\&.statSync\fP-- so make sure you don't use it in a hot code path (e\&.g\&. a request handler)
+.SH "License"
+.PP
+Multi-licensed under the two-clause BSD License, MIT License, or Apache License, version 2\&.0 

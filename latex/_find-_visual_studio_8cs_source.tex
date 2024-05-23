@@ -1,0 +1,256 @@
+\doxysection{Find-\/\+Visual\+Studio.cs}
+\hypertarget{_find-_visual_studio_8cs_source}{}\label{_find-_visual_studio_8cs_source}\index{backend/node\_modules/node-\/gyp/lib/Find-\/VisualStudio.cs@{backend/node\_modules/node-\/gyp/lib/Find-\/VisualStudio.cs}}
+\mbox{\hyperlink{_find-_visual_studio_8cs}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00001}00001\ \textcolor{comment}{//\ Copyright\ 2017\ -\/\ Refael\ Ackermann}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00002}00002\ \textcolor{comment}{//\ Distributed\ under\ MIT\ style\ license}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00003}00003\ \textcolor{comment}{//\ See\ accompanying\ file\ LICENSE\ at\ https://github.com/node4good/windows-\/autoconf}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00005}00005\ \textcolor{comment}{//\ Usage:}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00006}00006\ \textcolor{comment}{//\ powershell\ -\/ExecutionPolicy\ Unrestricted\ -\/Command\ "{}Add-\/Type\ -\/Path\ Find-\/VisualStudio.cs;\ [VisualStudioConfiguration.Main]::PrintJson()"{}}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00007}00007\ \textcolor{comment}{//\ This\ script\ needs\ to\ be\ compatible\ with\ PowerShell\ v2\ to\ run\ on\ Windows\ 2008R2\ and\ Windows\ 7.}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00009}00009\ \textcolor{keyword}{using\ }System;}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00010}00010\ \textcolor{keyword}{using\ }System.Text;}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00011}00011\ \textcolor{keyword}{using\ }System.Runtime.InteropServices;}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00012}00012\ \textcolor{keyword}{using\ }System.Collections.Generic;}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00014}\mbox{\hyperlink{namespace_visual_studio_configuration}{00014}}\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_visual_studio_configuration}{VisualStudioConfiguration}}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00015}00015\ \{}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00016}00016\ \ \ \ \ [Flags]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00017}\mbox{\hyperlink{namespace_visual_studio_configuration_a08d9d36d3273f9252ffc0005c1c3aa33}{00017}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{enum}\ \mbox{\hyperlink{namespace_visual_studio_configuration_a08d9d36d3273f9252ffc0005c1c3aa33}{InstanceState}}\ :\ uint}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00018}00018\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00019}00019\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespace_visual_studio_configuration_a08d9d36d3273f9252ffc0005c1c3aa33a6adf97f83acf6453d4a6a4b1070f3754}{None}}\ =\ 0,}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00020}00020\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespace_visual_studio_configuration_a08d9d36d3273f9252ffc0005c1c3aa33a509820290d57f333403f490dde7316f4}{Local}}\ =\ 1,}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00021}00021\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespace_visual_studio_configuration_a08d9d36d3273f9252ffc0005c1c3aa33a6205cf9436aee7ccb42779ac5e69bd3f}{Registered}}\ =\ 2,}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00022}00022\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespace_visual_studio_configuration_a08d9d36d3273f9252ffc0005c1c3aa33a2a3f14cc9c8ba9b4f6873f242e9c7025}{NoRebootRequired}}\ =\ 4,}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00023}00023\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespace_visual_studio_configuration_a08d9d36d3273f9252ffc0005c1c3aa33aa35de905010018750104b18dce51b568}{NoErrors}}\ =\ 8,}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00024}00024\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespace_visual_studio_configuration_a08d9d36d3273f9252ffc0005c1c3aa33aae94f80b3ce82062a5dd7815daa04f9d}{Complete}}\ =\ 4294967295,}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00025}00025\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00027}00027\ \ \ \ \ [Guid(\textcolor{stringliteral}{"{}6380BCFF-\/41D3-\/4B2E-\/8B2E-\/BF8A6810C848"{}})]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00028}00028\ \ \ \ \ [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00029}00029\ \ \ \ \ [ComImport]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00030}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_enum_setup_instances}{00030}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{interface\ }\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_enum_setup_instances}{IEnumSetupInstances}}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00031}00031\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00033}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_enum_setup_instances_a49be7898f8f325caeeda1eb8db090769}{00033}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_enum_setup_instances_a49be7898f8f325caeeda1eb8db090769}{Next}}([MarshalAs(UnmanagedType.U4),\ In]\ \textcolor{keywordtype}{int}\ celt,}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00034}00034\ \ \ \ \ \ \ \ \ \ \ \ \ [MarshalAs(UnmanagedType.LPArray,\ ArraySubType\ =\ UnmanagedType.Interface),\ Out]\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance}{ISetupInstance}}[]\ rgelt,}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ \ \ [MarshalAs(UnmanagedType.U4)]\ out\ \textcolor{keywordtype}{int}\ pceltFetched);}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00037}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_enum_setup_instances_ab72bc079a9faeb5f0db6f0a0b076e281}{00037}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_enum_setup_instances_ab72bc079a9faeb5f0db6f0a0b076e281}{Skip}}([MarshalAs(UnmanagedType.U4),\ In]\ \textcolor{keywordtype}{int}\ celt);}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00039}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_enum_setup_instances_a3e8a32a1a43532cabc2903377090480a}{00039}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_enum_setup_instances_a3e8a32a1a43532cabc2903377090480a}{Reset}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00041}00041\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.Interface)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00042}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_enum_setup_instances_a34d0f6cc0be4a7c4aafd1b9591e82104}{00042}}\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_enum_setup_instances}{IEnumSetupInstances}}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_enum_setup_instances_a34d0f6cc0be4a7c4aafd1b9591e82104}{Clone}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00043}00043\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00045}00045\ \ \ \ \ [Guid(\textcolor{stringliteral}{"{}42843719-\/DB4C-\/46C2-\/8E7C-\/64F1816EFD5B"{}})]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00046}00046\ \ \ \ \ [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00047}00047\ \ \ \ \ [ComImport]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00048}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_configuration}{00048}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{interface\ }\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_configuration}{ISetupConfiguration}}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00049}00049\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00050}00050\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00052}00052\ \ \ \ \ [Guid(\textcolor{stringliteral}{"{}26AAB78C-\/4A60-\/49D6-\/AF3B-\/3C35BC93365D"{}})]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00053}00053\ \ \ \ \ [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00054}00054\ \ \ \ \ [ComImport]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00055}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_configuration2}{00055}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{interface\ }\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_configuration2}{ISetupConfiguration2}}\ :\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_configuration}{ISetupConfiguration}}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00056}00056\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00058}00058\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.Interface)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00059}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_configuration2_affcb90d24cc56ebdaf943ec08ed45d91}{00059}}\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_enum_setup_instances}{IEnumSetupInstances}}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_configuration2_affcb90d24cc56ebdaf943ec08ed45d91}{EnumInstances}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00061}00061\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.Interface)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00062}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_configuration2_aabd8b79ed7aacfd7f89fe3f01963037c}{00062}}\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance}{ISetupInstance}}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_configuration2_aabd8b79ed7aacfd7f89fe3f01963037c}{GetInstanceForCurrentProcess}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00064}00064\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.Interface)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00065}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_configuration2_a10fa6f9c9dbf46bc091a0a5014c6d522}{00065}}\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance}{ISetupInstance}}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_configuration2_a10fa6f9c9dbf46bc091a0a5014c6d522}{GetInstanceForPath}}([MarshalAs(UnmanagedType.LPWStr),\ In]\ \textcolor{keywordtype}{string}\ path);}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00067}00067\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.Interface)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00068}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_configuration2_a443e87f324b6a8f87966f51f21c14949}{00068}}\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_enum_setup_instances}{IEnumSetupInstances}}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_configuration2_a443e87f324b6a8f87966f51f21c14949}{EnumAllInstances}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00069}00069\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00070}00070\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00071}00071\ \ \ \ \ [Guid(\textcolor{stringliteral}{"{}B41463C3-\/8866-\/43B5-\/BC33-\/2B0676F7F42E"{}})]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00072}00072\ \ \ \ \ [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00073}00073\ \ \ \ \ [ComImport]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00074}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance}{00074}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{interface\ }\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance}{ISetupInstance}}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00075}00075\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00076}00076\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00078}00078\ \ \ \ \ [Guid(\textcolor{stringliteral}{"{}89143C9A-\/05AF-\/49B0-\/B717-\/72E218A2185C"{}})]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00079}00079\ \ \ \ \ [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00080}00080\ \ \ \ \ [ComImport]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00081}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2}{00081}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{interface\ }\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2}{ISetupInstance2}}\ :\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance}{ISetupInstance}}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00082}00082\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00083}00083\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.BStr)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00084}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_a03a5ab87bd92fd9865819a9d140360e2}{00084}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_a03a5ab87bd92fd9865819a9d140360e2}{GetInstanceId}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00086}00086\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.Struct)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00087}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_ad276c5b0d72d6479232e6a8eb35fde20}{00087}}\ \ \ \ \ \ \ \ \ System.Runtime.InteropServices.ComTypes.FILETIME\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_ad276c5b0d72d6479232e6a8eb35fde20}{GetInstallDate}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00088}00088\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00089}00089\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.BStr)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00090}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_aa41b68d0eeb4434d7cf173cd56d06743}{00090}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_aa41b68d0eeb4434d7cf173cd56d06743}{GetInstallationName}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00092}00092\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.BStr)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00093}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_a248a9427e9d7f4244e9128af4d8f422e}{00093}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_a248a9427e9d7f4244e9128af4d8f422e}{GetInstallationPath}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00095}00095\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.BStr)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00096}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_a4b5b6dec8465383d9c8cedb5fe63e373}{00096}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_a4b5b6dec8465383d9c8cedb5fe63e373}{GetInstallationVersion}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00098}00098\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.BStr)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00099}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_ac5d18b267168dc6a78078d36bcc88fff}{00099}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_ac5d18b267168dc6a78078d36bcc88fff}{GetDisplayName}}([MarshalAs(UnmanagedType.U4),\ In]\ \textcolor{keywordtype}{int}\ lcid);}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00101}00101\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.BStr)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00102}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_a9d91bcbfaea6523416a96ad2648c054b}{00102}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_a9d91bcbfaea6523416a96ad2648c054b}{GetDescription}}([MarshalAs(UnmanagedType.U4),\ In]\ \textcolor{keywordtype}{int}\ lcid);}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00103}00103\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00104}00104\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.BStr)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00105}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_a86f07217972003462d26ebe39ea9f23e}{00105}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_a86f07217972003462d26ebe39ea9f23e}{ResolvePath}}([MarshalAs(UnmanagedType.LPWStr),\ In]\ \textcolor{keywordtype}{string}\ pwszRelativePath);}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00107}00107\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.U4)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00108}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_adfde125679175dab1c2efc0c5a6e76ee}{00108}}\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespace_visual_studio_configuration_a08d9d36d3273f9252ffc0005c1c3aa33}{InstanceState}}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_adfde125679175dab1c2efc0c5a6e76ee}{GetState}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00110}00110\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.SafeArray,\ SafeArraySubType\ =\ VarEnum.VT\_UNKNOWN)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00111}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_ab10ec7183bb1c5b124dcf2f10879afda}{00111}}\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_package_reference}{ISetupPackageReference}}[]\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_ab10ec7183bb1c5b124dcf2f10879afda}{GetPackages}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00112}00112\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00113}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_a5a45a2a24230715c9eeeddbaba575ecf}{00113}}\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_package_reference}{ISetupPackageReference}}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_a5a45a2a24230715c9eeeddbaba575ecf}{GetProduct}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00115}00115\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.BStr)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00116}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_a78bc08d73e08e91e5c7266ac370522c8}{00116}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_a78bc08d73e08e91e5c7266ac370522c8}{GetProductPath}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00118}00118\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.VariantBool)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00119}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_ad633846147f28675a6e68d318ee5a6a4}{00119}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_ad633846147f28675a6e68d318ee5a6a4}{IsLaunchable}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00121}00121\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.VariantBool)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00122}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_ace614ef7970f797f1b49b2ad352c58f2}{00122}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_ace614ef7970f797f1b49b2ad352c58f2}{IsComplete}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00124}00124\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.SafeArray,\ SafeArraySubType\ =\ VarEnum.VT\_UNKNOWN)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00125}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_afb88915bfc3dab48695325b9bf90ccb7}{00125}}\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_property_store}{ISetupPropertyStore}}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_afb88915bfc3dab48695325b9bf90ccb7}{GetProperties}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00126}00126\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00127}00127\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.BStr)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00128}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_accdb4f1c619722266feb5ba55faeeab9}{00128}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2_accdb4f1c619722266feb5ba55faeeab9}{GetEnginePath}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00129}00129\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00130}00130\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00131}00131\ \ \ \ \ [Guid(\textcolor{stringliteral}{"{}DA8D8A16-\/B2B6-\/4487-\/A2F1-\/594CCCCD6BF5"{}})]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00132}00132\ \ \ \ \ [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00133}00133\ \ \ \ \ [ComImport]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00134}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_package_reference}{00134}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{interface\ }\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_package_reference}{ISetupPackageReference}}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00135}00135\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00137}00137\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.BStr)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00138}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_package_reference_aa93e9b1a2459dd6f073c5b9fc9fffe8d}{00138}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_package_reference_aa93e9b1a2459dd6f073c5b9fc9fffe8d}{GetId}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00139}00139\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00140}00140\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.BStr)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00141}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_package_reference_ab256267550b4ccb6255cab026cfc4a19}{00141}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_package_reference_ab256267550b4ccb6255cab026cfc4a19}{GetVersion}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00142}00142\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00143}00143\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.BStr)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00144}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_package_reference_a68aa2c8391349069db4a653611ba53dd}{00144}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_package_reference_a68aa2c8391349069db4a653611ba53dd}{GetChip}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00145}00145\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00146}00146\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.BStr)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00147}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_package_reference_a9b4ec6fd737f779622d30385035063d1}{00147}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_package_reference_a9b4ec6fd737f779622d30385035063d1}{GetLanguage}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00148}00148\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00149}00149\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.BStr)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00150}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_package_reference_a0bb3f72dd59d32ad40f1a4a608a5d887}{00150}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_package_reference_a0bb3f72dd59d32ad40f1a4a608a5d887}{GetBranch}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00151}00151\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00152}00152\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.BStr)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00153}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_package_reference_aeac39c5534b57642a5b673ce815918c0}{00153}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_package_reference_aeac39c5534b57642a5b673ce815918c0}{GetType}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00154}00154\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00155}00155\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.BStr)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00156}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_package_reference_a82b6aa0ac5a04052151d0e18a658857a}{00156}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_package_reference_a82b6aa0ac5a04052151d0e18a658857a}{GetUniqueId}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00157}00157\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00158}00158\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.VariantBool)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00159}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_package_reference_a939ba59b9b37b131e559c2b05c7003e4}{00159}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_package_reference_a939ba59b9b37b131e559c2b05c7003e4}{GetIsExtension}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00160}00160\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00161}00161\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00162}00162\ \ \ \ \ [Guid(\textcolor{stringliteral}{"{}c601c175-\/a3be-\/44bc-\/91f6-\/4568d230fc83"{}})]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00163}00163\ \ \ \ \ [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00164}00164\ \ \ \ \ [ComImport]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00165}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_property_store}{00165}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{interface\ }\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_property_store}{ISetupPropertyStore}}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00166}00166\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00168}00168\ \ \ \ \ \ \ \ \ [\textcolor{keywordflow}{return}:\ MarshalAs(UnmanagedType.SafeArray,\ SafeArraySubType\ =\ VarEnum.VT\_BSTR)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00169}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_property_store_a5f3d879f0220c4357fab64c74fd9bc0b}{00169}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}[]\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_property_store_a5f3d879f0220c4357fab64c74fd9bc0b}{GetNames}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00170}00170\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00171}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_property_store_ab4aa659ab15d5ab282876d87c15e1349}{00171}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{object}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_property_store_ab4aa659ab15d5ab282876d87c15e1349}{GetValue}}([MarshalAs(UnmanagedType.LPWStr),\ In]\ \textcolor{keywordtype}{string}\ pwszName);}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00172}00172\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00173}00173\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00174}00174\ \ \ \ \ [Guid(\textcolor{stringliteral}{"{}42843719-\/DB4C-\/46C2-\/8E7C-\/64F1816EFD5B"{}})]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00175}00175\ \ \ \ \ [CoClass(typeof(\mbox{\hyperlink{class_visual_studio_configuration_1_1_setup_configuration_class}{SetupConfigurationClass}}))]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00176}00176\ \ \ \ \ [ComImport]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00177}\mbox{\hyperlink{interface_visual_studio_configuration_1_1_setup_configuration}{00177}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{interface\ }\mbox{\hyperlink{interface_visual_studio_configuration_1_1_setup_configuration}{SetupConfiguration}}\ :\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_configuration2}{ISetupConfiguration2}},\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_configuration}{ISetupConfiguration}}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00178}00178\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00179}00179\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00180}00180\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00181}00181\ \ \ \ \ [Guid(\textcolor{stringliteral}{"{}177F0C4A-\/1CD3-\/4DE7-\/A32C-\/71DBBB9FA36D"{}})]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00182}00182\ \ \ \ \ [ClassInterface(ClassInterfaceType.None)]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00183}00183\ \ \ \ \ [ComImport]}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00184}\mbox{\hyperlink{class_visual_studio_configuration_1_1_setup_configuration_class}{00184}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_visual_studio_configuration_1_1_setup_configuration_class}{SetupConfigurationClass}}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00185}00185\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00186}00186\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00187}00187\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00188}00188\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{static}\ \textcolor{keyword}{class\ }Main}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00189}00189\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00190}00190\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ PrintJson()}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00191}00191\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_configuration}{ISetupConfiguration}}\ query\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_setup_configuration}{SetupConfiguration}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_configuration2}{ISetupConfiguration2}}\ query2\ =\ (\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_configuration2}{ISetupConfiguration2}})query;}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00194}00194\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_enum_setup_instances}{IEnumSetupInstances}}\ e\ =\ query2.\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_configuration2_a443e87f324b6a8f87966f51f21c14949}{EnumAllInstances}}();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00195}00195\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ pceltFetched;}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00197}00197\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2}{ISetupInstance2}}[]\ rgelt\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_setup_instance2}{ISetupInstance2}}[1];}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00198}00198\ \ \ \ \ \ \ \ \ \ \ \ \ List<string>\ instances\ =\ \textcolor{keyword}{new}\ List<string>();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (\textcolor{keyword}{true})}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00200}00200\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00201}00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ e.\mbox{\hyperlink{interface_visual_studio_configuration_1_1_i_enum_setup_instances_a49be7898f8f325caeeda1eb8db090769}{Next}}(1,\ rgelt,\ out\ pceltFetched);}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00202}00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pceltFetched\ <=\ 0)}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00204}00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Console.WriteLine(String.Format(\textcolor{stringliteral}{"{}[\{0\}]"{}},\ \textcolor{keywordtype}{string}.Join(\textcolor{stringliteral}{"{},"{}},\ instances.ToArray())));}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00205}00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00207}00207\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00209}00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00210}00210\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ instances.Add(InstanceJson(rgelt[0]));}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00211}00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00212}00212\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{catch}\ (COMException)}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00213}00213\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00214}00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ignore\ instances\ that\ can't\ be\ queried.}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00217}00217\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00218}00218\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00219}00219\ \ \ \ \ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{string}\ JsonString(\textcolor{keywordtype}{string}\ s)}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00220}00220\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}\(\backslash\)"{}"{}}\ +\ s.Replace(\textcolor{stringliteral}{"{}\(\backslash\)\(\backslash\)"{}},\ \textcolor{stringliteral}{"{}\(\backslash\)\(\backslash\)\(\backslash\)\(\backslash\)"{}}).Replace(\textcolor{stringliteral}{"{}\(\backslash\)"{}"{}},\ \textcolor{stringliteral}{"{}\(\backslash\)\(\backslash\)\(\backslash\)"{}"{}})\ +\ \textcolor{stringliteral}{"{}\(\backslash\)"{}"{}};}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00222}00222\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00223}00223\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00224}00224\ \ \ \ \ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{string}\ InstanceJson(ISetupInstance2\ setupInstance2)}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00225}00225\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00226}00226\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Visual\ Studio\ component\ directory:}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ https://docs.microsoft.com/en-\/us/visualstudio/install/workload-\/and-\/component-\/ids}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00228}00228\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ StringBuilder\ json\ =\ \textcolor{keyword}{new}\ StringBuilder();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00230}00230\ \ \ \ \ \ \ \ \ \ \ \ \ json.Append(\textcolor{stringliteral}{"{}\{"{}});}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00231}00231\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ path\ =\ JsonString(setupInstance2.GetInstallationPath());}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00233}00233\ \ \ \ \ \ \ \ \ \ \ \ \ json.Append(String.Format(\textcolor{stringliteral}{"{}\(\backslash\)"{}path\(\backslash\)"{}:\{0\},"{}},\ path));}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00234}00234\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00235}00235\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{namespacesetup_a2aa722b36a933088812b50ea79b97a5c}{version}}\ =\ JsonString(setupInstance2.GetInstallationVersion());}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00236}00236\ \ \ \ \ \ \ \ \ \ \ \ \ json.Append(String.Format(\textcolor{stringliteral}{"{}\(\backslash\)"{}version\(\backslash\)"{}:\{0\},"{}},\ version));}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00237}00237\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00238}00238\ \ \ \ \ \ \ \ \ \ \ \ \ List<string>\ \mbox{\hyperlink{namespacesetup_aff2375a361fd5865c77bd9aa093be747}{packages}}\ =\ \textcolor{keyword}{new}\ List<string>();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00239}00239\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{foreach}\ (ISetupPackageReference\ package\ \textcolor{keywordflow}{in}\ setupInstance2.GetPackages())}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00240}00240\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00241}00241\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}\ \textcolor{keywordtype}{id}\ =\ JsonString(package.GetId());}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00242}00242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacesetup_aff2375a361fd5865c77bd9aa093be747}{packages}}.Add(\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00243}00243\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00244}00244\ \ \ \ \ \ \ \ \ \ \ \ \ json.Append(String.Format(\textcolor{stringliteral}{"{}\(\backslash\)"{}packages\(\backslash\)"{}:[\{0\}]"{}},\ \textcolor{keywordtype}{string}.Join(\textcolor{stringliteral}{"{},"{}},\ \mbox{\hyperlink{namespacesetup_aff2375a361fd5865c77bd9aa093be747}{packages}}.ToArray())));}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00245}00245\ }
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00246}00246\ \ \ \ \ \ \ \ \ \ \ \ \ json.Append(\textcolor{stringliteral}{"{}\}"{}});}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00247}00247\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ json.ToString();}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00248}00248\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00249}00249\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_find-_visual_studio_8cs_source_l00250}00250\ \}}
+
+\end{DoxyCode}

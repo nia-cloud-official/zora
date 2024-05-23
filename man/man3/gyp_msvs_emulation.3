@@ -1,0 +1,313 @@
+.TH "gyp.msvs_emulation" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gyp.msvs_emulation
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBMsvsSettings\fP"
+.br
+.ti -1c
+.RI "class \fBPrecompiledHeader\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBQuoteForRspFile\fP (arg, quote_cmd=True)"
+.br
+.ti -1c
+.RI "\fBEncodeRspFileList\fP (args, quote_cmd)"
+.br
+.ti -1c
+.RI "\fB_GenericRetrieve\fP (root, default, path)"
+.br
+.ti -1c
+.RI "\fB_AddPrefix\fP (element, prefix)"
+.br
+.ti -1c
+.RI "\fB_DoRemapping\fP (element, map)"
+.br
+.ti -1c
+.RI "\fB_AppendOrReturn\fP (append, element)"
+.br
+.ti -1c
+.RI "\fB_FindDirectXInstallation\fP ()"
+.br
+.ti -1c
+.RI "\fBGetGlobalVSMacroEnv\fP (\fBvs_version\fP)"
+.br
+.ti -1c
+.RI "\fBExtractSharedMSVSSystemIncludes\fP (configs, generator_flags)"
+.br
+.ti -1c
+.RI "\fB_LanguageMatchesForPch\fP (source_ext, pch_source_ext)"
+.br
+.ti -1c
+.RI "\fBGetVSVersion\fP (generator_flags)"
+.br
+.ti -1c
+.RI "\fB_GetVsvarsSetupArgs\fP (generator_flags, arch)"
+.br
+.ti -1c
+.RI "\fBExpandMacros\fP (string, expansions)"
+.br
+.ti -1c
+.RI "\fB_ExtractImportantEnvironment\fP (output_of_set)"
+.br
+.ti -1c
+.RI "\fB_FormatAsEnvironmentBlock\fP (envvar_dict)"
+.br
+.ti -1c
+.RI "\fB_ExtractCLPath\fP (output_of_where)"
+.br
+.ti -1c
+.RI "\fBGenerateEnvironmentFiles\fP (toplevel_build_dir, generator_flags, system_includes, open_out)"
+.br
+.ti -1c
+.RI "\fBVerifyMissingSources\fP (sources, build_dir, generator_flags, gyp_to_ninja)"
+.br
+.ti -1c
+.RI "\fBCalculateCommonVariables\fP (default_variables, params)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBwindows_quoter_regex\fP = re\&.compile(r'(\\\\*)'')"
+.br
+.ti -1c
+.RI "\fBvs_version\fP = None"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.PP
+.nf
+This module helps emulate Visual Studio 2008 behavior on top of other
+build systems, primarily ninja\&.
+
+.fi
+.PP
+ 
+.SH "Function Documentation"
+.PP 
+.SS "gyp\&.msvs_emulation\&._AddPrefix ( element,  prefix)\fR [protected]\fP"
+
+.PP
+.nf
+Add |prefix| to |element| or each subelement if element is iterable\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB91\fP of file \fBmsvs_emulation\&.py\fP\&.
+.SS "gyp\&.msvs_emulation\&._AppendOrReturn ( append,  element)\fR [protected]\fP"
+
+.PP
+.nf
+If |append| is None, simply return |element|\&. If |append| is not None,
+then add |element| to it, adding each item in |element| if it's a list or
+tuple\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB115\fP of file \fBmsvs_emulation\&.py\fP\&.
+.SS "gyp\&.msvs_emulation\&._DoRemapping ( element,  map)\fR [protected]\fP"
+
+.PP
+.nf
+If |element| then remap it through |map|\&. If |element| is iterable then
+each item will be remapped\&. Any elements not found will be removed\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB102\fP of file \fBmsvs_emulation\&.py\fP\&.
+.SS "gyp\&.msvs_emulation\&._ExtractCLPath ( output_of_where)\fR [protected]\fP"
+
+.PP
+.nf
+Gets the path to cl\&.exe based on the output of calling the environment
+setup batch file, followed by the equivalent of `where`\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1167\fP of file \fBmsvs_emulation\&.py\fP\&.
+.SS "gyp\&.msvs_emulation\&._ExtractImportantEnvironment ( output_of_set)\fR [protected]\fP"
+
+.PP
+.nf
+Extracts environment variables required for the toolchain to run from
+a textual dump output by the cmd\&.exe 'set' command\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1115\fP of file \fBmsvs_emulation\&.py\fP\&.
+.SS "gyp\&.msvs_emulation\&._FindDirectXInstallation ()\fR [protected]\fP"
+
+.PP
+.nf
+Try to find an installation location for the DirectX SDK\&. Check for the
+standard environment variable, and if that doesn't exist, try to find
+via the registry\&. May return None if not found in either location\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB128\fP of file \fBmsvs_emulation\&.py\fP\&.
+.SS "gyp\&.msvs_emulation\&._FormatAsEnvironmentBlock ( envvar_dict)\fR [protected]\fP"
+
+.PP
+.nf
+Format as an 'environment block' directly suitable for CreateProcess\&.
+Briefly this is a list of key=value\\0, terminated by an additional \\0\&. See
+CreateProcess documentation for more details\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1155\fP of file \fBmsvs_emulation\&.py\fP\&.
+.SS "gyp\&.msvs_emulation\&._GenericRetrieve ( root,  default,  path)\fR [protected]\fP"
+
+.PP
+.nf
+Given a list of dictionary keys |path| and a tree of dicts |root|, find
+value at path, or return |default| if any of the path doesn't exist\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB81\fP of file \fBmsvs_emulation\&.py\fP\&.
+.SS "gyp\&.msvs_emulation\&._GetVsvarsSetupArgs ( generator_flags,  arch)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1100\fP of file \fBmsvs_emulation\&.py\fP\&.
+.SS "gyp\&.msvs_emulation\&._LanguageMatchesForPch ( source_ext,  pch_source_ext)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1019\fP of file \fBmsvs_emulation\&.py\fP\&.
+.SS "gyp\&.msvs_emulation\&.CalculateCommonVariables ( default_variables,  params)"
+
+.PP
+Definition at line \fB1255\fP of file \fBmsvs_emulation\&.py\fP\&.
+.SS "gyp\&.msvs_emulation\&.EncodeRspFileList ( args,  quote_cmd)"
+
+.PP
+.nf
+Process a list of arguments using QuoteCmdExeArgument\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB63\fP of file \fBmsvs_emulation\&.py\fP\&.
+.SS "gyp\&.msvs_emulation\&.ExpandMacros ( string,  expansions)"
+
+.PP
+.nf
+Expand $(Variable) per expansions dict\&. See MsvsSettings\&.GetVSMacroEnv
+for the canonical way to retrieve a suitable dict\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1105\fP of file \fBmsvs_emulation\&.py\fP\&.
+.SS "gyp\&.msvs_emulation\&.ExtractSharedMSVSSystemIncludes ( configs,  generator_flags)"
+
+.PP
+.nf
+Finds msvs_system_include_dirs that are common to all targets, removes
+them from all targets, and returns an OrderedSet containing them\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB172\fP of file \fBmsvs_emulation\&.py\fP\&.
+.SS "gyp\&.msvs_emulation\&.GenerateEnvironmentFiles ( toplevel_build_dir,  generator_flags,  system_includes,  open_out)"
+
+.PP
+.nf
+It's not sufficient to have the absolute path to the compiler, linker,
+etc\&. on Windows, as those tools rely on \&.dlls being in the PATH\&. We also
+need to support both x86 and x64 compilers within the same build (to support
+msvs_target_platform hackery)\&. Different architectures require a different
+compiler binary, and different supporting environment variables (INCLUDE,
+LIB, LIBPATH)\&. So, we extract the environment here, wrap all invocations
+of compiler tools (cl, link, lib, rc, midl, etc\&.) via win_tool\&.py which
+sets up the environment, and then we do not prefix the compiler with
+an absolute path, instead preferring something like 'cl\&.exe' in the rule
+which will then run whichever the environment setup has put in the path\&.
+When the following procedure to generate environment files does not
+meet your requirement (e\&.g\&. for custom toolchains), you can pass
+'-G ninja_use_custom_environment_files' to the gyp to suppress file
+generation and use custom environment files prepared by yourself\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1176\fP of file \fBmsvs_emulation\&.py\fP\&.
+.SS "gyp\&.msvs_emulation\&.GetGlobalVSMacroEnv ( vs_version)"
+
+.PP
+.nf
+Get a dict of variables mapping internal VS macro names to their gyp
+equivalents\&. Returns all variables that are independent of the target\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB151\fP of file \fBmsvs_emulation\&.py\fP\&.
+.SS "gyp\&.msvs_emulation\&.GetVSVersion ( generator_flags)"
+
+.PP
+Definition at line \fB1091\fP of file \fBmsvs_emulation\&.py\fP\&.
+.SS "gyp\&.msvs_emulation\&.QuoteForRspFile ( arg,  quote_cmd = \fRTrue\fP)"
+
+.PP
+.nf
+Quote a command line argument so that it appears as one argument when
+processed via cmd\&.exe and parsed by CommandLineToArgvW (as is typical for
+Windows programs)\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB23\fP of file \fBmsvs_emulation\&.py\fP\&.
+.SS "gyp\&.msvs_emulation\&.VerifyMissingSources ( sources,  build_dir,  generator_flags,  gyp_to_ninja)"
+
+.PP
+.nf
+Emulate behavior of msvs_error_on_missing_sources present in the msvs
+generator: Check that all regular source files, i\&.e\&. not created at run time,
+exist on disk\&. Missing files cause needless recompilation when building via
+VS, and we want this check to match for people/bots that build using ninja,
+so they're not surprised when the VS build fails\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1236\fP of file \fBmsvs_emulation\&.py\fP\&.
+.SH "Variable Documentation"
+.PP 
+.SS "gyp\&.msvs_emulation\&.vs_version = None"
+
+.PP
+Definition at line \fB1088\fP of file \fBmsvs_emulation\&.py\fP\&.
+.SS "gyp\&.msvs_emulation\&.windows_quoter_regex = re\&.compile(r'(\\\\*)'')"
+
+.PP
+Definition at line \fB20\fP of file \fBmsvs_emulation\&.py\fP\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

@@ -1,0 +1,106 @@
+.TH "md_backend_2node__modules_2statuses_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2statuses_2_r_e_a_d_m_e \- statuses 
+.PP
+ \fR\fP \fR\fP \fR\fP \fR\fP \fR\fP
+.PP
+HTTP status utility for node\&.
+.PP
+This module provides a list of status codes and messages sourced from a few different projects:
+.PP
+.IP "\(bu" 2
+The \fRIANA Status Code Registry\fP
+.IP "\(bu" 2
+The \fRNode\&.js project\fP
+.IP "\(bu" 2
+The \fRNGINX project\fP
+.IP "\(bu" 2
+The \fRApache HTTP Server project\fP
+.PP
+.SH "Installation"
+.PP
+This is a \fRNode\&.js\fP module available through the \fRnpm registry\fP\&. Installation is done using the \fR\fRnpm install\fP command\fP:
+.PP
+.PP
+.nf
+$ npm install statuses
+.fi
+.PP
+.SH "API"
+.PP
+.PP
+.nf
+var status = require('statuses')
+.fi
+.PP
+.SS "status(code)"
+Returns the status message string for a known HTTP status code\&. The code may be a number or a string\&. An error is thrown for an unknown status code\&.
+.PP
+.PP
+.nf
+status(403) // => 'Forbidden'
+status('403') // => 'Forbidden'
+status(306) // throws
+.fi
+.PP
+.SS "status(msg)"
+Returns the numeric status code for a known HTTP status message\&. The message is case-insensitive\&. An error is thrown for an unknown status message\&.
+.PP
+.PP
+.nf
+status('forbidden') // => 403
+status('Forbidden') // => 403
+status('foo') // throws
+.fi
+.PP
+.SS "status\&.codes"
+Returns an array of all the status codes as \fRInteger\fPs\&.
+.SS "status\&.code[msg]"
+Returns the numeric status code for a known status message (in lower-case), otherwise \fRundefined\fP\&.
+.PP
+.PP
+.nf
+status['not found'] // => 404
+.fi
+.PP
+.SS "status\&.empty[code]"
+Returns \fRtrue\fP if a status code expects an empty body\&.
+.PP
+.PP
+.nf
+status\&.empty[200] // => undefined
+status\&.empty[204] // => true
+status\&.empty[304] // => true
+.fi
+.PP
+.SS "status\&.message[code]"
+Returns the string message for a known numeric status code, otherwise \fRundefined\fP\&. This object is the same format as the \fRNode\&.js http module \fRhttp\&.STATUS_CODES\fP\fP\&.
+.PP
+.PP
+.nf
+status\&.message[404] // => 'Not Found'
+.fi
+.PP
+.SS "status\&.redirect[code]"
+Returns \fRtrue\fP if a status code is a valid redirect status\&.
+.PP
+.PP
+.nf
+status\&.redirect[200] // => undefined
+status\&.redirect[301] // => true
+.fi
+.PP
+.SS "status\&.retry[code]"
+Returns \fRtrue\fP if you should retry the rest\&.
+.PP
+.PP
+.nf
+status\&.retry[501] // => undefined
+status\&.retry[503] // => true
+.fi
+.PP
+.SH "License"
+.PP
+[MIT](LICENSE) 

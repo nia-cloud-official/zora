@@ -1,0 +1,26 @@
+\chapter{set-\/blocking}
+\hypertarget{md_backend_2node__modules_2set-blocking_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2set-blocking_2_r_e_a_d_m_e}\index{set-\/blocking@{set-\/blocking}}
+\label{md_backend_2node__modules_2set-blocking_2_r_e_a_d_m_e_autotoc_md3257}%
+\Hypertarget{md_backend_2node__modules_2set-blocking_2_r_e_a_d_m_e_autotoc_md3257}%
+ \href{https://travis-ci.org/yargs/set-blocking}{\texttt{ }} \href{https://www.npmjs.com/package/set-blocking}{\texttt{ }} \href{https://coveralls.io/r/yargs/set-blocking?branch=master}{\texttt{ }} \href{https://github.com/conventional-changelog/standard-version}{\texttt{ }}
+
+set blocking {\ttfamily stdio} and {\ttfamily stderr} ensuring that terminal output does not truncate.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ setBlocking\ =\ require('set-\/blocking')}
+\DoxyCodeLine{setBlocking(true)}
+\DoxyCodeLine{console.log(someLargeStringToOutput)}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2set-blocking_2_r_e_a_d_m_e_autotoc_md3258}{}\doxysection{\texorpdfstring{Historical Context/\+Word of Warning}{Historical Context/\+Word of Warning}}\label{md_backend_2node__modules_2set-blocking_2_r_e_a_d_m_e_autotoc_md3258}
+This was created as a shim to address the bug discussed in \href{https://github.com/nodejs/node/issues/6456}{\texttt{ node \#6456}}. This bug crops up on newer versions of Node.\+js ({\ttfamily 0.\+12+}), truncating terminal output.
+
+You should be mindful of the side-\/effects caused by using {\ttfamily set-\/blocking}\+:
+
+
+\begin{DoxyItemize}
+\item if your module sets blocking to {\ttfamily true}, it will effect other modules consuming your library. In \href{https://github.com/yargs/yargs/blob/master/yargs.js\#L653}{\texttt{ yargs}} we only call {\ttfamily set\+Blocking(true)} once we already know we are about to call {\ttfamily process.\+exit(code)}.
+\item this patch will not apply to subprocesses spawned with {\ttfamily is\+TTY = true}, this is the \href{https://nodejs.org/api/child_process.html\#child_process_child_process_spawn_command_args_options}{\texttt{ default {\ttfamily spawn()} behavior}}.
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2set-blocking_2_r_e_a_d_m_e_autotoc_md3259}{}\doxysection{\texorpdfstring{License}{License}}\label{md_backend_2node__modules_2set-blocking_2_r_e_a_d_m_e_autotoc_md3259}
+ISC 

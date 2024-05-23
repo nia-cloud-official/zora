@@ -1,0 +1,183 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2type-is_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>type-is</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![NPM<sp/>Version][npm-version-image]][npm-url]</highlight></codeline>
+<codeline><highlight class="normal">[![NPM<sp/>Downloads][npm-downloads-image]][npm-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Node.js<sp/>Version][node-version-image]][node-version-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Build<sp/>Status][travis-image]][travis-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Test<sp/>Coverage][coveralls-image]][coveralls-url]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Infer<sp/>the<sp/>content-type<sp/>of<sp/>a<sp/>request.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Install</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>a<sp/>[Node.js](https://nodejs.org/en/)<sp/>module<sp/>available<sp/>through<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[npm<sp/>registry](https://www.npmjs.com/).<sp/>Installation<sp/>is<sp/>done<sp/>using<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[`npm<sp/>install`<sp/>command](https://docs.npmjs.com/getting-started/installing-npm-packages-locally):</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```sh</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>type-is</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>API</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>typeis<sp/>=<sp/>require(&apos;type-is&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">http.createServer(function<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>istext<sp/>=<sp/>typeis(req,<sp/>[&apos;text/*&apos;])</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.end(&apos;you<sp/>&apos;<sp/>+<sp/>(istext<sp/>?<sp/>&apos;sent&apos;<sp/>:<sp/>&apos;did<sp/>not<sp/>send&apos;)<sp/>+<sp/>&apos;<sp/>me<sp/>text&apos;)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>typeis(request,<sp/>types)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Checks<sp/>if<sp/>the<sp/>`request`<sp/>is<sp/>one<sp/>of<sp/>the<sp/>`types`.<sp/>If<sp/>the<sp/>request<sp/>has<sp/>no<sp/>body,</highlight></codeline>
+<codeline><highlight class="normal">even<sp/>if<sp/>there<sp/>is<sp/>a<sp/>`Content-Type`<sp/>header,<sp/>then<sp/>`null`<sp/>is<sp/>returned.<sp/>If<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">`Content-Type`<sp/>header<sp/>is<sp/>invalid<sp/>or<sp/>does<sp/>not<sp/>matches<sp/>any<sp/>of<sp/>the<sp/>`types`,<sp/>then</highlight></codeline>
+<codeline><highlight class="normal">`false`<sp/>is<sp/>returned.<sp/>Otherwise,<sp/>a<sp/>string<sp/>of<sp/>the<sp/>type<sp/>that<sp/>matched<sp/>is<sp/>returned.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`request`<sp/>argument<sp/>is<sp/>expected<sp/>to<sp/>be<sp/>a<sp/>Node.js<sp/>HTTP<sp/>request.<sp/>The<sp/>`types`</highlight></codeline>
+<codeline><highlight class="normal">argument<sp/>is<sp/>an<sp/>array<sp/>of<sp/>type<sp/>strings.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Each<sp/>type<sp/>in<sp/>the<sp/>`types`<sp/>array<sp/>can<sp/>be<sp/>one<sp/>of<sp/>the<sp/>following:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>A<sp/>file<sp/>extension<sp/>name<sp/>such<sp/>as<sp/>`json`.<sp/>This<sp/>name<sp/>will<sp/>be<sp/>returned<sp/>if<sp/>matched.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>A<sp/>mime<sp/>type<sp/>such<sp/>as<sp/>`application/json`.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>A<sp/>mime<sp/>type<sp/>with<sp/>a<sp/>wildcard<sp/>such<sp/>as<sp/>`*/*`<sp/>or<sp/>`*/json`<sp/>or<sp/>`application/*`.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>The<sp/>full<sp/>mime<sp/>type<sp/>will<sp/>be<sp/>returned<sp/>if<sp/>matched.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>A<sp/>suffix<sp/>such<sp/>as<sp/>`+json`.<sp/>This<sp/>can<sp/>be<sp/>combined<sp/>with<sp/>a<sp/>wildcard<sp/>such<sp/>as</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`*/vnd+json`<sp/>or<sp/>`application/*+json`.<sp/>The<sp/>full<sp/>mime<sp/>type<sp/>will<sp/>be<sp/>returned</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>matched.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Some<sp/>examples<sp/>to<sp/>illustrate<sp/>the<sp/>inputs<sp/>and<sp/>returned<sp/>value:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;!--<sp/>eslint-disable<sp/>no-undef<sp/>--&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>req.headers.content-type<sp/>=<sp/>&apos;application/json&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">typeis(req,<sp/>[&apos;json&apos;])<sp/>//<sp/>=&gt;<sp/>&apos;json&apos;</highlight></codeline>
+<codeline><highlight class="normal">typeis(req,<sp/>[&apos;html&apos;,<sp/>&apos;json&apos;])<sp/>//<sp/>=&gt;<sp/>&apos;json&apos;</highlight></codeline>
+<codeline><highlight class="normal">typeis(req,<sp/>[&apos;application/*&apos;])<sp/>//<sp/>=&gt;<sp/>&apos;application/json&apos;</highlight></codeline>
+<codeline><highlight class="normal">typeis(req,<sp/>[&apos;application/json&apos;])<sp/>//<sp/>=&gt;<sp/>&apos;application/json&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">typeis(req,<sp/>[&apos;html&apos;])<sp/>//<sp/>=&gt;<sp/>false</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>typeis.hasBody(request)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>a<sp/>Boolean<sp/>if<sp/>the<sp/>given<sp/>`request`<sp/>has<sp/>a<sp/>body,<sp/>regardless<sp/>of<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">`Content-Type`<sp/>header.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Having<sp/>a<sp/>body<sp/>has<sp/>no<sp/>relation<sp/>to<sp/>how<sp/>large<sp/>the<sp/>body<sp/>is<sp/>(it<sp/>may<sp/>be<sp/>0<sp/>bytes).</highlight></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>similar<sp/>to<sp/>how<sp/>file<sp/>existence<sp/>works.<sp/>If<sp/>a<sp/>body<sp/>does<sp/>exist,<sp/>then<sp/>this</highlight></codeline>
+<codeline><highlight class="normal">indicates<sp/>that<sp/>there<sp/>is<sp/>data<sp/>to<sp/>read<sp/>from<sp/>the<sp/>Node.js<sp/>request<sp/>stream.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;!--<sp/>eslint-disable<sp/>no-undef<sp/>--&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>(typeis.hasBody(req))<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>read<sp/>the<sp/>body,<sp/>since<sp/>there<sp/>is<sp/>one</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>req.on(&apos;data&apos;,<sp/>function<sp/>(chunk)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>...</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>typeis.is(mediaType,<sp/>types)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Checks<sp/>if<sp/>the<sp/>`mediaType`<sp/>is<sp/>one<sp/>of<sp/>the<sp/>`types`.<sp/>If<sp/>the<sp/>`mediaType`<sp/>is<sp/>invalid</highlight></codeline>
+<codeline><highlight class="normal">or<sp/>does<sp/>not<sp/>matches<sp/>any<sp/>of<sp/>the<sp/>`types`,<sp/>then<sp/>`false`<sp/>is<sp/>returned.<sp/>Otherwise,<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">string<sp/>of<sp/>the<sp/>type<sp/>that<sp/>matched<sp/>is<sp/>returned.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`mediaType`<sp/>argument<sp/>is<sp/>expected<sp/>to<sp/>be<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">[media<sp/>type](https://tools.ietf.org/html/rfc6838)<sp/>string.<sp/>The<sp/>`types`<sp/>argument</highlight></codeline>
+<codeline><highlight class="normal">is<sp/>an<sp/>array<sp/>of<sp/>type<sp/>strings.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Each<sp/>type<sp/>in<sp/>the<sp/>`types`<sp/>array<sp/>can<sp/>be<sp/>one<sp/>of<sp/>the<sp/>following:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>A<sp/>file<sp/>extension<sp/>name<sp/>such<sp/>as<sp/>`json`.<sp/>This<sp/>name<sp/>will<sp/>be<sp/>returned<sp/>if<sp/>matched.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>A<sp/>mime<sp/>type<sp/>such<sp/>as<sp/>`application/json`.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>A<sp/>mime<sp/>type<sp/>with<sp/>a<sp/>wildcard<sp/>such<sp/>as<sp/>`*/*`<sp/>or<sp/>`*/json`<sp/>or<sp/>`application/*`.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>The<sp/>full<sp/>mime<sp/>type<sp/>will<sp/>be<sp/>returned<sp/>if<sp/>matched.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>A<sp/>suffix<sp/>such<sp/>as<sp/>`+json`.<sp/>This<sp/>can<sp/>be<sp/>combined<sp/>with<sp/>a<sp/>wildcard<sp/>such<sp/>as</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`*/vnd+json`<sp/>or<sp/>`application/*+json`.<sp/>The<sp/>full<sp/>mime<sp/>type<sp/>will<sp/>be<sp/>returned</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>matched.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Some<sp/>examples<sp/>to<sp/>illustrate<sp/>the<sp/>inputs<sp/>and<sp/>returned<sp/>value:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;!--<sp/>eslint-disable<sp/>no-undef<sp/>--&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>mediaType<sp/>=<sp/>&apos;application/json&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">typeis.is(mediaType,<sp/>[&apos;json&apos;])<sp/>//<sp/>=&gt;<sp/>&apos;json&apos;</highlight></codeline>
+<codeline><highlight class="normal">typeis.is(mediaType,<sp/>[&apos;html&apos;,<sp/>&apos;json&apos;])<sp/>//<sp/>=&gt;<sp/>&apos;json&apos;</highlight></codeline>
+<codeline><highlight class="normal">typeis.is(mediaType,<sp/>[&apos;application/*&apos;])<sp/>//<sp/>=&gt;<sp/>&apos;application/json&apos;</highlight></codeline>
+<codeline><highlight class="normal">typeis.is(mediaType,<sp/>[&apos;application/json&apos;])<sp/>//<sp/>=&gt;<sp/>&apos;application/json&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">typeis.is(mediaType,<sp/>[&apos;html&apos;])<sp/>//<sp/>=&gt;<sp/>false</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Examples</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Example<sp/>body<sp/>parser</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>express<sp/>=<sp/>require(&apos;express&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>typeis<sp/>=<sp/>require(&apos;type-is&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>app<sp/>=<sp/>express()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">app.use(function<sp/>bodyParser<sp/>(req,<sp/>res,<sp/>next)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(!typeis.hasBody(req))<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>next()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>switch<sp/>(typeis(req,<sp/>[&apos;urlencoded&apos;,<sp/>&apos;json&apos;,<sp/>&apos;multipart&apos;]))<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>case<sp/>&apos;urlencoded&apos;:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>parse<sp/>urlencoded<sp/>body</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>throw<sp/>new<sp/>Error(&apos;implement<sp/>urlencoded<sp/>body<sp/>parsing&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>case<sp/>&apos;json&apos;:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>parse<sp/>json<sp/>body</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>throw<sp/>new<sp/>Error(&apos;implement<sp/>json<sp/>body<sp/>parsing&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>case<sp/>&apos;multipart&apos;:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>parse<sp/>multipart<sp/>body</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>throw<sp/>new<sp/>Error(&apos;implement<sp/>multipart<sp/>body<sp/>parsing&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>default:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>415<sp/>error<sp/>code</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>res.statusCode<sp/>=<sp/>415</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>res.end()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>break</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>License</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[MIT](LICENSE)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[coveralls-image]:<sp/>https://badgen.net/coveralls/c/github/jshttp/type-is/master</highlight></codeline>
+<codeline><highlight class="normal">[coveralls-url]:<sp/>https://coveralls.io/r/jshttp/type-is?branch=master</highlight></codeline>
+<codeline><highlight class="normal">[node-version-image]:<sp/>https://badgen.net/npm/node/type-is</highlight></codeline>
+<codeline><highlight class="normal">[node-version-url]:<sp/>https://nodejs.org/en/download</highlight></codeline>
+<codeline><highlight class="normal">[npm-downloads-image]:<sp/>https://badgen.net/npm/dm/type-is</highlight></codeline>
+<codeline><highlight class="normal">[npm-url]:<sp/>https://npmjs.org/package/type-is</highlight></codeline>
+<codeline><highlight class="normal">[npm-version-image]:<sp/>https://badgen.net/npm/v/type-is</highlight></codeline>
+<codeline><highlight class="normal">[travis-image]:<sp/>https://badgen.net/travis/jshttp/type-is/master</highlight></codeline>
+<codeline><highlight class="normal">[travis-url]:<sp/>https://travis-ci.org/jshttp/type-is</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/type-is/README.md"/>
+  </compounddef>
+</doxygen>

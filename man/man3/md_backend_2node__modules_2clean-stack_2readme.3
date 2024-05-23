@@ -1,0 +1,77 @@
+.TH "md_backend_2node__modules_2clean-stack_2readme" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2clean-stack_2readme \- clean-stack \fR\fP 
+.PP
+ 
+.PP
+.RS 4
+Clean up error stack traces 
+.RE
+.PP
+.PP
+Removes the mostly unhelpful internal Node\&.js entries\&.
+.PP
+Also works in Electron\&.
+.SH "Install"
+.PP
+.PP
+.nf
+$ npm install clean\-stack
+.fi
+.PP
+.SH "Usage"
+.PP
+.PP
+.nf
+const cleanStack = require('clean\-stack');
+
+const error = new Error('Missing unicorn');
+
+console\&.log(error\&.stack);
+/*
+Error: Missing unicorn
+    at Object\&.<anonymous> (/Users/sindresorhus/dev/clean\-stack/unicorn\&.js:2:15)
+    at Module\&._compile (module\&.js:409:26)
+    at Object\&.Module\&._extensions\&.\&.js (module\&.js:416:10)
+    at Module\&.load (module\&.js:343:32)
+    at Function\&.Module\&._load (module\&.js:300:12)
+    at Function\&.Module\&.runMain (module\&.js:441:10)
+    at startup (node\&.js:139:18)
+*/
+
+console\&.log(cleanStack(error\&.stack));
+/*
+Error: Missing unicorn
+    at Object\&.<anonymous> (/Users/sindresorhus/dev/clean\-stack/unicorn\&.js:2:15)
+*/
+.fi
+.PP
+.SH "API"
+.PP
+.SS "cleanStack(stack, [options])"
+.SS "stack"
+Type: \fRstring\fP
+.PP
+The \fRstack\fP property of an \fRError\fP\&.
+.SS "options"
+Type: \fRObject\fP
+.SS "pretty"
+Type: \fRboolean\fP
+.br
+ Default: \fRfalse\fP
+.PP
+Prettify the file paths in the stack:
+.PP
+\fR/Users/sindresorhus/dev/clean-stack/unicorn\&.js:2:15\fP → \fR~/dev/clean-stack/unicorn\&.js:2:15\fP
+.SH "Related"
+.PP
+.IP "\(bu" 2
+\fRextrack-stack\fP - Extract the actual stack of an error
+.IP "\(bu" 2
+\fRstack-utils\fP - Captures and cleans stack traces
+.PP
+.SH "License"
+.PP
+MIT © \fRSindre Sorhus\fP 

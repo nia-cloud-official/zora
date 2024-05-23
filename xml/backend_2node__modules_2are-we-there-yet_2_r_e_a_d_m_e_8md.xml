@@ -1,0 +1,221 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2are-we-there-yet_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">are-we-there-yet</highlight></codeline>
+<codeline><highlight class="normal">----------------</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Track<sp/>complex<sp/>hierarchies<sp/>of<sp/>asynchronous<sp/>task<sp/>completion<sp/>statuses.<sp/><sp/>This<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">intended<sp/>to<sp/>give<sp/>you<sp/>a<sp/>way<sp/>of<sp/>recording<sp/>and<sp/>reporting<sp/>the<sp/>progress<sp/>of<sp/>the<sp/>big</highlight></codeline>
+<codeline><highlight class="normal">recursive<sp/>fan-out<sp/>and<sp/>gather<sp/>type<sp/>workflows<sp/>that<sp/>are<sp/>so<sp/>common<sp/>in<sp/>async.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">What<sp/>you<sp/>do<sp/>with<sp/>this<sp/>completion<sp/>data<sp/>is<sp/>up<sp/>to<sp/>you,<sp/>but<sp/>the<sp/>most<sp/>common<sp/>use<sp/>case<sp/>is<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">feed<sp/>it<sp/>to<sp/>one<sp/>of<sp/>the<sp/>many<sp/>progress<sp/>bar<sp/>modules.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Most<sp/>progress<sp/>bar<sp/>modules<sp/>include<sp/>a<sp/>rudimentary<sp/>version<sp/>of<sp/>this,<sp/>but<sp/>my</highlight></codeline>
+<codeline><highlight class="normal">needs<sp/>were<sp/>more<sp/>complex.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Usage</highlight></codeline>
+<codeline><highlight class="normal">=====</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>TrackerGroup<sp/>=<sp/>require(&quot;are-we-there-yet&quot;).TrackerGroup</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>top<sp/>=<sp/>new<sp/>TrackerGroup(&quot;program&quot;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>single<sp/>=<sp/>top.newItem(&quot;one<sp/>thing&quot;,<sp/>100)</highlight></codeline>
+<codeline><highlight class="normal">single.completeWork(20)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">console.log(top.completed())<sp/>//<sp/>0.2</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">fs.stat(&quot;file&quot;,<sp/>function(er,<sp/>stat)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(er)<sp/>throw<sp/>er<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>stream<sp/>=<sp/>top.newStream(&quot;file&quot;,<sp/>stat.size)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(top.completed())<sp/>//<sp/>now<sp/>0.1<sp/>as<sp/>single<sp/>is<sp/>50%<sp/>of<sp/>the<sp/>job<sp/>and<sp/>is<sp/>20%<sp/>complete</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>and<sp/>50%<sp/>*<sp/>20%<sp/>==<sp/>10%</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fs.createReadStream(&quot;file&quot;).pipe(stream).on(&quot;data&quot;,<sp/>function<sp/>(chunk)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>do<sp/>stuff<sp/>with<sp/>chunk</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>top.on(&quot;change&quot;,<sp/>function<sp/>(name)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>called<sp/>each<sp/>time<sp/>a<sp/>chunk<sp/>is<sp/>read<sp/>from<sp/>&quot;file&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>top.completed()<sp/>will<sp/>start<sp/>at<sp/>0.1<sp/>and<sp/>fill<sp/>up<sp/>to<sp/>0.6<sp/>as<sp/>the<sp/>file<sp/>is<sp/>read</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Shared<sp/>Methods</highlight></codeline>
+<codeline><highlight class="normal">==============</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>var<sp/>completed<sp/>=<sp/>tracker.completed()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Implemented<sp/>in:<sp/>`Tracker`,<sp/>`TrackerGroup`,<sp/>`TrackerStream`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>the<sp/>ratio<sp/>of<sp/>completed<sp/>work<sp/>to<sp/>work<sp/>to<sp/>be<sp/>done.<sp/>Range<sp/>of<sp/>0<sp/>to<sp/>1.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>tracker.finish()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Implemented<sp/>in:<sp/>`Tracker`,<sp/>`TrackerGroup`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Marks<sp/>the<sp/>tracker<sp/>as<sp/>completed.<sp/>With<sp/>a<sp/>TrackerGroup<sp/>this<sp/>marks<sp/>all<sp/>of<sp/>its</highlight></codeline>
+<codeline><highlight class="normal">components<sp/>as<sp/>completed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Marks<sp/>all<sp/>of<sp/>the<sp/>components<sp/>of<sp/>this<sp/>tracker<sp/>as<sp/>finished,<sp/>which<sp/>in<sp/>turn<sp/>means</highlight></codeline>
+<codeline><highlight class="normal">that<sp/>`tracker.completed()`<sp/>for<sp/>this<sp/>will<sp/>now<sp/>be<sp/>1.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>will<sp/>result<sp/>in<sp/>one<sp/>or<sp/>more<sp/>`change`<sp/>events<sp/>being<sp/>emitted.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Events</highlight></codeline>
+<codeline><highlight class="normal">======</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">All<sp/>tracker<sp/>objects<sp/>emit<sp/>`change`<sp/>events<sp/>with<sp/>the<sp/>following<sp/>arguments:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">function<sp/>(name,<sp/>completed,<sp/>tracker)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`name`<sp/>is<sp/>the<sp/>name<sp/>of<sp/>the<sp/>tracker<sp/>that<sp/>originally<sp/>emitted<sp/>the<sp/>event,</highlight></codeline>
+<codeline><highlight class="normal">or<sp/>if<sp/>it<sp/>didn&apos;t<sp/>have<sp/>one,<sp/>the<sp/>first<sp/>containing<sp/>tracker<sp/>group<sp/>that<sp/>had<sp/>one.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`completed`<sp/>is<sp/>the<sp/>percent<sp/>complete<sp/>(as<sp/>returned<sp/>by<sp/>`tracker.completed()`<sp/>method).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`tracker`<sp/>is<sp/>the<sp/>tracker<sp/>object<sp/>that<sp/>you<sp/>are<sp/>listening<sp/>for<sp/>events<sp/>on.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">TrackerGroup</highlight></codeline>
+<codeline><highlight class="normal">============</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>var<sp/>tracker<sp/>=<sp/>new<sp/>TrackerGroup(**name**)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>**name**<sp/>*(optional)*<sp/>-<sp/>The<sp/>name<sp/>of<sp/>this<sp/>tracker<sp/>group,<sp/>used<sp/>in<sp/>change</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>notifications<sp/>if<sp/>the<sp/>component<sp/>updating<sp/>didn&apos;t<sp/>have<sp/>a<sp/>name.<sp/>Defaults<sp/>to<sp/>undefined.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Creates<sp/>a<sp/>new<sp/>empty<sp/>tracker<sp/>aggregation<sp/>group.<sp/>These<sp/>are<sp/>trackers<sp/>whose</highlight></codeline>
+<codeline><highlight class="normal">completion<sp/>status<sp/>is<sp/>determined<sp/>by<sp/>the<sp/>completion<sp/>status<sp/>of<sp/>other<sp/>trackers<sp/>added<sp/>to<sp/>this<sp/>aggregation<sp/>group.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Ex.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>tracker<sp/>=<sp/>new<sp/>TrackerGroup(&quot;parent&quot;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>foo<sp/>=<sp/>tracker.newItem(&quot;firstChild&quot;,<sp/>100)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>bar<sp/>=<sp/>tracker.newItem(&quot;secondChild&quot;,<sp/>100)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">foo.finish()</highlight></codeline>
+<codeline><highlight class="normal">console.log(tracker.completed())<sp/>//<sp/>0.5</highlight></codeline>
+<codeline><highlight class="normal">bar.finish()</highlight></codeline>
+<codeline><highlight class="normal">console.log(tracker.completed())<sp/>//<sp/>1</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>tracker.addUnit(**otherTracker**,<sp/>**weight**)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>**otherTracker**<sp/>-<sp/>Any<sp/>of<sp/>the<sp/>other<sp/>are-we-there-yet<sp/>tracker<sp/>objects</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>**weight**<sp/>*(optional)*<sp/>-<sp/>The<sp/>weight<sp/>to<sp/>give<sp/>the<sp/>tracker,<sp/>defaults<sp/>to<sp/>1.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Adds<sp/>the<sp/>**otherTracker**<sp/>to<sp/>this<sp/>aggregation<sp/>group.<sp/>The<sp/>weight<sp/>determines</highlight></codeline>
+<codeline><highlight class="normal">how<sp/>long<sp/>you<sp/>expect<sp/>this<sp/>tracker<sp/>to<sp/>take<sp/>to<sp/>complete<sp/>in<sp/>proportion<sp/>to<sp/>other</highlight></codeline>
+<codeline><highlight class="normal">units.<sp/><sp/>So<sp/>for<sp/>instance,<sp/>if<sp/>you<sp/>add<sp/>one<sp/>tracker<sp/>with<sp/>a<sp/>weight<sp/>of<sp/>1<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">another<sp/>with<sp/>a<sp/>weight<sp/>of<sp/>2,<sp/>you&apos;re<sp/>saying<sp/>the<sp/>second<sp/>will<sp/>take<sp/>twice<sp/>as<sp/>long</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>complete<sp/>as<sp/>the<sp/>first.<sp/><sp/>As<sp/>such,<sp/>the<sp/>first<sp/>will<sp/>account<sp/>for<sp/>33%<sp/>of<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">completion<sp/>of<sp/>this<sp/>tracker<sp/>and<sp/>the<sp/>second<sp/>will<sp/>account<sp/>for<sp/>the<sp/>other<sp/>67%.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>**otherTracker**.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>var<sp/>subGroup<sp/>=<sp/>tracker.newGroup(**name**,<sp/>**weight**)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>above<sp/>is<sp/>exactly<sp/>equivalent<sp/>to:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>subGroup<sp/>=<sp/>tracker.addUnit(new<sp/>TrackerGroup(name),<sp/>weight)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>var<sp/>subItem<sp/>=<sp/>tracker.newItem(**name**,<sp/>**todo**,<sp/>**weight**)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>above<sp/>is<sp/>exactly<sp/>equivalent<sp/>to:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>subItem<sp/>=<sp/>tracker.addUnit(new<sp/>Tracker(name,<sp/>todo),<sp/>weight)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>var<sp/>subStream<sp/>=<sp/>tracker.newStream(**name**,<sp/>**todo**,<sp/>**weight**)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>above<sp/>is<sp/>exactly<sp/>equivalent<sp/>to:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>subStream<sp/>=<sp/>tracker.addUnit(new<sp/>TrackerStream(name,<sp/>todo),<sp/>weight)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>console.log(<sp/>tracker.debug()<sp/>)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>a<sp/>tree<sp/>showing<sp/>the<sp/>completion<sp/>of<sp/>this<sp/>tracker<sp/>group<sp/>and<sp/>all<sp/>of<sp/>its</highlight></codeline>
+<codeline><highlight class="normal">children,<sp/>including<sp/>recursively<sp/>entering<sp/>all<sp/>of<sp/>the<sp/>children.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Tracker</highlight></codeline>
+<codeline><highlight class="normal">=======</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>var<sp/>tracker<sp/>=<sp/>new<sp/>Tracker(**name**,<sp/>**todo**)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>**name**<sp/>*(optional)*<sp/>The<sp/>name<sp/>of<sp/>this<sp/>counter<sp/>to<sp/>report<sp/>in<sp/>change</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>events.<sp/><sp/>Defaults<sp/>to<sp/>undefined.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>**todo**<sp/>*(optional)*<sp/>The<sp/>amount<sp/>of<sp/>work<sp/>todo<sp/>(a<sp/>number).<sp/>Defaults<sp/>to<sp/>0.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Ordinarily<sp/>these<sp/>are<sp/>constructed<sp/>as<sp/>a<sp/>part<sp/>of<sp/>a<sp/>tracker<sp/>group<sp/>(via</highlight></codeline>
+<codeline><highlight class="normal">`newItem`).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>var<sp/>completed<sp/>=<sp/>tracker.completed()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>the<sp/>ratio<sp/>of<sp/>completed<sp/>work<sp/>to<sp/>work<sp/>to<sp/>be<sp/>done.<sp/>Range<sp/>of<sp/>0<sp/>to<sp/>1.<sp/>If</highlight></codeline>
+<codeline><highlight class="normal">total<sp/>work<sp/>to<sp/>be<sp/>done<sp/>is<sp/>0<sp/>then<sp/>it<sp/>will<sp/>return<sp/>0.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>tracker.addWork(**todo**)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>**todo**<sp/>A<sp/>number<sp/>to<sp/>add<sp/>to<sp/>the<sp/>amount<sp/>of<sp/>work<sp/>to<sp/>be<sp/>done.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Increases<sp/>the<sp/>amount<sp/>of<sp/>work<sp/>to<sp/>be<sp/>done,<sp/>thus<sp/>decreasing<sp/>the<sp/>completion</highlight></codeline>
+<codeline><highlight class="normal">percentage.<sp/><sp/>Triggers<sp/>a<sp/>`change`<sp/>event.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>tracker.completeWork(**completed**)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>**completed**<sp/>A<sp/>number<sp/>to<sp/>add<sp/>to<sp/>the<sp/>work<sp/>complete</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Increase<sp/>the<sp/>amount<sp/>of<sp/>work<sp/>complete,<sp/>thus<sp/>increasing<sp/>the<sp/>completion<sp/>percentage.</highlight></codeline>
+<codeline><highlight class="normal">Will<sp/>never<sp/>increase<sp/>the<sp/>work<sp/>completed<sp/>past<sp/>the<sp/>amount<sp/>of<sp/>work<sp/>todo.<sp/>That<sp/>is,</highlight></codeline>
+<codeline><highlight class="normal">percentages<sp/>&gt;<sp/>100%<sp/>are<sp/>not<sp/>allowed.<sp/>Triggers<sp/>a<sp/>`change`<sp/>event.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>tracker.finish()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Marks<sp/>this<sp/>tracker<sp/>as<sp/>finished,<sp/>tracker.completed()<sp/>will<sp/>now<sp/>be<sp/>1.<sp/>Triggers</highlight></codeline>
+<codeline><highlight class="normal">a<sp/>`change`<sp/>event.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">TrackerStream</highlight></codeline>
+<codeline><highlight class="normal">=============</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>var<sp/>tracker<sp/>=<sp/>new<sp/>TrackerStream(**name**,<sp/>**size**,<sp/>**options**)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>**name**<sp/>*(optional)*<sp/>The<sp/>name<sp/>of<sp/>this<sp/>counter<sp/>to<sp/>report<sp/>in<sp/>change</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>events.<sp/><sp/>Defaults<sp/>to<sp/>undefined.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>**size**<sp/>*(optional)*<sp/>The<sp/>number<sp/>of<sp/>bytes<sp/>being<sp/>sent<sp/>through<sp/>this<sp/>stream.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>**options**<sp/>*(optional)*<sp/>A<sp/>hash<sp/>of<sp/>stream<sp/>options</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>tracker<sp/>stream<sp/>object<sp/>is<sp/>a<sp/>pass<sp/>through<sp/>stream<sp/>that<sp/>updates<sp/>an<sp/>internal</highlight></codeline>
+<codeline><highlight class="normal">tracker<sp/>object<sp/>each<sp/>time<sp/>a<sp/>block<sp/>passes<sp/>through.<sp/><sp/>It&apos;s<sp/>intended<sp/>to<sp/>track</highlight></codeline>
+<codeline><highlight class="normal">downloads,<sp/>file<sp/>extraction<sp/>and<sp/>other<sp/>related<sp/>activities.<sp/>You<sp/>use<sp/>it<sp/>by<sp/>piping</highlight></codeline>
+<codeline><highlight class="normal">your<sp/>data<sp/>source<sp/>into<sp/>it<sp/>and<sp/>then<sp/>using<sp/>it<sp/>as<sp/>your<sp/>data<sp/>source.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>your<sp/>data<sp/>has<sp/>a<sp/>length<sp/>attribute<sp/>then<sp/>that&apos;s<sp/>used<sp/>as<sp/>the<sp/>amount<sp/>of<sp/>work</highlight></codeline>
+<codeline><highlight class="normal">completed<sp/>when<sp/>the<sp/>chunk<sp/>is<sp/>passed<sp/>through.<sp/><sp/>If<sp/>it<sp/>does<sp/>not<sp/>(eg,<sp/>object</highlight></codeline>
+<codeline><highlight class="normal">streams)<sp/>then<sp/>each<sp/>chunk<sp/>counts<sp/>as<sp/>completing<sp/>1<sp/>unit<sp/>of<sp/>work,<sp/>so<sp/>your<sp/>size</highlight></codeline>
+<codeline><highlight class="normal">should<sp/>be<sp/>the<sp/>total<sp/>number<sp/>of<sp/>objects<sp/>being<sp/>streamed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>tracker.addWork(**todo**)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>**todo**<sp/>Increase<sp/>the<sp/>expected<sp/>overall<sp/>size<sp/>by<sp/>**todo**<sp/>bytes.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Increases<sp/>the<sp/>amount<sp/>of<sp/>work<sp/>to<sp/>be<sp/>done,<sp/>thus<sp/>decreasing<sp/>the<sp/>completion</highlight></codeline>
+<codeline><highlight class="normal">percentage.<sp/><sp/>Triggers<sp/>a<sp/>`change`<sp/>event.</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/are-we-there-yet/README.md"/>
+  </compounddef>
+</doxygen>

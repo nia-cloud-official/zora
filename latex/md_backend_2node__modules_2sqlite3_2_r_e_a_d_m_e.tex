@@ -1,0 +1,251 @@
+\chapter{⚙️ node-\/sqlite3}
+\hypertarget{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e}\index{⚙️ node-\/sqlite3@{⚙️ node-\/sqlite3}}
+\label{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3601}%
+\Hypertarget{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3601}%
+ Asynchronous, non-\/blocking \href{https://sqlite.org/}{\texttt{ SQLite3}} bindings for \href{http://nodejs.org/}{\texttt{ Node.\+js}}.
+
+\href{https://www.npmjs.com/package/sqlite3}{\texttt{ }}  \href{https://app.fossa.io/projects/git\%2Bhttps\%3A\%2F\%2Fgithub.com\%2Fmapbox\%2Fnode-sqlite3?ref=badge_shield}{\texttt{ }} \href{https://nodejs.org/dist/latest/docs/api/n-api.html\#n_api_n_api}{\texttt{ }} \href{https://nodejs.org/dist/latest/docs/api/n-api.html\#n_api_n_api}{\texttt{ }}\hypertarget{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3602}{}\doxysection{\texorpdfstring{Features}{Features}}\label{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3602}
+
+\begin{DoxyItemize}
+\item Straightforward query and parameter binding interface
+\item Full Buffer/\+Blob support
+\item Extensive \href{https://github.com/tryghost/node-sqlite3/wiki/Debugging}{\texttt{ debugging support}}
+\item \href{https://github.com/tryghost/node-sqlite3/wiki/Control-Flow}{\texttt{ Query serialization}} API
+\item \href{https://github.com/TryGhost/node-sqlite3/wiki/API\#databaseloadextensionpath-callback}{\texttt{ Extension support}}, including bundled support for the \href{https://www.sqlite.org/json1.html}{\texttt{ json1 extension}}
+\item Big test suite
+\item Written in modern C++ and tested for memory leaks
+\item Bundles SQLite v3.\+44.\+2, or you can build using a local SQLite
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3603}{}\doxysection{\texorpdfstring{Installing}{Installing}}\label{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3603}
+You can use \href{https://github.com/npm/cli}{\texttt{ {\ttfamily npm}}} or \href{https://github.com/yarnpkg/yarn}{\texttt{ {\ttfamily yarn}}} to install {\ttfamily sqlite3}\+:
+
+
+\begin{DoxyItemize}
+\item (recommended) Latest published package\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ sqlite3}
+\DoxyCodeLine{\#\ or}
+\DoxyCodeLine{yarn\ add\ sqlite3}
+
+\end{DoxyCode}
+
+\item Git\+Hub\textquotesingle{}s {\ttfamily master} branch\+: {\ttfamily npm install \href{https://github.com/tryghost/node-sqlite3/tarball/master}{\texttt{ https\+://github.\+com/tryghost/node-\/sqlite3/tarball/master}}}
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3604}{}\doxysubsubsection{\texorpdfstring{Prebuilt binaries}{Prebuilt binaries}}\label{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3604}
+{\ttfamily sqlite3} v5+ was rewritten to use \href{https://nodejs.org/api/n-api.html}{\texttt{ Node-\/\+API}} so prebuilt binaries do not need to be built for specific Node versions. {\ttfamily sqlite3} currently builds for both Node-\/\+API v3 and v6. Check the \href{https://nodejs.org/api/n-api.html\#node-api-version-matrix}{\texttt{ Node-\/\+API version matrix}} to ensure your Node version supports one of these. The prebuilt binaries should be supported on Node v10+.
+
+The module uses \href{https://github.com/prebuild/prebuild-install}{\texttt{ {\ttfamily prebuild-\/install}}} to download the prebuilt binary for your platform, if it exists. These binaries are hosted on Git\+Hub Releases for {\ttfamily sqlite3} versions above 5.\+0.\+2, and they are hosted on S3 otherwise. The following targets are currently provided\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily darwin-\/arm64}
+\item {\ttfamily darwin-\/x64}
+\item {\ttfamily linux-\/arm64}
+\item {\ttfamily linux-\/x64}
+\item {\ttfamily linuxmusl-\/arm64}
+\item {\ttfamily linuxmusl-\/x64}
+\item {\ttfamily win32-\/ia32}
+\item {\ttfamily win32-\/x64}
+\end{DoxyItemize}
+
+Unfortunately, \href{https://github.com/prebuild/prebuild/issues/174}{\texttt{ prebuild}} cannot differentiate between {\ttfamily armv6} and {\ttfamily armv7}, and instead uses {\ttfamily arm} as the {\ttfamily \{arch\}}. Until that is fixed, you will still need to install {\ttfamily sqlite3} from source.
+
+Support for other platforms and architectures may be added in the future if CI supports building on them.
+
+If your environment isn\textquotesingle{}t supported, it\textquotesingle{}ll use {\ttfamily node-\/gyp} to build SQLite, but you will need to install a C++ compiler and linker.\hypertarget{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3605}{}\doxysubsubsection{\texorpdfstring{Other ways to install}{Other ways to install}}\label{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3605}
+It is also possible to make your own build of {\ttfamily sqlite3} from its source instead of its npm package (See below.).
+
+The {\ttfamily sqlite3} module also works with \href{https://github.com/rogerwang/node-webkit}{\texttt{ node-\/webkit}} if node-\/webkit contains a supported version of \+Node.\+js engine. (See below.)
+
+SQLite\textquotesingle{}s \href{https://github.com/sqlcipher/sqlcipher}{\texttt{ SQLCipher extension}} is also supported. (See below.)\hypertarget{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3606}{}\doxysection{\texorpdfstring{API}{API}}\label{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3606}
+See the \href{https://github.com/TryGhost/node-sqlite3/wiki/API}{\texttt{ API documentation}} in the wiki.\hypertarget{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3607}{}\doxysection{\texorpdfstring{Usage}{Usage}}\label{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3607}
+{\bfseries{Note\+:}} the module must be installed before use.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{const\ sqlite3\ =\ require('sqlite3').verbose();}
+\DoxyCodeLine{const\ db\ =\ new\ sqlite3.Database(':memory:');}
+\DoxyCodeLine{}
+\DoxyCodeLine{db.serialize(()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ db.run("{}CREATE\ TABLE\ lorem\ (info\ TEXT)"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ const\ stmt\ =\ db.prepare("{}INSERT\ INTO\ lorem\ VALUES\ (?)"{});}
+\DoxyCodeLine{\ \ \ \ for\ (let\ i\ =\ 0;\ i\ <\ 10;\ i++)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ stmt.run("{}Ipsum\ "{}\ +\ i);}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ stmt.finalize();}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ db.each("{}SELECT\ rowid\ AS\ id,\ info\ FROM\ lorem"{},\ (err,\ row)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ console.log(row.id\ +\ "{}:\ "{}\ +\ row.info);}
+\DoxyCodeLine{\ \ \ \ \});}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{db.close();}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3608}{}\doxysubsection{\texorpdfstring{Source install}{Source install}}\label{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3608}
+To skip searching for pre-\/compiled binaries, and force a build from source, use
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/build-\/from-\/source}
+
+\end{DoxyCode}
+
+
+The sqlite3 module depends only on libsqlite3. However, by default, an internal/bundled copy of sqlite will be built and statically linked, so an externally installed sqlite3 is not required.
+
+If you wish to install against an external sqlite then you need to pass the {\ttfamily -\/-\/sqlite} argument to {\ttfamily npm} wrapper\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/build-\/from-\/source\ -\/-\/sqlite=/usr/local}
+
+\end{DoxyCode}
+
+
+If building against an external sqlite3 make sure to have the development headers available. Mac OS X ships with these by default. If you don\textquotesingle{}t have them installed, install the {\ttfamily -\/dev} package with your package manager, e.\+g. {\ttfamily apt-\/get install libsqlite3-\/dev} for Debian/\+Ubuntu. Make sure that you have at least {\ttfamily libsqlite3} \texorpdfstring{$>$}{>}= 3.\+6.
+
+Note, if building against homebrew-\/installed sqlite on OS X you can do\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/build-\/from-\/source\ -\/-\/sqlite=/usr/local/opt/sqlite/}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3609}{}\doxysubsection{\texorpdfstring{Custom file header (magic)}{Custom file header (magic)}}\label{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3609}
+The default sqlite file header is "{}\+SQLite format 3"{}. You can specify a different magic, though this will make standard tools and libraries unable to work with your files.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/build-\/from-\/source\ -\/-\/sqlite\_magic="{}MyCustomMagic15"{}}
+
+\end{DoxyCode}
+
+
+Note that the magic {\itshape must} be exactly 15 characters long (16 bytes including null terminator).\hypertarget{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3610}{}\doxysubsection{\texorpdfstring{Building for node-\/webkit}{Building for node-\/webkit}}\label{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3610}
+Because of ABI differences, {\ttfamily sqlite3} must be built in a custom to be used with \href{https://github.com/rogerwang/node-webkit}{\texttt{ node-\/webkit}}.
+
+To build {\ttfamily sqlite3} for node-\/webkit\+:
+
+
+\begin{DoxyEnumerate}
+\item Install \href{https://github.com/rogerwang/nw-gyp}{\texttt{ {\ttfamily nw-\/gyp}}} globally\+: {\ttfamily npm install nw-\/gyp -\/g} \texorpdfstring{$\ast$}{*}(unless already installed)\texorpdfstring{$\ast$}{*}
+\item Build the module with the custom flags of {\ttfamily -\/-\/runtime}, {\ttfamily -\/-\/target\+\_\+arch}, and {\ttfamily -\/-\/target}\+:
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{NODE\_WEBKIT\_VERSION="{}0.8.6"{}\ \#\ see\ latest\ version\ at\ https://github.com/rogerwang/node-\/webkit\#downloads}
+\DoxyCodeLine{npm\ install\ sqlite3\ -\/-\/build-\/from-\/source\ -\/-\/runtime=node-\/webkit\ -\/-\/target\_arch=ia32\ -\/-\/target=\$(NODE\_WEBKIT\_VERSION)}
+
+\end{DoxyCode}
+
+
+You can also run this command from within a {\ttfamily sqlite3} checkout\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ -\/-\/build-\/from-\/source\ -\/-\/runtime=node-\/webkit\ -\/-\/target\_arch=ia32\ -\/-\/target=\$(NODE\_WEBKIT\_VERSION)}
+
+\end{DoxyCode}
+
+
+Remember the following\+:
+
+
+\begin{DoxyItemize}
+\item You must provide the right {\ttfamily -\/-\/target\+\_\+arch} flag. {\ttfamily ia32} is needed to target 32bit node-\/webkit builds, while {\ttfamily x64} will target 64bit node-\/webkit builds (if available for your platform).
+\item After the {\ttfamily sqlite3} package is built for node-\/webkit it cannot run in the vanilla Node.\+js (and vice versa).
+\begin{DoxyItemize}
+\item For example, {\ttfamily npm test} of the node-\/webkit\textquotesingle{}s package would fail.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Visit the “\href{https://github.com/rogerwang/node-webkit/wiki/Using-Node-modules}{\texttt{ Using Node modules}}” article in the node-\/webkit\textquotesingle{}s wiki for more details.\hypertarget{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3611}{}\doxysubsection{\texorpdfstring{Building for SQLCipher}{Building for SQLCipher}}\label{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3611}
+For instructions on building SQLCipher, see \href{https://coolaj86.com/articles/building-sqlcipher-for-node-js-on-raspberry-pi-2/}{\texttt{ Building SQLCipher for Node.\+js}}. Alternatively, you can install it with your local package manager.
+
+To run against SQLCipher, you need to compile {\ttfamily sqlite3} from source by passing build options like\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ sqlite3\ -\/-\/build-\/from-\/source\ -\/-\/sqlite\_libname=sqlcipher\ -\/-\/sqlite=/usr/}
+\DoxyCodeLine{}
+\DoxyCodeLine{node\ -\/e\ 'require("{}sqlite3"{})'}
+
+\end{DoxyCode}
+
+
+If your SQLCipher is installed in a custom location (if you compiled and installed it yourself), you\textquotesingle{}ll need to set some environment variables\+:\hypertarget{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3612}{}\doxysubsubsection{\texorpdfstring{On OS X with Homebrew}{On OS X with Homebrew}}\label{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3612}
+Set the location where {\ttfamily brew} installed it\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ LDFLAGS="{}-\/L`brew\ -\/-\/prefix`/opt/sqlcipher/lib"{}}
+\DoxyCodeLine{export\ CPPFLAGS="{}-\/I`brew\ -\/-\/prefix`/opt/sqlcipher/include/sqlcipher"{}}
+\DoxyCodeLine{npm\ install\ sqlite3\ -\/-\/build-\/from-\/source\ -\/-\/sqlite\_libname=sqlcipher\ -\/-\/sqlite=`brew\ -\/-\/prefix`}
+\DoxyCodeLine{}
+\DoxyCodeLine{node\ -\/e\ 'require("{}sqlite3"{})'}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3613}{}\doxysubsubsection{\texorpdfstring{On most Linuxes (including Raspberry Pi)}{On most Linuxes (including Raspberry Pi)}}\label{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3613}
+Set the location where {\ttfamily make} installed it\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ LDFLAGS="{}-\/L/usr/local/lib"{}}
+\DoxyCodeLine{export\ CPPFLAGS="{}-\/I/usr/local/include\ -\/I/usr/local/include/sqlcipher"{}}
+\DoxyCodeLine{export\ CXXFLAGS="{}\$CPPFLAGS"{}}
+\DoxyCodeLine{npm\ install\ sqlite3\ -\/-\/build-\/from-\/source\ -\/-\/sqlite\_libname=sqlcipher\ -\/-\/sqlite=/usr/local\ -\/-\/verbose}
+\DoxyCodeLine{}
+\DoxyCodeLine{node\ -\/e\ 'require("{}sqlite3"{})'}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3614}{}\doxysubsubsection{\texorpdfstring{Custom builds and Electron}{Custom builds and Electron}}\label{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3614}
+Running {\ttfamily sqlite3} through \href{https://github.com/electron/electron-rebuild}{\texttt{ electron-\/rebuild}} does not preserve the SQLCipher extension, so some additional flags are needed to make this build Electron compatible. Your {\ttfamily npm install sqlite3 -\/-\/build-\/from-\/source} command needs these additional flags (be sure to replace the target version with the current Electron version you are working with)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{-\/-\/runtime=electron\ -\/-\/target=18.2.1\ -\/-\/dist-\/url=https://electronjs.org/headers}
+
+\end{DoxyCode}
+
+
+In the case of Mac\+OS with Homebrew, the command should look like the following\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ sqlite3\ -\/-\/build-\/from-\/source\ -\/-\/sqlite\_libname=sqlcipher\ -\/-\/sqlite=`brew\ -\/-\/prefix`\ -\/-\/runtime=electron\ -\/-\/target=18.2.1\ -\/-\/dist-\/url=https://electronjs.org/headers}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3615}{}\doxysection{\texorpdfstring{Testing}{Testing}}\label{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3615}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ test}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3616}{}\doxysection{\texorpdfstring{Contributors}{Contributors}}\label{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3616}
+
+\begin{DoxyItemize}
+\item \href{https://github.com/daniellockyer}{\texttt{ Daniel Lockyer}}
+\item \href{https://github.com/kkaefer}{\texttt{ Konstantin Käfer}}
+\item \href{https://github.com/springmeyer}{\texttt{ Dane Springmeyer}}
+\item \href{https://github.com/willwhite}{\texttt{ Will White}}
+\item \href{https://github.com/orlandov}{\texttt{ Orlando Vazquez}}
+\item \href{https://github.com/artiz}{\texttt{ Artem Kustikov}}
+\item \href{https://github.com/grumdrig}{\texttt{ Eric Fredricksen}}
+\item \href{https://github.com/mrjjwright}{\texttt{ John Wright}}
+\item \href{https://github.com/ry}{\texttt{ Ryan Dahl}}
+\item \href{https://github.com/tmcw}{\texttt{ Tom Mac\+Wright}}
+\item \href{https://github.com/carter-thaxton}{\texttt{ Carter Thaxton}}
+\item \href{https://github.com/audriusk}{\texttt{ Audrius Kažukauskas}}
+\item \href{https://github.com/pyneo}{\texttt{ Johannes Schauer}}
+\item \href{https://github.com/Mithgol}{\texttt{ Mithgol}}
+\item \href{https://github.com/kewde}{\texttt{ Kewde}}
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3617}{}\doxysection{\texorpdfstring{Acknowledgments}{Acknowledgments}}\label{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3617}
+Thanks to \href{https://github.com/orlandov}{\texttt{ Orlando Vazquez}}, \href{https://github.com/grumdrig}{\texttt{ Eric Fredricksen}} and \href{https://github.com/ry}{\texttt{ Ryan Dahl}} for their SQLite bindings for node, and to mraleph on Freenode\textquotesingle{}s \#v8 for answering questions.
+
+This module was originally created by \href{https://mapbox.com/}{\texttt{ Mapbox}} \& is now maintained by \href{https://ghost.org}{\texttt{ Ghost}}.\hypertarget{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3618}{}\doxysection{\texorpdfstring{Changelog}{Changelog}}\label{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3618}
+We use \href{https://github.com/TryGhost/node-sqlite3/releases}{\texttt{ Git\+Hub releases}} for notes on the latest versions. See \href{https://github.com/TryGhost/node-sqlite3/blob/b05f4594cf8b0de64743561fcd2cfe6f4571754d/CHANGELOG.md}{\texttt{ CHANGELOG.\+md}} in git history for details on older versions.\hypertarget{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3619}{}\doxysection{\texorpdfstring{License}{License}}\label{md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e_autotoc_md3619}
+{\ttfamily node-\/sqlite3} is \href{https://github.com/tryghost/node-sqlite3/raw/master/LICENSE}{\texttt{ BSD licensed}}.
+
+\href{https://app.fossa.io/projects/git\%2Bhttps\%3A\%2F\%2Fgithub.com\%2Fmapbox\%2Fnode-sqlite3?ref=badge_large}{\texttt{ }} 

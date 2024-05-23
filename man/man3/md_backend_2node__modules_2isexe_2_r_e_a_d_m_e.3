@@ -1,0 +1,51 @@
+.TH "md_backend_2node__modules_2isexe_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2isexe_2_r_e_a_d_m_e \- isexe 
+.PP
+ Minimal module to check if a file is executable, and a normal file\&.
+.PP
+Uses \fRfs\&.stat\fP and tests against the \fRPATHEXT\fP environment variable on Windows\&.
+.SH "USAGE"
+.PP
+.PP
+.nf
+var isexe = require('isexe')
+isexe('some\-file\-name', function (err, isExe) {
+  if (err) {
+    console\&.error('probably file does not exist or something', err)
+  } else if (isExe) {
+    console\&.error('this thing can be run')
+  } else {
+    console\&.error('cannot be run')
+  }
+})
+
+// same thing but synchronous, throws errors
+var isExe = isexe\&.sync('some\-file\-name')
+
+// treat errors as just "not executable"
+isexe('maybe\-missing\-file', { ignoreErrors: true }, callback)
+var isExe = isexe\&.sync('maybe\-missing\-file', { ignoreErrors: true })
+.fi
+.PP
+.SH "API"
+.PP
+.SS "\fRisexe(path, [options], [callback])\fP"
+Check if the path is executable\&. If no callback provided, and a global \fRPromise\fP object is available, then a Promise will be returned\&.
+.PP
+Will raise whatever errors may be raised by \fRfs\&.stat\fP, unless \fRoptions\&.ignoreErrors\fP is set to true\&.
+.SS "\fRisexe\&.sync(path, [options])\fP"
+Same as \fRisexe\fP but returns the value and throws any errors raised\&.
+.SS "Options"
+.IP "\(bu" 2
+\fRignoreErrors\fP Treat all errors as 'no, this is not executable', but don't raise them\&.
+.IP "\(bu" 2
+\fRuid\fP Number to use as the user id
+.IP "\(bu" 2
+\fRgid\fP Number to use as the group id
+.IP "\(bu" 2
+\fRpathExt\fP List of path extensions to use instead of \fRPATHEXT\fP environment variable on Windows\&. 
+.PP
+

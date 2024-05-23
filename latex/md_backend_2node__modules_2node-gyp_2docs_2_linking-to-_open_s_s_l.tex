@@ -1,0 +1,97 @@
+\chapter{Linking-\/to-\/\+Open\+SSL}
+\hypertarget{md_backend_2node__modules_2node-gyp_2docs_2_linking-to-_open_s_s_l}{}\label{md_backend_2node__modules_2node-gyp_2docs_2_linking-to-_open_s_s_l}\index{Linking-\/to-\/OpenSSL@{Linking-\/to-\/OpenSSL}}
+A handful of native addons require linking to Open\+SSL in one way or another. This introduces a small challenge since node will sometimes bundle Open\+SSL statically (the default for node \texorpdfstring{$>$}{>}= v0.\+8.\+x), or sometimes dynamically link to the system Open\+SSL (default for node \texorpdfstring{$<$}{<}= v0.\+6.\+x).
+
+Good native addons should account for both scenarios. It\textquotesingle{}s recommended that you use the {\ttfamily binding.\+gyp} file provided below as a starting-\/point for any addon that needs to use Open\+SSL\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ python}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ 'variables':\ \{}
+\DoxyCodeLine{\ \ \ \ \#\ node\ v0.6.x\ doesn't\ give\ us\ its\ build\ variables,}
+\DoxyCodeLine{\ \ \ \ \#\ but\ on\ Unix\ it\ was\ only\ possible\ to\ use\ the\ system\ OpenSSL\ library,}
+\DoxyCodeLine{\ \ \ \ \#\ so\ default\ the\ variable\ to\ "{}true"{},\ v0.8.x\ node\ and\ up\ will\ overwrite\ it.}
+\DoxyCodeLine{\ \ \ \ 'node\_shared\_openssl\%':\ 'true'}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ 'targets':\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ 'target\_name':\ 'binding',}
+\DoxyCodeLine{\ \ \ \ \ \ 'sources':\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ 'src/binding.cc'}
+\DoxyCodeLine{\ \ \ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ \ \ 'conditions':\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ ['node\_shared\_openssl=="{}false"{}',\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \#\ so\ when\ "{}node\_shared\_openssl"{}\ is\ "{}false"{},\ then\ OpenSSL\ has\ been}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \#\ bundled\ into\ the\ node\ executable.\ So\ we\ need\ to\ include\ the\ same}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \#\ header\ files\ that\ were\ used\ when\ building\ node.}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ 'include\_dirs':\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ '<(node\_root\_dir)/deps/openssl/openssl/include'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}conditions"{}\ :\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ ["{}target\_arch=='ia32'"{},\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}include\_dirs"{}:\ [\ "{}<(node\_root\_dir)/deps/openssl/config/piii"{}\ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ ["{}target\_arch=='x64'"{},\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}include\_dirs"{}:\ [\ "{}<(node\_root\_dir)/deps/openssl/config/k8"{}\ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ ["{}target\_arch=='arm'"{},\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}include\_dirs"{}:\ [\ "{}<(node\_root\_dir)/deps/openssl/config/arm"{}\ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}]}
+\DoxyCodeLine{\ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+This ensures that when Open\+SSL is statically linked into {\ttfamily node} then, the bundled Open\+SSL headers are included, but when the system Open\+SSL is in use, then only those headers will be used.\hypertarget{md_backend_2node__modules_2node-gyp_2docs_2_linking-to-_open_s_s_l_autotoc_md2397}{}\doxysubsection{\texorpdfstring{Windows?}{Windows?}}\label{md_backend_2node__modules_2node-gyp_2docs_2_linking-to-_open_s_s_l_autotoc_md2397}
+As you can see this baseline {\ttfamily binding.\+gyp} file only accounts for the Unix scenario. Currently on Windows the situation is a little less ideal. On Windows, Open\+SSL is {\itshape always} statically compiled into the {\ttfamily node} executable, so ideally it would be possible to use that copy of Open\+SSL when building native addons.
+
+Unfortunately it doesn\textquotesingle{}t seem like that is possible at the moment, as there would need to be tweaks made to the generated {\ttfamily node.\+lib} file to include the openssl glue functions, or a new {\ttfamily openssl.\+lib} file would need to be created during the node build. I\textquotesingle{}m not sure which is the easiest/most feasible.
+
+In the meantime, one possible solution is using another copy of Open\+SSL, which is what \href{https://github.com/ncb000gt/node.bcrypt.js}{\texttt{ {\ttfamily node-\/bcrypt}}} currently does. Adding something like this to your {\ttfamily binding.\+gyp} file\textquotesingle{}s {\ttfamily "{}conditions"{}} block would enable this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{python}
+\DoxyCodeLine{\ \ \ [\ 'OS=="{}win"{}',\ \{}
+\DoxyCodeLine{\ \ \ \ \ 'conditions':\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \#\ "{}openssl\_root"{}\ is\ the\ directory\ on\ Windows\ of\ the\ OpenSSL\ files.}
+\DoxyCodeLine{\ \ \ \ \ \ \ \#\ Check\ the\ "{}target\_arch"{}\ variable\ to\ set\ good\ default\ values\ for}
+\DoxyCodeLine{\ \ \ \ \ \ \ \#\ both\ 64-\/bit\ and\ 32-\/bit\ builds\ of\ the\ module.}
+\DoxyCodeLine{\ \ \ \ \ \ \ ['target\_arch=="{}x64"{}',\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ 'variables':\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ 'openssl\_root\%':\ 'C:/OpenSSL-\/Win64'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \},\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ 'variables':\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ 'openssl\_root\%':\ 'C:/OpenSSL-\/Win32'}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \}],}
+\DoxyCodeLine{\ \ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ \ 'libraries':\ [\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ '-\/l<(openssl\_root)/lib/libeay32.lib',}
+\DoxyCodeLine{\ \ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ \ 'include\_dirs':\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ '<(openssl\_root)/include',}
+\DoxyCodeLine{\ \ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \}]}
+
+\end{DoxyCode}
+
+
+Now you can direct your users to install Open\+SSL on Windows from here (be sure to tell them to install the 64-\/bit version if they\textquotesingle{}re compiling against a 64-\/bit version of node)\+: \href{http://slproweb.com/products/Win32OpenSSL.html}{\texttt{ http\+://slproweb.\+com/products/\+Win32\+Open\+SSL.\+html}}
+
+Also note that both {\ttfamily node-\/gyp} and {\ttfamily npm} allow you to overwrite that default {\ttfamily openssl\+\_\+root} variable on the command line\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ bash}
+\DoxyCodeLine{\$\ node-\/gyp\ rebuild\ -\/-\/openssl-\/root="{}C:\(\backslash\)Users\(\backslash\)Nathan\(\backslash\)Desktop\(\backslash\)openssl"{}}
+
+\end{DoxyCode}
+ 

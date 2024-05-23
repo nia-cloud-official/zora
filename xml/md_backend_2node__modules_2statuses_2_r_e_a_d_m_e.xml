@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2statuses_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2statuses_2_r_e_a_d_m_e</compoundname>
+    <title>statuses</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2statuses_2_r_e_a_d_m_e_1autotoc_md3739"/> <ulink url="https://npmjs.org/package/statuses"><image type="html" name="https://badgen.net/npm/v/statuses" alt="NPM Version" inline="yes"></image>
+</ulink> <ulink url="https://npmjs.org/package/statuses"><image type="html" name="https://badgen.net/npm/dm/statuses" alt="NPM Downloads" inline="yes"></image>
+</ulink> <ulink url="https://nodejs.org/en/download"><image type="html" name="https://badgen.net/npm/node/statuses" alt="Node.js Version" inline="yes"></image>
+</ulink> <ulink url="https://github.com/jshttp/statuses/actions?query=workflow%3Aci"><image type="html" name="https://badgen.net/github/checks/jshttp/statuses/master?label=ci" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/r/jshttp/statuses?branch=master"><image type="html" name="https://badgen.net/coveralls/c/github/jshttp/statuses/master" alt="Test Coverage" inline="yes"></image>
+</ulink></para>
+<para>HTTP status utility for node.</para>
+<para>This module provides a list of status codes and messages sourced from a few different projects:</para>
+<para><itemizedlist>
+<listitem><para>The <ulink url="https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml">IANA Status Code Registry</ulink></para>
+</listitem><listitem><para>The <ulink url="https://nodejs.org/">Node.js project</ulink></para>
+</listitem><listitem><para>The <ulink url="https://www.nginx.com/">NGINX project</ulink></para>
+</listitem><listitem><para>The <ulink url="https://httpd.apache.org/">Apache HTTP Server project</ulink></para>
+</listitem></itemizedlist>
+</para>
+<sect1 id="md_backend_2node__modules_2statuses_2_r_e_a_d_m_e_1autotoc_md3740">
+<title>Installation</title><para>This is a <ulink url="https://nodejs.org/en/">Node.js</ulink> module available through the <ulink url="https://www.npmjs.com/">npm registry</ulink>. Installation is done using the <ulink url="https://docs.npmjs.com/getting-started/installing-npm-packages-locally"><computeroutput>npm install</computeroutput> command</ulink>:</para>
+<para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>statuses</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2statuses_2_r_e_a_d_m_e_1autotoc_md3741">
+<title>API</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>status<sp/>=<sp/>require(&apos;statuses&apos;)</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2statuses_2_r_e_a_d_m_e_1autotoc_md3742">
+<title>status(code)</title><para>Returns the status message string for a known HTTP status code. The code may be a number or a string. An error is thrown for an unknown status code.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">status(403)<sp/>//<sp/>=&gt;<sp/>&apos;Forbidden&apos;</highlight></codeline>
+<codeline><highlight class="normal">status(&apos;403&apos;)<sp/>//<sp/>=&gt;<sp/>&apos;Forbidden&apos;</highlight></codeline>
+<codeline><highlight class="normal">status(306)<sp/>//<sp/>throws</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2statuses_2_r_e_a_d_m_e_1autotoc_md3743">
+<title>status(msg)</title><para>Returns the numeric status code for a known HTTP status message. The message is case-insensitive. An error is thrown for an unknown status message.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">status(&apos;forbidden&apos;)<sp/>//<sp/>=&gt;<sp/>403</highlight></codeline>
+<codeline><highlight class="normal">status(&apos;Forbidden&apos;)<sp/>//<sp/>=&gt;<sp/>403</highlight></codeline>
+<codeline><highlight class="normal">status(&apos;foo&apos;)<sp/>//<sp/>throws</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2statuses_2_r_e_a_d_m_e_1autotoc_md3744">
+<title>status.codes</title><para>Returns an array of all the status codes as <computeroutput>Integer</computeroutput>s.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2statuses_2_r_e_a_d_m_e_1autotoc_md3745">
+<title>status.code[msg]</title><para>Returns the numeric status code for a known status message (in lower-case), otherwise <computeroutput>undefined</computeroutput>.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">status[&apos;not<sp/>found&apos;]<sp/>//<sp/>=&gt;<sp/>404</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2statuses_2_r_e_a_d_m_e_1autotoc_md3746">
+<title>status.empty[code]</title><para>Returns <computeroutput>true</computeroutput> if a status code expects an empty body.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">status.empty[200]<sp/>//<sp/>=&gt;<sp/>undefined</highlight></codeline>
+<codeline><highlight class="normal">status.empty[204]<sp/>//<sp/>=&gt;<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">status.empty[304]<sp/>//<sp/>=&gt;<sp/>true</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2statuses_2_r_e_a_d_m_e_1autotoc_md3747">
+<title>status.message[code]</title><para>Returns the string message for a known numeric status code, otherwise <computeroutput>undefined</computeroutput>. This object is the same format as the <ulink url="https://nodejs.org/dist/latest/docs/api/http.html#http_http_status_codes">Node.js http module <computeroutput>http.STATUS_CODES</computeroutput></ulink>.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">status.message[404]<sp/>//<sp/>=&gt;<sp/>&apos;Not<sp/>Found&apos;</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2statuses_2_r_e_a_d_m_e_1autotoc_md3748">
+<title>status.redirect[code]</title><para>Returns <computeroutput>true</computeroutput> if a status code is a valid redirect status.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">status.redirect[200]<sp/>//<sp/>=&gt;<sp/>undefined</highlight></codeline>
+<codeline><highlight class="normal">status.redirect[301]<sp/>//<sp/>=&gt;<sp/>true</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2statuses_2_r_e_a_d_m_e_1autotoc_md3749">
+<title>status.retry[code]</title><para>Returns <computeroutput>true</computeroutput> if you should retry the rest.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">status.retry[501]<sp/>//<sp/>=&gt;<sp/>undefined</highlight></codeline>
+<codeline><highlight class="normal">status.retry[503]<sp/>//<sp/>=&gt;<sp/>true</highlight></codeline>
+</programlisting></para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2statuses_2_r_e_a_d_m_e_1autotoc_md3750">
+<title>License</title><para>[MIT](LICENSE) </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/statuses/README.md"/>
+  </compounddef>
+</doxygen>

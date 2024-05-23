@@ -1,0 +1,128 @@
+.TH "md_backend_2node__modules_2bytes_2_readme" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2bytes_2_readme \- Bytes utility 
+.PP
+ \fR\fP \fR\fP \fR\fP \fR\fP
+.PP
+Utility to parse a string bytes (ex: \fR1TB\fP) to bytes (\fR1099511627776\fP) and vice-versa\&.
+.SH "Installation"
+.PP
+This is a \fRNode\&.js\fP module available through the \fRnpm registry\fP\&. Installation is done using the \fR\fRnpm install\fP command\fP:
+.PP
+.PP
+.nf
+$ npm install bytes
+.fi
+.PP
+.SH "Usage"
+.PP
+.PP
+.nf
+var bytes = require('bytes');
+.fi
+.PP
+.SS "bytes(number｜string value, [options]): number｜string｜null"
+Default export function\&. Delegates to either \fRbytes\&.format\fP or \fRbytes\&.parse\fP based on the type of \fRvalue\fP\&.
+.PP
+\fBArguments\fP
+.PP
+Name   Type   Description    value   \fRnumber\fP｜\fRstring\fP   Number value to format or string value to parse    options   \fRObject\fP   Conversion options for \fRformat\fP   
+.PP
+\fBReturns\fP
+.PP
+Name   Type   Description    results   \fRstring\fP｜\fRnumber\fP｜\fRnull\fP   Return null upon error\&. Numeric value in bytes, or string value otherwise\&.   
+.PP
+\fBExample\fP
+.PP
+.PP
+.nf
+bytes(1024);
+// output: '1KB'
+
+bytes('1KB');
+// output: 1024
+.fi
+.PP
+.SS "bytes\&.format(number value, [options]): string｜null"
+Format the given value in bytes into a string\&. If the value is negative, it is kept as such\&. If it is a float, it is rounded\&.
+.PP
+\fBArguments\fP
+.PP
+Name   Type   Description    value   \fRnumber\fP   Value in bytes    options   \fRObject\fP   Conversion options   
+.PP
+\fBOptions\fP
+.PP
+Property   Type   Description    decimalPlaces   \fRnumber\fP｜\fRnull\fP   Maximum number of decimal places to include in output\&. Default value to \fR2\fP\&.    fixedDecimals   \fRboolean\fP｜\fRnull\fP   Whether to always display the maximum number of decimal places\&. Default value to \fRfalse\fP    thousandsSeparator   \fRstring\fP｜\fRnull\fP   Example of values: `' '\fR,\fP','\fRand\fP'\&.'\fR\&.\&.\&. Default value to\fP''\fR\&. \\ilinebr </td> </tr> <tr class='markdownTableRowEven'> <td class='markdownTableBodyNone'> unit \\ilinebr </td> <td class='markdownTableBodyNone'>\fPstring\fR｜\fPnull\fR\\ilinebr </td> <td class='markdownTableBodyNone'> The unit in which the result will be returned (B/KB/MB/GB/TB)\&. Default value to\fP''\fR(which means auto detect)\&. \\ilinebr </td> </tr> <tr class='markdownTableRowOdd'> <td class='markdownTableBodyNone'> unitSeparator \\ilinebr </td> <td class='markdownTableBodyNone'>\fPstring\fR｜\fPnull\fR\\ilinebr </td> <td class='markdownTableBodyNone'> Separator to use between number and unit\&. Default value to\fP''`\&.   
+.PP
+\fBReturns\fP
+.PP
+Name   Type   Description    results   \fRstring\fP｜\fRnull\fP   Return null upon error\&. String value otherwise\&.   
+.PP
+\fBExample\fP
+.PP
+.PP
+.nf
+bytes\&.format(1024);
+// output: '1KB'
+
+bytes\&.format(1000);
+// output: '1000B'
+
+bytes\&.format(1000, {thousandsSeparator: ' '});
+// output: '1 000B'
+
+bytes\&.format(1024 * 1\&.7, {decimalPlaces: 0});
+// output: '2KB'
+
+bytes\&.format(1024, {unitSeparator: ' '});
+// output: '1 KB'
+.fi
+.PP
+.SS "bytes\&.parse(string｜number value): number｜null"
+Parse the string value into an integer in bytes\&. If no unit is given, or \fRvalue\fP is a number, it is assumed the value is in bytes\&.
+.PP
+Supported units and abbreviations are as follows and are case-insensitive:
+.PP
+.IP "\(bu" 2
+\fRb\fP for bytes
+.IP "\(bu" 2
+\fRkb\fP for kilobytes
+.IP "\(bu" 2
+\fRmb\fP for megabytes
+.IP "\(bu" 2
+\fRgb\fP for gigabytes
+.IP "\(bu" 2
+\fRtb\fP for terabytes
+.IP "\(bu" 2
+\fRpb\fP for petabytes
+.PP
+.PP
+The units are in powers of two, not ten\&. This means 1kb = 1024b according to this parser\&.
+.PP
+\fBArguments\fP
+.PP
+Name   Type   Description    value   \fRstring\fP｜\fRnumber\fP   String to parse, or number in bytes\&.   
+.PP
+\fBReturns\fP
+.PP
+Name   Type   Description    results   \fRnumber\fP｜\fRnull\fP   Return null upon error\&. Value in bytes otherwise\&.   
+.PP
+\fBExample\fP
+.PP
+.PP
+.nf
+bytes\&.parse('1KB');
+// output: 1024
+
+bytes\&.parse('1024');
+// output: 1024
+
+bytes\&.parse(1024);
+// output: 1024
+.fi
+.PP
+.SH "License"
+.PP
+[MIT](LICENSE) 

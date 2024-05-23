@@ -1,0 +1,254 @@
+.TH "md_backend_2node__modules_2mkdirp_2readme" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2mkdirp_2readme \- mkdirp 
+.PP
+ Like \fRmkdir -p\fP, but in Node\&.js!
+.PP
+Now with a modern API and no* bugs!
+.PP
+* may contain some bugs
+.SH "example"
+.PP
+.SS "pow\&.js"
+.PP
+.nf
+const mkdirp = require('mkdirp')
+
+// return value is a Promise resolving to the first directory created
+mkdirp('/tmp/foo/bar/baz')\&.then(made =>
+  console\&.log(`made directories, starting with ${made}`))
+.fi
+.PP
+.PP
+Output (where \fR/tmp/foo\fP already exists)
+.PP
+.PP
+.nf
+made directories, starting with /tmp/foo/bar
+.fi
+.PP
+.PP
+Or, if you don't have time to wait around for promises:
+.PP
+.PP
+.nf
+const mkdirp = require('mkdirp')
+
+// return value is the first directory created
+const made = mkdirp\&.sync('/tmp/foo/bar/baz')
+console\&.log(`made directories, starting with ${made}`)
+.fi
+.PP
+.PP
+And now /tmp/foo/bar/baz exists, huzzah!
+.SH "methods"
+.PP
+.PP
+.nf
+const mkdirp = require('mkdirp')
+.fi
+.PP
+.SS "mkdirp(dir, [opts]) -> Promise<String | undefined>"
+Create a new directory and any necessary subdirectories at \fRdir\fP with octal permission string \fRopts\&.mode\fP\&. If \fRopts\fP is a string or number, it will be treated as the \fRopts\&.mode\fP\&.
+.PP
+If \fRopts\&.mode\fP isn't specified, it defaults to \fR0o777 & (~process\&.umask())\fP\&.
+.PP
+Promise resolves to first directory \fRmade\fP that had to be created, or \fRundefined\fP if everything already exists\&. Promise rejects if any errors are encountered\&. Note that, in the case of promise rejection, some directories \fImay\fP have been created, as recursive directory creation is not an atomic operation\&.
+.PP
+You can optionally pass in an alternate \fRfs\fP implementation by passing in \fRopts\&.fs\fP\&. Your implementation should have \fRopts\&.fs\&.mkdir(path, opts, cb)\fP and \fRopts\&.fs\&.stat(path, cb)\fP\&.
+.PP
+You can also override just one or the other of \fRmkdir\fP and \fRstat\fP by passing in \fRopts\&.stat\fP or \fRopts\&.mkdir\fP, or providing an \fRfs\fP option that only overrides one of these\&.
+.SS "mkdirp\&.sync(dir, opts) -> String|null"
+Synchronously create a new directory and any necessary subdirectories at \fRdir\fP with octal permission string \fRopts\&.mode\fP\&. If \fRopts\fP is a string or number, it will be treated as the \fRopts\&.mode\fP\&.
+.PP
+If \fRopts\&.mode\fP isn't specified, it defaults to \fR0o777 & (~process\&.umask())\fP\&.
+.PP
+Returns the first directory that had to be created, or undefined if everything already exists\&.
+.PP
+You can optionally pass in an alternate \fRfs\fP implementation by passing in \fRopts\&.fs\fP\&. Your implementation should have \fRopts\&.fs\&.mkdirSync(path, mode)\fP and \fRopts\&.fs\&.statSync(path)\fP\&.
+.PP
+You can also override just one or the other of \fRmkdirSync\fP and \fRstatSync\fP by passing in \fRopts\&.statSync\fP or \fRopts\&.mkdirSync\fP, or providing an \fRfs\fP option that only overrides one of these\&.
+.SS "mkdirp\&.manual, mkdirp\&.manualSync"
+Use the manual implementation (not the native one)\&. This is the default when the native implementation is not available or the stat/mkdir implementation is overridden\&.
+.SS "mkdirp\&.native, mkdirp\&.nativeSync"
+Use the native implementation (not the manual one)\&. This is the default when the native implementation is available and stat/mkdir are not overridden\&.
+.SH "implementation"
+.PP
+On Node\&.js v10\&.12\&.0 and above, use the native \fRfs\&.mkdir(p, {recursive:true})\fP option, unless \fRfs\&.mkdir\fP/\fRfs\&.mkdirSync\fP has been overridden by an option\&.
+.SS "native implementation"
+.IP "\(bu" 2
+If the path is a root directory, then pass it to the underlying implementation and return the result/error\&. (In this case, it'll either succeed or fail, but we aren't actually creating any dirs\&.)
+.IP "\(bu" 2
+Walk up the path statting each directory, to find the first path that will be created, \fRmade\fP\&.
+.IP "\(bu" 2
+Call \fRfs\&.mkdir(path, { recursive: true })\fP (or \fRfs\&.mkdirSync\fP)
+.IP "\(bu" 2
+If error, raise it to the caller\&.
+.IP "\(bu" 2
+Return \fRmade\fP\&.
+.PP
+.SS "manual implementation"
+.IP "\(bu" 2
+Call underlying \fRfs\&.mkdir\fP implementation, with \fRrecursive: false\fP
+.IP "\(bu" 2
+If error:
+.IP "  \(bu" 4
+If path is a root directory, raise to the caller and do not handle it
+.IP "  \(bu" 4
+If ENOENT, mkdirp parent dir, store result as \fRmade\fP
+.IP "  \(bu" 4
+stat(path)
+.IP "    \(bu" 6
+If error, raise original \fRmkdir\fP error
+.IP "    \(bu" 6
+If directory, return \fRmade\fP
+.IP "    \(bu" 6
+Else, raise original \fRmkdir\fP error
+.PP
+
+.PP
+
+.IP "\(bu" 2
+else
+.IP "  \(bu" 4
+return \fRundefined\fP if a root dir, or \fRmade\fP if set, or \fRpath\fP
+.PP
+
+.PP
+.SS "windows vs unix caveat"
+On Windows file systems, attempts to create a root directory (ie, a drive letter or root UNC path) will fail\&. If the root directory exists, then it will fail with \fREPERM\fP\&. If the root directory does not exist, then it will fail with \fRENOENT\fP\&.
+.PP
+On posix file systems, attempts to create a root directory (in recursive mode) will succeed silently, as it is treated like just another directory that already exists\&. (In non-recursive mode, of course, it fails with \fREEXIST\fP\&.)
+.PP
+In order to preserve this system-specific behavior (and because it's not as if we can create the parent of a root directory anyway), attempts to create a root directory are passed directly to the \fRfs\fP implementation, and any errors encountered are not handled\&.
+.SS "native error caveat"
+The native implementation (as of at least Node\&.js v13\&.4\&.0) does not provide appropriate errors in some cases (see \fRnodejs/node#31481\fP and \fRnodejs/node#28015\fP)\&.
+.PP
+In order to work around this issue, the native implementation will fall back to the manual implementation if an \fRENOENT\fP error is encountered\&.
+.SH "choosing a recursive mkdir implementation"
+.PP
+There are a few to choose from! Use the one that suits your needs best :D
+.SS "use \fRfs\&.mkdir(path, {recursive: true}, cb)\fP if:"
+.IP "\(bu" 2
+You wish to optimize performance even at the expense of other factors\&.
+.IP "\(bu" 2
+You don't need to know the first dir created\&.
+.IP "\(bu" 2
+You are ok with getting \fRENOENT\fP as the error when some other problem is the actual cause\&.
+.IP "\(bu" 2
+You can limit your platforms to Node\&.js v10\&.12 and above\&.
+.IP "\(bu" 2
+You're ok with using callbacks instead of promises\&.
+.IP "\(bu" 2
+You don't need/want a CLI\&.
+.IP "\(bu" 2
+You don't need to override the \fRfs\fP methods in use\&.
+.PP
+.SS "use this module (mkdirp 1\&.x) if:"
+.IP "\(bu" 2
+You need to know the first directory that was created\&.
+.IP "\(bu" 2
+You wish to use the native implementation if available, but fall back when it's not\&.
+.IP "\(bu" 2
+You prefer promise-returning APIs to callback-taking APIs\&.
+.IP "\(bu" 2
+You want more useful error messages than the native recursive mkdir provides (at least as of Node\&.js v13\&.4), and are ok with re-trying on \fRENOENT\fP to achieve this\&.
+.IP "\(bu" 2
+You need (or at least, are ok with) a CLI\&.
+.IP "\(bu" 2
+You need to override the \fRfs\fP methods in use\&.
+.PP
+.SS "use \fR\fRmake-dir\fP\fP if:"
+.IP "\(bu" 2
+You do not need to know the first dir created (and wish to save a few \fRstat\fP calls when using the native implementation for this reason)\&.
+.IP "\(bu" 2
+You wish to use the native implementation if available, but fall back when it's not\&.
+.IP "\(bu" 2
+You prefer promise-returning APIs to callback-taking APIs\&.
+.IP "\(bu" 2
+You are ok with occasionally getting \fRENOENT\fP errors for failures that are actually related to something other than a missing file system entry\&.
+.IP "\(bu" 2
+You don't need/want a CLI\&.
+.IP "\(bu" 2
+You need to override the \fRfs\fP methods in use\&.
+.PP
+.SS "use mkdirp 0\&.x if:"
+.IP "\(bu" 2
+You need to know the first directory that was created\&.
+.IP "\(bu" 2
+You need (or at least, are ok with) a CLI\&.
+.IP "\(bu" 2
+You need to override the \fRfs\fP methods in use\&.
+.IP "\(bu" 2
+You're ok with using callbacks instead of promises\&.
+.IP "\(bu" 2
+You are not running on Windows, where the root-level ENOENT errors can lead to infinite regress\&.
+.IP "\(bu" 2
+You think vinyl just sounds warmer and richer for some weird reason\&.
+.IP "\(bu" 2
+You are supporting truly ancient Node\&.js versions, before even the advent of a \fRPromise\fP language primitive\&. (Please don't\&. You deserve better\&.)
+.PP
+.SH "cli"
+.PP
+This package also ships with a \fRmkdirp\fP command\&.
+.PP
+.PP
+.nf
+$ mkdirp \-h
+
+usage: mkdirp [DIR1,DIR2\&.\&.] {OPTIONS}
+
+  Create each supplied directory including any necessary parent directories
+  that don't yet exist\&.
+
+  If the directory already exists, do nothing\&.
+
+OPTIONS are:
+
+  \-m<mode>       If a directory needs to be created, set the mode as an octal
+  \-\-mode=<mode>  permission string\&.
+
+  \-v \-\-version   Print the mkdirp version number
+
+  \-h \-\-help      Print this helpful banner
+
+  \-p \-\-print     Print the first directories created for each path provided
+
+  \-\-manual       Use manual implementation, even if native is available
+.fi
+.PP
+.SH "install"
+.PP
+With \fRnpm\fP do:
+.PP
+.PP
+.nf
+npm install mkdirp
+.fi
+.PP
+.PP
+to get the library locally, or
+.PP
+.PP
+.nf
+npm install \-g mkdirp
+.fi
+.PP
+.PP
+to get the command everywhere, or
+.PP
+.PP
+.nf
+npx mkdirp \&.\&.\&.
+.fi
+.PP
+.PP
+to run the command without installing it globally\&.
+.SH "platform support"
+.PP
+This module works on node v8, but only v10 and above are officially supported, as Node v8 reached its LTS end of life 2020-01-01, which is in the past, as of this writing\&.
+.SH "license"
+.PP
+MIT 

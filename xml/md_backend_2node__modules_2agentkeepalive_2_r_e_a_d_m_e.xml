@@ -1,0 +1,313 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e</compoundname>
+    <title>agentkeepalive</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_1autotoc_md149"/> <ulink url="https://npmjs.org/package/agentkeepalive"><image type="html" name="https://img.shields.io/npm/v/agentkeepalive.svg?style=flat" alt="NPM version" inline="yes"></image>
+</ulink> <ulink url="https://snyk.io/test/npm/agentkeepalive"><image type="html" name="https://snyk.io/test/npm/agentkeepalive/badge.svg?style=flat-square" alt="Known Vulnerabilities" inline="yes"></image>
+</ulink> <ulink url="https://github.com/node-modules/agentkeepalive/actions/workflows/nodejs.yml"><image type="html" name="https://github.com/node-modules/agentkeepalive/actions/workflows/nodejs.yml/badge.svg" alt="Node.js CI" inline="yes"></image>
+</ulink> <ulink url="https://npmjs.org/package/agentkeepalive"><image type="html" name="https://img.shields.io/npm/dm/agentkeepalive.svg?style=flat-square" alt="npm download" inline="yes"></image>
+</ulink></para>
+<para>The enhancement features <computeroutput>keep alive</computeroutput> <computeroutput>http.Agent</computeroutput>. Support <computeroutput>http</computeroutput> and <computeroutput>https</computeroutput>.</para>
+<sect1 id="md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_1autotoc_md150">
+<title>What&apos;s different from original <computeroutput>http.Agent</computeroutput>?</title><para><itemizedlist>
+<listitem><para><computeroutput>keepAlive=true</computeroutput> by default</para>
+</listitem><listitem><para>Disable Nagle&apos;s algorithm: <computeroutput>socket.setNoDelay(true)</computeroutput></para>
+</listitem><listitem><para>Add free socket timeout: avoid long time inactivity socket leak in the free-sockets queue.</para>
+</listitem><listitem><para>Add active socket timeout: avoid long time inactivity socket leak in the active-sockets queue.</para>
+</listitem><listitem><para>TTL for active socket.</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_1autotoc_md151">
+<title>Node.js version required</title><para>Support Node.js &gt;= <computeroutput>8.0.0</computeroutput></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_1autotoc_md152">
+<title>Install</title><para><programlisting filename=".bash"><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>agentkeepalive<sp/>--save</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_1autotoc_md153">
+<title>new Agent([options])</title><para><itemizedlist>
+<listitem><para><computeroutput>options</computeroutput> {Object} Set of configurable options to set on the agent. Can have the following fields:<itemizedlist>
+<listitem><para><computeroutput>keepAlive</computeroutput> {Boolean} Keep sockets around in a pool to be used by other requests in the future. Default = <computeroutput>true</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>keepAliveMsecs</computeroutput> {Number} When using the keepAlive option, specifies the initial delay for TCP Keep-Alive packets. Ignored when the keepAlive option is false or undefined. Defaults to 1000. Default = <computeroutput>1000</computeroutput>. Only relevant if <computeroutput>keepAlive</computeroutput> is set to <computeroutput>true</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>freeSocketTimeout</computeroutput>: {Number} Sets the free socket to timeout after <computeroutput>freeSocketTimeout</computeroutput> milliseconds of inactivity on the free socket. The default <ulink url="https://nodejs.org/api/http.html#serverkeepalivetimeout">server-side timeout</ulink> is 5000 milliseconds, to <ulink url="https://medium.com/ssense-tech/reduce-networking-errors-in-nodejs-23b4eb9f2d83">avoid ECONNRESET exceptions</ulink>, we set the default value to <computeroutput>4000</computeroutput> milliseconds. Only relevant if <computeroutput>keepAlive</computeroutput> is set to <computeroutput>true</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>timeout</computeroutput>: {Number} Sets the working socket to timeout after <computeroutput>timeout</computeroutput> milliseconds of inactivity on the working socket. Default is <computeroutput>freeSocketTimeout * 2</computeroutput> so long as that value is greater than or equal to 8 seconds, otherwise the default is 8 seconds.</para>
+</listitem><listitem><para><computeroutput>maxSockets</computeroutput> {Number} Maximum number of sockets to allow per host. Default = <computeroutput>Infinity</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>maxFreeSockets</computeroutput> {Number} Maximum number of sockets (per host) to leave open in a free state. Only relevant if <computeroutput>keepAlive</computeroutput> is set to <computeroutput>true</computeroutput>. Default = <computeroutput>256</computeroutput>.</para>
+</listitem><listitem><para><computeroutput>socketActiveTTL</computeroutput> {Number} Sets the socket active time to live, even if it&apos;s in use. If not set, the behaviour keeps the same (the socket will be released only when free) Default = <computeroutput>null</computeroutput>.</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_1autotoc_md154">
+<title>Usage</title><para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>http<sp/>=<sp/>require(&apos;http&apos;);</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>Agent<sp/>=<sp/>require(&apos;agentkeepalive&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>keepaliveAgent<sp/>=<sp/>new<sp/>Agent({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>maxSockets:<sp/>100,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>maxFreeSockets:<sp/>10,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>timeout:<sp/>60000,<sp/>//<sp/>active<sp/>socket<sp/>keepalive<sp/>for<sp/>60<sp/>seconds</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>freeSocketTimeout:<sp/>30000,<sp/>//<sp/>free<sp/>socket<sp/>keepalive<sp/>for<sp/>30<sp/>seconds</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>options<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>host:<sp/>&apos;cnodejs.org&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>port:<sp/>80,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>path:<sp/>&apos;/&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>method:<sp/>&apos;GET&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>agent:<sp/>keepaliveAgent,</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>req<sp/>=<sp/>http.request(options,<sp/>res<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;STATUS:<sp/>&apos;<sp/>+<sp/>res.statusCode);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;HEADERS:<sp/>&apos;<sp/>+<sp/>JSON.stringify(res.headers));</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.setEncoding(&apos;utf8&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.on(&apos;data&apos;,<sp/>function<sp/>(chunk)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(&apos;BODY:<sp/>&apos;<sp/>+<sp/>chunk);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>});</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">req.on(&apos;error&apos;,<sp/>e<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;problem<sp/>with<sp/>request:<sp/>&apos;<sp/>+<sp/>e.message);</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">req.end();</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">setTimeout(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(keepaliveAgent.statusChanged)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(&apos;[%s]<sp/>agent<sp/>status<sp/>changed:<sp/>%j&apos;,<sp/>Date(),<sp/>keepaliveAgent.getCurrentStatus());</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">},<sp/>2000);</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_1autotoc_md155">
+<title><computeroutput>getter agent.statusChanged</computeroutput></title><para>counters have change or not after last checkpoint.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_1autotoc_md156">
+<title><computeroutput>agent.getCurrentStatus()</computeroutput></title><para><computeroutput>agent.getCurrentStatus()</computeroutput> will return a object to show the status of this agent:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>createSocketCount:<sp/>10,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>closeSocketCount:<sp/>5,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>timeoutSocketCount:<sp/>0,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>requestCount:<sp/>5,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>freeSockets:<sp/>{<sp/>&apos;localhost:57479:&apos;:<sp/>3<sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>sockets:<sp/>{<sp/>&apos;localhost:57479:&apos;:<sp/>5<sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>requests:<sp/>{}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_1autotoc_md157">
+<title>Support <computeroutput>https</computeroutput></title><para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>https<sp/>=<sp/>require(&apos;https&apos;);</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>HttpsAgent<sp/>=<sp/>require(&apos;agentkeepalive&apos;).HttpsAgent;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>keepaliveAgent<sp/>=<sp/>new<sp/>HttpsAgent();</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>https://www.google.com/search?q=nodejs&amp;sugexp=chrome,mod=12&amp;sourceid=chrome&amp;ie=UTF-8</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>options<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>host:<sp/>&apos;www.google.com&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>port:<sp/>443,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>path:<sp/>&apos;/search?q=nodejs&amp;sugexp=chrome,mod=12&amp;sourceid=chrome&amp;ie=UTF-8&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>method:<sp/>&apos;GET&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>agent:<sp/>keepaliveAgent,</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>req<sp/>=<sp/>https.request(options,<sp/>res<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;STATUS:<sp/>&apos;<sp/>+<sp/>res.statusCode);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;HEADERS:<sp/>&apos;<sp/>+<sp/>JSON.stringify(res.headers));</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.setEncoding(&apos;utf8&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.on(&apos;data&apos;,<sp/>chunk<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(&apos;BODY:<sp/>&apos;<sp/>+<sp/>chunk);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>});</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">req.on(&apos;error&apos;,<sp/>e<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;problem<sp/>with<sp/>request:<sp/>&apos;<sp/>+<sp/>e.message);</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">req.end();</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">setTimeout(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;agent<sp/>status:<sp/>%j&apos;,<sp/>keepaliveAgent.getCurrentStatus());</highlight></codeline>
+<codeline><highlight class="normal">},<sp/>2000);</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_1autotoc_md158">
+<title>Support <computeroutput>req.reusedSocket</computeroutput></title><para>This agent implements the <computeroutput>req.reusedSocket</computeroutput> to determine whether a request is send through a reused socket.</para>
+<para>When server closes connection at unfortunate time (<ulink url="https://code-examples.net/en/q/28a8069">keep-alive race</ulink>), the http client will throw a <computeroutput>ECONNRESET</computeroutput> error. Under this circumstance, <computeroutput>req.reusedSocket</computeroutput> is useful when we want to retry the request automatically.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>http<sp/>=<sp/>require(&apos;http&apos;);</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>Agent<sp/>=<sp/>require(&apos;agentkeepalive&apos;);</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>agent<sp/>=<sp/>new<sp/>Agent();</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>req<sp/>=<sp/>http</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>.get(&apos;http://localhost:3000&apos;,<sp/>{<sp/>agent<sp/>},<sp/>(res)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>...</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>.on(&apos;error&apos;,<sp/>(err)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(req.reusedSocket<sp/>&amp;&amp;<sp/>err.code<sp/>===<sp/>&apos;ECONNRESET&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>retry<sp/>the<sp/>request<sp/>or<sp/>anything<sp/>else...</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+</programlisting></para>
+<para>This behavior is consistent with Node.js core. But through <computeroutput>agentkeepalive</computeroutput>, you can use this feature in older Node.js version.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_1autotoc_md159">
+<title><ulink url="https://github.com/node-modules/agentkeepalive/tree/master/benchmark">Benchmark</ulink></title><para>run the benchmark:</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">cd<sp/>benchmark</highlight></codeline>
+<codeline><highlight class="normal">sh<sp/>start.sh</highlight></codeline>
+</programlisting></para>
+<para>Intel(R) Core(TM)2 Duo CPU P8600 @ 2.40GHz</para>
+<para>node@v0.8.9</para>
+<para>50 maxSockets, 60 concurrent, 1000 requests per concurrent, 5ms delay</para>
+<para>Keep alive agent (30 seconds):</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">Transactions:<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>60000<sp/>hits</highlight></codeline>
+<codeline><highlight class="normal">Availability:<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>100.00<sp/>%</highlight></codeline>
+<codeline><highlight class="normal">Elapsed<sp/>time:<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>29.70<sp/>secs</highlight></codeline>
+<codeline><highlight class="normal">Data<sp/>transferred:<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>14.88<sp/>MB</highlight></codeline>
+<codeline><highlight class="normal">Response<sp/>time:<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0.03<sp/>secs</highlight></codeline>
+<codeline><highlight class="normal">Transaction<sp/>rate:<sp/><sp/><sp/><sp/><sp/><sp/>2020.20<sp/>trans/sec</highlight></codeline>
+<codeline><highlight class="normal">Throughput:<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0.50<sp/>MB/sec</highlight></codeline>
+<codeline><highlight class="normal">Concurrency:<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>59.84</highlight></codeline>
+<codeline><highlight class="normal">Successful<sp/>transactions:<sp/><sp/><sp/><sp/><sp/><sp/><sp/>60000</highlight></codeline>
+<codeline><highlight class="normal">Failed<sp/>transactions:<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0</highlight></codeline>
+<codeline><highlight class="normal">Longest<sp/>transaction:<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0.15</highlight></codeline>
+<codeline><highlight class="normal">Shortest<sp/>transaction:<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0.01</highlight></codeline>
+</programlisting></para>
+<para>Normal agent:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">Transactions:<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>60000<sp/>hits</highlight></codeline>
+<codeline><highlight class="normal">Availability:<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>100.00<sp/>%</highlight></codeline>
+<codeline><highlight class="normal">Elapsed<sp/>time:<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>46.53<sp/>secs</highlight></codeline>
+<codeline><highlight class="normal">Data<sp/>transferred:<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>14.88<sp/>MB</highlight></codeline>
+<codeline><highlight class="normal">Response<sp/>time:<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0.05<sp/>secs</highlight></codeline>
+<codeline><highlight class="normal">Transaction<sp/>rate:<sp/><sp/><sp/><sp/><sp/><sp/>1289.49<sp/>trans/sec</highlight></codeline>
+<codeline><highlight class="normal">Throughput:<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0.32<sp/>MB/sec</highlight></codeline>
+<codeline><highlight class="normal">Concurrency:<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>59.81</highlight></codeline>
+<codeline><highlight class="normal">Successful<sp/>transactions:<sp/><sp/><sp/><sp/><sp/><sp/><sp/>60000</highlight></codeline>
+<codeline><highlight class="normal">Failed<sp/>transactions:<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0</highlight></codeline>
+<codeline><highlight class="normal">Longest<sp/>transaction:<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0.45</highlight></codeline>
+<codeline><highlight class="normal">Shortest<sp/>transaction:<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0.00</highlight></codeline>
+</programlisting></para>
+<para>Socket created:</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">[proxy.js:120000]<sp/>keepalive,<sp/>50<sp/>created,<sp/>60000<sp/>requestFinished,<sp/>1200<sp/>req/socket,<sp/>0<sp/>requests,<sp/>0<sp/>sockets,<sp/>0<sp/>unusedSockets,<sp/>50<sp/>timeout</highlight></codeline>
+<codeline><highlight class="normal">{&quot;<sp/>&lt;10ms&quot;:662,&quot;<sp/>&lt;15ms&quot;:17825,&quot;<sp/>&lt;20ms&quot;:20552,&quot;<sp/>&lt;30ms&quot;:17646,&quot;<sp/>&lt;40ms&quot;:2315,&quot;<sp/>&lt;50ms&quot;:567,&quot;<sp/>&lt;100ms&quot;:377,&quot;<sp/>&lt;150ms&quot;:56,&quot;<sp/>&lt;200ms&quot;:0,&quot;<sp/>&gt;=200ms+&quot;:0}</highlight></codeline>
+<codeline><highlight class="normal">----------------------------------------------------------------</highlight></codeline>
+<codeline><highlight class="normal">[proxy.js:120000]<sp/>normal<sp/><sp/><sp/>,<sp/>53866<sp/>created,<sp/>84260<sp/>requestFinished,<sp/>1.56<sp/>req/socket,<sp/>0<sp/>requests,<sp/>0<sp/>sockets</highlight></codeline>
+<codeline><highlight class="normal">{&quot;<sp/>&lt;10ms&quot;:75,&quot;<sp/>&lt;15ms&quot;:1112,&quot;<sp/>&lt;20ms&quot;:10947,&quot;<sp/>&lt;30ms&quot;:32130,&quot;<sp/>&lt;40ms&quot;:8228,&quot;<sp/>&lt;50ms&quot;:3002,&quot;<sp/>&lt;100ms&quot;:4274,&quot;<sp/>&lt;150ms&quot;:181,&quot;<sp/>&lt;200ms&quot;:18,&quot;<sp/>&gt;=200ms+&quot;:33}</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_1autotoc_md160">
+<title>License</title><para>[MIT](LICENSE)</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e_1autotoc_md161">
+<title>Contributors</title><para><table rows="4" cols="6"><row>
+<entry thead="yes" align='center'><para><ulink url="https://github.com/fengmk2"><image type="html" name="https://avatars.githubusercontent.com/u/156269?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>fengmk2</bold></subscript></ulink><linebreak/>
+   </para>
+</entry><entry thead="yes" align='center'><para><ulink url="https://github.com/dead-horse"><image type="html" name="https://avatars.githubusercontent.com/u/985607?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>dead-horse</bold></subscript></ulink><linebreak/>
+   </para>
+</entry><entry thead="yes" align='center'><para><ulink url="https://github.com/AndrewLeedham"><image type="html" name="https://avatars.githubusercontent.com/u/5557458?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>AndrewLeedham</bold></subscript></ulink><linebreak/>
+   </para>
+</entry><entry thead="yes" align='center'><para><ulink url="https://github.com/ngot"><image type="html" name="https://avatars.githubusercontent.com/u/5243774?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>ngot</bold></subscript></ulink><linebreak/>
+   </para>
+</entry><entry thead="yes" align='center'><para><ulink url="https://github.com/wrynearson"><image type="html" name="https://avatars.githubusercontent.com/u/25919630?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>wrynearson</bold></subscript></ulink><linebreak/>
+   </para>
+</entry><entry thead="yes" align='center'><para><ulink url="https://github.com/aaronArinder"><image type="html" name="https://avatars.githubusercontent.com/u/26738844?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>aaronArinder</bold></subscript></ulink><linebreak/>
+    </para>
+</entry></row>
+<row>
+<entry thead="no" align='center'><para><ulink url="https://github.com/alexpenev-s"><image type="html" name="https://avatars.githubusercontent.com/u/10976983?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>alexpenev-s</bold></subscript></ulink><linebreak/>
+   </para>
+</entry><entry thead="no" align='center'><para><ulink url="https://github.com/blemoine"><image type="html" name="https://avatars.githubusercontent.com/u/959726?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>blemoine</bold></subscript></ulink><linebreak/>
+   </para>
+</entry><entry thead="no" align='center'><para><ulink url="https://github.com/bdehamer"><image type="html" name="https://avatars.githubusercontent.com/u/398027?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>bdehamer</bold></subscript></ulink><linebreak/>
+   </para>
+</entry><entry thead="no" align='center'><para><ulink url="https://github.com/DylanPiercey"><image type="html" name="https://avatars.githubusercontent.com/u/4985201?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>DylanPiercey</bold></subscript></ulink><linebreak/>
+   </para>
+</entry><entry thead="no" align='center'><para><ulink url="https://github.com/cixel"><image type="html" name="https://avatars.githubusercontent.com/u/3770250?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>cixel</bold></subscript></ulink><linebreak/>
+   </para>
+</entry><entry thead="no" align='center'><para><ulink url="https://github.com/HerringtonDarkholme"><image type="html" name="https://avatars.githubusercontent.com/u/2883231?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>HerringtonDarkholme</bold></subscript></ulink><linebreak/>
+    </para>
+</entry></row>
+<row>
+<entry thead="no" align='center'><para><ulink url="https://github.com/denghongcai"><image type="html" name="https://avatars.githubusercontent.com/u/1433247?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>denghongcai</bold></subscript></ulink><linebreak/>
+   </para>
+</entry><entry thead="no" align='center'><para><ulink url="https://github.com/kibertoad"><image type="html" name="https://avatars.githubusercontent.com/u/1847934?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>kibertoad</bold></subscript></ulink><linebreak/>
+   </para>
+</entry><entry thead="no" align='center'><para><ulink url="https://github.com/pangorgo"><image type="html" name="https://avatars.githubusercontent.com/u/5236150?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>pangorgo</bold></subscript></ulink><linebreak/>
+   </para>
+</entry><entry thead="no" align='center'><para><ulink url="https://github.com/mattiash"><image type="html" name="https://avatars.githubusercontent.com/u/588898?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>mattiash</bold></subscript></ulink><linebreak/>
+   </para>
+</entry><entry thead="no" align='center'><para><ulink url="https://github.com/nabeelbukhari"><image type="html" name="https://avatars.githubusercontent.com/u/182440?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>nabeelbukhari</bold></subscript></ulink><linebreak/>
+   </para>
+</entry><entry thead="no" align='center'><para><ulink url="https://github.com/pmalouin"><image type="html" name="https://avatars.githubusercontent.com/u/1411117?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>pmalouin</bold></subscript></ulink><linebreak/>
+    </para>
+</entry></row>
+<row>
+<entry thead="no" align='center'><para><ulink url="https://github.com/SimenB"><image type="html" name="https://avatars.githubusercontent.com/u/1404810?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>SimenB</bold></subscript></ulink><linebreak/>
+   </para>
+</entry><entry thead="no" align='center'><para><ulink url="https://github.com/vinaybedre"><image type="html" name="https://avatars.githubusercontent.com/u/2630384?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>vinaybedre</bold></subscript></ulink><linebreak/>
+   </para>
+</entry><entry thead="no" align='center'><para><ulink url="https://github.com/starkwang"><image type="html" name="https://avatars.githubusercontent.com/u/10933333?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>starkwang</bold></subscript></ulink><linebreak/>
+   </para>
+</entry><entry thead="no" align='center'><para><ulink url="https://github.com/killagu"><image type="html" name="https://avatars.githubusercontent.com/u/6897780?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>killagu</bold></subscript></ulink><linebreak/>
+   </para>
+</entry><entry thead="no" align='center'><para><ulink url="https://github.com/tony-gutierrez"><image type="html" name="https://avatars.githubusercontent.com/u/15345331?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>tony-gutierrez</bold></subscript></ulink><linebreak/>
+   </para>
+</entry><entry thead="no" align='center'><para><ulink url="https://github.com/whxaxes"><image type="html" name="https://avatars.githubusercontent.com/u/5856440?v=4" inline="yes"></image>
+<linebreak/>
+<subscript><bold>whxaxes</bold></subscript></ulink><linebreak/>
+   </para>
+</entry></row>
+</table>
+</para>
+<para>This project follows the git-contributor <ulink url="https://github.com/xudafeng/git-contributor">spec</ulink>, auto updated at <computeroutput>Sat Aug 05 2023 02:36:31 GMT+0800</computeroutput>. </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/agentkeepalive/README.md"/>
+  </compounddef>
+</doxygen>

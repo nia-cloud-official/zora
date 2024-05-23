@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2etag_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2etag_2_r_e_a_d_m_e</compoundname>
+    <title>etag</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2etag_2_r_e_a_d_m_e_1autotoc_md933"/> <ulink url="https://npmjs.org/package/etag"><image type="html" name="https://img.shields.io/npm/v/etag.svg" alt="NPM Version" inline="yes"></image>
+</ulink> <ulink url="https://npmjs.org/package/etag"><image type="html" name="https://img.shields.io/npm/dm/etag.svg" alt="NPM Downloads" inline="yes"></image>
+</ulink> <ulink url="https://nodejs.org/en/download/"><image type="html" name="https://img.shields.io/node/v/etag.svg" alt="Node.js Version" inline="yes"></image>
+</ulink> <ulink url="https://travis-ci.org/jshttp/etag"><image type="html" name="https://img.shields.io/travis/jshttp/etag/master.svg" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/r/jshttp/etag?branch=master"><image type="html" name="https://img.shields.io/coveralls/jshttp/etag/master.svg" alt="Test Coverage" inline="yes"></image>
+</ulink></para>
+<para>Create simple HTTP ETags</para>
+<para>This module generates HTTP ETags (as defined in RFC 7232) for use in HTTP responses.</para>
+<sect1 id="md_backend_2node__modules_2etag_2_r_e_a_d_m_e_1autotoc_md934">
+<title>Installation</title><para>This is a <ulink url="https://nodejs.org/en/">Node.js</ulink> module available through the <ulink url="https://www.npmjs.com/">npm registry</ulink>. Installation is done using the <ulink url="https://docs.npmjs.com/getting-started/installing-npm-packages-locally"><computeroutput>npm install</computeroutput> command</ulink>:</para>
+<para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>etag</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2etag_2_r_e_a_d_m_e_1autotoc_md935">
+<title>API</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>etag<sp/>=<sp/>require(&apos;etag&apos;)</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2etag_2_r_e_a_d_m_e_1autotoc_md936">
+<title>etag(entity, [options])</title><para>Generate a strong ETag for the given entity. This should be the complete body of the entity. Strings, <computeroutput>Buffer</computeroutput>s, and <computeroutput>fs.Stats</computeroutput> are accepted. By default, a strong ETag is generated except for <computeroutput>fs.Stats</computeroutput>, which will generate a weak ETag (this can be overwritten by <computeroutput>options.weak</computeroutput>).</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">res.setHeader(&apos;ETag&apos;,<sp/>etag(body))</highlight></codeline>
+</programlisting></para>
+<sect3 id="md_backend_2node__modules_2etag_2_r_e_a_d_m_e_1autotoc_md937">
+<title>Options</title><para><computeroutput>etag</computeroutput> accepts these properties in the options object.</para>
+<sect4 id="md_backend_2node__modules_2etag_2_r_e_a_d_m_e_1autotoc_md938">
+<title>weak</title><para>Specifies if the generated ETag will include the weak validator mark (that is, the leading <computeroutput>W/</computeroutput>). The actual entity tag is the same. The default value is <computeroutput>false</computeroutput>, unless the <computeroutput>entity</computeroutput> is <computeroutput>fs.Stats</computeroutput>, in which case it is <computeroutput>true</computeroutput>.</para>
+</sect4>
+</sect3>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2etag_2_r_e_a_d_m_e_1autotoc_md939">
+<title>Testing</title><para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>npm<sp/>test</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2etag_2_r_e_a_d_m_e_1autotoc_md940">
+<title>Benchmark</title><para><programlisting filename=".bash"><codeline><highlight class="normal">$<sp/>npm<sp/>run-script<sp/>bench</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>etag@1.8.1<sp/>bench<sp/>nodejs-etag</highlight></codeline>
+<codeline><highlight class="normal">&gt;<sp/>node<sp/>benchmark/index.js</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>http_parser@2.7.0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>node@6.11.1</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>v8@5.1.281.103</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>uv@1.11.0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>zlib@1.2.11</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>ares@1.10.1-DEV</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>icu@58.2</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>modules@48</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>openssl@1.0.2k</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>node<sp/>benchmark/body0-100b.js</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>100B<sp/>body</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>4<sp/>tests<sp/>completed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>buffer<sp/>-<sp/>strong<sp/>x<sp/>258,647<sp/>ops/sec<sp/>±1.07%<sp/>(180<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>buffer<sp/>-<sp/>weak<sp/><sp/><sp/>x<sp/>263,812<sp/>ops/sec<sp/>±0.61%<sp/>(184<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>string<sp/>-<sp/>strong<sp/>x<sp/>259,955<sp/>ops/sec<sp/>±1.19%<sp/>(185<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>string<sp/>-<sp/>weak<sp/><sp/><sp/>x<sp/>264,356<sp/>ops/sec<sp/>±1.09%<sp/>(184<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>node<sp/>benchmark/body1-1kb.js</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>1KB<sp/>body</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>4<sp/>tests<sp/>completed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>buffer<sp/>-<sp/>strong<sp/>x<sp/>189,018<sp/>ops/sec<sp/>±1.12%<sp/>(182<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>buffer<sp/>-<sp/>weak<sp/><sp/><sp/>x<sp/>190,586<sp/>ops/sec<sp/>±0.81%<sp/>(186<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>string<sp/>-<sp/>strong<sp/>x<sp/>144,272<sp/>ops/sec<sp/>±0.96%<sp/>(188<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>string<sp/>-<sp/>weak<sp/><sp/><sp/>x<sp/>145,380<sp/>ops/sec<sp/>±1.43%<sp/>(187<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>node<sp/>benchmark/body2-5kb.js</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>5KB<sp/>body</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>4<sp/>tests<sp/>completed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>buffer<sp/>-<sp/>strong<sp/>x<sp/>92,435<sp/>ops/sec<sp/>±0.42%<sp/>(188<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>buffer<sp/>-<sp/>weak<sp/><sp/><sp/>x<sp/>92,373<sp/>ops/sec<sp/>±0.58%<sp/>(189<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>string<sp/>-<sp/>strong<sp/>x<sp/>48,850<sp/>ops/sec<sp/>±0.56%<sp/>(186<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>string<sp/>-<sp/>weak<sp/><sp/><sp/>x<sp/>49,380<sp/>ops/sec<sp/>±0.56%<sp/>(190<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>node<sp/>benchmark/body3-10kb.js</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>10KB<sp/>body</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>4<sp/>tests<sp/>completed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>buffer<sp/>-<sp/>strong<sp/>x<sp/>55,989<sp/>ops/sec<sp/>±0.93%<sp/>(188<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>buffer<sp/>-<sp/>weak<sp/><sp/><sp/>x<sp/>56,148<sp/>ops/sec<sp/>±0.55%<sp/>(190<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>string<sp/>-<sp/>strong<sp/>x<sp/>27,345<sp/>ops/sec<sp/>±0.43%<sp/>(188<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>string<sp/>-<sp/>weak<sp/><sp/><sp/>x<sp/>27,496<sp/>ops/sec<sp/>±0.45%<sp/>(190<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>node<sp/>benchmark/body4-100kb.js</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>100KB<sp/>body</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>4<sp/>tests<sp/>completed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>buffer<sp/>-<sp/>strong<sp/>x<sp/>7,083<sp/>ops/sec<sp/>±0.22%<sp/>(190<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>buffer<sp/>-<sp/>weak<sp/><sp/><sp/>x<sp/>7,115<sp/>ops/sec<sp/>±0.26%<sp/>(191<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>string<sp/>-<sp/>strong<sp/>x<sp/>3,068<sp/>ops/sec<sp/>±0.34%<sp/>(190<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>string<sp/>-<sp/>weak<sp/><sp/><sp/>x<sp/>3,096<sp/>ops/sec<sp/>±0.35%<sp/>(190<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>node<sp/>benchmark/stats.js</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>stat</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>4<sp/>tests<sp/>completed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>real<sp/>-<sp/>strong<sp/>x<sp/>871,642<sp/>ops/sec<sp/>±0.34%<sp/>(189<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>real<sp/>-<sp/>weak<sp/><sp/><sp/>x<sp/>867,613<sp/>ops/sec<sp/>±0.39%<sp/>(190<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fake<sp/>-<sp/>strong<sp/>x<sp/>401,051<sp/>ops/sec<sp/>±0.40%<sp/>(189<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fake<sp/>-<sp/>weak<sp/><sp/><sp/>x<sp/>400,100<sp/>ops/sec<sp/>±0.47%<sp/>(188<sp/>runs<sp/>sampled)</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2etag_2_r_e_a_d_m_e_1autotoc_md941">
+<title>License</title><para>[MIT](LICENSE) </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/etag/README.md"/>
+  </compounddef>
+</doxygen>

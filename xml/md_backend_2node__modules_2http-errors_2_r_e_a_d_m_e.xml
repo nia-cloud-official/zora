@@ -1,0 +1,266 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2http-errors_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2http-errors_2_r_e_a_d_m_e</compoundname>
+    <title>http-errors</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2http-errors_2_r_e_a_d_m_e_1autotoc_md1550"/> <ulink url="https://npmjs.org/package/http-errors"><image type="html" name="https://badgen.net/npm/v/http-errors" alt="NPM Version" inline="yes"></image>
+</ulink> <ulink url="https://nodejs.org/en/download"><image type="html" name="https://badgen.net/npm/dm/http-errors" alt="NPM Downloads" inline="yes"></image>
+</ulink> <ulink url="https://nodejs.org/en/download"><image type="html" name="https://badgen.net/npm/node/http-errors" alt="Node.js Version" inline="yes"></image>
+</ulink> <ulink url="https://github.com/jshttp/http-errors/actions?query=workflow%3Aci"><image type="html" name="https://badgen.net/github/checks/jshttp/http-errors/master?label=ci" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/r/jshttp/http-errors?branch=master"><image type="html" name="https://badgen.net/coveralls/c/github/jshttp/http-errors/master" alt="Test Coverage" inline="yes"></image>
+</ulink></para>
+<para>Create HTTP errors for Express, Koa, Connect, etc. with ease.</para>
+<sect1 id="md_backend_2node__modules_2http-errors_2_r_e_a_d_m_e_1autotoc_md1551">
+<title>Install</title><para>This is a <ulink url="https://nodejs.org/en/">Node.js</ulink> module available through the <ulink url="https://www.npmjs.com/">npm registry</ulink>. Installation is done using the <ulink url="https://docs.npmjs.com/getting-started/installing-npm-packages-locally"><computeroutput>npm install</computeroutput> command</ulink>:</para>
+<para><programlisting filename=".console"><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>http-errors</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2http-errors_2_r_e_a_d_m_e_1autotoc_md1552">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>createError<sp/>=<sp/>require(&apos;http-errors&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>express<sp/>=<sp/>require(&apos;express&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>app<sp/>=<sp/>express()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">app.use(function<sp/>(req,<sp/>res,<sp/>next)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(!req.user)<sp/>return<sp/>next(createError(401,<sp/>&apos;Please<sp/>login<sp/>to<sp/>view<sp/>this<sp/>page.&apos;))</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>next()</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2http-errors_2_r_e_a_d_m_e_1autotoc_md1553">
+<title>API</title><para>This is the current API, currently extracted from Koa and subject to change.</para>
+<sect2 id="md_backend_2node__modules_2http-errors_2_r_e_a_d_m_e_1autotoc_md1554">
+<title>Error Properties</title><para><itemizedlist>
+<listitem><para><computeroutput>expose</computeroutput> - can be used to signal if <computeroutput>message</computeroutput> should be sent to the client, defaulting to <computeroutput>false</computeroutput> when <computeroutput>status</computeroutput> &gt;= 500</para>
+</listitem><listitem><para><computeroutput>headers</computeroutput> - can be an object of header names to values to be sent to the client, defaulting to <computeroutput>undefined</computeroutput>. When defined, the key names should all be lower-cased</para>
+</listitem><listitem><para><computeroutput>message</computeroutput> - the traditional error message, which should be kept short and all single line</para>
+</listitem><listitem><para><computeroutput>status</computeroutput> - the status code of the error, mirroring <computeroutput>statusCode</computeroutput> for general compatibility</para>
+</listitem><listitem><para><computeroutput>statusCode</computeroutput> - the status code of the error, defaulting to <computeroutput>500</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2http-errors_2_r_e_a_d_m_e_1autotoc_md1555">
+<title>createError([status], [message], [properties])</title><para>Create a new error object with the given message <computeroutput>msg</computeroutput>. The error object inherits from <computeroutput>createError.HttpError</computeroutput>.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>err<sp/>=<sp/>createError(404,<sp/>&apos;This<sp/>video<sp/>does<sp/>not<sp/>exist!&apos;)</highlight></codeline>
+</programlisting></para>
+<para><itemizedlist>
+<listitem><para><computeroutput>status: 500</computeroutput> - the status code as a number</para>
+</listitem><listitem><para><computeroutput>message</computeroutput> - the message of the error, defaulting to node&apos;s text for that status code.</para>
+</listitem><listitem><para><computeroutput>properties</computeroutput> - custom properties to attach to the object</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2http-errors_2_r_e_a_d_m_e_1autotoc_md1556">
+<title>createError([status], [error], [properties])</title><para>Extend the given <computeroutput>error</computeroutput> object with <computeroutput>createError.HttpError</computeroutput> properties. This will not alter the inheritance of the given <computeroutput>error</computeroutput> object, and the modified <computeroutput>error</computeroutput> object is the return value.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">fs.readFile(&apos;foo.txt&apos;,<sp/>function<sp/>(err,<sp/>buf)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(err.code<sp/>===<sp/>&apos;ENOENT&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>var<sp/>httpError<sp/>=<sp/>createError(404,<sp/>err,<sp/>{<sp/>expose:<sp/>false<sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>var<sp/>httpError<sp/>=<sp/>createError(500,<sp/>err)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+<para><itemizedlist>
+<listitem><para><computeroutput>status</computeroutput> - the status code as a number</para>
+</listitem><listitem><para><computeroutput>error</computeroutput> - the error object to extend</para>
+</listitem><listitem><para><computeroutput>properties</computeroutput> - custom properties to attach to the object</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2http-errors_2_r_e_a_d_m_e_1autotoc_md1557">
+<title>createError.isHttpError(val)</title><para>Determine if the provided <computeroutput>val</computeroutput> is an <computeroutput>HttpError</computeroutput>. This will return <computeroutput>true</computeroutput> if the error inherits from the <computeroutput>HttpError</computeroutput> constructor of this module or matches the &quot;duck type&quot; for an error this module creates. All outputs from the <computeroutput>createError</computeroutput> factory will return <computeroutput>true</computeroutput> for this function, including if an non-<computeroutput>HttpError</computeroutput> was passed into the factory.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2http-errors_2_r_e_a_d_m_e_1autotoc_md1558">
+<title>new createError[code || name]([msg]))</title><para>Create a new error object with the given message <computeroutput>msg</computeroutput>. The error object inherits from <computeroutput>createError.HttpError</computeroutput>.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>err<sp/>=<sp/>new<sp/>createError.NotFound()</highlight></codeline>
+</programlisting></para>
+<para><itemizedlist>
+<listitem><para><computeroutput>code</computeroutput> - the status code as a number</para>
+</listitem><listitem><para><computeroutput>name</computeroutput> - the name of the error as a &quot;bumpy case&quot;, i.e. <computeroutput>NotFound</computeroutput> or <computeroutput>InternalServerError</computeroutput>.</para>
+</listitem></itemizedlist>
+</para>
+<sect3 id="md_backend_2node__modules_2http-errors_2_r_e_a_d_m_e_1autotoc_md1559">
+<title>List of all constructors</title><para><table rows="42" cols="2"><row>
+<entry thead="yes"><para>Status Code   </para>
+</entry><entry thead="yes"><para>Constructor Name    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>400   </para>
+</entry><entry thead="no"><para>BadRequest    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>401   </para>
+</entry><entry thead="no"><para>Unauthorized    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>402   </para>
+</entry><entry thead="no"><para>PaymentRequired    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>403   </para>
+</entry><entry thead="no"><para>Forbidden    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>404   </para>
+</entry><entry thead="no"><para>NotFound    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>405   </para>
+</entry><entry thead="no"><para>MethodNotAllowed    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>406   </para>
+</entry><entry thead="no"><para>NotAcceptable    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>407   </para>
+</entry><entry thead="no"><para>ProxyAuthenticationRequired    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>408   </para>
+</entry><entry thead="no"><para>RequestTimeout    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>409   </para>
+</entry><entry thead="no"><para>Conflict    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>410   </para>
+</entry><entry thead="no"><para>Gone    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>411   </para>
+</entry><entry thead="no"><para>LengthRequired    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>412   </para>
+</entry><entry thead="no"><para>PreconditionFailed    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>413   </para>
+</entry><entry thead="no"><para>PayloadTooLarge    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>414   </para>
+</entry><entry thead="no"><para>URITooLong    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>415   </para>
+</entry><entry thead="no"><para>UnsupportedMediaType    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>416   </para>
+</entry><entry thead="no"><para>RangeNotSatisfiable    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>417   </para>
+</entry><entry thead="no"><para>ExpectationFailed    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>418   </para>
+</entry><entry thead="no"><para>ImATeapot    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>421   </para>
+</entry><entry thead="no"><para>MisdirectedRequest    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>422   </para>
+</entry><entry thead="no"><para>UnprocessableEntity    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>423   </para>
+</entry><entry thead="no"><para>Locked    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>424   </para>
+</entry><entry thead="no"><para>FailedDependency    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>425   </para>
+</entry><entry thead="no"><para>TooEarly    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>426   </para>
+</entry><entry thead="no"><para>UpgradeRequired    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>428   </para>
+</entry><entry thead="no"><para>PreconditionRequired    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>429   </para>
+</entry><entry thead="no"><para>TooManyRequests    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>431   </para>
+</entry><entry thead="no"><para>RequestHeaderFieldsTooLarge    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>451   </para>
+</entry><entry thead="no"><para>UnavailableForLegalReasons    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>500   </para>
+</entry><entry thead="no"><para>InternalServerError    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>501   </para>
+</entry><entry thead="no"><para>NotImplemented    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>502   </para>
+</entry><entry thead="no"><para>BadGateway    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>503   </para>
+</entry><entry thead="no"><para>ServiceUnavailable    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>504   </para>
+</entry><entry thead="no"><para>GatewayTimeout    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>505   </para>
+</entry><entry thead="no"><para>HTTPVersionNotSupported    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>506   </para>
+</entry><entry thead="no"><para>VariantAlsoNegotiates    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>507   </para>
+</entry><entry thead="no"><para>InsufficientStorage    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>508   </para>
+</entry><entry thead="no"><para>LoopDetected    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>509   </para>
+</entry><entry thead="no"><para>BandwidthLimitExceeded    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>510   </para>
+</entry><entry thead="no"><para>NotExtended    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>511   </para>
+</entry><entry thead="no"><para>NetworkAuthenticationRequired   </para>
+</entry></row>
+</table>
+</para>
+</sect3>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2http-errors_2_r_e_a_d_m_e_1autotoc_md1560">
+<title>License</title><para>[MIT](LICENSE) </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/http-errors/README.md"/>
+  </compounddef>
+</doxygen>

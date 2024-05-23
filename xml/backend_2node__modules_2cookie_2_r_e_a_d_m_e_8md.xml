@@ -1,0 +1,330 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2cookie_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>cookie</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![NPM<sp/>Version][npm-version-image]][npm-url]</highlight></codeline>
+<codeline><highlight class="normal">[![NPM<sp/>Downloads][npm-downloads-image]][npm-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Node.js<sp/>Version][node-image]][node-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Build<sp/>Status][ci-image]][ci-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Coverage<sp/>Status][coveralls-image]][coveralls-url]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Basic<sp/>HTTP<sp/>cookie<sp/>parser<sp/>and<sp/>serializer<sp/>for<sp/>HTTP<sp/>servers.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Installation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>a<sp/>[Node.js](https://nodejs.org/en/)<sp/>module<sp/>available<sp/>through<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[npm<sp/>registry](https://www.npmjs.com/).<sp/>Installation<sp/>is<sp/>done<sp/>using<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[`npm<sp/>install`<sp/>command](https://docs.npmjs.com/getting-started/installing-npm-packages-locally):</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```sh</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>cookie</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>API</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>cookie<sp/>=<sp/>require(&apos;cookie&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>cookie.parse(str,<sp/>options)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Parse<sp/>an<sp/>HTTP<sp/>`Cookie`<sp/>header<sp/>string<sp/>and<sp/>returning<sp/>an<sp/>object<sp/>of<sp/>all<sp/>cookie<sp/>name-value<sp/>pairs.</highlight></codeline>
+<codeline><highlight class="normal">The<sp/>`str`<sp/>argument<sp/>is<sp/>the<sp/>string<sp/>representing<sp/>a<sp/>`Cookie`<sp/>header<sp/>value<sp/>and<sp/>`options`<sp/>is<sp/>an</highlight></codeline>
+<codeline><highlight class="normal">optional<sp/>object<sp/>containing<sp/>additional<sp/>parsing<sp/>options.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>cookies<sp/>=<sp/>cookie.parse(&apos;foo=bar;<sp/>equation=E%3Dmc%5E2&apos;);</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>{<sp/>foo:<sp/>&apos;bar&apos;,<sp/>equation:<sp/>&apos;E=mc^2&apos;<sp/>}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Options</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`cookie.parse`<sp/>accepts<sp/>these<sp/>properties<sp/>in<sp/>the<sp/>options<sp/>object.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>decode</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Specifies<sp/>a<sp/>function<sp/>that<sp/>will<sp/>be<sp/>used<sp/>to<sp/>decode<sp/>a<sp/>cookie&apos;s<sp/>value.<sp/>Since<sp/>the<sp/>value<sp/>of<sp/>a<sp/>cookie</highlight></codeline>
+<codeline><highlight class="normal">has<sp/>a<sp/>limited<sp/>character<sp/>set<sp/>(and<sp/>must<sp/>be<sp/>a<sp/>simple<sp/>string),<sp/>this<sp/>function<sp/>can<sp/>be<sp/>used<sp/>to<sp/>decode</highlight></codeline>
+<codeline><highlight class="normal">a<sp/>previously-encoded<sp/>cookie<sp/>value<sp/>into<sp/>a<sp/>JavaScript<sp/>string<sp/>or<sp/>other<sp/>object.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>default<sp/>function<sp/>is<sp/>the<sp/>global<sp/>`decodeURIComponent`,<sp/>which<sp/>will<sp/>decode<sp/>any<sp/>URL-encoded</highlight></codeline>
+<codeline><highlight class="normal">sequences<sp/>into<sp/>their<sp/>byte<sp/>representations.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**note**<sp/>if<sp/>an<sp/>error<sp/>is<sp/>thrown<sp/>from<sp/>this<sp/>function,<sp/>the<sp/>original,<sp/>non-decoded<sp/>cookie<sp/>value<sp/>will</highlight></codeline>
+<codeline><highlight class="normal">be<sp/>returned<sp/>as<sp/>the<sp/>cookie&apos;s<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>cookie.serialize(name,<sp/>value,<sp/>options)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Serialize<sp/>a<sp/>cookie<sp/>name-value<sp/>pair<sp/>into<sp/>a<sp/>`Set-Cookie`<sp/>header<sp/>string.<sp/>The<sp/>`name`<sp/>argument<sp/>is<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">name<sp/>for<sp/>the<sp/>cookie,<sp/>the<sp/>`value`<sp/>argument<sp/>is<sp/>the<sp/>value<sp/>to<sp/>set<sp/>the<sp/>cookie<sp/>to,<sp/>and<sp/>the<sp/>`options`</highlight></codeline>
+<codeline><highlight class="normal">argument<sp/>is<sp/>an<sp/>optional<sp/>object<sp/>containing<sp/>additional<sp/>serialization<sp/>options.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>setCookie<sp/>=<sp/>cookie.serialize(&apos;foo&apos;,<sp/>&apos;bar&apos;);</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>foo=bar</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Options</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`cookie.serialize`<sp/>accepts<sp/>these<sp/>properties<sp/>in<sp/>the<sp/>options<sp/>object.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>domain</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Specifies<sp/>the<sp/>value<sp/>for<sp/>the<sp/>[`Domain`<sp/>`Set-Cookie`<sp/>attribute][rfc-6265-5.2.3].<sp/>By<sp/>default,<sp/>no</highlight></codeline>
+<codeline><highlight class="normal">domain<sp/>is<sp/>set,<sp/>and<sp/>most<sp/>clients<sp/>will<sp/>consider<sp/>the<sp/>cookie<sp/>to<sp/>apply<sp/>to<sp/>only<sp/>the<sp/>current<sp/>domain.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>encode</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Specifies<sp/>a<sp/>function<sp/>that<sp/>will<sp/>be<sp/>used<sp/>to<sp/>encode<sp/>a<sp/>cookie&apos;s<sp/>value.<sp/>Since<sp/>value<sp/>of<sp/>a<sp/>cookie</highlight></codeline>
+<codeline><highlight class="normal">has<sp/>a<sp/>limited<sp/>character<sp/>set<sp/>(and<sp/>must<sp/>be<sp/>a<sp/>simple<sp/>string),<sp/>this<sp/>function<sp/>can<sp/>be<sp/>used<sp/>to<sp/>encode</highlight></codeline>
+<codeline><highlight class="normal">a<sp/>value<sp/>into<sp/>a<sp/>string<sp/>suited<sp/>for<sp/>a<sp/>cookie&apos;s<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>default<sp/>function<sp/>is<sp/>the<sp/>global<sp/>`encodeURIComponent`,<sp/>which<sp/>will<sp/>encode<sp/>a<sp/>JavaScript<sp/>string</highlight></codeline>
+<codeline><highlight class="normal">into<sp/>UTF-8<sp/>byte<sp/>sequences<sp/>and<sp/>then<sp/>URL-encode<sp/>any<sp/>that<sp/>fall<sp/>outside<sp/>of<sp/>the<sp/>cookie<sp/>range.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>expires</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Specifies<sp/>the<sp/>`Date`<sp/>object<sp/>to<sp/>be<sp/>the<sp/>value<sp/>for<sp/>the<sp/>[`Expires`<sp/>`Set-Cookie`<sp/>attribute][rfc-6265-5.2.1].</highlight></codeline>
+<codeline><highlight class="normal">By<sp/>default,<sp/>no<sp/>expiration<sp/>is<sp/>set,<sp/>and<sp/>most<sp/>clients<sp/>will<sp/>consider<sp/>this<sp/>a<sp/>&quot;non-persistent<sp/>cookie&quot;<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">will<sp/>delete<sp/>it<sp/>on<sp/>a<sp/>condition<sp/>like<sp/>exiting<sp/>a<sp/>web<sp/>browser<sp/>application.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**note**<sp/>the<sp/>[cookie<sp/>storage<sp/>model<sp/>specification][rfc-6265-5.3]<sp/>states<sp/>that<sp/>if<sp/>both<sp/>`expires`<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">`maxAge`<sp/>are<sp/>set,<sp/>then<sp/>`maxAge`<sp/>takes<sp/>precedence,<sp/>but<sp/>it<sp/>is<sp/>possible<sp/>not<sp/>all<sp/>clients<sp/>by<sp/>obey<sp/>this,</highlight></codeline>
+<codeline><highlight class="normal">so<sp/>if<sp/>both<sp/>are<sp/>set,<sp/>they<sp/>should<sp/>point<sp/>to<sp/>the<sp/>same<sp/>date<sp/>and<sp/>time.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>httpOnly</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Specifies<sp/>the<sp/>`boolean`<sp/>value<sp/>for<sp/>the<sp/>[`HttpOnly`<sp/>`Set-Cookie`<sp/>attribute][rfc-6265-5.2.6].<sp/>When<sp/>truthy,</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>`HttpOnly`<sp/>attribute<sp/>is<sp/>set,<sp/>otherwise<sp/>it<sp/>is<sp/>not.<sp/>By<sp/>default,<sp/>the<sp/>`HttpOnly`<sp/>attribute<sp/>is<sp/>not<sp/>set.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**note**<sp/>be<sp/>careful<sp/>when<sp/>setting<sp/>this<sp/>to<sp/>`true`,<sp/>as<sp/>compliant<sp/>clients<sp/>will<sp/>not<sp/>allow<sp/>client-side</highlight></codeline>
+<codeline><highlight class="normal">JavaScript<sp/>to<sp/>see<sp/>the<sp/>cookie<sp/>in<sp/>`document.cookie`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>maxAge</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Specifies<sp/>the<sp/>`number`<sp/>(in<sp/>seconds)<sp/>to<sp/>be<sp/>the<sp/>value<sp/>for<sp/>the<sp/>[`Max-Age`<sp/>`Set-Cookie`<sp/>attribute][rfc-6265-5.2.2].</highlight></codeline>
+<codeline><highlight class="normal">The<sp/>given<sp/>number<sp/>will<sp/>be<sp/>converted<sp/>to<sp/>an<sp/>integer<sp/>by<sp/>rounding<sp/>down.<sp/>By<sp/>default,<sp/>no<sp/>maximum<sp/>age<sp/>is<sp/>set.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**note**<sp/>the<sp/>[cookie<sp/>storage<sp/>model<sp/>specification][rfc-6265-5.3]<sp/>states<sp/>that<sp/>if<sp/>both<sp/>`expires`<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">`maxAge`<sp/>are<sp/>set,<sp/>then<sp/>`maxAge`<sp/>takes<sp/>precedence,<sp/>but<sp/>it<sp/>is<sp/>possible<sp/>not<sp/>all<sp/>clients<sp/>by<sp/>obey<sp/>this,</highlight></codeline>
+<codeline><highlight class="normal">so<sp/>if<sp/>both<sp/>are<sp/>set,<sp/>they<sp/>should<sp/>point<sp/>to<sp/>the<sp/>same<sp/>date<sp/>and<sp/>time.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>partitioned</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Specifies<sp/>the<sp/>`boolean`<sp/>value<sp/>for<sp/>the<sp/>[`Partitioned`<sp/>`Set-Cookie`](rfc-cutler-httpbis-partitioned-cookies)</highlight></codeline>
+<codeline><highlight class="normal">attribute.<sp/>When<sp/>truthy,<sp/>the<sp/>`Partitioned`<sp/>attribute<sp/>is<sp/>set,<sp/>otherwise<sp/>it<sp/>is<sp/>not.<sp/>By<sp/>default,<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">`Partitioned`<sp/>attribute<sp/>is<sp/>not<sp/>set.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**note**<sp/>This<sp/>is<sp/>an<sp/>attribute<sp/>that<sp/>has<sp/>not<sp/>yet<sp/>been<sp/>fully<sp/>standardized,<sp/>and<sp/>may<sp/>change<sp/>in<sp/>the<sp/>future.</highlight></codeline>
+<codeline><highlight class="normal">This<sp/>also<sp/>means<sp/>many<sp/>clients<sp/>may<sp/>ignore<sp/>this<sp/>attribute<sp/>until<sp/>they<sp/>understand<sp/>it.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">More<sp/>information<sp/>about<sp/>can<sp/>be<sp/>found<sp/>in<sp/>[the<sp/>proposal](https://github.com/privacycg/CHIPS).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>path</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Specifies<sp/>the<sp/>value<sp/>for<sp/>the<sp/>[`Path`<sp/>`Set-Cookie`<sp/>attribute][rfc-6265-5.2.4].<sp/>By<sp/>default,<sp/>the<sp/>path</highlight></codeline>
+<codeline><highlight class="normal">is<sp/>considered<sp/>the<sp/>[&quot;default<sp/>path&quot;][rfc-6265-5.1.4].</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>priority</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Specifies<sp/>the<sp/>`string`<sp/>to<sp/>be<sp/>the<sp/>value<sp/>for<sp/>the<sp/>[`Priority`<sp/>`Set-Cookie`<sp/>attribute][rfc-west-cookie-priority-00-4.1].</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>`&apos;low&apos;`<sp/>will<sp/>set<sp/>the<sp/>`Priority`<sp/>attribute<sp/>to<sp/>`Low`.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>`&apos;medium&apos;`<sp/>will<sp/>set<sp/>the<sp/>`Priority`<sp/>attribute<sp/>to<sp/>`Medium`,<sp/>the<sp/>default<sp/>priority<sp/>when<sp/>not<sp/>set.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>`&apos;high&apos;`<sp/>will<sp/>set<sp/>the<sp/>`Priority`<sp/>attribute<sp/>to<sp/>`High`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">More<sp/>information<sp/>about<sp/>the<sp/>different<sp/>priority<sp/>levels<sp/>can<sp/>be<sp/>found<sp/>in</highlight></codeline>
+<codeline><highlight class="normal">[the<sp/>specification][rfc-west-cookie-priority-00-4.1].</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**note**<sp/>This<sp/>is<sp/>an<sp/>attribute<sp/>that<sp/>has<sp/>not<sp/>yet<sp/>been<sp/>fully<sp/>standardized,<sp/>and<sp/>may<sp/>change<sp/>in<sp/>the<sp/>future.</highlight></codeline>
+<codeline><highlight class="normal">This<sp/>also<sp/>means<sp/>many<sp/>clients<sp/>may<sp/>ignore<sp/>this<sp/>attribute<sp/>until<sp/>they<sp/>understand<sp/>it.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>sameSite</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Specifies<sp/>the<sp/>`boolean`<sp/>or<sp/>`string`<sp/>to<sp/>be<sp/>the<sp/>value<sp/>for<sp/>the<sp/>[`SameSite`<sp/>`Set-Cookie`<sp/>attribute][rfc-6265bis-09-5.4.7].</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>`true`<sp/>will<sp/>set<sp/>the<sp/>`SameSite`<sp/>attribute<sp/>to<sp/>`Strict`<sp/>for<sp/>strict<sp/>same<sp/>site<sp/>enforcement.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>`false`<sp/>will<sp/>not<sp/>set<sp/>the<sp/>`SameSite`<sp/>attribute.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>`&apos;lax&apos;`<sp/>will<sp/>set<sp/>the<sp/>`SameSite`<sp/>attribute<sp/>to<sp/>`Lax`<sp/>for<sp/>lax<sp/>same<sp/>site<sp/>enforcement.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>`&apos;none&apos;`<sp/>will<sp/>set<sp/>the<sp/>`SameSite`<sp/>attribute<sp/>to<sp/>`None`<sp/>for<sp/>an<sp/>explicit<sp/>cross-site<sp/>cookie.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>`&apos;strict&apos;`<sp/>will<sp/>set<sp/>the<sp/>`SameSite`<sp/>attribute<sp/>to<sp/>`Strict`<sp/>for<sp/>strict<sp/>same<sp/>site<sp/>enforcement.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">More<sp/>information<sp/>about<sp/>the<sp/>different<sp/>enforcement<sp/>levels<sp/>can<sp/>be<sp/>found<sp/>in</highlight></codeline>
+<codeline><highlight class="normal">[the<sp/>specification][rfc-6265bis-09-5.4.7].</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**note**<sp/>This<sp/>is<sp/>an<sp/>attribute<sp/>that<sp/>has<sp/>not<sp/>yet<sp/>been<sp/>fully<sp/>standardized,<sp/>and<sp/>may<sp/>change<sp/>in<sp/>the<sp/>future.</highlight></codeline>
+<codeline><highlight class="normal">This<sp/>also<sp/>means<sp/>many<sp/>clients<sp/>may<sp/>ignore<sp/>this<sp/>attribute<sp/>until<sp/>they<sp/>understand<sp/>it.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>secure</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Specifies<sp/>the<sp/>`boolean`<sp/>value<sp/>for<sp/>the<sp/>[`Secure`<sp/>`Set-Cookie`<sp/>attribute][rfc-6265-5.2.5].<sp/>When<sp/>truthy,</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>`Secure`<sp/>attribute<sp/>is<sp/>set,<sp/>otherwise<sp/>it<sp/>is<sp/>not.<sp/>By<sp/>default,<sp/>the<sp/>`Secure`<sp/>attribute<sp/>is<sp/>not<sp/>set.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**note**<sp/>be<sp/>careful<sp/>when<sp/>setting<sp/>this<sp/>to<sp/>`true`,<sp/>as<sp/>compliant<sp/>clients<sp/>will<sp/>not<sp/>send<sp/>the<sp/>cookie<sp/>back<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>server<sp/>in<sp/>the<sp/>future<sp/>if<sp/>the<sp/>browser<sp/>does<sp/>not<sp/>have<sp/>an<sp/>HTTPS<sp/>connection.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>following<sp/>example<sp/>uses<sp/>this<sp/>module<sp/>in<sp/>conjunction<sp/>with<sp/>the<sp/>Node.js<sp/>core<sp/>HTTP<sp/>server</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>prompt<sp/>a<sp/>user<sp/>for<sp/>their<sp/>name<sp/>and<sp/>display<sp/>it<sp/>back<sp/>on<sp/>future<sp/>visits.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>cookie<sp/>=<sp/>require(&apos;cookie&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>escapeHtml<sp/>=<sp/>require(&apos;escape-html&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>url<sp/>=<sp/>require(&apos;url&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>onRequest(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Parse<sp/>the<sp/>query<sp/>string</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>query<sp/>=<sp/>url.parse(req.url,<sp/>true,<sp/>true).query;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(query<sp/>&amp;&amp;<sp/>query.name)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Set<sp/>a<sp/>new<sp/>cookie<sp/>with<sp/>the<sp/>name</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.setHeader(&apos;Set-Cookie&apos;,<sp/>cookie.serialize(&apos;name&apos;,<sp/>String(query.name),<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>httpOnly:<sp/>true,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>maxAge:<sp/>60<sp/>*<sp/>60<sp/>*<sp/>24<sp/>*<sp/>7<sp/>//<sp/>1<sp/>week</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}));</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Redirect<sp/>back<sp/>after<sp/>setting<sp/>cookie</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.statusCode<sp/>=<sp/>302;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.setHeader(&apos;Location&apos;,<sp/>req.headers.referer<sp/>||<sp/>&apos;/&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.end();</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Parse<sp/>the<sp/>cookies<sp/>on<sp/>the<sp/>request</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>cookies<sp/>=<sp/>cookie.parse(req.headers.cookie<sp/>||<sp/>&apos;&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Get<sp/>the<sp/>visitor<sp/>name<sp/>set<sp/>in<sp/>the<sp/>cookie</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>name<sp/>=<sp/>cookies.name;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.setHeader(&apos;Content-Type&apos;,<sp/>&apos;text/html;<sp/>charset=UTF-8&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(name)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.write(&apos;&lt;p&gt;Welcome<sp/>back,<sp/>&lt;b&gt;&apos;<sp/>+<sp/>escapeHtml(name)<sp/>+<sp/>&apos;&lt;/b&gt;!&lt;/p&gt;&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}<sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.write(&apos;&lt;p&gt;Hello,<sp/>new<sp/>visitor!&lt;/p&gt;&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.write(&apos;&lt;form<sp/>method=&quot;GET&quot;&gt;&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.write(&apos;&lt;input<sp/>placeholder=&quot;enter<sp/>your<sp/>name&quot;<sp/>name=&quot;name&quot;&gt;<sp/>&lt;input<sp/>type=&quot;submit&quot;<sp/>value=&quot;Set<sp/>Name&quot;&gt;&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.end(&apos;&lt;/form&gt;&apos;);</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">http.createServer(onRequest).listen(3000);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Testing</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```sh</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>test</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Benchmark</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>run<sp/>bench</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>cookie@0.5.0<sp/>bench</highlight></codeline>
+<codeline><highlight class="normal">&gt;<sp/>node<sp/>benchmark/index.js</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>node@18.18.2</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>acorn@8.10.0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>ada@2.6.0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>ares@1.19.1</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>brotli@1.0.9</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cldr@43.1</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>icu@73.2</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>llhttp@6.0.11</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>modules@108</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>napi@9</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nghttp2@1.57.0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nghttp3@0.7.0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>ngtcp2@0.8.1</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>openssl@3.0.10+quic</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>simdutf@3.2.14</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>tz@2023c</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>undici@5.26.3</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>unicode@15.0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>uv@1.44.2</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>uvwasi@0.0.18</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>v8@10.2.154.26-node.26</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>zlib@1.2.13.1-motley</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>node<sp/>benchmark/parse-top.js</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cookie.parse<sp/>-<sp/>top<sp/>sites</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>14<sp/>tests<sp/>completed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>accounts.google.com<sp/>x<sp/>2,588,913<sp/>ops/sec<sp/>±0.74%<sp/>(186<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>apple.com<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>2,370,002<sp/>ops/sec<sp/>±0.69%<sp/>(186<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>cloudflare.com<sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>2,213,102<sp/>ops/sec<sp/>±0.88%<sp/>(188<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>docs.google.com<sp/><sp/><sp/><sp/><sp/>x<sp/>2,194,157<sp/>ops/sec<sp/>±1.03%<sp/>(184<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>drive.google.com<sp/><sp/><sp/><sp/>x<sp/>2,265,084<sp/>ops/sec<sp/>±0.79%<sp/>(187<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>en.wikipedia.org<sp/><sp/><sp/><sp/>x<sp/><sp/><sp/>457,099<sp/>ops/sec<sp/>±0.81%<sp/>(186<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>linkedin.com<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/><sp/><sp/>504,407<sp/>ops/sec<sp/>±0.89%<sp/>(186<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>maps.google.com<sp/><sp/><sp/><sp/><sp/>x<sp/>1,230,959<sp/>ops/sec<sp/>±0.98%<sp/>(186<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>microsoft.com<sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/><sp/><sp/>926,294<sp/>ops/sec<sp/>±0.88%<sp/>(184<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>play.google.com<sp/><sp/><sp/><sp/><sp/>x<sp/>2,311,338<sp/>ops/sec<sp/>±0.83%<sp/>(185<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>support.google.com<sp/><sp/>x<sp/>1,508,850<sp/>ops/sec<sp/>±0.86%<sp/>(186<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>www.google.com<sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>1,022,582<sp/>ops/sec<sp/>±1.32%<sp/>(182<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>youtu.be<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/><sp/><sp/>332,136<sp/>ops/sec<sp/>±1.02%<sp/>(185<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parse<sp/>youtube.com<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/><sp/><sp/>323,833<sp/>ops/sec<sp/>±0.77%<sp/>(183<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>node<sp/>benchmark/parse.js</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cookie.parse<sp/>-<sp/>generic</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>6<sp/>tests<sp/>completed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>simple<sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>3,214,032<sp/>ops/sec<sp/>±1.61%<sp/>(183<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>decode<sp/><sp/><sp/><sp/><sp/><sp/>x<sp/><sp/><sp/>587,237<sp/>ops/sec<sp/>±1.16%<sp/>(187<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>unquote<sp/><sp/><sp/><sp/><sp/>x<sp/>2,954,618<sp/>ops/sec<sp/>±1.35%<sp/>(183<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>duplicates<sp/><sp/>x<sp/><sp/><sp/>857,008<sp/>ops/sec<sp/>±0.89%<sp/>(187<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>10<sp/>cookies<sp/><sp/>x<sp/><sp/><sp/>292,133<sp/>ops/sec<sp/>±0.89%<sp/>(187<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>100<sp/>cookies<sp/>x<sp/><sp/><sp/><sp/>22,610<sp/>ops/sec<sp/>±0.68%<sp/>(187<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>References</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>[RFC<sp/>6265:<sp/>HTTP<sp/>State<sp/>Management<sp/>Mechanism][rfc-6265]</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[Same-site<sp/>Cookies][rfc-6265bis-09-5.4.7]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[rfc-cutler-httpbis-partitioned-cookies]:<sp/>https://tools.ietf.org/html/draft-cutler-httpbis-partitioned-cookies/</highlight></codeline>
+<codeline><highlight class="normal">[rfc-west-cookie-priority-00-4.1]:<sp/>https://tools.ietf.org/html/draft-west-cookie-priority-00#section-4.1</highlight></codeline>
+<codeline><highlight class="normal">[rfc-6265bis-09-5.4.7]:<sp/>https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-09#section-5.4.7</highlight></codeline>
+<codeline><highlight class="normal">[rfc-6265]:<sp/>https://tools.ietf.org/html/rfc6265</highlight></codeline>
+<codeline><highlight class="normal">[rfc-6265-5.1.4]:<sp/>https://tools.ietf.org/html/rfc6265#section-5.1.4</highlight></codeline>
+<codeline><highlight class="normal">[rfc-6265-5.2.1]:<sp/>https://tools.ietf.org/html/rfc6265#section-5.2.1</highlight></codeline>
+<codeline><highlight class="normal">[rfc-6265-5.2.2]:<sp/>https://tools.ietf.org/html/rfc6265#section-5.2.2</highlight></codeline>
+<codeline><highlight class="normal">[rfc-6265-5.2.3]:<sp/>https://tools.ietf.org/html/rfc6265#section-5.2.3</highlight></codeline>
+<codeline><highlight class="normal">[rfc-6265-5.2.4]:<sp/>https://tools.ietf.org/html/rfc6265#section-5.2.4</highlight></codeline>
+<codeline><highlight class="normal">[rfc-6265-5.2.5]:<sp/>https://tools.ietf.org/html/rfc6265#section-5.2.5</highlight></codeline>
+<codeline><highlight class="normal">[rfc-6265-5.2.6]:<sp/>https://tools.ietf.org/html/rfc6265#section-5.2.6</highlight></codeline>
+<codeline><highlight class="normal">[rfc-6265-5.3]:<sp/>https://tools.ietf.org/html/rfc6265#section-5.3</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>License</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[MIT](LICENSE)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[ci-image]:<sp/>https://badgen.net/github/checks/jshttp/cookie/master?label=ci</highlight></codeline>
+<codeline><highlight class="normal">[ci-url]:<sp/>https://github.com/jshttp/cookie/actions/workflows/ci.yml</highlight></codeline>
+<codeline><highlight class="normal">[coveralls-image]:<sp/>https://badgen.net/coveralls/c/github/jshttp/cookie/master</highlight></codeline>
+<codeline><highlight class="normal">[coveralls-url]:<sp/>https://coveralls.io/r/jshttp/cookie?branch=master</highlight></codeline>
+<codeline><highlight class="normal">[node-image]:<sp/>https://badgen.net/npm/node/cookie</highlight></codeline>
+<codeline><highlight class="normal">[node-url]:<sp/>https://nodejs.org/en/download</highlight></codeline>
+<codeline><highlight class="normal">[npm-downloads-image]:<sp/>https://badgen.net/npm/dm/cookie</highlight></codeline>
+<codeline><highlight class="normal">[npm-url]:<sp/>https://npmjs.org/package/cookie</highlight></codeline>
+<codeline><highlight class="normal">[npm-version-image]:<sp/>https://badgen.net/npm/v/cookie</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/cookie/README.md"/>
+  </compounddef>
+</doxygen>

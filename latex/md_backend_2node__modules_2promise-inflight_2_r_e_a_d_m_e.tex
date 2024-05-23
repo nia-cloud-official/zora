@@ -1,0 +1,33 @@
+\chapter{promise-\/inflight}
+\hypertarget{md_backend_2node__modules_2promise-inflight_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2promise-inflight_2_r_e_a_d_m_e}\index{promise-\/inflight@{promise-\/inflight}}
+\label{md_backend_2node__modules_2promise-inflight_2_r_e_a_d_m_e_autotoc_md2732}%
+\Hypertarget{md_backend_2node__modules_2promise-inflight_2_r_e_a_d_m_e_autotoc_md2732}%
+ One promise for multiple requests in flight to avoid async duplication\hypertarget{md_backend_2node__modules_2promise-inflight_2_r_e_a_d_m_e_autotoc_md2733}{}\doxysection{\texorpdfstring{USAGE}{USAGE}}\label{md_backend_2node__modules_2promise-inflight_2_r_e_a_d_m_e_autotoc_md2733}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ inflight\ =\ require('promise-\/inflight')}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ some\ request\ that\ does\ some\ stuff}
+\DoxyCodeLine{function\ req(key)\ \{}
+\DoxyCodeLine{\ \ //\ key\ is\ any\ random\ string.\ \ like\ a\ url\ or\ filename\ or\ whatever.}
+\DoxyCodeLine{\ \ return\ inflight(key,\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ //\ this\ is\ where\ you'd\ fetch\ the\ url\ or\ whatever}
+\DoxyCodeLine{\ \ \ \ return\ Promise.delay(100)}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ only\ assigns\ a\ single\ setTimeout}
+\DoxyCodeLine{//\ when\ it\ dings,\ all\ thens\ get\ called\ with\ the\ same\ result.\ \ (There's\ only}
+\DoxyCodeLine{//\ one\ underlying\ promise.)}
+\DoxyCodeLine{req('foo').then(…)}
+\DoxyCodeLine{req('foo').then(…)}
+\DoxyCodeLine{req('foo').then(…)}
+\DoxyCodeLine{req('foo').then(…)}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2promise-inflight_2_r_e_a_d_m_e_autotoc_md2734}{}\doxysection{\texorpdfstring{SEE ALSO}{SEE ALSO}}\label{md_backend_2node__modules_2promise-inflight_2_r_e_a_d_m_e_autotoc_md2734}
+
+\begin{DoxyItemize}
+\item \href{https://npmjs.com/package/inflight}{\texttt{ inflight}} -\/ For the callback based function on which this is based.
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2promise-inflight_2_r_e_a_d_m_e_autotoc_md2735}{}\doxysection{\texorpdfstring{STILL NEEDS}{STILL NEEDS}}\label{md_backend_2node__modules_2promise-inflight_2_r_e_a_d_m_e_autotoc_md2735}
+Tests! 

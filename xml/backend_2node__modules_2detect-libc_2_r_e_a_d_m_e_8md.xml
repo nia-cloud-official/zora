@@ -1,0 +1,176 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2detect-libc_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>detect-libc</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Node.js<sp/>module<sp/>to<sp/>detect<sp/>details<sp/>of<sp/>the<sp/>C<sp/>standard<sp/>library<sp/>(libc)</highlight></codeline>
+<codeline><highlight class="normal">implementation<sp/>provided<sp/>by<sp/>a<sp/>given<sp/>Linux<sp/>system.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Currently<sp/>supports<sp/>detection<sp/>of<sp/>GNU<sp/>glibc<sp/>and<sp/>MUSL<sp/>libc.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Provides<sp/>asychronous<sp/>and<sp/>synchronous<sp/>functions<sp/>for<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">family<sp/>(e.g.<sp/>`glibc`,<sp/>`musl`)<sp/>and<sp/>version<sp/>(e.g.<sp/>`1.23`,<sp/>`1.2.3`).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>version<sp/>numbers<sp/>of<sp/>libc<sp/>implementations</highlight></codeline>
+<codeline><highlight class="normal">are<sp/>not<sp/>guaranteed<sp/>to<sp/>be<sp/>semver-compliant.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>previous<sp/>v1.x<sp/>releases,<sp/>please<sp/>see<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[v1](https://github.com/lovell/detect-libc/tree/v1)<sp/>branch.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Install</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```sh</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>install<sp/>detect-libc</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>API</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>GLIBC</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```ts</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>GLIBC:<sp/>string<sp/>=<sp/>&apos;glibc&apos;;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>String<sp/>constant<sp/>containing<sp/>the<sp/>value<sp/>`glibc`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>MUSL</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```ts</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>MUSL:<sp/>string<sp/>=<sp/>&apos;musl&apos;;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>String<sp/>constant<sp/>containing<sp/>the<sp/>value<sp/>`musl`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>family</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```ts</highlight></codeline>
+<codeline><highlight class="normal">function<sp/>family():<sp/>Promise&lt;string<sp/>|<sp/>null&gt;;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Resolves<sp/>asychronously<sp/>with:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`glibc`<sp/>or<sp/>`musl`<sp/>when<sp/>the<sp/>libc<sp/>family<sp/>can<sp/>be<sp/>determined</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`null`<sp/>when<sp/>the<sp/>libc<sp/>family<sp/>cannot<sp/>be<sp/>determined</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`null`<sp/>when<sp/>run<sp/>on<sp/>a<sp/>non-Linux<sp/>platform</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>family,<sp/>GLIBC,<sp/>MUSL<sp/>}<sp/>=<sp/>require(&apos;detect-libc&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">switch<sp/>(await<sp/>family())<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>case<sp/>GLIBC:<sp/>...</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>case<sp/>MUSL:<sp/>...</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>case<sp/>null:<sp/>...</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>familySync</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```ts</highlight></codeline>
+<codeline><highlight class="normal">function<sp/>familySync():<sp/>string<sp/>|<sp/>null;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Synchronous<sp/>version<sp/>of<sp/>`family()`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>familySync,<sp/>GLIBC,<sp/>MUSL<sp/>}<sp/>=<sp/>require(&apos;detect-libc&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">switch<sp/>(familySync())<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>case<sp/>GLIBC:<sp/>...</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>case<sp/>MUSL:<sp/>...</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>case<sp/>null:<sp/>...</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>version</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```ts</highlight></codeline>
+<codeline><highlight class="normal">function<sp/>version():<sp/>Promise&lt;string<sp/>|<sp/>null&gt;;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Resolves<sp/>asychronously<sp/>with:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>The<sp/>version<sp/>when<sp/>it<sp/>can<sp/>be<sp/>determined</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`null`<sp/>when<sp/>the<sp/>libc<sp/>family<sp/>cannot<sp/>be<sp/>determined</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`null`<sp/>when<sp/>run<sp/>on<sp/>a<sp/>non-Linux<sp/>platform</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>version<sp/>}<sp/>=<sp/>require(&apos;detect-libc&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>v<sp/>=<sp/>await<sp/>version();</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>(v)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>const<sp/>[major,<sp/>minor,<sp/>patch]<sp/>=<sp/>v.split(&apos;.&apos;);</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>versionSync</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```ts</highlight></codeline>
+<codeline><highlight class="normal">function<sp/>versionSync():<sp/>string<sp/>|<sp/>null;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Synchronous<sp/>version<sp/>of<sp/>`version()`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>versionSync<sp/>}<sp/>=<sp/>require(&apos;detect-libc&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>v<sp/>=<sp/>versionSync();</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>(v)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>const<sp/>[major,<sp/>minor,<sp/>patch]<sp/>=<sp/>v.split(&apos;.&apos;);</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>isNonGlibcLinux</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```ts</highlight></codeline>
+<codeline><highlight class="normal">function<sp/>isNonGlibcLinux():<sp/>Promise&lt;boolean&gt;;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Resolves<sp/>asychronously<sp/>with:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`false`<sp/>when<sp/>the<sp/>libc<sp/>family<sp/>is<sp/>`glibc`</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`true`<sp/>when<sp/>the<sp/>libc<sp/>family<sp/>is<sp/>not<sp/>`glibc`</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`false`<sp/>when<sp/>run<sp/>on<sp/>a<sp/>non-Linux<sp/>platform</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>isNonGlibcLinux<sp/>}<sp/>=<sp/>require(&apos;detect-libc&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">if<sp/>(await<sp/>isNonGlibcLinux())<sp/>{<sp/>...<sp/>}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>isNonGlibcLinuxSync</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```ts</highlight></codeline>
+<codeline><highlight class="normal">function<sp/>isNonGlibcLinuxSync():<sp/>boolean;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Synchronous<sp/>version<sp/>of<sp/>`isNonGlibcLinux()`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>isNonGlibcLinuxSync<sp/>}<sp/>=<sp/>require(&apos;detect-libc&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">if<sp/>(isNonGlibcLinuxSync())<sp/>{<sp/>...<sp/>}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Licensing</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Copyright<sp/>2017<sp/>Lovell<sp/>Fuller<sp/>and<sp/>others.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Licensed<sp/>under<sp/>the<sp/>Apache<sp/>License,<sp/>Version<sp/>2.0<sp/>(the<sp/>&quot;License&quot;);</highlight></codeline>
+<codeline><highlight class="normal">you<sp/>may<sp/>not<sp/>use<sp/>this<sp/>file<sp/>except<sp/>in<sp/>compliance<sp/>with<sp/>the<sp/>License.</highlight></codeline>
+<codeline><highlight class="normal">You<sp/>may<sp/>obtain<sp/>a<sp/>copy<sp/>of<sp/>the<sp/>License<sp/>at<sp/>[http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0.html)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Unless<sp/>required<sp/>by<sp/>applicable<sp/>law<sp/>or<sp/>agreed<sp/>to<sp/>in<sp/>writing,<sp/>software</highlight></codeline>
+<codeline><highlight class="normal">distributed<sp/>under<sp/>the<sp/>License<sp/>is<sp/>distributed<sp/>on<sp/>an<sp/>&quot;AS<sp/>IS&quot;<sp/>BASIS,</highlight></codeline>
+<codeline><highlight class="normal">WITHOUT<sp/>WARRANTIES<sp/>OR<sp/>CONDITIONS<sp/>OF<sp/>ANY<sp/>KIND,<sp/>either<sp/>express<sp/>or<sp/>implied.</highlight></codeline>
+<codeline><highlight class="normal">See<sp/>the<sp/>License<sp/>for<sp/>the<sp/>specific<sp/>language<sp/>governing<sp/>permissions<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">limitations<sp/>under<sp/>the<sp/>License.</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/detect-libc/README.md"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,1327 @@
+\doxysection{cmake.\+py}
+\hypertarget{cmake_8py_source}{}\label{cmake_8py_source}\index{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/generator/cmake.py@{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/generator/cmake.py}}
+\mbox{\hyperlink{cmake_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00001}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake}{00001}}\ \textcolor{comment}{\#\ Copyright\ (c)\ 2013\ Google\ Inc.\ All\ rights\ reserved.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00002}00002\ \textcolor{comment}{\#\ Use\ of\ this\ source\ code\ is\ governed\ by\ a\ BSD-\/style\ license\ that\ can\ be}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00003}00003\ \textcolor{comment}{\#\ found\ in\ the\ LICENSE\ file.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00005}00005\ \textcolor{stringliteral}{"{}"{}"{}cmake\ output\ module}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00006}00006\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00007}00007\ \textcolor{stringliteral}{This\ module\ is\ under\ development\ and\ should\ be\ considered\ experimental.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00008}00008\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00009}00009\ \textcolor{stringliteral}{This\ module\ produces\ cmake\ (2.8.8+)\ input\ as\ its\ output.\ One\ CMakeLists.txt\ is}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00010}00010\ \textcolor{stringliteral}{created\ for\ each\ configuration.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00011}00011\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00012}00012\ \textcolor{stringliteral}{This\ module's\ original\ purpose\ was\ to\ support\ editing\ in\ IDEs\ like\ KDevelop}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00013}00013\ \textcolor{stringliteral}{which\ use\ CMake\ for\ project\ management.\ It\ is\ also\ possible\ to\ use\ CMake\ to}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00014}00014\ \textcolor{stringliteral}{generate\ projects\ for\ other\ IDEs\ such\ as\ eclipse\ cdt\ and\ code::blocks.\ QtCreator}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00015}00015\ \textcolor{stringliteral}{will\ convert\ the\ CMakeLists.txt\ to\ a\ code::blocks\ cbp\ for\ the\ editor\ to\ read,}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00016}00016\ \textcolor{stringliteral}{but\ build\ using\ CMake.\ As\ a\ result\ QtCreator\ editor\ is\ unaware\ of\ compiler}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00017}00017\ \textcolor{stringliteral}{defines.\ The\ generated\ CMakeLists.txt\ can\ also\ be\ used\ to\ build\ on\ Linux.\ There}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00018}00018\ \textcolor{stringliteral}{is\ currently\ no\ support\ for\ building\ on\ platforms\ other\ than\ Linux.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00019}00019\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00020}00020\ \textcolor{stringliteral}{The\ generated\ CMakeLists.txt\ should\ properly\ compile\ all\ projects.\ However,}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00021}00021\ \textcolor{stringliteral}{there\ is\ a\ mismatch\ between\ gyp\ and\ cmake\ with\ regard\ to\ linking.\ All\ attempts}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00022}00022\ \textcolor{stringliteral}{are\ made\ to\ work\ around\ this,\ but\ CMake\ sometimes\ sees\ -\/Wl,-\/-\/start-\/group\ as\ a}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00023}00023\ \textcolor{stringliteral}{library\ and\ incorrectly\ repeats\ it.\ As\ a\ result\ the\ output\ of\ this\ generator}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00024}00024\ \textcolor{stringliteral}{should\ not\ be\ relied\ on\ for\ building.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00025}00025\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00026}00026\ \textcolor{stringliteral}{When\ using\ with\ kdevelop,\ use\ version\ 4.4+.\ Previous\ versions\ of\ kdevelop\ will}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00027}00027\ \textcolor{stringliteral}{not\ be\ able\ to\ find\ the\ header\ file\ directories\ described\ in\ the\ generated}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00028}00028\ \textcolor{stringliteral}{CMakeLists.txt\ file.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00029}00029\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00032}00032\ \textcolor{keyword}{import}\ multiprocessing}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00033}00033\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00034}00034\ \textcolor{keyword}{import}\ signal}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00035}00035\ \textcolor{keyword}{import}\ subprocess}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00036}00036\ \textcolor{keyword}{import}\ \mbox{\hyperlink{namespacegyp_1_1common}{gyp.common}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00037}00037\ \textcolor{keyword}{import}\ \mbox{\hyperlink{namespacegyp_1_1xcode__emulation}{gyp.xcode\_emulation}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00039}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a981698a95fde570641c2316fe84c202a}{00039}}\ \_maketrans\ =\ str.maketrans}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00041}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a923d4a4182d98a65dfe0eda9b1a4ce0f}{00041}}\ generator\_default\_variables\ =\ \{}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00042}00042\ \ \ \ \ \textcolor{stringliteral}{"{}EXECUTABLE\_PREFIX"{}}:\ \textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00043}00043\ \ \ \ \ \textcolor{stringliteral}{"{}EXECUTABLE\_SUFFIX"{}}:\ \textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00044}00044\ \ \ \ \ \textcolor{stringliteral}{"{}STATIC\_LIB\_PREFIX"{}}:\ \textcolor{stringliteral}{"{}lib"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00045}00045\ \ \ \ \ \textcolor{stringliteral}{"{}STATIC\_LIB\_SUFFIX"{}}:\ \textcolor{stringliteral}{"{}.a"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00046}00046\ \ \ \ \ \textcolor{stringliteral}{"{}SHARED\_LIB\_PREFIX"{}}:\ \textcolor{stringliteral}{"{}lib"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00047}00047\ \ \ \ \ \textcolor{stringliteral}{"{}SHARED\_LIB\_SUFFIX"{}}:\ \textcolor{stringliteral}{"{}.so"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00048}00048\ \ \ \ \ \textcolor{stringliteral}{"{}SHARED\_LIB\_DIR"{}}:\ \textcolor{stringliteral}{"{}\$\{builddir\}/lib.\$\{TOOLSET\}"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00049}00049\ \ \ \ \ \textcolor{stringliteral}{"{}LIB\_DIR"{}}:\ \textcolor{stringliteral}{"{}\$\{obj\}.\$\{TOOLSET\}"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00050}00050\ \ \ \ \ \textcolor{stringliteral}{"{}INTERMEDIATE\_DIR"{}}:\ \textcolor{stringliteral}{"{}\$\{obj\}.\$\{TOOLSET\}/\$\{TARGET\}/geni"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00051}00051\ \ \ \ \ \textcolor{stringliteral}{"{}SHARED\_INTERMEDIATE\_DIR"{}}:\ \textcolor{stringliteral}{"{}\$\{obj\}/gen"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00052}00052\ \ \ \ \ \textcolor{stringliteral}{"{}PRODUCT\_DIR"{}}:\ \textcolor{stringliteral}{"{}\$\{builddir\}"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00053}00053\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_PATH"{}}:\ \textcolor{stringliteral}{"{}\$\{RULE\_INPUT\_PATH\}"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00054}00054\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_DIRNAME"{}}:\ \textcolor{stringliteral}{"{}\$\{RULE\_INPUT\_DIRNAME\}"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00055}00055\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_NAME"{}}:\ \textcolor{stringliteral}{"{}\$\{RULE\_INPUT\_NAME\}"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00056}00056\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_ROOT"{}}:\ \textcolor{stringliteral}{"{}\$\{RULE\_INPUT\_ROOT\}"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00057}00057\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_EXT"{}}:\ \textcolor{stringliteral}{"{}\$\{RULE\_INPUT\_EXT\}"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00058}00058\ \ \ \ \ \textcolor{stringliteral}{"{}CONFIGURATION\_NAME"{}}:\ \textcolor{stringliteral}{"{}\$\{configuration\}"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00059}00059\ \}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00061}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a80a717ee3f2b7135d3a16a9ecb40d766}{00061}}\ FULL\_PATH\_VARS\ =\ (\textcolor{stringliteral}{"{}\$\{CMAKE\_CURRENT\_LIST\_DIR\}"{}},\ \textcolor{stringliteral}{"{}\$\{builddir\}"{}},\ \textcolor{stringliteral}{"{}\$\{obj\}"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00063}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_aff7c3609068ccd5750c7fe11af2d9699}{00063}}\ generator\_supports\_multiple\_toolsets\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00064}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_aabdf70832f84f903f293f6089d0b175b}{00064}}\ generator\_wants\_static\_library\_dependencies\_adjusted\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00066}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_acd7efc87878a3be6d035efdce5b7f245}{00066}}\ COMPILABLE\_EXTENSIONS\ =\ \{}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00067}00067\ \ \ \ \ \textcolor{stringliteral}{"{}.c"{}}:\ \textcolor{stringliteral}{"{}cc"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00068}00068\ \ \ \ \ \textcolor{stringliteral}{"{}.cc"{}}:\ \textcolor{stringliteral}{"{}cxx"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00069}00069\ \ \ \ \ \textcolor{stringliteral}{"{}.cpp"{}}:\ \textcolor{stringliteral}{"{}cxx"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00070}00070\ \ \ \ \ \textcolor{stringliteral}{"{}.cxx"{}}:\ \textcolor{stringliteral}{"{}cxx"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00071}00071\ \ \ \ \ \textcolor{stringliteral}{"{}.s"{}}:\ \textcolor{stringliteral}{"{}s"{}},\ \ \textcolor{comment}{\#\ cc}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00072}00072\ \ \ \ \ \textcolor{stringliteral}{"{}.S"{}}:\ \textcolor{stringliteral}{"{}s"{}},\ \ \textcolor{comment}{\#\ cc}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00073}00073\ \}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00076}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a843a0c5c56c7948ad31855e8365af79c}{00076}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a843a0c5c56c7948ad31855e8365af79c}{RemovePrefix}}(a,\ prefix):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00077}00077\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Returns\ 'a'\ without\ 'prefix'\ if\ it\ starts\ with\ 'prefix'."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00078}00078\ \ \ \ \ \textcolor{keywordflow}{return}\ a[len(prefix)\ :]\ \textcolor{keywordflow}{if}\ a.startswith(prefix)\ \textcolor{keywordflow}{else}\ a}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00080}00080\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00081}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_af74a74f885cff322001b021547550c67}{00081}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_af74a74f885cff322001b021547550c67}{CalculateVariables}}(default\_variables,\ params):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00082}00082\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Calculate\ additional\ variables\ for\ use\ in\ the\ build\ (called\ by\ gyp)."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00083}00083\ \ \ \ \ default\_variables.setdefault(\textcolor{stringliteral}{"{}OS"{}},\ \mbox{\hyperlink{namespacegyp_1_1common_aeb48ab17a03cd7c40f5ad72fac713486}{gyp.common.GetFlavor}}(params))}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00086}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_ae8f4fce97aa1ab8ad3b9e3e23bcef2bb}{00086}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_ae8f4fce97aa1ab8ad3b9e3e23bcef2bb}{Compilable}}(filename):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00087}00087\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Return\ true\ if\ the\ file\ is\ compilable\ (should\ be\ in\ OBJS)."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00088}00088\ \ \ \ \ \textcolor{keywordflow}{return}\ any(filename.endswith(e)\ \textcolor{keywordflow}{for}\ e\ \textcolor{keywordflow}{in}\ COMPILABLE\_EXTENSIONS)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00091}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a712638e8cc1a7dceef12a169d2b3a8ae}{00091}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a712638e8cc1a7dceef12a169d2b3a8ae}{Linkable}}(filename):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00092}00092\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Return\ true\ if\ the\ file\ is\ linkable\ (should\ be\ on\ the\ link\ line)."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00093}00093\ \ \ \ \ \textcolor{keywordflow}{return}\ filename.endswith(\textcolor{stringliteral}{"{}.o"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00096}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_aa66dc3f1850aeb8ac3b865044b3d9113}{00096}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_aa66dc3f1850aeb8ac3b865044b3d9113}{NormjoinPathForceCMakeSource}}(base\_path,\ rel\_path):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00097}00097\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Resolves\ rel\_path\ against\ base\_path\ and\ returns\ the\ result.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00098}00098\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00099}00099\ \textcolor{stringliteral}{\ \ If\ rel\_path\ is\ an\ absolute\ path\ it\ is\ returned\ unchanged.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00100}00100\ \textcolor{stringliteral}{\ \ Otherwise\ it\ is\ resolved\ against\ base\_path\ and\ normalized.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00101}00101\ \textcolor{stringliteral}{\ \ If\ the\ result\ is\ a\ relative\ path,\ it\ is\ forced\ to\ be\ relative\ to\ the}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00102}00102\ \textcolor{stringliteral}{\ \ CMakeLists.txt.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00103}00103\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00104}00104\ \ \ \ \ \textcolor{keywordflow}{if}\ os.path.isabs(rel\_path):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ rel\_path}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00106}00106\ \ \ \ \ \textcolor{keywordflow}{if}\ any([rel\_path.startswith(var)\ \textcolor{keywordflow}{for}\ var\ \textcolor{keywordflow}{in}\ FULL\_PATH\_VARS]):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ rel\_path}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00108}00108\ \ \ \ \ \textcolor{comment}{\#\ TODO:\ do\ we\ need\ to\ check\ base\_path\ for\ absolute\ variables\ as\ well?}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00109}00109\ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.join(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\$\{CMAKE\_CURRENT\_LIST\_DIR\}"{}},\ os.path.normpath(os.path.join(base\_path,\ rel\_path))}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00111}00111\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00112}00112\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00113}00113\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00114}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_ab9a54e8429ea4dafe901947062436230}{00114}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_ab9a54e8429ea4dafe901947062436230}{NormjoinPath}}(base\_path,\ rel\_path):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00115}00115\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Resolves\ rel\_path\ against\ base\_path\ and\ returns\ the\ result.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00116}00116\ \textcolor{stringliteral}{\ \ TODO:\ what\ is\ this\ really\ used\ for?}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00117}00117\ \textcolor{stringliteral}{\ \ If\ rel\_path\ begins\ with\ '\$'\ it\ is\ returned\ unchanged.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00118}00118\ \textcolor{stringliteral}{\ \ Otherwise\ it\ is\ resolved\ against\ base\_path\ if\ relative,\ then\ normalized.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00119}00119\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00120}00120\ \ \ \ \ \textcolor{keywordflow}{if}\ rel\_path.startswith(\textcolor{stringliteral}{"{}\$"{}})\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ rel\_path.startswith(\textcolor{stringliteral}{"{}\$\{configuration\}"{}}):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ rel\_path}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00122}00122\ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.normpath(os.path.join(base\_path,\ rel\_path))}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00125}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a79eae0680ce728e6ff53796c3bfb08d5}{00125}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a79eae0680ce728e6ff53796c3bfb08d5}{CMakeStringEscape}}(a):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00126}00126\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Escapes\ the\ string\ 'a'\ for\ use\ inside\ a\ CMake\ string.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00127}00127\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00128}00128\ \textcolor{stringliteral}{\ \ This\ means\ escaping}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00129}00129\ \textcolor{stringliteral}{\ \ '\(\backslash\)'\ otherwise\ it\ may\ be\ seen\ as\ modifying\ the\ next\ character}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00130}00130\ \textcolor{stringliteral}{\ \ '"{}'\ otherwise\ it\ will\ end\ the\ string}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00131}00131\ \textcolor{stringliteral}{\ \ ';'\ otherwise\ the\ string\ becomes\ a\ list}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00132}00132\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00133}00133\ \textcolor{stringliteral}{\ \ The\ following\ do\ not\ need\ to\ be\ escaped}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00134}00134\ \textcolor{stringliteral}{\ \ '\#'\ when\ the\ lexer\ is\ in\ string\ state,\ this\ does\ not\ start\ a\ comment}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00135}00135\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00136}00136\ \textcolor{stringliteral}{\ \ The\ following\ are\ yet\ unknown}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00137}00137\ \textcolor{stringliteral}{\ \ '\$'\ generator\ variables\ (like\ \$\{obj\})\ must\ not\ be\ escaped,}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00138}00138\ \textcolor{stringliteral}{\ \ \ \ \ \ but\ text\ \$\ should\ be\ escaped}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00139}00139\ \textcolor{stringliteral}{\ \ \ \ \ \ what\ is\ wanted\ is\ to\ know\ which\ \$\ come\ from\ generator\ variables}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00140}00140\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00141}00141\ \ \ \ \ \textcolor{keywordflow}{return}\ a.replace(\textcolor{stringliteral}{"{}\(\backslash\)\(\backslash\)"{}},\ \textcolor{stringliteral}{"{}\(\backslash\)\(\backslash\)\(\backslash\)\(\backslash\)"{}}).replace(\textcolor{stringliteral}{"{};"{}},\ \textcolor{stringliteral}{"{}\(\backslash\)\(\backslash\);"{}}).replace(\textcolor{stringliteral}{'"{}'},\ \textcolor{stringliteral}{'\(\backslash\)\(\backslash\)"{}'})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00142}00142\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00143}00143\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00144}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a7d0a0ca26bce711a299e828414bac8da}{00144}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a7d0a0ca26bce711a299e828414bac8da}{SetFileProperty}}(output,\ source\_name,\ property\_name,\ values,\ sep):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00145}00145\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Given\ a\ set\ of\ source\ file,\ sets\ the\ given\ property\ on\ them."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00146}00146\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}set\_source\_files\_properties("{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00147}00147\ \ \ \ \ output.write(source\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00148}00148\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ PROPERTIES\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00149}00149\ \ \ \ \ output.write(property\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00150}00150\ \ \ \ \ output.write(\textcolor{stringliteral}{'\ "{}'})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00151}00151\ \ \ \ \ \textcolor{keywordflow}{for}\ value\ \textcolor{keywordflow}{in}\ values:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00152}00152\ \ \ \ \ \ \ \ \ output.write(\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a79eae0680ce728e6ff53796c3bfb08d5}{CMakeStringEscape}}(value))}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00153}00153\ \ \ \ \ \ \ \ \ output.write(sep)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00154}00154\ \ \ \ \ output.write(\textcolor{stringliteral}{'"{})\(\backslash\)n'})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00155}00155\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00156}00156\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00157}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_ab89494855e015adc10efd214f16cf7c8}{00157}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_ab89494855e015adc10efd214f16cf7c8}{SetFilesProperty}}(output,\ variable,\ property\_name,\ values,\ sep):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00158}00158\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Given\ a\ set\ of\ source\ files,\ sets\ the\ given\ property\ on\ them."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00159}00159\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}set\_source\_files\_properties("{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00160}00160\ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{WriteVariable}}(output,\ variable)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00161}00161\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ PROPERTIES\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00162}00162\ \ \ \ \ output.write(property\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00163}00163\ \ \ \ \ output.write(\textcolor{stringliteral}{'\ "{}'})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00164}00164\ \ \ \ \ \textcolor{keywordflow}{for}\ value\ \textcolor{keywordflow}{in}\ values:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00165}00165\ \ \ \ \ \ \ \ \ output.write(\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a79eae0680ce728e6ff53796c3bfb08d5}{CMakeStringEscape}}(value))}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00166}00166\ \ \ \ \ \ \ \ \ output.write(sep)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00167}00167\ \ \ \ \ output.write(\textcolor{stringliteral}{'"{})\(\backslash\)n'})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00168}00168\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00169}00169\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00170}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a1b75c32a166b60d4a133c66085ac802d}{00170}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a1b75c32a166b60d4a133c66085ac802d}{SetTargetProperty}}(output,\ target\_name,\ property\_name,\ values,\ sep="{}"{}):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00171}00171\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Given\ a\ target,\ sets\ the\ given\ property."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00172}00172\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}set\_target\_properties("{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00173}00173\ \ \ \ \ output.write(target\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00174}00174\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ PROPERTIES\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00175}00175\ \ \ \ \ output.write(property\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00176}00176\ \ \ \ \ output.write(\textcolor{stringliteral}{'\ "{}'})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00177}00177\ \ \ \ \ \textcolor{keywordflow}{for}\ value\ \textcolor{keywordflow}{in}\ values:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00178}00178\ \ \ \ \ \ \ \ \ output.write(\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a79eae0680ce728e6ff53796c3bfb08d5}{CMakeStringEscape}}(value))}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00179}00179\ \ \ \ \ \ \ \ \ output.write(sep)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00180}00180\ \ \ \ \ output.write(\textcolor{stringliteral}{'"{})\(\backslash\)n'})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00181}00181\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00182}00182\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00183}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_affa21f36ef73a3d339d97ab0a5939559}{00183}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_affa21f36ef73a3d339d97ab0a5939559}{SetVariable}}(output,\ variable\_name,\ value):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00184}00184\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Sets\ a\ CMake\ variable."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00185}00185\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}set("{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00186}00186\ \ \ \ \ output.write(variable\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00187}00187\ \ \ \ \ output.write(\textcolor{stringliteral}{'\ "{}'})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00188}00188\ \ \ \ \ output.write(\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a79eae0680ce728e6ff53796c3bfb08d5}{CMakeStringEscape}}(value))}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00189}00189\ \ \ \ \ output.write(\textcolor{stringliteral}{'"{})\(\backslash\)n'})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00190}00190\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00191}00191\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00192}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a930ecc27bac8e8eff33eb4523b82a5ba}{00192}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a930ecc27bac8e8eff33eb4523b82a5ba}{SetVariableList}}(output,\ variable\_name,\ values):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00193}00193\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Sets\ a\ CMake\ variable\ to\ a\ list."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00194}00194\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ values:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00195}00195\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_affa21f36ef73a3d339d97ab0a5939559}{SetVariable}}(output,\ variable\_name,\ \textcolor{stringliteral}{"{}"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00196}00196\ \ \ \ \ \textcolor{keywordflow}{if}\ len(values)\ ==\ 1:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00197}00197\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_affa21f36ef73a3d339d97ab0a5939559}{SetVariable}}(output,\ variable\_name,\ values[0])}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00198}00198\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}list(APPEND\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00199}00199\ \ \ \ \ output.write(variable\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00200}00200\ \ \ \ \ output.write(\textcolor{stringliteral}{'\(\backslash\)n\ \ "{}'})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00201}00201\ \ \ \ \ output.write(\textcolor{stringliteral}{'"{}\(\backslash\)n\ \ "{}'}.join([\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a79eae0680ce728e6ff53796c3bfb08d5}{CMakeStringEscape}}(value)\ \textcolor{keywordflow}{for}\ value\ \textcolor{keywordflow}{in}\ values]))}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00202}00202\ \ \ \ \ output.write(\textcolor{stringliteral}{'"{})\(\backslash\)n'})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00203}00203\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00204}00204\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00205}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_abf5ff1d9526ddbbba59ff260e20322d7}{00205}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_abf5ff1d9526ddbbba59ff260e20322d7}{UnsetVariable}}(output,\ variable\_name):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00206}00206\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Unsets\ a\ CMake\ variable."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00207}00207\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}unset("{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00208}00208\ \ \ \ \ output.write(variable\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00209}00209\ \ \ \ \ output.write(\textcolor{stringliteral}{"{})\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00210}00210\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00211}00211\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00212}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{00212}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{WriteVariable}}(output,\ variable\_name,\ prepend=None):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00213}00213\ \ \ \ \ \textcolor{keywordflow}{if}\ prepend:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00214}00214\ \ \ \ \ \ \ \ \ output.write(prepend)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00215}00215\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\$\{"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00216}00216\ \ \ \ \ output.write(variable\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00217}00217\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\}"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00218}00218\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00219}00219\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00220}\mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_target_type}{00220}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_target_type}{CMakeTargetType}}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00221}\mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_target_type_a3131fbe0d686b25933f4715ecbe7fb2f}{00221}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_target_type_a3131fbe0d686b25933f4715ecbe7fb2f}{\_\_init\_\_}}(self,\ command,\ modifier,\ property\_modifier):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00222}\mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_target_type_abb23f5c771f7a909a48272a13a11c1e0}{00222}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_target_type_abb23f5c771f7a909a48272a13a11c1e0}{command}}\ =\ command}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00223}\mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_target_type_ac3295218a8ad2fd5161b8c4bcc347404}{00223}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_target_type_ac3295218a8ad2fd5161b8c4bcc347404}{modifier}}\ =\ modifier}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00224}\mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_target_type_ac1d7422dc2244526418d9e9550202c4f}{00224}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_target_type_ac1d7422dc2244526418d9e9550202c4f}{property\_modifier}}\ =\ property\_modifier}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00225}00225\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00226}00226\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00227}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a37ddd1972b7e8590fbf6ad0e3d6d28e5}{00227}}\ cmake\_target\_type\_from\_gyp\_target\_type\ =\ \{}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00228}00228\ \ \ \ \ \textcolor{stringliteral}{"{}executable"{}}:\ \mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_target_type}{CMakeTargetType}}(\textcolor{stringliteral}{"{}add\_executable"{}},\ \textcolor{keywordtype}{None},\ \textcolor{stringliteral}{"{}RUNTIME"{}}),}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00229}00229\ \ \ \ \ \textcolor{stringliteral}{"{}static\_library"{}}:\ \mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_target_type}{CMakeTargetType}}(\textcolor{stringliteral}{"{}add\_library"{}},\ \textcolor{stringliteral}{"{}STATIC"{}},\ \textcolor{stringliteral}{"{}ARCHIVE"{}}),}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00230}00230\ \ \ \ \ \textcolor{stringliteral}{"{}shared\_library"{}}:\ \mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_target_type}{CMakeTargetType}}(\textcolor{stringliteral}{"{}add\_library"{}},\ \textcolor{stringliteral}{"{}SHARED"{}},\ \textcolor{stringliteral}{"{}LIBRARY"{}}),}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00231}00231\ \ \ \ \ \textcolor{stringliteral}{"{}loadable\_module"{}}:\ \mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_target_type}{CMakeTargetType}}(\textcolor{stringliteral}{"{}add\_library"{}},\ \textcolor{stringliteral}{"{}MODULE"{}},\ \textcolor{stringliteral}{"{}LIBRARY"{}}),}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00232}00232\ \ \ \ \ \textcolor{stringliteral}{"{}none"{}}:\ \mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_target_type}{CMakeTargetType}}(\textcolor{stringliteral}{"{}add\_custom\_target"{}},\ \textcolor{stringliteral}{"{}SOURCES"{}},\ \textcolor{keywordtype}{None}),}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00233}00233\ \}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00234}00234\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00235}00235\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00236}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a0555c06a6f18f26c8dfde9490d618622}{00236}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a0555c06a6f18f26c8dfde9490d618622}{StringToCMakeTargetName}}(a):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00237}00237\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Converts\ the\ given\ string\ 'a'\ to\ a\ valid\ CMake\ target\ name.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00238}00238\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00239}00239\ \textcolor{stringliteral}{\ \ All\ invalid\ characters\ are\ replaced\ by\ '\_'.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00240}00240\ \textcolor{stringliteral}{\ \ Invalid\ for\ cmake:\ '\ ',\ '/',\ '(',\ ')',\ '"{}'}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00241}00241\ \textcolor{stringliteral}{\ \ Invalid\ for\ make:\ ':'}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00242}00242\ \textcolor{stringliteral}{\ \ Invalid\ for\ unknown\ reasons\ but\ cause\ failures:\ '.'}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00243}00243\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00244}00244\ \ \ \ \ \textcolor{keywordflow}{return}\ a.translate(\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a981698a95fde570641c2316fe84c202a}{\_maketrans}}(\textcolor{stringliteral}{'\ /():."{}'},\ \textcolor{stringliteral}{"{}\_\_\_\_\_\_\_"{}}))}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00245}00245\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00246}00246\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00247}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_ab5b121f0489273f2a2150200c10ec415}{00247}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_ab5b121f0489273f2a2150200c10ec415}{WriteActions}}(target\_name,\ actions,\ extra\_sources,\ extra\_deps,\ path\_to\_gyp,\ output):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00248}00248\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Write\ CMake\ for\ the\ 'actions'\ in\ the\ target.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00249}00249\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00250}00250\ \textcolor{stringliteral}{\ \ Args:}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00251}00251\ \textcolor{stringliteral}{\ \ \ \ target\_name:\ the\ name\ of\ the\ CMake\ target\ being\ generated.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00252}00252\ \textcolor{stringliteral}{\ \ \ \ actions:\ the\ Gyp\ 'actions'\ dict\ for\ this\ target.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00253}00253\ \textcolor{stringliteral}{\ \ \ \ extra\_sources:\ [(<cmake\_src>,\ <src>)]\ to\ append\ with\ generated\ source\ files.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00254}00254\ \textcolor{stringliteral}{\ \ \ \ extra\_deps:\ [<cmake\_taget>]\ to\ append\ with\ generated\ targets.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00255}00255\ \textcolor{stringliteral}{\ \ \ \ path\_to\_gyp:\ relative\ path\ from\ CMakeLists.txt\ being\ generated\ to}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00256}00256\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ the\ Gyp\ file\ in\ which\ the\ target\ being\ generated\ is\ defined.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00257}00257\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00258}00258\ \ \ \ \ \textcolor{keywordflow}{for}\ action\ \textcolor{keywordflow}{in}\ actions:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00259}00259\ \ \ \ \ \ \ \ \ action\_name\ =\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a0555c06a6f18f26c8dfde9490d618622}{StringToCMakeTargetName}}(action[\textcolor{stringliteral}{"{}action\_name"{}}])}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00260}00260\ \ \ \ \ \ \ \ \ action\_target\_name\ =\ f\textcolor{stringliteral}{"{}\{target\_name\}\_\_\{action\_name\}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00261}00261\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00262}00262\ \ \ \ \ \ \ \ \ inputs\ =\ action[\textcolor{stringliteral}{"{}inputs"{}}]}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00263}00263\ \ \ \ \ \ \ \ \ inputs\_name\ =\ action\_target\_name\ +\ \textcolor{stringliteral}{"{}\_\_input"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00264}00264\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a930ecc27bac8e8eff33eb4523b82a5ba}{SetVariableList}}(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00265}00265\ \ \ \ \ \ \ \ \ \ \ \ \ output,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00266}00266\ \ \ \ \ \ \ \ \ \ \ \ \ inputs\_name,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ [\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_aa66dc3f1850aeb8ac3b865044b3d9113}{NormjoinPathForceCMakeSource}}(path\_to\_gyp,\ dep)\ \textcolor{keywordflow}{for}\ dep\ \textcolor{keywordflow}{in}\ inputs],}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00268}00268\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00269}00269\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00270}00270\ \ \ \ \ \ \ \ \ outputs\ =\ action[\textcolor{stringliteral}{"{}outputs"{}}]}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00271}00271\ \ \ \ \ \ \ \ \ cmake\_outputs\ =\ [}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_aa66dc3f1850aeb8ac3b865044b3d9113}{NormjoinPathForceCMakeSource}}(path\_to\_gyp,\ out)\ \textcolor{keywordflow}{for}\ out\ \textcolor{keywordflow}{in}\ outputs}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00273}00273\ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00274}00274\ \ \ \ \ \ \ \ \ outputs\_name\ =\ action\_target\_name\ +\ \textcolor{stringliteral}{"{}\_\_output"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00275}00275\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a930ecc27bac8e8eff33eb4523b82a5ba}{SetVariableList}}(output,\ outputs\_name,\ cmake\_outputs)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00276}00276\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00277}00277\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Build\ up\ a\ list\ of\ outputs.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00278}00278\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Collect\ the\ output\ dirs\ we'll\ need.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00279}00279\ \ \ \ \ \ \ \ \ dirs\ =\ \{dir\ \textcolor{keywordflow}{for}\ dir\ \textcolor{keywordflow}{in}\ (os.path.dirname(o)\ \textcolor{keywordflow}{for}\ o\ \textcolor{keywordflow}{in}\ outputs)\ \textcolor{keywordflow}{if}\ dir\}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00280}00280\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00281}00281\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ int(action.get(\textcolor{stringliteral}{"{}process\_outputs\_as\_sources"{}},\ \textcolor{keyword}{False})):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00282}00282\ \ \ \ \ \ \ \ \ \ \ \ \ extra\_sources.extend(zip(cmake\_outputs,\ outputs))}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00283}00283\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00284}00284\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ add\_custom\_command}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00285}00285\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}add\_custom\_command(OUTPUT\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00286}00286\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{WriteVariable}}(output,\ outputs\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00287}00287\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00288}00288\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00289}00289\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ len(dirs)\ >\ 0:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00290}00290\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ directory\ \textcolor{keywordflow}{in}\ dirs:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00291}00291\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ \ COMMAND\ \$\{CMAKE\_COMMAND\}\ -\/E\ make\_directory\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00292}00292\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(directory)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00293}00293\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00294}00294\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00295}00295\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ \ COMMAND\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00296}00296\ \ \ \ \ \ \ \ \ output.write(\mbox{\hyperlink{namespacegyp_1_1common_a1681405bb09a2eda416079b3ed7de917}{gyp.common.EncodePOSIXShellList}}(action[\textcolor{stringliteral}{"{}action"{}}]))}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00297}00297\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00298}00298\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00299}00299\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ \ DEPENDS\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00300}00300\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{WriteVariable}}(output,\ inputs\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00301}00301\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00302}00302\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00303}00303\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ \ WORKING\_DIRECTORY\ \$\{CMAKE\_CURRENT\_LIST\_DIR\}/"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00304}00304\ \ \ \ \ \ \ \ \ output.write(path\_to\_gyp)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00305}00305\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00306}00306\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00307}00307\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ \ COMMENT\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00308}00308\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}message"{}}\ \textcolor{keywordflow}{in}\ action:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00309}00309\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(action[\textcolor{stringliteral}{"{}message"{}}])}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00310}00310\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(action\_target\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00312}00312\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00313}00313\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00314}00314\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ \ VERBATIM\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00315}00315\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{})\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00316}00316\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00317}00317\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ add\_custom\_target}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00318}00318\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}add\_custom\_target("{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00319}00319\ \ \ \ \ \ \ \ \ output.write(action\_target\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00320}00320\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ DEPENDS\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00321}00321\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{WriteVariable}}(output,\ outputs\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00322}00322\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ SOURCES\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00323}00323\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{WriteVariable}}(output,\ inputs\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00324}00324\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n)\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00325}00325\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00326}00326\ \ \ \ \ \ \ \ \ extra\_deps.append(action\_target\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00327}00327\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00328}00328\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00329}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_abb4b7b3ad649787b82debc35939d0874}{00329}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_abb4b7b3ad649787b82debc35939d0874}{NormjoinRulePathForceCMakeSource}}(base\_path,\ rel\_path,\ rule\_source):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00330}00330\ \ \ \ \ \textcolor{keywordflow}{if}\ rel\_path.startswith((\textcolor{stringliteral}{"{}\$\{RULE\_INPUT\_PATH\}"{}},\ \textcolor{stringliteral}{"{}\$\{RULE\_INPUT\_DIRNAME\}"{}})):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00331}00331\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ any([rule\_source.startswith(var)\ \textcolor{keywordflow}{for}\ var\ \textcolor{keywordflow}{in}\ FULL\_PATH\_VARS]):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00332}00332\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ rel\_path}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00333}00333\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_aa66dc3f1850aeb8ac3b865044b3d9113}{NormjoinPathForceCMakeSource}}(base\_path,\ rel\_path)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00334}00334\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00335}00335\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00336}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a0d654706899f964a89c6768c69149645}{00336}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a0d654706899f964a89c6768c69149645}{WriteRules}}(target\_name,\ rules,\ extra\_sources,\ extra\_deps,\ path\_to\_gyp,\ output):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00337}00337\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Write\ CMake\ for\ the\ 'rules'\ in\ the\ target.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00338}00338\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00339}00339\ \textcolor{stringliteral}{\ \ Args:}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00340}00340\ \textcolor{stringliteral}{\ \ \ \ target\_name:\ the\ name\ of\ the\ CMake\ target\ being\ generated.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00341}00341\ \textcolor{stringliteral}{\ \ \ \ actions:\ the\ Gyp\ 'actions'\ dict\ for\ this\ target.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00342}00342\ \textcolor{stringliteral}{\ \ \ \ extra\_sources:\ [(<cmake\_src>,\ <src>)]\ to\ append\ with\ generated\ source\ files.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00343}00343\ \textcolor{stringliteral}{\ \ \ \ extra\_deps:\ [<cmake\_taget>]\ to\ append\ with\ generated\ targets.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00344}00344\ \textcolor{stringliteral}{\ \ \ \ path\_to\_gyp:\ relative\ path\ from\ CMakeLists.txt\ being\ generated\ to}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00345}00345\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ the\ Gyp\ file\ in\ which\ the\ target\ being\ generated\ is\ defined.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00346}00346\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00347}00347\ \ \ \ \ \textcolor{keywordflow}{for}\ rule\ \textcolor{keywordflow}{in}\ rules:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00348}00348\ \ \ \ \ \ \ \ \ rule\_name\ =\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a0555c06a6f18f26c8dfde9490d618622}{StringToCMakeTargetName}}(target\_name\ +\ \textcolor{stringliteral}{"{}\_\_"{}}\ +\ rule[\textcolor{stringliteral}{"{}rule\_name"{}}])}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00349}00349\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00350}00350\ \ \ \ \ \ \ \ \ inputs\ =\ rule.get(\textcolor{stringliteral}{"{}inputs"{}},\ [])}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00351}00351\ \ \ \ \ \ \ \ \ inputs\_name\ =\ rule\_name\ +\ \textcolor{stringliteral}{"{}\_\_input"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00352}00352\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a930ecc27bac8e8eff33eb4523b82a5ba}{SetVariableList}}(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ output,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ inputs\_name,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ [\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_aa66dc3f1850aeb8ac3b865044b3d9113}{NormjoinPathForceCMakeSource}}(path\_to\_gyp,\ dep)\ \textcolor{keywordflow}{for}\ dep\ \textcolor{keywordflow}{in}\ inputs],}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00356}00356\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00357}00357\ \ \ \ \ \ \ \ \ outputs\ =\ rule[\textcolor{stringliteral}{"{}outputs"{}}]}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00358}00358\ \ \ \ \ \ \ \ \ var\_outputs\ =\ []}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00359}00359\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00360}00360\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ count,\ rule\_source\ \textcolor{keywordflow}{in}\ enumerate(rule.get(\textcolor{stringliteral}{"{}rule\_sources"{}},\ [])):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00361}00361\ \ \ \ \ \ \ \ \ \ \ \ \ action\_name\ =\ rule\_name\ +\ \textcolor{stringliteral}{"{}\_"{}}\ +\ str(count)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00362}00362\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00363}00363\ \ \ \ \ \ \ \ \ \ \ \ \ rule\_source\_dirname,\ rule\_source\_basename\ =\ os.path.split(rule\_source)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00364}00364\ \ \ \ \ \ \ \ \ \ \ \ \ rule\_source\_root,\ rule\_source\_ext\ =\ os.path.splitext(rule\_source\_basename)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00365}00365\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00366}00366\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_affa21f36ef73a3d339d97ab0a5939559}{SetVariable}}(output,\ \textcolor{stringliteral}{"{}RULE\_INPUT\_PATH"{}},\ rule\_source)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00367}00367\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_affa21f36ef73a3d339d97ab0a5939559}{SetVariable}}(output,\ \textcolor{stringliteral}{"{}RULE\_INPUT\_DIRNAME"{}},\ rule\_source\_dirname)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00368}00368\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_affa21f36ef73a3d339d97ab0a5939559}{SetVariable}}(output,\ \textcolor{stringliteral}{"{}RULE\_INPUT\_NAME"{}},\ rule\_source\_basename)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00369}00369\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_affa21f36ef73a3d339d97ab0a5939559}{SetVariable}}(output,\ \textcolor{stringliteral}{"{}RULE\_INPUT\_ROOT"{}},\ rule\_source\_root)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00370}00370\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_affa21f36ef73a3d339d97ab0a5939559}{SetVariable}}(output,\ \textcolor{stringliteral}{"{}RULE\_INPUT\_EXT"{}},\ rule\_source\_ext)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00371}00371\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00372}00372\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Build\ up\ a\ list\ of\ outputs.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00373}00373\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Collect\ the\ output\ dirs\ we'll\ need.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00374}00374\ \ \ \ \ \ \ \ \ \ \ \ \ dirs\ =\ \{dir\ \textcolor{keywordflow}{for}\ dir\ \textcolor{keywordflow}{in}\ (os.path.dirname(o)\ \textcolor{keywordflow}{for}\ o\ \textcolor{keywordflow}{in}\ outputs)\ \textcolor{keywordflow}{if}\ dir\}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00375}00375\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00376}00376\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Create\ variables\ for\ the\ output,\ as\ 'local'\ variable\ will\ be\ unset.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00377}00377\ \ \ \ \ \ \ \ \ \ \ \ \ these\_outputs\ =\ []}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00378}00378\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ output\_index,\ out\ \textcolor{keywordflow}{in}\ enumerate(outputs):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00379}00379\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output\_name\ =\ action\_name\ +\ \textcolor{stringliteral}{"{}\_"{}}\ +\ str(output\_index)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00380}00380\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_affa21f36ef73a3d339d97ab0a5939559}{SetVariable}}(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00381}00381\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00382}00382\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output\_name,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00383}00383\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_abb4b7b3ad649787b82debc35939d0874}{NormjoinRulePathForceCMakeSource}}(path\_to\_gyp,\ out,\ rule\_source),}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00384}00384\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00385}00385\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ int(rule.get(\textcolor{stringliteral}{"{}process\_outputs\_as\_sources"{}},\ \textcolor{keyword}{False})):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00386}00386\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ extra\_sources.append((\textcolor{stringliteral}{"{}\$\{"{}}\ +\ output\_name\ +\ \textcolor{stringliteral}{"{}\}"{}},\ out))}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00387}00387\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ these\_outputs.append(\textcolor{stringliteral}{"{}\$\{"{}}\ +\ output\_name\ +\ \textcolor{stringliteral}{"{}\}"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00388}00388\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ var\_outputs.append(\textcolor{stringliteral}{"{}\$\{"{}}\ +\ output\_name\ +\ \textcolor{stringliteral}{"{}\}"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00389}00389\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00390}00390\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ add\_custom\_command}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00391}00391\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}add\_custom\_command(OUTPUT\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00392}00392\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ out\ \textcolor{keywordflow}{in}\ these\_outputs:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00393}00393\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ \ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00394}00394\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(out)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00395}00395\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00396}00396\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00397}00397\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ directory\ \textcolor{keywordflow}{in}\ dirs:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00398}00398\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ \ COMMAND\ \$\{CMAKE\_COMMAND\}\ -\/E\ make\_directory\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00399}00399\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(directory)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00400}00400\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00401}00401\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00402}00402\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ \ COMMAND\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00403}00403\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\mbox{\hyperlink{namespacegyp_1_1common_a1681405bb09a2eda416079b3ed7de917}{gyp.common.EncodePOSIXShellList}}(rule[\textcolor{stringliteral}{"{}action"{}}]))}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00404}00404\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00405}00405\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00406}00406\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ \ DEPENDS\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00407}00407\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{WriteVariable}}(output,\ inputs\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00408}00408\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00409}00409\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_ab9a54e8429ea4dafe901947062436230}{NormjoinPath}}(path\_to\_gyp,\ rule\_source))}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00410}00410\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00411}00411\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00412}00412\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ CMAKE\_CURRENT\_LIST\_DIR\ is\ where\ the\ CMakeLists.txt\ lives.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00413}00413\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ The\ cwd\ is\ the\ current\ build\ directory.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00414}00414\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ \ WORKING\_DIRECTORY\ \$\{CMAKE\_CURRENT\_LIST\_DIR\}/"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00415}00415\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(path\_to\_gyp)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00416}00416\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00417}00417\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00418}00418\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ \ COMMENT\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00419}00419\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}message"{}}\ \textcolor{keywordflow}{in}\ rule:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00420}00420\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(rule[\textcolor{stringliteral}{"{}message"{}}])}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00421}00421\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00422}00422\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(action\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00423}00423\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00424}00424\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00425}00425\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ \ VERBATIM\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00426}00426\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{})\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00427}00427\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00428}00428\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_abf5ff1d9526ddbbba59ff260e20322d7}{UnsetVariable}}(output,\ \textcolor{stringliteral}{"{}RULE\_INPUT\_PATH"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00429}00429\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_abf5ff1d9526ddbbba59ff260e20322d7}{UnsetVariable}}(output,\ \textcolor{stringliteral}{"{}RULE\_INPUT\_DIRNAME"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00430}00430\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_abf5ff1d9526ddbbba59ff260e20322d7}{UnsetVariable}}(output,\ \textcolor{stringliteral}{"{}RULE\_INPUT\_NAME"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00431}00431\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_abf5ff1d9526ddbbba59ff260e20322d7}{UnsetVariable}}(output,\ \textcolor{stringliteral}{"{}RULE\_INPUT\_ROOT"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00432}00432\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_abf5ff1d9526ddbbba59ff260e20322d7}{UnsetVariable}}(output,\ \textcolor{stringliteral}{"{}RULE\_INPUT\_EXT"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00433}00433\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00434}00434\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ add\_custom\_target}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00435}00435\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}add\_custom\_target("{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00436}00436\ \ \ \ \ \ \ \ \ output.write(rule\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00437}00437\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ DEPENDS\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00438}00438\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ out\ \textcolor{keywordflow}{in}\ var\_outputs:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00439}00439\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ \ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00440}00440\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(out)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00441}00441\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00442}00442\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}SOURCES\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00443}00443\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{WriteVariable}}(output,\ inputs\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00444}00444\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00445}00445\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ rule\_source\ \textcolor{keywordflow}{in}\ rule.get(\textcolor{stringliteral}{"{}rule\_sources"{}},\ []):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00446}00446\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ \ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00447}00447\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_ab9a54e8429ea4dafe901947062436230}{NormjoinPath}}(path\_to\_gyp,\ rule\_source))}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00448}00448\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00449}00449\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{})\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00450}00450\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00451}00451\ \ \ \ \ \ \ \ \ extra\_deps.append(rule\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00452}00452\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00453}00453\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00454}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a737edd52c80f9615e11c4f19bd16c884}{00454}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a737edd52c80f9615e11c4f19bd16c884}{WriteCopies}}(target\_name,\ copies,\ extra\_deps,\ path\_to\_gyp,\ output):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00455}00455\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Write\ CMake\ for\ the\ 'copies'\ in\ the\ target.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00456}00456\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00457}00457\ \textcolor{stringliteral}{\ \ Args:}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00458}00458\ \textcolor{stringliteral}{\ \ \ \ target\_name:\ the\ name\ of\ the\ CMake\ target\ being\ generated.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00459}00459\ \textcolor{stringliteral}{\ \ \ \ actions:\ the\ Gyp\ 'actions'\ dict\ for\ this\ target.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00460}00460\ \textcolor{stringliteral}{\ \ \ \ extra\_deps:\ [<cmake\_taget>]\ to\ append\ with\ generated\ targets.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00461}00461\ \textcolor{stringliteral}{\ \ \ \ path\_to\_gyp:\ relative\ path\ from\ CMakeLists.txt\ being\ generated\ to}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00462}00462\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ the\ Gyp\ file\ in\ which\ the\ target\ being\ generated\ is\ defined.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00463}00463\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00464}00464\ \ \ \ \ copy\_name\ =\ target\_name\ +\ \textcolor{stringliteral}{"{}\_\_copies"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00465}00465\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00466}00466\ \ \ \ \ \textcolor{comment}{\#\ CMake\ gets\ upset\ with\ custom\ targets\ with\ OUTPUT\ which\ specify\ no\ output.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00467}00467\ \ \ \ \ have\_copies\ =\ any(copy[\textcolor{stringliteral}{"{}files"{}}]\ \textcolor{keywordflow}{for}\ copy\ \textcolor{keywordflow}{in}\ copies)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00468}00468\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ have\_copies:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00469}00469\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}add\_custom\_target("{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00470}00470\ \ \ \ \ \ \ \ \ output.write(copy\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00471}00471\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{})\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00472}00472\ \ \ \ \ \ \ \ \ extra\_deps.append(copy\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00473}00473\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00474}00474\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00475}00475\ \ \ \ \ \textcolor{keyword}{class\ }Copy:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00476}00476\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }\_\_init\_\_(self,\ ext,\ command):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00477}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_ab6739b00b24253cda4a1734eb0b4ff7f}{00477}}\ \ \ \ \ \ \ \ \ \ \ \ \ self.cmake\_inputs\ =\ []}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00478}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_abd137737b1c9d8b1ddc8fe99f7fadae8}{00478}}\ \ \ \ \ \ \ \ \ \ \ \ \ self.cmake\_outputs\ =\ []}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00479}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_aae2b82e1000e256799bbccce72963cc2}{00479}}\ \ \ \ \ \ \ \ \ \ \ \ \ self.gyp\_inputs\ =\ []}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00480}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a86d75c5264ad2d90c7700fc148cd87c5}{00480}}\ \ \ \ \ \ \ \ \ \ \ \ \ self.gyp\_outputs\ =\ []}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00481}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a79c7b8e85ff7fc007c2664ada87f6d04}{00481}}\ \ \ \ \ \ \ \ \ \ \ \ \ self.ext\ =\ ext}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00482}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a90853b48bb0c9e7753bc6041b1332044}{00482}}\ \ \ \ \ \ \ \ \ \ \ \ \ self.inputs\_name\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00483}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a408c8117bb18232d25ac0f3c9d6c521c}{00483}}\ \ \ \ \ \ \ \ \ \ \ \ \ self.outputs\_name\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00484}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a3de86707eee30a1d0d8c4ee365485ecb}{00484}}\ \ \ \ \ \ \ \ \ \ \ \ \ self.command\ =\ command}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00485}00485\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00486}00486\ \ \ \ \ file\_copy\ =\ Copy(\textcolor{stringliteral}{"{}"{}},\ \textcolor{stringliteral}{"{}copy"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00487}00487\ \ \ \ \ dir\_copy\ =\ Copy(\textcolor{stringliteral}{"{}\_dirs"{}},\ \textcolor{stringliteral}{"{}copy\_directory"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00488}00488\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00489}00489\ \ \ \ \ \textcolor{keywordflow}{for}\ copy\ \textcolor{keywordflow}{in}\ copies:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00490}00490\ \ \ \ \ \ \ \ \ files\ =\ copy[\textcolor{stringliteral}{"{}files"{}}]}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00491}00491\ \ \ \ \ \ \ \ \ destination\ =\ copy[\textcolor{stringliteral}{"{}destination"{}}]}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00492}00492\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ src\ \textcolor{keywordflow}{in}\ files:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00493}00493\ \ \ \ \ \ \ \ \ \ \ \ \ path\ =\ os.path.normpath(src)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00494}00494\ \ \ \ \ \ \ \ \ \ \ \ \ basename\ =\ os.path.split(path)[1]}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00495}00495\ \ \ \ \ \ \ \ \ \ \ \ \ dst\ =\ os.path.join(destination,\ basename)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00496}00496\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00497}00497\ \ \ \ \ \ \ \ \ \ \ \ \ copy\ =\ file\_copy\ \textcolor{keywordflow}{if}\ os.path.basename(src)\ \textcolor{keywordflow}{else}\ dir\_copy}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00498}00498\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00499}00499\ \ \ \ \ \ \ \ \ \ \ \ \ copy.cmake\_inputs.append(\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_aa66dc3f1850aeb8ac3b865044b3d9113}{NormjoinPathForceCMakeSource}}(path\_to\_gyp,\ src))}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00500}00500\ \ \ \ \ \ \ \ \ \ \ \ \ copy.cmake\_outputs.append(\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_aa66dc3f1850aeb8ac3b865044b3d9113}{NormjoinPathForceCMakeSource}}(path\_to\_gyp,\ dst))}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00501}00501\ \ \ \ \ \ \ \ \ \ \ \ \ copy.gyp\_inputs.append(src)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00502}00502\ \ \ \ \ \ \ \ \ \ \ \ \ copy.gyp\_outputs.append(dst)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00503}00503\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00504}00504\ \ \ \ \ \textcolor{keywordflow}{for}\ copy\ \textcolor{keywordflow}{in}\ (file\_copy,\ dir\_copy):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00505}00505\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ copy.cmake\_inputs:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00506}00506\ \ \ \ \ \ \ \ \ \ \ \ \ copy.inputs\_name\ =\ copy\_name\ +\ \textcolor{stringliteral}{"{}\_\_input"{}}\ +\ copy.ext}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00507}00507\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a930ecc27bac8e8eff33eb4523b82a5ba}{SetVariableList}}(output,\ copy.inputs\_name,\ copy.cmake\_inputs)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00508}00508\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00509}00509\ \ \ \ \ \ \ \ \ \ \ \ \ copy.outputs\_name\ =\ copy\_name\ +\ \textcolor{stringliteral}{"{}\_\_output"{}}\ +\ copy.ext}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00510}00510\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a930ecc27bac8e8eff33eb4523b82a5ba}{SetVariableList}}(output,\ copy.outputs\_name,\ copy.cmake\_outputs)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00511}00511\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00512}00512\ \ \ \ \ \textcolor{comment}{\#\ add\_custom\_command}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00513}00513\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}add\_custom\_command(\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00514}00514\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00515}00515\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}OUTPUT"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00516}00516\ \ \ \ \ \textcolor{keywordflow}{for}\ copy\ \textcolor{keywordflow}{in}\ (file\_copy,\ dir\_copy):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00517}00517\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ copy.outputs\_name:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00518}00518\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{WriteVariable}}(output,\ copy.outputs\_name,\ \textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00519}00519\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00520}00520\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00521}00521\ \ \ \ \ \textcolor{keywordflow}{for}\ copy\ \textcolor{keywordflow}{in}\ (file\_copy,\ dir\_copy):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00522}00522\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ src,\ dst\ \textcolor{keywordflow}{in}\ zip(copy.gyp\_inputs,\ copy.gyp\_outputs):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00523}00523\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ 'cmake\ -\/E\ copy\ src\ dst'\ will\ create\ the\ 'dst'\ directory\ if\ needed.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00524}00524\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}COMMAND\ \$\{CMAKE\_COMMAND\}\ -\/E\ \%s\ "{}}\ \%\ copy.command)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00525}00525\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(src)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00526}00526\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00527}00527\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(dst)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00528}00528\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00529}00529\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00530}00530\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}DEPENDS"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00531}00531\ \ \ \ \ \textcolor{keywordflow}{for}\ copy\ \textcolor{keywordflow}{in}\ (file\_copy,\ dir\_copy):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00532}00532\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ copy.inputs\_name:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00533}00533\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{WriteVariable}}(output,\ copy.inputs\_name,\ \textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00534}00534\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00535}00535\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00536}00536\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}WORKING\_DIRECTORY\ \$\{CMAKE\_CURRENT\_LIST\_DIR\}/"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00537}00537\ \ \ \ \ output.write(path\_to\_gyp)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00538}00538\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00539}00539\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00540}00540\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}COMMENT\ Copying\ for\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00541}00541\ \ \ \ \ output.write(target\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00542}00542\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00543}00543\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00544}00544\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}VERBATIM\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00545}00545\ \ \ \ \ output.write(\textcolor{stringliteral}{"{})\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00546}00546\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00547}00547\ \ \ \ \ \textcolor{comment}{\#\ add\_custom\_target}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00548}00548\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}add\_custom\_target("{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00549}00549\ \ \ \ \ output.write(copy\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00550}00550\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ DEPENDS"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00551}00551\ \ \ \ \ \textcolor{keywordflow}{for}\ copy\ \textcolor{keywordflow}{in}\ (file\_copy,\ dir\_copy):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00552}00552\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ copy.outputs\_name:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00553}00553\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{WriteVariable}}(output,\ copy.outputs\_name,\ \textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00554}00554\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ SOURCES"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00555}00555\ \ \ \ \ \textcolor{keywordflow}{if}\ file\_copy.inputs\_name:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00556}00556\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{WriteVariable}}(output,\ file\_copy.inputs\_name,\ \textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00557}00557\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n)\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00558}00558\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00559}00559\ \ \ \ \ extra\_deps.append(copy\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00560}00560\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00561}00561\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00562}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a29509c41d435a18143236c17619676ad}{00562}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a29509c41d435a18143236c17619676ad}{CreateCMakeTargetBaseName}}(qualified\_target):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00563}00563\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}This\ is\ the\ name\ we\ would\ like\ the\ target\ to\ have."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00564}00564\ \ \ \ \ \_,\ gyp\_target\_name,\ gyp\_target\_toolset\ =\ \mbox{\hyperlink{namespacegyp_1_1common_a51180f038e57ff79c30f6231d1d7958f}{gyp.common.ParseQualifiedTarget}}(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00565}00565\ \ \ \ \ \ \ \ \ qualified\_target}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00566}00566\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00567}00567\ \ \ \ \ cmake\_target\_base\_name\ =\ gyp\_target\_name}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00568}00568\ \ \ \ \ \textcolor{keywordflow}{if}\ gyp\_target\_toolset\ \textcolor{keywordflow}{and}\ gyp\_target\_toolset\ !=\ \textcolor{stringliteral}{"{}target"{}}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00569}00569\ \ \ \ \ \ \ \ \ cmake\_target\_base\_name\ +=\ \textcolor{stringliteral}{"{}\_"{}}\ +\ gyp\_target\_toolset}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00570}00570\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a0555c06a6f18f26c8dfde9490d618622}{StringToCMakeTargetName}}(cmake\_target\_base\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00571}00571\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00572}00572\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00573}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_ac789de759005fa0869e11671ede16bb0}{00573}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_ac789de759005fa0869e11671ede16bb0}{CreateCMakeTargetFullName}}(qualified\_target):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00574}00574\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}An\ unambiguous\ name\ for\ the\ target."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00575}00575\ \ \ \ \ gyp\_file,\ gyp\_target\_name,\ gyp\_target\_toolset\ =\ \mbox{\hyperlink{namespacegyp_1_1common_a51180f038e57ff79c30f6231d1d7958f}{gyp.common.ParseQualifiedTarget}}(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00576}00576\ \ \ \ \ \ \ \ \ qualified\_target}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00577}00577\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00578}00578\ \ \ \ \ cmake\_target\_full\_name\ =\ gyp\_file\ +\ \textcolor{stringliteral}{"{}:"{}}\ +\ gyp\_target\_name}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00579}00579\ \ \ \ \ \textcolor{keywordflow}{if}\ gyp\_target\_toolset\ \textcolor{keywordflow}{and}\ gyp\_target\_toolset\ !=\ \textcolor{stringliteral}{"{}target"{}}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00580}00580\ \ \ \ \ \ \ \ \ cmake\_target\_full\_name\ +=\ \textcolor{stringliteral}{"{}\_"{}}\ +\ gyp\_target\_toolset}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00581}00581\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a0555c06a6f18f26c8dfde9490d618622}{StringToCMakeTargetName}}(cmake\_target\_full\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00582}00582\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00583}00583\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00584}\mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_namer}{00584}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_namer}{CMakeNamer}}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00585}00585\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Converts\ Gyp\ target\ names\ into\ CMake\ target\ names.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00586}00586\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00587}00587\ \textcolor{stringliteral}{\ \ CMake\ requires\ that\ target\ names\ be\ globally\ unique.\ One\ way\ to\ ensure}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00588}00588\ \textcolor{stringliteral}{\ \ this\ is\ to\ fully\ qualify\ the\ names\ of\ the\ targets.\ Unfortunately,\ this}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00589}00589\ \textcolor{stringliteral}{\ \ ends\ up\ with\ all\ targets\ looking\ like\ "{}chrome\_chrome\_gyp\_chrome"{}\ instead}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00590}00590\ \textcolor{stringliteral}{\ \ of\ just\ "{}chrome"{}.\ If\ this\ generator\ were\ only\ interested\ in\ building,\ it}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00591}00591\ \textcolor{stringliteral}{\ \ would\ be\ possible\ to\ fully\ qualify\ all\ target\ names,\ then\ create}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00592}00592\ \textcolor{stringliteral}{\ \ unqualified\ target\ names\ which\ depend\ on\ all\ qualified\ targets\ which}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00593}00593\ \textcolor{stringliteral}{\ \ should\ have\ had\ that\ name.\ This\ is\ more\ or\ less\ what\ the\ 'make'\ generator}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00594}00594\ \textcolor{stringliteral}{\ \ does\ with\ aliases.\ However,\ one\ goal\ of\ this\ generator\ is\ to\ create\ CMake}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00595}00595\ \textcolor{stringliteral}{\ \ files\ for\ use\ with\ IDEs,\ and\ fully\ qualified\ names\ are\ not\ as\ user}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00596}00596\ \textcolor{stringliteral}{\ \ friendly.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00597}00597\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00598}00598\ \textcolor{stringliteral}{\ \ Since\ target\ name\ collision\ is\ rare,\ we\ do\ the\ above\ only\ when\ required.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00599}00599\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00600}00600\ \textcolor{stringliteral}{\ \ Toolset\ variants\ are\ always\ qualified\ from\ the\ base,\ as\ this\ is\ required\ for}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00601}00601\ \textcolor{stringliteral}{\ \ building.\ However,\ it\ also\ makes\ sense\ for\ an\ IDE,\ as\ it\ is\ possible\ for}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00602}00602\ \textcolor{stringliteral}{\ \ defines\ to\ be\ different.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00603}00603\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00604}00604\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00605}\mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_namer_a9604710153af24a49404fd54fb386d56}{00605}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_namer_a9604710153af24a49404fd54fb386d56}{\_\_init\_\_}}(self,\ target\_list):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00606}\mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_namer_a2a5d7504cb815c92d8b834684e9d4d06}{00606}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_namer_a2a5d7504cb815c92d8b834684e9d4d06}{cmake\_target\_base\_names\_conficting}}\ =\ set()}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00607}00607\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00608}00608\ \ \ \ \ \ \ \ \ cmake\_target\_base\_names\_seen\ =\ set()}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00609}00609\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ qualified\_target\ \textcolor{keywordflow}{in}\ target\_list:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00610}00610\ \ \ \ \ \ \ \ \ \ \ \ \ cmake\_target\_base\_name\ =\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a29509c41d435a18143236c17619676ad}{CreateCMakeTargetBaseName}}(qualified\_target)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00611}00611\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00612}00612\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ cmake\_target\_base\_name\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ cmake\_target\_base\_names\_seen:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00613}00613\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cmake\_target\_base\_names\_seen.add(cmake\_target\_base\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00614}00614\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00615}00615\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_namer_a2a5d7504cb815c92d8b834684e9d4d06}{cmake\_target\_base\_names\_conficting}}.add(cmake\_target\_base\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00616}00616\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00617}\mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_namer_ae959d947bc1c2fbbc2b4198f0a44839f}{00617}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_namer_ae959d947bc1c2fbbc2b4198f0a44839f}{CreateCMakeTargetName}}(self,\ qualified\_target):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00618}00618\ \ \ \ \ \ \ \ \ base\_name\ =\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a29509c41d435a18143236c17619676ad}{CreateCMakeTargetBaseName}}(qualified\_target)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00619}00619\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ base\_name\ \textcolor{keywordflow}{in}\ self.\mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_namer_a2a5d7504cb815c92d8b834684e9d4d06}{cmake\_target\_base\_names\_conficting}}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00620}00620\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_ac789de759005fa0869e11671ede16bb0}{CreateCMakeTargetFullName}}(qualified\_target)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00621}00621\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ base\_name}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00622}00622\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00623}00623\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00624}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a03c12668c7f3b1764561e6d887e482b3}{00624}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a03c12668c7f3b1764561e6d887e482b3}{WriteTarget}}(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00625}00625\ \ \ \ \ namer,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00626}00626\ \ \ \ \ qualified\_target,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00627}00627\ \ \ \ \ target\_dicts,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00628}00628\ \ \ \ \ build\_dir,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00629}00629\ \ \ \ \ config\_to\_use,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00630}00630\ \ \ \ \ options,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00631}00631\ \ \ \ \ generator\_flags,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00632}00632\ \ \ \ \ all\_qualified\_targets,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00633}00633\ \ \ \ \ flavor,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00634}00634\ \ \ \ \ output,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00635}00635\ ):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00636}00636\ \ \ \ \ \textcolor{comment}{\#\ The\ make\ generator\ does\ this\ always.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00637}00637\ \ \ \ \ \textcolor{comment}{\#\ TODO:\ It\ would\ be\ nice\ to\ be\ able\ to\ tell\ CMake\ all\ dependencies.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00638}00638\ \ \ \ \ circular\_libs\ =\ generator\_flags.get(\textcolor{stringliteral}{"{}circular"{}},\ \textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00639}00639\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00640}00640\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ generator\_flags.get(\textcolor{stringliteral}{"{}standalone"{}},\ \textcolor{keyword}{False}):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00641}00641\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n\#"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00642}00642\ \ \ \ \ \ \ \ \ output.write(qualified\_target)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00643}00643\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00644}00644\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00645}00645\ \ \ \ \ gyp\_file,\ \_,\ \_\ =\ \mbox{\hyperlink{namespacegyp_1_1common_a51180f038e57ff79c30f6231d1d7958f}{gyp.common.ParseQualifiedTarget}}(qualified\_target)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00646}00646\ \ \ \ \ rel\_gyp\_file\ =\ \mbox{\hyperlink{namespacegyp_1_1common_a8533ebdd9774c22ee7f7450c54239796}{gyp.common.RelativePath}}(gyp\_file,\ options.toplevel\_dir)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00647}00647\ \ \ \ \ rel\_gyp\_dir\ =\ os.path.dirname(rel\_gyp\_file)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00648}00648\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00649}00649\ \ \ \ \ \textcolor{comment}{\#\ Relative\ path\ from\ build\ dir\ to\ top\ dir.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00650}00650\ \ \ \ \ build\_to\_top\ =\ \mbox{\hyperlink{namespacegyp_1_1common_a444243e74701615d1cdb73c45ab80575}{gyp.common.InvertRelativePath}}(build\_dir,\ options.toplevel\_dir)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00651}00651\ \ \ \ \ \textcolor{comment}{\#\ Relative\ path\ from\ build\ dir\ to\ gyp\ dir.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00652}00652\ \ \ \ \ build\_to\_gyp\ =\ os.path.join(build\_to\_top,\ rel\_gyp\_dir)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00653}00653\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00654}00654\ \ \ \ \ path\_from\_cmakelists\_to\_gyp\ =\ build\_to\_gyp}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00655}00655\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00656}00656\ \ \ \ \ spec\ =\ target\_dicts.get(qualified\_target,\ \{\})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00657}00657\ \ \ \ \ config\ =\ spec.get(\textcolor{stringliteral}{"{}configurations"{}},\ \{\}).get(config\_to\_use,\ \{\})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00658}00658\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00659}00659\ \ \ \ \ xcode\_settings\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00660}00660\ \ \ \ \ \textcolor{keywordflow}{if}\ flavor\ ==\ \textcolor{stringliteral}{"{}mac"{}}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00661}00661\ \ \ \ \ \ \ \ \ xcode\_settings\ =\ \mbox{\hyperlink{classgyp_1_1xcode__emulation_1_1_xcode_settings}{gyp.xcode\_emulation.XcodeSettings}}(spec)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00662}00662\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00663}00663\ \ \ \ \ target\_name\ =\ spec.get(\textcolor{stringliteral}{"{}target\_name"{}},\ \textcolor{stringliteral}{"{}<missing\ target\ name>"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00664}00664\ \ \ \ \ target\_type\ =\ spec.get(\textcolor{stringliteral}{"{}type"{}},\ \textcolor{stringliteral}{"{}<missing\ target\ type>"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00665}00665\ \ \ \ \ target\_toolset\ =\ spec.get(\textcolor{stringliteral}{"{}toolset"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00666}00666\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00667}00667\ \ \ \ \ cmake\_target\_type\ =\ cmake\_target\_type\_from\_gyp\_target\_type.get(target\_type)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00668}00668\ \ \ \ \ \textcolor{keywordflow}{if}\ cmake\_target\_type\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00669}00669\ \ \ \ \ \ \ \ \ print(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00670}00670\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Target\ \%s\ has\ unknown\ target\ type\ \%s,\ skipping."{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00671}00671\ \ \ \ \ \ \ \ \ \ \ \ \ \%\ (target\_name,\ target\_type)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00672}00672\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00673}00673\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00674}00674\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00675}00675\ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_affa21f36ef73a3d339d97ab0a5939559}{SetVariable}}(output,\ \textcolor{stringliteral}{"{}TARGET"{}},\ target\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00676}00676\ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_affa21f36ef73a3d339d97ab0a5939559}{SetVariable}}(output,\ \textcolor{stringliteral}{"{}TOOLSET"{}},\ target\_toolset)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00677}00677\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00678}00678\ \ \ \ \ cmake\_target\_name\ =\ namer.CreateCMakeTargetName(qualified\_target)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00679}00679\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00680}00680\ \ \ \ \ extra\_sources\ =\ []}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00681}00681\ \ \ \ \ extra\_deps\ =\ []}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00682}00682\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00683}00683\ \ \ \ \ \textcolor{comment}{\#\ Actions\ must\ come\ first,\ since\ they\ can\ generate\ more\ OBJs\ for\ use\ below.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00684}00684\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}actions"{}}\ \textcolor{keywordflow}{in}\ spec:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00685}00685\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_ab5b121f0489273f2a2150200c10ec415}{WriteActions}}(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00686}00686\ \ \ \ \ \ \ \ \ \ \ \ \ cmake\_target\_name,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00687}00687\ \ \ \ \ \ \ \ \ \ \ \ \ spec[\textcolor{stringliteral}{"{}actions"{}}],}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00688}00688\ \ \ \ \ \ \ \ \ \ \ \ \ extra\_sources,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00689}00689\ \ \ \ \ \ \ \ \ \ \ \ \ extra\_deps,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00690}00690\ \ \ \ \ \ \ \ \ \ \ \ \ path\_from\_cmakelists\_to\_gyp,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00691}00691\ \ \ \ \ \ \ \ \ \ \ \ \ output,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00692}00692\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00693}00693\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00694}00694\ \ \ \ \ \textcolor{comment}{\#\ Rules\ must\ be\ early\ like\ actions.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00695}00695\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}rules"{}}\ \textcolor{keywordflow}{in}\ spec:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00696}00696\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a0d654706899f964a89c6768c69149645}{WriteRules}}(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00697}00697\ \ \ \ \ \ \ \ \ \ \ \ \ cmake\_target\_name,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00698}00698\ \ \ \ \ \ \ \ \ \ \ \ \ spec[\textcolor{stringliteral}{"{}rules"{}}],}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00699}00699\ \ \ \ \ \ \ \ \ \ \ \ \ extra\_sources,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00700}00700\ \ \ \ \ \ \ \ \ \ \ \ \ extra\_deps,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00701}00701\ \ \ \ \ \ \ \ \ \ \ \ \ path\_from\_cmakelists\_to\_gyp,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00702}00702\ \ \ \ \ \ \ \ \ \ \ \ \ output,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00703}00703\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00704}00704\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00705}00705\ \ \ \ \ \textcolor{comment}{\#\ Copies}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00706}00706\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}copies"{}}\ \textcolor{keywordflow}{in}\ spec:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00707}00707\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a737edd52c80f9615e11c4f19bd16c884}{WriteCopies}}(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00708}00708\ \ \ \ \ \ \ \ \ \ \ \ \ cmake\_target\_name,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00709}00709\ \ \ \ \ \ \ \ \ \ \ \ \ spec[\textcolor{stringliteral}{"{}copies"{}}],}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00710}00710\ \ \ \ \ \ \ \ \ \ \ \ \ extra\_deps,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00711}00711\ \ \ \ \ \ \ \ \ \ \ \ \ path\_from\_cmakelists\_to\_gyp,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00712}00712\ \ \ \ \ \ \ \ \ \ \ \ \ output,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00713}00713\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00714}00714\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00715}00715\ \ \ \ \ \textcolor{comment}{\#\ Target\ and\ sources}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00716}00716\ \ \ \ \ srcs\ =\ spec.get(\textcolor{stringliteral}{"{}sources"{}},\ [])}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00717}00717\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00718}00718\ \ \ \ \ \textcolor{comment}{\#\ Gyp\ separates\ the\ sheep\ from\ the\ goats\ based\ on\ file\ extensions.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00719}00719\ \ \ \ \ \textcolor{comment}{\#\ A\ full\ separation\ is\ done\ here\ because\ of\ flag\ handing\ (see\ below).}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00720}00720\ \ \ \ \ s\_sources\ =\ []}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00721}00721\ \ \ \ \ c\_sources\ =\ []}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00722}00722\ \ \ \ \ cxx\_sources\ =\ []}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00723}00723\ \ \ \ \ linkable\_sources\ =\ []}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00724}00724\ \ \ \ \ other\_sources\ =\ []}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00725}00725\ \ \ \ \ \textcolor{keywordflow}{for}\ src\ \textcolor{keywordflow}{in}\ srcs:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00726}00726\ \ \ \ \ \ \ \ \ \_,\ ext\ =\ os.path.splitext(src)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00727}00727\ \ \ \ \ \ \ \ \ src\_type\ =\ COMPILABLE\_EXTENSIONS.get(ext,\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00728}00728\ \ \ \ \ \ \ \ \ src\_norm\_path\ =\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_ab9a54e8429ea4dafe901947062436230}{NormjoinPath}}(path\_from\_cmakelists\_to\_gyp,\ src)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00729}00729\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00730}00730\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ src\_type\ ==\ \textcolor{stringliteral}{"{}s"{}}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00731}00731\ \ \ \ \ \ \ \ \ \ \ \ \ s\_sources.append(src\_norm\_path)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00732}00732\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ src\_type\ ==\ \textcolor{stringliteral}{"{}cc"{}}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00733}00733\ \ \ \ \ \ \ \ \ \ \ \ \ c\_sources.append(src\_norm\_path)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00734}00734\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ src\_type\ ==\ \textcolor{stringliteral}{"{}cxx"{}}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00735}00735\ \ \ \ \ \ \ \ \ \ \ \ \ cxx\_sources.append(src\_norm\_path)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00736}00736\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a712638e8cc1a7dceef12a169d2b3a8ae}{Linkable}}(ext):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00737}00737\ \ \ \ \ \ \ \ \ \ \ \ \ linkable\_sources.append(src\_norm\_path)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00738}00738\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00739}00739\ \ \ \ \ \ \ \ \ \ \ \ \ other\_sources.append(src\_norm\_path)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00740}00740\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00741}00741\ \ \ \ \ \textcolor{keywordflow}{for}\ extra\_source\ \textcolor{keywordflow}{in}\ extra\_sources:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00742}00742\ \ \ \ \ \ \ \ \ src,\ real\_source\ =\ extra\_source}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00743}00743\ \ \ \ \ \ \ \ \ \_,\ ext\ =\ os.path.splitext(real\_source)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00744}00744\ \ \ \ \ \ \ \ \ src\_type\ =\ COMPILABLE\_EXTENSIONS.get(ext,\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00745}00745\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00746}00746\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ src\_type\ ==\ \textcolor{stringliteral}{"{}s"{}}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00747}00747\ \ \ \ \ \ \ \ \ \ \ \ \ s\_sources.append(src)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00748}00748\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ src\_type\ ==\ \textcolor{stringliteral}{"{}cc"{}}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00749}00749\ \ \ \ \ \ \ \ \ \ \ \ \ c\_sources.append(src)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00750}00750\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ src\_type\ ==\ \textcolor{stringliteral}{"{}cxx"{}}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00751}00751\ \ \ \ \ \ \ \ \ \ \ \ \ cxx\_sources.append(src)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00752}00752\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a712638e8cc1a7dceef12a169d2b3a8ae}{Linkable}}(ext):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00753}00753\ \ \ \ \ \ \ \ \ \ \ \ \ linkable\_sources.append(src)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00754}00754\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00755}00755\ \ \ \ \ \ \ \ \ \ \ \ \ other\_sources.append(src)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00756}00756\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00757}00757\ \ \ \ \ s\_sources\_name\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00758}00758\ \ \ \ \ \textcolor{keywordflow}{if}\ s\_sources:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00759}00759\ \ \ \ \ \ \ \ \ s\_sources\_name\ =\ cmake\_target\_name\ +\ \textcolor{stringliteral}{"{}\_\_asm\_srcs"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00760}00760\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a930ecc27bac8e8eff33eb4523b82a5ba}{SetVariableList}}(output,\ s\_sources\_name,\ s\_sources)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00761}00761\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00762}00762\ \ \ \ \ c\_sources\_name\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00763}00763\ \ \ \ \ \textcolor{keywordflow}{if}\ c\_sources:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00764}00764\ \ \ \ \ \ \ \ \ c\_sources\_name\ =\ cmake\_target\_name\ +\ \textcolor{stringliteral}{"{}\_\_c\_srcs"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00765}00765\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a930ecc27bac8e8eff33eb4523b82a5ba}{SetVariableList}}(output,\ c\_sources\_name,\ c\_sources)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00766}00766\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00767}00767\ \ \ \ \ cxx\_sources\_name\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00768}00768\ \ \ \ \ \textcolor{keywordflow}{if}\ cxx\_sources:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00769}00769\ \ \ \ \ \ \ \ \ cxx\_sources\_name\ =\ cmake\_target\_name\ +\ \textcolor{stringliteral}{"{}\_\_cxx\_srcs"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00770}00770\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a930ecc27bac8e8eff33eb4523b82a5ba}{SetVariableList}}(output,\ cxx\_sources\_name,\ cxx\_sources)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00771}00771\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00772}00772\ \ \ \ \ linkable\_sources\_name\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00773}00773\ \ \ \ \ \textcolor{keywordflow}{if}\ linkable\_sources:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00774}00774\ \ \ \ \ \ \ \ \ linkable\_sources\_name\ =\ cmake\_target\_name\ +\ \textcolor{stringliteral}{"{}\_\_linkable\_srcs"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00775}00775\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a930ecc27bac8e8eff33eb4523b82a5ba}{SetVariableList}}(output,\ linkable\_sources\_name,\ linkable\_sources)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00776}00776\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00777}00777\ \ \ \ \ other\_sources\_name\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00778}00778\ \ \ \ \ \textcolor{keywordflow}{if}\ other\_sources:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00779}00779\ \ \ \ \ \ \ \ \ other\_sources\_name\ =\ cmake\_target\_name\ +\ \textcolor{stringliteral}{"{}\_\_other\_srcs"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00780}00780\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a930ecc27bac8e8eff33eb4523b82a5ba}{SetVariableList}}(output,\ other\_sources\_name,\ other\_sources)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00781}00781\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00782}00782\ \ \ \ \ \textcolor{comment}{\#\ CMake\ gets\ upset\ when\ executable\ targets\ provide\ no\ sources.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00783}00783\ \ \ \ \ \textcolor{comment}{\#\ http://www.cmake.org/pipermail/cmake/2010-\/July/038461.html}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00784}00784\ \ \ \ \ dummy\_sources\_name\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00785}00785\ \ \ \ \ has\_sources\ =\ (}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00786}00786\ \ \ \ \ \ \ \ \ s\_sources\_name}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00787}00787\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{or}\ c\_sources\_name}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00788}00788\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{or}\ cxx\_sources\_name}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00789}00789\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{or}\ linkable\_sources\_name}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00790}00790\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{or}\ other\_sources\_name}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00791}00791\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00792}00792\ \ \ \ \ \textcolor{keywordflow}{if}\ target\_type\ ==\ \textcolor{stringliteral}{"{}executable"{}}\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ has\_sources:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00793}00793\ \ \ \ \ \ \ \ \ dummy\_sources\_name\ =\ cmake\_target\_name\ +\ \textcolor{stringliteral}{"{}\_\_dummy\_srcs"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00794}00794\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_affa21f36ef73a3d339d97ab0a5939559}{SetVariable}}(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00795}00795\ \ \ \ \ \ \ \ \ \ \ \ \ output,\ dummy\_sources\_name,\ \textcolor{stringliteral}{"{}\$\{obj\}.\$\{TOOLSET\}/\$\{TARGET\}/genc/dummy.c"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00796}00796\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00797}00797\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{'if(NOT\ EXISTS\ "{}'})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00798}00798\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{WriteVariable}}(output,\ dummy\_sources\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00799}00799\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{'"{})\(\backslash\)n'})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00800}00800\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{'\ \ file(WRITE\ "{}'})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00801}00801\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{WriteVariable}}(output,\ dummy\_sources\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00802}00802\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{'"{}\ "{}"{})\(\backslash\)n'})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00803}00803\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}endif()\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00804}00804\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00805}00805\ \ \ \ \ \textcolor{comment}{\#\ CMake\ is\ opposed\ to\ setting\ linker\ directories\ and\ considers\ the\ practice}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00806}00806\ \ \ \ \ \textcolor{comment}{\#\ of\ setting\ linker\ directories\ dangerous.\ Instead,\ it\ favors\ the\ use\ of}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00807}00807\ \ \ \ \ \textcolor{comment}{\#\ find\_library\ and\ passing\ absolute\ paths\ to\ target\_link\_libraries.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00808}00808\ \ \ \ \ \textcolor{comment}{\#\ However,\ CMake\ does\ provide\ the\ command\ link\_directories,\ which\ adds}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00809}00809\ \ \ \ \ \textcolor{comment}{\#\ link\ directories\ to\ targets\ defined\ after\ it\ is\ called.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00810}00810\ \ \ \ \ \textcolor{comment}{\#\ As\ a\ result,\ link\_directories\ must\ come\ before\ the\ target\ definition.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00811}00811\ \ \ \ \ \textcolor{comment}{\#\ CMake\ unfortunately\ has\ no\ means\ of\ removing\ entries\ from\ LINK\_DIRECTORIES.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00812}00812\ \ \ \ \ library\_dirs\ =\ config.get(\textcolor{stringliteral}{"{}library\_dirs"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00813}00813\ \ \ \ \ \textcolor{keywordflow}{if}\ library\_dirs\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00814}00814\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}link\_directories("{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00815}00815\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ library\_dir\ \textcolor{keywordflow}{in}\ library\_dirs:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00816}00816\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00817}00817\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_ab9a54e8429ea4dafe901947062436230}{NormjoinPath}}(path\_from\_cmakelists\_to\_gyp,\ library\_dir))}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00818}00818\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00819}00819\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{})\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00820}00820\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00821}00821\ \ \ \ \ output.write(cmake\_target\_type.command)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00822}00822\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}("{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00823}00823\ \ \ \ \ output.write(cmake\_target\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00824}00824\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00825}00825\ \ \ \ \ \textcolor{keywordflow}{if}\ cmake\_target\_type.modifier\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00826}00826\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00827}00827\ \ \ \ \ \ \ \ \ output.write(cmake\_target\_type.modifier)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00828}00828\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00829}00829\ \ \ \ \ \textcolor{keywordflow}{if}\ s\_sources\_name:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00830}00830\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{WriteVariable}}(output,\ s\_sources\_name,\ \textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00831}00831\ \ \ \ \ \textcolor{keywordflow}{if}\ c\_sources\_name:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00832}00832\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{WriteVariable}}(output,\ c\_sources\_name,\ \textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00833}00833\ \ \ \ \ \textcolor{keywordflow}{if}\ cxx\_sources\_name:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00834}00834\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{WriteVariable}}(output,\ cxx\_sources\_name,\ \textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00835}00835\ \ \ \ \ \textcolor{keywordflow}{if}\ linkable\_sources\_name:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00836}00836\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{WriteVariable}}(output,\ linkable\_sources\_name,\ \textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00837}00837\ \ \ \ \ \textcolor{keywordflow}{if}\ other\_sources\_name:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00838}00838\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{WriteVariable}}(output,\ other\_sources\_name,\ \textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00839}00839\ \ \ \ \ \textcolor{keywordflow}{if}\ dummy\_sources\_name:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00840}00840\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{WriteVariable}}(output,\ dummy\_sources\_name,\ \textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00841}00841\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00842}00842\ \ \ \ \ output.write(\textcolor{stringliteral}{"{})\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00843}00843\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00844}00844\ \ \ \ \ \textcolor{comment}{\#\ Let\ CMake\ know\ if\ the\ 'all'\ target\ should\ depend\ on\ this\ target.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00845}00845\ \ \ \ \ exclude\_from\_all\ =\ (}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00846}00846\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}TRUE"{}}\ \textcolor{keywordflow}{if}\ qualified\_target\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ all\_qualified\_targets\ \textcolor{keywordflow}{else}\ \textcolor{stringliteral}{"{}FALSE"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00847}00847\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00848}00848\ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a1b75c32a166b60d4a133c66085ac802d}{SetTargetProperty}}(output,\ cmake\_target\_name,\ \textcolor{stringliteral}{"{}EXCLUDE\_FROM\_ALL"{}},\ exclude\_from\_all)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00849}00849\ \ \ \ \ \textcolor{keywordflow}{for}\ extra\_target\_name\ \textcolor{keywordflow}{in}\ extra\_deps:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00850}00850\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a1b75c32a166b60d4a133c66085ac802d}{SetTargetProperty}}(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00851}00851\ \ \ \ \ \ \ \ \ \ \ \ \ output,\ extra\_target\_name,\ \textcolor{stringliteral}{"{}EXCLUDE\_FROM\_ALL"{}},\ exclude\_from\_all}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00852}00852\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00853}00853\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00854}00854\ \ \ \ \ \textcolor{comment}{\#\ Output\ name\ and\ location.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00855}00855\ \ \ \ \ \textcolor{keywordflow}{if}\ target\_type\ !=\ \textcolor{stringliteral}{"{}none"{}}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00856}00856\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Link\ as\ 'C'\ if\ there\ are\ no\ other\ files}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00857}00857\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ c\_sources\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ cxx\_sources:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00858}00858\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a1b75c32a166b60d4a133c66085ac802d}{SetTargetProperty}}(output,\ cmake\_target\_name,\ \textcolor{stringliteral}{"{}LINKER\_LANGUAGE"{}},\ [\textcolor{stringliteral}{"{}C"{}}])}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00859}00859\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00860}00860\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Mark\ uncompiled\ sources\ as\ uncompiled.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00861}00861\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ other\_sources\_name:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00862}00862\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}set\_source\_files\_properties("{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00863}00863\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{WriteVariable}}(output,\ other\_sources\_name,\ \textcolor{stringliteral}{"{}"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00864}00864\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{'\ PROPERTIES\ HEADER\_FILE\_ONLY\ "{}TRUE"{})\(\backslash\)n'})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00865}00865\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00866}00866\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Mark\ object\ sources\ as\ linkable.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00867}00867\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ linkable\_sources\_name:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00868}00868\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}set\_source\_files\_properties("{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00869}00869\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{WriteVariable}}(output,\ other\_sources\_name,\ \textcolor{stringliteral}{"{}"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00870}00870\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{'\ PROPERTIES\ EXTERNAL\_OBJECT\ "{}TRUE"{})\(\backslash\)n'})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00871}00871\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00872}00872\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Output\ directory}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00873}00873\ \ \ \ \ \ \ \ \ target\_output\_directory\ =\ spec.get(\textcolor{stringliteral}{"{}product\_dir"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00874}00874\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ target\_output\_directory\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00875}00875\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ target\_type\ \textcolor{keywordflow}{in}\ (\textcolor{stringliteral}{"{}executable"{}},\ \textcolor{stringliteral}{"{}loadable\_module"{}}):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00876}00876\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ target\_output\_directory\ =\ generator\_default\_variables[\textcolor{stringliteral}{"{}PRODUCT\_DIR"{}}]}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00877}00877\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ target\_type\ ==\ \textcolor{stringliteral}{"{}shared\_library"{}}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00878}00878\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ target\_output\_directory\ =\ \textcolor{stringliteral}{"{}\$\{builddir\}/lib.\$\{TOOLSET\}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00879}00879\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ spec.get(\textcolor{stringliteral}{"{}standalone\_static\_library"{}},\ \textcolor{keyword}{False}):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00880}00880\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ target\_output\_directory\ =\ generator\_default\_variables[\textcolor{stringliteral}{"{}PRODUCT\_DIR"{}}]}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00881}00881\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00882}00882\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ base\_path\ =\ \mbox{\hyperlink{namespacegyp_1_1common_a8533ebdd9774c22ee7f7450c54239796}{gyp.common.RelativePath}}(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00883}00883\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os.path.dirname(gyp\_file),\ options.toplevel\_dir}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00884}00884\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00885}00885\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ target\_output\_directory\ =\ \textcolor{stringliteral}{"{}\$\{obj\}.\$\{TOOLSET\}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00886}00886\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ target\_output\_directory\ =\ os.path.join(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00887}00887\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ target\_output\_directory,\ base\_path}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00888}00888\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00889}00889\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00890}00890\ \ \ \ \ \ \ \ \ cmake\_target\_output\_directory\ =\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_aa66dc3f1850aeb8ac3b865044b3d9113}{NormjoinPathForceCMakeSource}}(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00891}00891\ \ \ \ \ \ \ \ \ \ \ \ \ path\_from\_cmakelists\_to\_gyp,\ target\_output\_directory}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00892}00892\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00893}00893\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a1b75c32a166b60d4a133c66085ac802d}{SetTargetProperty}}(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00894}00894\ \ \ \ \ \ \ \ \ \ \ \ \ output,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00895}00895\ \ \ \ \ \ \ \ \ \ \ \ \ cmake\_target\_name,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00896}00896\ \ \ \ \ \ \ \ \ \ \ \ \ cmake\_target\_type.property\_modifier\ +\ \textcolor{stringliteral}{"{}\_OUTPUT\_DIRECTORY"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00897}00897\ \ \ \ \ \ \ \ \ \ \ \ \ cmake\_target\_output\_directory,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00898}00898\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00899}00899\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00900}00900\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Output\ name}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00901}00901\ \ \ \ \ \ \ \ \ default\_product\_prefix\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00902}00902\ \ \ \ \ \ \ \ \ default\_product\_name\ =\ target\_name}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00903}00903\ \ \ \ \ \ \ \ \ default\_product\_ext\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00904}00904\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ target\_type\ ==\ \textcolor{stringliteral}{"{}static\_library"{}}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00905}00905\ \ \ \ \ \ \ \ \ \ \ \ \ static\_library\_prefix\ =\ generator\_default\_variables[\textcolor{stringliteral}{"{}STATIC\_LIB\_PREFIX"{}}]}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00906}00906\ \ \ \ \ \ \ \ \ \ \ \ \ default\_product\_name\ =\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a843a0c5c56c7948ad31855e8365af79c}{RemovePrefix}}(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00907}00907\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ default\_product\_name,\ static\_library\_prefix}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00908}00908\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00909}00909\ \ \ \ \ \ \ \ \ \ \ \ \ default\_product\_prefix\ =\ static\_library\_prefix}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00910}00910\ \ \ \ \ \ \ \ \ \ \ \ \ default\_product\_ext\ =\ generator\_default\_variables[\textcolor{stringliteral}{"{}STATIC\_LIB\_SUFFIX"{}}]}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00911}00911\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00912}00912\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ target\_type\ \textcolor{keywordflow}{in}\ (\textcolor{stringliteral}{"{}loadable\_module"{}},\ \textcolor{stringliteral}{"{}shared\_library"{}}):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00913}00913\ \ \ \ \ \ \ \ \ \ \ \ \ shared\_library\_prefix\ =\ generator\_default\_variables[\textcolor{stringliteral}{"{}SHARED\_LIB\_PREFIX"{}}]}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00914}00914\ \ \ \ \ \ \ \ \ \ \ \ \ default\_product\_name\ =\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a843a0c5c56c7948ad31855e8365af79c}{RemovePrefix}}(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00915}00915\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ default\_product\_name,\ shared\_library\_prefix}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00916}00916\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00917}00917\ \ \ \ \ \ \ \ \ \ \ \ \ default\_product\_prefix\ =\ shared\_library\_prefix}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00918}00918\ \ \ \ \ \ \ \ \ \ \ \ \ default\_product\_ext\ =\ generator\_default\_variables[\textcolor{stringliteral}{"{}SHARED\_LIB\_SUFFIX"{}}]}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00919}00919\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00920}00920\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ target\_type\ !=\ \textcolor{stringliteral}{"{}executable"{}}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00921}00921\ \ \ \ \ \ \ \ \ \ \ \ \ print(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00922}00922\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}ERROR:\ What\ output\ file\ should\ be\ generated?"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00923}00923\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}type"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00924}00924\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ target\_type,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00925}00925\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}target"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00926}00926\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ target\_name,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00927}00927\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00928}00928\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00929}00929\ \ \ \ \ \ \ \ \ product\_prefix\ =\ spec.get(\textcolor{stringliteral}{"{}product\_prefix"{}},\ default\_product\_prefix)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00930}00930\ \ \ \ \ \ \ \ \ product\_name\ =\ spec.get(\textcolor{stringliteral}{"{}product\_name"{}},\ default\_product\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00931}00931\ \ \ \ \ \ \ \ \ product\_ext\ =\ spec.get(\textcolor{stringliteral}{"{}product\_extension"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00932}00932\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ product\_ext:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00933}00933\ \ \ \ \ \ \ \ \ \ \ \ \ product\_ext\ =\ \textcolor{stringliteral}{"{}."{}}\ +\ product\_ext}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00934}00934\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00935}00935\ \ \ \ \ \ \ \ \ \ \ \ \ product\_ext\ =\ default\_product\_ext}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00936}00936\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00937}00937\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a1b75c32a166b60d4a133c66085ac802d}{SetTargetProperty}}(output,\ cmake\_target\_name,\ \textcolor{stringliteral}{"{}PREFIX"{}},\ product\_prefix)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00938}00938\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a1b75c32a166b60d4a133c66085ac802d}{SetTargetProperty}}(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00939}00939\ \ \ \ \ \ \ \ \ \ \ \ \ output,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00940}00940\ \ \ \ \ \ \ \ \ \ \ \ \ cmake\_target\_name,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00941}00941\ \ \ \ \ \ \ \ \ \ \ \ \ cmake\_target\_type.property\_modifier\ +\ \textcolor{stringliteral}{"{}\_OUTPUT\_NAME"{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00942}00942\ \ \ \ \ \ \ \ \ \ \ \ \ product\_name,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00943}00943\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00944}00944\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a1b75c32a166b60d4a133c66085ac802d}{SetTargetProperty}}(output,\ cmake\_target\_name,\ \textcolor{stringliteral}{"{}SUFFIX"{}},\ product\_ext)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00945}00945\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00946}00946\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Make\ the\ output\ of\ this\ target\ referenceable\ as\ a\ source.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00947}00947\ \ \ \ \ \ \ \ \ cmake\_target\_output\_basename\ =\ product\_prefix\ +\ product\_name\ +\ product\_ext}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00948}00948\ \ \ \ \ \ \ \ \ cmake\_target\_output\ =\ os.path.join(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00949}00949\ \ \ \ \ \ \ \ \ \ \ \ \ cmake\_target\_output\_directory,\ cmake\_target\_output\_basename}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00950}00950\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00951}00951\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a7d0a0ca26bce711a299e828414bac8da}{SetFileProperty}}(output,\ cmake\_target\_output,\ \textcolor{stringliteral}{"{}GENERATED"{}},\ [\textcolor{stringliteral}{"{}TRUE"{}}],\ \textcolor{stringliteral}{"{}"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00952}00952\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00953}00953\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Includes}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00954}00954\ \ \ \ \ \ \ \ \ includes\ =\ config.get(\textcolor{stringliteral}{"{}include\_dirs"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00955}00955\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ includes:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00956}00956\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ (target\ include\ directories)\ is\ what\ requires\ CMake\ 2.8.8}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00957}00957\ \ \ \ \ \ \ \ \ \ \ \ \ includes\_name\ =\ cmake\_target\_name\ +\ \textcolor{stringliteral}{"{}\_\_include\_dirs"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00958}00958\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a930ecc27bac8e8eff33eb4523b82a5ba}{SetVariableList}}(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00959}00959\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00960}00960\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ includes\_name,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00961}00961\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00962}00962\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_aa66dc3f1850aeb8ac3b865044b3d9113}{NormjoinPathForceCMakeSource}}(path\_from\_cmakelists\_to\_gyp,\ include)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00963}00963\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ include\ \textcolor{keywordflow}{in}\ includes}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00964}00964\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ],}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00965}00965\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00966}00966\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}set\_property(TARGET\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00967}00967\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(cmake\_target\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00968}00968\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ APPEND\ PROPERTY\ INCLUDE\_DIRECTORIES\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00969}00969\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a01c1945107c4652c622293ac17f581b6}{WriteVariable}}(output,\ includes\_name,\ \textcolor{stringliteral}{"{}"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00970}00970\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{})\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00971}00971\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00972}00972\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Defines}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00973}00973\ \ \ \ \ \ \ \ \ defines\ =\ config.get(\textcolor{stringliteral}{"{}defines"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00974}00974\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ defines\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00975}00975\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a1b75c32a166b60d4a133c66085ac802d}{SetTargetProperty}}(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00976}00976\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output,\ cmake\_target\_name,\ \textcolor{stringliteral}{"{}COMPILE\_DEFINITIONS"{}},\ defines,\ \textcolor{stringliteral}{"{};"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00977}00977\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00978}00978\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00979}00979\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Compile\ Flags\ -\/\ http://www.cmake.org/Bug/view.php?id=6493}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00980}00980\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ CMake\ currently\ does\ not\ have\ target\ C\ and\ CXX\ flags.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00981}00981\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ So,\ instead\ of\ doing...}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00982}00982\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00983}00983\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ cflags\_c\ =\ config.get('cflags\_c')}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00984}00984\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ if\ cflags\_c\ is\ not\ None:}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00985}00985\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ SetTargetProperty(output,\ cmake\_target\_name,}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00986}00986\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 'C\_COMPILE\_FLAGS',\ cflags\_c,\ '\ ')}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00987}00987\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00988}00988\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ cflags\_cc\ =\ config.get('cflags\_cc')}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00989}00989\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ if\ cflags\_cc\ is\ not\ None:}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00990}00990\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ SetTargetProperty(output,\ cmake\_target\_name,}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00991}00991\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 'CXX\_COMPILE\_FLAGS',\ cflags\_cc,\ '\ ')}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00992}00992\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00993}00993\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Instead\ we\ must...}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00994}00994\ \ \ \ \ \ \ \ \ cflags\ =\ config.get(\textcolor{stringliteral}{"{}cflags"{}},\ [])}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00995}00995\ \ \ \ \ \ \ \ \ cflags\_c\ =\ config.get(\textcolor{stringliteral}{"{}cflags\_c"{}},\ [])}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00996}00996\ \ \ \ \ \ \ \ \ cflags\_cxx\ =\ config.get(\textcolor{stringliteral}{"{}cflags\_cc"{}},\ [])}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00997}00997\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ xcode\_settings:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00998}00998\ \ \ \ \ \ \ \ \ \ \ \ \ cflags\ =\ xcode\_settings.GetCflags(config\_to\_use)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l00999}00999\ \ \ \ \ \ \ \ \ \ \ \ \ cflags\_c\ =\ xcode\_settings.GetCflagsC(config\_to\_use)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01000}01000\ \ \ \ \ \ \ \ \ \ \ \ \ cflags\_cxx\ =\ xcode\_settings.GetCflagsCC(config\_to\_use)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01001}01001\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ cflags\_objc\ =\ xcode\_settings.GetCflagsObjC(config\_to\_use)}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01002}01002\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ cflags\_objcc\ =\ xcode\_settings.GetCflagsObjCC(config\_to\_use)}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01003}01003\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01004}01004\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keywordflow}{not}\ cflags\_c\ \textcolor{keywordflow}{or}\ \textcolor{keywordflow}{not}\ c\_sources)\ \textcolor{keywordflow}{and}\ (\textcolor{keywordflow}{not}\ cflags\_cxx\ \textcolor{keywordflow}{or}\ \textcolor{keywordflow}{not}\ cxx\_sources):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01005}01005\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a1b75c32a166b60d4a133c66085ac802d}{SetTargetProperty}}(output,\ cmake\_target\_name,\ \textcolor{stringliteral}{"{}COMPILE\_FLAGS"{}},\ cflags,\ \textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01006}01006\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01007}01007\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ c\_sources\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ (s\_sources\ \textcolor{keywordflow}{or}\ cxx\_sources):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01008}01008\ \ \ \ \ \ \ \ \ \ \ \ \ flags\ =\ []}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01009}01009\ \ \ \ \ \ \ \ \ \ \ \ \ flags.extend(cflags)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01010}01010\ \ \ \ \ \ \ \ \ \ \ \ \ flags.extend(cflags\_c)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01011}01011\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a1b75c32a166b60d4a133c66085ac802d}{SetTargetProperty}}(output,\ cmake\_target\_name,\ \textcolor{stringliteral}{"{}COMPILE\_FLAGS"{}},\ flags,\ \textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01012}01012\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01013}01013\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ cxx\_sources\ \textcolor{keywordflow}{and}\ \textcolor{keywordflow}{not}\ (s\_sources\ \textcolor{keywordflow}{or}\ c\_sources):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01014}01014\ \ \ \ \ \ \ \ \ \ \ \ \ flags\ =\ []}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01015}01015\ \ \ \ \ \ \ \ \ \ \ \ \ flags.extend(cflags)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01016}01016\ \ \ \ \ \ \ \ \ \ \ \ \ flags.extend(cflags\_cxx)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01017}01017\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a1b75c32a166b60d4a133c66085ac802d}{SetTargetProperty}}(output,\ cmake\_target\_name,\ \textcolor{stringliteral}{"{}COMPILE\_FLAGS"{}},\ flags,\ \textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01018}01018\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01019}01019\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01020}01020\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ TODO:\ This\ is\ broken,\ one\ cannot\ generally\ set\ properties\ on\ files,}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01021}01021\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ as\ other\ targets\ may\ require\ different\ properties\ on\ the\ same\ files.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01022}01022\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ s\_sources\ \textcolor{keywordflow}{and}\ cflags:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01023}01023\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_ab89494855e015adc10efd214f16cf7c8}{SetFilesProperty}}(output,\ s\_sources\_name,\ \textcolor{stringliteral}{"{}COMPILE\_FLAGS"{}},\ cflags,\ \textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01024}01024\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01025}01025\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ c\_sources\ \textcolor{keywordflow}{and}\ (cflags\ \textcolor{keywordflow}{or}\ cflags\_c):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01026}01026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flags\ =\ []}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01027}01027\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flags.extend(cflags)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01028}01028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flags.extend(cflags\_c)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01029}01029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_ab89494855e015adc10efd214f16cf7c8}{SetFilesProperty}}(output,\ c\_sources\_name,\ \textcolor{stringliteral}{"{}COMPILE\_FLAGS"{}},\ flags,\ \textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01030}01030\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01031}01031\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ cxx\_sources\ \textcolor{keywordflow}{and}\ (cflags\ \textcolor{keywordflow}{or}\ cflags\_cxx):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01032}01032\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flags\ =\ []}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01033}01033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flags.extend(cflags)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01034}01034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flags.extend(cflags\_cxx)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01035}01035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_ab89494855e015adc10efd214f16cf7c8}{SetFilesProperty}}(output,\ cxx\_sources\_name,\ \textcolor{stringliteral}{"{}COMPILE\_FLAGS"{}},\ flags,\ \textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01036}01036\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01037}01037\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Linker\ flags}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01038}01038\ \ \ \ \ \ \ \ \ ldflags\ =\ config.get(\textcolor{stringliteral}{"{}ldflags"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01039}01039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ldflags\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01040}01040\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a1b75c32a166b60d4a133c66085ac802d}{SetTargetProperty}}(output,\ cmake\_target\_name,\ \textcolor{stringliteral}{"{}LINK\_FLAGS"{}},\ ldflags,\ \textcolor{stringliteral}{"{}\ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01041}01041\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01042}01042\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ XCode\ settings}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01043}01043\ \ \ \ \ \ \ \ \ xcode\_settings\ =\ config.get(\textcolor{stringliteral}{"{}xcode\_settings"{}},\ \{\})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01044}01044\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ xcode\_setting,\ xcode\_value\ \textcolor{keywordflow}{in}\ xcode\_settings.items():}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01045}01045\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a1b75c32a166b60d4a133c66085ac802d}{SetTargetProperty}}(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01046}01046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01047}01047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cmake\_target\_name,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01048}01048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}XCODE\_ATTRIBUTE\_\%s"{}}\ \%\ xcode\_setting,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01049}01049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ xcode\_value,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01050}01050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}}\ \textcolor{keywordflow}{if}\ isinstance(xcode\_value,\ str)\ \textcolor{keywordflow}{else}\ \textcolor{stringliteral}{"{}\ "{}},}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01051}01051\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01052}01052\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01053}01053\ \ \ \ \ \textcolor{comment}{\#\ Note\ on\ Dependencies\ and\ Libraries:}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01054}01054\ \ \ \ \ \textcolor{comment}{\#\ CMake\ wants\ to\ handle\ link\ order,\ resolving\ the\ link\ line\ up\ front.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01055}01055\ \ \ \ \ \textcolor{comment}{\#\ Gyp\ does\ not\ retain\ or\ enforce\ specifying\ enough\ information\ to\ do\ so.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01056}01056\ \ \ \ \ \textcolor{comment}{\#\ So\ do\ as\ other\ gyp\ generators\ and\ use\ -\/-\/start-\/group\ and\ -\/-\/end-\/group.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01057}01057\ \ \ \ \ \textcolor{comment}{\#\ Give\ CMake\ as\ little\ information\ as\ possible\ so\ that\ it\ doesn't\ mess\ it\ up.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01058}01058\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01059}01059\ \ \ \ \ \textcolor{comment}{\#\ Dependencies}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01060}01060\ \ \ \ \ rawDeps\ =\ spec.get(\textcolor{stringliteral}{"{}dependencies"{}},\ [])}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01061}01061\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01062}01062\ \ \ \ \ static\_deps\ =\ []}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01063}01063\ \ \ \ \ shared\_deps\ =\ []}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01064}01064\ \ \ \ \ other\_deps\ =\ []}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01065}01065\ \ \ \ \ \textcolor{keywordflow}{for}\ rawDep\ \textcolor{keywordflow}{in}\ rawDeps:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01066}01066\ \ \ \ \ \ \ \ \ dep\_cmake\_name\ =\ namer.CreateCMakeTargetName(rawDep)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01067}01067\ \ \ \ \ \ \ \ \ dep\_spec\ =\ target\_dicts.get(rawDep,\ \{\})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01068}01068\ \ \ \ \ \ \ \ \ dep\_target\_type\ =\ dep\_spec.get(\textcolor{stringliteral}{"{}type"{}},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01069}01069\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01070}01070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ dep\_target\_type\ ==\ \textcolor{stringliteral}{"{}static\_library"{}}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01071}01071\ \ \ \ \ \ \ \ \ \ \ \ \ static\_deps.append(dep\_cmake\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01072}01072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ dep\_target\_type\ ==\ \textcolor{stringliteral}{"{}shared\_library"{}}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01073}01073\ \ \ \ \ \ \ \ \ \ \ \ \ shared\_deps.append(dep\_cmake\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01074}01074\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01075}01075\ \ \ \ \ \ \ \ \ \ \ \ \ other\_deps.append(dep\_cmake\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01076}01076\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01077}01077\ \ \ \ \ \textcolor{comment}{\#\ ensure\ all\ external\ dependencies\ are\ complete\ before\ internal\ dependencies}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01078}01078\ \ \ \ \ \textcolor{comment}{\#\ extra\_deps\ currently\ only\ depend\ on\ their\ own\ deps,\ so\ otherwise\ run\ early}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01079}01079\ \ \ \ \ \textcolor{keywordflow}{if}\ static\_deps\ \textcolor{keywordflow}{or}\ shared\_deps\ \textcolor{keywordflow}{or}\ other\_deps:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01080}01080\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ extra\_dep\ \textcolor{keywordflow}{in}\ extra\_deps:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01081}01081\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}add\_dependencies("{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01082}01082\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(extra\_dep)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01083}01083\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01084}01084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ deps\ \textcolor{keywordflow}{in}\ (static\_deps,\ shared\_deps,\ other\_deps):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01085}01085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ dep\ \textcolor{keywordflow}{in}\ \mbox{\hyperlink{namespacegyp_1_1common_ad189f1004790fca1b7cdfc7c01dde48f}{gyp.common.uniquer}}(deps):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01086}01086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ \ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01087}01087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(dep)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01088}01088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01089}01089\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{})\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01090}01090\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01091}01091\ \ \ \ \ linkable\ =\ target\_type\ \textcolor{keywordflow}{in}\ (\textcolor{stringliteral}{"{}executable"{}},\ \textcolor{stringliteral}{"{}loadable\_module"{}},\ \textcolor{stringliteral}{"{}shared\_library"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01092}01092\ \ \ \ \ other\_deps.extend(extra\_deps)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01093}01093\ \ \ \ \ \textcolor{keywordflow}{if}\ other\_deps\ \textcolor{keywordflow}{or}\ (\textcolor{keywordflow}{not}\ linkable\ \textcolor{keywordflow}{and}\ (static\_deps\ \textcolor{keywordflow}{or}\ shared\_deps)):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01094}01094\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}add\_dependencies("{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01095}01095\ \ \ \ \ \ \ \ \ output.write(cmake\_target\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01096}01096\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01097}01097\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ dep\ \textcolor{keywordflow}{in}\ \mbox{\hyperlink{namespacegyp_1_1common_ad189f1004790fca1b7cdfc7c01dde48f}{gyp.common.uniquer}}(other\_deps):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01098}01098\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ \ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01099}01099\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(dep)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01100}01100\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01101}01101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ linkable:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01102}01102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ deps\ \textcolor{keywordflow}{in}\ (static\_deps,\ shared\_deps):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01103}01103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ lib\_dep\ \textcolor{keywordflow}{in}\ \mbox{\hyperlink{namespacegyp_1_1common_ad189f1004790fca1b7cdfc7c01dde48f}{gyp.common.uniquer}}(deps):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01104}01104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ \ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01105}01105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(lib\_dep)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01106}01106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01107}01107\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{})\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01108}01108\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01109}01109\ \ \ \ \ \textcolor{comment}{\#\ Libraries}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01110}01110\ \ \ \ \ \textcolor{keywordflow}{if}\ linkable:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01111}01111\ \ \ \ \ \ \ \ \ external\_libs\ =\ [lib\ \textcolor{keywordflow}{for}\ lib\ \textcolor{keywordflow}{in}\ spec.get(\textcolor{stringliteral}{"{}libraries"{}},\ [])\ \textcolor{keywordflow}{if}\ len(lib)\ >\ 0]}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01112}01112\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ external\_libs\ \textcolor{keywordflow}{or}\ static\_deps\ \textcolor{keywordflow}{or}\ shared\_deps:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01113}01113\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}target\_link\_libraries("{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01114}01114\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(cmake\_target\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01115}01115\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01116}01116\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ static\_deps:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01117}01117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ write\_group\ =\ circular\_libs\ \textcolor{keywordflow}{and}\ len(static\_deps)\ >\ 1\ \textcolor{keywordflow}{and}\ flavor\ !=\ \textcolor{stringliteral}{"{}mac"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01118}01118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ write\_group:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01119}01119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}-\/Wl,-\/-\/start-\/group\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01120}01120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ dep\ \textcolor{keywordflow}{in}\ \mbox{\hyperlink{namespacegyp_1_1common_ad189f1004790fca1b7cdfc7c01dde48f}{gyp.common.uniquer}}(static\_deps):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01121}01121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ \ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01122}01122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(dep)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01123}01123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01124}01124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ write\_group:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01125}01125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}-\/Wl,-\/-\/end-\/group\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01126}01126\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ shared\_deps:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01127}01127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ dep\ \textcolor{keywordflow}{in}\ \mbox{\hyperlink{namespacegyp_1_1common_ad189f1004790fca1b7cdfc7c01dde48f}{gyp.common.uniquer}}(shared\_deps):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01128}01128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\ \ "{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01129}01129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(dep)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01130}01130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01131}01131\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ external\_libs:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01132}01132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ lib\ \textcolor{keywordflow}{in}\ \mbox{\hyperlink{namespacegyp_1_1common_ad189f1004790fca1b7cdfc7c01dde48f}{gyp.common.uniquer}}(external\_libs):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01133}01133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{'\ \ "{}'})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01134}01134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a843a0c5c56c7948ad31855e8365af79c}{RemovePrefix}}(lib,\ \textcolor{stringliteral}{"{}\$(SDKROOT)"{}}))}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01135}01135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{'"{}\(\backslash\)n'})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01136}01136\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01137}01137\ \ \ \ \ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{})\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01138}01138\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01139}01139\ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_abf5ff1d9526ddbbba59ff260e20322d7}{UnsetVariable}}(output,\ \textcolor{stringliteral}{"{}TOOLSET"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01140}01140\ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_abf5ff1d9526ddbbba59ff260e20322d7}{UnsetVariable}}(output,\ \textcolor{stringliteral}{"{}TARGET"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01141}01141\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01142}01142\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01143}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a165dcf6424838a1400df19070be8b2ff}{01143}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a165dcf6424838a1400df19070be8b2ff}{GenerateOutputForConfig}}(target\_list,\ target\_dicts,\ data,\ params,\ config\_to\_use):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01144}01144\ \ \ \ \ options\ =\ params[\textcolor{stringliteral}{"{}options"{}}]}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01145}01145\ \ \ \ \ generator\_flags\ =\ params[\textcolor{stringliteral}{"{}generator\_flags"{}}]}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01146}01146\ \ \ \ \ flavor\ =\ \mbox{\hyperlink{namespacegyp_1_1common_aeb48ab17a03cd7c40f5ad72fac713486}{gyp.common.GetFlavor}}(params)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01147}01147\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01148}01148\ \ \ \ \ \textcolor{comment}{\#\ generator\_dir:\ relative\ path\ from\ pwd\ to\ where\ make\ puts\ build\ files.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01149}01149\ \ \ \ \ \textcolor{comment}{\#\ Makes\ migrating\ from\ make\ to\ cmake\ easier,\ cmake\ doesn't\ put\ anything\ here.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01150}01150\ \ \ \ \ \textcolor{comment}{\#\ Each\ Gyp\ configuration\ creates\ a\ different\ CMakeLists.txt\ file}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01151}01151\ \ \ \ \ \textcolor{comment}{\#\ to\ avoid\ incompatibilities\ between\ Gyp\ and\ CMake\ configurations.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01152}01152\ \ \ \ \ generator\_dir\ =\ os.path.relpath(options.generator\_output\ \textcolor{keywordflow}{or}\ \textcolor{stringliteral}{"{}."{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01153}01153\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01154}01154\ \ \ \ \ \textcolor{comment}{\#\ output\_dir:\ relative\ path\ from\ generator\_dir\ to\ the\ build\ directory.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01155}01155\ \ \ \ \ output\_dir\ =\ generator\_flags.get(\textcolor{stringliteral}{"{}output\_dir"{}},\ \textcolor{stringliteral}{"{}out"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01156}01156\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01157}01157\ \ \ \ \ \textcolor{comment}{\#\ build\_dir:\ relative\ path\ from\ source\ root\ to\ our\ output\ files.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01158}01158\ \ \ \ \ \textcolor{comment}{\#\ e.g.\ "{}out/Debug"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01159}01159\ \ \ \ \ build\_dir\ =\ os.path.normpath(os.path.join(generator\_dir,\ output\_dir,\ config\_to\_use))}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01160}01160\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01161}01161\ \ \ \ \ toplevel\_build\ =\ os.path.join(options.toplevel\_dir,\ build\_dir)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01162}01162\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01163}01163\ \ \ \ \ output\_file\ =\ os.path.join(toplevel\_build,\ \textcolor{stringliteral}{"{}CMakeLists.txt"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01164}01164\ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1common_a62411b7ed9f7220bb951ea26e91e4e15}{gyp.common.EnsureDirExists}}(output\_file)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01165}01165\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01166}01166\ \ \ \ \ output\ =\ open(output\_file,\ \textcolor{stringliteral}{"{}w"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01167}01167\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}cmake\_minimum\_required(VERSION\ 2.8.8\ FATAL\_ERROR)\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01168}01168\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}cmake\_policy(VERSION\ 2.8.8)\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01169}01169\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01170}01170\ \ \ \ \ gyp\_file,\ project\_target,\ \_\ =\ \mbox{\hyperlink{namespacegyp_1_1common_a51180f038e57ff79c30f6231d1d7958f}{gyp.common.ParseQualifiedTarget}}(target\_list[-\/1])}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01171}01171\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}project("{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01172}01172\ \ \ \ \ output.write(project\_target)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01173}01173\ \ \ \ \ output.write(\textcolor{stringliteral}{"{})\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01174}01174\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01175}01175\ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_affa21f36ef73a3d339d97ab0a5939559}{SetVariable}}(output,\ \textcolor{stringliteral}{"{}configuration"{}},\ config\_to\_use)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01176}01176\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01177}01177\ \ \ \ \ ar\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01178}01178\ \ \ \ \ cc\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01179}01179\ \ \ \ \ cxx\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01180}01180\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01181}01181\ \ \ \ \ make\_global\_settings\ =\ data[gyp\_file].get(\textcolor{stringliteral}{"{}make\_global\_settings"{}},\ [])}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01182}01182\ \ \ \ \ build\_to\_top\ =\ \mbox{\hyperlink{namespacegyp_1_1common_a444243e74701615d1cdb73c45ab80575}{gyp.common.InvertRelativePath}}(build\_dir,\ options.toplevel\_dir)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01183}01183\ \ \ \ \ \textcolor{keywordflow}{for}\ key,\ value\ \textcolor{keywordflow}{in}\ make\_global\_settings:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01184}01184\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ key\ ==\ \textcolor{stringliteral}{"{}AR"{}}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01185}01185\ \ \ \ \ \ \ \ \ \ \ \ \ ar\ =\ os.path.join(build\_to\_top,\ value)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01186}01186\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ key\ ==\ \textcolor{stringliteral}{"{}CC"{}}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01187}01187\ \ \ \ \ \ \ \ \ \ \ \ \ cc\ =\ os.path.join(build\_to\_top,\ value)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01188}01188\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ key\ ==\ \textcolor{stringliteral}{"{}CXX"{}}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01189}01189\ \ \ \ \ \ \ \ \ \ \ \ \ cxx\ =\ os.path.join(build\_to\_top,\ value)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01190}01190\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01191}01191\ \ \ \ \ ar\ =\ \mbox{\hyperlink{namespacegyp_1_1common_a9d4e917fb02c16790daa4d9d4abb0758}{gyp.common.GetEnvironFallback}}([\textcolor{stringliteral}{"{}AR\_target"{}},\ \textcolor{stringliteral}{"{}AR"{}}],\ ar)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01192}01192\ \ \ \ \ cc\ =\ \mbox{\hyperlink{namespacegyp_1_1common_a9d4e917fb02c16790daa4d9d4abb0758}{gyp.common.GetEnvironFallback}}([\textcolor{stringliteral}{"{}CC\_target"{}},\ \textcolor{stringliteral}{"{}CC"{}}],\ cc)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01193}01193\ \ \ \ \ cxx\ =\ \mbox{\hyperlink{namespacegyp_1_1common_a9d4e917fb02c16790daa4d9d4abb0758}{gyp.common.GetEnvironFallback}}([\textcolor{stringliteral}{"{}CXX\_target"{}},\ \textcolor{stringliteral}{"{}CXX"{}}],\ cxx)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01194}01194\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01195}01195\ \ \ \ \ \textcolor{keywordflow}{if}\ ar:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01196}01196\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_affa21f36ef73a3d339d97ab0a5939559}{SetVariable}}(output,\ \textcolor{stringliteral}{"{}CMAKE\_AR"{}},\ ar)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01197}01197\ \ \ \ \ \textcolor{keywordflow}{if}\ cc:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01198}01198\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_affa21f36ef73a3d339d97ab0a5939559}{SetVariable}}(output,\ \textcolor{stringliteral}{"{}CMAKE\_C\_COMPILER"{}},\ cc)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01199}01199\ \ \ \ \ \textcolor{keywordflow}{if}\ cxx:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01200}01200\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_affa21f36ef73a3d339d97ab0a5939559}{SetVariable}}(output,\ \textcolor{stringliteral}{"{}CMAKE\_CXX\_COMPILER"{}},\ cxx)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01201}01201\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01202}01202\ \ \ \ \ \textcolor{comment}{\#\ The\ following\ appears\ to\ be\ as-\/yet\ undocumented.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01203}01203\ \ \ \ \ \textcolor{comment}{\#\ http://public.kitware.com/Bug/view.php?id=8392}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01204}01204\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}enable\_language(ASM)\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01205}01205\ \ \ \ \ \textcolor{comment}{\#\ ASM-\/ATT\ does\ not\ support\ .S\ files.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01206}01206\ \ \ \ \ \textcolor{comment}{\#\ output.write('enable\_language(ASM-\/ATT)\(\backslash\)n')}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01207}01207\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01208}01208\ \ \ \ \ \textcolor{keywordflow}{if}\ cc:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01209}01209\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_affa21f36ef73a3d339d97ab0a5939559}{SetVariable}}(output,\ \textcolor{stringliteral}{"{}CMAKE\_ASM\_COMPILER"{}},\ cc)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01210}01210\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01211}01211\ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_affa21f36ef73a3d339d97ab0a5939559}{SetVariable}}(output,\ \textcolor{stringliteral}{"{}builddir"{}},\ \textcolor{stringliteral}{"{}\$\{CMAKE\_CURRENT\_BINARY\_DIR\}"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01212}01212\ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_affa21f36ef73a3d339d97ab0a5939559}{SetVariable}}(output,\ \textcolor{stringliteral}{"{}obj"{}},\ \textcolor{stringliteral}{"{}\$\{builddir\}/obj"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01213}01213\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01214}01214\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01215}01215\ \ \ \ \ \textcolor{comment}{\#\ TODO:\ Undocumented/unsupported\ (the\ CMake\ Java\ generator\ depends\ on\ it).}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01216}01216\ \ \ \ \ \textcolor{comment}{\#\ CMake\ by\ default\ names\ the\ object\ resulting\ from\ foo.c\ to\ be\ foo.c.o.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01217}01217\ \ \ \ \ \textcolor{comment}{\#\ Gyp\ traditionally\ names\ the\ object\ resulting\ from\ foo.c\ foo.o.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01218}01218\ \ \ \ \ \textcolor{comment}{\#\ This\ should\ be\ irrelevant,\ but\ some\ targets\ extract\ .o\ files\ from\ .a}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01219}01219\ \ \ \ \ \textcolor{comment}{\#\ and\ depend\ on\ the\ name\ of\ the\ extracted\ .o\ files.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01220}01220\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}set(CMAKE\_C\_OUTPUT\_EXTENSION\_REPLACE\ 1)\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01221}01221\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}set(CMAKE\_CXX\_OUTPUT\_EXTENSION\_REPLACE\ 1)\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01222}01222\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01223}01223\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01224}01224\ \ \ \ \ \textcolor{comment}{\#\ Force\ ninja\ to\ use\ rsp\ files.\ Otherwise\ link\ and\ ar\ lines\ can\ get\ too\ long,}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01225}01225\ \ \ \ \ \textcolor{comment}{\#\ resulting\ in\ 'Argument\ list\ too\ long'\ errors.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01226}01226\ \ \ \ \ \textcolor{comment}{\#\ However,\ rsp\ files\ don't\ work\ correctly\ on\ Mac.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01227}01227\ \ \ \ \ \textcolor{keywordflow}{if}\ flavor\ !=\ \textcolor{stringliteral}{"{}mac"{}}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01228}01228\ \ \ \ \ \ \ \ \ output.write(\textcolor{stringliteral}{"{}set(CMAKE\_NINJA\_FORCE\_RESPONSE\_FILE\ 1)\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01229}01229\ \ \ \ \ output.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01230}01230\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01231}01231\ \ \ \ \ namer\ =\ \mbox{\hyperlink{classgyp_1_1generator_1_1cmake_1_1_c_make_namer}{CMakeNamer}}(target\_list)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01232}01232\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01233}01233\ \ \ \ \ \textcolor{comment}{\#\ The\ list\ of\ targets\ upon\ which\ the\ 'all'\ target\ should\ depend.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01234}01234\ \ \ \ \ \textcolor{comment}{\#\ CMake\ has\ it's\ own\ implicit\ 'all'\ target,\ one\ is\ not\ created\ explicitly.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01235}01235\ \ \ \ \ all\_qualified\_targets\ =\ set()}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01236}01236\ \ \ \ \ \textcolor{keywordflow}{for}\ build\_file\ \textcolor{keywordflow}{in}\ params[\textcolor{stringliteral}{"{}build\_files"{}}]:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01237}01237\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ qualified\_target\ \textcolor{keywordflow}{in}\ \mbox{\hyperlink{namespacegyp_1_1common_ae29bb9a2368860059458248dd76adeaa}{gyp.common.AllTargets}}(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01238}01238\ \ \ \ \ \ \ \ \ \ \ \ \ target\_list,\ target\_dicts,\ os.path.normpath(build\_file)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01239}01239\ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01240}01240\ \ \ \ \ \ \ \ \ \ \ \ \ all\_qualified\_targets.add(qualified\_target)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01241}01241\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01242}01242\ \ \ \ \ \textcolor{keywordflow}{for}\ qualified\_target\ \textcolor{keywordflow}{in}\ target\_list:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01243}01243\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ flavor\ ==\ \textcolor{stringliteral}{"{}mac"{}}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01244}01244\ \ \ \ \ \ \ \ \ \ \ \ \ gyp\_file,\ \_,\ \_\ =\ \mbox{\hyperlink{namespacegyp_1_1common_a51180f038e57ff79c30f6231d1d7958f}{gyp.common.ParseQualifiedTarget}}(qualified\_target)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01245}01245\ \ \ \ \ \ \ \ \ \ \ \ \ spec\ =\ target\_dicts[qualified\_target]}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01246}01246\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1xcode__emulation_a96f95b2f8275df1b0ce296a4559cbe32}{gyp.xcode\_emulation.MergeGlobalXcodeSettingsToSpec}}(data[gyp\_file],\ spec)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01247}01247\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01248}01248\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a03c12668c7f3b1764561e6d887e482b3}{WriteTarget}}(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01249}01249\ \ \ \ \ \ \ \ \ \ \ \ \ namer,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01250}01250\ \ \ \ \ \ \ \ \ \ \ \ \ qualified\_target,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01251}01251\ \ \ \ \ \ \ \ \ \ \ \ \ target\_dicts,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01252}01252\ \ \ \ \ \ \ \ \ \ \ \ \ build\_dir,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01253}01253\ \ \ \ \ \ \ \ \ \ \ \ \ config\_to\_use,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01254}01254\ \ \ \ \ \ \ \ \ \ \ \ \ options,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01255}01255\ \ \ \ \ \ \ \ \ \ \ \ \ generator\_flags,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01256}01256\ \ \ \ \ \ \ \ \ \ \ \ \ all\_qualified\_targets,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01257}01257\ \ \ \ \ \ \ \ \ \ \ \ \ flavor,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01258}01258\ \ \ \ \ \ \ \ \ \ \ \ \ output,}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01259}01259\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01260}01260\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01261}01261\ \ \ \ \ output.close()}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01262}01262\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01263}01263\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01264}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a6276444d71b2932afcefc124a27e3e70}{01264}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a6276444d71b2932afcefc124a27e3e70}{PerformBuild}}(data,\ configurations,\ params):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01265}01265\ \ \ \ \ options\ =\ params[\textcolor{stringliteral}{"{}options"{}}]}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01266}01266\ \ \ \ \ generator\_flags\ =\ params[\textcolor{stringliteral}{"{}generator\_flags"{}}]}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01267}01267\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01268}01268\ \ \ \ \ \textcolor{comment}{\#\ generator\_dir:\ relative\ path\ from\ pwd\ to\ where\ make\ puts\ build\ files.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01269}01269\ \ \ \ \ \textcolor{comment}{\#\ Makes\ migrating\ from\ make\ to\ cmake\ easier,\ cmake\ doesn't\ put\ anything\ here.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01270}01270\ \ \ \ \ generator\_dir\ =\ os.path.relpath(options.generator\_output\ \textcolor{keywordflow}{or}\ \textcolor{stringliteral}{"{}."{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01271}01271\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01272}01272\ \ \ \ \ \textcolor{comment}{\#\ output\_dir:\ relative\ path\ from\ generator\_dir\ to\ the\ build\ directory.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01273}01273\ \ \ \ \ output\_dir\ =\ generator\_flags.get(\textcolor{stringliteral}{"{}output\_dir"{}},\ \textcolor{stringliteral}{"{}out"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01274}01274\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01275}01275\ \ \ \ \ \textcolor{keywordflow}{for}\ config\_name\ \textcolor{keywordflow}{in}\ configurations:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01276}01276\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ build\_dir:\ relative\ path\ from\ source\ root\ to\ our\ output\ files.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01277}01277\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ e.g.\ "{}out/Debug"{}}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01278}01278\ \ \ \ \ \ \ \ \ build\_dir\ =\ os.path.normpath(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01279}01279\ \ \ \ \ \ \ \ \ \ \ \ \ os.path.join(generator\_dir,\ output\_dir,\ config\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01280}01280\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01281}01281\ \ \ \ \ \ \ \ \ arguments\ =\ [\textcolor{stringliteral}{"{}cmake"{}},\ \textcolor{stringliteral}{"{}-\/G"{}},\ \textcolor{stringliteral}{"{}Ninja"{}}]}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01282}01282\ \ \ \ \ \ \ \ \ print(f\textcolor{stringliteral}{"{}Generating\ [\{config\_name\}]:\ \{arguments\}"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01283}01283\ \ \ \ \ \ \ \ \ subprocess.check\_call(arguments,\ cwd=build\_dir)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01284}01284\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01285}01285\ \ \ \ \ \ \ \ \ arguments\ =\ [\textcolor{stringliteral}{"{}ninja"{}},\ \textcolor{stringliteral}{"{}-\/C"{}},\ build\_dir]}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01286}01286\ \ \ \ \ \ \ \ \ print(f\textcolor{stringliteral}{"{}Building\ [\{config\_name\}]:\ \{arguments\}"{}})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01287}01287\ \ \ \ \ \ \ \ \ subprocess.check\_call(arguments)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01288}01288\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01289}01289\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01290}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_adf0ee6fbcd0833c9f6b2023f1e38a92b}{01290}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_adf0ee6fbcd0833c9f6b2023f1e38a92b}{CallGenerateOutputForConfig}}(arglist):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01291}01291\ \ \ \ \ \textcolor{comment}{\#\ Ignore\ the\ interrupt\ signal\ so\ that\ the\ parent\ process\ catches\ it\ and}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01292}01292\ \ \ \ \ \textcolor{comment}{\#\ kills\ all\ multiprocessing\ children.}}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01293}01293\ \ \ \ \ signal.signal(signal.SIGINT,\ signal.SIG\_IGN)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01294}01294\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01295}01295\ \ \ \ \ target\_list,\ target\_dicts,\ data,\ params,\ config\_name\ =\ arglist}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01296}01296\ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a165dcf6424838a1400df19070be8b2ff}{GenerateOutputForConfig}}(target\_list,\ target\_dicts,\ data,\ params,\ config\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01297}01297\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01298}01298\ }
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01299}\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_af5d8157ae03ee9d229bf36a2e99d7dec}{01299}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_af5d8157ae03ee9d229bf36a2e99d7dec}{GenerateOutput}}(target\_list,\ target\_dicts,\ data,\ params):}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01300}01300\ \ \ \ \ user\_config\ =\ params.get(\textcolor{stringliteral}{"{}generator\_flags"{}},\ \{\}).get(\textcolor{stringliteral}{"{}config"{}},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01301}01301\ \ \ \ \ \textcolor{keywordflow}{if}\ user\_config:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01302}01302\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a165dcf6424838a1400df19070be8b2ff}{GenerateOutputForConfig}}(target\_list,\ target\_dicts,\ data,\ params,\ user\_config)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01303}01303\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01304}01304\ \ \ \ \ \ \ \ \ config\_names\ =\ target\_dicts[target\_list[0]][\textcolor{stringliteral}{"{}configurations"{}}]}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01305}01305\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ params[\textcolor{stringliteral}{"{}parallel"{}}]:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01306}01306\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01307}01307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pool\ =\ multiprocessing.Pool(len(config\_names))}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01308}01308\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ arglists\ =\ []}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01309}01309\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ config\_name\ \textcolor{keywordflow}{in}\ config\_names:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01310}01310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ arglists.append(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01311}01311\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (target\_list,\ target\_dicts,\ data,\ params,\ config\_name)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01312}01312\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01313}01313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pool.map(CallGenerateOutputForConfig,\ arglists)}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01314}01314\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{except}\ KeyboardInterrupt\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01315}01315\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pool.terminate()}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01316}01316\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ e}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01317}01317\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01318}01318\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ config\_name\ \textcolor{keywordflow}{in}\ config\_names:}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01319}01319\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1cmake_a165dcf6424838a1400df19070be8b2ff}{GenerateOutputForConfig}}(}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01320}01320\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ target\_list,\ target\_dicts,\ data,\ params,\ config\_name}
+\DoxyCodeLine{\Hypertarget{cmake_8py_source_l01321}01321\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+
+\end{DoxyCode}

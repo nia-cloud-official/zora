@@ -1,0 +1,72 @@
+.TH "md_backend_2node__modules_2aproba_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2aproba_2_r_e_a_d_m_e \- aproba 
+.PP
+A ridiculously light-weight function argument validator
+.PP
+.PP
+.nf
+var validate = require("aproba")
+
+function myfunc(a, b, c) {
+  // `a` must be a string, `b` a number, `c` a function
+  validate('SNF', arguments) // [a,b,c] is also valid
+}
+
+myfunc('test', 23, function () {}) // ok
+myfunc(123, 23, function () {}) // type error
+myfunc('test', 23) // missing arg error
+myfunc('test', 23, function () {}, true) // too many args error
+.fi
+.PP
+.PP
+Valid types are:
+.PP
+type   description    *   matches any type    A   \fRArray\&.isArray\fP OR an \fRarguments\fP object    S   typeof == string    N   typeof == number    F   typeof == function    O   typeof == object and not type A and not type E    B   typeof == boolean    E   \fRinstanceof Error\fP OR \fRnull\fP **(special: see below)**    Z   == \fRnull\fP   
+.PP
+Validation failures throw one of three exception types, distinguished by a \fRcode\fP property of \fREMISSINGARG\fP, \fREINVALIDTYPE\fP or \fRETOOMANYARGS\fP\&.
+.PP
+If you pass in an invalid type then it will throw with a code of \fREUNKNOWNTYPE\fP\&.
+.PP
+If an \fBerror\fP argument is found and is not null then the remaining arguments are optional\&. That is, if you say \fRESO\fP then that's like using a non-magical \fRE\fP in: \fRE|ESO|ZSO\fP\&.
+.SS "But I have optional arguments?!"
+You can provide more than one signature by separating them with pipes \fR|\fP\&. If any signature matches the arguments then they'll be considered valid\&.
+.PP
+So for example, say you wanted to write a signature for \fRfs\&.createWriteStream\fP\&. The docs for it describe it thusly:
+.PP
+.PP
+.nf
+fs\&.createWriteStream(path[, options])
+.fi
+.PP
+.PP
+This would be a signature of \fRSO|S\fP\&. That is, a string and and object, or just a string\&.
+.PP
+Now, if you read the full \fRfs\fP docs, you'll see that actually path can ALSO be a buffer\&. And options can be a string, that is: 
+.PP
+.nf
+path <String> | <Buffer>
+options <String> | <Object>
+
+.fi
+.PP
+.PP
+To reproduce this you have to fully enumerate all of the possible combinations and that implies a signature of \fRSO|SS|OO|OS|S|O\fP\&. The awkwardness is a feature: It reminds you of the complexity you're adding to your API when you do this sort of thing\&.
+.SS "Browser support"
+This has no dependencies and should work in browsers, though you'll have noisier stack traces\&.
+.SS "Why this exists"
+I wanted a very simple argument validator\&. It needed to do two things:
+.PP
+.IP "1." 4
+Be more concise and easier to use than assertions
+.IP "2." 4
+Not encourage an infinite bikeshed of DSLs
+.PP
+.PP
+This is why types are specified by a single character and there's no such thing as an optional argument\&.
+.PP
+This is not intended to validate user data\&. This is specifically about asserting the interface of your functions\&.
+.PP
+If you need greater validation, I encourage you to write them by hand or look elsewhere\&. 

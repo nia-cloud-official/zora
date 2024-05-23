@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e</compoundname>
+    <title>sprintf-js</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e_1autotoc_md3582"/> <ulink url="https://travis-ci.org/alexei/sprintf.js"><image type="html" name="https://travis-ci.org/alexei/sprintf.js.svg?branch=master" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://badge.fury.io/js/sprintf-js"><image type="html" name="https://badge.fury.io/js/sprintf-js.svg" alt="NPM Version" inline="yes"></image>
+</ulink> <ulink url="https://david-dm.org/alexei/sprintf.js"><image type="html" name="https://david-dm.org/alexei/sprintf.js.svg" alt="Dependency Status" inline="yes"></image>
+</ulink> <ulink url="https://david-dm.org/alexei/sprintf.js#info=devDependencies"><image type="html" name="https://david-dm.org/alexei/sprintf.js/dev-status.svg" alt="devDependency Status" inline="yes"></image>
+</ulink></para>
+<para><bold>sprintf-js</bold> is a complete open source JavaScript <computeroutput>sprintf</computeroutput> implementation for the <bold>browser</bold> and <bold>Node.js</bold>.</para>
+<para><bold>Note: as of v1.1.1 you might need some polyfills for older environments. See Support section below.</bold></para>
+<sect1 id="md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e_1autotoc_md3583">
+<title>Usage</title><para><verbatim>var sprintf = require(&apos;sprintf-js&apos;).sprintf,
+    vsprintf = require(&apos;sprintf-js&apos;).vsprintf
+
+sprintf(&apos;%2$s %3$s a %1$s&apos;, &apos;cracker&apos;, &apos;Polly&apos;, &apos;wants&apos;)
+vsprintf(&apos;The first 4 letters of the english alphabet are: %s, %s, %s and %s&apos;, [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;])
+</verbatim> </para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e_1autotoc_md3584">
+<title>Installation</title><sect2 id="md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e_1autotoc_md3585">
+<title>NPM</title><para><verbatim>npm install sprintf-js
+</verbatim> </para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e_1autotoc_md3586">
+<title>Bower</title><para><verbatim>bower install sprintf
+</verbatim> </para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e_1autotoc_md3587">
+<title>API</title><sect2 id="md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e_1autotoc_md3588">
+<title><computeroutput>sprintf</computeroutput></title><para>Returns a formatted string: <verbatim>string sprintf(string format, mixed arg1?, mixed arg2?, ...)
+</verbatim> </para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e_1autotoc_md3589">
+<title><computeroutput>vsprintf</computeroutput></title><para>Same as <computeroutput>sprintf</computeroutput> except it takes an array of arguments, rather than a variable number of arguments: <verbatim>string vsprintf(string format, array arguments?)
+</verbatim> </para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e_1autotoc_md3590">
+<title>Format specification</title><para>The placeholders in the format string are marked by <computeroutput>%</computeroutput> and are followed by one or more of these elements, in this order:</para>
+<para><itemizedlist>
+<listitem><para>An optional number followed by a <computeroutput>$</computeroutput> sign that selects which argument index to use for the value. If not specified, arguments will be placed in the same order as the placeholders in the input string.</para>
+</listitem><listitem><para>An optional <computeroutput>+</computeroutput> sign that forces to precede the result with a plus or minus sign on numeric values. By default, only the <computeroutput>-</computeroutput> sign is used on negative numbers.</para>
+</listitem><listitem><para>An optional padding specifier that says what character to use for padding (if specified). Possible values are <computeroutput>0</computeroutput> or any other character preceded by a <lsquo/><rsquo/><computeroutput>(single quote). The default is to pad with *spaces*.</computeroutput></para>
+</listitem><listitem><para><computeroutput>An optional</computeroutput>-<computeroutput>sign, that causes</computeroutput>sprintf<computeroutput>to left-align the result of this placeholder. The default is to right-align the result.</computeroutput></para>
+</listitem><listitem><para><computeroutput>An optional number, that says how many characters the result should have. If the value to be returned is shorter than this number, the result will be padded. When used with the</computeroutput>j&lt;tt&gt;(JSON) type specifier, the padding length specifies the tab size used for indentation.</para>
+</listitem><listitem><para>An optional precision modifier, consisting of a</para>
+</listitem></itemizedlist>
+.<computeroutput>(dot) followed by a number, that says how many digits should be displayed for floating point numbers. When used with the</computeroutput>g<computeroutput>type specifier, it specifies the number of significant digits. When used on a string, it causes the result to be truncated.<itemizedlist>
+<listitem><para>A type specifier that can be any of: *</para>
+</listitem></itemizedlist>
+</computeroutput>%<computeroutput>— yields a literal</computeroutput>%<computeroutput>character *</computeroutput>b<computeroutput>— yields an integer as a binary number *</computeroutput>c<computeroutput>— yields an integer as the character with that ASCII value *</computeroutput>d<computeroutput>or</computeroutput>i<computeroutput>— yields an integer as a signed decimal number *</computeroutput>e<computeroutput>— yields a float using scientific notation *</computeroutput>u<computeroutput>— yields an integer as an unsigned decimal number *</computeroutput>f<computeroutput>— yields a float as is; see notes on precision above *</computeroutput>g<computeroutput>— yields a float as is; see notes on precision above *</computeroutput>o<computeroutput>— yields an integer as an octal number *</computeroutput>s<computeroutput>— yields a string as is *</computeroutput>t<computeroutput>— yields</computeroutput>true<computeroutput>or</computeroutput>false<computeroutput> *</computeroutput>T<computeroutput>— yields the type of the argument&lt;sup&gt;&lt;a href=&quot;#fn-1&quot; name=&quot;fn-ref-1&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; *</computeroutput>v<computeroutput>— yields the primitive value of the specified argument *</computeroutput>x<computeroutput>— yields an integer as a hexadecimal number (lower-case) *</computeroutput>X<computeroutput>— yields an integer as a hexadecimal number (upper-case) *</computeroutput>j` — yields a JavaScript object or array as a JSON encoded string</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e_1autotoc_md3591">
+<title>Features</title><sect2 id="md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e_1autotoc_md3592">
+<title>Argument swapping</title><para>You can also swap the arguments. That is, the order of the placeholders doesn&apos;t have to match the order of the arguments. You can do that by simply indicating in the format string which arguments the placeholders refer to: <verbatim>sprintf(&apos;%2$s %3$s a %1$s&apos;, &apos;cracker&apos;, &apos;Polly&apos;, &apos;wants&apos;)
+</verbatim> And, of course, you can repeat the placeholders without having to increase the number of arguments.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e_1autotoc_md3593">
+<title>Named arguments</title><para>Format strings may contain replacement fields rather than positional placeholders. Instead of referring to a certain argument, you can now refer to a certain key within an object. Replacement fields are surrounded by rounded parentheses - <computeroutput>(</computeroutput> and <computeroutput>)</computeroutput> - and begin with a keyword that refers to a key: <verbatim>var user = {
+    name: &apos;Dolly&apos;,
+}
+sprintf(&apos;Hello %(name)s&apos;, user) // Hello Dolly
+</verbatim> Keywords in replacement fields can be optionally followed by any number of keywords or indexes: <verbatim>var users = [
+    {name: &apos;Dolly&apos;},
+    {name: &apos;Molly&apos;},
+    {name: &apos;Polly&apos;},
+]
+sprintf(&apos;Hello %(users[0].name)s, %(users[1].name)s and %(users[2].name)s&apos;, {users: users}) // Hello Dolly, Molly and Polly
+</verbatim> Note: mixing positional and named placeholders is not (yet) supported</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e_1autotoc_md3594">
+<title>Computed values</title><para>You can pass in a function as a dynamic value and it will be invoked (with no arguments) in order to compute the value on the fly. <verbatim>sprintf(&apos;Current date and time: %s&apos;, function() { return new Date().toString() })
+</verbatim> </para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e_1autotoc_md3595">
+<title>AngularJS</title><para>You can use <computeroutput>sprintf</computeroutput> and <computeroutput>vsprintf</computeroutput> (also aliased as <computeroutput>fmt</computeroutput> and <computeroutput>vfmt</computeroutput> respectively) in your AngularJS projects. See <computeroutput>demo/</computeroutput>.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e_1autotoc_md3596">
+<title>Support</title><sect2 id="md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e_1autotoc_md3597">
+<title>Node.js</title><para><computeroutput>sprintf-js</computeroutput> runs in all active Node versions (4.x+).</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e_1autotoc_md3598">
+<title>Browser</title><para><computeroutput>sprintf-js</computeroutput> should work in all modern browsers. As of v1.1.1, you might need polyfills for the following:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>String.prototype.repeat()</computeroutput> (any IE)</para>
+</listitem><listitem><para><computeroutput>Array.isArray()</computeroutput> (IE &lt; 9)</para>
+</listitem><listitem><para><computeroutput>Object.create()</computeroutput> (IE &lt; 9)</para>
+</listitem></itemizedlist>
+</para>
+<para>YMMV</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e_1autotoc_md3599">
+<title>License</title><para><bold>sprintf-js</bold> is licensed under the terms of the BSD 3-Clause License.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e_1autotoc_md3600">
+<title>Notes</title><para><small><superscript><anchor id="md_backend_2node__modules_2sprintf-js_2_r_e_a_d_m_e_1fn-1"/>1</superscript> <computeroutput>sprintf</computeroutput> doesn&apos;t use the <computeroutput>typeof</computeroutput> operator. As such, the value <computeroutput>null</computeroutput> is a <computeroutput>null</computeroutput>, an array is an <computeroutput>array</computeroutput> (not an <computeroutput>object</computeroutput>), a date value is a <computeroutput>date</computeroutput> etc.</small> </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/sprintf-js/README.md"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,44 @@
+.TH "md_backend_2node__modules_2signal-exit_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2signal-exit_2_r_e_a_d_m_e \- signal-exit 
+.PP
+ \fR\fP \fR\fP \fR\fP \fR\fP
+.PP
+When you want to fire an event no matter how a process exits:
+.PP
+.IP "\(bu" 2
+reaching the end of execution\&.
+.IP "\(bu" 2
+explicitly having \fRprocess\&.exit(code)\fP called\&.
+.IP "\(bu" 2
+having \fRprocess\&.kill(pid, sig)\fP called\&.
+.IP "\(bu" 2
+receiving a fatal signal from outside the process
+.PP
+.PP
+Use \fRsignal-exit\fP\&.
+.PP
+.PP
+.nf
+var onExit = require('signal\-exit')
+
+onExit(function (code, signal) {
+  console\&.log('process exited!')
+})
+.fi
+.PP
+.SH "API"
+.PP
+\fRvar remove = onExit(function (code, signal) {}, options)\fP
+.PP
+The return value of the function is a function that will remove the handler\&.
+.PP
+Note that the function \fIonly\fP fires for signals if the signal would cause the process to exit\&. That is, there are no other listeners, and it is a fatal signal\&.
+.SH "Options"
+.PP
+.IP "\(bu" 2
+\fRalwaysLast\fP: Run this handler after any other signal or exit handlers\&. This causes \fRprocess\&.emit\fP to be monkeypatched\&. 
+.PP
+

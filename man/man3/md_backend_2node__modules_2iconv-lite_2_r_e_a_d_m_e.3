@@ -1,0 +1,185 @@
+.TH "md_backend_2node__modules_2iconv-lite_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2iconv-lite_2_r_e_a_d_m_e \- Pure JS character encoding conversion \fR\fP 
+.PP
+
+.IP "\(bu" 2
+Doesn't need native code compilation\&. Works on Windows and in sandboxed environments like \fRCloud9\fP\&.
+.IP "\(bu" 2
+Used in popular projects like \fRExpress\&.js (body_parser)\fP, \fRGrunt\fP, \fRNodemailer\fP, \fRYeoman\fP and others\&.
+.IP "\(bu" 2
+Faster than \fRnode-iconv\fP (see below for performance comparison)\&.
+.IP "\(bu" 2
+Intuitive encode/decode API
+.IP "\(bu" 2
+Streaming support for Node v0\&.10+
+.IP "\(bu" 2
+[Deprecated] Can extend Node\&.js primitives (buffers, streams) to support all iconv-lite encodings\&.
+.IP "\(bu" 2
+In-browser usage via \fRBrowserify\fP (~180k gzip compressed with Buffer shim included)\&.
+.IP "\(bu" 2
+Typescript \fRtype definition file\fP included\&.
+.IP "\(bu" 2
+React Native is supported (need to explicitly \fRnpm install\fP two more modules: \fRbuffer\fP and \fRstream\fP)\&.
+.IP "\(bu" 2
+License: MIT\&.
+.PP
+.PP
+\fR\fP.SH "Usage"
+.PP
+.SS "Basic API"
+.PP
+.nf
+var iconv = require('iconv\-lite');
+
+// Convert from an encoded buffer to js string\&.
+str = iconv\&.decode(Buffer\&.from([0x68, 0x65, 0x6c, 0x6c, 0x6f]), 'win1251');
+
+// Convert from js string to an encoded buffer\&.
+buf = iconv\&.encode("Sample input string", 'win1251');
+
+// Check if encoding is supported
+iconv\&.encodingExists("us\-ascii")
+.fi
+.PP
+.SS "Streaming API (Node v0\&.10+)"
+.PP
+.nf
+// Decode stream (from binary stream to js strings)
+http\&.createServer(function(req, res) {
+    var converterStream = iconv\&.decodeStream('win1251');
+    req\&.pipe(converterStream);
+
+    converterStream\&.on('data', function(str) {
+        console\&.log(str); // Do something with decoded strings, chunk\-by\-chunk\&.
+    });
+});
+
+// Convert encoding streaming example
+fs\&.createReadStream('file\-in\-win1251\&.txt')
+    \&.pipe(iconv\&.decodeStream('win1251'))
+    \&.pipe(iconv\&.encodeStream('ucs2'))
+    \&.pipe(fs\&.createWriteStream('file\-in\-ucs2\&.txt'));
+
+// Sugar: all encode/decode streams have \&.collect(cb) method to accumulate data\&.
+http\&.createServer(function(req, res) {
+    req\&.pipe(iconv\&.decodeStream('win1251'))\&.collect(function(err, body) {
+        assert(typeof body == 'string');
+        console\&.log(body); // full request body string
+    });
+});
+.fi
+.PP
+.SS "[Deprecated] Extend Node\&.js own encodings"
+.RS 4
+NOTE: This doesn't work on latest Node versions\&. See \fRdetails\fP\&. 
+.RE
+.PP
+.PP
+.PP
+.nf
+// After this call all Node basic primitives will understand iconv\-lite encodings\&.
+iconv\&.extendNodeEncodings();
+
+// Examples:
+buf = new Buffer(str, 'win1251');
+buf\&.write(str, 'gbk');
+str = buf\&.toString('latin1');
+assert(Buffer\&.isEncoding('iso\-8859\-15'));
+Buffer\&.byteLength(str, 'us\-ascii');
+
+http\&.createServer(function(req, res) {
+    req\&.setEncoding('big5');
+    req\&.collect(function(err, body) {
+        console\&.log(body);
+    });
+});
+
+fs\&.createReadStream("file\&.txt", "shift_jis");
+
+// External modules are also supported (if they use Node primitives, which they probably do)\&.
+request = require('request');
+request({
+    url: "http://github\&.com/", 
+    encoding: "cp932"
+});
+
+// To remove extensions
+iconv\&.undoExtendNodeEncodings();
+.fi
+.PP
+.SH "Supported encodings"
+.PP
+.IP "\(bu" 2
+All node\&.js native encodings: utf8, ucs2 / utf16-le, ascii, binary, base64, hex\&.
+.IP "\(bu" 2
+Additional unicode encodings: utf16, utf16-be, utf-7, utf-7-imap\&.
+.IP "\(bu" 2
+All widespread singlebyte encodings: Windows 125x family, ISO-8859 family, IBM/DOS codepages, Macintosh family, KOI8 family, all others supported by iconv library\&. Aliases like 'latin1', 'us-ascii' also supported\&.
+.IP "\(bu" 2
+All widespread multibyte encodings: CP932, CP936, CP949, CP950, GB2312, GBK, GB18030, Big5, Shift_JIS, EUC-JP\&.
+.PP
+.PP
+See \fRall supported encodings on wiki\fP\&.
+.PP
+Most singlebyte encodings are generated automatically from \fRnode-iconv\fP\&. Thank you Ben Noordhuis and libiconv authors!
+.PP
+Multibyte encodings are generated from \fRUnicode\&.org mappings\fP and \fRWHATWG Encoding Standard mappings\fP\&. Thank you, respective authors!
+.SH "Encoding/decoding speed"
+.PP
+Comparison with node-iconv module (1000x256kb, on MacBook Pro, Core i5/2\&.6 GHz, Node v0\&.12\&.0)\&. Note: your results may vary, so please always check on your hardware\&. 
+.PP
+.nf
+operation             iconv@2\&.1\&.4   iconv-lite@0\&.4\&.7
+----------------------------------------------------------
+encode('win1251')     ~96 Mb/s      ~320 Mb/s
+decode('win1251')     ~95 Mb/s      ~246 Mb/s
+
+.fi
+.PP
+ 
+.SH "BOM handling"
+.PP
+.IP "\(bu" 2
+Decoding: BOM is stripped by default, unless overridden by passing \fRstripBOM: false\fP in options (f\&.ex\&. \fRiconv\&.decode(buf, enc, {stripBOM: false})\fP)\&. A callback might also be given as a \fRstripBOM\fP parameter - it'll be called if BOM character was actually found\&.
+.IP "\(bu" 2
+If you want to detect UTF-8 BOM when decoding other encodings, use \fRnode-autodetect-decoder-stream\fP module\&.
+.IP "\(bu" 2
+Encoding: No BOM added, unless overridden by \fRaddBOM: true\fP option\&.
+.PP
+.SH "UTF-16 Encodings"
+.PP
+This library supports UTF-16LE, UTF-16BE and UTF-16 encodings\&. First two are straightforward, but UTF-16 is trying to be smart about endianness in the following ways:
+.IP "\(bu" 2
+Decoding: uses BOM and 'spaces heuristic' to determine input endianness\&. Default is UTF-16LE, but can be overridden with `defaultEncoding: 'utf-16be'\fRoption\&. Strips BOM unless\fPstripBOM: false\fR\&.\fP
+.IP "\(bu" 2
+\fREncoding: uses UTF-16LE and writes BOM by default\&. Use\fPaddBOM: false` to override\&.
+.PP
+.SH "Other notes"
+.PP
+When decoding, be sure to supply a Buffer to decode() method, otherwise \fRbad things usually happen\fP\&. 
+.br
+ Untranslatable characters are set to � or ?\&. No transliteration is currently supported\&. 
+.br
+ Node versions 0\&.10\&.31 and 0\&.11\&.13 are buggy, don't use them (see #65, #77)\&. 
+.br
+.SH "Testing"
+.PP
+.PP
+.nf
+$ git clone git@github\&.com:ashtuchkin/iconv\-lite\&.git
+$ cd iconv\-lite
+$ npm install
+$ npm test
+    
+$ # To view performance:
+$ node test/performance\&.js
+
+$ # To view test coverage:
+$ npm run coverage
+$ open coverage/lcov\-report/index\&.html
+.fi
+.PP
+ 

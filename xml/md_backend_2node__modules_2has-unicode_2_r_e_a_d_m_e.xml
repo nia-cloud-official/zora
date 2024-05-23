@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2has-unicode_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2has-unicode_2_r_e_a_d_m_e</compoundname>
+    <title>has-unicode</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Try to guess if your terminal supports unicode</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>hasUnicode<sp/>=<sp/>require(&quot;has-unicode&quot;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">if<sp/>(hasUnicode())<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>the<sp/>terminal<sp/>probably<sp/>has<sp/>unicode<sp/>support</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> <programlisting filename=".js"><codeline><highlight class="normal">var<sp/>hasUnicode<sp/>=<sp/>require(&quot;has-unicode&quot;).tryHarder</highlight></codeline>
+<codeline><highlight class="normal">hasUnicode(function(unicodeSupported)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(unicodeSupported)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>the<sp/>terminal<sp/>probably<sp/>has<sp/>unicode<sp/>support</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+<sect1 id="md_backend_2node__modules_2has-unicode_2_r_e_a_d_m_e_1autotoc_md1492">
+<title>Detecting Unicode</title><para>What we actually detect is UTF-8 support, as that&apos;s what Node itself supports. If you have a UTF-16 locale then you won&apos;t be detected as unicode capable.</para>
+<sect2 id="md_backend_2node__modules_2has-unicode_2_r_e_a_d_m_e_1autotoc_md1493">
+<title>Windows</title><para>Since at least Windows 7, <computeroutput>cmd</computeroutput> and <computeroutput>powershell</computeroutput> have been unicode capable, but unfortunately even then it&apos;s not guaranteed. In many localizations it still uses legacy code pages and there&apos;s no facility short of running programs or linking C++ that will let us detect this. As such, we report any Windows installation as NOT unicode capable, and recommend that you encourage your users to override this via config.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2has-unicode_2_r_e_a_d_m_e_1autotoc_md1494">
+<title>Unix Like Operating Systems</title><para>We look at the environment variables <computeroutput>LC_ALL</computeroutput>, <computeroutput>LC_CTYPE</computeroutput>, and <computeroutput>LANG</computeroutput> in that order. For <computeroutput>LC_ALL</computeroutput> and <computeroutput>LANG</computeroutput>, it looks for <computeroutput>.UTF-8</computeroutput> in the value. For <computeroutput>LC_CTYPE</computeroutput> it looks to see if the value is <computeroutput>UTF-8</computeroutput>. This is sufficient for most POSIX systems. While locale data can be put in <computeroutput>/etc/locale.conf</computeroutput> as well, AFAIK it&apos;s always copied into the environment. </para>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/has-unicode/README.md"/>
+  </compounddef>
+</doxygen>

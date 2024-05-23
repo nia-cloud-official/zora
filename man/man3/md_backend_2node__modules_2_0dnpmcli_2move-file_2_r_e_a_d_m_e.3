@@ -1,0 +1,67 @@
+.TH "md_backend_2node__modules_2_0dnpmcli_2move-file_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2_0dnpmcli_2move-file_2_r_e_a_d_m_e \- @npmcli/move-file 
+.PP
+ A fork of \fRmove-file\fP with compatibility with all node 10\&.x versions\&.
+.PP
+.RS 4
+Move a file (or directory) 
+.RE
+.PP
+.PP
+The built-in \fR\fRfs\&.rename()\fP\fP is just a JavaScript wrapper for the C \fRrename(2)\fP function, which doesn't support moving files across partitions or devices\&. This module is what you would have expected \fRfs\&.rename()\fP to be\&.
+.SH "Highlights"
+.PP
+.IP "\(bu" 2
+Promise API\&.
+.IP "\(bu" 2
+Supports moving a file across partitions and devices\&.
+.IP "\(bu" 2
+Optionally prevent overwriting an existing file\&.
+.IP "\(bu" 2
+Creates non-existent destination directories for you\&.
+.IP "\(bu" 2
+Support for Node versions that lack built-in recursive \fRfs\&.mkdir()\fP
+.IP "\(bu" 2
+Automatically recurses when source is a directory\&.
+.PP
+.SH "Install"
+.PP
+.PP
+.nf
+$ npm install @npmcli/move\-file
+.fi
+.PP
+.SH "Usage"
+.PP
+.PP
+.nf
+const moveFile = require('@npmcli/move\-file');
+
+(async () => {
+    await moveFile('source/unicorn\&.png', 'destination/unicorn\&.png');
+    console\&.log('The file has been moved');
+})();
+.fi
+.PP
+.SH "API"
+.PP
+.SS "moveFile(source, destination, options?)"
+Returns a \fRPromise\fP that resolves when the file has been moved\&.
+.SS "moveFile\&.sync(source, destination, options?)"
+.SS "source"
+Type: \fRstring\fP
+.PP
+File, or directory, you want to move\&.
+.SS "destination"
+Type: \fRstring\fP
+.PP
+Where you want the file or directory moved\&.
+.SS "options"
+Type: \fRobject\fP
+.SS "overwrite"
+Type: \fRboolean\fP\\ Default: \fRtrue\fP
+.PP
+Overwrite existing destination file(s)\&. 

@@ -1,0 +1,59 @@
+\chapter{@gar/promisify}
+\hypertarget{md_backend_2node__modules_2_0dgar_2promisify_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2_0dgar_2promisify_2_r_e_a_d_m_e}\index{"@gar/promisify@{"@gar/promisify}}
+\label{md_backend_2node__modules_2_0dgar_2promisify_2_r_e_a_d_m_e_autotoc_md0}%
+\Hypertarget{md_backend_2node__modules_2_0dgar_2promisify_2_r_e_a_d_m_e_autotoc_md0}%
+ \hypertarget{md_backend_2node__modules_2_0dgar_2promisify_2_r_e_a_d_m_e_autotoc_md1}{}\doxysubsection{\texorpdfstring{Promisify an entire object or class instance}{Promisify an entire object or class instance}}\label{md_backend_2node__modules_2_0dgar_2promisify_2_r_e_a_d_m_e_autotoc_md1}
+This module leverages es6 Proxy and Reflect to promisify every function in an object or class instance.
+
+It assumes the callback that the function is expecting is the last parameter, and that it is an error-\/first callback with only one value, i.\+e. {\ttfamily (err, value) =\texorpdfstring{$>$}{>} ...}. This mirrors node\textquotesingle{}s {\ttfamily util.\+promisify} method.
+
+In order that you can use it as a one-\/stop-\/shop for all your promisify needs, you can also pass it a function. That function will be promisified as normal using node\textquotesingle{}s built-\/in {\ttfamily util.\+promisify} method.
+
+\href{https://nodejs.org/api/util.html\#util_custom_promisified_functions}{\texttt{ node\textquotesingle{}s custom promisified functions}} will also be mirrored, further allowing this to be a drop-\/in replacement for the built-\/in {\ttfamily util.\+promisify}.\hypertarget{md_backend_2node__modules_2_0dgar_2promisify_2_r_e_a_d_m_e_autotoc_md2}{}\doxysubsection{\texorpdfstring{Examples}{Examples}}\label{md_backend_2node__modules_2_0dgar_2promisify_2_r_e_a_d_m_e_autotoc_md2}
+Promisify an entire object
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ promisify\ =\ require('@gar/promisify')}
+\DoxyCodeLine{}
+\DoxyCodeLine{class\ Foo\ \{}
+\DoxyCodeLine{\ \ constructor\ (attr)\ \{}
+\DoxyCodeLine{\ \ \ \ this.attr\ =\ attr}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ double\ (input,\ cb)\ \{}
+\DoxyCodeLine{\ \ \ \ cb(null,\ input\ *\ 2)}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ foo\ =\ new\ Foo('baz')}
+\DoxyCodeLine{const\ promisified\ =\ promisify(foo)}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(promisified.attr)}
+\DoxyCodeLine{console.log(await\ promisified.double(1024))}
+
+\end{DoxyCode}
+
+
+Promisify a function
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ promisify\ =\ require('@gar/promisify')}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ foo\ (a,\ cb)\ \{}
+\DoxyCodeLine{\ \ if\ (a\ !==\ 'bad')\ \{}
+\DoxyCodeLine{\ \ \ \ return\ cb(null,\ 'ok')}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ return\ cb('not\ ok')}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ promisified\ =\ promisify(foo)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ This\ will\ resolve\ to\ 'ok'}
+\DoxyCodeLine{promisified('good')}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ this\ will\ reject}
+\DoxyCodeLine{promisified('bad')}
+
+\end{DoxyCode}
+ 

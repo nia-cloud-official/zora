@@ -1,0 +1,716 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2cacache_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>cacache<sp/>[![npm<sp/>version](https://img.shields.io/npm/v/cacache.svg)](https://npm.im/cacache)<sp/>[![license](https://img.shields.io/npm/l/cacache.svg)](https://npm.im/cacache)<sp/>[![Travis](https://img.shields.io/travis/npm/cacache.svg)](https://travis-ci.org/npm/cacache)<sp/>[![AppVeyor](https://ci.appveyor.com/api/projects/status/github/npm/cacache?svg=true)](https://ci.appveyor.com/project/npm/cacache)<sp/>[![Coverage<sp/>Status](https://coveralls.io/repos/github/npm/cacache/badge.svg?branch=latest)](https://coveralls.io/github/npm/cacache?branch=latest)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[`cacache`](https://github.com/npm/cacache)<sp/>is<sp/>a<sp/>Node.js<sp/>library<sp/>for<sp/>managing</highlight></codeline>
+<codeline><highlight class="normal">local<sp/>key<sp/>and<sp/>content<sp/>address<sp/>caches.<sp/>It&apos;s<sp/>really<sp/>fast,<sp/>really<sp/>good<sp/>at</highlight></codeline>
+<codeline><highlight class="normal">concurrency,<sp/>and<sp/>it<sp/>will<sp/>never<sp/>give<sp/>you<sp/>corrupted<sp/>data,<sp/>even<sp/>if<sp/>cache<sp/>files</highlight></codeline>
+<codeline><highlight class="normal">get<sp/>corrupted<sp/>or<sp/>manipulated.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">On<sp/>systems<sp/>that<sp/>support<sp/>user<sp/>and<sp/>group<sp/>settings<sp/>on<sp/>files,<sp/>cacache<sp/>will</highlight></codeline>
+<codeline><highlight class="normal">match<sp/>the<sp/>`uid`<sp/>and<sp/>`gid`<sp/>values<sp/>to<sp/>the<sp/>folder<sp/>where<sp/>the<sp/>cache<sp/>lives,<sp/>even</highlight></codeline>
+<codeline><highlight class="normal">when<sp/>running<sp/>as<sp/>`root`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It<sp/>was<sp/>written<sp/>to<sp/>be<sp/>used<sp/>as<sp/>[npm](https://npm.im)&apos;s<sp/>local<sp/>cache,<sp/>but<sp/>can</highlight></codeline>
+<codeline><highlight class="normal">just<sp/>as<sp/>easily<sp/>be<sp/>used<sp/>on<sp/>its<sp/>own.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Install</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`$<sp/>npm<sp/>install<sp/>--save<sp/>cacache`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Table<sp/>of<sp/>Contents</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>[Example](#example)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>[Features](#features)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>[Contributing](#contributing)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>[API](#api)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>[Using<sp/>localized<sp/>APIs](#localized-api)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>Reading</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`ls`](#ls)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`ls.stream`](#ls-stream)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`get`](#get-data)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`get.stream`](#get-stream)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`get.info`](#get-info)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`get.hasContent`](#get-hasContent)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>Writing</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`put`](#put-data)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`put.stream`](#put-stream)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`rm.all`](#rm-all)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`rm.entry`](#rm-entry)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`rm.content`](#rm-content)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`index.compact`](#index-compact)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`index.insert`](#index-insert)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>Utilities</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`clearMemoized`](#clear-memoized)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`tmp.mkdir`](#tmp-mkdir)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`tmp.withTmp`](#with-tmp)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>Integrity</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[Subresource<sp/>Integrity](#integrity)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`verify`](#verify)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`verify.lastRun`](#verify-last-run)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>cacache<sp/>=<sp/>require(&apos;cacache&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>fs<sp/>=<sp/>require(&apos;fs&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>tarball<sp/>=<sp/>&apos;/path/to/mytar.tgz&apos;</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>cachePath<sp/>=<sp/>&apos;/tmp/my-toy-cache&apos;</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>key<sp/>=<sp/>&apos;my-unique-key-1234&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Cache<sp/>it!<sp/>Use<sp/>`cachePath`<sp/>as<sp/>the<sp/>root<sp/>of<sp/>the<sp/>content<sp/>cache</highlight></codeline>
+<codeline><highlight class="normal">cacache.put(cachePath,<sp/>key,<sp/>&apos;10293801983029384&apos;).then(integrity<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(`Saved<sp/>content<sp/>to<sp/>${cachePath}.`)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>destination<sp/>=<sp/>&apos;/tmp/mytar.tgz&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Copy<sp/>the<sp/>contents<sp/>out<sp/>of<sp/>the<sp/>cache<sp/>and<sp/>into<sp/>their<sp/>destination!</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>But<sp/>this<sp/>time,<sp/>use<sp/>stream<sp/>instead!</highlight></codeline>
+<codeline><highlight class="normal">cacache.get.stream(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cachePath,<sp/>key</highlight></codeline>
+<codeline><highlight class="normal">).pipe(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fs.createWriteStream(destination)</highlight></codeline>
+<codeline><highlight class="normal">).on(&apos;finish&apos;,<sp/>()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;done<sp/>extracting!&apos;)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>The<sp/>same<sp/>thing,<sp/>but<sp/>skip<sp/>the<sp/>key<sp/>index.</highlight></codeline>
+<codeline><highlight class="normal">cacache.get.byDigest(cachePath,<sp/>integrityHash).then(data<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fs.writeFile(destination,<sp/>data,<sp/>err<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(&apos;tarball<sp/>data<sp/>fetched<sp/>based<sp/>on<sp/>its<sp/>sha512sum<sp/>and<sp/>written<sp/>out!&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Features</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>Extraction<sp/>by<sp/>key<sp/>or<sp/>by<sp/>content<sp/>address<sp/>(shasum,<sp/>etc)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>[Subresource<sp/>Integrity](#integrity)<sp/>web<sp/>standard<sp/>support</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Multi-hash<sp/>support<sp/>-<sp/>safely<sp/>host<sp/>sha1,<sp/>sha512,<sp/>etc,<sp/>in<sp/>a<sp/>single<sp/>cache</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Automatic<sp/>content<sp/>deduplication</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Fault<sp/>tolerance<sp/>(immune<sp/>to<sp/>corruption,<sp/>partial<sp/>writes,<sp/>process<sp/>races,<sp/>etc)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Consistency<sp/>guarantees<sp/>on<sp/>read<sp/>and<sp/>write<sp/>(full<sp/>data<sp/>verification)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Lockless,<sp/>high-concurrency<sp/>cache<sp/>access</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Streaming<sp/>support</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Promise<sp/>support</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Fast<sp/>--<sp/>sub-millisecond<sp/>reads<sp/>and<sp/>writes<sp/>including<sp/>verification</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Arbitrary<sp/>metadata<sp/>storage</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Garbage<sp/>collection<sp/>and<sp/>additional<sp/>offline<sp/>verification</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Thorough<sp/>test<sp/>coverage</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>There&apos;s<sp/>probably<sp/>a<sp/>bloom<sp/>filter<sp/>in<sp/>there<sp/>somewhere.<sp/>Those<sp/>are<sp/>cool,<sp/>right?<sp/>🤔</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Contributing</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>cacache<sp/>team<sp/>enthusiastically<sp/>welcomes<sp/>contributions<sp/>and<sp/>project<sp/>participation!<sp/>There&apos;s<sp/>a<sp/>bunch<sp/>of<sp/>things<sp/>you<sp/>can<sp/>do<sp/>if<sp/>you<sp/>want<sp/>to<sp/>contribute!<sp/>The<sp/>[Contributor<sp/>Guide](CONTRIBUTING.md)<sp/>has<sp/>all<sp/>the<sp/>information<sp/>you<sp/>need<sp/>for<sp/>everything<sp/>from<sp/>reporting<sp/>bugs<sp/>to<sp/>contributing<sp/>entire<sp/>new<sp/>features.<sp/>Please<sp/>don&apos;t<sp/>hesitate<sp/>to<sp/>jump<sp/>in<sp/>if<sp/>you&apos;d<sp/>like<sp/>to,<sp/>or<sp/>even<sp/>ask<sp/>us<sp/>questions<sp/>if<sp/>something<sp/>isn&apos;t<sp/>clear.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">All<sp/>participants<sp/>and<sp/>maintainers<sp/>in<sp/>this<sp/>project<sp/>are<sp/>expected<sp/>to<sp/>follow<sp/>[Code<sp/>of<sp/>Conduct](CODE_OF_CONDUCT.md),<sp/>and<sp/>just<sp/>generally<sp/>be<sp/>excellent<sp/>to<sp/>each<sp/>other.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Please<sp/>refer<sp/>to<sp/>the<sp/>[Changelog](CHANGELOG.md)<sp/>for<sp/>project<sp/>history<sp/>details,<sp/>too.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Happy<sp/>hacking!</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>API</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;ls&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>cacache.ls(cache)<sp/>-&gt;<sp/>Promise&lt;Object&gt;`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Lists<sp/>info<sp/>for<sp/>all<sp/>entries<sp/>currently<sp/>in<sp/>the<sp/>cache<sp/>as<sp/>a<sp/>single<sp/>large<sp/>object.<sp/>Each</highlight></codeline>
+<codeline><highlight class="normal">entry<sp/>in<sp/>the<sp/>object<sp/>will<sp/>be<sp/>keyed<sp/>by<sp/>the<sp/>unique<sp/>index<sp/>key,<sp/>with<sp/>corresponding</highlight></codeline>
+<codeline><highlight class="normal">[`get.info`](#get-info)<sp/>objects<sp/>as<sp/>the<sp/>values.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">cacache.ls(cachePath).then(console.log)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Output</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&apos;my-thing&apos;:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>key:<sp/>&apos;my-thing&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>integrity:<sp/>&apos;sha512-BaSe64/EnCoDED+HAsh==&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>path:<sp/>&apos;.testcache/content/deadbeef&apos;,<sp/>//<sp/>joined<sp/>with<sp/>`cachePath`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>time:<sp/>12345698490,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>size:<sp/>4023948,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>metadata:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>name:<sp/>&apos;blah&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>version:<sp/>&apos;1.2.3&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>description:<sp/>&apos;this<sp/>was<sp/>once<sp/>a<sp/>package<sp/>but<sp/>now<sp/>it<sp/>is<sp/>my-thing&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&apos;other-thing&apos;:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>key:<sp/>&apos;other-thing&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>integrity:<sp/>&apos;sha1-ANothER+hasH=&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>path:<sp/>&apos;.testcache/content/bada55&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>time:<sp/>11992309289,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>size:<sp/>111112</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;ls-stream&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>cacache.ls.stream(cache)<sp/>-&gt;<sp/>Readable`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Lists<sp/>info<sp/>for<sp/>all<sp/>entries<sp/>currently<sp/>in<sp/>the<sp/>cache<sp/>as<sp/>a<sp/>single<sp/>large<sp/>object.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>works<sp/>just<sp/>like<sp/>[`ls`](#ls),<sp/>except<sp/>[`get.info`](#get-info)<sp/>entries<sp/>are</highlight></codeline>
+<codeline><highlight class="normal">returned<sp/>as<sp/>`&apos;data&apos;`<sp/>events<sp/>on<sp/>the<sp/>returned<sp/>stream.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">cacache.ls.stream(cachePath).on(&apos;data&apos;,<sp/>console.log)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Output</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>key:<sp/>&apos;my-thing&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>integrity:<sp/>&apos;sha512-BaSe64HaSh&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>path:<sp/>&apos;.testcache/content/deadbeef&apos;,<sp/>//<sp/>joined<sp/>with<sp/>`cachePath`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>time:<sp/>12345698490,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>size:<sp/>13423,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>metadata:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>name:<sp/>&apos;blah&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>version:<sp/>&apos;1.2.3&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>description:<sp/>&apos;this<sp/>was<sp/>once<sp/>a<sp/>package<sp/>but<sp/>now<sp/>it<sp/>is<sp/>my-thing&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>key:<sp/>&apos;other-thing&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>integrity:<sp/>&apos;whirlpool-WoWSoMuchSupport&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>path:<sp/>&apos;.testcache/content/bada55&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>time:<sp/>11992309289,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>size:<sp/>498023984029</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>...</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;get-data&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>cacache.get(cache,<sp/>key,<sp/>[opts])<sp/>-&gt;<sp/>Promise({data,<sp/>metadata,<sp/>integrity})`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>an<sp/>object<sp/>with<sp/>the<sp/>cached<sp/>data,<sp/>digest,<sp/>and<sp/>metadata<sp/>identified<sp/>by</highlight></codeline>
+<codeline><highlight class="normal">`key`.<sp/>The<sp/>`data`<sp/>property<sp/>of<sp/>this<sp/>object<sp/>will<sp/>be<sp/>a<sp/>`Buffer`<sp/>instance<sp/>that</highlight></codeline>
+<codeline><highlight class="normal">presumably<sp/>holds<sp/>some<sp/>data<sp/>that<sp/>means<sp/>something<sp/>to<sp/>you.<sp/>I&apos;m<sp/>sure<sp/>you<sp/>know<sp/>what</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>do<sp/>with<sp/>it!<sp/>cacache<sp/>just<sp/>won&apos;t<sp/>care.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`integrity`<sp/>is<sp/>a<sp/>[Subresource</highlight></codeline>
+<codeline><highlight class="normal">Integrity](#integrity)</highlight></codeline>
+<codeline><highlight class="normal">string.<sp/>That<sp/>is,<sp/>a<sp/>string<sp/>that<sp/>can<sp/>be<sp/>used<sp/>to<sp/>verify<sp/>`data`,<sp/>which<sp/>looks<sp/>like</highlight></codeline>
+<codeline><highlight class="normal">`&lt;hash-algorithm&gt;-&lt;base64-integrity-hash&gt;`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>there<sp/>is<sp/>no<sp/>content<sp/>identified<sp/>by<sp/>`key`,<sp/>or<sp/>if<sp/>the<sp/>locally-stored<sp/>data<sp/>does</highlight></codeline>
+<codeline><highlight class="normal">not<sp/>pass<sp/>the<sp/>validity<sp/>checksum,<sp/>the<sp/>promise<sp/>will<sp/>be<sp/>rejected.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>sub-function,<sp/>`get.byDigest`<sp/>may<sp/>be<sp/>used<sp/>for<sp/>identical<sp/>behavior,<sp/>except<sp/>lookup</highlight></codeline>
+<codeline><highlight class="normal">will<sp/>happen<sp/>by<sp/>integrity<sp/>hash,<sp/>bypassing<sp/>the<sp/>index<sp/>entirely.<sp/>This<sp/>version<sp/>of<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">function<sp/>*only*<sp/>returns<sp/>`data`<sp/>itself,<sp/>without<sp/>any<sp/>wrapper.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">See:<sp/>[options](#get-options)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Note</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>function<sp/>loads<sp/>the<sp/>entire<sp/>cache<sp/>entry<sp/>into<sp/>memory<sp/>before<sp/>returning<sp/>it.<sp/>If</highlight></codeline>
+<codeline><highlight class="normal">you&apos;re<sp/>dealing<sp/>with<sp/>Very<sp/>Large<sp/>data,<sp/>consider<sp/>using<sp/>[`get.stream`](#get-stream)</highlight></codeline>
+<codeline><highlight class="normal">instead.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Look<sp/>up<sp/>by<sp/>key</highlight></codeline>
+<codeline><highlight class="normal">cache.get(cachePath,<sp/>&apos;my-thing&apos;).then(console.log)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Output:</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>metadata:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>thingName:<sp/>&apos;my&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>integrity:<sp/>&apos;sha512-BaSe64HaSh&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>data:<sp/>Buffer#&lt;deadbeef&gt;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>size:<sp/>9320</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Look<sp/>up<sp/>by<sp/>digest</highlight></codeline>
+<codeline><highlight class="normal">cache.get.byDigest(cachePath,<sp/>&apos;sha512-BaSe64HaSh&apos;).then(console.log)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Output:</highlight></codeline>
+<codeline><highlight class="normal">Buffer#&lt;deadbeef&gt;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;get-stream&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>cacache.get.stream(cache,<sp/>key,<sp/>[opts])<sp/>-&gt;<sp/>Readable`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>a<sp/>[Readable<sp/>Stream](https://nodejs.org/api/stream.html#stream_readable_streams)<sp/>of<sp/>the<sp/>cached<sp/>data<sp/>identified<sp/>by<sp/>`key`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>there<sp/>is<sp/>no<sp/>content<sp/>identified<sp/>by<sp/>`key`,<sp/>or<sp/>if<sp/>the<sp/>locally-stored<sp/>data<sp/>does</highlight></codeline>
+<codeline><highlight class="normal">not<sp/>pass<sp/>the<sp/>validity<sp/>checksum,<sp/>an<sp/>error<sp/>will<sp/>be<sp/>emitted.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`metadata`<sp/>and<sp/>`integrity`<sp/>events<sp/>will<sp/>be<sp/>emitted<sp/>before<sp/>the<sp/>stream<sp/>closes,<sp/>if</highlight></codeline>
+<codeline><highlight class="normal">you<sp/>need<sp/>to<sp/>collect<sp/>that<sp/>extra<sp/>data<sp/>about<sp/>the<sp/>cached<sp/>entry.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>sub-function,<sp/>`get.stream.byDigest`<sp/>may<sp/>be<sp/>used<sp/>for<sp/>identical<sp/>behavior,</highlight></codeline>
+<codeline><highlight class="normal">except<sp/>lookup<sp/>will<sp/>happen<sp/>by<sp/>integrity<sp/>hash,<sp/>bypassing<sp/>the<sp/>index<sp/>entirely.<sp/>This</highlight></codeline>
+<codeline><highlight class="normal">version<sp/>does<sp/>not<sp/>emit<sp/>the<sp/>`metadata`<sp/>and<sp/>`integrity`<sp/>events<sp/>at<sp/>all.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">See:<sp/>[options](#get-options)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Look<sp/>up<sp/>by<sp/>key</highlight></codeline>
+<codeline><highlight class="normal">cache.get.stream(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cachePath,<sp/>&apos;my-thing&apos;</highlight></codeline>
+<codeline><highlight class="normal">).on(&apos;metadata&apos;,<sp/>metadata<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;metadata:&apos;,<sp/>metadata)</highlight></codeline>
+<codeline><highlight class="normal">}).on(&apos;integrity&apos;,<sp/>integrity<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;integrity:&apos;,<sp/>integrity)</highlight></codeline>
+<codeline><highlight class="normal">}).pipe(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fs.createWriteStream(&apos;./x.tgz&apos;)</highlight></codeline>
+<codeline><highlight class="normal">)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Outputs:</highlight></codeline>
+<codeline><highlight class="normal">metadata:<sp/>{<sp/>...<sp/>}</highlight></codeline>
+<codeline><highlight class="normal">integrity:<sp/>&apos;sha512-SoMeDIGest+64==&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Look<sp/>up<sp/>by<sp/>digest</highlight></codeline>
+<codeline><highlight class="normal">cache.get.stream.byDigest(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cachePath,<sp/>&apos;sha512-SoMeDIGest+64==&apos;</highlight></codeline>
+<codeline><highlight class="normal">).pipe(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fs.createWriteStream(&apos;./x.tgz&apos;)</highlight></codeline>
+<codeline><highlight class="normal">)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;get-info&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>cacache.get.info(cache,<sp/>key)<sp/>-&gt;<sp/>Promise`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Looks<sp/>up<sp/>`key`<sp/>in<sp/>the<sp/>cache<sp/>index,<sp/>returning<sp/>information<sp/>about<sp/>the<sp/>entry<sp/>if</highlight></codeline>
+<codeline><highlight class="normal">one<sp/>exists.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Fields</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`key`<sp/>-<sp/>Key<sp/>the<sp/>entry<sp/>was<sp/>looked<sp/>up<sp/>under.<sp/>Matches<sp/>the<sp/>`key`<sp/>argument.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`integrity`<sp/>-<sp/>[Subresource<sp/>Integrity<sp/>hash](#integrity)<sp/>for<sp/>the<sp/>content<sp/>this<sp/>entry<sp/>refers<sp/>to.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`path`<sp/>-<sp/>Filesystem<sp/>path<sp/>where<sp/>content<sp/>is<sp/>stored,<sp/>joined<sp/>with<sp/>`cache`<sp/>argument.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`time`<sp/>-<sp/>Timestamp<sp/>the<sp/>entry<sp/>was<sp/>first<sp/>added<sp/>on.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`metadata`<sp/>-<sp/>User-assigned<sp/>metadata<sp/>associated<sp/>with<sp/>the<sp/>entry/content.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">cacache.get.info(cachePath,<sp/>&apos;my-thing&apos;).then(console.log)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Output</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>key:<sp/>&apos;my-thing&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>integrity:<sp/>&apos;sha256-MUSTVERIFY+ALL/THINGS==&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>path:<sp/>&apos;.testcache/content/deadbeef&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>time:<sp/>12345698490,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>size:<sp/>849234,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>metadata:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>name:<sp/>&apos;blah&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>version:<sp/>&apos;1.2.3&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>description:<sp/>&apos;this<sp/>was<sp/>once<sp/>a<sp/>package<sp/>but<sp/>now<sp/>it<sp/>is<sp/>my-thing&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;get-hasContent&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>cacache.get.hasContent(cache,<sp/>integrity)<sp/>-&gt;<sp/>Promise`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Looks<sp/>up<sp/>a<sp/>[Subresource<sp/>Integrity<sp/>hash](#integrity)<sp/>in<sp/>the<sp/>cache.<sp/>If<sp/>content</highlight></codeline>
+<codeline><highlight class="normal">exists<sp/>for<sp/>this<sp/>`integrity`,<sp/>it<sp/>will<sp/>return<sp/>an<sp/>object,<sp/>with<sp/>the<sp/>specific<sp/>single<sp/>integrity<sp/>hash</highlight></codeline>
+<codeline><highlight class="normal">that<sp/>was<sp/>found<sp/>in<sp/>`sri`<sp/>key,<sp/>and<sp/>the<sp/>size<sp/>of<sp/>the<sp/>found<sp/>content<sp/>as<sp/>`size`.<sp/>If<sp/>no<sp/>content<sp/>exists<sp/>for<sp/>this<sp/>integrity,<sp/>it<sp/>will<sp/>return<sp/>`false`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">cacache.get.hasContent(cachePath,<sp/>&apos;sha256-MUSTVERIFY+ALL/THINGS==&apos;).then(console.log)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Output</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>sri:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>source:<sp/>&apos;sha256-MUSTVERIFY+ALL/THINGS==&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>algorithm:<sp/>&apos;sha256&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>digest:<sp/>&apos;MUSTVERIFY+ALL/THINGS==&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>options:<sp/>[]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>size:<sp/>9001</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">cacache.get.hasContent(cachePath,<sp/>&apos;sha521-NOT+IN/CACHE==&apos;).then(console.log)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Output</highlight></codeline>
+<codeline><highlight class="normal">false</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>&lt;a<sp/>name=&quot;get-options&quot;&gt;&lt;/a&gt;<sp/>Options</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>`opts.integrity`</highlight></codeline>
+<codeline><highlight class="normal">If<sp/>present,<sp/>the<sp/>pre-calculated<sp/>digest<sp/>for<sp/>the<sp/>inserted<sp/>content.<sp/>If<sp/>this<sp/>option</highlight></codeline>
+<codeline><highlight class="normal">is<sp/>provided<sp/>and<sp/>does<sp/>not<sp/>match<sp/>the<sp/>post-insertion<sp/>digest,<sp/>insertion<sp/>will<sp/>fail</highlight></codeline>
+<codeline><highlight class="normal">with<sp/>an<sp/>`EINTEGRITY`<sp/>error.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>`opts.memoize`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Default:<sp/>null</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>explicitly<sp/>truthy,<sp/>cacache<sp/>will<sp/>read<sp/>from<sp/>memory<sp/>and<sp/>memoize<sp/>data<sp/>on<sp/>bulk<sp/>read.<sp/>If<sp/>`false`,<sp/>cacache<sp/>will<sp/>read<sp/>from<sp/>disk<sp/>data.<sp/>Reader<sp/>functions<sp/>by<sp/>default<sp/>read<sp/>from<sp/>in-memory<sp/>cache.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>`opts.size`</highlight></codeline>
+<codeline><highlight class="normal">If<sp/>provided,<sp/>the<sp/>data<sp/>stream<sp/>will<sp/>be<sp/>verified<sp/>to<sp/>check<sp/>that<sp/>enough<sp/>data<sp/>was</highlight></codeline>
+<codeline><highlight class="normal">passed<sp/>through.<sp/>If<sp/>there&apos;s<sp/>more<sp/>or<sp/>less<sp/>data<sp/>than<sp/>expected,<sp/>insertion<sp/>will<sp/>fail</highlight></codeline>
+<codeline><highlight class="normal">with<sp/>an<sp/>`EBADSIZE`<sp/>error.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;put-data&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>cacache.put(cache,<sp/>key,<sp/>data,<sp/>[opts])<sp/>-&gt;<sp/>Promise`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Inserts<sp/>data<sp/>passed<sp/>to<sp/>it<sp/>into<sp/>the<sp/>cache.<sp/>The<sp/>returned<sp/>Promise<sp/>resolves<sp/>with<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">digest<sp/>(generated<sp/>according<sp/>to<sp/>[`opts.algorithms`](#optsalgorithms))<sp/>after<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">cache<sp/>entry<sp/>has<sp/>been<sp/>successfully<sp/>written.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">See:<sp/>[options](#put-options)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">fetch(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&apos;https://registry.npmjs.org/cacache/-/cacache-1.0.0.tgz&apos;</highlight></codeline>
+<codeline><highlight class="normal">).then(data<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>cacache.put(cachePath,<sp/>&apos;registry.npmjs.org|cacache@1.0.0&apos;,<sp/>data)</highlight></codeline>
+<codeline><highlight class="normal">}).then(integrity<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;integrity<sp/>hash<sp/>is&apos;,<sp/>integrity)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;put-stream&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>cacache.put.stream(cache,<sp/>key,<sp/>[opts])<sp/>-&gt;<sp/>Writable`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>a<sp/>[Writable</highlight></codeline>
+<codeline><highlight class="normal">Stream](https://nodejs.org/api/stream.html#stream_writable_streams)<sp/>that<sp/>inserts</highlight></codeline>
+<codeline><highlight class="normal">data<sp/>written<sp/>to<sp/>it<sp/>into<sp/>the<sp/>cache.<sp/>Emits<sp/>an<sp/>`integrity`<sp/>event<sp/>with<sp/>the<sp/>digest<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">written<sp/>contents<sp/>when<sp/>it<sp/>succeeds.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">See:<sp/>[options](#put-options)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">request.get(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&apos;https://registry.npmjs.org/cacache/-/cacache-1.0.0.tgz&apos;</highlight></codeline>
+<codeline><highlight class="normal">).pipe(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cacache.put.stream(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>cachePath,<sp/>&apos;registry.npmjs.org|cacache@1.0.0&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>).on(&apos;integrity&apos;,<sp/>d<sp/>=&gt;<sp/>console.log(`integrity<sp/>digest<sp/>is<sp/>${d}`))</highlight></codeline>
+<codeline><highlight class="normal">)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>&lt;a<sp/>name=&quot;put-options&quot;&gt;&lt;/a&gt;<sp/>Options</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>`opts.metadata`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Arbitrary<sp/>metadata<sp/>to<sp/>be<sp/>attached<sp/>to<sp/>the<sp/>inserted<sp/>key.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>`opts.size`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>provided,<sp/>the<sp/>data<sp/>stream<sp/>will<sp/>be<sp/>verified<sp/>to<sp/>check<sp/>that<sp/>enough<sp/>data<sp/>was</highlight></codeline>
+<codeline><highlight class="normal">passed<sp/>through.<sp/>If<sp/>there&apos;s<sp/>more<sp/>or<sp/>less<sp/>data<sp/>than<sp/>expected,<sp/>insertion<sp/>will<sp/>fail</highlight></codeline>
+<codeline><highlight class="normal">with<sp/>an<sp/>`EBADSIZE`<sp/>error.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>`opts.integrity`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>present,<sp/>the<sp/>pre-calculated<sp/>digest<sp/>for<sp/>the<sp/>inserted<sp/>content.<sp/>If<sp/>this<sp/>option</highlight></codeline>
+<codeline><highlight class="normal">is<sp/>provided<sp/>and<sp/>does<sp/>not<sp/>match<sp/>the<sp/>post-insertion<sp/>digest,<sp/>insertion<sp/>will<sp/>fail</highlight></codeline>
+<codeline><highlight class="normal">with<sp/>an<sp/>`EINTEGRITY`<sp/>error.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`algorithms`<sp/>has<sp/>no<sp/>effect<sp/>if<sp/>this<sp/>option<sp/>is<sp/>present.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>`opts.algorithms`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Default:<sp/>[&apos;sha512&apos;]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Hashing<sp/>algorithms<sp/>to<sp/>use<sp/>when<sp/>calculating<sp/>the<sp/>[subresource<sp/>integrity</highlight></codeline>
+<codeline><highlight class="normal">digest](#integrity)</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>inserted<sp/>data.<sp/>Can<sp/>use<sp/>any<sp/>algorithm<sp/>listed<sp/>in<sp/>`crypto.getHashes()`<sp/>or</highlight></codeline>
+<codeline><highlight class="normal">`&apos;omakase&apos;`/`&apos;お任せします&apos;`<sp/>to<sp/>pick<sp/>a<sp/>random<sp/>hash<sp/>algorithm<sp/>on<sp/>each<sp/>insertion.<sp/>You</highlight></codeline>
+<codeline><highlight class="normal">may<sp/>also<sp/>use<sp/>any<sp/>anagram<sp/>of<sp/>`&apos;modnar&apos;`<sp/>to<sp/>use<sp/>this<sp/>feature.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Currently<sp/>only<sp/>supports<sp/>one<sp/>algorithm<sp/>at<sp/>a<sp/>time<sp/>(i.e.,<sp/>an<sp/>array<sp/>length<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">exactly<sp/>`1`).<sp/>Has<sp/>no<sp/>effect<sp/>if<sp/>`opts.integrity`<sp/>is<sp/>present.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>`opts.memoize`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Default:<sp/>null</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>provided,<sp/>cacache<sp/>will<sp/>memoize<sp/>the<sp/>given<sp/>cache<sp/>insertion<sp/>in<sp/>memory,<sp/>bypassing</highlight></codeline>
+<codeline><highlight class="normal">any<sp/>filesystem<sp/>checks<sp/>for<sp/>that<sp/>key<sp/>or<sp/>digest<sp/>in<sp/>future<sp/>cache<sp/>fetches.<sp/>Nothing</highlight></codeline>
+<codeline><highlight class="normal">will<sp/>be<sp/>written<sp/>to<sp/>the<sp/>in-memory<sp/>cache<sp/>unless<sp/>this<sp/>option<sp/>is<sp/>explicitly<sp/>truthy.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.memoize`<sp/>is<sp/>an<sp/>object<sp/>or<sp/>a<sp/>`Map`-like<sp/>(that<sp/>is,<sp/>an<sp/>object<sp/>with<sp/>`get`</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>`set`<sp/>methods),<sp/>it<sp/>will<sp/>be<sp/>written<sp/>to<sp/>instead<sp/>of<sp/>the<sp/>global<sp/>memoization</highlight></codeline>
+<codeline><highlight class="normal">cache.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Reading<sp/>from<sp/>disk<sp/>data<sp/>can<sp/>be<sp/>forced<sp/>by<sp/>explicitly<sp/>passing<sp/>`memoize:<sp/>false`<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>reader<sp/>functions,<sp/>but<sp/>their<sp/>default<sp/>will<sp/>be<sp/>to<sp/>read<sp/>from<sp/>memory.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>`opts.tmpPrefix`</highlight></codeline>
+<codeline><highlight class="normal">Default:<sp/>null</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Prefix<sp/>to<sp/>append<sp/>on<sp/>the<sp/>temporary<sp/>directory<sp/>name<sp/>inside<sp/>the<sp/>cache&apos;s<sp/>tmp<sp/>dir.<sp/></highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;rm-all&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>cacache.rm.all(cache)<sp/>-&gt;<sp/>Promise`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Clears<sp/>the<sp/>entire<sp/>cache.<sp/>Mainly<sp/>by<sp/>blowing<sp/>away<sp/>the<sp/>cache<sp/>directory<sp/>itself.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">cacache.rm.all(cachePath).then(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;THE<sp/>APOCALYPSE<sp/>IS<sp/>UPON<sp/>US<sp/>😱&apos;)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;rm-entry&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>cacache.rm.entry(cache,<sp/>key,<sp/>[opts])<sp/>-&gt;<sp/>Promise`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Alias:<sp/>`cacache.rm`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Removes<sp/>the<sp/>index<sp/>entry<sp/>for<sp/>`key`.<sp/>Content<sp/>will<sp/>still<sp/>be<sp/>accessible<sp/>if</highlight></codeline>
+<codeline><highlight class="normal">requested<sp/>directly<sp/>by<sp/>content<sp/>address<sp/>([`get.stream.byDigest`](#get-stream)).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">By<sp/>default,<sp/>this<sp/>appends<sp/>a<sp/>new<sp/>entry<sp/>to<sp/>the<sp/>index<sp/>with<sp/>an<sp/>integrity<sp/>of<sp/>`null`.</highlight></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.removeFully`<sp/>is<sp/>set<sp/>to<sp/>`true`<sp/>then<sp/>the<sp/>index<sp/>file<sp/>itself<sp/>will<sp/>be</highlight></codeline>
+<codeline><highlight class="normal">physically<sp/>deleted<sp/>rather<sp/>than<sp/>appending<sp/>a<sp/>`null`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>remove<sp/>the<sp/>content<sp/>itself<sp/>(which<sp/>might<sp/>still<sp/>be<sp/>used<sp/>by<sp/>other<sp/>entries),<sp/>use</highlight></codeline>
+<codeline><highlight class="normal">[`rm.content`](#rm-content).<sp/>Or,<sp/>to<sp/>safely<sp/>vacuum<sp/>any<sp/>unused<sp/>content,<sp/>use</highlight></codeline>
+<codeline><highlight class="normal">[`verify`](#verify).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">cacache.rm.entry(cachePath,<sp/>&apos;my-thing&apos;).then(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;I<sp/>did<sp/>not<sp/>like<sp/>it<sp/>anyway&apos;)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;rm-content&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>cacache.rm.content(cache,<sp/>integrity)<sp/>-&gt;<sp/>Promise`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Removes<sp/>the<sp/>content<sp/>identified<sp/>by<sp/>`integrity`.<sp/>Any<sp/>index<sp/>entries<sp/>referring<sp/>to<sp/>it</highlight></codeline>
+<codeline><highlight class="normal">will<sp/>not<sp/>be<sp/>usable<sp/>again<sp/>until<sp/>the<sp/>content<sp/>is<sp/>re-added<sp/>to<sp/>the<sp/>cache<sp/>with<sp/>an</highlight></codeline>
+<codeline><highlight class="normal">identical<sp/>digest.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">cacache.rm.content(cachePath,<sp/>&apos;sha512-SoMeDIGest/IN+BaSE64==&apos;).then(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;data<sp/>for<sp/>my-thing<sp/>is<sp/>gone!&apos;)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;index-compact&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>cacache.index.compact(cache,<sp/>key,<sp/>matchFn,<sp/>[opts])<sp/>-&gt;<sp/>Promise`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Uses<sp/>`matchFn`,<sp/>which<sp/>must<sp/>be<sp/>a<sp/>synchronous<sp/>function<sp/>that<sp/>accepts<sp/>two<sp/>entries</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>returns<sp/>a<sp/>boolean<sp/>indicating<sp/>whether<sp/>or<sp/>not<sp/>the<sp/>two<sp/>entries<sp/>match,<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">deduplicate<sp/>all<sp/>entries<sp/>in<sp/>the<sp/>cache<sp/>for<sp/>the<sp/>given<sp/>`key`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.validateEntry`<sp/>is<sp/>provided,<sp/>it<sp/>will<sp/>be<sp/>called<sp/>as<sp/>a<sp/>function<sp/>with<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">only<sp/>parameter<sp/>being<sp/>a<sp/>single<sp/>index<sp/>entry.<sp/>The<sp/>function<sp/>must<sp/>return<sp/>a<sp/>Boolean,</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>it<sp/>returns<sp/>`true`<sp/>the<sp/>entry<sp/>is<sp/>considered<sp/>valid<sp/>and<sp/>will<sp/>be<sp/>kept<sp/>in<sp/>the<sp/>index,</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>it<sp/>returns<sp/>`false`<sp/>the<sp/>entry<sp/>will<sp/>be<sp/>removed<sp/>from<sp/>the<sp/>index.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.validateEntry`<sp/>is<sp/>not<sp/>provided,<sp/>however,<sp/>every<sp/>entry<sp/>in<sp/>the<sp/>index<sp/>will</highlight></codeline>
+<codeline><highlight class="normal">be<sp/>deduplicated<sp/>and<sp/>kept<sp/>until<sp/>the<sp/>first<sp/>`null`<sp/>integrity<sp/>is<sp/>reached,<sp/>removing</highlight></codeline>
+<codeline><highlight class="normal">all<sp/>entries<sp/>that<sp/>were<sp/>written<sp/>before<sp/>the<sp/>`null`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>deduplicated<sp/>list<sp/>of<sp/>entries<sp/>is<sp/>both<sp/>written<sp/>to<sp/>the<sp/>index,<sp/>replacing<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">existing<sp/>content,<sp/>and<sp/>returned<sp/>in<sp/>the<sp/>Promise.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;index-insert&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>cacache.index.insert(cache,<sp/>key,<sp/>integrity,<sp/>opts)<sp/>-&gt;<sp/>Promise`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Writes<sp/>an<sp/>index<sp/>entry<sp/>to<sp/>the<sp/>cache<sp/>for<sp/>the<sp/>given<sp/>`key`<sp/>without<sp/>writing<sp/>content.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It<sp/>is<sp/>assumed<sp/>if<sp/>you<sp/>are<sp/>using<sp/>this<sp/>method,<sp/>you<sp/>have<sp/>already<sp/>stored<sp/>the<sp/>content</highlight></codeline>
+<codeline><highlight class="normal">some<sp/>other<sp/>way<sp/>and<sp/>you<sp/>only<sp/>wish<sp/>to<sp/>add<sp/>a<sp/>new<sp/>index<sp/>to<sp/>that<sp/>content.<sp/>The<sp/>`metadata`</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>`size`<sp/>properties<sp/>are<sp/>read<sp/>from<sp/>`opts`<sp/>and<sp/>used<sp/>as<sp/>part<sp/>of<sp/>the<sp/>index<sp/>entry.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>a<sp/>Promise<sp/>resolving<sp/>to<sp/>the<sp/>newly<sp/>added<sp/>entry.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;clear-memoized&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>cacache.clearMemoized()`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Completely<sp/>resets<sp/>the<sp/>in-memory<sp/>entry<sp/>cache.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;tmp-mkdir&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>tmp.mkdir(cache,<sp/>opts)<sp/>-&gt;<sp/>Promise&lt;Path&gt;`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>a<sp/>unique<sp/>temporary<sp/>directory<sp/>inside<sp/>the<sp/>cache&apos;s<sp/>`tmp`<sp/>dir.<sp/>This</highlight></codeline>
+<codeline><highlight class="normal">directory<sp/>will<sp/>use<sp/>the<sp/>same<sp/>safe<sp/>user<sp/>assignment<sp/>that<sp/>all<sp/>the<sp/>other<sp/>stuff<sp/>use.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Once<sp/>the<sp/>directory<sp/>is<sp/>made,<sp/>it&apos;s<sp/>the<sp/>user&apos;s<sp/>responsibility<sp/>that<sp/>all<sp/>files</highlight></codeline>
+<codeline><highlight class="normal">within<sp/>are<sp/>given<sp/>the<sp/>appropriate<sp/>`gid`/`uid`<sp/>ownership<sp/>settings<sp/>to<sp/>match</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>rest<sp/>of<sp/>the<sp/>cache.<sp/>If<sp/>not,<sp/>you<sp/>can<sp/>ask<sp/>cacache<sp/>to<sp/>do<sp/>it<sp/>for<sp/>you<sp/>by</highlight></codeline>
+<codeline><highlight class="normal">calling<sp/>[`tmp.fix()`](#tmp-fix),<sp/>which<sp/>will<sp/>fix<sp/>all<sp/>tmp<sp/>directory</highlight></codeline>
+<codeline><highlight class="normal">permissions.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>want<sp/>automatic<sp/>cleanup<sp/>of<sp/>this<sp/>directory,<sp/>use</highlight></codeline>
+<codeline><highlight class="normal">[`tmp.withTmp()`](#with-tpm)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">See:<sp/>[options](#tmp-options)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">cacache.tmp.mkdir(cache).then(dir<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fs.writeFile(path.join(dir,<sp/>&apos;blablabla&apos;),<sp/>Buffer#&lt;1234&gt;,<sp/>...)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;tmp-fix&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>tmp.fix(cache)<sp/>-&gt;<sp/>Promise`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Sets<sp/>the<sp/>`uid`<sp/>and<sp/>`gid`<sp/>properties<sp/>on<sp/>all<sp/>files<sp/>and<sp/>folders<sp/>within<sp/>the<sp/>tmp</highlight></codeline>
+<codeline><highlight class="normal">folder<sp/>to<sp/>match<sp/>the<sp/>rest<sp/>of<sp/>the<sp/>cache.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Use<sp/>this<sp/>after<sp/>manually<sp/>writing<sp/>files<sp/>into<sp/>[`tmp.mkdir`](#tmp-mkdir)<sp/>or</highlight></codeline>
+<codeline><highlight class="normal">[`tmp.withTmp`](#with-tmp).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">cacache.tmp.mkdir(cache).then(dir<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>writeFile(path.join(dir,<sp/>&apos;file&apos;),<sp/>someData).then(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>make<sp/>sure<sp/>we<sp/>didn&apos;t<sp/>just<sp/>put<sp/>a<sp/>root-owned<sp/>file<sp/>in<sp/>the<sp/>cache</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>cacache.tmp.fix().then(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>all<sp/>uids<sp/>and<sp/>gids<sp/>match<sp/>now</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;with-tmp&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>tmp.withTmp(cache,<sp/>opts,<sp/>cb)<sp/>-&gt;<sp/>Promise`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Creates<sp/>a<sp/>temporary<sp/>directory<sp/>with<sp/>[`tmp.mkdir()`](#tmp-mkdir)<sp/>and<sp/>calls<sp/>`cb`</highlight></codeline>
+<codeline><highlight class="normal">with<sp/>it.<sp/>The<sp/>created<sp/>temporary<sp/>directory<sp/>will<sp/>be<sp/>removed<sp/>when<sp/>the<sp/>return<sp/>value</highlight></codeline>
+<codeline><highlight class="normal">of<sp/>`cb()`<sp/>resolves,<sp/>the<sp/>tmp<sp/>directory<sp/>will<sp/>be<sp/>automatically<sp/>deleted<sp/>once<sp/>that<sp/></highlight></codeline>
+<codeline><highlight class="normal">promise<sp/>completes.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>same<sp/>caveats<sp/>apply<sp/>when<sp/>it<sp/>comes<sp/>to<sp/>managing<sp/>permissions<sp/>for<sp/>the<sp/>tmp<sp/>dir&apos;s</highlight></codeline>
+<codeline><highlight class="normal">contents.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">See:<sp/>[options](#tmp-options)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">cacache.tmp.withTmp(cache,<sp/>dir<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>fs.writeFileAsync(path.join(dir,<sp/>&apos;blablabla&apos;),<sp/>Buffer#&lt;1234&gt;,<sp/>...)</highlight></codeline>
+<codeline><highlight class="normal">}).then(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>`dir`<sp/>no<sp/>longer<sp/>exists</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>&lt;a<sp/>name=&quot;tmp-options&quot;&gt;&lt;/a&gt;<sp/>Options</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>`opts.tmpPrefix`</highlight></codeline>
+<codeline><highlight class="normal">Default:<sp/>null</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Prefix<sp/>to<sp/>append<sp/>on<sp/>the<sp/>temporary<sp/>directory<sp/>name<sp/>inside<sp/>the<sp/>cache&apos;s<sp/>tmp<sp/>dir.<sp/></highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;integrity&quot;&gt;&lt;/a&gt;<sp/>Subresource<sp/>Integrity<sp/>Digests</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>content<sp/>verification<sp/>and<sp/>addressing,<sp/>cacache<sp/>uses<sp/>strings<sp/>following<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[Subresource</highlight></codeline>
+<codeline><highlight class="normal">Integrity<sp/>spec](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity).</highlight></codeline>
+<codeline><highlight class="normal">That<sp/>is,<sp/>any<sp/>time<sp/>cacache<sp/>expects<sp/>an<sp/>`integrity`<sp/>argument<sp/>or<sp/>option,<sp/>it</highlight></codeline>
+<codeline><highlight class="normal">should<sp/>be<sp/>in<sp/>the<sp/>format<sp/>`&lt;hashAlgorithm&gt;-&lt;base64-hash&gt;`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">One<sp/>deviation<sp/>from<sp/>the<sp/>current<sp/>spec<sp/>is<sp/>that<sp/>cacache<sp/>will<sp/>support<sp/>any<sp/>hash</highlight></codeline>
+<codeline><highlight class="normal">algorithms<sp/>supported<sp/>by<sp/>the<sp/>underlying<sp/>Node.js<sp/>process.<sp/>You<sp/>can<sp/>use</highlight></codeline>
+<codeline><highlight class="normal">`crypto.getHashes()`<sp/>to<sp/>see<sp/>which<sp/>ones<sp/>you<sp/>can<sp/>use.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Generating<sp/>Digests<sp/>Yourself</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>have<sp/>an<sp/>existing<sp/>content<sp/>shasum,<sp/>they<sp/>are<sp/>generally<sp/>formatted<sp/>as<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">hexadecimal<sp/>string<sp/>(that<sp/>is,<sp/>a<sp/>sha1<sp/>would<sp/>look<sp/>like:</highlight></codeline>
+<codeline><highlight class="normal">`5f5513f8822fdbe5145af33b64d8d970dcf95c6e`).<sp/>In<sp/>order<sp/>to<sp/>be<sp/>compatible<sp/>with</highlight></codeline>
+<codeline><highlight class="normal">cacache,<sp/>you&apos;ll<sp/>need<sp/>to<sp/>convert<sp/>this<sp/>to<sp/>an<sp/>equivalent<sp/>subresource<sp/>integrity</highlight></codeline>
+<codeline><highlight class="normal">string.<sp/>For<sp/>this<sp/>example,<sp/>the<sp/>corresponding<sp/>hash<sp/>would<sp/>be:</highlight></codeline>
+<codeline><highlight class="normal">`sha1-X1UT+IIv2+UUWvM7ZNjZcNz5XG4=`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>want<sp/>to<sp/>generate<sp/>an<sp/>integrity<sp/>string<sp/>yourself<sp/>for<sp/>existing<sp/>data,<sp/>you<sp/>can</highlight></codeline>
+<codeline><highlight class="normal">use<sp/>something<sp/>like<sp/>this:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>crypto<sp/>=<sp/>require(&apos;crypto&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>hashAlgorithm<sp/>=<sp/>&apos;sha512&apos;</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>data<sp/>=<sp/>&apos;foobarbaz&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>integrity<sp/>=<sp/>(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>hashAlgorithm<sp/>+</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&apos;-&apos;<sp/>+</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>crypto.createHash(hashAlgorithm).update(data).digest(&apos;base64&apos;)</highlight></codeline>
+<codeline><highlight class="normal">)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>also<sp/>use<sp/>[`ssri`](https://npm.im/ssri)<sp/>to<sp/>have<sp/>a<sp/>richer<sp/>set<sp/>of<sp/>functionality</highlight></codeline>
+<codeline><highlight class="normal">around<sp/>SRI<sp/>strings,<sp/>including<sp/>generation,<sp/>parsing,<sp/>and<sp/>translating<sp/>from<sp/>existing</highlight></codeline>
+<codeline><highlight class="normal">hex-formatted<sp/>strings.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;verify&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>cacache.verify(cache,<sp/>opts)<sp/>-&gt;<sp/>Promise`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Checks<sp/>out<sp/>and<sp/>fixes<sp/>up<sp/>your<sp/>cache:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>Cleans<sp/>up<sp/>corrupted<sp/>or<sp/>invalid<sp/>index<sp/>entries.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Custom<sp/>entry<sp/>filtering<sp/>options.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Garbage<sp/>collects<sp/>any<sp/>content<sp/>entries<sp/>not<sp/>referenced<sp/>by<sp/>the<sp/>index.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Checks<sp/>integrity<sp/>for<sp/>all<sp/>content<sp/>entries<sp/>and<sp/>removes<sp/>invalid<sp/>content.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Fixes<sp/>cache<sp/>ownership.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Removes<sp/>the<sp/>`tmp`<sp/>directory<sp/>in<sp/>the<sp/>cache<sp/>and<sp/>all<sp/>its<sp/>contents.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>it&apos;s<sp/>done,<sp/>it&apos;ll<sp/>return<sp/>an<sp/>object<sp/>with<sp/>various<sp/>stats<sp/>about<sp/>the<sp/>verification</highlight></codeline>
+<codeline><highlight class="normal">process,<sp/>including<sp/>amount<sp/>of<sp/>storage<sp/>reclaimed,<sp/>number<sp/>of<sp/>valid<sp/>entries,<sp/>number</highlight></codeline>
+<codeline><highlight class="normal">of<sp/>entries<sp/>removed,<sp/>etc.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>&lt;a<sp/>name=&quot;verify-options&quot;&gt;&lt;/a&gt;<sp/>Options</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>`opts.concurrency`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Default:<sp/>20</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Number<sp/>of<sp/>concurrently<sp/>read<sp/>files<sp/>in<sp/>the<sp/>filesystem<sp/>while<sp/>doing<sp/>clean<sp/>up.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>`opts.filter`</highlight></codeline>
+<codeline><highlight class="normal">Receives<sp/>a<sp/>formatted<sp/>entry.<sp/>Return<sp/>false<sp/>to<sp/>remove<sp/>it.</highlight></codeline>
+<codeline><highlight class="normal">Note:<sp/>might<sp/>be<sp/>called<sp/>more<sp/>than<sp/>once<sp/>on<sp/>the<sp/>same<sp/>entry.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>`opts.log`</highlight></codeline>
+<codeline><highlight class="normal">Custom<sp/>logger<sp/>function:</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>log:<sp/>{<sp/>silly<sp/>()<sp/>{}<sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>log.silly(&apos;verify&apos;,<sp/>&apos;verifying<sp/>cache<sp/>at&apos;,<sp/>cache)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```sh</highlight></codeline>
+<codeline><highlight class="normal">echo<sp/>somegarbage<sp/>&gt;&gt;<sp/>$CACHEPATH/content/deadbeef</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">cacache.verify(cachePath).then(stats<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>deadbeef<sp/>collected,<sp/>because<sp/>of<sp/>invalid<sp/>checksum.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;cache<sp/>is<sp/>much<sp/>nicer<sp/>now!<sp/>stats:&apos;,<sp/>stats)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;verify-last-run&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>cacache.verify.lastRun(cache)<sp/>-&gt;<sp/>Promise`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>a<sp/>`Date`<sp/>representing<sp/>the<sp/>last<sp/>time<sp/>`cacache.verify`<sp/>was<sp/>run<sp/>on<sp/>`cache`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">cacache.verify(cachePath).then(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cacache.verify.lastRun(cachePath).then(lastTime<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(&apos;cacache.verify<sp/>was<sp/>last<sp/>called<sp/>on&apos;<sp/>+<sp/>lastTime)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/cacache/README.md"/>
+  </compounddef>
+</doxygen>

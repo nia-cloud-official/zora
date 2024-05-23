@@ -1,0 +1,103 @@
+.TH "gyp.xcode_ninja" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gyp.xcode_ninja
+.SH SYNOPSIS
+.br
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fB_WriteWorkspace\fP (main_gyp, sources_gyp, params)"
+.br
+.ti -1c
+.RI "\fB_TargetFromSpec\fP (old_spec, params)"
+.br
+.ti -1c
+.RI "\fBIsValidTargetForWrapper\fP (target_extras, executable_target_pattern, spec)"
+.br
+.ti -1c
+.RI "\fBCreateWrapper\fP (target_list, target_dicts, data, params)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.PP
+.nf
+Xcode-ninja wrapper project file generator\&.
+
+This updates the data structures passed to the Xcode gyp generator to build
+with ninja instead\&. The Xcode project itself is transformed into a list of
+executable targets, each with a build step to build with ninja, and a target
+with every source and resource file\&.  This appears to sidestep some of the
+major performance headaches experienced using complex projects and large number
+of targets within Xcode\&.
+
+.fi
+.PP
+ 
+.SH "Function Documentation"
+.PP 
+.SS "gyp\&.xcode_ninja\&._TargetFromSpec ( old_spec,  params)\fR [protected]\fP"
+
+.PP
+.nf
+ Create fake target for xcode-ninja wrapper\&. 
+.fi
+.PP
+ 
+.PP
+Definition at line \fB58\fP of file \fBxcode_ninja\&.py\fP\&.
+.SS "gyp\&.xcode_ninja\&._WriteWorkspace ( main_gyp,  sources_gyp,  params)\fR [protected]\fP"
+
+.PP
+.nf
+ Create a workspace to wrap main and sources gyp paths\&. 
+.fi
+.PP
+ 
+.PP
+Definition at line \fB22\fP of file \fBxcode_ninja\&.py\fP\&.
+.SS "gyp\&.xcode_ninja\&.CreateWrapper ( target_list,  target_dicts,  data,  params)"
+
+.PP
+.nf
+Initialize targets for the ninja wrapper\&.
+
+This sets up the necessary variables in the targets to generate Xcode projects
+that use ninja as an external builder\&.
+Arguments:
+target_list: List of target pairs: 'base/base\&.gyp:base'\&.
+target_dicts: Dict of target properties keyed on target pair\&.
+data: Dict of flattened build files keyed on gyp path\&.
+params: Dict of global options for gyp\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB166\fP of file \fBxcode_ninja\&.py\fP\&.
+.SS "gyp\&.xcode_ninja\&.IsValidTargetForWrapper ( target_extras,  executable_target_pattern,  spec)"
+
+.PP
+.nf
+Limit targets for Xcode wrapper\&.
+
+Xcode sometimes performs poorly with too many targets, so only include
+proper executable targets, with filters to customize\&.
+Arguments:
+target_extras: Regular expression to always add, matching any target\&.
+executable_target_pattern: Regular expression limiting executable targets\&.
+spec: Specifications for target\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB137\fP of file \fBxcode_ninja\&.py\fP\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

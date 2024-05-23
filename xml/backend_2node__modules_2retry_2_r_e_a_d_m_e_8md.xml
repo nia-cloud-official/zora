@@ -1,0 +1,240 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2retry_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">&lt;!--<sp/>badges/<sp/>--&gt;</highlight></codeline>
+<codeline><highlight class="normal">[![Build<sp/>Status](https://secure.travis-ci.org/tim-kos/node-retry.png?branch=master)](http://travis-ci.org/tim-kos/node-retry<sp/>&quot;Check<sp/>this<sp/>project&apos;s<sp/>build<sp/>status<sp/>on<sp/>TravisCI&quot;)</highlight></codeline>
+<codeline><highlight class="normal">[![codecov](https://codecov.io/gh/tim-kos/node-retry/branch/master/graph/badge.svg)](https://codecov.io/gh/tim-kos/node-retry)</highlight></codeline>
+<codeline><highlight class="normal">&lt;!--<sp/>/badges<sp/>--&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>retry</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Abstraction<sp/>for<sp/>exponential<sp/>and<sp/>custom<sp/>retry<sp/>strategies<sp/>for<sp/>failed<sp/>operations.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Installation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>npm<sp/>install<sp/>retry</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Current<sp/>Status</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>module<sp/>has<sp/>been<sp/>tested<sp/>and<sp/>is<sp/>ready<sp/>to<sp/>be<sp/>used.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Tutorial</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>example<sp/>below<sp/>will<sp/>retry<sp/>a<sp/>potentially<sp/>failing<sp/>`dns.resolve`<sp/>operation</highlight></codeline>
+<codeline><highlight class="normal">`10`<sp/>times<sp/>using<sp/>an<sp/>exponential<sp/>backoff<sp/>strategy.<sp/>With<sp/>the<sp/>default<sp/>settings,<sp/>this</highlight></codeline>
+<codeline><highlight class="normal">means<sp/>the<sp/>last<sp/>attempt<sp/>is<sp/>made<sp/>after<sp/>`17<sp/>minutes<sp/>and<sp/>3<sp/>seconds`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>dns<sp/>=<sp/>require(&apos;dns&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>retry<sp/>=<sp/>require(&apos;retry&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>faultTolerantResolve(address,<sp/>cb)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>operation<sp/>=<sp/>retry.operation();</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>operation.attempt(function(currentAttempt)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>dns.resolve(address,<sp/>function(err,<sp/>addresses)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>if<sp/>(operation.retry(err))<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>cb(err<sp/>?<sp/>operation.mainError()<sp/>:<sp/>null,<sp/>addresses);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>});</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>});</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">faultTolerantResolve(&apos;nodejs.org&apos;,<sp/>function(err,<sp/>addresses)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(err,<sp/>addresses);</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Of<sp/>course<sp/>you<sp/>can<sp/>also<sp/>configure<sp/>the<sp/>factors<sp/>that<sp/>go<sp/>into<sp/>the<sp/>exponential</highlight></codeline>
+<codeline><highlight class="normal">backoff.<sp/>See<sp/>the<sp/>API<sp/>documentation<sp/>below<sp/>for<sp/>all<sp/>available<sp/>settings.</highlight></codeline>
+<codeline><highlight class="normal">currentAttempt<sp/>is<sp/>an<sp/>int<sp/>representing<sp/>the<sp/>number<sp/>of<sp/>attempts<sp/>so<sp/>far.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>operation<sp/>=<sp/>retry.operation({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>retries:<sp/>5,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>factor:<sp/>3,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>minTimeout:<sp/>1<sp/>*<sp/>1000,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>maxTimeout:<sp/>60<sp/>*<sp/>1000,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>randomize:<sp/>true,</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>API</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>retry.operation([options])</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Creates<sp/>a<sp/>new<sp/>`RetryOperation`<sp/>object.<sp/>`options`<sp/>is<sp/>the<sp/>same<sp/>as<sp/>`retry.timeouts()`&apos;s<sp/>`options`,<sp/>with<sp/>two<sp/>additions:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`forever`:<sp/>Whether<sp/>to<sp/>retry<sp/>forever,<sp/>defaults<sp/>to<sp/>`false`.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`unref`:<sp/>Whether<sp/>to<sp/>[unref](https://nodejs.org/api/timers.html#timers_unref)<sp/>the<sp/>setTimeout&apos;s,<sp/>defaults<sp/>to<sp/>`false`.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`maxRetryTime`:<sp/>The<sp/>maximum<sp/>time<sp/>(in<sp/>milliseconds)<sp/>that<sp/>the<sp/>retried<sp/>operation<sp/>is<sp/>allowed<sp/>to<sp/>run.<sp/>Default<sp/>is<sp/>`Infinity`.<sp/><sp/></highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>retry.timeouts([options])</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>an<sp/>array<sp/>of<sp/>timeouts.<sp/>All<sp/>time<sp/>`options`<sp/>and<sp/>return<sp/>values<sp/>are<sp/>in</highlight></codeline>
+<codeline><highlight class="normal">milliseconds.<sp/>If<sp/>`options`<sp/>is<sp/>an<sp/>array,<sp/>a<sp/>copy<sp/>of<sp/>that<sp/>array<sp/>is<sp/>returned.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`options`<sp/>is<sp/>a<sp/>JS<sp/>object<sp/>that<sp/>can<sp/>contain<sp/>any<sp/>of<sp/>the<sp/>following<sp/>keys:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`retries`:<sp/>The<sp/>maximum<sp/>amount<sp/>of<sp/>times<sp/>to<sp/>retry<sp/>the<sp/>operation.<sp/>Default<sp/>is<sp/>`10`.<sp/>Seting<sp/>this<sp/>to<sp/>`1`<sp/>means<sp/>`do<sp/>it<sp/>once,<sp/>then<sp/>retry<sp/>it<sp/>once`.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`factor`:<sp/>The<sp/>exponential<sp/>factor<sp/>to<sp/>use.<sp/>Default<sp/>is<sp/>`2`.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`minTimeout`:<sp/>The<sp/>number<sp/>of<sp/>milliseconds<sp/>before<sp/>starting<sp/>the<sp/>first<sp/>retry.<sp/>Default<sp/>is<sp/>`1000`.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`maxTimeout`:<sp/>The<sp/>maximum<sp/>number<sp/>of<sp/>milliseconds<sp/>between<sp/>two<sp/>retries.<sp/>Default<sp/>is<sp/>`Infinity`.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`randomize`:<sp/>Randomizes<sp/>the<sp/>timeouts<sp/>by<sp/>multiplying<sp/>with<sp/>a<sp/>factor<sp/>between<sp/>`1`<sp/>to<sp/>`2`.<sp/>Default<sp/>is<sp/>`false`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>formula<sp/>used<sp/>to<sp/>calculate<sp/>the<sp/>individual<sp/>timeouts<sp/>is:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">Math.min(random<sp/>*<sp/>minTimeout<sp/>*<sp/>Math.pow(factor,<sp/>attempt),<sp/>maxTimeout)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Have<sp/>a<sp/>look<sp/>at<sp/>[this<sp/>article][article]<sp/>for<sp/>a<sp/>better<sp/>explanation<sp/>of<sp/>approach.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>want<sp/>to<sp/>tune<sp/>your<sp/>`factor`<sp/>/<sp/>`times`<sp/>settings<sp/>to<sp/>attempt<sp/>the<sp/>last<sp/>retry</highlight></codeline>
+<codeline><highlight class="normal">after<sp/>a<sp/>certain<sp/>amount<sp/>of<sp/>time,<sp/>you<sp/>can<sp/>use<sp/>wolfram<sp/>alpha.<sp/>For<sp/>example<sp/>in<sp/>order</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>tune<sp/>for<sp/>`10`<sp/>attempts<sp/>in<sp/>`5<sp/>minutes`,<sp/>you<sp/>can<sp/>use<sp/>this<sp/>equation:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">![screenshot](https://github.com/tim-kos/node-retry/raw/master/equation.gif)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Explaining<sp/>the<sp/>various<sp/>values<sp/>from<sp/>left<sp/>to<sp/>right:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`k<sp/>=<sp/>0<sp/>...<sp/>9`:<sp/><sp/>The<sp/>`retries`<sp/>value<sp/>(10)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`1000`:<sp/>The<sp/>`minTimeout`<sp/>value<sp/>in<sp/>ms<sp/>(1000)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`x^k`:<sp/>No<sp/>need<sp/>to<sp/>change<sp/>this,<sp/>`x`<sp/>will<sp/>be<sp/>your<sp/>resulting<sp/>factor</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`5<sp/>*<sp/>60<sp/>*<sp/>1000`:<sp/>The<sp/>desired<sp/>total<sp/>amount<sp/>of<sp/>time<sp/>for<sp/>retrying<sp/>in<sp/>ms<sp/>(5<sp/>minutes)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>make<sp/>this<sp/>a<sp/>little<sp/>easier<sp/>for<sp/>you,<sp/>use<sp/>wolfram<sp/>alpha<sp/>to<sp/>do<sp/>the<sp/>calculations:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;http://www.wolframalpha.com/input/?i=Sum%5B1000*x^k%2C+{k%2C+0%2C+9}%5D+%3D+5+*+60+*+1000&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[article]:<sp/>http://dthain.blogspot.com/2009/02/exponential-backoff-in-distributed.html</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>retry.createTimeout(attempt,<sp/>opts)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>a<sp/>new<sp/>`timeout`<sp/>(integer<sp/>in<sp/>milliseconds)<sp/>based<sp/>on<sp/>the<sp/>given<sp/>parameters.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`attempt`<sp/>is<sp/>an<sp/>integer<sp/>representing<sp/>for<sp/>which<sp/>retry<sp/>the<sp/>timeout<sp/>should<sp/>be<sp/>calculated.<sp/>If<sp/>your<sp/>retry<sp/>operation<sp/>was<sp/>executed<sp/>4<sp/>times<sp/>you<sp/>had<sp/>one<sp/>attempt<sp/>and<sp/>3<sp/>retries.<sp/>If<sp/>you<sp/>then<sp/>want<sp/>to<sp/>calculate<sp/>a<sp/>new<sp/>timeout,<sp/>you<sp/>should<sp/>set<sp/>`attempt`<sp/>to<sp/>4<sp/>(attempts<sp/>are<sp/>zero-indexed).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`opts`<sp/>can<sp/>include<sp/>`factor`,<sp/>`minTimeout`,<sp/>`randomize`<sp/>(boolean)<sp/>and<sp/>`maxTimeout`.<sp/>They<sp/>are<sp/>documented<sp/>above.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`retry.createTimeout()`<sp/>is<sp/>used<sp/>internally<sp/>by<sp/>`retry.timeouts()`<sp/>and<sp/>is<sp/>public<sp/>for<sp/>you<sp/>to<sp/>be<sp/>able<sp/>to<sp/>create<sp/>your<sp/>own<sp/>timeouts<sp/>for<sp/>reinserting<sp/>an<sp/>item,<sp/>see<sp/>[issue<sp/>#13](https://github.com/tim-kos/node-retry/issues/13).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>retry.wrap(obj,<sp/>[options],<sp/>[methodNames])</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Wrap<sp/>all<sp/>functions<sp/>of<sp/>the<sp/>`obj`<sp/>with<sp/>retry.<sp/>Optionally<sp/>you<sp/>can<sp/>pass<sp/>operation<sp/>options<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">an<sp/>array<sp/>of<sp/>method<sp/>names<sp/>which<sp/>need<sp/>to<sp/>be<sp/>wrapped.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">retry.wrap(obj)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">retry.wrap(obj,<sp/>[&apos;method1&apos;,<sp/>&apos;method2&apos;])</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">retry.wrap(obj,<sp/>{retries:<sp/>3})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">retry.wrap(obj,<sp/>{retries:<sp/>3},<sp/>[&apos;method1&apos;,<sp/>&apos;method2&apos;])</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">The<sp/>`options`<sp/>object<sp/>can<sp/>take<sp/>any<sp/>options<sp/>that<sp/>the<sp/>usual<sp/>call<sp/>to<sp/>`retry.operation`<sp/>can<sp/>take.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>new<sp/>RetryOperation(timeouts,<sp/>[options])</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Creates<sp/>a<sp/>new<sp/>`RetryOperation`<sp/>where<sp/>`timeouts`<sp/>is<sp/>an<sp/>array<sp/>where<sp/>each<sp/>value<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">a<sp/>timeout<sp/>given<sp/>in<sp/>milliseconds.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Available<sp/>options:</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`forever`:<sp/>Whether<sp/>to<sp/>retry<sp/>forever,<sp/>defaults<sp/>to<sp/>`false`.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`unref`:<sp/>Wether<sp/>to<sp/>[unref](https://nodejs.org/api/timers.html#timers_unref)<sp/>the<sp/>setTimeout&apos;s,<sp/>defaults<sp/>to<sp/>`false`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`forever`<sp/>is<sp/>true,<sp/>the<sp/>following<sp/>changes<sp/>happen:</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`RetryOperation.errors()`<sp/>will<sp/>only<sp/>output<sp/>an<sp/>array<sp/>of<sp/>one<sp/>item:<sp/>the<sp/>last<sp/>error.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`RetryOperation`<sp/>will<sp/>repeatedly<sp/>use<sp/>the<sp/>`timeouts`<sp/>array.<sp/>Once<sp/>all<sp/>of<sp/>its<sp/>timeouts<sp/>have<sp/>been<sp/>used<sp/>up,<sp/>it<sp/>restarts<sp/>with<sp/>the<sp/>first<sp/>timeout,<sp/>then<sp/>uses<sp/>the<sp/>second<sp/>and<sp/>so<sp/>on.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>retryOperation.errors()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>an<sp/>array<sp/>of<sp/>all<sp/>errors<sp/>that<sp/>have<sp/>been<sp/>passed<sp/>to<sp/>`retryOperation.retry()`<sp/>so<sp/>far.<sp/>The</highlight></codeline>
+<codeline><highlight class="normal">returning<sp/>array<sp/>has<sp/>the<sp/>errors<sp/>ordered<sp/>chronologically<sp/>based<sp/>on<sp/>when<sp/>they<sp/>were<sp/>passed<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">`retryOperation.retry()`,<sp/>which<sp/>means<sp/>the<sp/>first<sp/>passed<sp/>error<sp/>is<sp/>at<sp/>index<sp/>zero<sp/>and<sp/>the<sp/>last<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">at<sp/>the<sp/>last<sp/>index.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>retryOperation.mainError()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>reference<sp/>to<sp/>the<sp/>error<sp/>object<sp/>that<sp/>occured<sp/>most<sp/>frequently.<sp/>Errors<sp/>are</highlight></codeline>
+<codeline><highlight class="normal">compared<sp/>using<sp/>the<sp/>`error.message`<sp/>property.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>multiple<sp/>error<sp/>messages<sp/>occured<sp/>the<sp/>same<sp/>amount<sp/>of<sp/>time,<sp/>the<sp/>last<sp/>error</highlight></codeline>
+<codeline><highlight class="normal">object<sp/>with<sp/>that<sp/>message<sp/>is<sp/>returned.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>no<sp/>errors<sp/>occured<sp/>so<sp/>far,<sp/>the<sp/>value<sp/>is<sp/>`null`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>retryOperation.attempt(fn,<sp/>timeoutOps)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Defines<sp/>the<sp/>function<sp/>`fn`<sp/>that<sp/>is<sp/>to<sp/>be<sp/>retried<sp/>and<sp/>executes<sp/>it<sp/>for<sp/>the<sp/>first</highlight></codeline>
+<codeline><highlight class="normal">time<sp/>right<sp/>away.<sp/>The<sp/>`fn`<sp/>function<sp/>can<sp/>receive<sp/>an<sp/>optional<sp/>`currentAttempt`<sp/>callback<sp/>that<sp/>represents<sp/>the<sp/>number<sp/>of<sp/>attempts<sp/>to<sp/>execute<sp/>`fn`<sp/>so<sp/>far.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Optionally<sp/>defines<sp/>`timeoutOps`<sp/>which<sp/>is<sp/>an<sp/>object<sp/>having<sp/>a<sp/>property<sp/>`timeout`<sp/>in<sp/>miliseconds<sp/>and<sp/>a<sp/>property<sp/>`cb`<sp/>callback<sp/>function.</highlight></codeline>
+<codeline><highlight class="normal">Whenever<sp/>your<sp/>retry<sp/>operation<sp/>takes<sp/>longer<sp/>than<sp/>`timeout`<sp/>to<sp/>execute,<sp/>the<sp/>timeout<sp/>callback<sp/>function<sp/>`cb`<sp/>is<sp/>called.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>retryOperation.try(fn)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>an<sp/>alias<sp/>for<sp/>`retryOperation.attempt(fn)`.<sp/>This<sp/>is<sp/>deprecated.<sp/>Please<sp/>use<sp/>`retryOperation.attempt(fn)`<sp/>instead.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>retryOperation.start(fn)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>an<sp/>alias<sp/>for<sp/>`retryOperation.attempt(fn)`.<sp/>This<sp/>is<sp/>deprecated.<sp/>Please<sp/>use<sp/>`retryOperation.attempt(fn)`<sp/>instead.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>retryOperation.retry(error)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>`false`<sp/>when<sp/>no<sp/>`error`<sp/>value<sp/>is<sp/>given,<sp/>or<sp/>the<sp/>maximum<sp/>amount<sp/>of<sp/>retries</highlight></codeline>
+<codeline><highlight class="normal">has<sp/>been<sp/>reached.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Otherwise<sp/>it<sp/>returns<sp/>`true`,<sp/>and<sp/>retries<sp/>the<sp/>operation<sp/>after<sp/>the<sp/>timeout<sp/>for</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>current<sp/>attempt<sp/>number.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>retryOperation.stop()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Allows<sp/>you<sp/>to<sp/>stop<sp/>the<sp/>operation<sp/>being<sp/>retried.<sp/>Useful<sp/>for<sp/>aborting<sp/>the<sp/>operation<sp/>on<sp/>a<sp/>fatal<sp/>error<sp/>etc.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>retryOperation.reset()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Resets<sp/>the<sp/>internal<sp/>state<sp/>of<sp/>the<sp/>operation<sp/>object,<sp/>so<sp/>that<sp/>you<sp/>can<sp/>call<sp/>`attempt()`<sp/>again<sp/>as<sp/>if<sp/>this<sp/>was<sp/>a<sp/>new<sp/>operation<sp/>object.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>retryOperation.attempts()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>an<sp/>int<sp/>representing<sp/>the<sp/>number<sp/>of<sp/>attempts<sp/>it<sp/>took<sp/>to<sp/>call<sp/>`fn`<sp/>before<sp/>it<sp/>was<sp/>successful.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>License</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">retry<sp/>is<sp/>licensed<sp/>under<sp/>the<sp/>MIT<sp/>license.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Changelog</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">0.10.0<sp/>Adding<sp/>`stop`<sp/>functionality,<sp/>thanks<sp/>to<sp/>@maxnachlinger.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">0.9.0<sp/>Adding<sp/>`unref`<sp/>functionality,<sp/>thanks<sp/>to<sp/>@satazor.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">0.8.0<sp/>Implementing<sp/>retry.wrap.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">0.7.0<sp/>Some<sp/>bug<sp/>fixes<sp/>and<sp/>made<sp/>retry.createTimeout()<sp/>public.<sp/>Fixed<sp/>issues<sp/>[#10](https://github.com/tim-kos/node-retry/issues/10),<sp/>[#12](https://github.com/tim-kos/node-retry/issues/12),<sp/>and<sp/>[#13](https://github.com/tim-kos/node-retry/issues/13).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">0.6.0<sp/>Introduced<sp/>optional<sp/>timeOps<sp/>parameter<sp/>for<sp/>the<sp/>attempt()<sp/>function<sp/>which<sp/>is<sp/>an<sp/>object<sp/>having<sp/>a<sp/>property<sp/>timeout<sp/>in<sp/>milliseconds<sp/>and<sp/>a<sp/>property<sp/>cb<sp/>callback<sp/>function.<sp/>Whenever<sp/>your<sp/>retry<sp/>operation<sp/>takes<sp/>longer<sp/>than<sp/>timeout<sp/>to<sp/>execute,<sp/>the<sp/>timeout<sp/>callback<sp/>function<sp/>cb<sp/>is<sp/>called.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">0.5.0<sp/>Some<sp/>minor<sp/>refactoring.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">0.4.0<sp/>Changed<sp/>retryOperation.try()<sp/>to<sp/>retryOperation.attempt().<sp/>Deprecated<sp/>the<sp/>aliases<sp/>start()<sp/>and<sp/>try()<sp/>for<sp/>it.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">0.3.0<sp/>Added<sp/>retryOperation.start()<sp/>which<sp/>is<sp/>an<sp/>alias<sp/>for<sp/>retryOperation.try().</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">0.2.0<sp/>Added<sp/>attempts()<sp/>function<sp/>and<sp/>parameter<sp/>to<sp/>retryOperation.try()<sp/>representing<sp/>the<sp/>number<sp/>of<sp/>attempts<sp/>it<sp/>took<sp/>to<sp/>call<sp/>fn().</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/retry/README.md"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,104 @@
+.TH "md_backend_2node__modules_2accepts_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2accepts_2_r_e_a_d_m_e \- accepts 
+.PP
+ \fR\fP \fR\fP \fR\fP \fR\fP \fR\fP
+.PP
+Higher level content negotiation based on \fRnegotiator\fP\&. Extracted from \fRkoa\fP for general use\&.
+.PP
+In addition to negotiator, it allows:
+.PP
+.IP "\(bu" 2
+Allows types as an array or arguments list, ie `(['text/html', 'application/json'])\fR as well as\fP('text/html', 'application/json')\fR\&.\fP
+.IP "\(bu" 2
+\fRAllows type shorthands such as\fPjson\fR\&.\fP
+.IP "\(bu" 2
+\fRReturns\fPfalse\fRwhen no types match\fP
+.IP "\(bu" 2
+\fRTreats non-existent headers as\fP*`
+.PP
+.SH "Installation"
+.PP
+This is a \fRNode\&.js\fP module available through the \fRnpm registry\fP\&. Installation is done using the \fR\fRnpm install\fP command\fP:
+.PP
+.PP
+.nf
+$ npm install accepts
+.fi
+.PP
+.SH "API"
+.PP
+.PP
+.nf
+var accepts = require('accepts')
+.fi
+.PP
+.SS "accepts(req)"
+Create a new \fRAccepts\fP object for the given \fRreq\fP\&.
+.SS "\&.charset(charsets)"
+Return the first accepted charset\&. If nothing in \fRcharsets\fP is accepted, then \fRfalse\fP is returned\&.
+.SS "\&.charsets()"
+Return the charsets that the request accepts, in the order of the client's preference (most preferred first)\&.
+.SS "\&.encoding(encodings)"
+Return the first accepted encoding\&. If nothing in \fRencodings\fP is accepted, then \fRfalse\fP is returned\&.
+.SS "\&.encodings()"
+Return the encodings that the request accepts, in the order of the client's preference (most preferred first)\&.
+.SS "\&.language(languages)"
+Return the first accepted language\&. If nothing in \fRlanguages\fP is accepted, then \fRfalse\fP is returned\&.
+.SS "\&.languages()"
+Return the languages that the request accepts, in the order of the client's preference (most preferred first)\&.
+.SS "\&.type(types)"
+Return the first accepted type (and it is returned as the same text as what appears in the \fRtypes\fP array)\&. If nothing in \fRtypes\fP is accepted, then \fRfalse\fP is returned\&.
+.PP
+The \fRtypes\fP array can contain full MIME types or file extensions\&. Any value that is not a full MIME types is passed to `require('mime-types')\&.lookup`\&.
+.SS "\&.types()"
+Return the types that the request accepts, in the order of the client's preference (most preferred first)\&.
+.SH "Examples"
+.PP
+.SS "Simple type negotiation"
+This simple example shows how to use \fRaccepts\fP to return a different typed respond body based on what the client wants to accept\&. The server lists it's preferences in order and will get back the best match between the client and server\&.
+.PP
+.PP
+.nf
+var accepts = require('accepts')
+var http = require('http')
+
+function app (req, res) {
+  var accept = accepts(req)
+
+  // the order of this list is significant; should be server preferred order
+  switch (accept\&.type(['json', 'html'])) {
+    case 'json':
+      res\&.setHeader('Content\-Type', 'application/json')
+      res\&.write('{"hello":"world!"}')
+      break
+    case 'html':
+      res\&.setHeader('Content\-Type', 'text/html')
+      res\&.write('<b>hello, world!</b>')
+      break
+    default:
+      // the fallback is text/plain, so no need to specify it above
+      res\&.setHeader('Content\-Type', 'text/plain')
+      res\&.write('hello, world!')
+      break
+  }
+
+  res\&.end()
+}
+
+http\&.createServer(app)\&.listen(3000)
+.fi
+.PP
+.PP
+You can test this out with the cURL program: 
+.PP
+.nf
+curl \-I \-H'Accept: text/html' http://localhost:3000/
+
+.fi
+.PP
+.SH "License"
+.PP
+[MIT](LICENSE) 

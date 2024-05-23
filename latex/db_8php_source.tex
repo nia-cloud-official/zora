@@ -1,0 +1,87 @@
+\doxysection{db.\+php}
+\hypertarget{db_8php_source}{}\label{db_8php_source}\mbox{\hyperlink{db_8php}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00001}00001\ <?php}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00002}00002\ require(\textcolor{stringliteral}{'fpdf/fpdf.php'});}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00003}\mbox{\hyperlink{db_8php_ad79b54e31bd1050001133c4d70f850fe}{00003}}\ \ \ \ \ \mbox{\hyperlink{db_8php_ad79b54e31bd1050001133c4d70f850fe}{\$servername}}=\textcolor{stringliteral}{'localhost'};}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00004}\mbox{\hyperlink{db_8php_a0eb82aa5f81cf845de4b36cd653c42cf}{00004}}\ \ \ \ \ \mbox{\hyperlink{db_8php_a0eb82aa5f81cf845de4b36cd653c42cf}{\$username}}=\textcolor{stringliteral}{'root'};}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00005}\mbox{\hyperlink{db_8php_a607686ef9f99ea7c42f4f3dd3dbb2b0d}{00005}}\ \ \ \ \ \mbox{\hyperlink{db_8php_a607686ef9f99ea7c42f4f3dd3dbb2b0d}{\$password}}=\textcolor{stringliteral}{''};}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00006}\mbox{\hyperlink{db_8php_ac5111a571fffa2499732833bb7f0d8c1}{00006}}\ \ \ \ \ \mbox{\hyperlink{db_8php_ac5111a571fffa2499732833bb7f0d8c1}{\$dbname}}\ =\ \textcolor{stringliteral}{"{}academy"{}};}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00007}\mbox{\hyperlink{db_8php_aa8a5a87b9c1a6a0819b88447cbe41877}{00007}}\ \ \ \ \ \mbox{\hyperlink{db_8php_aa8a5a87b9c1a6a0819b88447cbe41877}{\$conn}}=mysqli\_connect(\mbox{\hyperlink{db_8php_ad79b54e31bd1050001133c4d70f850fe}{\$servername}},\mbox{\hyperlink{db_8php_a0eb82aa5f81cf845de4b36cd653c42cf}{\$username}},\mbox{\hyperlink{db_8php_a607686ef9f99ea7c42f4f3dd3dbb2b0d}{\$password}},\ \mbox{\hyperlink{db_8php_ac5111a571fffa2499732833bb7f0d8c1}{\$dbname}});}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00008}00008\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!\mbox{\hyperlink{db_8php_aa8a5a87b9c1a6a0819b88447cbe41877}{\$conn}})\{}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00009}00009\ \ \ \ \ \ \ \ \ \ \ die(\textcolor{stringliteral}{'Could\ not\ Connect\ MySql\ Server:'}\ .mysql\_error());}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00010}00010\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00012}\mbox{\hyperlink{db_8php_a9ea51ca73b64fdffcf9d0bc7b33662c8}{00012}}\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}\ \{}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00013}00013\ \ \ \ \ \ \ \ \ \ \ \ \ \$pdo\ =\ \textcolor{keyword}{new}\ PDO(\textcolor{stringliteral}{"{}mysql:host="{}}\ .\ \mbox{\hyperlink{db_8php_ad79b54e31bd1050001133c4d70f850fe}{\$servername}}\ .\ \textcolor{stringliteral}{"{};dbname="{}}\ .\ \mbox{\hyperlink{db_8php_ac5111a571fffa2499732833bb7f0d8c1}{\$dbname}},\ \mbox{\hyperlink{db_8php_a0eb82aa5f81cf845de4b36cd653c42cf}{\$username}},\ \mbox{\hyperlink{db_8php_a607686ef9f99ea7c42f4f3dd3dbb2b0d}{\$password}});}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00014}00014\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Set\ the\ PDO\ error\ mode\ to\ exception}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00015}00015\ \ \ \ \ \ \ \ \ \ \ \ \ \$pdo-\/>setAttribute(PDO::ATTR\_ERRMODE,\ PDO::ERRMODE\_EXCEPTION);}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00016}00016\ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{catch}(PDOException\ \$e)\ \{}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00017}00017\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Display\ the\ connection\ error\ message}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00018}00018\ \ \ \ \ \ \ \ \ \ \ \ \ die(\textcolor{stringliteral}{"{}Connection\ failed:\ "{}}\ .\ \$e-\/>getMessage());}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00019}00019\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00021}00021\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00022}00022\ \textcolor{comment}{//\ Create\ a\ function\ to\ get\ all\ the\ courses\ from\ the\ database}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00023}\mbox{\hyperlink{db_8php_abf3258cd8a30c829325c72e152aee6ae}{00023}}\ \textcolor{keyword}{function}\ \mbox{\hyperlink{db_8php_abf3258cd8a30c829325c72e152aee6ae}{get\_courses}}(\$pdo)\ \{}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00024}00024\ \ \ \ \ \textcolor{comment}{//\ Prepare\ the\ SQL\ statement\ to\ select\ all\ the\ courses}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00025}00025\ \ \ \ \ \$stmt\ =\ \$pdo-\/>prepare(\textcolor{stringliteral}{"{}SELECT\ *\ FROM\ courses"{}});}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00026}00026\ \ \ \ \ \textcolor{comment}{//\ Execute\ the\ statement}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00027}00027\ \ \ \ \ \$stmt-\/>execute();}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00028}00028\ \ \ \ \ \textcolor{comment}{//\ Fetch\ all\ the\ results\ as\ an\ associative\ array}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00029}00029\ \ \ \ \ \$courses\ =\ \$stmt-\/>fetchAll(PDO::FETCH\_ASSOC);}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00030}00030\ \ \ \ \ \textcolor{comment}{//\ Return\ the\ courses\ array}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00031}00031\ \ \ \ \ \textcolor{keywordflow}{return}\ \$courses;}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00032}00032\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00033}\mbox{\hyperlink{db_8php_adbac1052093741ed14c8ddab44175721}{00033}}\ \ \ \textcolor{keyword}{function}\ \mbox{\hyperlink{db_8php_adbac1052093741ed14c8ddab44175721}{get\_ucourses}}(\$pdo\ ,\mbox{\hyperlink{code_8php_ad634f418b20382e2802f80532d76d3cd}{\$email}})\ \{}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00034}00034\ \ \ \ \ \textcolor{comment}{//\ Prepare\ the\ SQL\ statement\ to\ select\ all\ the\ courses}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00035}00035\ \ \ \ \ \$stmt\ =\ \$pdo-\/>prepare(\textcolor{stringliteral}{"{}SELECT\ *\ FROM\ orders\ WHERE\ email\ =\ \$email"{}});}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00036}00036\ \ \ \ \ \textcolor{comment}{//\ Execute\ the\ statement}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00037}00037\ \ \ \ \ \$stmt-\/>execute();}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00038}00038\ \ \ \ \ \textcolor{comment}{//\ Fetch\ all\ the\ results\ as\ an\ associative\ array}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00039}00039\ \ \ \ \ \$courses\ =\ \$stmt-\/>fetchAll(PDO::FETCH\_ASSOC);}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00040}00040\ \ \ \ \ \textcolor{comment}{//\ Return\ the\ courses\ array}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00041}00041\ \ \ \ \ \textcolor{keywordflow}{return}\ \$courses;}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00042}00042\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00043}00043\ \ \ }
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00044}00044\ \ \ \textcolor{comment}{//\ Create\ a\ function\ to\ get\ a\ single\ course\ by\ its\ id\ from\ the\ database}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00045}\mbox{\hyperlink{db_8php_ab7e8883fa731a256c679272fbe012d14}{00045}}\ \ \ \textcolor{keyword}{function}\ \mbox{\hyperlink{db_8php_ab7e8883fa731a256c679272fbe012d14}{get\_course}}(\$pdo,\ \$id)\ \{}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00046}00046\ \ \ \ \ \textcolor{comment}{//\ Prepare\ the\ SQL\ statement\ to\ select\ the\ course\ by\ its\ id}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00047}00047\ \ \ \ \ \$stmt\ =\ \$pdo-\/>prepare(\textcolor{stringliteral}{"{}SELECT\ *\ FROM\ courses\ WHERE\ id\ =\ :id"{}});}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00048}00048\ \ \ \ \ \textcolor{comment}{//\ Bind\ the\ id\ parameter\ to\ the\ statement}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00049}00049\ \ \ \ \ \$stmt-\/>bindParam(\textcolor{stringliteral}{':id'},\ \$id);}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00050}00050\ \ \ \ \ \textcolor{comment}{//\ Execute\ the\ statement}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00051}00051\ \ \ \ \ \$stmt-\/>execute();}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00052}00052\ \ \ \ \ \textcolor{comment}{//\ Fetch\ the\ result\ as\ an\ associative\ array}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00053}00053\ \ \ \ \ \$course\ =\ \$stmt-\/>fetch(PDO::FETCH\_ASSOC);}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00054}00054\ \ \ \ \ \textcolor{comment}{//\ Return\ the\ course\ array}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00055}00055\ \ \ \ \ \textcolor{keywordflow}{return}\ \$course;}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00056}00056\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00057}00057\ \ \ \textcolor{comment}{//\ Get\ all\ the\ user's\ courses}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00059}00059\ \ \ \textcolor{comment}{//\ Define\ the\ get\_item\ function}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00060}\mbox{\hyperlink{db_8php_a4f71cfb3bef85c097fe3ffee1ac83a8e}{00060}}\ \textcolor{keyword}{function}\ \mbox{\hyperlink{db_8php_a4f71cfb3bef85c097fe3ffee1ac83a8e}{get\_item}}\ (\$pdo,\ \$id)\ \{}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00061}00061\ \ \ \ \ \textcolor{comment}{//\ Prepare\ the\ SQL\ statement\ to\ get\ the\ item\ data\ by\ its\ id}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00062}00062\ \ \ \ \ \$stmt\ =\ \$pdo-\/>prepare(\textcolor{stringliteral}{"{}SELECT\ *\ FROM\ orders\ WHERE\ order\_id\ =\ :id"{}});}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00063}00063\ \ \ \ \ \textcolor{comment}{//\ Bind\ the\ id\ to\ the\ statement\ parameter}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00064}00064\ \ \ \ \ \$stmt-\/>bindParam(\textcolor{stringliteral}{':id'},\ \$id);}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00065}00065\ \ \ \ \ \textcolor{comment}{//\ Execute\ the\ statement}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00066}00066\ \ \ \ \ \$stmt-\/>execute();}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00067}00067\ \ \ \ \ \textcolor{comment}{//\ Fetch\ the\ item\ data\ as\ an\ associative\ array}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00068}00068\ \ \ \ \ \$item\ =\ \$stmt-\/>fetch(PDO::FETCH\_ASSOC);}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00069}00069\ \ \ \ \ \textcolor{comment}{//\ Return\ the\ item\ data}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00070}00070\ \ \ \ \ \textcolor{keywordflow}{return}\ \$item;}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00071}00071\ \ \ \}\ \ }
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00072}\mbox{\hyperlink{db_8php_a956e1cce946af9443be34bc925e998c1}{00072}}\ \ \ \textcolor{keyword}{function}\ \mbox{\hyperlink{db_8php_a956e1cce946af9443be34bc925e998c1}{get\_allcourses}}(\$pdo)\ \{}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00073}00073\ \ \ \ \ \mbox{\hyperlink{code_8php_ad634f418b20382e2802f80532d76d3cd}{\$email}}\ =\ \$\_SESSION[\textcolor{stringliteral}{'email'}];}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00075}00075\ \ \ \ \ \mbox{\hyperlink{execute_8php_a047170d6020a882807665812a27e2525}{\$sql}}\ =\ \textcolor{stringliteral}{"{}SELECT\ order\_id,\ name,\ image\_url\ FROM\ orders\ WHERE\ email\ =\ :email"{}};}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00076}00076\ \ \ \ \ \$stmt\ =\ \$pdo-\/>prepare(\mbox{\hyperlink{execute_8php_a047170d6020a882807665812a27e2525}{\$sql}});}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00077}00077\ \ \ \ \ \$stmt-\/>bindParam(\textcolor{stringliteral}{':email'},\ \mbox{\hyperlink{code_8php_ad634f418b20382e2802f80532d76d3cd}{\$email}});}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00078}00078\ \ \ \ \ \$stmt-\/>execute();}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00079}00079\ \ \ \ \ \$courses\ =\ \$stmt-\/>fetchAll(PDO::FETCH\_ASSOC);}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00080}00080\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00081}00081\ \textcolor{comment}{//\ Define\ your\ custom\ function\ to\ write\ HTML\ content}}
+\DoxyCodeLine{\Hypertarget{db_8php_source_l00082}00082\ \ \ ?>}
+
+\end{DoxyCode}

@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2aproba_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">aproba</highlight></codeline>
+<codeline><highlight class="normal">======</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>ridiculously<sp/>light-weight<sp/>function<sp/>argument<sp/>validator</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>validate<sp/>=<sp/>require(&quot;aproba&quot;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>myfunc(a,<sp/>b,<sp/>c)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>`a`<sp/>must<sp/>be<sp/>a<sp/>string,<sp/>`b`<sp/>a<sp/>number,<sp/>`c`<sp/>a<sp/>function</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>validate(&apos;SNF&apos;,<sp/>arguments)<sp/>//<sp/>[a,b,c]<sp/>is<sp/>also<sp/>valid</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">myfunc(&apos;test&apos;,<sp/>23,<sp/>function<sp/>()<sp/>{})<sp/>//<sp/>ok</highlight></codeline>
+<codeline><highlight class="normal">myfunc(123,<sp/>23,<sp/>function<sp/>()<sp/>{})<sp/>//<sp/>type<sp/>error</highlight></codeline>
+<codeline><highlight class="normal">myfunc(&apos;test&apos;,<sp/>23)<sp/>//<sp/>missing<sp/>arg<sp/>error</highlight></codeline>
+<codeline><highlight class="normal">myfunc(&apos;test&apos;,<sp/>23,<sp/>function<sp/>()<sp/>{},<sp/>true)<sp/>//<sp/>too<sp/>many<sp/>args<sp/>error</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Valid<sp/>types<sp/>are:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">|<sp/>type<sp/>|<sp/>description</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>:--:<sp/>|<sp/>:----------</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>*<sp/><sp/><sp/><sp/>|<sp/>matches<sp/>any<sp/>type</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>A<sp/><sp/><sp/><sp/>|<sp/>`Array.isArray`<sp/>OR<sp/>an<sp/>`arguments`<sp/>object</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>S<sp/><sp/><sp/><sp/>|<sp/>typeof<sp/>==<sp/>string</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>N<sp/><sp/><sp/><sp/>|<sp/>typeof<sp/>==<sp/>number</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>F<sp/><sp/><sp/><sp/>|<sp/>typeof<sp/>==<sp/>function</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>O<sp/><sp/><sp/><sp/>|<sp/>typeof<sp/>==<sp/>object<sp/>and<sp/>not<sp/>type<sp/>A<sp/>and<sp/>not<sp/>type<sp/>E</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>B<sp/><sp/><sp/><sp/>|<sp/>typeof<sp/>==<sp/>boolean</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>E<sp/><sp/><sp/><sp/>|<sp/>`instanceof<sp/>Error`<sp/>OR<sp/>`null`<sp/>**(special:<sp/>see<sp/>below)**</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Z<sp/><sp/><sp/><sp/>|<sp/>==<sp/>`null`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Validation<sp/>failures<sp/>throw<sp/>one<sp/>of<sp/>three<sp/>exception<sp/>types,<sp/>distinguished<sp/>by<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">`code`<sp/>property<sp/>of<sp/>`EMISSINGARG`,<sp/>`EINVALIDTYPE`<sp/>or<sp/>`ETOOMANYARGS`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>pass<sp/>in<sp/>an<sp/>invalid<sp/>type<sp/>then<sp/>it<sp/>will<sp/>throw<sp/>with<sp/>a<sp/>code<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">`EUNKNOWNTYPE`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>an<sp/>**error**<sp/>argument<sp/>is<sp/>found<sp/>and<sp/>is<sp/>not<sp/>null<sp/>then<sp/>the<sp/>remaining</highlight></codeline>
+<codeline><highlight class="normal">arguments<sp/>are<sp/>optional.<sp/><sp/>That<sp/>is,<sp/>if<sp/>you<sp/>say<sp/>`ESO`<sp/>then<sp/>that&apos;s<sp/>like<sp/>using<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">non-magical<sp/>`E`<sp/>in:<sp/>`E|ESO|ZSO`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>But<sp/>I<sp/>have<sp/>optional<sp/>arguments?!</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>provide<sp/>more<sp/>than<sp/>one<sp/>signature<sp/>by<sp/>separating<sp/>them<sp/>with<sp/>pipes<sp/>`|`.</highlight></codeline>
+<codeline><highlight class="normal">If<sp/>any<sp/>signature<sp/>matches<sp/>the<sp/>arguments<sp/>then<sp/>they&apos;ll<sp/>be<sp/>considered<sp/>valid.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">So<sp/>for<sp/>example,<sp/>say<sp/>you<sp/>wanted<sp/>to<sp/>write<sp/>a<sp/>signature<sp/>for</highlight></codeline>
+<codeline><highlight class="normal">`fs.createWriteStream`.<sp/><sp/>The<sp/>docs<sp/>for<sp/>it<sp/>describe<sp/>it<sp/>thusly:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">fs.createWriteStream(path[,<sp/>options])</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>would<sp/>be<sp/>a<sp/>signature<sp/>of<sp/>`SO|S`.<sp/><sp/>That<sp/>is,<sp/>a<sp/>string<sp/>and<sp/>and<sp/>object,<sp/>or</highlight></codeline>
+<codeline><highlight class="normal">just<sp/>a<sp/>string.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Now,<sp/>if<sp/>you<sp/>read<sp/>the<sp/>full<sp/>`fs`<sp/>docs,<sp/>you&apos;ll<sp/>see<sp/>that<sp/>actually<sp/>path<sp/>can<sp/>ALSO</highlight></codeline>
+<codeline><highlight class="normal">be<sp/>a<sp/>buffer.<sp/><sp/>And<sp/>options<sp/>can<sp/>be<sp/>a<sp/>string,<sp/>that<sp/>is:</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">path<sp/>&lt;String&gt;<sp/>|<sp/>&lt;Buffer&gt;</highlight></codeline>
+<codeline><highlight class="normal">options<sp/>&lt;String&gt;<sp/>|<sp/>&lt;Object&gt;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>reproduce<sp/>this<sp/>you<sp/>have<sp/>to<sp/>fully<sp/>enumerate<sp/>all<sp/>of<sp/>the<sp/>possible</highlight></codeline>
+<codeline><highlight class="normal">combinations<sp/>and<sp/>that<sp/>implies<sp/>a<sp/>signature<sp/>of<sp/>`SO|SS|OO|OS|S|O`.<sp/><sp/>The</highlight></codeline>
+<codeline><highlight class="normal">awkwardness<sp/>is<sp/>a<sp/>feature:<sp/>It<sp/>reminds<sp/>you<sp/>of<sp/>the<sp/>complexity<sp/>you&apos;re<sp/>adding<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">your<sp/>API<sp/>when<sp/>you<sp/>do<sp/>this<sp/>sort<sp/>of<sp/>thing.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Browser<sp/>support</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>has<sp/>no<sp/>dependencies<sp/>and<sp/>should<sp/>work<sp/>in<sp/>browsers,<sp/>though<sp/>you&apos;ll<sp/>have</highlight></codeline>
+<codeline><highlight class="normal">noisier<sp/>stack<sp/>traces.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Why<sp/>this<sp/>exists</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">I<sp/>wanted<sp/>a<sp/>very<sp/>simple<sp/>argument<sp/>validator.<sp/>It<sp/>needed<sp/>to<sp/>do<sp/>two<sp/>things:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">1.<sp/>Be<sp/>more<sp/>concise<sp/>and<sp/>easier<sp/>to<sp/>use<sp/>than<sp/>assertions</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">2.<sp/>Not<sp/>encourage<sp/>an<sp/>infinite<sp/>bikeshed<sp/>of<sp/>DSLs</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>why<sp/>types<sp/>are<sp/>specified<sp/>by<sp/>a<sp/>single<sp/>character<sp/>and<sp/>there&apos;s<sp/>no<sp/>such</highlight></codeline>
+<codeline><highlight class="normal">thing<sp/>as<sp/>an<sp/>optional<sp/>argument.<sp/></highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>not<sp/>intended<sp/>to<sp/>validate<sp/>user<sp/>data.<sp/>This<sp/>is<sp/>specifically<sp/>about</highlight></codeline>
+<codeline><highlight class="normal">asserting<sp/>the<sp/>interface<sp/>of<sp/>your<sp/>functions.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>need<sp/>greater<sp/>validation,<sp/>I<sp/>encourage<sp/>you<sp/>to<sp/>write<sp/>them<sp/>by<sp/>hand<sp/>or</highlight></codeline>
+<codeline><highlight class="normal">look<sp/>elsewhere.</highlight></codeline>
+<codeline></codeline>
+    </programlisting>
+    <location file="backend/node_modules/aproba/README.md"/>
+  </compounddef>
+</doxygen>

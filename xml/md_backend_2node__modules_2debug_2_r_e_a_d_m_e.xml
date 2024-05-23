@@ -1,0 +1,282 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2debug_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2debug_2_r_e_a_d_m_e</compoundname>
+    <title>debug</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2debug_2_r_e_a_d_m_e_1autotoc_md686"/><ulink url="https://travis-ci.org/visionmedia/debug"><image type="html" name="https://travis-ci.org/visionmedia/debug.svg?branch=master" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/github/visionmedia/debug?branch=master"><image type="html" name="https://coveralls.io/repos/github/visionmedia/debug/badge.svg?branch=master" alt="Coverage Status" inline="yes"></image>
+</ulink> <ulink url="https://visionmedia-community-slackin.now.sh/"><image type="html" name="https://visionmedia-community-slackin.now.sh/badge.svg" alt="Slack" inline="yes"></image>
+</ulink> ![OpenCollective](https://opencollective.com/debug/backers/badge.svg) ![OpenCollective](https://opencollective.com/debug/sponsors/badge.svg)</para>
+<para>A tiny node.js debugging utility modelled after node core&apos;s debugging technique.</para>
+<para><bold>Discussion around the V3 API is under way <ulink url="https://github.com/visionmedia/debug/issues/370">here</ulink></bold></para>
+<sect1 id="md_backend_2node__modules_2debug_2_r_e_a_d_m_e_1autotoc_md687">
+<title>Installation</title><para><programlisting filename=".bash"><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>debug</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2debug_2_r_e_a_d_m_e_1autotoc_md688">
+<title>Usage</title><para><computeroutput>debug</computeroutput> exposes a function; simply pass this function the name of your module, and it will return a decorated version of <computeroutput>console.error</computeroutput> for you to pass debug statements to. This will allow you to toggle the debug output for different parts of your module as well as the module as a whole.</para>
+<para>Example <emphasis>app.js</emphasis>:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>debug<sp/>=<sp/>require(&apos;debug&apos;)(&apos;http&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>,<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>,<sp/>name<sp/>=<sp/>&apos;My<sp/>App&apos;;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>fake<sp/>app</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">debug(&apos;booting<sp/>%s&apos;,<sp/>name);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">http.createServer(function(req,<sp/>res){</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>debug(req.method<sp/>+<sp/>&apos;<sp/>&apos;<sp/>+<sp/>req.url);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.end(&apos;hello\n&apos;);</highlight></codeline>
+<codeline><highlight class="normal">}).listen(3000,<sp/>function(){</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>debug(&apos;listening&apos;);</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>fake<sp/>worker<sp/>of<sp/>some<sp/>kind</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">require(&apos;./worker&apos;);</highlight></codeline>
+</programlisting></para>
+<para>Example <emphasis>worker.js</emphasis>:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>debug<sp/>=<sp/>require(&apos;debug&apos;)(&apos;worker&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">setInterval(function(){</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>debug(&apos;doing<sp/>some<sp/>work&apos;);</highlight></codeline>
+<codeline><highlight class="normal">},<sp/>1000);</highlight></codeline>
+</programlisting></para>
+<para>The <bold>DEBUG</bold> environment variable is then used to enable these based on space or comma-delimited names. Here are some examples:</para>
+<para><image type="html" name="http://f.cl.ly/items/18471z1H402O24072r1J/Screenshot.png" alt="debug http and worker" inline="yes"></image>
+</para>
+<para><image type="html" name="http://f.cl.ly/items/1X413v1a3M0d3C2c1E0i/Screenshot.png" alt="debug worker" inline="yes"></image>
+</para>
+<sect3 id="md_backend_2node__modules_2debug_2_r_e_a_d_m_e_1autotoc_md689">
+<title>Windows note</title><para>On Windows the environment variable is set using the <computeroutput>set</computeroutput> command.</para>
+<para><programlisting filename=".cmd"><codeline><highlight class="normal">set<sp/>DEBUG=*,-not_this</highlight></codeline>
+</programlisting></para>
+<para>Note that PowerShell uses different syntax to set environment variables.</para>
+<para><programlisting filename=".cmd"><codeline><highlight class="normal">$env:DEBUG<sp/>=<sp/>&quot;*,-not_this&quot;</highlight></codeline>
+</programlisting></para>
+<para>Then, run the program to be debugged as usual.</para>
+</sect3>
+</sect1>
+<sect1 id="md_backend_2node__modules_2debug_2_r_e_a_d_m_e_1autotoc_md690">
+<title>Millisecond diff</title><para>When actively developing an application it can be useful to see when the time spent between one <computeroutput>debug()</computeroutput> call and the next. Suppose for example you invoke <computeroutput>debug()</computeroutput> before requesting a resource, and after as well, the &quot;+NNNms&quot; will show you how much time was spent between calls.</para>
+<para><image type="html" name="http://f.cl.ly/items/2i3h1d3t121M2Z1A3Q0N/Screenshot.png" inline="yes"></image>
+</para>
+<para>When stdout is not a TTY, <computeroutput>Date#toUTCString()</computeroutput> is used, making it more useful for logging the debug information as shown below:</para>
+<para><image type="html" name="http://f.cl.ly/items/112H3i0e0o0P0a2Q2r11/Screenshot.png" inline="yes"></image>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2debug_2_r_e_a_d_m_e_1autotoc_md691">
+<title>Conventions</title><para>If you&apos;re using this in one or more of your libraries, you <emphasis>should</emphasis> use the name of your library so that developers may toggle debugging as desired without guessing names. If you have more than one debuggers you <emphasis>should</emphasis> prefix them with your library name and use &quot;:&quot; to separate features. For example &quot;bodyParser&quot; from Connect would then be &quot;connect:bodyParser&quot;.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2debug_2_r_e_a_d_m_e_1autotoc_md692">
+<title>Wildcards</title><para>The <computeroutput>*</computeroutput> character may be used as a wildcard. Suppose for example your library has debuggers named &quot;connect:bodyParser&quot;, &quot;connect:compress&quot;, &quot;connect:session&quot;, instead of listing all three with <computeroutput>DEBUG=connect:bodyParser,connect:compress,connect:session</computeroutput>, you may simply do <computeroutput>DEBUG=connect:*</computeroutput>, or to run everything using this module simply use <computeroutput>DEBUG=*</computeroutput>.</para>
+<para>You can also exclude specific debuggers by prefixing them with a &quot;-&quot; character. For example, <computeroutput>DEBUG=*,-connect:*</computeroutput> would include all debuggers except those starting with &quot;connect:&quot;.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2debug_2_r_e_a_d_m_e_1autotoc_md693">
+<title>Environment Variables</title><para>When running through Node.js, you can set a few environment variables that will change the behavior of the debug logging:</para>
+<para><table rows="5" cols="2"><row>
+<entry thead="yes"><para>Name   </para>
+</entry><entry thead="yes"><para>Purpose    </para>
+</entry></row>
+<row>
+<entry thead="no"><para><computeroutput>DEBUG</computeroutput>   </para>
+</entry><entry thead="no"><para>Enables/disables specific debugging namespaces.    </para>
+</entry></row>
+<row>
+<entry thead="no"><para><computeroutput>DEBUG_COLORS</computeroutput>   </para>
+</entry><entry thead="no"><para>Whether or not to use colors in the debug output.    </para>
+</entry></row>
+<row>
+<entry thead="no"><para><computeroutput>DEBUG_DEPTH</computeroutput>   </para>
+</entry><entry thead="no"><para>Object inspection depth.    </para>
+</entry></row>
+<row>
+<entry thead="no"><para><computeroutput>DEBUG_SHOW_HIDDEN</computeroutput>   </para>
+</entry><entry thead="no"><para>Shows hidden properties on inspected objects.   </para>
+</entry></row>
+</table>
+</para>
+<para><bold>Note:</bold> The environment variables beginning with <computeroutput>DEBUG_</computeroutput> end up being converted into an Options object that gets used with <computeroutput>o</computeroutput>/<computeroutput>O</computeroutput> formatters. See the Node.js documentation for <ulink url="https://nodejs.org/api/util.html#util_util_inspect_object_options"><computeroutput>util.inspect()</computeroutput></ulink> for the complete list.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2debug_2_r_e_a_d_m_e_1autotoc_md694">
+<title>Formatters</title><para>Debug uses <ulink url="https://wikipedia.org/wiki/Printf_format_string">printf-style</ulink> formatting. Below are the officially supported formatters:</para>
+<para><table rows="7" cols="2"><row>
+<entry thead="yes"><para>Formatter   </para>
+</entry><entry thead="yes"><para>Representation    </para>
+</entry></row>
+<row>
+<entry thead="no"><para><computeroutput>O</computeroutput>   </para>
+</entry><entry thead="no"><para>Pretty-print an Object on multiple lines.    </para>
+</entry></row>
+<row>
+<entry thead="no"><para><computeroutput>o</computeroutput>   </para>
+</entry><entry thead="no"><para>Pretty-print an Object all on a single line.    </para>
+</entry></row>
+<row>
+<entry thead="no"><para><computeroutput>s</computeroutput>   </para>
+</entry><entry thead="no"><para>String.    </para>
+</entry></row>
+<row>
+<entry thead="no"><para><computeroutput>d</computeroutput>   </para>
+</entry><entry thead="no"><para>Number (both integer and float).    </para>
+</entry></row>
+<row>
+<entry thead="no"><para><computeroutput>j</computeroutput>   </para>
+</entry><entry thead="no"><para>JSON. Replaced with the string &apos;[Circular]&apos; if the argument contains circular references.    </para>
+</entry></row>
+<row>
+<entry thead="no"><para><computeroutput>%%</computeroutput>   </para>
+</entry><entry thead="no"><para>Single percent sign (&apos;&apos;). This does not consume an argument.   </para>
+</entry></row>
+</table>
+</para>
+<sect2 id="md_backend_2node__modules_2debug_2_r_e_a_d_m_e_1autotoc_md695">
+<title>Custom formatters</title><para>You can add custom formatters by extending the <computeroutput>debug.formatters</computeroutput> object. For example, if you wanted to add support for rendering a Buffer as hex with <computeroutput>h</computeroutput>, you could do something like:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>createDebug<sp/>=<sp/>require(&apos;debug&apos;)</highlight></codeline>
+<codeline><highlight class="normal">createDebug.formatters.h<sp/>=<sp/>(v)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>v.toString(&apos;hex&apos;)</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>…elsewhere</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>debug<sp/>=<sp/>createDebug(&apos;foo&apos;)</highlight></codeline>
+<codeline><highlight class="normal">debug(&apos;this<sp/>is<sp/>hex:<sp/>%h&apos;,<sp/>new<sp/>Buffer(&apos;hello<sp/>world&apos;))</highlight></codeline>
+<codeline><highlight class="normal">//<sp/><sp/><sp/>foo<sp/>this<sp/>is<sp/>hex:<sp/>68656c6c6f20776f726c6421<sp/>+0ms</highlight></codeline>
+</programlisting></para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2debug_2_r_e_a_d_m_e_1autotoc_md696">
+<title>Browser support</title><para>You can build a browser-ready script using <ulink url="https://github.com/substack/node-browserify">browserify</ulink>, or just use the <ulink url="https://wzrd.in/">browserify-as-a-service</ulink> <ulink url="https://wzrd.in/standalone/debug@latest">build</ulink>, if you don&apos;t want to build it yourself.</para>
+<para>Debug&apos;s enable state is currently persisted by <computeroutput>localStorage</computeroutput>. Consider the situation shown below where you have <computeroutput>worker:a</computeroutput> and <computeroutput>worker:b</computeroutput>, and wish to debug both. You can enable this using <computeroutput>localStorage.debug</computeroutput>:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">localStorage.debug<sp/>=<sp/>&apos;worker:*&apos;</highlight></codeline>
+</programlisting></para>
+<para>And then refresh the page.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">a<sp/>=<sp/>debug(&apos;worker:a&apos;);</highlight></codeline>
+<codeline><highlight class="normal">b<sp/>=<sp/>debug(&apos;worker:b&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">setInterval(function(){</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>a(&apos;doing<sp/>some<sp/>work&apos;);</highlight></codeline>
+<codeline><highlight class="normal">},<sp/>1000);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">setInterval(function(){</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>b(&apos;doing<sp/>some<sp/>work&apos;);</highlight></codeline>
+<codeline><highlight class="normal">},<sp/>1200);</highlight></codeline>
+</programlisting></para>
+<sect3 id="md_backend_2node__modules_2debug_2_r_e_a_d_m_e_1autotoc_md697">
+<title>Web Inspector Colors</title><para>Colors are also enabled on &quot;Web Inspectors&quot; that understand the <computeroutput>c</computeroutput> formatting option. These are WebKit web inspectors, Firefox (<ulink url="https://hacks.mozilla.org/2014/05/editable-box-model-multiple-selection-sublime-text-keys-much-more-firefox-developer-tools-episode-31/">since version 31</ulink>) and the Firebug plugin for Firefox (any version).</para>
+<para>Colored output looks something like:</para>
+<para><image type="html" name="https://cloud.githubusercontent.com/assets/71256/3139768/b98c5fd8-e8ef-11e3-862a-f7253b6f47c6.png" inline="yes"></image>
+</para>
+</sect3>
+</sect1>
+<sect1 id="md_backend_2node__modules_2debug_2_r_e_a_d_m_e_1autotoc_md698">
+<title>Output streams</title><para>By default <computeroutput>debug</computeroutput> will log to stderr, however this can be configured per-namespace by overriding the <computeroutput>log</computeroutput> method:</para>
+<para>Example <emphasis>stdout.js</emphasis>:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>debug<sp/>=<sp/>require(&apos;debug&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>error<sp/>=<sp/>debug(&apos;app:error&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>by<sp/>default<sp/>stderr<sp/>is<sp/>used</highlight></codeline>
+<codeline><highlight class="normal">error(&apos;goes<sp/>to<sp/>stderr!&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>log<sp/>=<sp/>debug(&apos;app:log&apos;);</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>set<sp/>this<sp/>namespace<sp/>to<sp/>log<sp/>via<sp/>console.log</highlight></codeline>
+<codeline><highlight class="normal">log.log<sp/>=<sp/>console.log.bind(console);<sp/>//<sp/>don&apos;t<sp/>forget<sp/>to<sp/>bind<sp/>to<sp/>console!</highlight></codeline>
+<codeline><highlight class="normal">log(&apos;goes<sp/>to<sp/>stdout&apos;);</highlight></codeline>
+<codeline><highlight class="normal">error(&apos;still<sp/>goes<sp/>to<sp/>stderr!&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>set<sp/>all<sp/>output<sp/>to<sp/>go<sp/>via<sp/>console.info</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>overrides<sp/>all<sp/>per-namespace<sp/>log<sp/>settings</highlight></codeline>
+<codeline><highlight class="normal">debug.log<sp/>=<sp/>console.info.bind(console);</highlight></codeline>
+<codeline><highlight class="normal">error(&apos;now<sp/>goes<sp/>to<sp/>stdout<sp/>via<sp/>console.info&apos;);</highlight></codeline>
+<codeline><highlight class="normal">log(&apos;still<sp/>goes<sp/>to<sp/>stdout,<sp/>but<sp/>via<sp/>console.info<sp/>now&apos;);</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2debug_2_r_e_a_d_m_e_1autotoc_md699">
+<title>Authors</title><para><itemizedlist>
+<listitem><para>TJ Holowaychuk</para>
+</listitem><listitem><para>Nathan Rajlich</para>
+</listitem><listitem><para>Andrew Rhyne</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2debug_2_r_e_a_d_m_e_1autotoc_md700">
+<title>Backers</title><para>Support us with a monthly donation and help us continue our activities. [<ulink url="https://opencollective.com/debug#backer">Become a backer</ulink>]</para>
+<para><ulink url="https://opencollective.com/debug/backer/0/website"><image type="html" name="https://opencollective.com/debug/backer/0/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/1/website"><image type="html" name="https://opencollective.com/debug/backer/1/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/2/website"><image type="html" name="https://opencollective.com/debug/backer/2/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/3/website"><image type="html" name="https://opencollective.com/debug/backer/3/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/4/website"><image type="html" name="https://opencollective.com/debug/backer/4/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/5/website"><image type="html" name="https://opencollective.com/debug/backer/5/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/6/website"><image type="html" name="https://opencollective.com/debug/backer/6/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/7/website"><image type="html" name="https://opencollective.com/debug/backer/7/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/8/website"><image type="html" name="https://opencollective.com/debug/backer/8/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/9/website"><image type="html" name="https://opencollective.com/debug/backer/9/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/10/website"><image type="html" name="https://opencollective.com/debug/backer/10/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/11/website"><image type="html" name="https://opencollective.com/debug/backer/11/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/12/website"><image type="html" name="https://opencollective.com/debug/backer/12/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/13/website"><image type="html" name="https://opencollective.com/debug/backer/13/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/14/website"><image type="html" name="https://opencollective.com/debug/backer/14/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/15/website"><image type="html" name="https://opencollective.com/debug/backer/15/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/16/website"><image type="html" name="https://opencollective.com/debug/backer/16/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/17/website"><image type="html" name="https://opencollective.com/debug/backer/17/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/18/website"><image type="html" name="https://opencollective.com/debug/backer/18/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/19/website"><image type="html" name="https://opencollective.com/debug/backer/19/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/20/website"><image type="html" name="https://opencollective.com/debug/backer/20/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/21/website"><image type="html" name="https://opencollective.com/debug/backer/21/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/22/website"><image type="html" name="https://opencollective.com/debug/backer/22/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/23/website"><image type="html" name="https://opencollective.com/debug/backer/23/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/24/website"><image type="html" name="https://opencollective.com/debug/backer/24/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/25/website"><image type="html" name="https://opencollective.com/debug/backer/25/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/26/website"><image type="html" name="https://opencollective.com/debug/backer/26/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/27/website"><image type="html" name="https://opencollective.com/debug/backer/27/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/28/website"><image type="html" name="https://opencollective.com/debug/backer/28/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/backer/29/website"><image type="html" name="https://opencollective.com/debug/backer/29/avatar.svg" inline="yes"></image>
+</ulink></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2debug_2_r_e_a_d_m_e_1autotoc_md701">
+<title>Sponsors</title><para>Become a sponsor and get your logo on our README on Github with a link to your site. [<ulink url="https://opencollective.com/debug#sponsor">Become a sponsor</ulink>]</para>
+<para><ulink url="https://opencollective.com/debug/sponsor/0/website"><image type="html" name="https://opencollective.com/debug/sponsor/0/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/1/website"><image type="html" name="https://opencollective.com/debug/sponsor/1/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/2/website"><image type="html" name="https://opencollective.com/debug/sponsor/2/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/3/website"><image type="html" name="https://opencollective.com/debug/sponsor/3/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/4/website"><image type="html" name="https://opencollective.com/debug/sponsor/4/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/5/website"><image type="html" name="https://opencollective.com/debug/sponsor/5/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/6/website"><image type="html" name="https://opencollective.com/debug/sponsor/6/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/7/website"><image type="html" name="https://opencollective.com/debug/sponsor/7/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/8/website"><image type="html" name="https://opencollective.com/debug/sponsor/8/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/9/website"><image type="html" name="https://opencollective.com/debug/sponsor/9/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/10/website"><image type="html" name="https://opencollective.com/debug/sponsor/10/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/11/website"><image type="html" name="https://opencollective.com/debug/sponsor/11/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/12/website"><image type="html" name="https://opencollective.com/debug/sponsor/12/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/13/website"><image type="html" name="https://opencollective.com/debug/sponsor/13/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/14/website"><image type="html" name="https://opencollective.com/debug/sponsor/14/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/15/website"><image type="html" name="https://opencollective.com/debug/sponsor/15/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/16/website"><image type="html" name="https://opencollective.com/debug/sponsor/16/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/17/website"><image type="html" name="https://opencollective.com/debug/sponsor/17/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/18/website"><image type="html" name="https://opencollective.com/debug/sponsor/18/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/19/website"><image type="html" name="https://opencollective.com/debug/sponsor/19/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/20/website"><image type="html" name="https://opencollective.com/debug/sponsor/20/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/21/website"><image type="html" name="https://opencollective.com/debug/sponsor/21/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/22/website"><image type="html" name="https://opencollective.com/debug/sponsor/22/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/23/website"><image type="html" name="https://opencollective.com/debug/sponsor/23/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/24/website"><image type="html" name="https://opencollective.com/debug/sponsor/24/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/25/website"><image type="html" name="https://opencollective.com/debug/sponsor/25/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/26/website"><image type="html" name="https://opencollective.com/debug/sponsor/26/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/27/website"><image type="html" name="https://opencollective.com/debug/sponsor/27/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/28/website"><image type="html" name="https://opencollective.com/debug/sponsor/28/avatar.svg" inline="yes"></image>
+</ulink> <ulink url="https://opencollective.com/debug/sponsor/29/website"><image type="html" name="https://opencollective.com/debug/sponsor/29/avatar.svg" inline="yes"></image>
+</ulink></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2debug_2_r_e_a_d_m_e_1autotoc_md702">
+<title>License</title><para>(The MIT License)</para>
+<para>Copyright (c) 2014-2016 TJ Holowaychuk &lt;<ulink url="mailto:tj@vision-media.ca">tj@vision-media.ca</ulink>&gt;</para>
+<para>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &apos;Software&apos;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</para>
+<para>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</para>
+<para>THE SOFTWARE IS PROVIDED &apos;AS IS&apos;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/debug/README.md"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,605 @@
+.TH "gyp.generator.make" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gyp.generator.make
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBMakefileWriter\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBCalculateVariables\fP (default_variables, params)"
+.br
+.ti -1c
+.RI "\fBCalculateGeneratorInputInfo\fP (params)"
+.br
+.ti -1c
+.RI "\fBWriteRootHeaderSuffixRules\fP (writer)"
+.br
+.ti -1c
+.RI "\fBCompilable\fP (filename)"
+.br
+.ti -1c
+.RI "\fBLinkable\fP (filename)"
+.br
+.ti -1c
+.RI "\fBTarget\fP (filename)"
+.br
+.ti -1c
+.RI "\fBEscapeShellArgument\fP (s)"
+.br
+.ti -1c
+.RI "\fBEscapeMakeVariableExpansion\fP (s)"
+.br
+.ti -1c
+.RI "\fBEscapeCppDefine\fP (s)"
+.br
+.ti -1c
+.RI "\fBQuoteIfNecessary\fP (string)"
+.br
+.ti -1c
+.RI "\fBStringToMakefileVariable\fP (string)"
+.br
+.ti -1c
+.RI "\fBSourceify\fP (path)"
+.br
+.ti -1c
+.RI "\fBQuoteSpaces\fP (s, quote=r'\\ ')"
+.br
+.ti -1c
+.RI "\fBSourceifyAndQuoteSpaces\fP (path)"
+.br
+.ti -1c
+.RI "\fBWriteAutoRegenerationRule\fP (params, root_makefile, makefile_name, build_files)"
+.br
+.ti -1c
+.RI "\fBPerformBuild\fP (data, configurations, params)"
+.br
+.ti -1c
+.RI "\fBGenerateOutput\fP (target_list, target_dicts, data, params)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "dict \fBgenerator_default_variables\fP"
+.br
+.ti -1c
+.RI "bool \fBgenerator_supports_multiple_toolsets\fP = True"
+.br
+.ti -1c
+.RI "bool \fBgenerator_wants_sorted_dependencies\fP = False"
+.br
+.ti -1c
+.RI "list \fBgenerator_additional_non_configuration_keys\fP = []"
+.br
+.ti -1c
+.RI "list \fBgenerator_additional_path_sections\fP = []"
+.br
+.ti -1c
+.RI "list \fBgenerator_extra_sources_for_rules\fP = []"
+.br
+.ti -1c
+.RI "\fBgenerator_filelist_paths\fP = None"
+.br
+.ti -1c
+.RI "str \fBSPACE_REPLACEMENT\fP = '?'"
+.br
+.ti -1c
+.RI "str \fBLINK_COMMANDS_LINUX\fP"
+.br
+.ti -1c
+.RI "str \fBLINK_COMMANDS_MAC\fP"
+.br
+.ti -1c
+.RI "str \fBLINK_COMMANDS_ANDROID\fP"
+.br
+.ti -1c
+.RI "str \fBLINK_COMMANDS_AIX\fP"
+.br
+.ti -1c
+.RI "str \fBLINK_COMMANDS_OS390\fP"
+.br
+.ti -1c
+.RI "tuple \fBSHARED_HEADER\fP"
+.br
+.ti -1c
+.RI "str \fBSHARED_HEADER_MAC_COMMANDS\fP"
+.br
+.ti -1c
+.RI "str \fBSHARED_HEADER_SUFFIX_RULES_COMMENT1\fP"
+.br
+.ti -1c
+.RI "str \fBSHARED_HEADER_SUFFIX_RULES_COMMENT2\fP"
+.br
+.ti -1c
+.RI "str \fBSHARED_FOOTER\fP"
+.br
+.ti -1c
+.RI "str \fBheader\fP"
+.br
+.ti -1c
+.RI "dict \fBCOMPILABLE_EXTENSIONS\fP"
+.br
+.ti -1c
+.RI "str \fBsrcdir_prefix\fP = ''"
+.br
+.ti -1c
+.RI "dict \fBtarget_outputs\fP = {}"
+.br
+.ti -1c
+.RI "dict \fBtarget_link_deps\fP = {}"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "gyp\&.generator\&.make\&.CalculateGeneratorInputInfo ( params)"
+
+.PP
+.nf
+Calculate the generator specific info that gets fed to input (called by
+gyp)\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB108\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.CalculateVariables ( default_variables,  params)"
+
+.PP
+.nf
+Calculate additional variables for use in the build (called by gyp)\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB65\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.Compilable ( filename)"
+
+.PP
+.nf
+Return true if the file is compilable (should be in OBJS)\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB597\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.EscapeCppDefine ( s)"
+
+.PP
+.nf
+Escapes a CPP define so that it will reach the compiler unaltered\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB629\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.EscapeMakeVariableExpansion ( s)"
+
+.PP
+.nf
+Make has its own variable expansion syntax using $\&. We must escape it for
+string to be interpreted literally\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB623\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.EscapeShellArgument ( s)"
+
+.PP
+.nf
+Quotes an argument so that it will be interpreted literally by a POSIX
+shell\&. Taken from
+http://stackoverflow\&.com/questions/35817/whats-the-best-way-to-escape-ossystem-calls-in-python
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB615\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.GenerateOutput ( target_list,  target_dicts,  data,  params)"
+
+.PP
+Definition at line \fB2230\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.Linkable ( filename)"
+
+.PP
+.nf
+Return true if the file is linkable (should be on the link line)\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB605\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.PerformBuild ( data,  configurations,  params)"
+
+.PP
+Definition at line \fB2219\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.QuoteIfNecessary ( string)"
+
+.PP
+.nf
+TODO: Should this ideally be replaced with one or more of the above
+functions?
+.fi
+.PP
+ 
+.PP
+Definition at line \fB638\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.QuoteSpaces ( s,  quote = \fRr'\\ '\fP)"
+
+.PP
+Definition at line \fB663\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.Sourceify ( path)"
+
+.PP
+.nf
+Convert a path to its source directory form\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB654\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.SourceifyAndQuoteSpaces ( path)"
+
+.PP
+.nf
+Convert a path to its source directory form and quote spaces\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB667\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.StringToMakefileVariable ( string)"
+
+.PP
+.nf
+Convert a string to a value that is acceptable as a make variable name\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB646\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.Target ( filename)"
+
+.PP
+.nf
+Translate a compilable filename to its \&.o target\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB610\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.WriteAutoRegenerationRule ( params,  root_makefile,  makefile_name,  build_files)"
+
+.PP
+.nf
+Write the target to regenerate the Makefile\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB2190\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.WriteRootHeaderSuffixRules ( writer)"
+
+.PP
+Definition at line \fB537\fP of file \fBmake\&.py\fP\&.
+.SH "Variable Documentation"
+.PP 
+.SS "dict gyp\&.generator\&.make\&.COMPILABLE_EXTENSIONS"
+\fBInitial value:\fP
+.nf
+1 =  {
+2     "\&.c": "cc",
+3     "\&.cc": "cxx",
+4     "\&.cpp": "cxx",
+5     "\&.cxx": "cxx",
+6     "\&.s": "cc",
+7     "\&.S": "cc",
+8 }
+.PP
+.fi
+
+.PP
+Definition at line \fB587\fP of file \fBmake\&.py\fP\&.
+.SS "list gyp\&.generator\&.make\&.generator_additional_non_configuration_keys = []"
+
+.PP
+Definition at line \fB59\fP of file \fBmake\&.py\fP\&.
+.SS "list gyp\&.generator\&.make\&.generator_additional_path_sections = []"
+
+.PP
+Definition at line \fB60\fP of file \fBmake\&.py\fP\&.
+.SS "dict gyp\&.generator\&.make\&.generator_default_variables"
+\fBInitial value:\fP
+.nf
+1 =  {
+2     "EXECUTABLE_PREFIX": "",
+3     "EXECUTABLE_SUFFIX": "",
+4     "STATIC_LIB_PREFIX": "lib",
+5     "SHARED_LIB_PREFIX": "lib",
+6     "STATIC_LIB_SUFFIX": "\&.a",
+7     "INTERMEDIATE_DIR": "$(obj)\&.$(TOOLSET)/$(TARGET)/geni",
+8     "SHARED_INTERMEDIATE_DIR": "$(obj)/gen",
+9     "PRODUCT_DIR": "$(builddir)",
+10     "RULE_INPUT_ROOT": "%(INPUT_ROOT)s",  # This gets expanded by Python\&.
+11     "RULE_INPUT_DIRNAME": "%(INPUT_DIRNAME)s",  # This gets expanded by Python\&.
+12     "RULE_INPUT_PATH": "$(abspath $<)",
+13     "RULE_INPUT_EXT": "$(suffix $<)",
+14     "RULE_INPUT_NAME": "$(notdir $<)",
+15     "CONFIGURATION_NAME": "$(BUILDTYPE)",
+16 }
+.PP
+.fi
+
+.PP
+Definition at line \fB35\fP of file \fBmake\&.py\fP\&.
+.SS "list gyp\&.generator\&.make\&.generator_extra_sources_for_rules = []"
+
+.PP
+Definition at line \fB61\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.generator_filelist_paths = None"
+
+.PP
+Definition at line \fB62\fP of file \fBmake\&.py\fP\&.
+.SS "bool gyp\&.generator\&.make\&.generator_supports_multiple_toolsets = True"
+
+.PP
+Definition at line \fB53\fP of file \fBmake\&.py\fP\&.
+.SS "bool gyp\&.generator\&.make\&.generator_wants_sorted_dependencies = False"
+
+.PP
+Definition at line \fB56\fP of file \fBmake\&.py\fP\&.
+.SS "str gyp\&.generator\&.make\&.header"
+\fBInitial value:\fP
+.nf
+1 =  """\\
+2 # This file is generated by gyp; do not edit\&.
+3 
+4 """
+.PP
+.fi
+
+.PP
+Definition at line \fB581\fP of file \fBmake\&.py\fP\&.
+.SS "str gyp\&.generator\&.make\&.LINK_COMMANDS_AIX"
+\fBInitial value:\fP
+.nf
+1 =  """\\
+2 quiet_cmd_alink = AR($(TOOLSET)) $@
+3 cmd_alink = rm \-f $@ && $(AR\&.$(TOOLSET)) \-X32_64 crs $@ $(filter %\&.o,$^)
+4 
+5 quiet_cmd_alink_thin = AR($(TOOLSET)) $@
+6 cmd_alink_thin = rm \-f $@ && $(AR\&.$(TOOLSET)) \-X32_64 crs $@ $(filter %\&.o,$^)
+7 
+8 quiet_cmd_link = LINK($(TOOLSET)) $@
+9 cmd_link = $(LINK\&.$(TOOLSET)) $(GYP_LDFLAGS) $(LDFLAGS\&.$(TOOLSET)) \-o $@ $(LD_INPUTS) $(LIBS)
+10 
+11 quiet_cmd_solink = SOLINK($(TOOLSET)) $@
+12 cmd_solink = $(LINK\&.$(TOOLSET)) \-shared $(GYP_LDFLAGS) $(LDFLAGS\&.$(TOOLSET)) \-o $@ $(LD_INPUTS) $(LIBS)
+13 
+14 quiet_cmd_solink_module = SOLINK_MODULE($(TOOLSET)) $@
+15 cmd_solink_module = $(LINK\&.$(TOOLSET)) \-shared $(GYP_LDFLAGS) $(LDFLAGS\&.$(TOOLSET)) \-o $@ $(filter\-out FORCE_DO_CMD, $^) $(LIBS)
+16 """
+.PP
+.fi
+
+.PP
+Definition at line \fB222\fP of file \fBmake\&.py\fP\&.
+.SS "str gyp\&.generator\&.make\&.LINK_COMMANDS_ANDROID"
+\fBInitial value:\fP
+.nf
+1 =  """\\
+2 quiet_cmd_alink = AR($(TOOLSET)) $@
+3 cmd_alink = rm \-f $@ && $(AR\&.$(TOOLSET)) crs $@ $(filter %\&.o,$^)
+4 
+5 quiet_cmd_alink_thin = AR($(TOOLSET)) $@
+6 cmd_alink_thin = rm \-f $@ && $(AR\&.$(TOOLSET)) crsT $@ $(filter %\&.o,$^)
+7 
+8 # Due to circular dependencies between libraries :(, we wrap the
+9 # special "figure out circular dependencies" flags around the entire
+10 # input list during linking\&.
+11 quiet_cmd_link = LINK($(TOOLSET)) $@
+12 quiet_cmd_link_host = LINK($(TOOLSET)) $@
+13 cmd_link = $(LINK\&.$(TOOLSET)) $(GYP_LDFLAGS) $(LDFLAGS\&.$(TOOLSET)) \-o $@ \-Wl,\-\-start\-group $(LD_INPUTS) \-Wl,\-\-end\-group $(LIBS)
+14 cmd_link_host = $(LINK\&.$(TOOLSET)) $(GYP_LDFLAGS) $(LDFLAGS\&.$(TOOLSET)) \-o $@ \-Wl,\-\-start\-group $(LD_INPUTS) \-Wl,\-\-end\-group $(LIBS)
+15 
+16 # Other shared\-object link notes:
+17 # \- Set SONAME to the library filename so our binaries don't reference
+18 # the local, absolute paths used on the link command\-line\&.
+19 quiet_cmd_solink = SOLINK($(TOOLSET)) $@
+20 cmd_solink = $(LINK\&.$(TOOLSET)) \-shared $(GYP_LDFLAGS) $(LDFLAGS\&.$(TOOLSET)) \-Wl,\-soname=$(@F) \-o $@ \-Wl,\-\-whole\-archive $(LD_INPUTS) \-Wl,\-\-no\-whole\-archive $(LIBS)
+21 
+22 quiet_cmd_solink_module = SOLINK_MODULE($(TOOLSET)) $@
+23 cmd_solink_module = $(LINK\&.$(TOOLSET)) \-shared $(GYP_LDFLAGS) $(LDFLAGS\&.$(TOOLSET)) \-Wl,\-soname=$(@F) \-o $@ \-Wl,\-\-start\-group $(filter\-out FORCE_DO_CMD, $^) \-Wl,\-\-end\-group $(LIBS)
+24 quiet_cmd_solink_module_host = SOLINK_MODULE($(TOOLSET)) $@
+25 cmd_solink_module_host = $(LINK\&.$(TOOLSET)) \-shared $(GYP_LDFLAGS) $(LDFLAGS\&.$(TOOLSET)) \-Wl,\-soname=$(@F) \-o $@ $(filter\-out FORCE_DO_CMD, $^) $(LIBS)
+26 """
+.PP
+.fi
+
+.PP
+Definition at line \fB194\fP of file \fBmake\&.py\fP\&.
+.SS "str gyp\&.generator\&.make\&.LINK_COMMANDS_LINUX"
+
+.PP
+Definition at line \fB144\fP of file \fBmake\&.py\fP\&.
+.SS "str gyp\&.generator\&.make\&.LINK_COMMANDS_MAC"
+\fBInitial value:\fP
+.nf
+1 =  """\\
+2 quiet_cmd_alink = LIBTOOL\-STATIC $@
+3 cmd_alink = rm \-f $@ && \&./gyp\-mac\-tool filter\-libtool libtool $(GYP_LIBTOOLFLAGS) \-static \-o $@ $(filter %\&.o,$^)
+4 
+5 quiet_cmd_link = LINK($(TOOLSET)) $@
+6 cmd_link = $(LINK\&.$(TOOLSET)) $(GYP_LDFLAGS) $(LDFLAGS\&.$(TOOLSET)) \-o "$@" $(LD_INPUTS) $(LIBS)
+7 
+8 quiet_cmd_solink = SOLINK($(TOOLSET)) $@
+9 cmd_solink = $(LINK\&.$(TOOLSET)) \-shared $(GYP_LDFLAGS) $(LDFLAGS\&.$(TOOLSET)) \-o "$@" $(LD_INPUTS) $(LIBS)
+10 
+11 quiet_cmd_solink_module = SOLINK_MODULE($(TOOLSET)) $@
+12 cmd_solink_module = $(LINK\&.$(TOOLSET)) \-bundle $(GYP_LDFLAGS) $(LDFLAGS\&.$(TOOLSET)) \-o $@ $(filter\-out FORCE_DO_CMD, $^) $(LIBS)
+13 """
+.PP
+.fi
+
+.PP
+Definition at line \fB180\fP of file \fBmake\&.py\fP\&.
+.SS "str gyp\&.generator\&.make\&.LINK_COMMANDS_OS390"
+\fBInitial value:\fP
+.nf
+1 =  """\\
+2 quiet_cmd_alink = AR($(TOOLSET)) $@
+3 cmd_alink = rm \-f $@ && $(AR\&.$(TOOLSET)) crs $@ $(filter %\&.o,$^)
+4 
+5 quiet_cmd_alink_thin = AR($(TOOLSET)) $@
+6 cmd_alink_thin = rm \-f $@ && $(AR\&.$(TOOLSET)) crsT $@ $(filter %\&.o,$^)
+7 
+8 quiet_cmd_link = LINK($(TOOLSET)) $@
+9 cmd_link = $(LINK\&.$(TOOLSET)) $(GYP_LDFLAGS) $(LDFLAGS\&.$(TOOLSET)) \-o $@ $(LD_INPUTS) $(LIBS)
+10 
+11 quiet_cmd_solink = SOLINK($(TOOLSET)) $@
+12 cmd_solink = $(LINK\&.$(TOOLSET)) $(GYP_LDFLAGS) $(LDFLAGS\&.$(TOOLSET)) \-o $@ $(LD_INPUTS) $(LIBS) \-Wl,DLL
+13 
+14 quiet_cmd_solink_module = SOLINK_MODULE($(TOOLSET)) $@
+15 cmd_solink_module = $(LINK\&.$(TOOLSET)) $(GYP_LDFLAGS) $(LDFLAGS\&.$(TOOLSET)) \-o $@ $(filter\-out FORCE_DO_CMD, $^) $(LIBS) \-Wl,DLL
+16 """
+.PP
+.fi
+
+.PP
+Definition at line \fB240\fP of file \fBmake\&.py\fP\&.
+.SS "str gyp\&.generator\&.make\&.SHARED_FOOTER"
+\fBInitial value:\fP
+.nf
+1 =  """\\
+2 # "all" is a concatenation of the "all" targets from all the included
+3 # sub\-makefiles\&. This is just here to clarify\&.
+4 all:
+5 
+6 # Add in dependency\-tracking rules\&.  $(all_deps) is the list of every single
+7 # target in our tree\&. Only consider the ones with \&.d (dependency) info:
+8 d_files := $(wildcard $(foreach f,$(all_deps),$(depsdir)/$(f)\&.d))
+9 ifneq ($(d_files),)
+10   include $(d_files)
+11 endif
+12 """
+.PP
+.fi
+
+.PP
+Definition at line \fB568\fP of file \fBmake\&.py\fP\&.
+.SS "tuple gyp\&.generator\&.make\&.SHARED_HEADER"
+\fBInitial value:\fP
+.nf
+1 =  (
+2     
+3     + SPACE_REPLACEMENT
+4     + 
+5     + SPACE_REPLACEMENT
+6     + 
+7     
+8       # noqa: E501
+9     
+10     
+11     + SPACE_REPLACEMENT
+12     + 
+13     + SPACE_REPLACEMENT
+14     + 
+15     + SPACE_REPLACEMENT
+16     +   # noqa: E501
+17 )
+.PP
+.fi
+
+.PP
+Definition at line \fB260\fP of file \fBmake\&.py\fP\&.
+.SS "str gyp\&.generator\&.make\&.SHARED_HEADER_MAC_COMMANDS"
+\fBInitial value:\fP
+.nf
+1 =  """
+2 quiet_cmd_objc = CXX($(TOOLSET)) $@
+3 cmd_objc = $(CC\&.$(TOOLSET)) $(GYP_OBJCFLAGS) $(DEPFLAGS) \-c \-o $@ $<
+4 
+5 quiet_cmd_objcxx = CXX($(TOOLSET)) $@
+6 cmd_objcxx = $(CXX\&.$(TOOLSET)) $(GYP_OBJCXXFLAGS) $(DEPFLAGS) \-c \-o $@ $<
+7 
+8 # Commands for precompiled header files\&.
+9 quiet_cmd_pch_c = CXX($(TOOLSET)) $@
+10 cmd_pch_c = $(CC\&.$(TOOLSET)) $(GYP_PCH_CFLAGS) $(DEPFLAGS) $(CXXFLAGS\&.$(TOOLSET)) \-c \-o $@ $<
+11 quiet_cmd_pch_cc = CXX($(TOOLSET)) $@
+12 cmd_pch_cc = $(CC\&.$(TOOLSET)) $(GYP_PCH_CXXFLAGS) $(DEPFLAGS) $(CXXFLAGS\&.$(TOOLSET)) \-c \-o $@ $<
+13 quiet_cmd_pch_m = CXX($(TOOLSET)) $@
+14 cmd_pch_m = $(CC\&.$(TOOLSET)) $(GYP_PCH_OBJCFLAGS) $(DEPFLAGS) \-c \-o $@ $<
+15 quiet_cmd_pch_mm = CXX($(TOOLSET)) $@
+16 cmd_pch_mm = $(CC\&.$(TOOLSET)) $(GYP_PCH_OBJCXXFLAGS) $(DEPFLAGS) \-c \-o $@ $<
+17 
+18 # gyp\-mac\-tool is written next to the root Makefile by gyp\&.
+19 # Use $(4) for the command, since $(2) and $(3) are used as flag by do_cmd
+20 # already\&.
+21 quiet_cmd_mac_tool = MACTOOL $(4) $<
+22 cmd_mac_tool = \&./gyp\-mac\-tool $(4) $< "$@"
+23 
+24 quiet_cmd_mac_package_framework = PACKAGE FRAMEWORK $@
+25 cmd_mac_package_framework = \&./gyp\-mac\-tool package\-framework "$@" $(4)
+26 
+27 quiet_cmd_infoplist = INFOPLIST $@
+28 cmd_infoplist = $(CC\&.$(TOOLSET)) \-E \-P \-Wno\-trigraphs \-x c $(INFOPLIST_DEFINES) "$<" \-o "$@"
+29 """
+.PP
+.fi
+
+.PP
+Definition at line \fB506\fP of file \fBmake\&.py\fP\&.
+.SS "str gyp\&.generator\&.make\&.SHARED_HEADER_SUFFIX_RULES_COMMENT1"
+\fBInitial value:\fP
+.nf
+1 =  """\\
+2 # Suffix rules, putting all outputs into $(obj)\&.
+3 """
+.PP
+.fi
+
+.PP
+Definition at line \fB558\fP of file \fBmake\&.py\fP\&.
+.SS "str gyp\&.generator\&.make\&.SHARED_HEADER_SUFFIX_RULES_COMMENT2"
+\fBInitial value:\fP
+.nf
+1 =  """\\
+2 # Try building from generated source, too\&.
+3 """
+.PP
+.fi
+
+.PP
+Definition at line \fB563\fP of file \fBmake\&.py\fP\&.
+.SS "str gyp\&.generator\&.make\&.SPACE_REPLACEMENT = '?'"
+
+.PP
+Definition at line \fB141\fP of file \fBmake\&.py\fP\&.
+.SS "str gyp\&.generator\&.make\&.srcdir_prefix = ''"
+
+.PP
+Definition at line \fB651\fP of file \fBmake\&.py\fP\&.
+.SS "dict gyp\&.generator\&.make\&.target_link_deps = {}"
+
+.PP
+Definition at line \fB678\fP of file \fBmake\&.py\fP\&.
+.SS "dict gyp\&.generator\&.make\&.target_outputs = {}"
+
+.PP
+Definition at line \fB673\fP of file \fBmake\&.py\fP\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

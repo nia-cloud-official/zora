@@ -1,0 +1,242 @@
+.TH "md_backend_2node__modules_2cookie_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2cookie_2_r_e_a_d_m_e \- cookie 
+.PP
+ \fR\fP \fR\fP \fR\fP \fR\fP \fR\fP
+.PP
+Basic HTTP cookie parser and serializer for HTTP servers\&.
+.SH "Installation"
+.PP
+This is a \fRNode\&.js\fP module available through the \fRnpm registry\fP\&. Installation is done using the \fR\fRnpm install\fP command\fP:
+.PP
+.PP
+.nf
+$ npm install cookie
+.fi
+.PP
+.SH "API"
+.PP
+.PP
+.nf
+var cookie = require('cookie');
+.fi
+.PP
+.SS "cookie\&.parse(str, options)"
+Parse an HTTP \fRCookie\fP header string and returning an object of all cookie name-value pairs\&. The \fRstr\fP argument is the string representing a \fRCookie\fP header value and \fRoptions\fP is an optional object containing additional parsing options\&.
+.PP
+.PP
+.nf
+var cookies = cookie\&.parse('foo=bar; equation=E%3Dmc%5E2');
+// { foo: 'bar', equation: 'E=mc^2' }
+.fi
+.PP
+.SS "Options"
+\fRcookie\&.parse\fP accepts these properties in the options object\&.
+.SS "decode"
+Specifies a function that will be used to decode a cookie's value\&. Since the value of a cookie has a limited character set (and must be a simple string), this function can be used to decode a previously-encoded cookie value into a JavaScript string or other object\&.
+.PP
+The default function is the global \fRdecodeURIComponent\fP, which will decode any URL-encoded sequences into their byte representations\&.
+.PP
+\fBnote\fP if an error is thrown from this function, the original, non-decoded cookie value will be returned as the cookie's value\&.
+.SS "cookie\&.serialize(name, value, options)"
+Serialize a cookie name-value pair into a \fRSet-Cookie\fP header string\&. The \fRname\fP argument is the name for the cookie, the \fRvalue\fP argument is the value to set the cookie to, and the \fRoptions\fP argument is an optional object containing additional serialization options\&.
+.PP
+.PP
+.nf
+var setCookie = cookie\&.serialize('foo', 'bar');
+// foo=bar
+.fi
+.PP
+.SS "Options"
+\fRcookie\&.serialize\fP accepts these properties in the options object\&.
+.SS "domain"
+Specifies the value for the \fR\fRDomain\fP \fRSet-Cookie\fP attribute\fP\&. By default, no domain is set, and most clients will consider the cookie to apply to only the current domain\&.
+.SS "encode"
+Specifies a function that will be used to encode a cookie's value\&. Since value of a cookie has a limited character set (and must be a simple string), this function can be used to encode a value into a string suited for a cookie's value\&.
+.PP
+The default function is the global \fRencodeURIComponent\fP, which will encode a JavaScript string into UTF-8 byte sequences and then URL-encode any that fall outside of the cookie range\&.
+.SS "expires"
+Specifies the \fRDate\fP object to be the value for the \fR\fRExpires\fP \fRSet-Cookie\fP attribute\fP\&. By default, no expiration is set, and most clients will consider this a 'non-persistent cookie' and will delete it on a condition like exiting a web browser application\&.
+.PP
+\fBnote\fP the \fRcookie storage model specification\fP states that if both \fRexpires\fP and \fRmaxAge\fP are set, then \fRmaxAge\fP takes precedence, but it is possible not all clients by obey this, so if both are set, they should point to the same date and time\&.
+.SS "httpOnly"
+Specifies the \fRboolean\fP value for the \fR\fRHttpOnly\fP \fRSet-Cookie\fP attribute\fP\&. When truthy, the \fRHttpOnly\fP attribute is set, otherwise it is not\&. By default, the \fRHttpOnly\fP attribute is not set\&.
+.PP
+\fBnote\fP be careful when setting this to \fRtrue\fP, as compliant clients will not allow client-side JavaScript to see the cookie in \fRdocument\&.cookie\fP\&.
+.SS "maxAge"
+Specifies the \fRnumber\fP (in seconds) to be the value for the \fR\fRMax-Age\fP \fRSet-Cookie\fP attribute\fP\&. The given number will be converted to an integer by rounding down\&. By default, no maximum age is set\&.
+.PP
+\fBnote\fP the \fRcookie storage model specification\fP states that if both \fRexpires\fP and \fRmaxAge\fP are set, then \fRmaxAge\fP takes precedence, but it is possible not all clients by obey this, so if both are set, they should point to the same date and time\&.
+.SS "partitioned"
+Specifies the \fRboolean\fP value for the [\fRPartitioned\fP \fRSet-Cookie\fP](rfc-cutler-httpbis-partitioned-cookies) attribute\&. When truthy, the \fRPartitioned\fP attribute is set, otherwise it is not\&. By default, the \fRPartitioned\fP attribute is not set\&.
+.PP
+\fBnote\fP This is an attribute that has not yet been fully standardized, and may change in the future\&. This also means many clients may ignore this attribute until they understand it\&.
+.PP
+More information about can be found in \fRthe proposal\fP\&.
+.SS "path"
+Specifies the value for the \fR\fRPath\fP \fRSet-Cookie\fP attribute\fP\&. By default, the path is considered the \fR'default path'\fP\&.
+.SS "priority"
+Specifies the \fRstring\fP to be the value for the \fR\fRPriority\fP \fRSet-Cookie\fP attribute\fP\&.
+.PP
+.IP "\(bu" 2
+`'low'\fRwill set the\fPPriority\fRattribute to\fPLow\fR\&. -\fP'medium'\fRwill set the\fPPriority\fRattribute to\fPMedium\fR, the default priority when not set\&. -\fP'high'\fRwill set the\fPPriority\fRattribute to\fPHigh`\&.
+.PP
+.PP
+More information about the different priority levels can be found in \fRthe specification\fP\&.
+.PP
+\fBnote\fP This is an attribute that has not yet been fully standardized, and may change in the future\&. This also means many clients may ignore this attribute until they understand it\&.
+.SS "sameSite"
+Specifies the \fRboolean\fP or \fRstring\fP to be the value for the \fR\fRSameSite\fP \fRSet-Cookie\fP attribute\fP\&.
+.PP
+.IP "\(bu" 2
+\fRtrue\fP will set the \fRSameSite\fP attribute to \fRStrict\fP for strict same site enforcement\&.
+.IP "\(bu" 2
+\fRfalse\fP will not set the \fRSameSite\fP attribute\&.
+.IP "\(bu" 2
+`'lax'\fRwill set the\fPSameSite\fRattribute to\fPLax\fRfor lax same site enforcement\&. -\fP'none'\fRwill set the\fPSameSite\fRattribute to\fPNone\fRfor an explicit cross-site cookie\&. -\fP'strict'\fRwill set the\fPSameSite\fRattribute to\fPStrict` for strict same site enforcement\&.
+.PP
+.PP
+More information about the different enforcement levels can be found in \fRthe specification\fP\&.
+.PP
+\fBnote\fP This is an attribute that has not yet been fully standardized, and may change in the future\&. This also means many clients may ignore this attribute until they understand it\&.
+.SS "secure"
+Specifies the \fRboolean\fP value for the \fR\fRSecure\fP \fRSet-Cookie\fP attribute\fP\&. When truthy, the \fRSecure\fP attribute is set, otherwise it is not\&. By default, the \fRSecure\fP attribute is not set\&.
+.PP
+\fBnote\fP be careful when setting this to \fRtrue\fP, as compliant clients will not send the cookie back to the server in the future if the browser does not have an HTTPS connection\&.
+.SH "Example"
+.PP
+The following example uses this module in conjunction with the Node\&.js core HTTP server to prompt a user for their name and display it back on future visits\&.
+.PP
+.PP
+.nf
+var cookie = require('cookie');
+var escapeHtml = require('escape\-html');
+var http = require('http');
+var url = require('url');
+
+function onRequest(req, res) {
+  // Parse the query string
+  var query = url\&.parse(req\&.url, true, true)\&.query;
+
+  if (query && query\&.name) {
+    // Set a new cookie with the name
+    res\&.setHeader('Set\-Cookie', cookie\&.serialize('name', String(query\&.name), {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 7 // 1 week
+    }));
+
+    // Redirect back after setting cookie
+    res\&.statusCode = 302;
+    res\&.setHeader('Location', req\&.headers\&.referer || '/');
+    res\&.end();
+    return;
+  }
+
+  // Parse the cookies on the request
+  var cookies = cookie\&.parse(req\&.headers\&.cookie || '');
+
+  // Get the visitor name set in the cookie
+  var name = cookies\&.name;
+
+  res\&.setHeader('Content\-Type', 'text/html; charset=UTF\-8');
+
+  if (name) {
+    res\&.write('<p>Welcome back, <b>' + escapeHtml(name) + '</b>!</p>');
+  } else {
+    res\&.write('<p>Hello, new visitor!</p>');
+  }
+
+  res\&.write('<form method="GET">');
+  res\&.write('<input placeholder="enter your name" name="name"> <input type="submit" value="Set Name">');
+  res\&.end('</form>');
+}
+
+http\&.createServer(onRequest)\&.listen(3000);
+.fi
+.PP
+.SH "Testing"
+.PP
+.PP
+.nf
+$ npm test
+.fi
+.PP
+.SH "Benchmark"
+.PP
+.PP
+.nf
+$ npm run bench
+
+> cookie@0\&.5\&.0 bench
+> node benchmark/index\&.js
+
+  node@18\&.18\&.2
+  acorn@8\&.10\&.0
+  ada@2\&.6\&.0
+  ares@1\&.19\&.1
+  brotli@1\&.0\&.9
+  cldr@43\&.1
+  icu@73\&.2
+  llhttp@6\&.0\&.11
+  modules@108
+  napi@9
+  nghttp2@1\&.57\&.0
+  nghttp3@0\&.7\&.0
+  ngtcp2@0\&.8\&.1
+  openssl@3\&.0\&.10+quic
+  simdutf@3\&.2\&.14
+  tz@2023c
+  undici@5\&.26\&.3
+  unicode@15\&.0
+  uv@1\&.44\&.2
+  uvwasi@0\&.0\&.18
+  v8@10\&.2\&.154\&.26\-node\&.26
+  zlib@1\&.2\&.13\&.1\-motley
+
+> node benchmark/parse\-top\&.js
+
+  cookie\&.parse \- top sites
+
+  14 tests completed\&.
+
+  parse accounts\&.google\&.com x 2,588,913 ops/sec ±0\&.74% (186 runs sampled)
+  parse apple\&.com           x 2,370,002 ops/sec ±0\&.69% (186 runs sampled)
+  parse cloudflare\&.com      x 2,213,102 ops/sec ±0\&.88% (188 runs sampled)
+  parse docs\&.google\&.com     x 2,194,157 ops/sec ±1\&.03% (184 runs sampled)
+  parse drive\&.google\&.com    x 2,265,084 ops/sec ±0\&.79% (187 runs sampled)
+  parse en\&.wikipedia\&.org    x   457,099 ops/sec ±0\&.81% (186 runs sampled)
+  parse linkedin\&.com        x   504,407 ops/sec ±0\&.89% (186 runs sampled)
+  parse maps\&.google\&.com     x 1,230,959 ops/sec ±0\&.98% (186 runs sampled)
+  parse microsoft\&.com       x   926,294 ops/sec ±0\&.88% (184 runs sampled)
+  parse play\&.google\&.com     x 2,311,338 ops/sec ±0\&.83% (185 runs sampled)
+  parse support\&.google\&.com  x 1,508,850 ops/sec ±0\&.86% (186 runs sampled)
+  parse www\&.google\&.com      x 1,022,582 ops/sec ±1\&.32% (182 runs sampled)
+  parse youtu\&.be            x   332,136 ops/sec ±1\&.02% (185 runs sampled)
+  parse youtube\&.com         x   323,833 ops/sec ±0\&.77% (183 runs sampled)
+
+> node benchmark/parse\&.js
+
+  cookie\&.parse \- generic
+
+  6 tests completed\&.
+
+  simple      x 3,214,032 ops/sec ±1\&.61% (183 runs sampled)
+  decode      x   587,237 ops/sec ±1\&.16% (187 runs sampled)
+  unquote     x 2,954,618 ops/sec ±1\&.35% (183 runs sampled)
+  duplicates  x   857,008 ops/sec ±0\&.89% (187 runs sampled)
+  10 cookies  x   292,133 ops/sec ±0\&.89% (187 runs sampled)
+  100 cookies x    22,610 ops/sec ±0\&.68% (187 runs sampled)
+.fi
+.PP
+.SH "References"
+.PP
+.IP "\(bu" 2
+\fRRFC 6265: HTTP State Management Mechanism\fP
+.IP "\(bu" 2
+\fRSame-site Cookies\fP
+.PP
+.SH "License"
+.PP
+[MIT](LICENSE) 

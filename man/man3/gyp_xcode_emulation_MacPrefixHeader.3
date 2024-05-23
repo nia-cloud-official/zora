@@ -1,0 +1,168 @@
+.TH "gyp.xcode_emulation.MacPrefixHeader" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gyp.xcode_emulation.MacPrefixHeader
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fB__init__\fP (self, xcode_settings, gyp_path_to_build_path, gyp_path_to_build_output)"
+.br
+.ti -1c
+.RI "\fBGetInclude\fP (self, lang, arch=None)"
+.br
+.ti -1c
+.RI "\fBGetObjDependencies\fP (self, sources, objs, arch=None)"
+.br
+.ti -1c
+.RI "\fBGetPchBuildCommands\fP (self, arch=None)"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBheader\fP"
+.br
+.ti -1c
+.RI "\fBcompile_headers\fP"
+.br
+.ti -1c
+.RI "\fBcompiled_headers\fP"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fB_CompiledHeader\fP (self, lang, arch)"
+.br
+.ti -1c
+.RI "\fB_Gch\fP (self, lang, arch)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.PP
+.nf
+A class that helps with emulating Xcode's GCC_PREFIX_HEADER feature\&.
+
+This feature consists of several pieces:
+* If GCC_PREFIX_HEADER is present, all compilations in that project get an
+additional |-include path_to_prefix_header| cflag\&.
+* If GCC_PRECOMPILE_PREFIX_HEADER is present too, then the prefix header is
+instead compiled, and all other compilations in the project get an
+additional |-include path_to_compiled_header| instead\&.
++ Compiled prefix headers have the extension gch\&. There is one gch file for
+  every language used in the project (c, cc, m, mm), since gch files for
+  different languages aren't compatible\&.
++ gch files themselves are built with the target's normal cflags, but they
+  obviously don't get the |-include| flag\&. Instead, they need a -x flag that
+  describes their language\&.
++ All o files in the target need to depend on the gch file, to make sure
+  it's built before any o file is built\&.
+
+This class helps with some of these tasks, but it needs help from the build
+system for writing dependencies to the gch files, for writing build commands
+for the gch files, and for figuring out the location of the gch files\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1371\fP of file \fBxcode_emulation\&.py\fP\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "gyp\&.xcode_emulation\&.MacPrefixHeader\&.__init__ ( self,  xcode_settings,  gyp_path_to_build_path,  gyp_path_to_build_output)"
+
+.PP
+.nf
+If xcode_settings is None, all methods on this class are no-ops\&.
+
+Args:
+gyp_path_to_build_path: A function that takes a gyp-relative path,
+    and returns a path relative to the build directory\&.
+gyp_path_to_build_output: A function that takes a gyp-relative path and
+    a language code ('c', 'cc', 'm', or 'mm'), and that returns a path
+    to where the output of precompiling that path for that language
+    should be placed (without the trailing '\&.gch')\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1394\fP of file \fBxcode_emulation\&.py\fP\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "gyp\&.xcode_emulation\&.MacPrefixHeader\&._CompiledHeader ( self,  lang,  arch)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1428\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&.MacPrefixHeader\&._Gch ( self,  lang,  arch)\fR [protected]\fP"
+
+.PP
+.nf
+Returns the actual file name of the prefix header for language |lang|\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1444\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&.MacPrefixHeader\&.GetInclude ( self,  lang,  arch = \fRNone\fP)"
+
+.PP
+.nf
+Gets the cflags to include the prefix header for language |lang|\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1435\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&.MacPrefixHeader\&.GetObjDependencies ( self,  sources,  objs,  arch = \fRNone\fP)"
+
+.PP
+.nf
+Given a list of source files and the corresponding object files, returns
+a list of (source, object, gch) tuples, where |gch| is the build-directory
+relative path to the gch file each object file depends on\&.  |compilable[i]|
+has to be the source file belonging to |objs[i]|\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1449\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&.MacPrefixHeader\&.GetPchBuildCommands ( self,  arch = \fRNone\fP)"
+
+.PP
+.nf
+Returns [(path_to_gch, language_flag, language, header)]\&.
+|path_to_gch| and |header| are relative to the build directory\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1472\fP of file \fBxcode_emulation\&.py\fP\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "gyp\&.xcode_emulation\&.MacPrefixHeader\&.compile_headers"
+
+.PP
+Definition at line \fB1410\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&.MacPrefixHeader\&.compiled_headers"
+
+.PP
+Definition at line \fB1419\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&.MacPrefixHeader\&.header"
+
+.PP
+Definition at line \fB1409\fP of file \fBxcode_emulation\&.py\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

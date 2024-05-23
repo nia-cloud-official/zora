@@ -1,0 +1,308 @@
+\doxysection{xcode\+\_\+ninja.\+py}
+\hypertarget{xcode__ninja_8py_source}{}\label{xcode__ninja_8py_source}\index{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/xcode\_ninja.py@{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/xcode\_ninja.py}}
+\mbox{\hyperlink{xcode__ninja_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00001}\mbox{\hyperlink{namespacegyp_1_1xcode__ninja}{00001}}\ \textcolor{comment}{\#\ Copyright\ (c)\ 2014\ Google\ Inc.\ All\ rights\ reserved.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00002}00002\ \textcolor{comment}{\#\ Use\ of\ this\ source\ code\ is\ governed\ by\ a\ BSD-\/style\ license\ that\ can\ be}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00003}00003\ \textcolor{comment}{\#\ found\ in\ the\ LICENSE\ file.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00005}00005\ \textcolor{stringliteral}{"{}"{}"{}Xcode-\/ninja\ wrapper\ project\ file\ generator.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00006}00006\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00007}00007\ \textcolor{stringliteral}{This\ updates\ the\ data\ structures\ passed\ to\ the\ Xcode\ gyp\ generator\ to\ build}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00008}00008\ \textcolor{stringliteral}{with\ ninja\ instead.\ The\ Xcode\ project\ itself\ is\ transformed\ into\ a\ list\ of}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00009}00009\ \textcolor{stringliteral}{executable\ targets,\ each\ with\ a\ build\ step\ to\ build\ with\ ninja,\ and\ a\ target}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00010}00010\ \textcolor{stringliteral}{with\ every\ source\ and\ resource\ file.\ \ This\ appears\ to\ sidestep\ some\ of\ the}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00011}00011\ \textcolor{stringliteral}{major\ performance\ headaches\ experienced\ using\ complex\ projects\ and\ large\ number}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00012}00012\ \textcolor{stringliteral}{of\ targets\ within\ Xcode.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00013}00013\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00015}00015\ \textcolor{keyword}{import}\ errno}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00016}00016\ \textcolor{keyword}{import}\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1ninja}{gyp.generator.ninja}}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00017}00017\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00018}00018\ \textcolor{keyword}{import}\ re}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00019}00019\ \textcolor{keyword}{import}\ xml.sax.saxutils}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00022}\mbox{\hyperlink{namespacegyp_1_1xcode__ninja_a50d26b6057f1df48e64b9884213d61c2}{00022}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1xcode__ninja_a50d26b6057f1df48e64b9884213d61c2}{\_WriteWorkspace}}(main\_gyp,\ sources\_gyp,\ params):}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00023}00023\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}\ Create\ a\ workspace\ to\ wrap\ main\ and\ sources\ gyp\ paths.\ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00024}00024\ \ \ \ \ (build\_file\_root,\ build\_file\_ext)\ =\ os.path.splitext(main\_gyp)}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00025}00025\ \ \ \ \ workspace\_path\ =\ build\_file\_root\ +\ \textcolor{stringliteral}{"{}.xcworkspace"{}}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00026}00026\ \ \ \ \ options\ =\ params[\textcolor{stringliteral}{"{}options"{}}]}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00027}00027\ \ \ \ \ \textcolor{keywordflow}{if}\ options.generator\_output:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00028}00028\ \ \ \ \ \ \ \ \ workspace\_path\ =\ os.path.join(options.generator\_output,\ workspace\_path)}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00029}00029\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00030}00030\ \ \ \ \ \ \ \ \ os.makedirs(workspace\_path)}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00031}00031\ \ \ \ \ \textcolor{keywordflow}{except}\ OSError\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00032}00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ e.errno\ !=\ errno.EEXIST:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00034}00034\ \ \ \ \ output\_string\ =\ (}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00035}00035\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'<?xml\ version="{}1.0"{}\ encoding="{}UTF-\/8"{}?>\(\backslash\)n'}\ +\ \textcolor{stringliteral}{'<Workspace\ version\ =\ "{}1.0"{}>\(\backslash\)n'}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00036}00036\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00037}00037\ \ \ \ \ \textcolor{keywordflow}{for}\ gyp\_name\ \textcolor{keywordflow}{in}\ [main\_gyp,\ sources\_gyp]:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ name\ =\ os.path.splitext(os.path.basename(gyp\_name))[0]\ +\ \textcolor{stringliteral}{"{}.xcodeproj"{}}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ name\ =\ xml.sax.saxutils.quoteattr(\textcolor{stringliteral}{"{}group:"{}}\ +\ name)}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00040}00040\ \ \ \ \ \ \ \ \ output\_string\ +=\ \textcolor{stringliteral}{"{}\ \ <FileRef\ location\ =\ \%s></FileRef>\(\backslash\)n"{}}\ \%\ name}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00041}00041\ \ \ \ \ output\_string\ +=\ \textcolor{stringliteral}{"{}</Workspace>\(\backslash\)n"{}}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00043}00043\ \ \ \ \ workspace\_file\ =\ os.path.join(workspace\_path,\ \textcolor{stringliteral}{"{}contents.xcworkspacedata"{}})}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00045}00045\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ open(workspace\_file)\ \textcolor{keyword}{as}\ input\_file:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ input\_string\ =\ input\_file.read()}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ input\_string\ ==\ output\_string:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00050}00050\ \ \ \ \ \textcolor{keywordflow}{except}\ OSError:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Ignore\ errors\ if\ the\ file\ doesn't\ exist.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00054}00054\ \ \ \ \ \textcolor{keyword}{with}\ open(workspace\_file,\ \textcolor{stringliteral}{"{}w"{}})\ \textcolor{keyword}{as}\ output\_file:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ output\_file.write(output\_string)}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00058}\mbox{\hyperlink{namespacegyp_1_1xcode__ninja_ab1430fbd4d4ee7b4f1216f82bdb1b8ea}{00058}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1xcode__ninja_ab1430fbd4d4ee7b4f1216f82bdb1b8ea}{\_TargetFromSpec}}(old\_spec,\ params):}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00059}00059\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}\ Create\ fake\ target\ for\ xcode-\/ninja\ wrapper.\ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00060}00060\ \ \ \ \ \textcolor{comment}{\#\ Determine\ ninja\ top\ level\ build\ dir\ (e.g.\ /path/to/out).}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00061}00061\ \ \ \ \ ninja\_toplevel\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00062}00062\ \ \ \ \ jobs\ =\ 0}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00063}00063\ \ \ \ \ \textcolor{keywordflow}{if}\ params:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ options\ =\ params[\textcolor{stringliteral}{"{}options"{}}]}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ ninja\_toplevel\ =\ os.path.join(}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ options.toplevel\_dir,\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1ninja_a7c1f50d1b8493a9c6b2f7ce07ef4bb2b}{gyp.generator.ninja.ComputeOutputDir}}(params)}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ jobs\ =\ params.get(\textcolor{stringliteral}{"{}generator\_flags"{}},\ \{\}).get(\textcolor{stringliteral}{"{}xcode\_ninja\_jobs"{}},\ 0)}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00070}00070\ \ \ \ \ target\_name\ =\ old\_spec.get(\textcolor{stringliteral}{"{}target\_name"{}})}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00071}00071\ \ \ \ \ product\_name\ =\ old\_spec.get(\textcolor{stringliteral}{"{}product\_name"{}},\ target\_name)}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00072}00072\ \ \ \ \ product\_extension\ =\ old\_spec.get(\textcolor{stringliteral}{"{}product\_extension"{}})}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00074}00074\ \ \ \ \ ninja\_target\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00075}00075\ \ \ \ \ ninja\_target[\textcolor{stringliteral}{"{}target\_name"{}}]\ =\ target\_name}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00076}00076\ \ \ \ \ ninja\_target[\textcolor{stringliteral}{"{}product\_name"{}}]\ =\ product\_name}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00077}00077\ \ \ \ \ \textcolor{keywordflow}{if}\ product\_extension:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ ninja\_target[\textcolor{stringliteral}{"{}product\_extension"{}}]\ =\ product\_extension}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00079}00079\ \ \ \ \ ninja\_target[\textcolor{stringliteral}{"{}toolset"{}}]\ =\ old\_spec.get(\textcolor{stringliteral}{"{}toolset"{}})}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00080}00080\ \ \ \ \ ninja\_target[\textcolor{stringliteral}{"{}default\_configuration"{}}]\ =\ old\_spec.get(\textcolor{stringliteral}{"{}default\_configuration"{}})}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00081}00081\ \ \ \ \ ninja\_target[\textcolor{stringliteral}{"{}configurations"{}}]\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00083}00083\ \ \ \ \ \textcolor{comment}{\#\ Tell\ Xcode\ to\ look\ in\ |ninja\_toplevel|\ for\ build\ products.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00084}00084\ \ \ \ \ new\_xcode\_settings\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00085}00085\ \ \ \ \ \textcolor{keywordflow}{if}\ ninja\_toplevel:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ new\_xcode\_settings[\textcolor{stringliteral}{"{}CONFIGURATION\_BUILD\_DIR"{}}]\ =\ (}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\%s/\$(CONFIGURATION)\$(EFFECTIVE\_PLATFORM\_NAME)"{}}\ \%\ ninja\_toplevel}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00090}00090\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}configurations"{}}\ \textcolor{keywordflow}{in}\ old\_spec:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ config\ \textcolor{keywordflow}{in}\ old\_spec[\textcolor{stringliteral}{"{}configurations"{}}]:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ old\_xcode\_settings\ =\ old\_spec[\textcolor{stringliteral}{"{}configurations"{}}][config].get(}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}xcode\_settings"{}},\ \{\}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{stringliteral}{"{}IPHONEOS\_DEPLOYMENT\_TARGET"{}}\ \textcolor{keywordflow}{in}\ old\_xcode\_settings:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_xcode\_settings[\textcolor{stringliteral}{"{}CODE\_SIGNING\_REQUIRED"{}}]\ =\ \textcolor{stringliteral}{"{}NO"{}}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_xcode\_settings[\textcolor{stringliteral}{"{}IPHONEOS\_DEPLOYMENT\_TARGET"{}}]\ =\ old\_xcode\_settings[}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}IPHONEOS\_DEPLOYMENT\_TARGET"{}}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ key\ \textcolor{keywordflow}{in}\ [\textcolor{stringliteral}{"{}BUNDLE\_LOADER"{}},\ \textcolor{stringliteral}{"{}TEST\_HOST"{}}]:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ key\ \textcolor{keywordflow}{in}\ old\_xcode\_settings:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_xcode\_settings[key]\ =\ old\_xcode\_settings[key]}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00103}00103\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ ninja\_target[\textcolor{stringliteral}{"{}configurations"{}}][config]\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ ninja\_target[\textcolor{stringliteral}{"{}configurations"{}}][config][}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}xcode\_settings"{}}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ ]\ =\ new\_xcode\_settings}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00109}00109\ \ \ \ \ ninja\_target[\textcolor{stringliteral}{"{}mac\_bundle"{}}]\ =\ old\_spec.get(\textcolor{stringliteral}{"{}mac\_bundle"{}},\ 0)}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00110}00110\ \ \ \ \ ninja\_target[\textcolor{stringliteral}{"{}mac\_xctest\_bundle"{}}]\ =\ old\_spec.get(\textcolor{stringliteral}{"{}mac\_xctest\_bundle"{}},\ 0)}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00111}00111\ \ \ \ \ ninja\_target[\textcolor{stringliteral}{"{}ios\_app\_extension"{}}]\ =\ old\_spec.get(\textcolor{stringliteral}{"{}ios\_app\_extension"{}},\ 0)}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00112}00112\ \ \ \ \ ninja\_target[\textcolor{stringliteral}{"{}ios\_watchkit\_extension"{}}]\ =\ old\_spec.get(\textcolor{stringliteral}{"{}ios\_watchkit\_extension"{}},\ 0)}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00113}00113\ \ \ \ \ ninja\_target[\textcolor{stringliteral}{"{}ios\_watchkit\_app"{}}]\ =\ old\_spec.get(\textcolor{stringliteral}{"{}ios\_watchkit\_app"{}},\ 0)}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00114}00114\ \ \ \ \ ninja\_target[\textcolor{stringliteral}{"{}type"{}}]\ =\ old\_spec[\textcolor{stringliteral}{"{}type"{}}]}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00115}00115\ \ \ \ \ \textcolor{keywordflow}{if}\ ninja\_toplevel:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ ninja\_target[\textcolor{stringliteral}{"{}actions"{}}]\ =\ [}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}action\_name"{}}:\ \textcolor{stringliteral}{"{}Compile\ and\ copy\ \%s\ via\ ninja"{}}\ \%\ target\_name,}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}inputs"{}}:\ [],}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}outputs"{}}:\ [],}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}action"{}}:\ [}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}env"{}},}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}PATH=\%s"{}}\ \%\ os.environ[\textcolor{stringliteral}{"{}PATH"{}}],}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}ninja"{}},}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/C"{}},}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_xcode\_settings[\textcolor{stringliteral}{"{}CONFIGURATION\_BUILD\_DIR"{}}],}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ target\_name,}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ],}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}message"{}}:\ \textcolor{stringliteral}{"{}Compile\ and\ copy\ \%s\ via\ ninja"{}}\ \%\ target\_name,}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ jobs\ >\ 0:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ ninja\_target[\textcolor{stringliteral}{"{}actions"{}}][0][\textcolor{stringliteral}{"{}action"{}}].extend((\textcolor{stringliteral}{"{}-\/j"{}},\ jobs))}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00134}00134\ \ \ \ \ \textcolor{keywordflow}{return}\ ninja\_target}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00135}00135\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00137}\mbox{\hyperlink{namespacegyp_1_1xcode__ninja_a68b5ab659fcb19a3231cf41e7bd02cb2}{00137}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1xcode__ninja_a68b5ab659fcb19a3231cf41e7bd02cb2}{IsValidTargetForWrapper}}(target\_extras,\ executable\_target\_pattern,\ spec):}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00138}00138\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Limit\ targets\ for\ Xcode\ wrapper.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00139}00139\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00140}00140\ \textcolor{stringliteral}{\ \ Xcode\ sometimes\ performs\ poorly\ with\ too\ many\ targets,\ so\ only\ include}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00141}00141\ \textcolor{stringliteral}{\ \ proper\ executable\ targets,\ with\ filters\ to\ customize.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00142}00142\ \textcolor{stringliteral}{\ \ Arguments:}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00143}00143\ \textcolor{stringliteral}{\ \ \ \ target\_extras:\ Regular\ expression\ to\ always\ add,\ matching\ any\ target.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00144}00144\ \textcolor{stringliteral}{\ \ \ \ executable\_target\_pattern:\ Regular\ expression\ limiting\ executable\ targets.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00145}00145\ \textcolor{stringliteral}{\ \ \ \ spec:\ Specifications\ for\ target.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00146}00146\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00147}00147\ \ \ \ \ target\_name\ =\ spec.get(\textcolor{stringliteral}{"{}target\_name"{}})}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00148}00148\ \ \ \ \ \textcolor{comment}{\#\ Always\ include\ targets\ matching\ target\_extras.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00149}00149\ \ \ \ \ \textcolor{keywordflow}{if}\ target\_extras\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}\ \textcolor{keywordflow}{and}\ re.search(target\_extras,\ target\_name):}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00150}00150\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00151}00151\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00152}00152\ \ \ \ \ \textcolor{comment}{\#\ Otherwise\ just\ show\ executable\ targets\ and\ xc\_tests.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00153}00153\ \ \ \ \ \textcolor{keywordflow}{if}\ int(spec.get(\textcolor{stringliteral}{"{}mac\_xctest\_bundle"{}},\ 0))\ !=\ 0\ \textcolor{keywordflow}{or}\ (}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00154}00154\ \ \ \ \ \ \ \ \ spec.get(\textcolor{stringliteral}{"{}type"{}},\ \textcolor{stringliteral}{"{}"{}})\ ==\ \textcolor{stringliteral}{"{}executable"{}}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00155}00155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ spec.get(\textcolor{stringliteral}{"{}product\_extension"{}},\ \textcolor{stringliteral}{"{}"{}})\ !=\ \textcolor{stringliteral}{"{}bundle"{}}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00156}00156\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00157}00157\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00158}00158\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ there\ is\ a\ filter\ and\ the\ target\ does\ not\ match,\ exclude\ the\ target.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00159}00159\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ executable\_target\_pattern\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ re.search(executable\_target\_pattern,\ target\_name):}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00163}00163\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00164}00164\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00165}00165\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00166}\mbox{\hyperlink{namespacegyp_1_1xcode__ninja_ab6307d8e6c19f93e77b08334eb41ca41}{00166}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1xcode__ninja_ab6307d8e6c19f93e77b08334eb41ca41}{CreateWrapper}}(target\_list,\ target\_dicts,\ data,\ params):}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00167}00167\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Initialize\ targets\ for\ the\ ninja\ wrapper.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00168}00168\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00169}00169\ \textcolor{stringliteral}{\ \ This\ sets\ up\ the\ necessary\ variables\ in\ the\ targets\ to\ generate\ Xcode\ projects}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00170}00170\ \textcolor{stringliteral}{\ \ that\ use\ ninja\ as\ an\ external\ builder.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00171}00171\ \textcolor{stringliteral}{\ \ Arguments:}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00172}00172\ \textcolor{stringliteral}{\ \ \ \ target\_list:\ List\ of\ target\ pairs:\ 'base/base.gyp:base'.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00173}00173\ \textcolor{stringliteral}{\ \ \ \ target\_dicts:\ Dict\ of\ target\ properties\ keyed\ on\ target\ pair.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00174}00174\ \textcolor{stringliteral}{\ \ \ \ data:\ Dict\ of\ flattened\ build\ files\ keyed\ on\ gyp\ path.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00175}00175\ \textcolor{stringliteral}{\ \ \ \ params:\ Dict\ of\ global\ options\ for\ gyp.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00176}00176\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00177}00177\ \ \ \ \ orig\_gyp\ =\ params[\textcolor{stringliteral}{"{}build\_files"{}}][0]}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00178}00178\ \ \ \ \ \textcolor{keywordflow}{for}\ gyp\_name,\ gyp\_dict\ \textcolor{keywordflow}{in}\ data.items():}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00179}00179\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ gyp\_name\ ==\ orig\_gyp:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00180}00180\ \ \ \ \ \ \ \ \ \ \ \ \ depth\ =\ gyp\_dict[\textcolor{stringliteral}{"{}\_DEPTH"{}}]}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00181}00181\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00182}00182\ \ \ \ \ \textcolor{comment}{\#\ Check\ for\ custom\ main\ gyp\ name,\ otherwise\ use\ the\ default\ CHROMIUM\_GYP\_FILE}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00183}00183\ \ \ \ \ \textcolor{comment}{\#\ and\ prepend\ .ninja\ before\ the\ .gyp\ extension.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00184}00184\ \ \ \ \ generator\_flags\ =\ params.get(\textcolor{stringliteral}{"{}generator\_flags"{}},\ \{\})}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00185}00185\ \ \ \ \ main\_gyp\ =\ generator\_flags.get(\textcolor{stringliteral}{"{}xcode\_ninja\_main\_gyp"{}},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00186}00186\ \ \ \ \ \textcolor{keywordflow}{if}\ main\_gyp\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00187}00187\ \ \ \ \ \ \ \ \ (build\_file\_root,\ build\_file\_ext)\ =\ os.path.splitext(orig\_gyp)}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00188}00188\ \ \ \ \ \ \ \ \ main\_gyp\ =\ build\_file\_root\ +\ \textcolor{stringliteral}{"{}.ninja"{}}\ +\ build\_file\_ext}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00189}00189\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00190}00190\ \ \ \ \ \textcolor{comment}{\#\ Create\ new\ |target\_list|,\ |target\_dicts|\ and\ |data|\ data\ structures.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00191}00191\ \ \ \ \ new\_target\_list\ =\ []}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00192}00192\ \ \ \ \ new\_target\_dicts\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00193}00193\ \ \ \ \ new\_data\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00194}00194\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00195}00195\ \ \ \ \ \textcolor{comment}{\#\ Set\ base\ keys\ needed\ for\ |data|.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00196}00196\ \ \ \ \ new\_data[main\_gyp]\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00197}00197\ \ \ \ \ new\_data[main\_gyp][\textcolor{stringliteral}{"{}included\_files"{}}]\ =\ []}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00198}00198\ \ \ \ \ new\_data[main\_gyp][\textcolor{stringliteral}{"{}targets"{}}]\ =\ []}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00199}00199\ \ \ \ \ new\_data[main\_gyp][\textcolor{stringliteral}{"{}xcode\_settings"{}}]\ =\ data[orig\_gyp].get(\textcolor{stringliteral}{"{}xcode\_settings"{}},\ \{\})}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00200}00200\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00201}00201\ \ \ \ \ \textcolor{comment}{\#\ Normally\ the\ xcode-\/ninja\ generator\ includes\ only\ valid\ executable\ targets.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00202}00202\ \ \ \ \ \textcolor{comment}{\#\ If\ |xcode\_ninja\_executable\_target\_pattern|\ is\ set,\ that\ list\ is\ reduced\ to}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00203}00203\ \ \ \ \ \textcolor{comment}{\#\ executable\ targets\ that\ match\ the\ pattern.\ (Default\ all)}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00204}00204\ \ \ \ \ executable\_target\_pattern\ =\ generator\_flags.get(}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00205}00205\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}xcode\_ninja\_executable\_target\_pattern"{}},\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00206}00206\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00207}00207\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00208}00208\ \ \ \ \ \textcolor{comment}{\#\ For\ including\ other\ non-\/executable\ targets,\ add\ the\ matching\ target\ name}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00209}00209\ \ \ \ \ \textcolor{comment}{\#\ to\ the\ |xcode\_ninja\_target\_pattern|\ regular\ expression.\ (Default\ none)}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00210}00210\ \ \ \ \ target\_extras\ =\ generator\_flags.get(\textcolor{stringliteral}{"{}xcode\_ninja\_target\_pattern"{}},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00211}00211\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00212}00212\ \ \ \ \ \textcolor{keywordflow}{for}\ old\_qualified\_target\ \textcolor{keywordflow}{in}\ target\_list:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00213}00213\ \ \ \ \ \ \ \ \ spec\ =\ target\_dicts[old\_qualified\_target]}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00214}00214\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \mbox{\hyperlink{namespacegyp_1_1xcode__ninja_a68b5ab659fcb19a3231cf41e7bd02cb2}{IsValidTargetForWrapper}}(target\_extras,\ executable\_target\_pattern,\ spec):}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Add\ to\ new\_target\_list.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ target\_name\ =\ spec.get(\textcolor{stringliteral}{"{}target\_name"{}})}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ new\_target\_name\ =\ f\textcolor{stringliteral}{"{}\{main\_gyp\}:\{target\_name\}\#target"{}}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \ \ new\_target\_list.append(new\_target\_name)}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00219}00219\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Add\ to\ new\_target\_dicts.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ new\_target\_dicts[new\_target\_name]\ =\ \mbox{\hyperlink{namespacegyp_1_1xcode__ninja_ab1430fbd4d4ee7b4f1216f82bdb1b8ea}{\_TargetFromSpec}}(spec,\ params)}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00222}00222\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Add\ to\ new\_data.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ old\_target\ \textcolor{keywordflow}{in}\ data[old\_qualified\_target.split(\textcolor{stringliteral}{"{}:"{}})[0]][\textcolor{stringliteral}{"{}targets"{}}]:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00225}00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ old\_target[\textcolor{stringliteral}{"{}target\_name"{}}]\ ==\ target\_name:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00226}00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_data\_target\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_data\_target[\textcolor{stringliteral}{"{}target\_name"{}}]\ =\ old\_target[\textcolor{stringliteral}{"{}target\_name"{}}]}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_data\_target[\textcolor{stringliteral}{"{}toolset"{}}]\ =\ old\_target[\textcolor{stringliteral}{"{}toolset"{}}]}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_data[main\_gyp][\textcolor{stringliteral}{"{}targets"{}}].append(new\_data\_target)}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00230}00230\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00231}00231\ \ \ \ \ \textcolor{comment}{\#\ Create\ sources\ target.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00232}00232\ \ \ \ \ sources\_target\_name\ =\ \textcolor{stringliteral}{"{}sources\_for\_indexing"{}}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00233}00233\ \ \ \ \ sources\_target\ =\ \mbox{\hyperlink{namespacegyp_1_1xcode__ninja_ab1430fbd4d4ee7b4f1216f82bdb1b8ea}{\_TargetFromSpec}}(}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00234}00234\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00235}00235\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}target\_name"{}}:\ sources\_target\_name,}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00236}00236\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}toolset"{}}:\ \textcolor{stringliteral}{"{}target"{}},}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00237}00237\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}default\_configuration"{}}:\ \textcolor{stringliteral}{"{}Default"{}},}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00238}00238\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}mac\_bundle"{}}:\ \textcolor{stringliteral}{"{}0"{}},}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00239}00239\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}type"{}}:\ \textcolor{stringliteral}{"{}executable"{}},}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00240}00240\ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00241}00241\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{None},}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00242}00242\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00243}00243\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00244}00244\ \ \ \ \ \textcolor{comment}{\#\ Tell\ Xcode\ to\ look\ everywhere\ for\ headers.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00245}00245\ \ \ \ \ sources\_target[\textcolor{stringliteral}{"{}configurations"{}}]\ =\ \{\textcolor{stringliteral}{"{}Default"{}}:\ \{\textcolor{stringliteral}{"{}include\_dirs"{}}:\ [depth]\}\}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00246}00246\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00247}00247\ \ \ \ \ \textcolor{comment}{\#\ Put\ excluded\ files\ into\ the\ sources\ target\ so\ they\ can\ be\ opened\ in\ Xcode.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00248}00248\ \ \ \ \ skip\_excluded\_files\ =\ \textcolor{keywordflow}{not}\ generator\_flags.get(}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00249}00249\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}xcode\_ninja\_list\_excluded\_files"{}},\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00250}00250\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00251}00251\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00252}00252\ \ \ \ \ sources\ =\ []}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00253}00253\ \ \ \ \ \textcolor{keywordflow}{for}\ target,\ target\_dict\ \textcolor{keywordflow}{in}\ target\_dicts.items():}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00254}00254\ \ \ \ \ \ \ \ \ base\ =\ os.path.dirname(target)}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00255}00255\ \ \ \ \ \ \ \ \ files\ =\ target\_dict.get(\textcolor{stringliteral}{"{}sources"{}},\ [])\ +\ target\_dict.get(}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00256}00256\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}mac\_bundle\_resources"{}},\ []}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00257}00257\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00258}00258\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00259}00259\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ skip\_excluded\_files:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ files.extend(}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ target\_dict.get(\textcolor{stringliteral}{"{}sources\_excluded"{}},\ [])}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ target\_dict.get(\textcolor{stringliteral}{"{}mac\_bundle\_resources\_excluded"{}},\ [])}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00263}00263\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00264}00264\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00265}00265\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ action\ \textcolor{keywordflow}{in}\ target\_dict.get(\textcolor{stringliteral}{"{}actions"{}},\ []):}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00266}00266\ \ \ \ \ \ \ \ \ \ \ \ \ files.extend(action.get(\textcolor{stringliteral}{"{}inputs"{}},\ []))}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00267}00267\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ skip\_excluded\_files:}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ files.extend(action.get(\textcolor{stringliteral}{"{}inputs\_excluded"{}},\ []))}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00270}00270\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00271}00271\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Remove\ files\ starting\ with\ \$.\ These\ are\ mostly\ intermediate\ files\ for\ the}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00272}00272\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ build\ system.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00273}00273\ \ \ \ \ \ \ \ \ files\ =\ [file\ \textcolor{keywordflow}{for}\ file\ \textcolor{keywordflow}{in}\ files\ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ file.startswith(\textcolor{stringliteral}{"{}\$"{}})]}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00274}00274\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00275}00275\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Make\ sources\ relative\ to\ root\ build\ file.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00276}00276\ \ \ \ \ \ \ \ \ relative\_path\ =\ os.path.dirname(main\_gyp)}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00277}00277\ \ \ \ \ \ \ \ \ sources\ +=\ [}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00278}00278\ \ \ \ \ \ \ \ \ \ \ \ \ os.path.relpath(os.path.join(base,\ file),\ relative\_path)\ \textcolor{keywordflow}{for}\ file\ \textcolor{keywordflow}{in}\ files}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00279}00279\ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00280}00280\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00281}00281\ \ \ \ \ sources\_target[\textcolor{stringliteral}{"{}sources"{}}]\ =\ sorted(set(sources))}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00282}00282\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00283}00283\ \ \ \ \ \textcolor{comment}{\#\ Put\ sources\_to\_index\ in\ it's\ own\ gyp.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00284}00284\ \ \ \ \ sources\_gyp\ =\ os.path.join(os.path.dirname(main\_gyp),\ sources\_target\_name\ +\ \textcolor{stringliteral}{"{}.gyp"{}})}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00285}00285\ \ \ \ \ fully\_qualified\_target\_name\ =\ f\textcolor{stringliteral}{"{}\{sources\_gyp\}:\{sources\_target\_name\}\#target"{}}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00286}00286\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00287}00287\ \ \ \ \ \textcolor{comment}{\#\ Add\ to\ new\_target\_list,\ new\_target\_dicts\ and\ new\_data.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00288}00288\ \ \ \ \ new\_target\_list.append(fully\_qualified\_target\_name)}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00289}00289\ \ \ \ \ new\_target\_dicts[fully\_qualified\_target\_name]\ =\ sources\_target}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00290}00290\ \ \ \ \ new\_data\_target\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00291}00291\ \ \ \ \ new\_data\_target[\textcolor{stringliteral}{"{}target\_name"{}}]\ =\ sources\_target[\textcolor{stringliteral}{"{}target\_name"{}}]}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00292}00292\ \ \ \ \ new\_data\_target[\textcolor{stringliteral}{"{}\_DEPTH"{}}]\ =\ depth}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00293}00293\ \ \ \ \ new\_data\_target[\textcolor{stringliteral}{"{}toolset"{}}]\ =\ \textcolor{stringliteral}{"{}target"{}}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00294}00294\ \ \ \ \ new\_data[sources\_gyp]\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00295}00295\ \ \ \ \ new\_data[sources\_gyp][\textcolor{stringliteral}{"{}targets"{}}]\ =\ []}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00296}00296\ \ \ \ \ new\_data[sources\_gyp][\textcolor{stringliteral}{"{}included\_files"{}}]\ =\ []}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00297}00297\ \ \ \ \ new\_data[sources\_gyp][\textcolor{stringliteral}{"{}xcode\_settings"{}}]\ =\ data[orig\_gyp].get(\textcolor{stringliteral}{"{}xcode\_settings"{}},\ \{\})}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00298}00298\ \ \ \ \ new\_data[sources\_gyp][\textcolor{stringliteral}{"{}targets"{}}].append(new\_data\_target)}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00299}00299\ }
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00300}00300\ \ \ \ \ \textcolor{comment}{\#\ Write\ workspace\ to\ file.}}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00301}00301\ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1xcode__ninja_a50d26b6057f1df48e64b9884213d61c2}{\_WriteWorkspace}}(main\_gyp,\ sources\_gyp,\ params)}
+\DoxyCodeLine{\Hypertarget{xcode__ninja_8py_source_l00302}00302\ \ \ \ \ \textcolor{keywordflow}{return}\ (new\_target\_list,\ new\_target\_dicts,\ new\_data)}
+
+\end{DoxyCode}

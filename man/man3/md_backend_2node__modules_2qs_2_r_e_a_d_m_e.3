@@ -1,0 +1,684 @@
+.TH "md_backend_2node__modules_2qs_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2qs_2_r_e_a_d_m_e \- qs \*{\fR\fP\*}  
+.PP
+ \fR\fP \fR\fP \fR\fP \fR\fP [][license-url] \fR\fP
+.PP
+\fR\fP.PP
+A querystring parsing and stringifying library with some added security\&.
+.PP
+Lead Maintainer: \fRJordan Harband\fP
+.PP
+The \fBqs\fP module was originally created and maintained by \fRTJ Holowaychuk\fP\&.
+.SH "Usage"
+.PP
+.PP
+.nf
+var qs = require('qs');
+var assert = require('assert');
+
+var obj = qs\&.parse('a=c');
+assert\&.deepEqual(obj, { a: 'c' });
+
+var str = qs\&.stringify(obj);
+assert\&.equal(str, 'a=c');
+.fi
+.PP
+.SS "Parsing Objects"
+[](#preventEval) 
+.PP
+.nf
+qs\&.parse(string, [options]);
+
+.fi
+.PP
+.PP
+\fBqs\fP allows you to create nested objects within your query strings, by surrounding the name of sub-keys with square brackets \fR[]\fP\&. For example, the string `'foo[bar]=baz'` converts to:
+.PP
+.PP
+.nf
+assert\&.deepEqual(qs\&.parse('foo[bar]=baz'), {
+    foo: {
+        bar: 'baz'
+    }
+});
+.fi
+.PP
+.PP
+When using the \fRplainObjects\fP option the parsed value is returned as a null object, created via \fRObject\&.create(null)\fP and as such you should be aware that prototype methods will not exist on it and a user may set those names to whatever value they like:
+.PP
+.PP
+.nf
+var nullObject = qs\&.parse('a[hasOwnProperty]=b', { plainObjects: true });
+assert\&.deepEqual(nullObject, { a: { hasOwnProperty: 'b' } });
+.fi
+.PP
+.PP
+By default parameters that would overwrite properties on the object prototype are ignored, if you wish to keep the data from those fields either use \fRplainObjects\fP as mentioned above, or set \fRallowPrototypes\fP to \fRtrue\fP which will allow user input to overwrite those properties\&. \fIWARNING\fP It is generally a bad idea to enable this option as it can cause problems when attempting to use the properties that have been overwritten\&. Always be careful with this option\&.
+.PP
+.PP
+.nf
+var protoObject = qs\&.parse('a[hasOwnProperty]=b', { allowPrototypes: true });
+assert\&.deepEqual(protoObject, { a: { hasOwnProperty: 'b' } });
+.fi
+.PP
+.PP
+URI encoded strings work too:
+.PP
+.PP
+.nf
+assert\&.deepEqual(qs\&.parse('a%5Bb%5D=c'), {
+    a: { b: 'c' }
+});
+.fi
+.PP
+.PP
+You can also nest your objects, like `'foo[bar][baz]=foobarbaz'`:
+.PP
+.PP
+.nf
+assert\&.deepEqual(qs\&.parse('foo[bar][baz]=foobarbaz'), {
+    foo: {
+        bar: {
+            baz: 'foobarbaz'
+        }
+    }
+});
+.fi
+.PP
+.PP
+By default, when nesting objects \fBqs\fP will only parse up to 5 children deep\&. This means if you attempt to parse a string like `'a[b][c][d][e][f][g][h][i]=j'` your resulting object will be:
+.PP
+.PP
+.nf
+var expected = {
+    a: {
+        b: {
+            c: {
+                d: {
+                    e: {
+                        f: {
+                            '[g][h][i]': 'j'
+                        }
+                    }
+                }
+            }
+        }
+    }
+};
+var string = 'a[b][c][d][e][f][g][h][i]=j';
+assert\&.deepEqual(qs\&.parse(string), expected);
+.fi
+.PP
+.PP
+This depth can be overridden by passing a \fRdepth\fP option to \fRqs\&.parse(string, [options])\fP:
+.PP
+.PP
+.nf
+var deep = qs\&.parse('a[b][c][d][e][f][g][h][i]=j', { depth: 1 });
+assert\&.deepEqual(deep, { a: { b: { '[c][d][e][f][g][h][i]': 'j' } } });
+.fi
+.PP
+.PP
+The depth limit helps mitigate abuse when \fBqs\fP is used to parse user input, and it is recommended to keep it a reasonably small number\&.
+.PP
+For similar reasons, by default \fBqs\fP will only parse up to 1000 parameters\&. This can be overridden by passing a \fRparameterLimit\fP option:
+.PP
+.PP
+.nf
+var limited = qs\&.parse('a=b&c=d', { parameterLimit: 1 });
+assert\&.deepEqual(limited, { a: 'b' });
+.fi
+.PP
+.PP
+To bypass the leading question mark, use \fRignoreQueryPrefix\fP:
+.PP
+.PP
+.nf
+var prefixed = qs\&.parse('?a=b&c=d', { ignoreQueryPrefix: true });
+assert\&.deepEqual(prefixed, { a: 'b', c: 'd' });
+.fi
+.PP
+.PP
+An optional delimiter can also be passed:
+.PP
+.PP
+.nf
+var delimited = qs\&.parse('a=b;c=d', { delimiter: ';' });
+assert\&.deepEqual(delimited, { a: 'b', c: 'd' });
+.fi
+.PP
+.PP
+Delimiters can be a regular expression too:
+.PP
+.PP
+.nf
+var regexed = qs\&.parse('a=b;c=d,e=f', { delimiter: /[;,]/ });
+assert\&.deepEqual(regexed, { a: 'b', c: 'd', e: 'f' });
+.fi
+.PP
+.PP
+Option \fRallowDots\fP can be used to enable dot notation:
+.PP
+.PP
+.nf
+var withDots = qs\&.parse('a\&.b=c', { allowDots: true });
+assert\&.deepEqual(withDots, { a: { b: 'c' } });
+.fi
+.PP
+.PP
+If you have to deal with legacy browsers or services, there's also support for decoding percent-encoded octets as iso-8859-1:
+.PP
+.PP
+.nf
+var oldCharset = qs\&.parse('a=%A7', { charset: 'iso\-8859\-1' });
+assert\&.deepEqual(oldCharset, { a: '§' });
+.fi
+.PP
+.PP
+Some services add an initial \fRutf8=✓\fP value to forms so that old Internet Explorer versions are more likely to submit the form as utf-8\&. Additionally, the server can check the value against wrong encodings of the checkmark character and detect that a query string or \fRapplication/x-www-form-urlencoded\fP body was \fInot\fP sent as utf-8, eg\&. if the form had an \fRaccept-charset\fP parameter or the containing page had a different character set\&.
+.PP
+\fBqs\fP supports this mechanism via the \fRcharsetSentinel\fP option\&. If specified, the \fRutf8\fP parameter will be omitted from the returned object\&. It will be used to switch to \fRiso-8859-1\fP/\fRutf-8\fP mode depending on how the checkmark is encoded\&.
+.PP
+\fBImportant\fP: When you specify both the \fRcharset\fP option and the \fRcharsetSentinel\fP option, the \fRcharset\fP will be overridden when the request contains a \fRutf8\fP parameter from which the actual charset can be deduced\&. In that sense the \fRcharset\fP will behave as the default charset rather than the authoritative charset\&.
+.PP
+.PP
+.nf
+var detectedAsUtf8 = qs\&.parse('utf8=%E2%9C%93&a=%C3%B8', {
+    charset: 'iso\-8859\-1',
+    charsetSentinel: true
+});
+assert\&.deepEqual(detectedAsUtf8, { a: 'ø' });
+
+// Browsers encode the checkmark as &#10003; when submitting as iso\-8859\-1:
+var detectedAsIso8859_1 = qs\&.parse('utf8=%26%2310003%3B&a=%F8', {
+    charset: 'utf\-8',
+    charsetSentinel: true
+});
+assert\&.deepEqual(detectedAsIso8859_1, { a: 'ø' });
+.fi
+.PP
+.PP
+If you want to decode the \fR&#\&.\&.\&.;\fP syntax to the actual character, you can specify the \fRinterpretNumericEntities\fP option as well:
+.PP
+.PP
+.nf
+var detectedAsIso8859_1 = qs\&.parse('a=%26%239786%3B', {
+    charset: 'iso\-8859\-1',
+    interpretNumericEntities: true
+});
+assert\&.deepEqual(detectedAsIso8859_1, { a: '☺' });
+.fi
+.PP
+.PP
+It also works when the charset has been detected in \fRcharsetSentinel\fP mode\&.
+.SS "Parsing Arrays"
+\fBqs\fP can also parse arrays using a similar \fR[]\fP notation:
+.PP
+.PP
+.nf
+var withArray = qs\&.parse('a[]=b&a[]=c');
+assert\&.deepEqual(withArray, { a: ['b', 'c'] });
+.fi
+.PP
+.PP
+You may specify an index as well:
+.PP
+.PP
+.nf
+var withIndexes = qs\&.parse('a[1]=c&a[0]=b');
+assert\&.deepEqual(withIndexes, { a: ['b', 'c'] });
+.fi
+.PP
+.PP
+Note that the only difference between an index in an array and a key in an object is that the value between the brackets must be a number to create an array\&. When creating arrays with specific indices, \fBqs\fP will compact a sparse array to only the existing values preserving their order:
+.PP
+.PP
+.nf
+var noSparse = qs\&.parse('a[1]=b&a[15]=c');
+assert\&.deepEqual(noSparse, { a: ['b', 'c'] });
+.fi
+.PP
+.PP
+You may also use \fRallowSparse\fP option to parse sparse arrays:
+.PP
+.PP
+.nf
+var sparseArray = qs\&.parse('a[1]=2&a[3]=5', { allowSparse: true });
+assert\&.deepEqual(sparseArray, { a: [, '2', , '5'] });
+.fi
+.PP
+.PP
+Note that an empty string is also a value, and will be preserved:
+.PP
+.PP
+.nf
+var withEmptyString = qs\&.parse('a[]=&a[]=b');
+assert\&.deepEqual(withEmptyString, { a: ['', 'b'] });
+
+var withIndexedEmptyString = qs\&.parse('a[0]=b&a[1]=&a[2]=c');
+assert\&.deepEqual(withIndexedEmptyString, { a: ['b', '', 'c'] });
+.fi
+.PP
+.PP
+\fBqs\fP will also limit specifying indices in an array to a maximum index of \fR20\fP\&. Any array members with an index of greater than \fR20\fP will instead be converted to an object with the index as the key\&. This is needed to handle cases when someone sent, for example, \fRa[999999999]\fP and it will take significant time to iterate over this huge array\&.
+.PP
+.PP
+.nf
+var withMaxIndex = qs\&.parse('a[100]=b');
+assert\&.deepEqual(withMaxIndex, { a: { '100': 'b' } });
+.fi
+.PP
+.PP
+This limit can be overridden by passing an \fRarrayLimit\fP option:
+.PP
+.PP
+.nf
+var withArrayLimit = qs\&.parse('a[1]=b', { arrayLimit: 0 });
+assert\&.deepEqual(withArrayLimit, { a: { '1': 'b' } });
+.fi
+.PP
+.PP
+To disable array parsing entirely, set \fRparseArrays\fP to \fRfalse\fP\&.
+.PP
+.PP
+.nf
+var noParsingArrays = qs\&.parse('a[]=b', { parseArrays: false });
+assert\&.deepEqual(noParsingArrays, { a: { '0': 'b' } });
+.fi
+.PP
+.PP
+If you mix notations, \fBqs\fP will merge the two items into an object:
+.PP
+.PP
+.nf
+var mixedNotation = qs\&.parse('a[0]=b&a[b]=c');
+assert\&.deepEqual(mixedNotation, { a: { '0': 'b', b: 'c' } });
+.fi
+.PP
+.PP
+You can also create arrays of objects:
+.PP
+.PP
+.nf
+var arraysOfObjects = qs\&.parse('a[][b]=c');
+assert\&.deepEqual(arraysOfObjects, { a: [{ b: 'c' }] });
+.fi
+.PP
+.PP
+Some people use comma to join array, \fBqs\fP can parse it: 
+.PP
+.nf
+var arraysOfObjects = qs\&.parse('a=b,c', { comma: true })
+assert\&.deepEqual(arraysOfObjects, { a: ['b', 'c'] })
+
+.fi
+.PP
+ (\fIthis cannot convert nested objects, such as \fRa={b:1},{c:d}\fP\fP)
+.SS "Parsing primitive/scalar values (numbers, booleans, null, etc)"
+By default, all values are parsed as strings\&. This behavior will not change and is explained in \fRissue #91\fP\&.
+.PP
+.PP
+.nf
+var primitiveValues = qs\&.parse('a=15&b=true&c=null');
+assert\&.deepEqual(primitiveValues, { a: '15', b: 'true', c: 'null' });
+.fi
+.PP
+.PP
+If you wish to auto-convert values which look like numbers, booleans, and other values into their primitive counterparts, you can use the \fRquery-types Express JS middleware\fP which will auto-convert all request query parameters\&.
+.SS "Stringifying"
+[](#preventEval) 
+.PP
+.nf
+qs\&.stringify(object, [options]);
+
+.fi
+.PP
+.PP
+When stringifying, \fBqs\fP by default URI encodes output\&. Objects are stringified as you would expect:
+.PP
+.PP
+.nf
+assert\&.equal(qs\&.stringify({ a: 'b' }), 'a=b');
+assert\&.equal(qs\&.stringify({ a: { b: 'c' } }), 'a%5Bb%5D=c');
+.fi
+.PP
+.PP
+This encoding can be disabled by setting the \fRencode\fP option to \fRfalse\fP:
+.PP
+.PP
+.nf
+var unencoded = qs\&.stringify({ a: { b: 'c' } }, { encode: false });
+assert\&.equal(unencoded, 'a[b]=c');
+.fi
+.PP
+.PP
+Encoding can be disabled for keys by setting the \fRencodeValuesOnly\fP option to \fRtrue\fP: 
+.PP
+.nf
+var encodedValues = qs\&.stringify(
+    { a: 'b', c: ['d', 'e=f'], f: [['g'], ['h']] },
+    { encodeValuesOnly: true }
+);
+assert\&.equal(encodedValues,'a=b&c[0]=d&c[1]=e%3Df&f[0][0]=g&f[1][0]=h');
+
+.fi
+.PP
+.PP
+This encoding can also be replaced by a custom encoding method set as \fRencoder\fP option:
+.PP
+.PP
+.nf
+var encoded = qs\&.stringify({ a: { b: 'c' } }, { encoder: function (str) {
+    // Passed in values `a`, `b`, `c`
+    return // Return encoded string
+}})
+.fi
+.PP
+.PP
+_(Note: the \fRencoder\fP option does not apply if \fRencode\fP is \fRfalse\fP)_
+.PP
+Analogue to the \fRencoder\fP there is a \fRdecoder\fP option for \fRparse\fP to override decoding of properties and values:
+.PP
+.PP
+.nf
+var decoded = qs\&.parse('x=z', { decoder: function (str) {
+    // Passed in values `x`, `z`
+    return // Return decoded string
+}})
+.fi
+.PP
+.PP
+You can encode keys and values using different logic by using the type argument provided to the encoder:
+.PP
+.PP
+.nf
+var encoded = qs\&.stringify({ a: { b: 'c' } }, { encoder: function (str, defaultEncoder, charset, type) {
+    if (type === 'key') {
+        return // Encoded key
+    } else if (type === 'value') {
+        return // Encoded value
+    }
+}})
+.fi
+.PP
+.PP
+The type argument is also provided to the decoder:
+.PP
+.PP
+.nf
+var decoded = qs\&.parse('x=z', { decoder: function (str, defaultDecoder, charset, type) {
+    if (type === 'key') {
+        return // Decoded key
+    } else if (type === 'value') {
+        return // Decoded value
+    }
+}})
+.fi
+.PP
+.PP
+Examples beyond this point will be shown as though the output is not URI encoded for clarity\&. Please note that the return values in these cases \fIwill\fP be URI encoded during real usage\&.
+.PP
+When arrays are stringified, by default they are given explicit indices:
+.PP
+.PP
+.nf
+qs\&.stringify({ a: ['b', 'c', 'd'] });
+// 'a[0]=b&a[1]=c&a[2]=d'
+.fi
+.PP
+.PP
+You may override this by setting the \fRindices\fP option to \fRfalse\fP:
+.PP
+.PP
+.nf
+qs\&.stringify({ a: ['b', 'c', 'd'] }, { indices: false });
+// 'a=b&a=c&a=d'
+.fi
+.PP
+.PP
+You may use the \fRarrayFormat\fP option to specify the format of the output array:
+.PP
+.PP
+.nf
+qs\&.stringify({ a: ['b', 'c'] }, { arrayFormat: 'indices' })
+// 'a[0]=b&a[1]=c'
+qs\&.stringify({ a: ['b', 'c'] }, { arrayFormat: 'brackets' })
+// 'a[]=b&a[]=c'
+qs\&.stringify({ a: ['b', 'c'] }, { arrayFormat: 'repeat' })
+// 'a=b&a=c'
+qs\&.stringify({ a: ['b', 'c'] }, { arrayFormat: 'comma' })
+// 'a=b,c'
+.fi
+.PP
+.PP
+Note: when using \fRarrayFormat\fP set to `'comma'\fR, you can also pass the\fPcommaRoundTrip\fRoption set to\fPtrue\fRor\fPfalse\fR, to append\fP[]` on single-item arrays, so that they can round trip through a parse\&.
+.PP
+When objects are stringified, by default they use bracket notation:
+.PP
+.PP
+.nf
+qs\&.stringify({ a: { b: { c: 'd', e: 'f' } } });
+// 'a[b][c]=d&a[b][e]=f'
+.fi
+.PP
+.PP
+You may override this to use dot notation by setting the \fRallowDots\fP option to \fRtrue\fP:
+.PP
+.PP
+.nf
+qs\&.stringify({ a: { b: { c: 'd', e: 'f' } } }, { allowDots: true });
+// 'a\&.b\&.c=d&a\&.b\&.e=f'
+.fi
+.PP
+.PP
+Empty strings and null values will omit the value, but the equals sign (=) remains in place:
+.PP
+.PP
+.nf
+assert\&.equal(qs\&.stringify({ a: '' }), 'a=');
+.fi
+.PP
+.PP
+Key with no values (such as an empty object or array) will return nothing:
+.PP
+.PP
+.nf
+assert\&.equal(qs\&.stringify({ a: [] }), '');
+assert\&.equal(qs\&.stringify({ a: {} }), '');
+assert\&.equal(qs\&.stringify({ a: [{}] }), '');
+assert\&.equal(qs\&.stringify({ a: { b: []} }), '');
+assert\&.equal(qs\&.stringify({ a: { b: {}} }), '');
+.fi
+.PP
+.PP
+Properties that are set to \fRundefined\fP will be omitted entirely:
+.PP
+.PP
+.nf
+assert\&.equal(qs\&.stringify({ a: null, b: undefined }), 'a=');
+.fi
+.PP
+.PP
+The query string may optionally be prepended with a question mark:
+.PP
+.PP
+.nf
+assert\&.equal(qs\&.stringify({ a: 'b', c: 'd' }, { addQueryPrefix: true }), '?a=b&c=d');
+.fi
+.PP
+.PP
+The delimiter may be overridden with stringify as well:
+.PP
+.PP
+.nf
+assert\&.equal(qs\&.stringify({ a: 'b', c: 'd' }, { delimiter: ';' }), 'a=b;c=d');
+.fi
+.PP
+.PP
+If you only want to override the serialization of \fRDate\fP objects, you can provide a \fRserializeDate\fP option:
+.PP
+.PP
+.nf
+var date = new Date(7);
+assert\&.equal(qs\&.stringify({ a: date }), 'a=1970\-01\-01T00:00:00\&.007Z'\&.replace(/:/g, '%3A'));
+assert\&.equal(
+    qs\&.stringify({ a: date }, { serializeDate: function (d) { return d\&.getTime(); } }),
+    'a=7'
+);
+.fi
+.PP
+.PP
+You may use the \fRsort\fP option to affect the order of parameter keys:
+.PP
+.PP
+.nf
+function alphabeticalSort(a, b) {
+    return a\&.localeCompare(b);
+}
+assert\&.equal(qs\&.stringify({ a: 'c', z: 'y', b : 'f' }, { sort: alphabeticalSort }), 'a=c&b=f&z=y');
+.fi
+.PP
+.PP
+Finally, you can use the \fRfilter\fP option to restrict which keys will be included in the stringified output\&. If you pass a function, it will be called for each key to obtain the replacement value\&. Otherwise, if you pass an array, it will be used to select properties and array indices for stringification:
+.PP
+.PP
+.nf
+function filterFunc(prefix, value) {
+    if (prefix == 'b') {
+        // Return an `undefined` value to omit a property\&.
+        return;
+    }
+    if (prefix == 'e[f]') {
+        return value\&.getTime();
+    }
+    if (prefix == 'e[g][0]') {
+        return value * 2;
+    }
+    return value;
+}
+qs\&.stringify({ a: 'b', c: 'd', e: { f: new Date(123), g: [2] } }, { filter: filterFunc });
+// 'a=b&c=d&e[f]=123&e[g][0]=4'
+qs\&.stringify({ a: 'b', c: 'd', e: 'f' }, { filter: ['a', 'e'] });
+// 'a=b&e=f'
+qs\&.stringify({ a: ['b', 'c', 'd'], e: 'f' }, { filter: ['a', 0, 2] });
+// 'a[0]=b&a[2]=d'
+.fi
+.PP
+.SS "Handling of \fRnull\fP values"
+By default, \fRnull\fP values are treated like empty strings:
+.PP
+.PP
+.nf
+var withNull = qs\&.stringify({ a: null, b: '' });
+assert\&.equal(withNull, 'a=&b=');
+.fi
+.PP
+.PP
+Parsing does not distinguish between parameters with and without equal signs\&. Both are converted to empty strings\&.
+.PP
+.PP
+.nf
+var equalsInsensitive = qs\&.parse('a&b=');
+assert\&.deepEqual(equalsInsensitive, { a: '', b: '' });
+.fi
+.PP
+.PP
+To distinguish between \fRnull\fP values and empty strings use the \fRstrictNullHandling\fP flag\&. In the result string the \fRnull\fP values have no \fR=\fP sign:
+.PP
+.PP
+.nf
+var strictNull = qs\&.stringify({ a: null, b: '' }, { strictNullHandling: true });
+assert\&.equal(strictNull, 'a&b=');
+.fi
+.PP
+.PP
+To parse values without \fR=\fP back to \fRnull\fP use the \fRstrictNullHandling\fP flag:
+.PP
+.PP
+.nf
+var parsedStrictNull = qs\&.parse('a&b=', { strictNullHandling: true });
+assert\&.deepEqual(parsedStrictNull, { a: null, b: '' });
+.fi
+.PP
+.PP
+To completely skip rendering keys with \fRnull\fP values, use the \fRskipNulls\fP flag:
+.PP
+.PP
+.nf
+var nullsSkipped = qs\&.stringify({ a: 'b', c: null}, { skipNulls: true });
+assert\&.equal(nullsSkipped, 'a=b');
+.fi
+.PP
+.PP
+If you're communicating with legacy systems, you can switch to \fRiso-8859-1\fP using the \fRcharset\fP option:
+.PP
+.PP
+.nf
+var iso = qs\&.stringify({ æ: 'æ' }, { charset: 'iso\-8859\-1' });
+assert\&.equal(iso, '%E6=%E6');
+.fi
+.PP
+.PP
+Characters that don't exist in \fRiso-8859-1\fP will be converted to numeric entities, similar to what browsers do:
+.PP
+.PP
+.nf
+var numeric = qs\&.stringify({ a: '☺' }, { charset: 'iso\-8859\-1' });
+assert\&.equal(numeric, 'a=%26%239786%3B');
+.fi
+.PP
+.PP
+You can use the \fRcharsetSentinel\fP option to announce the character by including an \fRutf8=✓\fP parameter with the proper encoding if the checkmark, similar to what Ruby on Rails and others do when submitting forms\&.
+.PP
+.PP
+.nf
+var sentinel = qs\&.stringify({ a: '☺' }, { charsetSentinel: true });
+assert\&.equal(sentinel, 'utf8=%E2%9C%93&a=%E2%98%BA');
+
+var isoSentinel = qs\&.stringify({ a: 'æ' }, { charsetSentinel: true, charset: 'iso\-8859\-1' });
+assert\&.equal(isoSentinel, 'utf8=%26%2310003%3B&a=%E6');
+.fi
+.PP
+.SS "Dealing with special character sets"
+By default the encoding and decoding of characters is done in \fRutf-8\fP, and \fRiso-8859-1\fP support is also built in via the \fRcharset\fP parameter\&.
+.PP
+If you wish to encode querystrings to a different character set (i\&.e\&. \fRShift JIS\fP) you can use the \fR\fRqs-iconv\fP\fP library:
+.PP
+.PP
+.nf
+var encoder = require('qs\-iconv/encoder')('shift_jis');
+var shiftJISEncoded = qs\&.stringify({ a: 'こんにちは！' }, { encoder: encoder });
+assert\&.equal(shiftJISEncoded, 'a=%82%B1%82%F1%82%C9%82%BF%82%CD%81I');
+.fi
+.PP
+.PP
+This also works for decoding of query strings:
+.PP
+.PP
+.nf
+var decoder = require('qs\-iconv/decoder')('shift_jis');
+var obj = qs\&.parse('a=%82%B1%82%F1%82%C9%82%BF%82%CD%81I', { decoder: decoder });
+assert\&.deepEqual(obj, { a: 'こんにちは！' });
+.fi
+.PP
+.SS "RFC 3986 and RFC 1738 space encoding"
+RFC3986 used as default option and encodes ' ' to \fI%20\fP which is backward compatible\&. In the same time, output can be stringified as per RFC1738 with ' ' equal to '+'\&.
+.PP
+.PP
+.nf
+assert\&.equal(qs\&.stringify({ a: 'b c' }), 'a=b%20c');
+assert\&.equal(qs\&.stringify({ a: 'b c' }, { format : 'RFC3986' }), 'a=b%20c');
+assert\&.equal(qs\&.stringify({ a: 'b c' }, { format : 'RFC1738' }), 'a=b+c');
+.fi
+.PP
+.SH "Security"
+.PP
+Please email \fR@ljharb\fP or see https://tidelift.com/security if you have a potential security vulnerability to report\&.
+.SH "qs for enterprise"
+.PP
+Available as part of the Tidelift Subscription
+.PP
+The maintainers of qs and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications\&. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use\&. \fRLearn more\&.\fP 

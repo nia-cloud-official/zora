@@ -1,0 +1,158 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2agent-base_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">agent-base</highlight></codeline>
+<codeline><highlight class="normal">==========</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>Turn<sp/>a<sp/>function<sp/>into<sp/>an<sp/>[`http.Agent`][http.Agent]<sp/>instance</highlight></codeline>
+<codeline><highlight class="normal">[![Build<sp/>Status](https://github.com/TooTallNate/node-agent-base/workflows/Node%20CI/badge.svg)](https://github.com/TooTallNate/node-agent-base/actions?workflow=Node+CI)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>module<sp/>provides<sp/>an<sp/>`http.Agent`<sp/>generator.<sp/>That<sp/>is,<sp/>you<sp/>pass<sp/>it<sp/>an<sp/>async</highlight></codeline>
+<codeline><highlight class="normal">callback<sp/>function,<sp/>and<sp/>it<sp/>returns<sp/>a<sp/>new<sp/>`http.Agent`<sp/>instance<sp/>that<sp/>will<sp/>invoke<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">given<sp/>callback<sp/>function<sp/>when<sp/>sending<sp/>outbound<sp/>HTTP<sp/>requests.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Some<sp/>subclasses:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Here&apos;s<sp/>some<sp/>more<sp/>interesting<sp/>uses<sp/>of<sp/>`agent-base`.</highlight></codeline>
+<codeline><highlight class="normal">Send<sp/>a<sp/>pull<sp/>request<sp/>to<sp/>list<sp/>yours!</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>[`http-proxy-agent`][http-proxy-agent]:<sp/>An<sp/>HTTP(s)<sp/>proxy<sp/>`http.Agent`<sp/>implementation<sp/>for<sp/>HTTP<sp/>endpoints</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>[`https-proxy-agent`][https-proxy-agent]:<sp/>An<sp/>HTTP(s)<sp/>proxy<sp/>`http.Agent`<sp/>implementation<sp/>for<sp/>HTTPS<sp/>endpoints</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>[`pac-proxy-agent`][pac-proxy-agent]:<sp/>A<sp/>PAC<sp/>file<sp/>proxy<sp/>`http.Agent`<sp/>implementation<sp/>for<sp/>HTTP<sp/>and<sp/>HTTPS</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>[`socks-proxy-agent`][socks-proxy-agent]:<sp/>A<sp/>SOCKS<sp/>proxy<sp/>`http.Agent`<sp/>implementation<sp/>for<sp/>HTTP<sp/>and<sp/>HTTPS</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Installation</highlight></codeline>
+<codeline><highlight class="normal">------------</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Install<sp/>with<sp/>`npm`:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>bash</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>agent-base</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Example</highlight></codeline>
+<codeline><highlight class="normal">-------</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Here&apos;s<sp/>a<sp/>minimal<sp/>example<sp/>that<sp/>creates<sp/>a<sp/>new<sp/>`net.Socket`<sp/>connection<sp/>to<sp/>the<sp/>server</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>every<sp/>HTTP<sp/>request<sp/>(i.e.<sp/>the<sp/>equivalent<sp/>of<sp/>`agent:<sp/>false`<sp/>option):</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>net<sp/>=<sp/>require(&apos;net&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>tls<sp/>=<sp/>require(&apos;tls&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>url<sp/>=<sp/>require(&apos;url&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>agent<sp/>=<sp/>require(&apos;agent-base&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>endpoint<sp/>=<sp/>&apos;http://nodejs.org/api/&apos;;</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>parsed<sp/>=<sp/>url.parse(endpoint);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>This<sp/>is<sp/>the<sp/>important<sp/>part!</highlight></codeline>
+<codeline><highlight class="normal">parsed.agent<sp/>=<sp/>agent(function<sp/>(req,<sp/>opts)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>socket;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>`secureEndpoint`<sp/>is<sp/>true<sp/>when<sp/>using<sp/>the<sp/>https<sp/>module</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(opts.secureEndpoint)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>socket<sp/>=<sp/>tls.connect(opts);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}<sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>socket<sp/>=<sp/>net.connect(opts);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>socket;</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Everything<sp/>else<sp/>works<sp/>just<sp/>like<sp/>normal...</highlight></codeline>
+<codeline><highlight class="normal">http.get(parsed,<sp/>function<sp/>(res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;&quot;response&quot;<sp/>event!&apos;,<sp/>res.headers);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.pipe(process.stdout);</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returning<sp/>a<sp/>Promise<sp/>or<sp/>using<sp/>an<sp/>`async`<sp/>function<sp/>is<sp/>also<sp/>supported:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">agent(async<sp/>function<sp/>(req,<sp/>opts)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>await<sp/>sleep(1000);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>etc…</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Return<sp/>another<sp/>`http.Agent`<sp/>instance<sp/>to<sp/>&quot;pass<sp/>through&quot;<sp/>the<sp/>responsibility</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>that<sp/>HTTP<sp/>request<sp/>to<sp/>that<sp/>agent:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">agent(function<sp/>(req,<sp/>opts)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>opts.secureEndpoint<sp/>?<sp/>https.globalAgent<sp/>:<sp/>http.globalAgent;</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">API</highlight></codeline>
+<codeline><highlight class="normal">---</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Agent(Function<sp/>callback[,<sp/>Object<sp/>options])<sp/>→<sp/>[http.Agent][]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Creates<sp/>a<sp/>base<sp/>`http.Agent`<sp/>that<sp/>will<sp/>execute<sp/>the<sp/>callback<sp/>function<sp/>`callback`</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>every<sp/>HTTP<sp/>request<sp/>that<sp/>it<sp/>is<sp/>used<sp/>as<sp/>the<sp/>`agent`<sp/>for.<sp/>The<sp/>callback<sp/>function</highlight></codeline>
+<codeline><highlight class="normal">is<sp/>responsible<sp/>for<sp/>creating<sp/>a<sp/>`stream.Duplex`<sp/>instance<sp/>of<sp/>some<sp/>kind<sp/>that<sp/>will<sp/>be</highlight></codeline>
+<codeline><highlight class="normal">used<sp/>as<sp/>the<sp/>underlying<sp/>socket<sp/>in<sp/>the<sp/>HTTP<sp/>request.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`options`<sp/>object<sp/>accepts<sp/>the<sp/>following<sp/>properties:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`timeout`<sp/>-<sp/>Number<sp/>-<sp/>Timeout<sp/>for<sp/>the<sp/>`callback()`<sp/>function<sp/>in<sp/>milliseconds.<sp/>Defaults<sp/>to<sp/>Infinity<sp/>(optional).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>callback<sp/>function<sp/>should<sp/>have<sp/>the<sp/>following<sp/>signature:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>callback(http.ClientRequest<sp/>req,<sp/>Object<sp/>options,<sp/>Function<sp/>cb)<sp/>→<sp/>undefined</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>ClientRequest<sp/>`req`<sp/>can<sp/>be<sp/>accessed<sp/>to<sp/>read<sp/>request<sp/>headers<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>the<sp/>path,<sp/>etc.<sp/>The<sp/>`options`<sp/>object<sp/>contains<sp/>the<sp/>options<sp/>passed</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>the<sp/>`http.request()`/`https.request()`<sp/>function<sp/>call,<sp/>and<sp/>is<sp/>formatted</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>be<sp/>directly<sp/>passed<sp/>to<sp/>`net.connect()`/`tls.connect()`,<sp/>or<sp/>however</highlight></codeline>
+<codeline><highlight class="normal">else<sp/>you<sp/>want<sp/>a<sp/>Socket<sp/>to<sp/>be<sp/>created.<sp/>Pass<sp/>the<sp/>created<sp/>socket<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>callback<sp/>function<sp/>`cb`<sp/>once<sp/>created,<sp/>and<sp/>the<sp/>HTTP<sp/>request<sp/>will</highlight></codeline>
+<codeline><highlight class="normal">continue<sp/>to<sp/>proceed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>the<sp/>`https`<sp/>module<sp/>is<sp/>used<sp/>to<sp/>invoke<sp/>the<sp/>HTTP<sp/>request,<sp/>then<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">`secureEndpoint`<sp/>property<sp/>on<sp/>`options`<sp/>_will<sp/>be<sp/>set<sp/>to<sp/>`true`_.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">License</highlight></codeline>
+<codeline><highlight class="normal">-------</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">(The<sp/>MIT<sp/>License)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Copyright<sp/>(c)<sp/>2013<sp/>Nathan<sp/>Rajlich<sp/>&amp;lt;nathan@tootallnate.net&amp;gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Permission<sp/>is<sp/>hereby<sp/>granted,<sp/>free<sp/>of<sp/>charge,<sp/>to<sp/>any<sp/>person<sp/>obtaining</highlight></codeline>
+<codeline><highlight class="normal">a<sp/>copy<sp/>of<sp/>this<sp/>software<sp/>and<sp/>associated<sp/>documentation<sp/>files<sp/>(the</highlight></codeline>
+<codeline><highlight class="normal">&apos;Software&apos;),<sp/>to<sp/>deal<sp/>in<sp/>the<sp/>Software<sp/>without<sp/>restriction,<sp/>including</highlight></codeline>
+<codeline><highlight class="normal">without<sp/>limitation<sp/>the<sp/>rights<sp/>to<sp/>use,<sp/>copy,<sp/>modify,<sp/>merge,<sp/>publish,</highlight></codeline>
+<codeline><highlight class="normal">distribute,<sp/>sublicense,<sp/>and/or<sp/>sell<sp/>copies<sp/>of<sp/>the<sp/>Software,<sp/>and<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">permit<sp/>persons<sp/>to<sp/>whom<sp/>the<sp/>Software<sp/>is<sp/>furnished<sp/>to<sp/>do<sp/>so,<sp/>subject<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>following<sp/>conditions:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>above<sp/>copyright<sp/>notice<sp/>and<sp/>this<sp/>permission<sp/>notice<sp/>shall<sp/>be</highlight></codeline>
+<codeline><highlight class="normal">included<sp/>in<sp/>all<sp/>copies<sp/>or<sp/>substantial<sp/>portions<sp/>of<sp/>the<sp/>Software.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">THE<sp/>SOFTWARE<sp/>IS<sp/>PROVIDED<sp/>&apos;AS<sp/>IS&apos;,<sp/>WITHOUT<sp/>WARRANTY<sp/>OF<sp/>ANY<sp/>KIND,</highlight></codeline>
+<codeline><highlight class="normal">EXPRESS<sp/>OR<sp/>IMPLIED,<sp/>INCLUDING<sp/>BUT<sp/>NOT<sp/>LIMITED<sp/>TO<sp/>THE<sp/>WARRANTIES<sp/>OF</highlight></codeline>
+<codeline><highlight class="normal">MERCHANTABILITY,<sp/>FITNESS<sp/>FOR<sp/>A<sp/>PARTICULAR<sp/>PURPOSE<sp/>AND<sp/>NONINFRINGEMENT.</highlight></codeline>
+<codeline><highlight class="normal">IN<sp/>NO<sp/>EVENT<sp/>SHALL<sp/>THE<sp/>AUTHORS<sp/>OR<sp/>COPYRIGHT<sp/>HOLDERS<sp/>BE<sp/>LIABLE<sp/>FOR<sp/>ANY</highlight></codeline>
+<codeline><highlight class="normal">CLAIM,<sp/>DAMAGES<sp/>OR<sp/>OTHER<sp/>LIABILITY,<sp/>WHETHER<sp/>IN<sp/>AN<sp/>ACTION<sp/>OF<sp/>CONTRACT,</highlight></codeline>
+<codeline><highlight class="normal">TORT<sp/>OR<sp/>OTHERWISE,<sp/>ARISING<sp/>FROM,<sp/>OUT<sp/>OF<sp/>OR<sp/>IN<sp/>CONNECTION<sp/>WITH<sp/>THE</highlight></codeline>
+<codeline><highlight class="normal">SOFTWARE<sp/>OR<sp/>THE<sp/>USE<sp/>OR<sp/>OTHER<sp/>DEALINGS<sp/>IN<sp/>THE<sp/>SOFTWARE.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[http-proxy-agent]:<sp/>https://github.com/TooTallNate/node-http-proxy-agent</highlight></codeline>
+<codeline><highlight class="normal">[https-proxy-agent]:<sp/>https://github.com/TooTallNate/node-https-proxy-agent</highlight></codeline>
+<codeline><highlight class="normal">[pac-proxy-agent]:<sp/>https://github.com/TooTallNate/node-pac-proxy-agent</highlight></codeline>
+<codeline><highlight class="normal">[socks-proxy-agent]:<sp/>https://github.com/TooTallNate/node-socks-proxy-agent</highlight></codeline>
+<codeline><highlight class="normal">[http.Agent]:<sp/>https://nodejs.org/api/http.html#http_class_http_agent</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/agent-base/README.md"/>
+  </compounddef>
+</doxygen>

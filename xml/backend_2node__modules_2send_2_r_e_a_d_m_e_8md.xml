@@ -1,0 +1,340 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2send_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>send</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![NPM<sp/>Version][npm-version-image]][npm-url]</highlight></codeline>
+<codeline><highlight class="normal">[![NPM<sp/>Downloads][npm-downloads-image]][npm-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Linux<sp/>Build][github-actions-ci-image]][github-actions-ci-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Windows<sp/>Build][appveyor-image]][appveyor-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Test<sp/>Coverage][coveralls-image]][coveralls-url]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Send<sp/>is<sp/>a<sp/>library<sp/>for<sp/>streaming<sp/>files<sp/>from<sp/>the<sp/>file<sp/>system<sp/>as<sp/>a<sp/>http<sp/>response</highlight></codeline>
+<codeline><highlight class="normal">supporting<sp/>partial<sp/>responses<sp/>(Ranges),<sp/>conditional-GET<sp/>negotiation<sp/>(If-Match,</highlight></codeline>
+<codeline><highlight class="normal">If-Unmodified-Since,<sp/>If-None-Match,<sp/>If-Modified-Since),<sp/>high<sp/>test<sp/>coverage,</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>granular<sp/>events<sp/>which<sp/>may<sp/>be<sp/>leveraged<sp/>to<sp/>take<sp/>appropriate<sp/>actions<sp/>in<sp/>your</highlight></codeline>
+<codeline><highlight class="normal">application<sp/>or<sp/>framework.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Looking<sp/>to<sp/>serve<sp/>up<sp/>entire<sp/>folders<sp/>mapped<sp/>to<sp/>URLs?<sp/>Try<sp/>[serve-static](https://www.npmjs.org/package/serve-static).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Installation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>a<sp/>[Node.js](https://nodejs.org/en/)<sp/>module<sp/>available<sp/>through<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[npm<sp/>registry](https://www.npmjs.com/).<sp/>Installation<sp/>is<sp/>done<sp/>using<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[`npm<sp/>install`<sp/>command](https://docs.npmjs.com/getting-started/installing-npm-packages-locally):</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```bash</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>send</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>API</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>send<sp/>=<sp/>require(&apos;send&apos;)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>send(req,<sp/>path,<sp/>[options])</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Create<sp/>a<sp/>new<sp/>`SendStream`<sp/>for<sp/>the<sp/>given<sp/>path<sp/>to<sp/>send<sp/>to<sp/>a<sp/>`res`.<sp/>The<sp/>`req`<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>Node.js<sp/>HTTP<sp/>request<sp/>and<sp/>the<sp/>`path`<sp/>is<sp/>a<sp/>urlencoded<sp/>path<sp/>to<sp/>send<sp/>(urlencoded,</highlight></codeline>
+<codeline><highlight class="normal">not<sp/>the<sp/>actual<sp/>file-system<sp/>path).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Options</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>acceptRanges</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Enable<sp/>or<sp/>disable<sp/>accepting<sp/>ranged<sp/>requests,<sp/>defaults<sp/>to<sp/>true.</highlight></codeline>
+<codeline><highlight class="normal">Disabling<sp/>this<sp/>will<sp/>not<sp/>send<sp/>`Accept-Ranges`<sp/>and<sp/>ignore<sp/>the<sp/>contents</highlight></codeline>
+<codeline><highlight class="normal">of<sp/>the<sp/>`Range`<sp/>request<sp/>header.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>cacheControl</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Enable<sp/>or<sp/>disable<sp/>setting<sp/>`Cache-Control`<sp/>response<sp/>header,<sp/>defaults<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">true.<sp/>Disabling<sp/>this<sp/>will<sp/>ignore<sp/>the<sp/>`immutable`<sp/>and<sp/>`maxAge`<sp/>options.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>dotfiles</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Set<sp/>how<sp/>&quot;dotfiles&quot;<sp/>are<sp/>treated<sp/>when<sp/>encountered.<sp/>A<sp/>dotfile<sp/>is<sp/>a<sp/>file</highlight></codeline>
+<codeline><highlight class="normal">or<sp/>directory<sp/>that<sp/>begins<sp/>with<sp/>a<sp/>dot<sp/>(&quot;.&quot;).<sp/>Note<sp/>this<sp/>check<sp/>is<sp/>done<sp/>on</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>path<sp/>itself<sp/>without<sp/>checking<sp/>if<sp/>the<sp/>path<sp/>actually<sp/>exists<sp/>on<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">disk.<sp/>If<sp/>`root`<sp/>is<sp/>specified,<sp/>only<sp/>the<sp/>dotfiles<sp/>above<sp/>the<sp/>root<sp/>are</highlight></codeline>
+<codeline><highlight class="normal">checked<sp/>(i.e.<sp/>the<sp/>root<sp/>itself<sp/>can<sp/>be<sp/>within<sp/>a<sp/>dotfile<sp/>when<sp/>when<sp/>set</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>&quot;deny&quot;).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>`&apos;allow&apos;`<sp/>No<sp/>special<sp/>treatment<sp/>for<sp/>dotfiles.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>`&apos;deny&apos;`<sp/>Send<sp/>a<sp/>403<sp/>for<sp/>any<sp/>request<sp/>for<sp/>a<sp/>dotfile.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>`&apos;ignore&apos;`<sp/>Pretend<sp/>like<sp/>the<sp/>dotfile<sp/>does<sp/>not<sp/>exist<sp/>and<sp/>404.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>default<sp/>value<sp/>is<sp/>_similar_<sp/>to<sp/>`&apos;ignore&apos;`,<sp/>with<sp/>the<sp/>exception<sp/>that</highlight></codeline>
+<codeline><highlight class="normal">this<sp/>default<sp/>will<sp/>not<sp/>ignore<sp/>the<sp/>files<sp/>within<sp/>a<sp/>directory<sp/>that<sp/>begins</highlight></codeline>
+<codeline><highlight class="normal">with<sp/>a<sp/>dot,<sp/>for<sp/>backward-compatibility.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>end</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Byte<sp/>offset<sp/>at<sp/>which<sp/>the<sp/>stream<sp/>ends,<sp/>defaults<sp/>to<sp/>the<sp/>length<sp/>of<sp/>the<sp/>file</highlight></codeline>
+<codeline><highlight class="normal">minus<sp/>1.<sp/>The<sp/>end<sp/>is<sp/>inclusive<sp/>in<sp/>the<sp/>stream,<sp/>meaning<sp/>`end:<sp/>3`<sp/>will<sp/>include</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>4th<sp/>byte<sp/>in<sp/>the<sp/>stream.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>etag</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Enable<sp/>or<sp/>disable<sp/>etag<sp/>generation,<sp/>defaults<sp/>to<sp/>true.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>extensions</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>a<sp/>given<sp/>file<sp/>doesn&apos;t<sp/>exist,<sp/>try<sp/>appending<sp/>one<sp/>of<sp/>the<sp/>given<sp/>extensions,</highlight></codeline>
+<codeline><highlight class="normal">in<sp/>the<sp/>given<sp/>order.<sp/>By<sp/>default,<sp/>this<sp/>is<sp/>disabled<sp/>(set<sp/>to<sp/>`false`).<sp/>An</highlight></codeline>
+<codeline><highlight class="normal">example<sp/>value<sp/>that<sp/>will<sp/>serve<sp/>extension-less<sp/>HTML<sp/>files:<sp/>`[&apos;html&apos;,<sp/>&apos;htm&apos;]`.</highlight></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>skipped<sp/>if<sp/>the<sp/>requested<sp/>file<sp/>already<sp/>has<sp/>an<sp/>extension.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>immutable</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Enable<sp/>or<sp/>disable<sp/>the<sp/>`immutable`<sp/>directive<sp/>in<sp/>the<sp/>`Cache-Control`<sp/>response</highlight></codeline>
+<codeline><highlight class="normal">header,<sp/>defaults<sp/>to<sp/>`false`.<sp/>If<sp/>set<sp/>to<sp/>`true`,<sp/>the<sp/>`maxAge`<sp/>option<sp/>should</highlight></codeline>
+<codeline><highlight class="normal">also<sp/>be<sp/>specified<sp/>to<sp/>enable<sp/>caching.<sp/>The<sp/>`immutable`<sp/>directive<sp/>will<sp/>prevent</highlight></codeline>
+<codeline><highlight class="normal">supported<sp/>clients<sp/>from<sp/>making<sp/>conditional<sp/>requests<sp/>during<sp/>the<sp/>life<sp/>of<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">`maxAge`<sp/>option<sp/>to<sp/>check<sp/>if<sp/>the<sp/>file<sp/>has<sp/>changed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>index</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">By<sp/>default<sp/>send<sp/>supports<sp/>&quot;index.html&quot;<sp/>files,<sp/>to<sp/>disable<sp/>this</highlight></codeline>
+<codeline><highlight class="normal">set<sp/>`false`<sp/>or<sp/>to<sp/>supply<sp/>a<sp/>new<sp/>index<sp/>pass<sp/>a<sp/>string<sp/>or<sp/>an<sp/>array</highlight></codeline>
+<codeline><highlight class="normal">in<sp/>preferred<sp/>order.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>lastModified</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Enable<sp/>or<sp/>disable<sp/>`Last-Modified`<sp/>header,<sp/>defaults<sp/>to<sp/>true.<sp/>Uses<sp/>the<sp/>file</highlight></codeline>
+<codeline><highlight class="normal">system&apos;s<sp/>last<sp/>modified<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>maxAge</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Provide<sp/>a<sp/>max-age<sp/>in<sp/>milliseconds<sp/>for<sp/>http<sp/>caching,<sp/>defaults<sp/>to<sp/>0.</highlight></codeline>
+<codeline><highlight class="normal">This<sp/>can<sp/>also<sp/>be<sp/>a<sp/>string<sp/>accepted<sp/>by<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[ms](https://www.npmjs.org/package/ms#readme)<sp/>module.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>root</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Serve<sp/>files<sp/>relative<sp/>to<sp/>`path`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>start</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Byte<sp/>offset<sp/>at<sp/>which<sp/>the<sp/>stream<sp/>starts,<sp/>defaults<sp/>to<sp/>0.<sp/>The<sp/>start<sp/>is<sp/>inclusive,</highlight></codeline>
+<codeline><highlight class="normal">meaning<sp/>`start:<sp/>2`<sp/>will<sp/>include<sp/>the<sp/>3rd<sp/>byte<sp/>in<sp/>the<sp/>stream.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Events</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`SendStream`<sp/>is<sp/>an<sp/>event<sp/>emitter<sp/>and<sp/>will<sp/>emit<sp/>the<sp/>following<sp/>events:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>`error`<sp/>an<sp/>error<sp/>occurred<sp/>`(err)`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>`directory`<sp/>a<sp/>directory<sp/>was<sp/>requested<sp/>`(res,<sp/>path)`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>`file`<sp/>a<sp/>file<sp/>was<sp/>requested<sp/>`(path,<sp/>stat)`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>`headers`<sp/>the<sp/>headers<sp/>are<sp/>about<sp/>to<sp/>be<sp/>set<sp/>on<sp/>a<sp/>file<sp/>`(res,<sp/>path,<sp/>stat)`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>`stream`<sp/>file<sp/>streaming<sp/>has<sp/>started<sp/>`(stream)`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>`end`<sp/>streaming<sp/>has<sp/>completed</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>.pipe</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`pipe`<sp/>method<sp/>is<sp/>used<sp/>to<sp/>pipe<sp/>the<sp/>response<sp/>into<sp/>the<sp/>Node.js<sp/>HTTP<sp/>response</highlight></codeline>
+<codeline><highlight class="normal">object,<sp/>typically<sp/>`send(req,<sp/>path,<sp/>options).pipe(res)`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>.mime</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`mime`<sp/>export<sp/>is<sp/>the<sp/>global<sp/>instance<sp/>of<sp/>of<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[`mime`<sp/>npm<sp/>module](https://www.npmjs.com/package/mime).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>used<sp/>to<sp/>configure<sp/>the<sp/>MIME<sp/>types<sp/>that<sp/>are<sp/>associated<sp/>with<sp/>file<sp/>extensions</highlight></codeline>
+<codeline><highlight class="normal">as<sp/>well<sp/>as<sp/>other<sp/>options<sp/>for<sp/>how<sp/>to<sp/>resolve<sp/>the<sp/>MIME<sp/>type<sp/>of<sp/>a<sp/>file<sp/>(like<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">default<sp/>type<sp/>to<sp/>use<sp/>for<sp/>an<sp/>unknown<sp/>file<sp/>extension).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Error-handling</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">By<sp/>default<sp/>when<sp/>no<sp/>`error`<sp/>listeners<sp/>are<sp/>present<sp/>an<sp/>automatic<sp/>response<sp/>will<sp/>be</highlight></codeline>
+<codeline><highlight class="normal">made,<sp/>otherwise<sp/>you<sp/>have<sp/>full<sp/>control<sp/>over<sp/>the<sp/>response,<sp/>aka<sp/>you<sp/>may<sp/>show<sp/>a<sp/>5xx</highlight></codeline>
+<codeline><highlight class="normal">page<sp/>etc.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Caching</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It<sp/>does<sp/>_not_<sp/>perform<sp/>internal<sp/>caching,<sp/>you<sp/>should<sp/>use<sp/>a<sp/>reverse<sp/>proxy<sp/>cache</highlight></codeline>
+<codeline><highlight class="normal">such<sp/>as<sp/>Varnish<sp/>for<sp/>this,<sp/>or<sp/>those<sp/>fancy<sp/>things<sp/>called<sp/>CDNs.<sp/>If<sp/>your</highlight></codeline>
+<codeline><highlight class="normal">application<sp/>is<sp/>small<sp/>enough<sp/>that<sp/>it<sp/>would<sp/>benefit<sp/>from<sp/>single-node<sp/>memory</highlight></codeline>
+<codeline><highlight class="normal">caching,<sp/>it&apos;s<sp/>small<sp/>enough<sp/>that<sp/>it<sp/>does<sp/>not<sp/>need<sp/>caching<sp/>at<sp/>all<sp/>;).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Debugging</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>enable<sp/>`debug()`<sp/>instrumentation<sp/>output<sp/>export<sp/>__DEBUG__:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>DEBUG=send<sp/>node<sp/>app</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Running<sp/>tests</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>install</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>test</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Examples</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Serve<sp/>a<sp/>specific<sp/>file</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>simple<sp/>example<sp/>will<sp/>send<sp/>a<sp/>specific<sp/>file<sp/>to<sp/>all<sp/>requests.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>send<sp/>=<sp/>require(&apos;send&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>server<sp/>=<sp/>http.createServer(function<sp/>onRequest<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>send(req,<sp/>&apos;/path/to/index.html&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.pipe(res)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">server.listen(3000)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Serve<sp/>all<sp/>files<sp/>from<sp/>a<sp/>directory</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>simple<sp/>example<sp/>will<sp/>just<sp/>serve<sp/>up<sp/>all<sp/>the<sp/>files<sp/>in<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">given<sp/>directory<sp/>as<sp/>the<sp/>top-level.<sp/>For<sp/>example,<sp/>a<sp/>request</highlight></codeline>
+<codeline><highlight class="normal">`GET<sp/>/foo.txt`<sp/>will<sp/>send<sp/>back<sp/>`/www/public/foo.txt`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>parseUrl<sp/>=<sp/>require(&apos;parseurl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>send<sp/>=<sp/>require(&apos;send&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>server<sp/>=<sp/>http.createServer(function<sp/>onRequest<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>send(req,<sp/>parseUrl(req).pathname,<sp/>{<sp/>root:<sp/>&apos;/www/public&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.pipe(res)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">server.listen(3000)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Custom<sp/>file<sp/>types</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>parseUrl<sp/>=<sp/>require(&apos;parseurl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>send<sp/>=<sp/>require(&apos;send&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Default<sp/>unknown<sp/>types<sp/>to<sp/>text/plain</highlight></codeline>
+<codeline><highlight class="normal">send.mime.default_type<sp/>=<sp/>&apos;text/plain&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Add<sp/>a<sp/>custom<sp/>type</highlight></codeline>
+<codeline><highlight class="normal">send.mime.define({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&apos;application/x-my-type&apos;:<sp/>[&apos;x-mt&apos;,<sp/>&apos;x-mtt&apos;]</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>server<sp/>=<sp/>http.createServer(function<sp/>onRequest<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>send(req,<sp/>parseUrl(req).pathname,<sp/>{<sp/>root:<sp/>&apos;/www/public&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.pipe(res)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">server.listen(3000)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Custom<sp/>directory<sp/>index<sp/>view</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>a<sp/>example<sp/>of<sp/>serving<sp/>up<sp/>a<sp/>structure<sp/>of<sp/>directories<sp/>with<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">custom<sp/>function<sp/>to<sp/>render<sp/>a<sp/>listing<sp/>of<sp/>a<sp/>directory.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>fs<sp/>=<sp/>require(&apos;fs&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>parseUrl<sp/>=<sp/>require(&apos;parseurl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>send<sp/>=<sp/>require(&apos;send&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Transfer<sp/>arbitrary<sp/>files<sp/>from<sp/>within<sp/>/www/example.com/public/*</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>with<sp/>a<sp/>custom<sp/>handler<sp/>for<sp/>directory<sp/>listing</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>server<sp/>=<sp/>http.createServer(function<sp/>onRequest<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>send(req,<sp/>parseUrl(req).pathname,<sp/>{<sp/>index:<sp/>false,<sp/>root:<sp/>&apos;/www/public&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.once(&apos;directory&apos;,<sp/>directory)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.pipe(res)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">server.listen(3000)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Custom<sp/>directory<sp/>handler</highlight></codeline>
+<codeline><highlight class="normal">function<sp/>directory<sp/>(res,<sp/>path)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>stream<sp/>=<sp/>this</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>redirect<sp/>to<sp/>trailing<sp/>slash<sp/>for<sp/>consistent<sp/>url</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(!stream.hasTrailingSlash())<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>stream.redirect(path)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>get<sp/>directory<sp/>list</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fs.readdir(path,<sp/>function<sp/>onReaddir<sp/>(err,<sp/>list)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(err)<sp/>return<sp/>stream.error(err)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>render<sp/>an<sp/>index<sp/>for<sp/>the<sp/>directory</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.setHeader(&apos;Content-Type&apos;,<sp/>&apos;text/plain;<sp/>charset=UTF-8&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.end(list.join(&apos;\n&apos;)<sp/>+<sp/>&apos;\n&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Serving<sp/>from<sp/>a<sp/>root<sp/>directory<sp/>with<sp/>custom<sp/>error-handling</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>parseUrl<sp/>=<sp/>require(&apos;parseurl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>send<sp/>=<sp/>require(&apos;send&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>server<sp/>=<sp/>http.createServer(function<sp/>onRequest<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>your<sp/>custom<sp/>error-handling<sp/>logic:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>function<sp/>error<sp/>(err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.statusCode<sp/>=<sp/>err.status<sp/>||<sp/>500</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.end(err.message)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>your<sp/>custom<sp/>headers</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>function<sp/>headers<sp/>(res,<sp/>path,<sp/>stat)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>serve<sp/>all<sp/>files<sp/>for<sp/>download</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.setHeader(&apos;Content-Disposition&apos;,<sp/>&apos;attachment&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>your<sp/>custom<sp/>directory<sp/>handling<sp/>logic:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>function<sp/>redirect<sp/>()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.statusCode<sp/>=<sp/>301</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.setHeader(&apos;Location&apos;,<sp/>req.url<sp/>+<sp/>&apos;/&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.end(&apos;Redirecting<sp/>to<sp/>&apos;<sp/>+<sp/>req.url<sp/>+<sp/>&apos;/&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>transfer<sp/>arbitrary<sp/>files<sp/>from<sp/>within</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>/www/example.com/public/*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>send(req,<sp/>parseUrl(req).pathname,<sp/>{<sp/>root:<sp/>&apos;/www/public&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.on(&apos;error&apos;,<sp/>error)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.on(&apos;directory&apos;,<sp/>redirect)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.on(&apos;headers&apos;,<sp/>headers)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.pipe(res)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">server.listen(3000)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>License</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[MIT](LICENSE)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[appveyor-image]:<sp/>https://badgen.net/appveyor/ci/dougwilson/send/master?label=windows</highlight></codeline>
+<codeline><highlight class="normal">[appveyor-url]:<sp/>https://ci.appveyor.com/project/dougwilson/send</highlight></codeline>
+<codeline><highlight class="normal">[coveralls-image]:<sp/>https://badgen.net/coveralls/c/github/pillarjs/send/master</highlight></codeline>
+<codeline><highlight class="normal">[coveralls-url]:<sp/>https://coveralls.io/r/pillarjs/send?branch=master</highlight></codeline>
+<codeline><highlight class="normal">[github-actions-ci-image]:<sp/>https://badgen.net/github/checks/pillarjs/send/master?label=linux</highlight></codeline>
+<codeline><highlight class="normal">[github-actions-ci-url]:<sp/>https://github.com/pillarjs/send/actions/workflows/ci.yml</highlight></codeline>
+<codeline><highlight class="normal">[node-image]:<sp/>https://badgen.net/npm/node/send</highlight></codeline>
+<codeline><highlight class="normal">[node-url]:<sp/>https://nodejs.org/en/download/</highlight></codeline>
+<codeline><highlight class="normal">[npm-downloads-image]:<sp/>https://badgen.net/npm/dm/send</highlight></codeline>
+<codeline><highlight class="normal">[npm-url]:<sp/>https://npmjs.org/package/send</highlight></codeline>
+<codeline><highlight class="normal">[npm-version-image]:<sp/>https://badgen.net/npm/v/send</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/send/README.md"/>
+  </compounddef>
+</doxygen>

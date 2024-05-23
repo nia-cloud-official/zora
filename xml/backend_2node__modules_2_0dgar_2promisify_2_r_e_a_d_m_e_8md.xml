@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2_0dgar_2promisify_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>@gar/promisify</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Promisify<sp/>an<sp/>entire<sp/>object<sp/>or<sp/>class<sp/>instance</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>module<sp/>leverages<sp/>es6<sp/>Proxy<sp/>and<sp/>Reflect<sp/>to<sp/>promisify<sp/>every<sp/>function<sp/>in<sp/>an</highlight></codeline>
+<codeline><highlight class="normal">object<sp/>or<sp/>class<sp/>instance.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It<sp/>assumes<sp/>the<sp/>callback<sp/>that<sp/>the<sp/>function<sp/>is<sp/>expecting<sp/>is<sp/>the<sp/>last</highlight></codeline>
+<codeline><highlight class="normal">parameter,<sp/>and<sp/>that<sp/>it<sp/>is<sp/>an<sp/>error-first<sp/>callback<sp/>with<sp/>only<sp/>one<sp/>value,</highlight></codeline>
+<codeline><highlight class="normal">i.e.<sp/>`(err,<sp/>value)<sp/>=&gt;<sp/>...`.<sp/>This<sp/>mirrors<sp/>node&apos;s<sp/>`util.promisify`<sp/>method.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">In<sp/>order<sp/>that<sp/>you<sp/>can<sp/>use<sp/>it<sp/>as<sp/>a<sp/>one-stop-shop<sp/>for<sp/>all<sp/>your<sp/>promisify</highlight></codeline>
+<codeline><highlight class="normal">needs,<sp/>you<sp/>can<sp/>also<sp/>pass<sp/>it<sp/>a<sp/>function.<sp/><sp/>That<sp/>function<sp/>will<sp/>be</highlight></codeline>
+<codeline><highlight class="normal">promisified<sp/>as<sp/>normal<sp/>using<sp/>node&apos;s<sp/>built-in<sp/>`util.promisify`<sp/>method.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[node&apos;s<sp/>custom<sp/>promisified</highlight></codeline>
+<codeline><highlight class="normal">functions](https://nodejs.org/api/util.html#util_custom_promisified_functions)</highlight></codeline>
+<codeline><highlight class="normal">will<sp/>also<sp/>be<sp/>mirrored,<sp/>further<sp/>allowing<sp/>this<sp/>to<sp/>be<sp/>a<sp/>drop-in<sp/>replacement</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>the<sp/>built-in<sp/>`util.promisify`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Examples</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Promisify<sp/>an<sp/>entire<sp/>object</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>promisify<sp/>=<sp/>require(&apos;@gar/promisify&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">class<sp/>Foo<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>constructor<sp/>(attr)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>this.attr<sp/>=<sp/>attr</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>double<sp/>(input,<sp/>cb)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>cb(null,<sp/>input<sp/>*<sp/>2)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>foo<sp/>=<sp/>new<sp/>Foo(&apos;baz&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>promisified<sp/>=<sp/>promisify(foo)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">console.log(promisified.attr)</highlight></codeline>
+<codeline><highlight class="normal">console.log(await<sp/>promisified.double(1024))</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Promisify<sp/>a<sp/>function</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>promisify<sp/>=<sp/>require(&apos;@gar/promisify&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>foo<sp/>(a,<sp/>cb)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(a<sp/>!==<sp/>&apos;bad&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>cb(null,<sp/>&apos;ok&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>cb(&apos;not<sp/>ok&apos;)</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>promisified<sp/>=<sp/>promisify(foo)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>This<sp/>will<sp/>resolve<sp/>to<sp/>&apos;ok&apos;</highlight></codeline>
+<codeline><highlight class="normal">promisified(&apos;good&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>this<sp/>will<sp/>reject</highlight></codeline>
+<codeline><highlight class="normal">promisified(&apos;bad&apos;)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/@gar/promisify/README.md"/>
+  </compounddef>
+</doxygen>

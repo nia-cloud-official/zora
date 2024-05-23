@@ -1,0 +1,83 @@
+.TH "md_backend_2node__modules_2mimic-response_2readme" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2mimic-response_2readme \- mimic-response \fR\fP 
+.PP
+ 
+.PP
+.RS 4
+Mimic a \fRNode\&.js HTTP response stream\fP 
+.RE
+.PP
+.SH "Install"
+.PP
+.PP
+.nf
+$ npm install mimic\-response
+.fi
+.PP
+.SH "Usage"
+.PP
+.PP
+.nf
+const stream = require('stream');
+const mimicResponse = require('mimic\-response');
+
+const responseStream = getHttpResponseStream();
+const myStream = new stream\&.PassThrough();
+
+mimicResponse(responseStream, myStream);
+
+console\&.log(myStream\&.statusCode);
+//=> 200
+.fi
+.PP
+.SH "API"
+.PP
+.SS "mimicResponse(from, to)"
+\fBNote #1:\fP The \fRfrom\&.destroy(error)\fP function is not proxied\&. You have to call it manually:
+.PP
+.PP
+.nf
+const stream = require('stream');
+const mimicResponse = require('mimic\-response');
+
+const responseStream = getHttpResponseStream();
+
+const myStream = new stream\&.PassThrough({
+    destroy(error, callback) {
+        responseStream\&.destroy();
+
+        callback(error);
+    }
+});
+
+myStream\&.destroy();
+.fi
+.PP
+.PP
+Please note that \fRmyStream\fP and \fRresponseStream\fP never throws\&. The error is passed to the request instead\&.
+.SS "from"
+Type: \fRStream\fP
+.PP
+\fRNode\&.js HTTP response stream\&.\fP
+.SS "to"
+Type: \fRStream\fP
+.PP
+Any stream\&.
+.SH "Related"
+.PP
+.IP "\(bu" 2
+\fRmimic-fn\fP - Make a function mimic another one
+.IP "\(bu" 2
+\fRclone-response\fP - Clone a Node\&.js response stream
+.PP
+.PP
+.PP
+.PP
+ \fB \fRGet professional support for this package with a Tidelift subscription\fP \fP 
+.br
+ \*< Tidelift helps make open source sustainable for maintainers while giving companies
+.br
+assurances about security, maintenance, and licensing for their dependencies\&. \*>   

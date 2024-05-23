@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2destroy_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2destroy_2_r_e_a_d_m_e</compoundname>
+    <title>destroy</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2destroy_2_r_e_a_d_m_e_1autotoc_md785"/> <ulink url="https://npmjs.org/package/destroy"><image type="html" name="https://img.shields.io/npm/v/destroy.svg?style=flat-square" alt="NPM version" inline="yes"></image>
+</ulink> <ulink url="https://github.com/stream-utils/destroy/actions/workflows/ci.yml"><image type="html" name="https://img.shields.io/github/workflow/status/stream-utils/destroy/ci/master?label=ci&amp;style=flat-square" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/r/stream-utils/destroy?branch=master"><image type="html" name="https://img.shields.io/coveralls/stream-utils/destroy.svg?style=flat-square" alt="Test coverage" inline="yes"></image>
+</ulink> <ref refid="ssri_2_l_i_c_e_n_s_e_8md" kindref="compound"><image type="html" name="http://img.shields.io/npm/l/destroy.svg?style=flat-square" alt="License" inline="yes"></image>
+</ref> <ulink url="https://npmjs.org/package/destroy"><image type="html" name="http://img.shields.io/npm/dm/destroy.svg?style=flat-square" alt="Downloads" inline="yes"></image>
+</ulink></para>
+<para>Destroy a stream.</para>
+<para>This module is meant to ensure a stream gets destroyed, handling different APIs and Node.js bugs.</para>
+<sect1 id="md_backend_2node__modules_2destroy_2_r_e_a_d_m_e_1autotoc_md786">
+<title>API</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>destroy<sp/>=<sp/>require(&apos;destroy&apos;)</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2destroy_2_r_e_a_d_m_e_1autotoc_md787">
+<title>destroy(stream [, suppress])</title><para>Destroy the given stream, and optionally suppress any future <computeroutput>error</computeroutput> events.</para>
+<para>In most cases, this is identical to a simple <computeroutput>stream.destroy()</computeroutput> call. The rules are as follows for a given stream:</para>
+<para><orderedlist>
+<listitem><para>If the <computeroutput>stream</computeroutput> is an instance of <computeroutput>ReadStream</computeroutput>, then call <computeroutput>stream.destroy()</computeroutput> and add a listener to the <computeroutput>open</computeroutput> event to call <computeroutput>stream.close()</computeroutput> if it is fired. This is for a Node.js bug that will leak a file descriptor if <computeroutput>.destroy()</computeroutput> is called before <computeroutput>open</computeroutput>.</para>
+</listitem><listitem><para>If the <computeroutput>stream</computeroutput> is an instance of a zlib stream, then call <computeroutput>stream.destroy()</computeroutput> and close the underlying zlib handle if open, otherwise call <computeroutput>stream.close()</computeroutput>. This is for consistency across Node.js versions and a Node.js bug that will leak a native zlib handle.</para>
+</listitem><listitem><para>If the <computeroutput>stream</computeroutput> is not an instance of <computeroutput>Stream</computeroutput>, then nothing happens.</para>
+</listitem><listitem><para>If the <computeroutput>stream</computeroutput> has a <computeroutput>.destroy()</computeroutput> method, then call it.</para>
+</listitem></orderedlist>
+</para>
+<para>The function returns the <computeroutput>stream</computeroutput> passed in as the argument.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2destroy_2_r_e_a_d_m_e_1autotoc_md788">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>destroy<sp/>=<sp/>require(&apos;destroy&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>fs<sp/>=<sp/>require(&apos;fs&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>stream<sp/>=<sp/>fs.createReadStream(&apos;package.json&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>...<sp/>and<sp/>later</highlight></codeline>
+<codeline><highlight class="normal">destroy(stream)</highlight></codeline>
+</programlisting> </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/destroy/README.md"/>
+  </compounddef>
+</doxygen>

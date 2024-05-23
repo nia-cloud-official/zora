@@ -1,0 +1,171 @@
+\doxysection{easy\+\_\+xml.\+py}
+\hypertarget{easy__xml_8py_source}{}\label{easy__xml_8py_source}\index{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/easy\_xml.py@{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/easy\_xml.py}}
+\mbox{\hyperlink{easy__xml_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00001}\mbox{\hyperlink{namespacegyp_1_1easy__xml}{00001}}\ \textcolor{comment}{\#\ Copyright\ (c)\ 2011\ Google\ Inc.\ All\ rights\ reserved.}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00002}00002\ \textcolor{comment}{\#\ Use\ of\ this\ source\ code\ is\ governed\ by\ a\ BSD-\/style\ license\ that\ can\ be}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00003}00003\ \textcolor{comment}{\#\ found\ in\ the\ LICENSE\ file.}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00005}00005\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00006}00006\ \textcolor{keyword}{import}\ re}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00007}00007\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00008}00008\ \textcolor{keyword}{import}\ locale}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00009}00009\ \textcolor{keyword}{from}\ functools\ \textcolor{keyword}{import}\ reduce}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00012}\mbox{\hyperlink{namespacegyp_1_1easy__xml_af9076fbcacf7b9a10d1c59a49c08d97a}{00012}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1easy__xml_af9076fbcacf7b9a10d1c59a49c08d97a}{XmlToString}}(content,\ encoding="{}utf-\/8"{},\ pretty=False):}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00013}00013\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}\ Writes\ the\ XML\ content\ to\ disk,\ touching\ the\ file\ only\ if\ it\ has\ changed.}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00014}00014\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00015}00015\ \textcolor{stringliteral}{\ \ Visual\ Studio\ files\ have\ a\ lot\ of\ pre-\/defined\ structures.\ \ This\ function\ makes}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00016}00016\ \textcolor{stringliteral}{\ \ it\ easy\ to\ represent\ these\ structures\ as\ Python\ data\ structures,\ instead\ of}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00017}00017\ \textcolor{stringliteral}{\ \ having\ to\ create\ a\ lot\ of\ function\ calls.}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00018}00018\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00019}00019\ \textcolor{stringliteral}{\ \ Each\ XML\ element\ of\ the\ content\ is\ represented\ as\ a\ list\ composed\ of:}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00020}00020\ \textcolor{stringliteral}{\ \ 1.\ The\ name\ of\ the\ element,\ a\ string,}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00021}00021\ \textcolor{stringliteral}{\ \ 2.\ The\ attributes\ of\ the\ element,\ a\ dictionary\ (optional),\ and}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00022}00022\ \textcolor{stringliteral}{\ \ 3+.\ The\ content\ of\ the\ element,\ if\ any.\ \ Strings\ are\ simple\ text\ nodes\ and}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00023}00023\ \textcolor{stringliteral}{\ \ \ \ \ \ lists\ are\ child\ elements.}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00024}00024\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00025}00025\ \textcolor{stringliteral}{\ \ Example\ 1:}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00026}00026\ \textcolor{stringliteral}{\ \ \ \ \ \ <test/>}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00027}00027\ \textcolor{stringliteral}{\ \ becomes}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00028}00028\ \textcolor{stringliteral}{\ \ \ \ \ \ ['test']}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00029}00029\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00030}00030\ \textcolor{stringliteral}{\ \ Example\ 2:}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00031}00031\ \textcolor{stringliteral}{\ \ \ \ \ \ <myelement\ a='value1'\ b='value2'>}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00032}00032\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ <childtype>This\ is</childtype>}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00033}00033\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ <childtype>it!</childtype>}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00034}00034\ \textcolor{stringliteral}{\ \ \ \ \ \ </myelement>}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00035}00035\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00036}00036\ \textcolor{stringliteral}{\ \ becomes}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00037}00037\ \textcolor{stringliteral}{\ \ \ \ \ \ ['myelement',\ \{'a':'value1',\ 'b':'value2'\},}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00038}00038\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ ['childtype',\ 'This\ is'],}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00039}00039\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ ['childtype',\ 'it!'],}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00040}00040\ \textcolor{stringliteral}{\ \ \ \ \ \ ]}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00041}00041\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00042}00042\ \textcolor{stringliteral}{\ \ Args:}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00043}00043\ \textcolor{stringliteral}{\ \ \ \ content:\ \ The\ structured\ content\ to\ be\ converted.}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00044}00044\ \textcolor{stringliteral}{\ \ \ \ encoding:\ The\ encoding\ to\ report\ on\ the\ first\ XML\ line.}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00045}00045\ \textcolor{stringliteral}{\ \ \ \ pretty:\ True\ if\ we\ want\ pretty\ printing\ with\ indents\ and\ new\ lines.}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00046}00046\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00047}00047\ \textcolor{stringliteral}{\ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00048}00048\ \textcolor{stringliteral}{\ \ \ \ The\ XML\ content\ as\ a\ string.}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00049}00049\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00050}00050\ \ \ \ \ \textcolor{comment}{\#\ We\ create\ a\ huge\ list\ of\ all\ the\ elements\ of\ the\ file.}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00051}00051\ \ \ \ \ xml\_parts\ =\ [\textcolor{stringliteral}{'<?xml\ version="{}1.0"{}\ encoding="{}\%s"{}?>'}\ \%\ encoding]}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00052}00052\ \ \ \ \ \textcolor{keywordflow}{if}\ pretty:}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ xml\_parts.append(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00054}00054\ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1easy__xml_ac7f66029e9129c662361b77caee46401}{\_ConstructContentList}}(xml\_parts,\ content,\ pretty)}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00056}00056\ \ \ \ \ \textcolor{comment}{\#\ Convert\ it\ to\ a\ string}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00057}00057\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}"{}}.join(xml\_parts)}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00060}\mbox{\hyperlink{namespacegyp_1_1easy__xml_ac7f66029e9129c662361b77caee46401}{00060}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1easy__xml_ac7f66029e9129c662361b77caee46401}{\_ConstructContentList}}(xml\_parts,\ specification,\ pretty,\ level=0):}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00061}00061\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}\ Appends\ the\ XML\ parts\ corresponding\ to\ the\ specification.}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00062}00062\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00063}00063\ \textcolor{stringliteral}{\ \ Args:}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00064}00064\ \textcolor{stringliteral}{\ \ \ \ xml\_parts:\ A\ list\ of\ XML\ parts\ to\ be\ appended\ to.}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00065}00065\ \textcolor{stringliteral}{\ \ \ \ specification:\ \ The\ specification\ of\ the\ element.\ \ See\ EasyXml\ docs.}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00066}00066\ \textcolor{stringliteral}{\ \ \ \ pretty:\ True\ if\ we\ want\ pretty\ printing\ with\ indents\ and\ new\ lines.}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00067}00067\ \textcolor{stringliteral}{\ \ \ \ level:\ Indentation\ level.}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00068}00068\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00069}00069\ \ \ \ \ \textcolor{comment}{\#\ The\ first\ item\ in\ a\ specification\ is\ the\ name\ of\ the\ element.}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00070}00070\ \ \ \ \ \textcolor{keywordflow}{if}\ pretty:}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ indentation\ =\ \textcolor{stringliteral}{"{}\ \ "{}}\ *\ level}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ new\_line\ =\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00073}00073\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ indentation\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ new\_line\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00076}00076\ \ \ \ \ name\ =\ specification[0]}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00077}00077\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ isinstance(name,\ str):}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ Exception(}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}The\ first\ item\ of\ an\ EasyXml\ specification\ should\ be\ "{}}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}a\ string.\ \ Specification\ was\ "{}}\ +\ str(specification)}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00082}00082\ \ \ \ \ xml\_parts.append(indentation\ +\ \textcolor{stringliteral}{"{}<"{}}\ +\ name)}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00084}00084\ \ \ \ \ \textcolor{comment}{\#\ Optionally\ in\ second\ position\ is\ a\ dictionary\ of\ the\ attributes.}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00085}00085\ \ \ \ \ rest\ =\ specification[1:]}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00086}00086\ \ \ \ \ \textcolor{keywordflow}{if}\ rest\ \textcolor{keywordflow}{and}\ isinstance(rest[0],\ dict):}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ at,\ val\ \textcolor{keywordflow}{in}\ sorted(rest[0].items()):}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ xml\_parts.append(f\textcolor{stringliteral}{'\ \{at\}="{}\{\_XmlEscape(val,\ attr=True)\}"{}'})}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ rest\ =\ rest[1:]}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00090}00090\ \ \ \ \ \textcolor{keywordflow}{if}\ rest:}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ xml\_parts.append(\textcolor{stringliteral}{"{}>"{}})}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ all\_strings\ =\ reduce(\textcolor{keyword}{lambda}\ x,\ y:\ x\ \textcolor{keywordflow}{and}\ isinstance(y,\ str),\ rest,\ \textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ multi\_line\ =\ \textcolor{keywordflow}{not}\ all\_strings}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ multi\_line\ \textcolor{keywordflow}{and}\ new\_line:}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ xml\_parts.append(new\_line)}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ child\_spec\ \textcolor{keywordflow}{in}\ rest:}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ it's\ a\ string,\ append\ a\ text\ node.}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Otherwise\ recurse\ over\ that\ child\ definition}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(child\_spec,\ str):}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ xml\_parts.append(\mbox{\hyperlink{namespacegyp_1_1easy__xml_a993445741df15aaa06fe1cdd8444de73}{\_XmlEscape}}(child\_spec))}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1easy__xml_ac7f66029e9129c662361b77caee46401}{\_ConstructContentList}}(xml\_parts,\ child\_spec,\ pretty,\ level\ +\ 1)}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ multi\_line\ \textcolor{keywordflow}{and}\ indentation:}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ xml\_parts.append(indentation)}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ xml\_parts.append(f\textcolor{stringliteral}{"{}</\{name\}>\{new\_line\}"{}})}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00106}00106\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ xml\_parts.append(\textcolor{stringliteral}{"{}/>\%s"{}}\ \%\ new\_line)}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00110}\mbox{\hyperlink{namespacegyp_1_1easy__xml_a48ff9e84a26be6ee00b6882e1864f6a6}{00110}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1easy__xml_a48ff9e84a26be6ee00b6882e1864f6a6}{WriteXmlIfChanged}}(content,\ path,\ encoding="{}utf-\/8"{},\ pretty=False,}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ win32=(sys.platform\ ==\ \textcolor{stringliteral}{"{}win32"{}})):}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00112}00112\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}\ Writes\ the\ XML\ content\ to\ disk,\ touching\ the\ file\ only\ if\ it\ has\ changed.}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00113}00113\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00114}00114\ \textcolor{stringliteral}{\ \ Args:}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00115}00115\ \textcolor{stringliteral}{\ \ \ \ content:\ \ The\ structured\ content\ to\ be\ written.}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00116}00116\ \textcolor{stringliteral}{\ \ \ \ path:\ Location\ of\ the\ file.}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00117}00117\ \textcolor{stringliteral}{\ \ \ \ encoding:\ The\ encoding\ to\ report\ on\ the\ first\ line\ of\ the\ XML\ file.}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00118}00118\ \textcolor{stringliteral}{\ \ \ \ pretty:\ True\ if\ we\ want\ pretty\ printing\ with\ indents\ and\ new\ lines.}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00119}00119\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00120}00120\ \ \ \ \ xml\_string\ =\ \mbox{\hyperlink{namespacegyp_1_1easy__xml_af9076fbcacf7b9a10d1c59a49c08d97a}{XmlToString}}(content,\ encoding,\ pretty)}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00121}00121\ \ \ \ \ \textcolor{keywordflow}{if}\ win32\ \textcolor{keywordflow}{and}\ os.linesep\ !=\ \textcolor{stringliteral}{"{}\(\backslash\)r\(\backslash\)n"{}}:}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ xml\_string\ =\ xml\_string.replace(\textcolor{stringliteral}{"{}\(\backslash\)n"{}},\ \textcolor{stringliteral}{"{}\(\backslash\)r\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00124}00124\ \ \ \ \ default\_encoding\ =\ locale.getdefaultlocale()[1]}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00125}00125\ \ \ \ \ \textcolor{keywordflow}{if}\ default\_encoding\ \textcolor{keywordflow}{and}\ default\_encoding.upper()\ !=\ encoding.upper():}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00126}00126\ \ \ \ \ \ \ \ \ xml\_string\ =\ xml\_string.encode(encoding)}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00127}00127\ }
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00128}00128\ \ \ \ \ \textcolor{comment}{\#\ Get\ the\ old\ content}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00129}00129\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ open(path)\ \textcolor{keyword}{as}\ file:}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ existing\ =\ file.read()}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00132}00132\ \ \ \ \ \textcolor{keywordflow}{except}\ OSError:}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ existing\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00134}00134\ }
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00135}00135\ \ \ \ \ \textcolor{comment}{\#\ It\ has\ changed,\ write\ it}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00136}00136\ \ \ \ \ \textcolor{keywordflow}{if}\ existing\ !=\ xml\_string:}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ open(path,\ \textcolor{stringliteral}{"{}wb"{}})\ \textcolor{keyword}{as}\ file:}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ file.write(xml\_string)}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00139}00139\ }
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00140}00140\ }
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00141}\mbox{\hyperlink{namespacegyp_1_1easy__xml_a03e57b2d733adca141b4087d10832468}{00141}}\ \_xml\_escape\_map\ =\ \{}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00142}00142\ \ \ \ \ \textcolor{stringliteral}{'"{}'}:\ \textcolor{stringliteral}{"{}\&quot;"{}},}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00143}00143\ \ \ \ \ \textcolor{stringliteral}{"{}'"{}}:\ \textcolor{stringliteral}{"{}\&apos;"{}},}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00144}00144\ \ \ \ \ \textcolor{stringliteral}{"{}<"{}}:\ \textcolor{stringliteral}{"{}\&lt;"{}},}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00145}00145\ \ \ \ \ \textcolor{stringliteral}{"{}>"{}}:\ \textcolor{stringliteral}{"{}\&gt;"{}},}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00146}00146\ \ \ \ \ \textcolor{stringliteral}{"{}\&"{}}:\ \textcolor{stringliteral}{"{}\&amp;"{}},}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00147}00147\ \ \ \ \ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}:\ \textcolor{stringliteral}{"{}\&\#xA;"{}},}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00148}00148\ \ \ \ \ \textcolor{stringliteral}{"{}\(\backslash\)r"{}}:\ \textcolor{stringliteral}{"{}\&\#xD;"{}},}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00149}00149\ \}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00150}00150\ }
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00151}00151\ }
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00152}\mbox{\hyperlink{namespacegyp_1_1easy__xml_ad080a7c07b995a44d4da1def783e191a}{00152}}\ \_xml\_escape\_re\ =\ re.compile(\textcolor{stringliteral}{"{}(\%s)"{}}\ \%\ \textcolor{stringliteral}{"{}|"{}}.join(map(re.escape,\ \_xml\_escape\_map.keys())))}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00153}00153\ }
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00154}00154\ }
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00155}\mbox{\hyperlink{namespacegyp_1_1easy__xml_a993445741df15aaa06fe1cdd8444de73}{00155}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1easy__xml_a993445741df15aaa06fe1cdd8444de73}{\_XmlEscape}}(value,\ attr=False):}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00156}00156\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}\ Escape\ a\ string\ for\ inclusion\ in\ XML."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00157}00157\ }
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00158}00158\ \ \ \ \ \textcolor{keyword}{def\ }replace(match):}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00159}00159\ \ \ \ \ \ \ \ \ m\ =\ match.string[match.start()\ :\ match.end()]}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00160}00160\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ don't\ replace\ single\ quotes\ in\ attrs}}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ attr\ \textcolor{keywordflow}{and}\ m\ ==\ \textcolor{stringliteral}{"{}'"{}}:}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00163}00163\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_xml\_escape\_map[m]}
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00164}00164\ }
+\DoxyCodeLine{\Hypertarget{easy__xml_8py_source_l00165}00165\ \ \ \ \ \textcolor{keywordflow}{return}\ \_xml\_escape\_re.sub(replace,\ value)}
+
+\end{DoxyCode}

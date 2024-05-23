@@ -1,0 +1,82 @@
+.TH "md_backend_2node__modules_2delegates_2_readme" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2delegates_2_readme \- delegates 
+.PP
+ Node method and accessor delegation utilty\&.
+.SH "Installation"
+.PP
+.PP
+.nf
+$ npm install delegates
+.fi
+.PP
+.SH "Example"
+.PP
+.PP
+.nf
+var delegate = require('delegates');
+
+\&.\&.\&.
+
+delegate(proto, 'request')
+  \&.method('acceptsLanguages')
+  \&.method('acceptsEncodings')
+  \&.method('acceptsCharsets')
+  \&.method('accepts')
+  \&.method('is')
+  \&.access('querystring')
+  \&.access('idempotent')
+  \&.access('socket')
+  \&.access('length')
+  \&.access('query')
+  \&.access('search')
+  \&.access('status')
+  \&.access('method')
+  \&.access('path')
+  \&.access('body')
+  \&.access('host')
+  \&.access('url')
+  \&.getter('subdomains')
+  \&.getter('protocol')
+  \&.getter('header')
+  \&.getter('stale')
+  \&.getter('fresh')
+  \&.getter('secure')
+  \&.getter('ips')
+  \&.getter('ip')
+.fi
+.PP
+.SH "API"
+.PP
+.SS "Delegate(proto, prop)"
+Creates a delegator instance used to configure using the \fRprop\fP on the given \fRproto\fP object\&. (which is usually a prototype)
+.SS "Delegate::method(name)"
+Allows the given method \fRname\fP to be accessed on the host\&.
+.SS "Delegate::getter(name)"
+Creates a 'getter' for the property with the given \fRname\fP on the delegated object\&.
+.SS "Delegate::setter(name)"
+Creates a 'setter' for the property with the given \fRname\fP on the delegated object\&.
+.SS "Delegate::access(name)"
+Creates an 'accessor' (ie: both getter \fIand\fP setter) for the property with the given \fRname\fP on the delegated object\&.
+.SS "Delegate::fluent(name)"
+A unique type of 'accessor' that works for a 'fluent' API\&. When called as a getter, the method returns the expected value\&. However, if the method is called with a value, it will return itself so it can be chained\&. For example:
+.PP
+.PP
+.nf
+delegate(proto, 'request')
+  \&.fluent('query')
+
+// getter
+var q = request\&.query();
+
+// setter (chainable)
+request
+  \&.query({ a: 1 })
+  \&.query({ b: 2 });
+.fi
+.PP
+.SH "License"
+.PP
+MIT 

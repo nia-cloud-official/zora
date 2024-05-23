@@ -1,0 +1,399 @@
+\chapter{make-\/fetch-\/happen}
+\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e}\index{make-\/fetch-\/happen@{make-\/fetch-\/happen}}
+\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1809}%
+\Hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1809}%
+\href{https://npm.im/make-fetch-happen}{\texttt{ }} \href{https://npm.im/make-fetch-happen}{\texttt{ }} \href{https://travis-ci.org/npm/make-fetch-happen}{\texttt{ }} \href{https://coveralls.io/github/npm/make-fetch-happen?branch=latest}{\texttt{ }}
+
+\href{https://github.com/npm/make-fetch-happen}{\texttt{ {\ttfamily make-\/fetch-\/happen}}} is a Node.\+js library that wraps \href{https://github.com/npm/minipass-fetch}{\texttt{ {\ttfamily minipass-\/fetch}}} with additional features \href{https://github.com/npm/minipass-fetch}{\texttt{ {\ttfamily minipass-\/fetch}}} doesn\textquotesingle{}t intend to include, including HTTP Cache support, request pooling, proxies, retries, and more!\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1810}{}\doxysection{\texorpdfstring{Install}{Install}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1810}
+{\ttfamily \$ npm install -\/-\/save make-\/fetch-\/happen}\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1811}{}\doxysection{\texorpdfstring{Table of Contents}{Table of Contents}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1811}
+
+\begin{DoxyItemize}
+\item Example
+\item Features
+\item Contributing
+\item \doxylink{md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_api}{API}
+\begin{DoxyItemize}
+\item \`{}fetch\`{}
+\item \`{}fetch.defaults\`{}
+\item \`{}minipass-\/fetch\`{} options
+\item \`{}make-\/fetch-\/happen\`{} options
+\begin{DoxyItemize}
+\item \`{}opts.cache\+Path\`{}
+\item \`{}opts.cache\`{}
+\item \`{}opts.proxy\`{}
+\item \`{}opts.no\+Proxy\`{}
+\item \`{}opts.ca, opts.cert, opts.key\`{}
+\item \`{}opts.max\+Sockets\`{}
+\item \`{}opts.retry\`{}
+\item \`{}opts.on\+Retry\`{}
+\item \`{}opts.integrity\`{}
+\end{DoxyItemize}
+\end{DoxyItemize}
+\item Message From Our Sponsors
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1812}{}\doxysubsection{\texorpdfstring{Example}{Example}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1812}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ fetch\ =\ require('make-\/fetch-\/happen').defaults(\{}
+\DoxyCodeLine{\ \ cachePath:\ './my-\/cache'\ //\ path\ where\ cache\ will\ be\ written\ (and\ read)}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{fetch('https://registry.npmjs.org/make-\/fetch-\/happen').then(res\ =>\ \{}
+\DoxyCodeLine{\ \ return\ res.json()\ //\ download\ the\ body\ as\ JSON}
+\DoxyCodeLine{\}).then(body\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(`got\ \$\{body.name\}\ from\ web`)}
+\DoxyCodeLine{\ \ return\ fetch('https://registry.npmjs.org/make-\/fetch-\/happen',\ \{}
+\DoxyCodeLine{\ \ \ \ cache:\ 'no-\/cache'\ //\ forces\ a\ conditional\ request}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\}).then(res\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(res.status)\ //\ 304!\ cache\ validated!}
+\DoxyCodeLine{\ \ return\ res.json().then(body\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(`got\ \$\{body.name\}\ from\ cache`)}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1813}{}\doxysubsection{\texorpdfstring{Features}{Features}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1813}
+
+\begin{DoxyItemize}
+\item Builds around \href{https://npm.im/minipass-fetch}{\texttt{ {\ttfamily minipass-\/fetch}}} for the core \href{https://fetch.spec.whatwg.org}{\texttt{ {\ttfamily fetch} API}} implementation
+\item Request pooling out of the box
+\item Quite fast, really
+\item Automatic HTTP-\/semantics-\/aware request retries
+\item Cache-\/fallback automatic "{}offline mode"{}
+\item Proxy support (http, https, socks, socks4, socks5)
+\item Built-\/in request caching following full HTTP caching rules ({\ttfamily Cache-\/\+Control}, {\ttfamily ETag}, {\ttfamily 304}s, cache fallback on error, etc).
+\item Customize cache storage with any \href{https://developer.mozilla.org/en-US/docs/Web/API/Cache}{\texttt{ Cache API}}-\/compliant {\ttfamily Cache} instance. Cache to Redis!
+\item Node.\+js Stream support
+\item Transparent gzip and deflate support
+\item \href{https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity}{\texttt{ Subresource Integrity}} support
+\item Literally punches nazis
+\item (PENDING) Range request caching and resuming
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1814}{}\doxysubsection{\texorpdfstring{Contributing}{Contributing}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1814}
+The make-\/fetch-\/happen team enthusiastically welcomes contributions and project participation! There\textquotesingle{}s a bunch of things you can do if you want to contribute! The \href{https://github.com/npm/cli/blob/latest/CONTRIBUTING.md}{\texttt{ Contributor Guide}} outlines the process for community interaction and contribution. Please don\textquotesingle{}t hesitate to jump in if you\textquotesingle{}d like to, or even ask us questions if something isn\textquotesingle{}t clear.
+
+All participants and maintainers in this project are expected to follow the \href{https://www.npmjs.com/policies/conduct}{\texttt{ npm Code of Conduct}}, and just generally be excellent to each other.
+
+Please refer to the \doxylink{which_2_c_h_a_n_g_e_l_o_g_8md}{Changelog} for project history details, too.
+
+Happy hacking!\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1815}{}\doxysubsection{\texorpdfstring{API}{API}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1815}
+\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1816}{}\doxysubsubsection{\texorpdfstring{\label{_fetch}%
+ {\ttfamily \texorpdfstring{$>$}{>} fetch(uri\+Or\+Request, \mbox{[}opts\mbox{]}) -\/\texorpdfstring{$>$}{>} Promise\texorpdfstring{$<$}{<}Response\texorpdfstring{$>$}{>}}}{\label{_fetch}%
+ {\ttfamily \texorpdfstring{$>$}{>} fetch(uri\+Or\+Request, \mbox{[}opts\mbox{]}) -\/\texorpdfstring{$>$}{>} Promise\texorpdfstring{$<$}{<}Response\texorpdfstring{$>$}{>}}}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1816}
+This function implements most of the \href{https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch}{\texttt{ {\ttfamily fetch} API}}\+: given a {\ttfamily uri} string or a {\ttfamily Request} instance, it will fire off an http request and return a Promise containing the relevant response.
+
+If {\ttfamily opts} is provided, the \`{}minipass-\/fetch\`{}-\/specific options will be passed to that library. There are also additional options specific to make-\/fetch-\/happen that add various features, such as HTTP caching, integrity verification, proxy support, and more.\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1817}{}\doxysubsubsubsection{\texorpdfstring{Example}{Example}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1817}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{fetch('https://google.com').then(res\ =>\ res.buffer())}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1818}{}\doxysubsubsection{\texorpdfstring{\label{_fetch-defaults}%
+ {\ttfamily \texorpdfstring{$>$}{>} fetch.\+defaults(\mbox{[}default\+Url\mbox{]}, \mbox{[}default\+Opts\mbox{]})}}{\label{_fetch-defaults}%
+ {\ttfamily \texorpdfstring{$>$}{>} fetch.\+defaults(\mbox{[}default\+Url\mbox{]}, \mbox{[}default\+Opts\mbox{]})}}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1818}
+Returns a new {\ttfamily fetch} function that will call {\ttfamily make-\/fetch-\/happen} using {\ttfamily default\+Url} and {\ttfamily default\+Opts} as default values to any calls.
+
+A defaulted {\ttfamily fetch} will also have a {\ttfamily .defaults()} method, so they can be chained.\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1819}{}\doxysubsubsubsection{\texorpdfstring{Example}{Example}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1819}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ fetch\ =\ require('make-\/fetch-\/happen').defaults(\{}
+\DoxyCodeLine{\ \ cachePath:\ './my-\/local-\/cache'}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{fetch('https://registry.npmjs.org/make-\/fetch-\/happen')\ //\ will\ always\ use\ the\ cache}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1820}{}\doxysubsubsection{\texorpdfstring{\label{_minipass-fetch-options}%
+ {\ttfamily \texorpdfstring{$>$}{>} minipass-\/fetch options}}{\label{_minipass-fetch-options}%
+ {\ttfamily \texorpdfstring{$>$}{>} minipass-\/fetch options}}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1820}
+The following options for {\ttfamily minipass-\/fetch} are used as-\/is\+:
+
+
+\begin{DoxyItemize}
+\item method
+\item body
+\item redirect
+\item follow
+\item timeout
+\item compress
+\item size
+\end{DoxyItemize}
+
+These other options are modified or augmented by make-\/fetch-\/happen\+:
+
+
+\begin{DoxyItemize}
+\item headers -\/ Default {\ttfamily User-\/\+Agent} set to make-\/fetch happen. {\ttfamily Connection} is set to {\ttfamily keep-\/alive} or {\ttfamily close} automatically depending on {\ttfamily opts.\+agent}.
+\item agent
+\begin{DoxyItemize}
+\item If agent is null, an http or https Agent will be automatically used. By default, these will be {\ttfamily http.\+global\+Agent} and {\ttfamily https.\+global\+Agent}.
+\item If \`{}opts.proxy\`{} is provided and {\ttfamily opts.\+agent} is null, the agent will be set to an appropriate proxy-\/handling agent.
+\item If {\ttfamily opts.\+agent} is an object, it will be used as the request-\/pooling agent argument for this request.
+\item If {\ttfamily opts.\+agent} is {\ttfamily false}, it will be passed as-\/is to the underlying request library. This causes a new Agent to be spawned for every request.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+For more details, see \href{https://github.com/npm/minipass-fetch\#options}{\texttt{ the documentation for {\ttfamily minipass-\/fetch} itself}}.\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1821}{}\doxysubsubsection{\texorpdfstring{\label{_extra-options}%
+ {\ttfamily \texorpdfstring{$>$}{>} make-\/fetch-\/happen options}}{\label{_extra-options}%
+ {\ttfamily \texorpdfstring{$>$}{>} make-\/fetch-\/happen options}}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1821}
+make-\/fetch-\/happen augments the {\ttfamily minipass-\/fetch} API with additional features available through extra options. The following extra options are available\+:
+
+
+\begin{DoxyItemize}
+\item \`{}opts.cache\+Path\`{} -\/ Cache target to read/write
+\item \`{}opts.cache\`{} -\/ {\ttfamily fetch} cache mode. Controls cache {\itshape behavior}.
+\item \`{}opts.proxy\`{} -\/ Proxy agent
+\item \`{}opts.no\+Proxy\`{} -\/ Domain segments to disable proxying for.
+\item \`{}opts.ca, opts.cert, opts.key, opts.strict\+SSL\`{}
+\item \`{}opts.local\+Address\`{}
+\item \`{}opts.max\+Sockets\`{}
+\item \`{}opts.retry\`{} -\/ Request retry settings
+\item \`{}opts.on\+Retry\`{} -\/ a function called whenever a retry is attempted
+\item \`{}opts.integrity\`{} -\/ \href{https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity}{\texttt{ Subresource Integrity}} metadata.
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1822}{}\doxysubsubsection{\texorpdfstring{\label{_opts-cache-path}%
+ {\ttfamily \texorpdfstring{$>$}{>} opts.\+cache\+Path}}{\label{_opts-cache-path}%
+ {\ttfamily \texorpdfstring{$>$}{>} opts.\+cache\+Path}}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1822}
+A string {\ttfamily Path} to be used as the cache root for \href{https://npm.im/cacache}{\texttt{ {\ttfamily cacache}}}.
+
+{\bfseries{NOTE}}\+: Requests will not be cached unless their response bodies are consumed. You will need to use one of the {\ttfamily res.\+json()}, {\ttfamily res.\+buffer()}, etc methods on the response, or drain the {\ttfamily res.\+body} stream, in order for it to be written.
+
+The default cache manager also adds the following headers to cached responses\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily X-\/\+Local-\/\+Cache}\+: Path to the cache the content was found in
+\item {\ttfamily X-\/\+Local-\/\+Cache-\/\+Key}\+: Unique cache entry key for this response
+\item {\ttfamily X-\/\+Local-\/\+Cache-\/\+Mode}\+: Either {\ttfamily stream} or {\ttfamily buffer} to indicate how the response was read from cacache
+\item {\ttfamily X-\/\+Local-\/\+Cache-\/\+Hash}\+: Specific integrity hash for the cached entry
+\item {\ttfamily X-\/\+Local-\/\+Cache-\/\+Status}\+: One of {\ttfamily miss}, {\ttfamily hit}, {\ttfamily stale}, {\ttfamily revalidated}, {\ttfamily updated}, or {\ttfamily skip} to signal how the response was created
+\item {\ttfamily X-\/\+Local-\/\+Cache-\/\+Time}\+: UTCString of the cache insertion time for the entry
+\end{DoxyItemize}
+
+Using \href{https://npm.im/cacache}{\texttt{ {\ttfamily cacache}}}, a call like this may be used to manually fetch the cached entry\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ h\ =\ response.headers}
+\DoxyCodeLine{cacache.get(h.get('x-\/local-\/cache'),\ h.get('x-\/local-\/cache-\/key'))}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ grab\ content\ only,\ directly:}
+\DoxyCodeLine{cacache.get.byDigest(h.get('x-\/local-\/cache'),\ h.get('x-\/local-\/cache-\/hash'))}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1823}{}\doxysubsubsubsection{\texorpdfstring{Example}{Example}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1823}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{fetch('https://registry.npmjs.org/make-\/fetch-\/happen',\ \{}
+\DoxyCodeLine{\ \ cachePath:\ './my-\/local-\/cache'}
+\DoxyCodeLine{\})\ //\ -\/>\ 200-\/level\ response\ will\ be\ written\ to\ disk}
+
+\end{DoxyCode}
+
+
+A possible (minimal) implementation for {\ttfamily My\+Custom\+Redis\+Cache}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ bluebird\ =\ require('bluebird')}
+\DoxyCodeLine{const\ redis\ =\ require("{}redis"{})}
+\DoxyCodeLine{bluebird.promisifyAll(redis.RedisClient.prototype)}
+\DoxyCodeLine{class\ MyCustomRedisCache\ \{}
+\DoxyCodeLine{\ \ constructor\ (opts)\ \{}
+\DoxyCodeLine{\ \ \ \ this.redis\ =\ redis.createClient(opts)}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ match\ (req)\ \{}
+\DoxyCodeLine{\ \ \ \ return\ this.redis.getAsync(req.url).then(res\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ if\ (res)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ const\ parsed\ =\ JSON.parse(res)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ new\ fetch.Response(parsed.body,\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ url:\ req.url,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ headers:\ parsed.headers,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ status:\ 200}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \})}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ put\ (req,\ res)\ \{}
+\DoxyCodeLine{\ \ \ \ return\ res.buffer().then(body\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ return\ this.redis.setAsync(req.url,\ JSON.stringify(\{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ body:\ body,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ headers:\ res.headers.raw()}
+\DoxyCodeLine{\ \ \ \ \ \ \}))}
+\DoxyCodeLine{\ \ \ \ \}).then(()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ //\ return\ the\ response\ itself}
+\DoxyCodeLine{\ \ \ \ \ \ return\ res}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ 'delete'\ (req)\ \{}
+\DoxyCodeLine{\ \ \ \ return\ this.redis.unlinkAsync(req.url)}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1824}{}\doxysubsubsection{\texorpdfstring{\label{_opts-cache}%
+ {\ttfamily \texorpdfstring{$>$}{>} opts.\+cache}}{\label{_opts-cache}%
+ {\ttfamily \texorpdfstring{$>$}{>} opts.\+cache}}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1824}
+This option follows the standard {\ttfamily fetch} API cache option. This option will do nothing if \`{}opts.cache\+Path\`{} is null. The following values are accepted (as strings)\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily default} -\/ Fetch will inspect the HTTP cache on the way to the network. If there is a fresh response it will be used. If there is a stale response a conditional request will be created, and a normal request otherwise. It then updates the HTTP cache with the response. If the revalidation request fails (for example, on a 500 or if you\textquotesingle{}re offline), the stale response will be returned.
+\item {\ttfamily no-\/store} -\/ Fetch behaves as if there is no HTTP cache at all.
+\item {\ttfamily reload} -\/ Fetch behaves as if there is no HTTP cache on the way to the network. Ergo, it creates a normal request and updates the HTTP cache with the response.
+\item {\ttfamily no-\/cache} -\/ Fetch creates a conditional request if there is a response in the HTTP cache and a normal request otherwise. It then updates the HTTP cache with the response.
+\item {\ttfamily force-\/cache} -\/ Fetch uses any response in the HTTP cache matching the request, not paying attention to staleness. If there was no response, it creates a normal request and updates the HTTP cache with the response.
+\item {\ttfamily only-\/if-\/cached} -\/ Fetch uses any response in the HTTP cache matching the request, not paying attention to staleness. If there was no response, it returns a network error. (Can only be used when request’s mode is "{}same-\/origin"{}. Any cached redirects will be followed assuming request’s redirect mode is "{}follow"{} and the redirects do not violate request’s mode.)
+\end{DoxyItemize}
+
+(Note\+: option descriptions are taken from \href{https://fetch.spec.whatwg.org/\#http-network-or-cache-fetch}{\texttt{ https\+://fetch.\+spec.\+whatwg.\+org/\#http-\/network-\/or-\/cache-\/fetch}})\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1825}{}\doxysubsubsubsection{\texorpdfstring{Example}{Example}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1825}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ fetch\ =\ require('make-\/fetch-\/happen').defaults(\{}
+\DoxyCodeLine{\ \ cachePath:\ './my-\/cache'}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Will\ error\ with\ ENOTCACHED\ if\ we\ haven't\ already\ cached\ this\ url}
+\DoxyCodeLine{fetch('https://registry.npmjs.org/make-\/fetch-\/happen',\ \{}
+\DoxyCodeLine{\ \ cache:\ 'only-\/if-\/cached'}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Will\ refresh\ any\ local\ content\ and\ cache\ the\ new\ response}
+\DoxyCodeLine{fetch('https://registry.npmjs.org/make-\/fetch-\/happen',\ \{}
+\DoxyCodeLine{\ \ cache:\ 'reload'}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Will\ use\ any\ local\ data,\ even\ if\ stale.\ Otherwise,\ will\ hit\ network.}
+\DoxyCodeLine{fetch('https://registry.npmjs.org/make-\/fetch-\/happen',\ \{}
+\DoxyCodeLine{\ \ cache:\ 'force-\/cache'}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1826}{}\doxysubsubsection{\texorpdfstring{\label{_opts-proxy}%
+ {\ttfamily \texorpdfstring{$>$}{>} opts.\+proxy}}{\label{_opts-proxy}%
+ {\ttfamily \texorpdfstring{$>$}{>} opts.\+proxy}}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1826}
+A string or {\ttfamily new url.\+URL()}-\/d URI to proxy through. Different Proxy handlers will be used depending on the proxy\textquotesingle{}s protocol.
+
+Additionally, {\ttfamily process.\+env.\+HTTP\+\_\+\+PROXY}, {\ttfamily process.\+env.\+HTTPS\+\_\+\+PROXY}, and {\ttfamily process.\+env.\+PROXY} are used if present and no {\ttfamily opts.\+proxy} value is provided.
+
+(Pending) {\ttfamily process.\+env.\+NO\+\_\+\+PROXY} may also be configured to skip proxying requests for all, or specific domains.\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1827}{}\doxysubsubsubsection{\texorpdfstring{Example}{Example}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1827}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{fetch('https://registry.npmjs.org/make-\/fetch-\/happen',\ \{}
+\DoxyCodeLine{\ \ proxy:\ 'https://corporate.yourcompany.proxy:4445'}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{fetch('https://registry.npmjs.org/make-\/fetch-\/happen',\ \{}
+\DoxyCodeLine{\ \ proxy:\ \{}
+\DoxyCodeLine{\ \ \ \ protocol:\ 'https:',}
+\DoxyCodeLine{\ \ \ \ hostname:\ 'corporate.yourcompany.proxy',}
+\DoxyCodeLine{\ \ \ \ port:\ 4445}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1828}{}\doxysubsubsection{\texorpdfstring{\label{_opts-no-proxy}%
+ {\ttfamily \texorpdfstring{$>$}{>} opts.\+no\+Proxy}}{\label{_opts-no-proxy}%
+ {\ttfamily \texorpdfstring{$>$}{>} opts.\+no\+Proxy}}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1828}
+If present, should be a comma-\/separated string or an array of domain extensions that a proxy should {\itshape not} be used for.
+
+This option may also be provided through {\ttfamily process.\+env.\+NO\+\_\+\+PROXY}.\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1829}{}\doxysubsubsection{\texorpdfstring{\label{_https-opts}%
+ {\ttfamily \texorpdfstring{$>$}{>} opts.\+ca, opts.\+cert, opts.\+key, opts.\+strict\+SSL}}{\label{_https-opts}%
+ {\ttfamily \texorpdfstring{$>$}{>} opts.\+ca, opts.\+cert, opts.\+key, opts.\+strict\+SSL}}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1829}
+These values are passed in directly to the HTTPS agent and will be used for both proxied and unproxied outgoing HTTPS requests. They mostly correspond to the same options the {\ttfamily https} module accepts, which will be themselves passed to {\ttfamily tls.\+connect()}. {\ttfamily opts.\+strict\+SSL} corresponds to {\ttfamily reject\+Unauthorized}.\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1830}{}\doxysubsubsection{\texorpdfstring{\label{_opts-local-address}%
+ {\ttfamily \texorpdfstring{$>$}{>} opts.\+local\+Address}}{\label{_opts-local-address}%
+ {\ttfamily \texorpdfstring{$>$}{>} opts.\+local\+Address}}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1830}
+Passed directly to {\ttfamily http} and {\ttfamily https} request calls. Determines the local address to bind to.\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1831}{}\doxysubsubsection{\texorpdfstring{\label{_opts-max-sockets}%
+ {\ttfamily \texorpdfstring{$>$}{>} opts.\+max\+Sockets}}{\label{_opts-max-sockets}%
+ {\ttfamily \texorpdfstring{$>$}{>} opts.\+max\+Sockets}}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1831}
+Default\+: 15
+
+Maximum number of active concurrent sockets to use for the underlying Http/\+Https/\+Proxy agents. This setting applies once per spawned agent.
+
+15 is probably a {\itshape pretty good value} for most use-\/cases, and balances speed with, uh, not knocking out people\textquotesingle{}s routers. 🤓\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1832}{}\doxysubsubsection{\texorpdfstring{\label{_opts-retry}%
+ {\ttfamily \texorpdfstring{$>$}{>} opts.\+retry}}{\label{_opts-retry}%
+ {\ttfamily \texorpdfstring{$>$}{>} opts.\+retry}}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1832}
+An object that can be used to tune request retry settings. Retries will only be attempted on the following conditions\+:
+
+
+\begin{DoxyItemize}
+\item Request method is NOT {\ttfamily POST} AND
+\item Request status is one of\+: {\ttfamily 408}, {\ttfamily 420}, {\ttfamily 429}, or any status in the 500-\/range. OR
+\item Request errored with {\ttfamily ECONNRESET}, {\ttfamily ECONNREFUSED}, {\ttfamily EADDRINUSE}, {\ttfamily ETIMEDOUT}, or the {\ttfamily fetch} error {\ttfamily request-\/timeout}.
+\end{DoxyItemize}
+
+The following are worth noting as explicitly not retried\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily getaddrinfo ENOTFOUND} and will be assumed to be either an unreachable domain or the user will be assumed offline. If a response is cached, it will be returned immediately.
+\end{DoxyItemize}
+
+If {\ttfamily opts.\+retry} is {\ttfamily false}, it is equivalent to {\ttfamily \{retries\+: 0\}}
+
+If {\ttfamily opts.\+retry} is a number, it is equivalent to {\ttfamily \{retries\+: num\}}
+
+The following retry options are available if you want more control over it\+:
+
+
+\begin{DoxyItemize}
+\item retries
+\item factor
+\item min\+Timeout
+\item max\+Timeout
+\item randomize
+\end{DoxyItemize}
+
+For details on what each of these do, refer to the \href{https://npm.im/retry}{\texttt{ {\ttfamily retry}}} documentation.\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1833}{}\doxysubsubsubsection{\texorpdfstring{Example}{Example}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1833}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{fetch('https://flaky.site.com',\ \{}
+\DoxyCodeLine{\ \ retry:\ \{}
+\DoxyCodeLine{\ \ \ \ retries:\ 10,}
+\DoxyCodeLine{\ \ \ \ randomize:\ true}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{fetch('http://reliable.site.com',\ \{}
+\DoxyCodeLine{\ \ retry:\ false}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{fetch('http://one-\/more.site.com',\ \{}
+\DoxyCodeLine{\ \ retry:\ 3}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1834}{}\doxysubsubsection{\texorpdfstring{\label{_opts-onretry}%
+ {\ttfamily \texorpdfstring{$>$}{>} opts.\+on\+Retry}}{\label{_opts-onretry}%
+ {\ttfamily \texorpdfstring{$>$}{>} opts.\+on\+Retry}}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1834}
+A function called whenever a retry is attempted.\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1835}{}\doxysubsubsubsection{\texorpdfstring{Example}{Example}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1835}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{fetch('https://flaky.site.com',\ \{}
+\DoxyCodeLine{\ \ onRetry()\ \{}
+\DoxyCodeLine{\ \ \ \ console.log('we\ will\ retry!')}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1836}{}\doxysubsubsection{\texorpdfstring{\label{_opts-integrity}%
+ {\ttfamily \texorpdfstring{$>$}{>} opts.\+integrity}}{\label{_opts-integrity}%
+ {\ttfamily \texorpdfstring{$>$}{>} opts.\+integrity}}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1836}
+Matches the response body against the given \href{https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity}{\texttt{ Subresource Integrity}} metadata. If verification fails, the request will fail with an {\ttfamily EINTEGRITY} error.
+
+{\ttfamily integrity} may either be a string or an \href{https://npm.im/ssri}{\texttt{ {\ttfamily ssri}}} {\ttfamily Integrity}-\/like.\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1837}{}\doxysubsubsubsection{\texorpdfstring{Example}{Example}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1837}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{fetch('https://registry.npmjs.org/make-\/fetch-\/happen/-\//make-\/fetch-\/happen-\/1.0.0.tgz',\ \{}
+\DoxyCodeLine{\ \ integrity:\ 'sha1-\/o47j7zAYnedYFn1dF/fR9OV3z8Q='}
+\DoxyCodeLine{\})\ //\ -\/>\ ok}
+\DoxyCodeLine{}
+\DoxyCodeLine{fetch('https://malicious-\/registry.org/make-\/fetch-\/happen/-\//make-\/fetch-\/happen-\/1.0.0.tgz',\ \{}
+\DoxyCodeLine{\ \ integrity:\ 'sha1-\/o47j7zAYnedYFn1dF/fR9OV3z8Q='}
+\DoxyCodeLine{\})\ //\ Error:\ EINTEGRITY}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1838}{}\doxysubsection{\texorpdfstring{\label{_wow}%
+ Message From Our Sponsors}{\label{_wow}%
+ Message From Our Sponsors}}\label{md_backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_autotoc_md1838}
+
+
+ 

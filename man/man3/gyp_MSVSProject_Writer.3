@@ -1,0 +1,259 @@
+.TH "gyp.MSVSProject.Writer" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gyp.MSVSProject.Writer
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fB__init__\fP (self, \fBproject_path\fP, \fBversion\fP, \fBname\fP, \fBguid\fP=None, platforms=None)"
+.br
+.ti -1c
+.RI "\fBAddToolFile\fP (self, path)"
+.br
+.ti -1c
+.RI "\fBAddConfig\fP (self, \fBname\fP, attrs=None, tools=None)"
+.br
+.ti -1c
+.RI "\fBAddFiles\fP (self, files)"
+.br
+.ti -1c
+.RI "\fBAddFileConfig\fP (self, path, config, attrs=None, tools=None)"
+.br
+.ti -1c
+.RI "\fBWriteIfChanged\fP (self)"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBproject_path\fP"
+.br
+.ti -1c
+.RI "\fBversion\fP"
+.br
+.ti -1c
+.RI "\fBname\fP"
+.br
+.ti -1c
+.RI "\fBguid\fP"
+.br
+.ti -1c
+.RI "\fBplatform_section\fP"
+.br
+.ti -1c
+.RI "\fBtool_files_section\fP"
+.br
+.ti -1c
+.RI "\fBconfigurations_section\fP"
+.br
+.ti -1c
+.RI "\fBfiles_section\fP"
+.br
+.ti -1c
+.RI "\fBfiles_dict\fP"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fB_GetSpecForConfiguration\fP (self, config_type, config_name, attrs, tools)"
+.br
+.ti -1c
+.RI "\fB_AddFilesToNode\fP (self, parent, files)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.PP
+.nf
+Visual Studio XML project writer\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB51\fP of file \fBMSVSProject\&.py\fP\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "gyp\&.MSVSProject\&.Writer\&.__init__ ( self,  project_path,  version,  name,  guid = \fRNone\fP,  platforms = \fRNone\fP)"
+
+.PP
+.nf
+Initializes the project\&.
+
+Args:
+project_path: Path to the project file\&.
+version: Format version to emit\&.
+name: Name of the project\&.
+guid: GUID to use for project, if not None\&.
+platforms: Array of string, the supported platforms\&.  If null, ['Win32']
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB54\fP of file \fBMSVSProject\&.py\fP\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "gyp\&.MSVSProject\&.Writer\&._AddFilesToNode ( self,  parent,  files)\fR [protected]\fP"
+
+.PP
+.nf
+Adds files and/or filters to the parent node\&.
+
+Args:
+parent: Destination node
+files: A list of Filter objects and/or relative paths to files\&.
+
+Will call itself recursively, if the files list contains Filter objects\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB133\fP of file \fBMSVSProject\&.py\fP\&.
+.SS "gyp\&.MSVSProject\&.Writer\&._GetSpecForConfiguration ( self,  config_type,  config_name,  attrs,  tools)\fR [protected]\fP"
+
+.PP
+.nf
+Returns the specification for a configuration\&.
+
+Args:
+config_type: Type of configuration node\&.
+config_name: Configuration name\&.
+attrs: Dict of configuration attributes; may be None\&.
+tools: List of tools (strings or Tool objects); may be None\&.
+Returns:
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB92\fP of file \fBMSVSProject\&.py\fP\&.
+.SS "gyp\&.MSVSProject\&.Writer\&.AddConfig ( self,  name,  attrs = \fRNone\fP,  tools = \fRNone\fP)"
+
+.PP
+.nf
+Adds a configuration to the project\&.
+
+Args:
+name: Configuration name\&.
+attrs: Dict of configuration attributes; may be None\&.
+tools: List of tools (strings or Tool objects); may be None\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB122\fP of file \fBMSVSProject\&.py\fP\&.
+.SS "gyp\&.MSVSProject\&.Writer\&.AddFileConfig ( self,  path,  config,  attrs = \fRNone\fP,  tools = \fRNone\fP)"
+
+.PP
+.nf
+Adds a configuration to a file\&.
+
+Args:
+path: Relative path to the file\&.
+config: Name of configuration to add\&.
+attrs: Dict of configuration attributes; may be None\&.
+tools: List of tools (strings or Tool objects); may be None\&.
+
+Raises:
+ValueError: Relative path does not match any file added via AddFiles()\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB165\fP of file \fBMSVSProject\&.py\fP\&.
+.SS "gyp\&.MSVSProject\&.Writer\&.AddFiles ( self,  files)"
+
+.PP
+.nf
+Adds files to the project\&.
+
+Args:
+files: A list of Filter objects and/or relative paths to files\&.
+
+This makes a copy of the file/filter tree at the time of this call\&.  If you
+later add files to a Filter object which was passed into a previous call
+to AddFiles(), it will not be reflected in this project\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB151\fP of file \fBMSVSProject\&.py\fP\&.
+.SS "gyp\&.MSVSProject\&.Writer\&.AddToolFile ( self,  path)"
+
+.PP
+.nf
+Adds a tool file to the project\&.
+
+Args:
+path: Relative path from project to tool file\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB84\fP of file \fBMSVSProject\&.py\fP\&.
+.SS "gyp\&.MSVSProject\&.Writer\&.WriteIfChanged ( self)"
+
+.PP
+.nf
+Writes the project file\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB186\fP of file \fBMSVSProject\&.py\fP\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "gyp\&.MSVSProject\&.Writer\&.configurations_section"
+
+.PP
+Definition at line \fB78\fP of file \fBMSVSProject\&.py\fP\&.
+.SS "gyp\&.MSVSProject\&.Writer\&.files_dict"
+
+.PP
+Definition at line \fB82\fP of file \fBMSVSProject\&.py\fP\&.
+.SS "gyp\&.MSVSProject\&.Writer\&.files_section"
+
+.PP
+Definition at line \fB79\fP of file \fBMSVSProject\&.py\fP\&.
+.SS "gyp\&.MSVSProject\&.Writer\&.guid"
+
+.PP
+Definition at line \fB67\fP of file \fBMSVSProject\&.py\fP\&.
+.SS "gyp\&.MSVSProject\&.Writer\&.name"
+
+.PP
+Definition at line \fB66\fP of file \fBMSVSProject\&.py\fP\&.
+.SS "gyp\&.MSVSProject\&.Writer\&.platform_section"
+
+.PP
+Definition at line \fB74\fP of file \fBMSVSProject\&.py\fP\&.
+.SS "gyp\&.MSVSProject\&.Writer\&.project_path"
+
+.PP
+Definition at line \fB64\fP of file \fBMSVSProject\&.py\fP\&.
+.SS "gyp\&.MSVSProject\&.Writer\&.tool_files_section"
+
+.PP
+Definition at line \fB77\fP of file \fBMSVSProject\&.py\fP\&.
+.SS "gyp\&.MSVSProject\&.Writer\&.version"
+
+.PP
+Definition at line \fB65\fP of file \fBMSVSProject\&.py\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

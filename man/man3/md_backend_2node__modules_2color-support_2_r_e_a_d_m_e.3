@@ -1,0 +1,134 @@
+.TH "md_backend_2node__modules_2color-support_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2color-support_2_r_e_a_d_m_e \- color-support 
+.PP
+ A module which will endeavor to guess your terminal's level of color support\&.
+.PP
+\fR\fP \fR\fP
+.PP
+This is similar to \fRsupports-color\fP, but it does not read \fRprocess\&.argv\fP\&.
+.PP
+.IP "1." 4
+If not in a node environment, not supported\&.
+.IP "2." 4
+If stdout is not a TTY, not supported, unless the \fRignoreTTY\fP option is set\&.
+.IP "3." 4
+If the \fRTERM\fP environ is \fRdumb\fP, not supported, unless the \fRignoreDumb\fP option is set\&.
+.IP "4." 4
+If on Windows, then support 16 colors\&.
+.IP "5." 4
+If using Tmux, then support 256 colors\&.
+.IP "7." 4
+Handle continuous-integration servers\&. If \fRCI\fP or \fRTEAMCITY_VERSION\fP are set in the environment, and \fRTRAVIS\fP is not set, then color is not supported, unless \fRignoreCI\fP option is set\&.
+.PP
+.IP "6." 4
+Guess based on the \fRTERM_PROGRAM\fP environ\&. These terminals support 16m colors:
+.IP "  \(bu" 4
+\fRiTerm\&.app\fP version 3\&.x supports 16m colors, below support 256
+.IP "  \(bu" 4
+\fRMacTerm\fP supports 16m colors
+.IP "  \(bu" 4
+\fRApple_Terminal\fP supports 256 colors
+.IP "  \(bu" 4
+Have more things that belong on this list? Send a PR!
+.PP
+
+.IP "8." 4
+Make a guess based on the \fRTERM\fP environment variable\&. Any \fRxterm-256color\fP will get 256 colors\&. Any screen, xterm, vt100, color, ansi, cygwin, or linux \fRTERM\fP will get 16 colors\&.
+.IP "9." 4
+If \fRCOLORTERM\fP environment variable is set, then support 16 colors\&.
+.IP "10." 4
+At this point, we assume that color is not supported\&.
+.PP
+.SH "USAGE"
+.PP
+.PP
+.nf
+var testColorSupport = require('color\-support')
+var colorSupport = testColorSupport(/* options object */)
+
+if (!colorSupport) {
+  console\&.log('color is not supported')
+} else if (colorSupport\&.has16m) {
+  console\&.log('\\x1b[38;2;102;194;255m16m colors\\x1b[0m')
+} else if (colorSupport\&.has256) {
+  console\&.log('\\x1b[38;5;119m256 colors\\x1b[0m')
+} else if (colorSupport\&.hasBasic) {
+  console\&.log('\\x1b[31mbasic colors\\x1b[0m')
+} else {
+  console\&.log('this is impossible, but colors are not supported')
+}
+.fi
+.PP
+.PP
+If you don't have any options to set, you can also just look at the flags which will all be set on the test function itself\&. (Of course, this doesn't return a falsey value when colors aren't supported, and doesn't allow you to set options\&.)
+.PP
+.PP
+.nf
+var colorSupport = require('color\-support')
+
+if (colorSupport\&.has16m) {
+  console\&.log('\\x1b[38;2;102;194;255m16m colors\\x1b[0m')
+} else if (colorSupport\&.has256) {
+  console\&.log('\\x1b[38;5;119m256 colors\\x1b[0m')
+} else if (colorSupport\&.hasBasic) {
+  console\&.log('\\x1b[31mbasic colors\\x1b[0m')
+} else {
+  console\&.log('colors are not supported')
+}
+.fi
+.PP
+.SH "Options"
+.PP
+You can pass in the following options\&.
+.PP
+.IP "\(bu" 2
+ignoreTTY - default false\&. Ignore the \fRisTTY\fP check\&.
+.IP "\(bu" 2
+ignoreDumb - default false\&. Ignore \fRTERM=dumb\fP environ check\&.
+.IP "\(bu" 2
+ignoreCI - default false\&. Ignore \fRCI\fP environ check\&.
+.IP "\(bu" 2
+env - Object for environment vars\&. Defaults to \fRprocess\&.env\fP\&.
+.IP "\(bu" 2
+stream - Stream for \fRisTTY\fP check\&. Defaults to \fRprocess\&.stdout\fP\&.
+.IP "\(bu" 2
+term - String for \fRTERM\fP checking\&. Defaults to \fRenv\&.TERM\fP\&.
+.IP "\(bu" 2
+alwaysReturn - default false\&. Return an object when colors aren't supported (instead of returning \fRfalse\fP)\&.
+.IP "\(bu" 2
+level - A number from 0 to 3\&. This will return a result for the specified level\&. This is useful if you want to be able to set the color support level explicitly as a number in an environment variable or config, but then use the object flags in your program\&. Except for \fRalwaysReturn\fP to return an object for level 0, all other options are ignored, since no checking is done if a level is explicitly set\&.
+.PP
+.SH "Return Value"
+.PP
+If no color support is available, then \fRfalse\fP is returned by default, unless the \fRalwaysReturn\fP flag is set to \fRtrue\fP\&. This is so that the simple question of 'can I use colors or not' can treat any truthy return as 'yes'\&.
+.PP
+Otherwise, the return object has the following fields:
+.PP
+.IP "\(bu" 2
+\fRlevel\fP - A number from 0 to 3
+.IP "  \(bu" 4
+\fR0\fP - No color support
+.IP "  \(bu" 4
+\fR1\fP - Basic (16) color support
+.IP "  \(bu" 4
+\fR2\fP - 256 color support
+.IP "  \(bu" 4
+\fR3\fP - 16 million (true) color support
+.PP
+
+.IP "\(bu" 2
+\fRhasBasic\fP - Boolean
+.IP "\(bu" 2
+\fRhas256\fP - Boolean
+.IP "\(bu" 2
+\fRhas16m\fP - Boolean
+.PP
+.SH "CLI"
+.PP
+You can run the \fRcolor-support\fP bin from the command line which will just dump the values as this module calculates them in whatever env it's run\&. It takes no command line arguments\&.
+.SH "Credits"
+.PP
+This is a spiritual, if not actual, fork of \fRsupports-color\fP by the ever prolific \fRSindre Sorhus\fP\&. 

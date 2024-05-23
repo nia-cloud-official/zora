@@ -1,0 +1,27 @@
+var ninja_8py =
+[
+    [ "gyp.generator.ninja.Target", "classgyp_1_1generator_1_1ninja_1_1_target.html", "classgyp_1_1generator_1_1ninja_1_1_target" ],
+    [ "gyp.generator.ninja.NinjaWriter", "classgyp_1_1generator_1_1ninja_1_1_ninja_writer.html", "classgyp_1_1generator_1_1ninja_1_1_ninja_writer" ],
+    [ "_AddWinLinkRules", "ninja_8py.html#a0863c37b45278a14886fffe9c08892b6", null ],
+    [ "_GetWinLinkRuleNameSuffix", "ninja_8py.html#ab1c232b7ca3caf129bd5653555e65a69", null ],
+    [ "AddArch", "ninja_8py.html#a5ca28e466b74dd6596e81c1066a74bc3", null ],
+    [ "CalculateGeneratorInputInfo", "ninja_8py.html#a993e473eb4c2bfc6dbf2f650fdf790ef", null ],
+    [ "CalculateVariables", "ninja_8py.html#aab39b9a58a8eaac20b277114c061df1f", null ],
+    [ "CallGenerateOutputForConfig", "ninja_8py.html#af507181e3cec515e9d31e4744a614af2", null ],
+    [ "CommandWithWrapper", "ninja_8py.html#a8870939cd395f1926ee40a197e379b00", null ],
+    [ "ComputeOutputDir", "ninja_8py.html#a7c1f50d1b8493a9c6b2f7ce07ef4bb2b", null ],
+    [ "Define", "ninja_8py.html#a63b6b82c8e1606325886eb7a5c98b8a9", null ],
+    [ "GenerateOutput", "ninja_8py.html#aaaff503be15aaede183a37e4681ef7ca", null ],
+    [ "GenerateOutputForConfig", "ninja_8py.html#ae725b232455eaaa660dee42d4a8050dd", null ],
+    [ "GetDefaultConcurrentLinks", "ninja_8py.html#aadef163d1bd093dd5b10fc0ea9cc4941", null ],
+    [ "OpenOutput", "ninja_8py.html#a92eeb5cfd026631615c5678afa54d162", null ],
+    [ "PerformBuild", "ninja_8py.html#af477cd6918a226053da6b9220d3dcfc7", null ],
+    [ "QuoteShellArgument", "ninja_8py.html#aa997d1d8d8219f59a8eca516eab874b0", null ],
+    [ "StripPrefix", "ninja_8py.html#a077fb57e7b20c9ab7fcd3d4ec962ad94", null ],
+    [ "generator_additional_non_configuration_keys", "ninja_8py.html#ad5a340bfdf0f07eebc2435505a57b26d", null ],
+    [ "generator_additional_path_sections", "ninja_8py.html#a1962853adab3f54633a27f7fde2ec473", null ],
+    [ "generator_default_variables", "ninja_8py.html#ac460e6ab1b781201e56480bbfc18a6f3", null ],
+    [ "generator_extra_sources_for_rules", "ninja_8py.html#aed8fbce493c0603bb28adcdd2c9f7083", null ],
+    [ "generator_filelist_paths", "ninja_8py.html#a2c88ab0fbc0add758cb7930b2bcf71bf", null ],
+    [ "generator_supports_multiple_toolsets", "ninja_8py.html#aa2a4612ae51e9a4092252a6168603cb5", null ]
+];

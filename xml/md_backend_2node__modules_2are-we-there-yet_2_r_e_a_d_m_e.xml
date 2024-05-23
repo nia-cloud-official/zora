@@ -1,0 +1,178 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2are-we-there-yet_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2are-we-there-yet_2_r_e_a_d_m_e</compoundname>
+    <title>are-we-there-yet</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Track complex hierarchies of asynchronous task completion statuses. This is intended to give you a way of recording and reporting the progress of the big recursive fan-out and gather type workflows that are so common in async.</para>
+<para>What you do with this completion data is up to you, but the most common use case is to feed it to one of the many progress bar modules.</para>
+<para>Most progress bar modules include a rudimentary version of this, but my needs were more complex.</para>
+<sect1 id="md_backend_2node__modules_2are-we-there-yet_2_r_e_a_d_m_e_1autotoc_md182">
+<title>Usage</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>TrackerGroup<sp/>=<sp/>require(&quot;are-we-there-yet&quot;).TrackerGroup</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>top<sp/>=<sp/>new<sp/>TrackerGroup(&quot;program&quot;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>single<sp/>=<sp/>top.newItem(&quot;one<sp/>thing&quot;,<sp/>100)</highlight></codeline>
+<codeline><highlight class="normal">single.completeWork(20)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">console.log(top.completed())<sp/>//<sp/>0.2</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">fs.stat(&quot;file&quot;,<sp/>function(er,<sp/>stat)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(er)<sp/>throw<sp/>er<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>stream<sp/>=<sp/>top.newStream(&quot;file&quot;,<sp/>stat.size)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(top.completed())<sp/>//<sp/>now<sp/>0.1<sp/>as<sp/>single<sp/>is<sp/>50%<sp/>of<sp/>the<sp/>job<sp/>and<sp/>is<sp/>20%<sp/>complete</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>and<sp/>50%<sp/>*<sp/>20%<sp/>==<sp/>10%</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fs.createReadStream(&quot;file&quot;).pipe(stream).on(&quot;data&quot;,<sp/>function<sp/>(chunk)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>do<sp/>stuff<sp/>with<sp/>chunk</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>top.on(&quot;change&quot;,<sp/>function<sp/>(name)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>called<sp/>each<sp/>time<sp/>a<sp/>chunk<sp/>is<sp/>read<sp/>from<sp/>&quot;file&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>top.completed()<sp/>will<sp/>start<sp/>at<sp/>0.1<sp/>and<sp/>fill<sp/>up<sp/>to<sp/>0.6<sp/>as<sp/>the<sp/>file<sp/>is<sp/>read</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2are-we-there-yet_2_r_e_a_d_m_e_1autotoc_md183">
+<title>Shared Methods</title><para><itemizedlist>
+<listitem><para>var completed = tracker.completed()</para>
+</listitem></itemizedlist>
+</para>
+<para>Implemented in: <computeroutput>Tracker</computeroutput>, <computeroutput>TrackerGroup</computeroutput>, <computeroutput>TrackerStream</computeroutput></para>
+<para>Returns the ratio of completed work to work to be done. Range of 0 to 1.</para>
+<para><itemizedlist>
+<listitem><para>tracker.finish()</para>
+</listitem></itemizedlist>
+</para>
+<para>Implemented in: <computeroutput>Tracker</computeroutput>, <computeroutput>TrackerGroup</computeroutput></para>
+<para>Marks the tracker as completed. With a TrackerGroup this marks all of its components as completed.</para>
+<para>Marks all of the components of this tracker as finished, which in turn means that <computeroutput>tracker.completed()</computeroutput> for this will now be 1.</para>
+<para>This will result in one or more <computeroutput>change</computeroutput> events being emitted.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2are-we-there-yet_2_r_e_a_d_m_e_1autotoc_md184">
+<title>Events</title><para>All tracker objects emit <computeroutput>change</computeroutput> events with the following arguments:</para>
+<para><programlisting><codeline><highlight class="normal">function<sp/>(name,<sp/>completed,<sp/>tracker)</highlight></codeline>
+</programlisting></para>
+<para><computeroutput>name</computeroutput> is the name of the tracker that originally emitted the event, or if it didn&apos;t have one, the first containing tracker group that had one.</para>
+<para><computeroutput>completed</computeroutput> is the percent complete (as returned by <computeroutput>tracker.completed()</computeroutput> method).</para>
+<para><computeroutput>tracker</computeroutput> is the tracker object that you are listening for events on.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2are-we-there-yet_2_r_e_a_d_m_e_1autotoc_md185">
+<title>TrackerGroup</title><para><itemizedlist>
+<listitem><para>var tracker = new TrackerGroup(<bold>name</bold>)<itemizedlist>
+<listitem><para><bold>name</bold> *(optional)* - The name of this tracker group, used in change notifications if the component updating didn&apos;t have a name. Defaults to undefined.</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+<para>Creates a new empty tracker aggregation group. These are trackers whose completion status is determined by the completion status of other trackers added to this aggregation group.</para>
+<para>Ex.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>tracker<sp/>=<sp/>new<sp/>TrackerGroup(&quot;parent&quot;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>foo<sp/>=<sp/>tracker.newItem(&quot;firstChild&quot;,<sp/>100)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>bar<sp/>=<sp/>tracker.newItem(&quot;secondChild&quot;,<sp/>100)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">foo.finish()</highlight></codeline>
+<codeline><highlight class="normal">console.log(tracker.completed())<sp/>//<sp/>0.5</highlight></codeline>
+<codeline><highlight class="normal">bar.finish()</highlight></codeline>
+<codeline><highlight class="normal">console.log(tracker.completed())<sp/>//<sp/>1</highlight></codeline>
+</programlisting></para>
+<para><itemizedlist>
+<listitem><para>tracker.addUnit(<bold>otherTracker</bold>, <bold>weight</bold>)<itemizedlist>
+<listitem><para><bold>otherTracker</bold> - Any of the other are-we-there-yet tracker objects</para>
+</listitem><listitem><para><bold>weight</bold> *(optional)* - The weight to give the tracker, defaults to 1.</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+<para>Adds the <bold>otherTracker</bold> to this aggregation group. The weight determines how long you expect this tracker to take to complete in proportion to other units. So for instance, if you add one tracker with a weight of 1 and another with a weight of 2, you&apos;re saying the second will take twice as long to complete as the first. As such, the first will account for 33% of the completion of this tracker and the second will account for the other 67%.</para>
+<para>Returns <bold>otherTracker</bold>.</para>
+<para><itemizedlist>
+<listitem><para>var subGroup = tracker.newGroup(<bold>name</bold>, <bold>weight</bold>)</para>
+</listitem></itemizedlist>
+</para>
+<para>The above is exactly equivalent to:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>subGroup<sp/>=<sp/>tracker.addUnit(new<sp/>TrackerGroup(name),<sp/>weight)</highlight></codeline>
+</programlisting></para>
+<para><itemizedlist>
+<listitem><para>var subItem = tracker.newItem(<bold>name</bold>, <bold>todo</bold>, <bold>weight</bold>)</para>
+</listitem></itemizedlist>
+</para>
+<para>The above is exactly equivalent to:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>subItem<sp/>=<sp/>tracker.addUnit(new<sp/>Tracker(name,<sp/>todo),<sp/>weight)</highlight></codeline>
+</programlisting></para>
+<para><itemizedlist>
+<listitem><para>var subStream = tracker.newStream(<bold>name</bold>, <bold>todo</bold>, <bold>weight</bold>)</para>
+</listitem></itemizedlist>
+</para>
+<para>The above is exactly equivalent to:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>subStream<sp/>=<sp/>tracker.addUnit(new<sp/>TrackerStream(name,<sp/>todo),<sp/>weight)</highlight></codeline>
+</programlisting></para>
+<para><itemizedlist>
+<listitem><para>console.log( tracker.debug() )</para>
+</listitem></itemizedlist>
+</para>
+<para>Returns a tree showing the completion of this tracker group and all of its children, including recursively entering all of the children.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2are-we-there-yet_2_r_e_a_d_m_e_1autotoc_md186">
+<title>Tracker</title><para><itemizedlist>
+<listitem><para>var tracker = new Tracker(<bold>name</bold>, <bold>todo</bold>)<itemizedlist>
+<listitem><para><bold>name</bold> *(optional)* The name of this counter to report in change events. Defaults to undefined.</para>
+</listitem><listitem><para><bold>todo</bold> *(optional)* The amount of work todo (a number). Defaults to 0.</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+<para>Ordinarily these are constructed as a part of a tracker group (via <computeroutput>newItem</computeroutput>).</para>
+<para><itemizedlist>
+<listitem><para>var completed = tracker.completed()</para>
+</listitem></itemizedlist>
+</para>
+<para>Returns the ratio of completed work to work to be done. Range of 0 to 1. If total work to be done is 0 then it will return 0.</para>
+<para><itemizedlist>
+<listitem><para>tracker.addWork(<bold>todo</bold>)<itemizedlist>
+<listitem><para><bold>todo</bold> A number to add to the amount of work to be done.</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+<para>Increases the amount of work to be done, thus decreasing the completion percentage. Triggers a <computeroutput>change</computeroutput> event.</para>
+<para><itemizedlist>
+<listitem><para>tracker.completeWork(<bold>completed</bold>)<itemizedlist>
+<listitem><para><bold>completed</bold> A number to add to the work complete</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+<para>Increase the amount of work complete, thus increasing the completion percentage. Will never increase the work completed past the amount of work todo. That is, percentages &gt; 100% are not allowed. Triggers a <computeroutput>change</computeroutput> event.</para>
+<para><itemizedlist>
+<listitem><para>tracker.finish()</para>
+</listitem></itemizedlist>
+</para>
+<para>Marks this tracker as finished, tracker.completed() will now be 1. Triggers a <computeroutput>change</computeroutput> event.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2are-we-there-yet_2_r_e_a_d_m_e_1autotoc_md187">
+<title>TrackerStream</title><para><itemizedlist>
+<listitem><para>var tracker = new TrackerStream(<bold>name</bold>, <bold>size</bold>, <bold>options</bold>)<itemizedlist>
+<listitem><para><bold>name</bold> *(optional)* The name of this counter to report in change events. Defaults to undefined.</para>
+</listitem><listitem><para><bold>size</bold> *(optional)* The number of bytes being sent through this stream.</para>
+</listitem><listitem><para><bold>options</bold> *(optional)* A hash of stream options</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+<para>The tracker stream object is a pass through stream that updates an internal tracker object each time a block passes through. It&apos;s intended to track downloads, file extraction and other related activities. You use it by piping your data source into it and then using it as your data source.</para>
+<para>If your data has a length attribute then that&apos;s used as the amount of work completed when the chunk is passed through. If it does not (eg, object streams) then each chunk counts as completing 1 unit of work, so your size should be the total number of objects being streamed.</para>
+<para><itemizedlist>
+<listitem><para>tracker.addWork(<bold>todo</bold>)<itemizedlist>
+<listitem><para><bold>todo</bold> Increase the expected overall size by <bold>todo</bold> bytes.</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+<para>Increases the amount of work to be done, thus decreasing the completion percentage. Triggers a <computeroutput>change</computeroutput> event. </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/are-we-there-yet/README.md"/>
+  </compounddef>
+</doxygen>

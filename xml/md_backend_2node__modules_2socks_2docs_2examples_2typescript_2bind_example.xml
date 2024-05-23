@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2socks_2docs_2examples_2typescript_2bind_example" kind="page">
+    <compoundname>md_backend_2node__modules_2socks_2docs_2examples_2typescript_2bind_example</compoundname>
+    <title>socks examples</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2socks_2docs_2examples_2typescript_2bind_example_1autotoc_md3540"/> </para>
+<sect1 id="md_backend_2node__modules_2socks_2docs_2examples_2typescript_2bind_example_1autotoc_md3541">
+<title>Example for SOCKS &apos;bind&apos; command</title><para>The bind command tells the SOCKS proxy server to bind and listen on a new TCP port for an incoming connection. It communicates the newly opened port back to the origin client. Once a incoming connection is accepted by the SOCKS proxy server it then communicates the remote host that connected to the SOCKS proxy back through the same initial connection via the origin client.</para>
+<para>This can be used for things such as FTP clients which require incoming TCP connections, etc.</para>
+<para><bold>Connection Steps</bold></para>
+<para><orderedlist>
+<listitem><para>Client -(bind)-&gt; Proxy (Tells the proxy to bind to a new port)</para>
+</listitem><listitem><para>Client &lt;-(port)- Proxy (Tells the origin client which port it opened)</para>
+</listitem><listitem><para>Client2 --&gt; Proxy (Other client connects to the proxy on this port)</para>
+</listitem><listitem><para>Client &lt;<ndash/>(client2&apos;s host info) (Proxy tells the origin client who connected to it)</para>
+</listitem><listitem><para>Original connection to the proxy is now a full TCP stream between client (you) and client2.</para>
+</listitem><listitem><para>Client &lt;--&gt; Proxy &lt;--&gt; Client2</para>
+</listitem></orderedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2socks_2docs_2examples_2typescript_2bind_example_1autotoc_md3542">
+<title>Usage</title><para>The &apos;bind&apos; command can only be used by creating a new SocksClient instance and listening for &apos;bound&apos; and &apos;established&apos; events.</para>
+<para><programlisting filename=".typescript"><codeline><highlight class="normal">import<sp/>{<sp/>SocksClient,<sp/>SocksClientOptions<sp/>}<sp/>from<sp/>&apos;socks&apos;;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>options:<sp/>SocksClientOptions<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>proxy:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;104.131.124.203&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>1081,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>type:<sp/>5</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>This<sp/>should<sp/>be<sp/>the<sp/>ip<sp/>and<sp/>port<sp/>of<sp/>the<sp/>expected<sp/>client<sp/>that<sp/>will<sp/>connect<sp/>to<sp/>the<sp/>SOCKS<sp/>proxy<sp/>server<sp/>on<sp/>the<sp/>newly<sp/>bound<sp/>port.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Most<sp/>SOCKS<sp/>servers<sp/>accept<sp/>0.0.0.0<sp/>as<sp/>a<sp/>wildcard<sp/>address<sp/>to<sp/>accept<sp/>any<sp/>client.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>destination:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;0.0.0.0&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>command:<sp/>&apos;bind&apos;</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>client<sp/>=<sp/>new<sp/>SocksClient(options);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>This<sp/>event<sp/>is<sp/>fired<sp/>when<sp/>the<sp/>SOCKS<sp/>server<sp/>has<sp/>started<sp/>listening<sp/>on<sp/>a<sp/>new<sp/>port<sp/>for<sp/>incoming<sp/>connections.</highlight></codeline>
+<codeline><highlight class="normal">client.on(&apos;bound&apos;,<sp/>(info)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(info);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>/*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>socket:<sp/>&lt;Socket<sp/>...&gt;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>remoteHost:<sp/>{<sp/>//<sp/>This<sp/>is<sp/>the<sp/>remote<sp/>ip<sp/>and<sp/>port<sp/>of<sp/>the<sp/>SOCKS<sp/>proxy<sp/>that<sp/>is<sp/>now<sp/>accepting<sp/>incoming<sp/>connections.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>host:<sp/>&apos;104.131.124.203&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>port:<sp/>49928</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>This<sp/>event<sp/>is<sp/>fired<sp/>when<sp/>the<sp/>SOCKS<sp/>server<sp/>has<sp/>accepted<sp/>an<sp/>incoming<sp/>connection<sp/>on<sp/>the<sp/>newly<sp/>bound<sp/>port.</highlight></codeline>
+<codeline><highlight class="normal">client.on(&apos;established&apos;,<sp/>(info)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(info);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>/*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>socket:<sp/>&lt;Socket<sp/>...&gt;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>remoteHost:<sp/>{<sp/>//<sp/>This<sp/>is<sp/>the<sp/>remote<sp/>ip<sp/>and<sp/>port<sp/>that<sp/>connected<sp/>to<sp/>the<sp/>SOCKS<sp/>proxy<sp/>on<sp/>the<sp/>newly<sp/>bound<sp/>port.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>host:<sp/>&apos;1.2.3.4&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>port:<sp/>58232</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*/</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>At<sp/>this<sp/>point<sp/>info.socket<sp/>is<sp/>a<sp/>regular<sp/>net.Socket<sp/>TCP<sp/>connection<sp/>between<sp/>client<sp/>and<sp/>client2<sp/>(1.2.3.4)<sp/>(the<sp/>client<sp/>which<sp/>connected<sp/>to<sp/>the<sp/>proxy<sp/>on<sp/>the<sp/>newly<sp/>bound<sp/>port.)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(info.socket);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>&lt;Socket<sp/>...&gt;<sp/><sp/>(this<sp/>is<sp/>a<sp/>raw<sp/>net.Socket<sp/>that<sp/>is<sp/>established<sp/>to<sp/>the<sp/>destination<sp/>host<sp/>through<sp/>the<sp/>given<sp/>proxy<sp/>servers)</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>SOCKS<sp/>proxy<sp/>failed<sp/>to<sp/>bind.</highlight></codeline>
+<codeline><highlight class="normal">client.on(&apos;error&apos;,<sp/>()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Handle<sp/>errors</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Start<sp/>connection</highlight></codeline>
+<codeline><highlight class="normal">client.connect();</highlight></codeline>
+</programlisting> </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/socks/docs/examples/typescript/bindExample.md"/>
+  </compounddef>
+</doxygen>

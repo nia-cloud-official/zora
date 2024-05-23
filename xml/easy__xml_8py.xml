@@ -1,0 +1,180 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="easy__xml_8py" kind="file" language="Python">
+    <compoundname>easy_xml.py</compoundname>
+    <innernamespace refid="namespacegyp">gyp</innernamespace>
+    <innernamespace refid="namespacegyp_1_1easy__xml">gyp::easy_xml</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1" refid="namespacegyp_1_1easy__xml" refkind="compound"><highlight class="comment">#<sp/>Copyright<sp/>(c)<sp/>2011<sp/>Google<sp/>Inc.<sp/>All<sp/>rights<sp/>reserved.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">#<sp/>Use<sp/>of<sp/>this<sp/>source<sp/>code<sp/>is<sp/>governed<sp/>by<sp/>a<sp/>BSD-style<sp/>license<sp/>that<sp/>can<sp/>be</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">#<sp/>found<sp/>in<sp/>the<sp/>LICENSE<sp/>file.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>sys</highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>re</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>os</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>locale</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>functools<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>reduce</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12" refid="namespacegyp_1_1easy__xml_1af9076fbcacf7b9a10d1c59a49c08d97a" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="namespacegyp_1_1easy__xml_1af9076fbcacf7b9a10d1c59a49c08d97a" kindref="member">XmlToString</ref>(content,<sp/>encoding=&quot;utf-8&quot;,<sp/>pretty=False):</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;&quot;&quot;<sp/>Writes<sp/>the<sp/>XML<sp/>content<sp/>to<sp/>disk,<sp/>touching<sp/>the<sp/>file<sp/>only<sp/>if<sp/>it<sp/>has<sp/>changed.</highlight></codeline>
+<codeline lineno="14"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="15"><highlight class="stringliteral"><sp/><sp/>Visual<sp/>Studio<sp/>files<sp/>have<sp/>a<sp/>lot<sp/>of<sp/>pre-defined<sp/>structures.<sp/><sp/>This<sp/>function<sp/>makes</highlight></codeline>
+<codeline lineno="16"><highlight class="stringliteral"><sp/><sp/>it<sp/>easy<sp/>to<sp/>represent<sp/>these<sp/>structures<sp/>as<sp/>Python<sp/>data<sp/>structures,<sp/>instead<sp/>of</highlight></codeline>
+<codeline lineno="17"><highlight class="stringliteral"><sp/><sp/>having<sp/>to<sp/>create<sp/>a<sp/>lot<sp/>of<sp/>function<sp/>calls.</highlight></codeline>
+<codeline lineno="18"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="19"><highlight class="stringliteral"><sp/><sp/>Each<sp/>XML<sp/>element<sp/>of<sp/>the<sp/>content<sp/>is<sp/>represented<sp/>as<sp/>a<sp/>list<sp/>composed<sp/>of:</highlight></codeline>
+<codeline lineno="20"><highlight class="stringliteral"><sp/><sp/>1.<sp/>The<sp/>name<sp/>of<sp/>the<sp/>element,<sp/>a<sp/>string,</highlight></codeline>
+<codeline lineno="21"><highlight class="stringliteral"><sp/><sp/>2.<sp/>The<sp/>attributes<sp/>of<sp/>the<sp/>element,<sp/>a<sp/>dictionary<sp/>(optional),<sp/>and</highlight></codeline>
+<codeline lineno="22"><highlight class="stringliteral"><sp/><sp/>3+.<sp/>The<sp/>content<sp/>of<sp/>the<sp/>element,<sp/>if<sp/>any.<sp/><sp/>Strings<sp/>are<sp/>simple<sp/>text<sp/>nodes<sp/>and</highlight></codeline>
+<codeline lineno="23"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/>lists<sp/>are<sp/>child<sp/>elements.</highlight></codeline>
+<codeline lineno="24"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="25"><highlight class="stringliteral"><sp/><sp/>Example<sp/>1:</highlight></codeline>
+<codeline lineno="26"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/>&lt;test/&gt;</highlight></codeline>
+<codeline lineno="27"><highlight class="stringliteral"><sp/><sp/>becomes</highlight></codeline>
+<codeline lineno="28"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/>[&apos;test&apos;]</highlight></codeline>
+<codeline lineno="29"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="30"><highlight class="stringliteral"><sp/><sp/>Example<sp/>2:</highlight></codeline>
+<codeline lineno="31"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/>&lt;myelement<sp/>a=&apos;value1&apos;<sp/>b=&apos;value2&apos;&gt;</highlight></codeline>
+<codeline lineno="32"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;childtype&gt;This<sp/>is&lt;/childtype&gt;</highlight></codeline>
+<codeline lineno="33"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;childtype&gt;it!&lt;/childtype&gt;</highlight></codeline>
+<codeline lineno="34"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/myelement&gt;</highlight></codeline>
+<codeline lineno="35"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="36"><highlight class="stringliteral"><sp/><sp/>becomes</highlight></codeline>
+<codeline lineno="37"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/>[&apos;myelement&apos;,<sp/>{&apos;a&apos;:&apos;value1&apos;,<sp/>&apos;b&apos;:&apos;value2&apos;},</highlight></codeline>
+<codeline lineno="38"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[&apos;childtype&apos;,<sp/>&apos;This<sp/>is&apos;],</highlight></codeline>
+<codeline lineno="39"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[&apos;childtype&apos;,<sp/>&apos;it!&apos;],</highlight></codeline>
+<codeline lineno="40"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/>]</highlight></codeline>
+<codeline lineno="41"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="42"><highlight class="stringliteral"><sp/><sp/>Args:</highlight></codeline>
+<codeline lineno="43"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>content:<sp/><sp/>The<sp/>structured<sp/>content<sp/>to<sp/>be<sp/>converted.</highlight></codeline>
+<codeline lineno="44"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>encoding:<sp/>The<sp/>encoding<sp/>to<sp/>report<sp/>on<sp/>the<sp/>first<sp/>XML<sp/>line.</highlight></codeline>
+<codeline lineno="45"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>pretty:<sp/>True<sp/>if<sp/>we<sp/>want<sp/>pretty<sp/>printing<sp/>with<sp/>indents<sp/>and<sp/>new<sp/>lines.</highlight></codeline>
+<codeline lineno="46"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="47"><highlight class="stringliteral"><sp/><sp/>Returns:</highlight></codeline>
+<codeline lineno="48"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>The<sp/>XML<sp/>content<sp/>as<sp/>a<sp/>string.</highlight></codeline>
+<codeline lineno="49"><highlight class="stringliteral"><sp/><sp/>&quot;&quot;&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>We<sp/>create<sp/>a<sp/>huge<sp/>list<sp/>of<sp/>all<sp/>the<sp/>elements<sp/>of<sp/>the<sp/>file.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/>xml_parts<sp/>=<sp/>[</highlight><highlight class="stringliteral">&apos;&lt;?xml<sp/>version=&quot;1.0&quot;<sp/>encoding=&quot;%s&quot;?&gt;&apos;</highlight><highlight class="normal"><sp/>%<sp/>encoding]</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>pretty:</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>xml_parts.append(</highlight><highlight class="stringliteral">&quot;\n&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacegyp_1_1easy__xml_1ac7f66029e9129c662361b77caee46401" kindref="member">_ConstructContentList</ref>(xml_parts,<sp/>content,<sp/>pretty)</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>Convert<sp/>it<sp/>to<sp/>a<sp/>string</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">.join(xml_parts)</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60" refid="namespacegyp_1_1easy__xml_1ac7f66029e9129c662361b77caee46401" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="namespacegyp_1_1easy__xml_1ac7f66029e9129c662361b77caee46401" kindref="member">_ConstructContentList</ref>(xml_parts,<sp/>specification,<sp/>pretty,<sp/>level=0):</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;&quot;&quot;<sp/>Appends<sp/>the<sp/>XML<sp/>parts<sp/>corresponding<sp/>to<sp/>the<sp/>specification.</highlight></codeline>
+<codeline lineno="62"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="63"><highlight class="stringliteral"><sp/><sp/>Args:</highlight></codeline>
+<codeline lineno="64"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>xml_parts:<sp/>A<sp/>list<sp/>of<sp/>XML<sp/>parts<sp/>to<sp/>be<sp/>appended<sp/>to.</highlight></codeline>
+<codeline lineno="65"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>specification:<sp/><sp/>The<sp/>specification<sp/>of<sp/>the<sp/>element.<sp/><sp/>See<sp/>EasyXml<sp/>docs.</highlight></codeline>
+<codeline lineno="66"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>pretty:<sp/>True<sp/>if<sp/>we<sp/>want<sp/>pretty<sp/>printing<sp/>with<sp/>indents<sp/>and<sp/>new<sp/>lines.</highlight></codeline>
+<codeline lineno="67"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>level:<sp/>Indentation<sp/>level.</highlight></codeline>
+<codeline lineno="68"><highlight class="stringliteral"><sp/><sp/>&quot;&quot;&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>The<sp/>first<sp/>item<sp/>in<sp/>a<sp/>specification<sp/>is<sp/>the<sp/>name<sp/>of<sp/>the<sp/>element.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>pretty:</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>indentation<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;<sp/><sp/>&quot;</highlight><highlight class="normal"><sp/>*<sp/>level</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>new_line<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;\n&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>indentation<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>new_line<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/>name<sp/>=<sp/>specification[0]</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">not</highlight><highlight class="normal"><sp/>isinstance(name,<sp/>str):</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">raise</highlight><highlight class="normal"><sp/>Exception(</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;The<sp/>first<sp/>item<sp/>of<sp/>an<sp/>EasyXml<sp/>specification<sp/>should<sp/>be<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;a<sp/>string.<sp/><sp/>Specification<sp/>was<sp/>&quot;</highlight><highlight class="normal"><sp/>+<sp/>str(specification)</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>)</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/>xml_parts.append(indentation<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;&lt;&quot;</highlight><highlight class="normal"><sp/>+<sp/>name)</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>Optionally<sp/>in<sp/>second<sp/>position<sp/>is<sp/>a<sp/>dictionary<sp/>of<sp/>the<sp/>attributes.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/>rest<sp/>=<sp/>specification[1:]</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>rest<sp/></highlight><highlight class="keywordflow">and</highlight><highlight class="normal"><sp/>isinstance(rest[0],<sp/>dict):</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>at,<sp/>val<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>sorted(rest[0].items()):</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>xml_parts.append(f</highlight><highlight class="stringliteral">&apos;<sp/>{at}=&quot;{_XmlEscape(val,<sp/>attr=True)}&quot;&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rest<sp/>=<sp/>rest[1:]</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>rest:</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>xml_parts.append(</highlight><highlight class="stringliteral">&quot;&gt;&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>all_strings<sp/>=<sp/>reduce(</highlight><highlight class="keyword">lambda</highlight><highlight class="normal"><sp/>x,<sp/>y:<sp/>x<sp/></highlight><highlight class="keywordflow">and</highlight><highlight class="normal"><sp/>isinstance(y,<sp/>str),<sp/>rest,<sp/></highlight><highlight class="keyword">True</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>multi_line<sp/>=<sp/></highlight><highlight class="keywordflow">not</highlight><highlight class="normal"><sp/>all_strings</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>multi_line<sp/></highlight><highlight class="keywordflow">and</highlight><highlight class="normal"><sp/>new_line:</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>xml_parts.append(new_line)</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>child_spec<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>rest:</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>If<sp/>it&apos;s<sp/>a<sp/>string,<sp/>append<sp/>a<sp/>text<sp/>node.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>Otherwise<sp/>recurse<sp/>over<sp/>that<sp/>child<sp/>definition</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>isinstance(child_spec,<sp/>str):</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>xml_parts.append(<ref refid="namespacegyp_1_1easy__xml_1a993445741df15aaa06fe1cdd8444de73" kindref="member">_XmlEscape</ref>(child_spec))</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacegyp_1_1easy__xml_1ac7f66029e9129c662361b77caee46401" kindref="member">_ConstructContentList</ref>(xml_parts,<sp/>child_spec,<sp/>pretty,<sp/>level<sp/>+<sp/>1)</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>multi_line<sp/></highlight><highlight class="keywordflow">and</highlight><highlight class="normal"><sp/>indentation:</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>xml_parts.append(indentation)</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>xml_parts.append(f</highlight><highlight class="stringliteral">&quot;&lt;/{name}&gt;{new_line}&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>xml_parts.append(</highlight><highlight class="stringliteral">&quot;/&gt;%s&quot;</highlight><highlight class="normal"><sp/>%<sp/>new_line)</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"></highlight></codeline>
+<codeline lineno="109"><highlight class="normal"></highlight></codeline>
+<codeline lineno="110" refid="namespacegyp_1_1easy__xml_1a48ff9e84a26be6ee00b6882e1864f6a6" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="namespacegyp_1_1easy__xml_1a48ff9e84a26be6ee00b6882e1864f6a6" kindref="member">WriteXmlIfChanged</ref>(content,<sp/>path,<sp/>encoding=&quot;utf-8&quot;,<sp/>pretty=False,</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>win32=(sys.platform<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;win32&quot;</highlight><highlight class="normal">)):</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;&quot;&quot;<sp/>Writes<sp/>the<sp/>XML<sp/>content<sp/>to<sp/>disk,<sp/>touching<sp/>the<sp/>file<sp/>only<sp/>if<sp/>it<sp/>has<sp/>changed.</highlight></codeline>
+<codeline lineno="113"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="114"><highlight class="stringliteral"><sp/><sp/>Args:</highlight></codeline>
+<codeline lineno="115"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>content:<sp/><sp/>The<sp/>structured<sp/>content<sp/>to<sp/>be<sp/>written.</highlight></codeline>
+<codeline lineno="116"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>path:<sp/>Location<sp/>of<sp/>the<sp/>file.</highlight></codeline>
+<codeline lineno="117"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>encoding:<sp/>The<sp/>encoding<sp/>to<sp/>report<sp/>on<sp/>the<sp/>first<sp/>line<sp/>of<sp/>the<sp/>XML<sp/>file.</highlight></codeline>
+<codeline lineno="118"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>pretty:<sp/>True<sp/>if<sp/>we<sp/>want<sp/>pretty<sp/>printing<sp/>with<sp/>indents<sp/>and<sp/>new<sp/>lines.</highlight></codeline>
+<codeline lineno="119"><highlight class="stringliteral"><sp/><sp/>&quot;&quot;&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/>xml_string<sp/>=<sp/><ref refid="namespacegyp_1_1easy__xml_1af9076fbcacf7b9a10d1c59a49c08d97a" kindref="member">XmlToString</ref>(content,<sp/>encoding,<sp/>pretty)</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>win32<sp/></highlight><highlight class="keywordflow">and</highlight><highlight class="normal"><sp/>os.linesep<sp/>!=<sp/></highlight><highlight class="stringliteral">&quot;\r\n&quot;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>xml_string<sp/>=<sp/>xml_string.replace(</highlight><highlight class="stringliteral">&quot;\n&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;\r\n&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"></highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/>default_encoding<sp/>=<sp/>locale.getdefaultlocale()[1]</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>default_encoding<sp/></highlight><highlight class="keywordflow">and</highlight><highlight class="normal"><sp/>default_encoding.upper()<sp/>!=<sp/>encoding.upper():</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>xml_string<sp/>=<sp/>xml_string.encode(encoding)</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"></highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>Get<sp/>the<sp/>old<sp/>content</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">try</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">with</highlight><highlight class="normal"><sp/>open(path)<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>file:</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>existing<sp/>=<sp/>file.read()</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">except</highlight><highlight class="normal"><sp/>OSError:</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>existing<sp/>=<sp/></highlight><highlight class="keywordtype">None</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal"></highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>It<sp/>has<sp/>changed,<sp/>write<sp/>it</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>existing<sp/>!=<sp/>xml_string:</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">with</highlight><highlight class="normal"><sp/>open(path,<sp/></highlight><highlight class="stringliteral">&quot;wb&quot;</highlight><highlight class="normal">)<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>file:</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>file.write(xml_string)</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"></highlight></codeline>
+<codeline lineno="140"><highlight class="normal"></highlight></codeline>
+<codeline lineno="141" refid="namespacegyp_1_1easy__xml_1a03e57b2d733adca141b4087d10832468" refkind="member"><highlight class="normal">_xml_escape_map<sp/>=<sp/>{</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&apos;&quot;&apos;</highlight><highlight class="normal">:<sp/></highlight><highlight class="stringliteral">&quot;&amp;quot;&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;&apos;&quot;</highlight><highlight class="normal">:<sp/></highlight><highlight class="stringliteral">&quot;&amp;apos;&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;&lt;&quot;</highlight><highlight class="normal">:<sp/></highlight><highlight class="stringliteral">&quot;&amp;lt;&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;&gt;&quot;</highlight><highlight class="normal">:<sp/></highlight><highlight class="stringliteral">&quot;&amp;gt;&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;&amp;&quot;</highlight><highlight class="normal">:<sp/></highlight><highlight class="stringliteral">&quot;&amp;amp;&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;\n&quot;</highlight><highlight class="normal">:<sp/></highlight><highlight class="stringliteral">&quot;&amp;#xA;&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;\r&quot;</highlight><highlight class="normal">:<sp/></highlight><highlight class="stringliteral">&quot;&amp;#xD;&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="149"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"></highlight></codeline>
+<codeline lineno="151"><highlight class="normal"></highlight></codeline>
+<codeline lineno="152" refid="namespacegyp_1_1easy__xml_1ad080a7c07b995a44d4da1def783e191a" refkind="member"><highlight class="normal">_xml_escape_re<sp/>=<sp/>re.compile(</highlight><highlight class="stringliteral">&quot;(%s)&quot;</highlight><highlight class="normal"><sp/>%<sp/></highlight><highlight class="stringliteral">&quot;|&quot;</highlight><highlight class="normal">.join(map(re.escape,<sp/>_xml_escape_map.keys())))</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"></highlight></codeline>
+<codeline lineno="154"><highlight class="normal"></highlight></codeline>
+<codeline lineno="155" refid="namespacegyp_1_1easy__xml_1a993445741df15aaa06fe1cdd8444de73" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="namespacegyp_1_1easy__xml_1a993445741df15aaa06fe1cdd8444de73" kindref="member">_XmlEscape</ref>(value,<sp/>attr=False):</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;&quot;&quot;<sp/>Escape<sp/>a<sp/>string<sp/>for<sp/>inclusion<sp/>in<sp/>XML.&quot;&quot;&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"></highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">replace(match):</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m<sp/>=<sp/>match.string[match.start()<sp/>:<sp/>match.end()]</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>don&apos;t<sp/>replace<sp/>single<sp/>quotes<sp/>in<sp/>attrs</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>attr<sp/></highlight><highlight class="keywordflow">and</highlight><highlight class="normal"><sp/>m<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;&apos;&quot;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>m</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>_xml_escape_map[m]</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"></highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>_xml_escape_re.sub(replace,<sp/>value)</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/easy_xml.py"/>
+  </compounddef>
+</doxygen>

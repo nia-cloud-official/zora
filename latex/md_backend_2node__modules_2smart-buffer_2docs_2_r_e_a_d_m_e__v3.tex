@@ -1,0 +1,341 @@
+\chapter{smart-\/buffer \texorpdfstring{$<$}{<}a href="{}https\+://travis-\/ci.\+org/\+Josh\+Glazebrook/smart-\/buffer"{} \texorpdfstring{$>$}{>}\texorpdfstring{$<$}{<}img src="{}https\+://travis-\/ci.\+org/\+Josh\+Glazebrook/smart-\/buffer.\+svg?branch=master"{} alt="{}\+Build Status"{}/\texorpdfstring{$>$}{>}\texorpdfstring{$<$}{<}/a\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}a href="{}https\+://coveralls.\+io/github/\+Josh\+Glazebrook/smart-\/buffer?branch=master"{} \texorpdfstring{$>$}{>}\texorpdfstring{$<$}{<}img src="{}https\+://coveralls.\+io/repos/github/\+Josh\+Glazebrook/smart-\/buffer/badge.\+svg?branch=master"{} alt="{}\+Coverage Status"{}/\texorpdfstring{$>$}{>}\texorpdfstring{$<$}{<}/a\texorpdfstring{$>$}{>}}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3}{}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3}\index{smart-\/buffer  $<$a href="{}https://travis-\/ci.org/JoshGlazebrook/smart-\/buffer"{} $>$$<$img src="{}https://travis-\/ci.org/JoshGlazebrook/smart-\/buffer.svg?branch=master"{} alt="{}Build Status"{}/$>$$<$/a$>$  $<$a href="{}https://coveralls.io/github/JoshGlazebrook/smart-\/buffer?branch=master"{} $>$$<$img src="{}https://coveralls.io/repos/github/JoshGlazebrook/smart-\/buffer/badge.svg?branch=master"{} alt="{}Coverage Status"{}/$>$$<$/a$>$@{smart-\/buffer  $<$a href=""https://travis-\/ci.org/JoshGlazebrook/smart-\/buffer"" $>$$<$img src=""https://travis-\/ci.org/JoshGlazebrook/smart-\/buffer.svg?branch=master"" alt=""Build Status""/$>$$<$/a$>$  $<$a href=""https://coveralls.io/github/JoshGlazebrook/smart-\/buffer?branch=master"" $>$$<$img src=""https://coveralls.io/repos/github/JoshGlazebrook/smart-\/buffer/badge.svg?branch=master"" alt=""Coverage Status""/$>$$<$/a$>$}}
+smart-\/buffer is a light Buffer wrapper that takes away the need to keep track of what position to read and write data to and from the underlying Buffer. It also adds null terminating string operations and {\bfseries{grows}} as you add more data.
+
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3341}{}\doxysubsection{\texorpdfstring{What it\textquotesingle{}s useful for\+:}{What it\textquotesingle{}s useful for\+:}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3341}
+I created smart-\/buffer because I wanted to simplify the process of using Buffer for building and reading network packets to send over a socket. Rather than having to keep track of which position I need to write a UInt16 to after adding a string of variable length, I simply don\textquotesingle{}t have to.
+
+Key Features\+:
+\begin{DoxyItemize}
+\item Proxies all of the Buffer write and read functions.
+\item Keeps track of read and write positions for you.
+\item Grows the internal Buffer as you add data to it.
+\item Useful string operations. (Null terminating strings)
+\item Allows for inserting values at specific points in the internal Buffer.
+\item Built in Type\+Script
+\item Type Definitions Provided
+\end{DoxyItemize}
+
+Requirements\+:
+\begin{DoxyItemize}
+\item Node v4.\+0+ is supported at this time. (Versions prior to 2.\+0 will work on node 0.\+10)
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3342}{}\doxysubsubsection{\texorpdfstring{Note\+:}{Note\+:}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3342}
+smart-\/buffer can be used for writing to an underlying buffer as well as reading from it. It however does not function correctly if you\textquotesingle{}re mixing both read and write operations with each other.\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3343}{}\doxysection{\texorpdfstring{Breaking Changes with 2.\+0}{Breaking Changes with 2.\+0}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3343}
+The latest version (2.\+0+) is written in Type\+Script, and are compiled to ES6 Javascript. This means the earliest Node.\+js it supports will be 4.\+x (in strict mode.) If you\textquotesingle{}re using version 6 and above it will work without any issues. From an API standpoint, 2.\+0 is backwards compatible. The only difference is Smart\+Buffer is not exported directly as the root module.\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3344}{}\doxysection{\texorpdfstring{Breaking Changes with 3.\+0}{Breaking Changes with 3.\+0}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3344}
+Starting with 3.\+0, if any of the read\+Int\+XXXX() methods are called and the requested data is larger than the bounds of the internally managed valid buffer data, an exception will now be thrown.\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3345}{}\doxysection{\texorpdfstring{Installing\+:}{Installing\+:}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3345}
+{\ttfamily npm install smart-\/buffer}
+
+or
+
+{\ttfamily yarn add smart-\/buffer}
+
+Note\+: The published NPM package includes the built javascript library. If you cloned this repo and wish to build the library manually use\+:
+
+{\ttfamily tsc -\/p ./}\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3346}{}\doxysection{\texorpdfstring{Using smart-\/buffer}{Using smart-\/buffer}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3346}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3347}{}\doxysubsection{\texorpdfstring{Example}{Example}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3347}
+Say you were building a packet that had to conform to the following protocol\+:
+
+{\ttfamily \mbox{[}Packet\+Type\+:2\mbox{]}\mbox{[}Packet\+Length\+:2\mbox{]}\mbox{[}Data\+:XX\mbox{]}}
+
+To build this packet using the vanilla Buffer class, you would have to count up the length of the data payload beforehand. You would also need to keep track of the current "{}cursor"{} position in your Buffer so you write everything in the right places. With smart-\/buffer you don\textquotesingle{}t have to do either of those things.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ 1.x\ (javascript)}
+\DoxyCodeLine{var\ SmartBuffer\ =\ require('smart-\/buffer');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ 1.x\ (typescript)}
+\DoxyCodeLine{import\ SmartBuffer\ =\ require('smart-\/buffer');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ 2.x+\ (javascript)}
+\DoxyCodeLine{const\ SmartBuffer\ =\ require('smart-\/buffer').SmartBuffer;}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ 2.x+\ (typescript)}
+\DoxyCodeLine{import\ \{\ SmartBuffer,\ SmartBufferOptions\}\ from\ 'smart-\/buffer';}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ createLoginPacket(username,\ password,\ age,\ country)\ \{}
+\DoxyCodeLine{\ \ \ \ let\ packet\ =\ new\ SmartBuffer();}
+\DoxyCodeLine{\ \ \ \ packet.writeUInt16LE(0x0060);\ //\ Login\ Packet\ Type/ID}
+\DoxyCodeLine{\ \ \ \ packet.writeStringNT(username);}
+\DoxyCodeLine{\ \ \ \ packet.writeStringNT(password);}
+\DoxyCodeLine{\ \ \ \ packet.writeUInt8(age);}
+\DoxyCodeLine{\ \ \ \ packet.writeStringNT(country);}
+\DoxyCodeLine{\ \ \ \ packet.writeUInt16LE(packet.length\ -\/\ 2,\ 2);}
+\DoxyCodeLine{\ \ \ \ }
+\DoxyCodeLine{\ \ \ \ return\ packet.toBuffer();}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ With the above function, you now can do this\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{let\ login\ =\ createLoginPacket("{}Josh"{},\ "{}secret123"{},\ 22,\ "{}United\ States"{});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ <Buffer\ 60\ 00\ 1e\ 00\ 4a\ 6f\ 73\ 68\ 00\ 73\ 65\ 63\ 72\ 65\ 74\ 31\ 32\ 33\ 00\ 16\ 55\ 6e\ 69\ 74\ 65\ 64\ 20\ 53\ 74\ 61\ 74\ 65\ 73\ 00>}
+
+\end{DoxyCode}
+ Notice that the {\ttfamily \mbox{[}Packet\+Length\+:2\mbox{]}} part of the packet was inserted after we had added everything else, and as shown in the Buffer dump above, is in the correct location along with everything else.
+
+Reading back the packet we created above is just as easy\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{let\ reader\ =\ SmartBuffer.fromBuffer(login);}
+\DoxyCodeLine{}
+\DoxyCodeLine{let\ logininfo\ =\ \{}
+\DoxyCodeLine{\ \ \ \ packetType:\ reader.readUInt16LE(),}
+\DoxyCodeLine{\ \ \ \ packetLength:\ reader.readUInt16LE(),}
+\DoxyCodeLine{\ \ \ \ username:\ reader.readStringNT(),}
+\DoxyCodeLine{\ \ \ \ password:\ reader.readStringNT(),}
+\DoxyCodeLine{\ \ \ \ age:\ reader.readUInt8(),}
+\DoxyCodeLine{\ \ \ \ country:\ reader.readStringNT()}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{/*}
+\DoxyCodeLine{\{\ }
+\DoxyCodeLine{\ \ \ \ packetType:\ 96,\ (0x0060)}
+\DoxyCodeLine{\ \ \ \ packetLength:\ 30,}
+\DoxyCodeLine{\ \ \ \ username:\ 'Josh',}
+\DoxyCodeLine{\ \ \ \ password:\ 'secret123',}
+\DoxyCodeLine{\ \ \ \ age:\ 22,}
+\DoxyCodeLine{\ \ \ \ country:\ 'United\ States'\ }
+\DoxyCodeLine{\};}
+\DoxyCodeLine{*/}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3348}{}\doxysection{\texorpdfstring{Api Reference\+:}{Api Reference\+:}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3348}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3349}{}\doxysubsubsection{\texorpdfstring{Constructing a smart-\/buffer}{Constructing a smart-\/buffer}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3349}
+smart-\/buffer has a few different ways to construct an instance. Starting with version 2.\+0, the following factory methods are preffered.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{let\ SmartBuffer\ =\ require('smart-\/buffer');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Creating\ SmartBuffer\ from\ existing\ Buffer}
+\DoxyCodeLine{let\ buff\ =\ SmartBuffer.fromBuffer(buffer);\ //\ Creates\ instance\ from\ buffer.\ (Uses\ default\ utf8\ encoding)}
+\DoxyCodeLine{let\ buff\ =\ SmartBuffer.fromBuffer(buffer,\ 'ascii');\ //\ Creates\ instance\ from\ buffer\ with\ ascii\ encoding\ for\ Strings.\ }
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Creating\ SmartBuffer\ with\ specified\ internal\ Buffer\ size.}
+\DoxyCodeLine{let\ buff\ =\ SmartBuffer.fromSize(1024);\ //\ Creates\ instance\ with\ internal\ Buffer\ size\ of\ 1024.}
+\DoxyCodeLine{let\ buff\ =\ SmartBuffer.fromSize(1024,\ 'utf8');\ //\ Creates\ instance\ with\ intenral\ Buffer\ size\ of\ 1024,\ and\ utf8\ encoding.\ }
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Creating\ SmartBuffer\ with\ options\ object.\ This\ one\ specifies\ size\ and\ encoding.}
+\DoxyCodeLine{let\ buff\ =\ SmartBuffer.fromOptions(\{}
+\DoxyCodeLine{\ \ \ \ size:\ 1024,}
+\DoxyCodeLine{\ \ \ \ encoding:\ 'ascii'}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Creating\ SmartBuffer\ with\ options\ object.\ This\ one\ specified\ an\ existing\ Buffer.}
+\DoxyCodeLine{let\ buff\ =\ SmartBuffer.fromOptions(\{}
+\DoxyCodeLine{\ \ \ \ buff:\ buffer}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Just\ want\ a\ regular\ SmartBuffer\ with\ all\ default\ options?}
+\DoxyCodeLine{let\ buff\ =\ new\ SmartBuffer();}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3350}{}\doxysubsection{\texorpdfstring{Backwards Compatibility\+:}{Backwards Compatibility\+:}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3350}
+All constructors used prior to 2.\+0 still are supported. However it\textquotesingle{}s not recommended to use these.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{let\ writer\ =\ new\ SmartBuffer();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ Defaults\ to\ utf8,\ 4096\ length\ internal\ Buffer.}
+\DoxyCodeLine{let\ writer\ =\ new\ SmartBuffer(1024);\ \ \ \ \ \ \ \ \ \ \ //\ Defaults\ to\ utf8,\ 1024\ length\ internal\ Buffer.}
+\DoxyCodeLine{let\ writer\ =\ new\ SmartBuffer('ascii');\ \ \ \ \ \ \ \ \ //\ Sets\ to\ ascii\ encoding,\ 4096\ length\ internal\ buffer.}
+\DoxyCodeLine{let\ writer\ =\ new\ SmartBuffer(1024,\ 'ascii');\ \ //\ Sets\ to\ ascii\ encoding,\ 1024\ length\ internal\ buffer.}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3351}{}\doxysubsection{\texorpdfstring{Reading Data}{Reading Data}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3351}
+smart-\/buffer supports all of the common read functions you will find in the vanilla Buffer class. The only difference is, you do not need to specify which location to start reading from. This is possible because as you read data out of a smart-\/buffer, it automatically progresses an internal read offset/position to know where to pick up from on the next read.\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3352}{}\doxysubsection{\texorpdfstring{Reading Numeric Values}{Reading Numeric Values}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3352}
+When numeric values, you simply need to call the function you want, and the data is returned.
+
+Supported Operations\+:
+\begin{DoxyItemize}
+\item read\+Int8
+\item read\+Int16\+BE
+\item read\+Int16\+LE
+\item read\+Int32\+BE
+\item read\+Int32\+LE
+\item read\+Big\+Int64\+LE
+\item read\+Big\+Int64\+BE
+\item read\+UInt8
+\item read\+UInt16\+BE
+\item read\+UInt16\+LE
+\item read\+UInt32\+BE
+\item read\+UInt32\+LE
+\item read\+Big\+UInt64\+LE
+\item read\+Big\+UInt64\+BE
+\item read\+Float\+BE
+\item read\+Float\+LE
+\item read\+Double\+BE
+\item read\+Double\+LE
+\end{DoxyItemize}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{let\ reader\ =\ new\ SmartBuffer(somebuffer);}
+\DoxyCodeLine{let\ num\ =\ reader.readInt8();}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3353}{}\doxysubsection{\texorpdfstring{Reading String Values}{Reading String Values}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3353}
+When reading String values, you can either choose to read a null terminated string, or a string of a specified length.\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3354}{}\doxysubsubsection{\texorpdfstring{Smart\+Buffer.\+read\+String\+NT( \mbox{[}encoding\mbox{]} )}{Smart\+Buffer.\+read\+String\+NT( \mbox{[}encoding\mbox{]} )}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3354}
+\begin{quote}
+{\ttfamily String} {\bfseries{String encoding to use}} -\/ Defaults to the encoding set in the constructor. \end{quote}
+
+
+returns {\ttfamily String}
+
+\begin{quote}
+Note\+: When read\+String\+NT is called and there is no null character found, smart-\/buffer will read to the end of the internal Buffer. \end{quote}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3355}{}\doxysubsubsection{\texorpdfstring{Smart\+Buffer.\+read\+String( \mbox{[}length\mbox{]} )}{Smart\+Buffer.\+read\+String( \mbox{[}length\mbox{]} )}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3355}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3356}{}\doxysubsubsection{\texorpdfstring{Smart\+Buffer.\+read\+String( \mbox{[}encoding\mbox{]} )}{Smart\+Buffer.\+read\+String( \mbox{[}encoding\mbox{]} )}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3356}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3357}{}\doxysubsubsection{\texorpdfstring{Smart\+Buffer.\+read\+String( \mbox{[}length\mbox{]}, \mbox{[}encoding\mbox{]} )}{Smart\+Buffer.\+read\+String( \mbox{[}length\mbox{]}, \mbox{[}encoding\mbox{]} )}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3357}
+\begin{quote}
+{\ttfamily Number} {\bfseries{Length of the string to read}} \end{quote}
+
+
+\begin{quote}
+{\ttfamily String} {\bfseries{String encoding to use}} -\/ Defaults to the encoding set in the constructor, or utf8. \end{quote}
+
+
+returns {\ttfamily String}
+
+\begin{quote}
+Note\+: When read\+String is called without a specified length, smart-\/buffer will read to the end of the internal Buffer. \end{quote}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3358}{}\doxysubsection{\texorpdfstring{Reading Buffer Values}{Reading Buffer Values}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3358}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3359}{}\doxysubsubsection{\texorpdfstring{Smart\+Buffer.\+read\+Buffer( length )}{Smart\+Buffer.\+read\+Buffer( length )}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3359}
+\begin{quote}
+{\ttfamily Number} {\bfseries{Length of data to read into a Buffer}} \end{quote}
+
+
+returns {\ttfamily Buffer}
+
+\begin{quote}
+Note\+: This function uses {\ttfamily slice} to retrieve the Buffer. \end{quote}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3360}{}\doxysubsubsection{\texorpdfstring{Smart\+Buffer.\+read\+Buffer\+NT()}{Smart\+Buffer.\+read\+Buffer\+NT()}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3360}
+returns {\ttfamily Buffer}
+
+\begin{quote}
+Note\+: This reads the next sequence of bytes in the buffer until a null (0x00) value is found. (Null terminated buffer) Note\+: This function uses {\ttfamily slice} to retrieve the Buffer. \end{quote}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3361}{}\doxysubsection{\texorpdfstring{Writing Data}{Writing Data}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3361}
+smart-\/buffer supports all of the common write functions you will find in the vanilla Buffer class. The only difference is, you do not need to specify which location to write to in your Buffer by default. You do however have the option of {\bfseries{inserting}} a piece of data into your smart-\/buffer at a given location.\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3362}{}\doxysubsection{\texorpdfstring{Writing Numeric Values}{Writing Numeric Values}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3362}
+For numeric values, you simply need to call the function you want, and the data is written at the end of the internal Buffer\textquotesingle{}s current write position. You can specify a offset/position to {\bfseries{insert}} the given value at, but keep in mind this does not override data at the given position. This feature also does not work properly when inserting a value beyond the current internal length of the smart-\/buffer (length being the .length property of the smart-\/buffer instance you\textquotesingle{}re writing to)
+
+Supported Operations\+:
+\begin{DoxyItemize}
+\item write\+Int8
+\item write\+Int16\+BE
+\item write\+Int16\+LE
+\item write\+Int32\+BE
+\item write\+Int32\+LE
+\item write\+Big\+Int64\+BE
+\item write\+Big\+Int64\+LE
+\item write\+UInt8
+\item write\+UInt16\+BE
+\item write\+UInt16\+LE
+\item write\+UInt32\+BE
+\item write\+UInt32\+LE
+\item write\+Big\+UInt64\+BE
+\item write\+Big\+UInt64\+LE
+\item write\+Float\+BE
+\item write\+Float\+LE
+\item write\+Double\+BE
+\item write\+Double\+LE
+\end{DoxyItemize}
+
+The following signature is the same for all the above functions\+:\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3363}{}\doxysubsubsection{\texorpdfstring{Smart\+Buffer.\+write\+Int8( value, \mbox{[}offset\mbox{]} )}{Smart\+Buffer.\+write\+Int8( value, \mbox{[}offset\mbox{]} )}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3363}
+\begin{quote}
+{\ttfamily Number} {\bfseries{A valid Int8 number}} \end{quote}
+
+
+\begin{quote}
+{\ttfamily Number} {\bfseries{The position to insert this value at}} \end{quote}
+
+
+returns this
+
+\begin{quote}
+Note\+: All write operations return {\ttfamily this} to allow for chaining. \end{quote}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3364}{}\doxysubsection{\texorpdfstring{Writing String Values}{Writing String Values}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3364}
+When reading String values, you can either choose to write a null terminated string, or a non null terminated string.\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3365}{}\doxysubsubsection{\texorpdfstring{Smart\+Buffer.\+write\+String\+NT( value, \mbox{[}offset\mbox{]}, \mbox{[}encoding\mbox{]} )}{Smart\+Buffer.\+write\+String\+NT( value, \mbox{[}offset\mbox{]}, \mbox{[}encoding\mbox{]} )}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3365}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3366}{}\doxysubsubsection{\texorpdfstring{Smart\+Buffer.\+write\+String\+NT( value, \mbox{[}offset\mbox{]} )}{Smart\+Buffer.\+write\+String\+NT( value, \mbox{[}offset\mbox{]} )}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3366}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3367}{}\doxysubsubsection{\texorpdfstring{Smart\+Buffer.\+write\+String\+NT( value, \mbox{[}encoding\mbox{]} )}{Smart\+Buffer.\+write\+String\+NT( value, \mbox{[}encoding\mbox{]} )}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3367}
+\begin{quote}
+{\ttfamily String} {\bfseries{String value to write}} \end{quote}
+
+
+\begin{quote}
+{\ttfamily Number} {\bfseries{The position to insert this String at}} \end{quote}
+
+
+\begin{quote}
+{\ttfamily String} {\bfseries{The String encoding to use.}} -\/ Defaults to the encoding set in the constructor, or utf8. \end{quote}
+
+
+returns this\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3368}{}\doxysubsubsection{\texorpdfstring{Smart\+Buffer.\+write\+String( value, \mbox{[}offset\mbox{]}, \mbox{[}encoding\mbox{]} )}{Smart\+Buffer.\+write\+String( value, \mbox{[}offset\mbox{]}, \mbox{[}encoding\mbox{]} )}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3368}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3369}{}\doxysubsubsection{\texorpdfstring{Smart\+Buffer.\+write\+String( value, \mbox{[}offset\mbox{]} )}{Smart\+Buffer.\+write\+String( value, \mbox{[}offset\mbox{]} )}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3369}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3370}{}\doxysubsubsection{\texorpdfstring{Smart\+Buffer.\+write\+String( value, \mbox{[}encoding\mbox{]} )}{Smart\+Buffer.\+write\+String( value, \mbox{[}encoding\mbox{]} )}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3370}
+\begin{quote}
+{\ttfamily String} {\bfseries{String value to write}} \end{quote}
+
+
+\begin{quote}
+{\ttfamily Number} {\bfseries{The position to insert this String at}} \end{quote}
+
+
+\begin{quote}
+{\ttfamily String} {\bfseries{The String encoding to use}} -\/ Defaults to the encoding set in the constructor, or utf8. \end{quote}
+
+
+returns this\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3371}{}\doxysubsection{\texorpdfstring{Writing Buffer Values}{Writing Buffer Values}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3371}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3372}{}\doxysubsubsection{\texorpdfstring{Smart\+Buffer.\+write\+Buffer( value, \mbox{[}offset\mbox{]} )}{Smart\+Buffer.\+write\+Buffer( value, \mbox{[}offset\mbox{]} )}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3372}
+\begin{quote}
+{\ttfamily Buffer} {\bfseries{Buffer value to write}} \end{quote}
+
+
+\begin{quote}
+{\ttfamily Number} {\bfseries{The position to insert this Buffer\textquotesingle{}s content at}} \end{quote}
+
+
+returns this\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3373}{}\doxysubsubsection{\texorpdfstring{Smart\+Buffer.\+write\+Buffer\+NT( value, \mbox{[}offset\mbox{]} )}{Smart\+Buffer.\+write\+Buffer\+NT( value, \mbox{[}offset\mbox{]} )}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3373}
+\begin{quote}
+{\ttfamily Buffer} {\bfseries{Buffer value to write}} \end{quote}
+
+
+\begin{quote}
+{\ttfamily Number} {\bfseries{The position to insert this Buffer\textquotesingle{}s content at}} \end{quote}
+
+
+returns this\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3374}{}\doxysubsection{\texorpdfstring{Utility Functions}{Utility Functions}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3374}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3375}{}\doxysubsubsection{\texorpdfstring{Smart\+Buffer.\+clear()}{Smart\+Buffer.\+clear()}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3375}
+Resets the Smart\+Buffer to its default state where it can be reused for reading or writing.\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3376}{}\doxysubsubsection{\texorpdfstring{Smart\+Buffer.\+remaining()}{Smart\+Buffer.\+remaining()}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3376}
+returns {\ttfamily Number} The amount of data left to read based on the current read Position.\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3377}{}\doxysubsubsection{\texorpdfstring{Smart\+Buffer.\+skip( value )}{Smart\+Buffer.\+skip( value )}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3377}
+\begin{quote}
+{\ttfamily Number} {\bfseries{The amount of bytes to skip ahead}} \end{quote}
+
+
+Skips the read position ahead by the given value.
+
+returns this\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3378}{}\doxysubsubsection{\texorpdfstring{Smart\+Buffer.\+rewind( value )}{Smart\+Buffer.\+rewind( value )}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3378}
+\begin{quote}
+{\ttfamily Number} {\bfseries{The amount of bytes to reward backwards}} \end{quote}
+
+
+Rewinds the read position backwards by the given value.
+
+returns this\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3379}{}\doxysubsubsection{\texorpdfstring{Smart\+Buffer.\+move\+To( position )}{Smart\+Buffer.\+move\+To( position )}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3379}
+\begin{quote}
+{\ttfamily Number} {\bfseries{The point to skip the read position to}} \end{quote}
+
+
+Moves the read position to the given point. returns this\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3380}{}\doxysubsubsection{\texorpdfstring{Smart\+Buffer.\+to\+Buffer()}{Smart\+Buffer.\+to\+Buffer()}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3380}
+returns {\ttfamily Buffer} A Buffer containing the contents of the internal Buffer.
+
+\begin{quote}
+Note\+: This uses the slice function. \end{quote}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3381}{}\doxysubsubsection{\texorpdfstring{Smart\+Buffer.\+to\+String( \mbox{[}encoding\mbox{]} )}{Smart\+Buffer.\+to\+String( \mbox{[}encoding\mbox{]} )}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3381}
+\begin{quote}
+{\ttfamily String} {\bfseries{The String encoding to use}} -\/ Defaults to the encoding set in the constructor, or utf8. \end{quote}
+
+
+returns {\ttfamily String} The internal Buffer in String representation.\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3382}{}\doxysubsection{\texorpdfstring{Properties}{Properties}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3382}
+\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3383}{}\doxysubsubsection{\texorpdfstring{Smart\+Buffer.\+length}{Smart\+Buffer.\+length}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3383}
+returns {\ttfamily Number} {\bfseries{The length of the data that is being tracked in the internal Buffer}} -\/ Does NOT return the absolute length of the internal Buffer being written to.\hypertarget{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3384}{}\doxysubsection{\texorpdfstring{License}{License}}\label{md_backend_2node__modules_2smart-buffer_2docs_2_r_e_a_d_m_e__v3_autotoc_md3384}
+This work is licensed under the \href{http://en.wikipedia.org/wiki/MIT_License}{\texttt{ MIT license}}. 

@@ -1,0 +1,187 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2http-cache-semantics_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2http-cache-semantics_2_r_e_a_d_m_e</compoundname>
+    <title>Can I cache this? &lt;a href=&quot;https://travis-ci.org/kornelski/http-cache-semantics&quot; &gt;&lt;img src=&quot;https://travis-ci.org/kornelski/http-cache-semantics.svg?branch=master&quot; alt=&quot;Build Status&quot;/&gt;&lt;/a&gt;</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2http-cache-semantics_2_r_e_a_d_m_e_1autotoc_md1507"/> <computeroutput>CachePolicy</computeroutput> tells when responses can be reused from a cache, taking into account <ulink url="http://httpwg.org/specs/rfc7234.html">HTTP RFC 7234</ulink> rules for user agents and shared caches. It also implements <ulink url="https://tools.ietf.org/html/rfc5861">RFC 5861</ulink>, implementing <computeroutput>stale-if-error</computeroutput> and <computeroutput>stale-while-revalidate</computeroutput>. It&apos;s aware of many tricky details such as the <computeroutput>Vary</computeroutput> header, proxy revalidation, and authenticated responses.</para>
+<sect1 id="md_backend_2node__modules_2http-cache-semantics_2_r_e_a_d_m_e_1autotoc_md1508">
+<title>Usage</title><para>Cacheability of an HTTP response depends on how it was requested, so both <computeroutput>request</computeroutput> and <computeroutput>response</computeroutput> are required to create the policy.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>policy<sp/>=<sp/>new<sp/>CachePolicy(request,<sp/>response,<sp/>options);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">if<sp/>(!policy.storable())<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>throw<sp/>the<sp/>response<sp/>away,<sp/>it&apos;s<sp/>not<sp/>usable<sp/>at<sp/>all</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Cache<sp/>the<sp/>data<sp/>AND<sp/>the<sp/>policy<sp/>object<sp/>in<sp/>your<sp/>cache</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>(this<sp/>is<sp/>pseudocode,<sp/>roll<sp/>your<sp/>own<sp/>cache<sp/>(lru-cache<sp/>package<sp/>works))</highlight></codeline>
+<codeline><highlight class="normal">letsPretendThisIsSomeCache.set(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>request.url,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>policy,<sp/>response<sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>policy.timeToLive()</highlight></codeline>
+<codeline><highlight class="normal">);</highlight></codeline>
+</programlisting></para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>And<sp/>later,<sp/>when<sp/>you<sp/>receive<sp/>a<sp/>new<sp/>request:</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>policy,<sp/>response<sp/>}<sp/>=<sp/>letsPretendThisIsSomeCache.get(newRequest.url);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>It&apos;s<sp/>not<sp/>enough<sp/>that<sp/>it<sp/>exists<sp/>in<sp/>the<sp/>cache,<sp/>it<sp/>has<sp/>to<sp/>match<sp/>the<sp/>new<sp/>request,<sp/>too:</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>(policy<sp/>&amp;&amp;<sp/>policy.satisfiesWithoutRevalidation(newRequest))<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>OK,<sp/>the<sp/>previous<sp/>response<sp/>can<sp/>be<sp/>used<sp/>to<sp/>respond<sp/>to<sp/>the<sp/>`newRequest`.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Response<sp/>headers<sp/>have<sp/>to<sp/>be<sp/>updated,<sp/>e.g.<sp/>to<sp/>add<sp/>Age<sp/>and<sp/>remove<sp/>uncacheable<sp/>headers.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>response.headers<sp/>=<sp/>policy.responseHeaders();</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>response;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+<para>It may be surprising, but it&apos;s not enough for an HTTP response to be fresh to satisfy a request. It may need to match request headers specified in <computeroutput>Vary</computeroutput>. Even a matching fresh response may still not be usable if the new request restricted cacheability, etc.</para>
+<para>The key method is <computeroutput>satisfiesWithoutRevalidation(newRequest)</computeroutput>, which checks whether the <computeroutput>newRequest</computeroutput> is compatible with the original request and whether all caching conditions are met.</para>
+<sect2 id="md_backend_2node__modules_2http-cache-semantics_2_r_e_a_d_m_e_1autotoc_md1509">
+<title>Constructor options</title><para>Request and response must have a <computeroutput>headers</computeroutput> property with all header names in lower case. <computeroutput>url</computeroutput>, <computeroutput>status</computeroutput> and <computeroutput>method</computeroutput> are optional (defaults are any URL, status <computeroutput>200</computeroutput>, and <computeroutput>GET</computeroutput> method).</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>request<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>url:<sp/>&apos;/&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>method:<sp/>&apos;GET&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>headers:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>accept:<sp/>&apos;*/*&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>response<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>status:<sp/>200,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>headers:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;cache-control&apos;:<sp/>&apos;public,<sp/>max-age=7234&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>options<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>shared:<sp/>true,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>cacheHeuristic:<sp/>0.1,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>immutableMinTimeToLive:<sp/>24<sp/>*<sp/>3600<sp/>*<sp/>1000,<sp/>//<sp/>24h</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>ignoreCargoCult:<sp/>false,</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+</programlisting></para>
+<para>If <computeroutput>options.shared</computeroutput> is <computeroutput>true</computeroutput> (default), then the response is evaluated from a perspective of a shared cache (i.e. <computeroutput>private</computeroutput> is not cacheable and <computeroutput>s-maxage</computeroutput> is respected). If <computeroutput>options.shared</computeroutput> is <computeroutput>false</computeroutput>, then the response is evaluated from a perspective of a single-user cache (i.e. <computeroutput>private</computeroutput> is cacheable and <computeroutput>s-maxage</computeroutput> is ignored). <computeroutput>shared: true</computeroutput> is recommended for HTTP clients.</para>
+<para><computeroutput>options.cacheHeuristic</computeroutput> is a fraction of response&apos;s age that is used as a fallback cache duration. The default is 0.1 (10%), e.g. if a file hasn&apos;t been modified for 100 days, it&apos;ll be cached for 100*0.1 = 10 days.</para>
+<para><computeroutput>options.immutableMinTimeToLive</computeroutput> is a number of milliseconds to assume as the default time to cache responses with <computeroutput>Cache-Control: immutable</computeroutput>. Note that <ulink url="http://httpwg.org/http-extensions/immutable.html">per RFC</ulink> these can become stale, so <computeroutput>max-age</computeroutput> still overrides the default.</para>
+<para>If <computeroutput>options.ignoreCargoCult</computeroutput> is true, common anti-cache directives will be completely ignored if the non-standard <computeroutput>pre-check</computeroutput> and <computeroutput>post-check</computeroutput> directives are present. These two useless directives are most commonly found in bad StackOverflow answers and PHP&apos;s &quot;session limiter&quot; defaults.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2http-cache-semantics_2_r_e_a_d_m_e_1autotoc_md1510">
+<title><computeroutput>storable()</computeroutput></title><para>Returns <computeroutput>true</computeroutput> if the response can be stored in a cache. If it&apos;s <computeroutput>false</computeroutput> then you MUST NOT store either the request or the response.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2http-cache-semantics_2_r_e_a_d_m_e_1autotoc_md1511">
+<title><computeroutput>satisfiesWithoutRevalidation(newRequest)</computeroutput></title><para>This is the most important method. Use this method to check whether the cached response is still fresh in the context of the new request.</para>
+<para>If it returns <computeroutput>true</computeroutput>, then the given <computeroutput>request</computeroutput> matches the original response this cache policy has been created with, and the response can be reused without contacting the server. Note that the old response can&apos;t be returned without being updated, see <computeroutput>responseHeaders()</computeroutput>.</para>
+<para>If it returns <computeroutput>false</computeroutput>, then the response may not be matching at all (e.g. it&apos;s for a different URL or method), or may require to be refreshed first (see <computeroutput>revalidationHeaders()</computeroutput>).</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2http-cache-semantics_2_r_e_a_d_m_e_1autotoc_md1512">
+<title><computeroutput>responseHeaders()</computeroutput></title><para>Returns updated, filtered set of response headers to return to clients receiving the cached response. This function is necessary, because proxies MUST always remove hop-by-hop headers (such as <computeroutput>TE</computeroutput> and <computeroutput>Connection</computeroutput>) and update response&apos;s <computeroutput>Age</computeroutput> to avoid doubling cache time.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">cachedResponse.headers<sp/>=<sp/>cachePolicy.responseHeaders(cachedResponse);</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2http-cache-semantics_2_r_e_a_d_m_e_1autotoc_md1513">
+<title><computeroutput>timeToLive()</computeroutput></title><para>Returns approximate time in <emphasis>milliseconds</emphasis> until the response becomes stale (i.e. not fresh).</para>
+<para>After that time (when <computeroutput>timeToLive() &lt;= 0</computeroutput>) the response might not be usable without revalidation. However, there are exceptions, e.g. a client can explicitly allow stale responses, so always check with <computeroutput>satisfiesWithoutRevalidation()</computeroutput>. <computeroutput>stale-if-error</computeroutput> and <computeroutput>stale-while-revalidate</computeroutput> extend the time to live of the cache, that can still be used if stale.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2http-cache-semantics_2_r_e_a_d_m_e_1autotoc_md1514">
+<title><computeroutput>toObject()</computeroutput>/<computeroutput>fromObject(json)</computeroutput></title><para>Chances are you&apos;ll want to store the <computeroutput>CachePolicy</computeroutput> object along with the cached response. <computeroutput>obj = policy.toObject()</computeroutput> gives a plain JSON-serializable object. <computeroutput>policy = CachePolicy.fromObject(obj)</computeroutput> creates an instance from it.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2http-cache-semantics_2_r_e_a_d_m_e_1autotoc_md1515">
+<title>Refreshing stale cache (revalidation)</title><para>When a cached response has expired, it can be made fresh again by making a request to the origin server. The server may respond with status 304 (Not Modified) without sending the response body again, saving bandwidth.</para>
+<para>The following methods help perform the update efficiently and correctly.</para>
+<sect3 id="md_backend_2node__modules_2http-cache-semantics_2_r_e_a_d_m_e_1autotoc_md1516">
+<title><computeroutput>revalidationHeaders(newRequest)</computeroutput></title><para>Returns updated, filtered set of request headers to send to the origin server to check if the cached response can be reused. These headers allow the origin server to return status 304 indicating the response is still fresh. All headers unrelated to caching are passed through as-is.</para>
+<para>Use this method when updating cache from the origin server.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">updateRequest.headers<sp/>=<sp/>cachePolicy.revalidationHeaders(updateRequest);</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2http-cache-semantics_2_r_e_a_d_m_e_1autotoc_md1517">
+<title><computeroutput>revalidatedPolicy(revalidationRequest, revalidationResponse)</computeroutput></title><para>Use this method to update the cache after receiving a new response from the origin server. It returns an object with two keys:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>policy</computeroutput> — A new <computeroutput>CachePolicy</computeroutput> with HTTP headers updated from <computeroutput>revalidationResponse</computeroutput>. You can always replace the old cached <computeroutput>CachePolicy</computeroutput> with the new one.</para>
+</listitem><listitem><para><computeroutput>modified</computeroutput> — Boolean indicating whether the response body has changed.<itemizedlist>
+<listitem><para>If <computeroutput>false</computeroutput>, then a valid 304 Not Modified response has been received, and you can reuse the old cached response body. This is also affected by <computeroutput>stale-if-error</computeroutput>.</para>
+</listitem><listitem><para>If <computeroutput>true</computeroutput>, you should use new response&apos;s body (if present), or make another request to the origin server without any conditional headers (i.e. don&apos;t use <computeroutput>revalidationHeaders()</computeroutput> this time) to get the new resource.</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>When<sp/>serving<sp/>requests<sp/>from<sp/>cache:</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>oldPolicy,<sp/>oldResponse<sp/>}<sp/>=<sp/>letsPretendThisIsSomeCache.get(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>newRequest.url</highlight></codeline>
+<codeline><highlight class="normal">);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">if<sp/>(!oldPolicy.satisfiesWithoutRevalidation(newRequest))<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Change<sp/>the<sp/>request<sp/>to<sp/>ask<sp/>the<sp/>origin<sp/>server<sp/>if<sp/>the<sp/>cached<sp/>response<sp/>can<sp/>be<sp/>used</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>newRequest.headers<sp/>=<sp/>oldPolicy.revalidationHeaders(newRequest);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Send<sp/>request<sp/>to<sp/>the<sp/>origin<sp/>server.<sp/>The<sp/>server<sp/>may<sp/>respond<sp/>with<sp/>status<sp/>304</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>const<sp/>newResponse<sp/>=<sp/>await<sp/>makeRequest(newRequest);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Create<sp/>updated<sp/>policy<sp/>and<sp/>combined<sp/>response<sp/>from<sp/>the<sp/>old<sp/>and<sp/>new<sp/>data</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>const<sp/>{<sp/>policy,<sp/>modified<sp/>}<sp/>=<sp/>oldPolicy.revalidatedPolicy(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>newRequest,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>newResponse</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>const<sp/>response<sp/>=<sp/>modified<sp/>?<sp/>newResponse<sp/>:<sp/>oldResponse;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Update<sp/>the<sp/>cache<sp/>with<sp/>the<sp/>newer/fresher<sp/>response</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>letsPretendThisIsSomeCache.set(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>newRequest.url,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<sp/>policy,<sp/>response<sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>policy.timeToLive()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>And<sp/>proceed<sp/>returning<sp/>cached<sp/>response<sp/>as<sp/>usual</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>response.headers<sp/>=<sp/>policy.responseHeaders();</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>response;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+</sect3>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2http-cache-semantics_2_r_e_a_d_m_e_1autotoc_md1518">
+<title>Yo, FRESH</title><para><image type="html" name="fresh.jpg" alt="satisfiesWithoutRevalidation" inline="yes"></image>
+</para>
+<sect2 id="md_backend_2node__modules_2http-cache-semantics_2_r_e_a_d_m_e_1autotoc_md1519">
+<title>Used by</title><para><itemizedlist>
+<listitem><para><ulink url="https://imageoptim.com/api">ImageOptim API</ulink>, <ulink url="https://github.com/zkat/make-fetch-happen">make-fetch-happen</ulink>, <ulink url="https://www.npmjs.com/package/cacheable-request">cacheable-request</ulink> (<ulink url="https://www.npmjs.com/package/got">got</ulink>), <ulink url="https://github.com/npm/registry-fetch">npm/registry-fetch</ulink>, <ulink url="https://github.com/kornelski/http-cache-semantics/network/dependents">etc.</ulink></para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2http-cache-semantics_2_r_e_a_d_m_e_1autotoc_md1520">
+<title>Implemented</title><para><itemizedlist>
+<listitem><para><computeroutput>Cache-Control</computeroutput> response header with all the quirks.</para>
+</listitem><listitem><para><computeroutput>Expires</computeroutput> with check for bad clocks.</para>
+</listitem><listitem><para><computeroutput>Pragma</computeroutput> response header.</para>
+</listitem><listitem><para><computeroutput>Age</computeroutput> response header.</para>
+</listitem><listitem><para><computeroutput>Vary</computeroutput> response header.</para>
+</listitem><listitem><para>Default cacheability of statuses and methods.</para>
+</listitem><listitem><para>Requests for stale data.</para>
+</listitem><listitem><para>Filtering of hop-by-hop headers.</para>
+</listitem><listitem><para>Basic revalidation request</para>
+</listitem><listitem><para><computeroutput>stale-if-error</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2http-cache-semantics_2_r_e_a_d_m_e_1autotoc_md1521">
+<title>Unimplemented</title><para><itemizedlist>
+<listitem><para>Merging of range requests, <computeroutput>If-Range</computeroutput> (but correctly supports them as non-cacheable)</para>
+</listitem><listitem><para>Revalidation of multiple representations</para>
+</listitem></itemizedlist>
+</para>
+<sect3 id="md_backend_2node__modules_2http-cache-semantics_2_r_e_a_d_m_e_1autotoc_md1522">
+<title>Trusting server <computeroutput>Date</computeroutput></title><para>Per the RFC, the cache should take into account the time between server-supplied <computeroutput>Date</computeroutput> and the time it received the response. The RFC-mandated behavior creates two problems:</para>
+<para><itemizedlist>
+<listitem><para>Servers with incorrectly set timezone may add several hours to cache age (or more, if the clock is completely wrong).</para>
+</listitem><listitem><para>Even reasonably correct clocks may be off by a couple of seconds, breaking <computeroutput>max-age=1</computeroutput> trick (which is useful for reverse proxies on high-traffic servers).</para>
+</listitem></itemizedlist>
+</para>
+<para>Previous versions of this library had an option to ignore the server date if it was &quot;too inaccurate&quot;. To support the <computeroutput>max-age=1</computeroutput> trick the library also has to ignore dates that pretty accurate. There&apos;s no point of having an option to trust dates that are only a bit inaccurate, so this library won&apos;t trust any server dates. <computeroutput>max-age</computeroutput> will be interpreted from the time the response has been received, not from when it has been sent. This will affect only <ulink url="https://tools.ietf.org/html/rfc1149">RFC 1149 networks</ulink>. </para>
+</sect3>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/http-cache-semantics/README.md"/>
+  </compounddef>
+</doxygen>

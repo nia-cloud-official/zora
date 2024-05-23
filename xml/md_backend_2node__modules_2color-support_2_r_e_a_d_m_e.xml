@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2color-support_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2color-support_2_r_e_a_d_m_e</compoundname>
+    <title>color-support</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2color-support_2_r_e_a_d_m_e_1autotoc_md514"/> A module which will endeavor to guess your terminal&apos;s level of color support.</para>
+<para><ulink url="https://travis-ci.org/isaacs/color-support"><image type="html" name="https://travis-ci.org/isaacs/color-support.svg?branch=master" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/github/isaacs/color-support?branch=master"><image type="html" name="https://coveralls.io/repos/github/isaacs/color-support/badge.svg?branch=master" alt="Coverage Status" inline="yes"></image>
+</ulink></para>
+<para>This is similar to <computeroutput>supports-color</computeroutput>, but it does not read <computeroutput>process.argv</computeroutput>.</para>
+<para><orderedlist>
+<listitem><para>If not in a node environment, not supported.</para>
+</listitem><listitem><para>If stdout is not a TTY, not supported, unless the <computeroutput>ignoreTTY</computeroutput> option is set.</para>
+</listitem><listitem><para>If the <computeroutput>TERM</computeroutput> environ is <computeroutput>dumb</computeroutput>, not supported, unless the <computeroutput>ignoreDumb</computeroutput> option is set.</para>
+</listitem><listitem><para>If on Windows, then support 16 colors.</para>
+</listitem><listitem><para>If using Tmux, then support 256 colors.</para>
+</listitem><listitem><para>Handle continuous-integration servers. If <computeroutput>CI</computeroutput> or <computeroutput>TEAMCITY_VERSION</computeroutput> are set in the environment, and <computeroutput>TRAVIS</computeroutput> is not set, then color is not supported, unless <computeroutput>ignoreCI</computeroutput> option is set.</para>
+</listitem></orderedlist>
+<orderedlist>
+<listitem><para>Guess based on the <computeroutput>TERM_PROGRAM</computeroutput> environ. These terminals support 16m colors:<itemizedlist>
+<listitem><para><computeroutput>iTerm.app</computeroutput> version 3.x supports 16m colors, below support 256</para>
+</listitem><listitem><para><computeroutput>MacTerm</computeroutput> supports 16m colors</para>
+</listitem><listitem><para><computeroutput>Apple_Terminal</computeroutput> supports 256 colors</para>
+</listitem><listitem><para>Have more things that belong on this list? Send a PR!</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para>Make a guess based on the <computeroutput>TERM</computeroutput> environment variable. Any <computeroutput>xterm-256color</computeroutput> will get 256 colors. Any screen, xterm, vt100, color, ansi, cygwin, or linux <computeroutput>TERM</computeroutput> will get 16 colors.</para>
+</listitem><listitem><para>If <computeroutput>COLORTERM</computeroutput> environment variable is set, then support 16 colors.</para>
+</listitem><listitem><para>At this point, we assume that color is not supported.</para>
+</listitem></orderedlist>
+</para>
+<sect1 id="md_backend_2node__modules_2color-support_2_r_e_a_d_m_e_1autotoc_md515">
+<title>USAGE</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>testColorSupport<sp/>=<sp/>require(&apos;color-support&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>colorSupport<sp/>=<sp/>testColorSupport(/*<sp/>options<sp/>object<sp/>*/)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">if<sp/>(!colorSupport)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;color<sp/>is<sp/>not<sp/>supported&apos;)</highlight></codeline>
+<codeline><highlight class="normal">}<sp/>else<sp/>if<sp/>(colorSupport.has16m)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;\x1b[38;2;102;194;255m16m<sp/>colors\x1b[0m&apos;)</highlight></codeline>
+<codeline><highlight class="normal">}<sp/>else<sp/>if<sp/>(colorSupport.has256)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;\x1b[38;5;119m256<sp/>colors\x1b[0m&apos;)</highlight></codeline>
+<codeline><highlight class="normal">}<sp/>else<sp/>if<sp/>(colorSupport.hasBasic)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;\x1b[31mbasic<sp/>colors\x1b[0m&apos;)</highlight></codeline>
+<codeline><highlight class="normal">}<sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;this<sp/>is<sp/>impossible,<sp/>but<sp/>colors<sp/>are<sp/>not<sp/>supported&apos;)</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+<para>If you don&apos;t have any options to set, you can also just look at the flags which will all be set on the test function itself. (Of course, this doesn&apos;t return a falsey value when colors aren&apos;t supported, and doesn&apos;t allow you to set options.)</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>colorSupport<sp/>=<sp/>require(&apos;color-support&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">if<sp/>(colorSupport.has16m)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;\x1b[38;2;102;194;255m16m<sp/>colors\x1b[0m&apos;)</highlight></codeline>
+<codeline><highlight class="normal">}<sp/>else<sp/>if<sp/>(colorSupport.has256)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;\x1b[38;5;119m256<sp/>colors\x1b[0m&apos;)</highlight></codeline>
+<codeline><highlight class="normal">}<sp/>else<sp/>if<sp/>(colorSupport.hasBasic)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;\x1b[31mbasic<sp/>colors\x1b[0m&apos;)</highlight></codeline>
+<codeline><highlight class="normal">}<sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;colors<sp/>are<sp/>not<sp/>supported&apos;)</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2color-support_2_r_e_a_d_m_e_1autotoc_md516">
+<title>Options</title><para>You can pass in the following options.</para>
+<para><itemizedlist>
+<listitem><para>ignoreTTY - default false. Ignore the <computeroutput>isTTY</computeroutput> check.</para>
+</listitem><listitem><para>ignoreDumb - default false. Ignore <computeroutput>TERM=dumb</computeroutput> environ check.</para>
+</listitem><listitem><para>ignoreCI - default false. Ignore <computeroutput>CI</computeroutput> environ check.</para>
+</listitem><listitem><para>env - Object for environment vars. Defaults to <computeroutput>process.env</computeroutput>.</para>
+</listitem><listitem><para>stream - Stream for <computeroutput>isTTY</computeroutput> check. Defaults to <computeroutput>process.stdout</computeroutput>.</para>
+</listitem><listitem><para>term - String for <computeroutput>TERM</computeroutput> checking. Defaults to <computeroutput>env.TERM</computeroutput>.</para>
+</listitem><listitem><para>alwaysReturn - default false. Return an object when colors aren&apos;t supported (instead of returning <computeroutput>false</computeroutput>).</para>
+</listitem><listitem><para>level - A number from 0 to 3. This will return a result for the specified level. This is useful if you want to be able to set the color support level explicitly as a number in an environment variable or config, but then use the object flags in your program. Except for <computeroutput>alwaysReturn</computeroutput> to return an object for level 0, all other options are ignored, since no checking is done if a level is explicitly set.</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2color-support_2_r_e_a_d_m_e_1autotoc_md517">
+<title>Return Value</title><para>If no color support is available, then <computeroutput>false</computeroutput> is returned by default, unless the <computeroutput>alwaysReturn</computeroutput> flag is set to <computeroutput>true</computeroutput>. This is so that the simple question of &quot;can I use colors or not&quot; can treat any truthy return as &quot;yes&quot;.</para>
+<para>Otherwise, the return object has the following fields:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>level</computeroutput> - A number from 0 to 3<itemizedlist>
+<listitem><para><computeroutput>0</computeroutput> - No color support</para>
+</listitem><listitem><para><computeroutput>1</computeroutput> - Basic (16) color support</para>
+</listitem><listitem><para><computeroutput>2</computeroutput> - 256 color support</para>
+</listitem><listitem><para><computeroutput>3</computeroutput> - 16 million (true) color support</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>hasBasic</computeroutput> - Boolean</para>
+</listitem><listitem><para><computeroutput>has256</computeroutput> - Boolean</para>
+</listitem><listitem><para><computeroutput>has16m</computeroutput> - Boolean</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2color-support_2_r_e_a_d_m_e_1autotoc_md518">
+<title>CLI</title><para>You can run the <computeroutput>color-support</computeroutput> bin from the command line which will just dump the values as this module calculates them in whatever env it&apos;s run. It takes no command line arguments.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2color-support_2_r_e_a_d_m_e_1autotoc_md519">
+<title>Credits</title><para>This is a spiritual, if not actual, fork of <ulink url="http://npm.im/supports-color">supports-color</ulink> by the ever prolific <ulink url="http://npm.im/~sindresorhus">Sindre Sorhus</ulink>. </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/color-support/README.md"/>
+  </compounddef>
+</doxygen>

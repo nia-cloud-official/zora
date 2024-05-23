@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2once_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>once</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Only<sp/>call<sp/>a<sp/>function<sp/>once.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>usage</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>once<sp/>=<sp/>require(&apos;once&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>load<sp/>(file,<sp/>cb)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cb<sp/>=<sp/>once(cb)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>loader.load(&apos;file&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>loader.once(&apos;load&apos;,<sp/>cb)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>loader.once(&apos;error&apos;,<sp/>cb)</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Or<sp/>add<sp/>to<sp/>the<sp/>Function.prototype<sp/>in<sp/>a<sp/>responsible<sp/>way:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>only<sp/>has<sp/>to<sp/>be<sp/>done<sp/>once</highlight></codeline>
+<codeline><highlight class="normal">require(&apos;once&apos;).proto()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>load<sp/>(file,<sp/>cb)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cb<sp/>=<sp/>cb.once()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>loader.load(&apos;file&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>loader.once(&apos;load&apos;,<sp/>cb)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>loader.once(&apos;error&apos;,<sp/>cb)</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Ironically,<sp/>the<sp/>prototype<sp/>feature<sp/>makes<sp/>this<sp/>module<sp/>twice<sp/>as</highlight></codeline>
+<codeline><highlight class="normal">complicated<sp/>as<sp/>necessary.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>check<sp/>whether<sp/>you<sp/>function<sp/>has<sp/>been<sp/>called,<sp/>use<sp/>`fn.called`.<sp/>Once<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">function<sp/>is<sp/>called<sp/>for<sp/>the<sp/>first<sp/>time<sp/>the<sp/>return<sp/>value<sp/>of<sp/>the<sp/>original</highlight></codeline>
+<codeline><highlight class="normal">function<sp/>is<sp/>saved<sp/>in<sp/>`fn.value`<sp/>and<sp/>subsequent<sp/>calls<sp/>will<sp/>continue<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">return<sp/>this<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>once<sp/>=<sp/>require(&apos;once&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>load<sp/>(cb)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cb<sp/>=<sp/>once(cb)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>stream<sp/>=<sp/>createStream()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>stream.once(&apos;data&apos;,<sp/>cb)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>stream.once(&apos;end&apos;,<sp/>function<sp/>()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(!cb.called)<sp/>cb(new<sp/>Error(&apos;not<sp/>found&apos;))</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>`once.strict(func)`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Throw<sp/>an<sp/>error<sp/>if<sp/>the<sp/>function<sp/>is<sp/>called<sp/>twice.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Some<sp/>functions<sp/>are<sp/>expected<sp/>to<sp/>be<sp/>called<sp/>only<sp/>once.<sp/>Using<sp/>`once`<sp/>for<sp/>them<sp/>would</highlight></codeline>
+<codeline><highlight class="normal">potentially<sp/>hide<sp/>logical<sp/>errors.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">In<sp/>the<sp/>example<sp/>below,<sp/>the<sp/>`greet`<sp/>function<sp/>has<sp/>to<sp/>call<sp/>the<sp/>callback<sp/>only<sp/>once:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">function<sp/>greet<sp/>(name,<sp/>cb)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>return<sp/>is<sp/>missing<sp/>from<sp/>the<sp/>if<sp/>statement</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>when<sp/>no<sp/>name<sp/>is<sp/>passed,<sp/>the<sp/>callback<sp/>is<sp/>called<sp/>twice</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(!name)<sp/>cb(&apos;Hello<sp/>anonymous&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cb(&apos;Hello<sp/>&apos;<sp/>+<sp/>name)</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>log<sp/>(msg)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(msg)</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>this<sp/>will<sp/>print<sp/>&apos;Hello<sp/>anonymous&apos;<sp/>but<sp/>the<sp/>logical<sp/>error<sp/>will<sp/>be<sp/>missed</highlight></codeline>
+<codeline><highlight class="normal">greet(null,<sp/>once(msg))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>once.strict<sp/>will<sp/>print<sp/>&apos;Hello<sp/>anonymous&apos;<sp/>and<sp/>throw<sp/>an<sp/>error<sp/>when<sp/>the<sp/>callback<sp/>will<sp/>be<sp/>called<sp/>the<sp/>second<sp/>time</highlight></codeline>
+<codeline><highlight class="normal">greet(null,<sp/>once.strict(msg))</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/once/README.md"/>
+  </compounddef>
+</doxygen>

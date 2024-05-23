@@ -1,0 +1,48 @@
+.TH "md_backend_2node__modules_2destroy_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2destroy_2_r_e_a_d_m_e \- destroy 
+.PP
+ \fR\fP \fR\fP \fR\fP \fB\fP \fR\fP
+.PP
+Destroy a stream\&.
+.PP
+This module is meant to ensure a stream gets destroyed, handling different APIs and Node\&.js bugs\&.
+.SH "API"
+.PP
+.PP
+.nf
+var destroy = require('destroy')
+.fi
+.PP
+.SS "destroy(stream [, suppress])"
+Destroy the given stream, and optionally suppress any future \fRerror\fP events\&.
+.PP
+In most cases, this is identical to a simple \fRstream\&.destroy()\fP call\&. The rules are as follows for a given stream:
+.PP
+.IP "1." 4
+If the \fRstream\fP is an instance of \fRReadStream\fP, then call \fRstream\&.destroy()\fP and add a listener to the \fRopen\fP event to call \fRstream\&.close()\fP if it is fired\&. This is for a Node\&.js bug that will leak a file descriptor if \fR\&.destroy()\fP is called before \fRopen\fP\&.
+.IP "2." 4
+If the \fRstream\fP is an instance of a zlib stream, then call \fRstream\&.destroy()\fP and close the underlying zlib handle if open, otherwise call \fRstream\&.close()\fP\&. This is for consistency across Node\&.js versions and a Node\&.js bug that will leak a native zlib handle\&.
+.IP "3." 4
+If the \fRstream\fP is not an instance of \fRStream\fP, then nothing happens\&.
+.IP "4." 4
+If the \fRstream\fP has a \fR\&.destroy()\fP method, then call it\&.
+.PP
+.PP
+The function returns the \fRstream\fP passed in as the argument\&.
+.SH "Example"
+.PP
+.PP
+.nf
+var destroy = require('destroy')
+
+var fs = require('fs')
+var stream = fs\&.createReadStream('package\&.json')
+
+// \&.\&.\&. and later
+destroy(stream)
+.fi
+.PP
+ 

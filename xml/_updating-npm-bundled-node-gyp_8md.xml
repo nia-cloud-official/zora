@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="_updating-npm-bundled-node-gyp_8md" kind="file" language="Markdown">
+    <compoundname>Updating-npm-bundled-node-gyp.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>Updating<sp/>the<sp/>npm-bundled<sp/>version<sp/>of<sp/>node-gyp</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[Many<sp/>issues](https://github.com/nodejs/node-gyp/labels/ERR%21%20node-gyp%20-v%20%3C%3D%20v5.1.0)<sp/>are<sp/>opened<sp/>by<sp/>users<sp/>who<sp/>are</highlight></codeline>
+<codeline><highlight class="normal">not<sp/>running<sp/>a<sp/>[current<sp/>version<sp/>of<sp/>node-gyp](https://github.com/nodejs/node-gyp/releases).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`npm`<sp/>bundles<sp/>its<sp/>own,<sp/>internal,<sp/>copy<sp/>of<sp/>`node-gyp`.<sp/>This<sp/>internal<sp/>copy<sp/>is<sp/>independent<sp/>of<sp/>any<sp/>globally<sp/>installed<sp/>copy<sp/>of<sp/>node-gyp<sp/>that</highlight></codeline>
+<codeline><highlight class="normal">may<sp/>have<sp/>been<sp/>installed<sp/>via<sp/>`npm<sp/>install<sp/>-g<sp/>node-gyp`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Generally,<sp/>npm&apos;s<sp/>library<sp/>files<sp/>are<sp/>installed<sp/>inside<sp/>your<sp/>global<sp/>&quot;node_modules&quot;,<sp/>where<sp/>npm<sp/>is<sp/>installed<sp/>(run<sp/>`npm<sp/>prefix`<sp/>and<sp/>add<sp/>`lib/node_modules`,<sp/>or<sp/>just<sp/>`node_modules`<sp/>for<sp/>Windows).<sp/>There<sp/>are<sp/>some<sp/>exceptions<sp/>to<sp/>this.<sp/>Inside<sp/>this<sp/>global<sp/>`node_modules/`<sp/>there<sp/>will<sp/>be<sp/>an<sp/>`npm/`<sp/>directory<sp/>and<sp/>inside<sp/>this<sp/>you&apos;ll<sp/>find<sp/>a<sp/>`node_modules/node-gyp/`<sp/>directory.<sp/>So<sp/>it<sp/>may<sp/>look<sp/>something<sp/>like<sp/>`/usr/local/lib/node_modules/npm/node_modules/node-gyp/`.<sp/>This<sp/>is<sp/>the<sp/>version<sp/>of<sp/>node-gyp<sp/>that<sp/>ships<sp/>with<sp/>npm.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>you<sp/>install<sp/>a<sp/>_new_<sp/>version<sp/>of<sp/>node-gyp<sp/>outside<sp/>of<sp/>npm,<sp/>it&apos;ll<sp/>go<sp/>into<sp/>your<sp/>global<sp/>node_modules,<sp/>but<sp/>not<sp/>under<sp/>the<sp/>`npm/node_modules`.<sp/>So<sp/>that<sp/>may<sp/>look<sp/>like<sp/>`/usr/local/lib/node_modules/node-gyp/`.<sp/>It&apos;ll<sp/>have<sp/>the<sp/>`node-gyp`<sp/>executable<sp/>linked<sp/>into<sp/>your<sp/>`PATH`<sp/>so<sp/>running<sp/>`node-gyp`<sp/>will<sp/>use<sp/>this<sp/>version.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>catch<sp/>is<sp/>that<sp/>npm<sp/>won&apos;t<sp/>use<sp/>this<sp/>version<sp/>unless<sp/>you<sp/>tell<sp/>it<sp/>to,<sp/>it&apos;ll<sp/>keep<sp/>on<sp/>using<sp/>the<sp/>one<sp/>you<sp/>have<sp/>installed.<sp/>You<sp/>need<sp/>to<sp/>instruct<sp/>it<sp/>to<sp/>by<sp/>setting<sp/>the<sp/>`node_gyp`<sp/>config<sp/>variable<sp/>(which<sp/>goes<sp/>into<sp/>your<sp/>`~/.npmrc`).<sp/>You<sp/>do<sp/>this<sp/>by<sp/>running<sp/>the<sp/>`npm<sp/>config<sp/>set`<sp/>command<sp/>as<sp/>below.<sp/>Then<sp/>npm<sp/>will<sp/>use<sp/>the<sp/>command<sp/>in<sp/>the<sp/>path<sp/>you<sp/>supply<sp/>whenever<sp/>it<sp/>needs<sp/>to<sp/>build<sp/>a<sp/>native<sp/>addon.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Important**:<sp/>You<sp/>also<sp/>need<sp/>to<sp/>remember<sp/>to<sp/>unset<sp/>this<sp/>when<sp/>you<sp/>upgrade<sp/>npm<sp/>with<sp/>a<sp/>newer<sp/>version<sp/>of<sp/>node-gyp,<sp/>or<sp/>you<sp/>have<sp/>to<sp/>manually<sp/>keep<sp/>your<sp/>globally<sp/>installed<sp/>node-gyp<sp/>to<sp/>date.<sp/>See<sp/>&quot;Undo&quot;<sp/>below.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Linux<sp/>and<sp/>macOS</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>install<sp/>--global<sp/>node-gyp@latest</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>config<sp/>set<sp/>node_gyp<sp/>$(npm<sp/>prefix<sp/>-g)/lib/node_modules/node-gyp/bin/node-gyp.js</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`sudo`<sp/>may<sp/>be<sp/>required<sp/>for<sp/>the<sp/>first<sp/>command<sp/>if<sp/>you<sp/>get<sp/>a<sp/>permission<sp/>error.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Windows</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Windows<sp/>Command<sp/>Prompt</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>install<sp/>--global<sp/>node-gyp@latest</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>/f<sp/>&quot;delims=&quot;<sp/>%P<sp/>in<sp/>(&apos;npm<sp/>prefix<sp/>-g&apos;)<sp/>do<sp/>npm<sp/>config<sp/>set<sp/>node_gyp<sp/>&quot;%P\node_modules\node-gyp\bin\node-gyp.js&quot;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Powershell</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>install<sp/>--global<sp/>node-gyp@latest</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>prefix<sp/>-g<sp/>|<sp/>%<sp/>{npm<sp/>config<sp/>set<sp/>node_gyp<sp/>&quot;$_\node_modules\node-gyp\bin\node-gyp.js&quot;}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Undo</highlight></codeline>
+<codeline><highlight class="normal">**Beware**<sp/>if<sp/>you<sp/>don&apos;t<sp/>unset<sp/>the<sp/>`node_gyp`<sp/>config<sp/>option,<sp/>npm<sp/>will<sp/>continue<sp/>to<sp/>use<sp/>the<sp/>globally<sp/>installed<sp/>version<sp/>of<sp/>node-gyp<sp/>rather<sp/>than<sp/>the<sp/>one<sp/>it<sp/>ships<sp/>with,<sp/>which<sp/>may<sp/>end<sp/>up<sp/>being<sp/>newer.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>config<sp/>delete<sp/>node_gyp</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>uninstall<sp/>--global<sp/>node-gyp</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/node-gyp/docs/Updating-npm-bundled-node-gyp.md"/>
+  </compounddef>
+</doxygen>

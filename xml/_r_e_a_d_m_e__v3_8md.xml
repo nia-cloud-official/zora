@@ -1,0 +1,380 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="_r_e_a_d_m_e__v3_8md" kind="file" language="Markdown">
+    <compoundname>README_v3.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">smart-buffer<sp/><sp/>[![Build<sp/>Status](https://travis-ci.org/JoshGlazebrook/smart-buffer.svg?branch=master)](https://travis-ci.org/JoshGlazebrook/smart-buffer)<sp/><sp/>[![Coverage<sp/>Status](https://coveralls.io/repos/github/JoshGlazebrook/smart-buffer/badge.svg?branch=master)](https://coveralls.io/github/JoshGlazebrook/smart-buffer?branch=master)</highlight></codeline>
+<codeline><highlight class="normal">=============</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">smart-buffer<sp/>is<sp/>a<sp/>light<sp/>Buffer<sp/>wrapper<sp/>that<sp/>takes<sp/>away<sp/>the<sp/>need<sp/>to<sp/>keep<sp/>track<sp/>of<sp/>what<sp/>position<sp/>to<sp/>read<sp/>and<sp/>write<sp/>data<sp/>to<sp/>and<sp/>from<sp/>the<sp/>underlying<sp/>Buffer.<sp/>It<sp/>also<sp/>adds<sp/>null<sp/>terminating<sp/>string<sp/>operations<sp/>and<sp/>**grows**<sp/>as<sp/>you<sp/>add<sp/>more<sp/>data.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">![stats](https://nodei.co/npm/smart-buffer.png?downloads=true&amp;downloadRank=true&amp;stars=true<sp/>&quot;stats&quot;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>What<sp/>it&apos;s<sp/>useful<sp/>for:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">I<sp/>created<sp/>smart-buffer<sp/>because<sp/>I<sp/>wanted<sp/>to<sp/>simplify<sp/>the<sp/>process<sp/>of<sp/>using<sp/>Buffer<sp/>for<sp/>building<sp/>and<sp/>reading<sp/>network<sp/>packets<sp/>to<sp/>send<sp/>over<sp/>a<sp/>socket.<sp/>Rather<sp/>than<sp/>having<sp/>to<sp/>keep<sp/>track<sp/>of<sp/>which<sp/>position<sp/>I<sp/>need<sp/>to<sp/>write<sp/>a<sp/>UInt16<sp/>to<sp/>after<sp/>adding<sp/>a<sp/>string<sp/>of<sp/>variable<sp/>length,<sp/>I<sp/>simply<sp/>don&apos;t<sp/>have<sp/>to.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Key<sp/>Features:</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Proxies<sp/>all<sp/>of<sp/>the<sp/>Buffer<sp/>write<sp/>and<sp/>read<sp/>functions.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Keeps<sp/>track<sp/>of<sp/>read<sp/>and<sp/>write<sp/>positions<sp/>for<sp/>you.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Grows<sp/>the<sp/>internal<sp/>Buffer<sp/>as<sp/>you<sp/>add<sp/>data<sp/>to<sp/>it.<sp/></highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Useful<sp/>string<sp/>operations.<sp/>(Null<sp/>terminating<sp/>strings)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Allows<sp/>for<sp/>inserting<sp/>values<sp/>at<sp/>specific<sp/>points<sp/>in<sp/>the<sp/>internal<sp/>Buffer.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Built<sp/>in<sp/>TypeScript</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Type<sp/>Definitions<sp/>Provided</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Requirements:</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Node<sp/>v4.0+<sp/>is<sp/>supported<sp/>at<sp/>this<sp/>time.<sp/><sp/>(Versions<sp/>prior<sp/>to<sp/>2.0<sp/>will<sp/>work<sp/>on<sp/>node<sp/>0.10)</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Note:</highlight></codeline>
+<codeline><highlight class="normal">smart-buffer<sp/>can<sp/>be<sp/>used<sp/>for<sp/>writing<sp/>to<sp/>an<sp/>underlying<sp/>buffer<sp/>as<sp/>well<sp/>as<sp/>reading<sp/>from<sp/>it.<sp/>It<sp/>however<sp/>does<sp/>not<sp/>function<sp/>correctly<sp/>if<sp/>you&apos;re<sp/>mixing<sp/>both<sp/>read<sp/>and<sp/>write<sp/>operations<sp/>with<sp/>each<sp/>other.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Breaking<sp/>Changes<sp/>with<sp/>2.0</highlight></codeline>
+<codeline><highlight class="normal">The<sp/>latest<sp/>version<sp/>(2.0+)<sp/>is<sp/>written<sp/>in<sp/>TypeScript,<sp/>and<sp/>are<sp/>compiled<sp/>to<sp/>ES6<sp/>Javascript.<sp/>This<sp/>means<sp/>the<sp/>earliest<sp/>Node.js<sp/>it<sp/>supports<sp/>will<sp/>be<sp/>4.x<sp/>(in<sp/>strict<sp/>mode.)<sp/>If<sp/>you&apos;re<sp/>using<sp/>version<sp/>6<sp/>and<sp/>above<sp/>it<sp/>will<sp/>work<sp/>without<sp/>any<sp/>issues.<sp/>From<sp/>an<sp/>API<sp/>standpoint,<sp/>2.0<sp/>is<sp/>backwards<sp/>compatible.<sp/>The<sp/>only<sp/>difference<sp/>is<sp/>SmartBuffer<sp/>is<sp/>not<sp/>exported<sp/>directly<sp/>as<sp/>the<sp/>root<sp/>module.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Breaking<sp/>Changes<sp/>with<sp/>3.0</highlight></codeline>
+<codeline><highlight class="normal">Starting<sp/>with<sp/>3.0,<sp/>if<sp/>any<sp/>of<sp/>the<sp/>readIntXXXX()<sp/>methods<sp/>are<sp/>called<sp/>and<sp/>the<sp/>requested<sp/>data<sp/>is<sp/>larger<sp/>than<sp/>the<sp/>bounds<sp/>of<sp/>the<sp/>internally<sp/>managed<sp/>valid<sp/>buffer<sp/>data,<sp/>an<sp/>exception<sp/>will<sp/>now<sp/>be<sp/>thrown.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Installing:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`npm<sp/>install<sp/>smart-buffer`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">or</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`yarn<sp/>add<sp/>smart-buffer`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note:<sp/>The<sp/>published<sp/>NPM<sp/>package<sp/>includes<sp/>the<sp/>built<sp/>javascript<sp/>library.<sp/></highlight></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>cloned<sp/>this<sp/>repo<sp/>and<sp/>wish<sp/>to<sp/>build<sp/>the<sp/>library<sp/>manually<sp/>use:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`tsc<sp/>-p<sp/>./`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Using<sp/>smart-buffer</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Say<sp/>you<sp/>were<sp/>building<sp/>a<sp/>packet<sp/>that<sp/>had<sp/>to<sp/>conform<sp/>to<sp/>the<sp/>following<sp/>protocol:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`[PacketType:2][PacketLength:2][Data:XX]`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>build<sp/>this<sp/>packet<sp/>using<sp/>the<sp/>vanilla<sp/>Buffer<sp/>class,<sp/>you<sp/>would<sp/>have<sp/>to<sp/>count<sp/>up<sp/>the<sp/>length<sp/>of<sp/>the<sp/>data<sp/>payload<sp/>beforehand.<sp/>You<sp/>would<sp/>also<sp/>need<sp/>to<sp/>keep<sp/>track<sp/>of<sp/>the<sp/>current<sp/>&quot;cursor&quot;<sp/>position<sp/>in<sp/>your<sp/>Buffer<sp/>so<sp/>you<sp/>write<sp/>everything<sp/>in<sp/>the<sp/>right<sp/>places.<sp/>With<sp/>smart-buffer<sp/>you<sp/>don&apos;t<sp/>have<sp/>to<sp/>do<sp/>either<sp/>of<sp/>those<sp/>things.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>1.x<sp/>(javascript)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>SmartBuffer<sp/>=<sp/>require(&apos;smart-buffer&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>1.x<sp/>(typescript)</highlight></codeline>
+<codeline><highlight class="normal">import<sp/>SmartBuffer<sp/>=<sp/>require(&apos;smart-buffer&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>2.x+<sp/>(javascript)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>SmartBuffer<sp/>=<sp/>require(&apos;smart-buffer&apos;).SmartBuffer;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>2.x+<sp/>(typescript)</highlight></codeline>
+<codeline><highlight class="normal">import<sp/>{<sp/>SmartBuffer,<sp/>SmartBufferOptions}<sp/>from<sp/>&apos;smart-buffer&apos;;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>createLoginPacket(username,<sp/>password,<sp/>age,<sp/>country)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>let<sp/>packet<sp/>=<sp/>new<sp/>SmartBuffer();</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.writeUInt16LE(0x0060);<sp/>//<sp/>Login<sp/>Packet<sp/>Type/ID</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.writeStringNT(username);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.writeStringNT(password);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.writeUInt8(age);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.writeStringNT(country);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.writeUInt16LE(packet.length<sp/>-<sp/>2,<sp/>2);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>packet.toBuffer();</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">With<sp/>the<sp/>above<sp/>function,<sp/>you<sp/>now<sp/>can<sp/>do<sp/>this:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>login<sp/>=<sp/>createLoginPacket(&quot;Josh&quot;,<sp/>&quot;secret123&quot;,<sp/>22,<sp/>&quot;United<sp/>States&quot;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>&lt;Buffer<sp/>60<sp/>00<sp/>1e<sp/>00<sp/>4a<sp/>6f<sp/>73<sp/>68<sp/>00<sp/>73<sp/>65<sp/>63<sp/>72<sp/>65<sp/>74<sp/>31<sp/>32<sp/>33<sp/>00<sp/>16<sp/>55<sp/>6e<sp/>69<sp/>74<sp/>65<sp/>64<sp/>20<sp/>53<sp/>74<sp/>61<sp/>74<sp/>65<sp/>73<sp/>00&gt;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">Notice<sp/>that<sp/>the<sp/>`[PacketLength:2]`<sp/>part<sp/>of<sp/>the<sp/>packet<sp/>was<sp/>inserted<sp/>after<sp/>we<sp/>had<sp/>added<sp/>everything<sp/>else,<sp/>and<sp/>as<sp/>shown<sp/>in<sp/>the<sp/>Buffer<sp/>dump<sp/>above,<sp/>is<sp/>in<sp/>the<sp/>correct<sp/>location<sp/>along<sp/>with<sp/>everything<sp/>else.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Reading<sp/>back<sp/>the<sp/>packet<sp/>we<sp/>created<sp/>above<sp/>is<sp/>just<sp/>as<sp/>easy:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">let<sp/>reader<sp/>=<sp/>SmartBuffer.fromBuffer(login);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">let<sp/>logininfo<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packetType:<sp/>reader.readUInt16LE(),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packetLength:<sp/>reader.readUInt16LE(),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>username:<sp/>reader.readStringNT(),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>password:<sp/>reader.readStringNT(),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>age:<sp/>reader.readUInt8(),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>country:<sp/>reader.readStringNT()</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">/*</highlight></codeline>
+<codeline><highlight class="normal">{<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packetType:<sp/>96,<sp/>(0x0060)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packetLength:<sp/>30,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>username:<sp/>&apos;Josh&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>password:<sp/>&apos;secret123&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>age:<sp/>22,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>country:<sp/>&apos;United<sp/>States&apos;<sp/></highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline><highlight class="normal">*/</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Api<sp/>Reference:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Constructing<sp/>a<sp/>smart-buffer</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">smart-buffer<sp/>has<sp/>a<sp/>few<sp/>different<sp/>ways<sp/>to<sp/>construct<sp/>an<sp/>instance.<sp/>Starting<sp/>with<sp/>version<sp/>2.0,<sp/>the<sp/>following<sp/>factory<sp/>methods<sp/>are<sp/>preffered.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>SmartBuffer<sp/>=<sp/>require(&apos;smart-buffer&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Creating<sp/>SmartBuffer<sp/>from<sp/>existing<sp/>Buffer</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(buffer);<sp/>//<sp/>Creates<sp/>instance<sp/>from<sp/>buffer.<sp/>(Uses<sp/>default<sp/>utf8<sp/>encoding)</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(buffer,<sp/>&apos;ascii&apos;);<sp/>//<sp/>Creates<sp/>instance<sp/>from<sp/>buffer<sp/>with<sp/>ascii<sp/>encoding<sp/>for<sp/>Strings.<sp/></highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Creating<sp/>SmartBuffer<sp/>with<sp/>specified<sp/>internal<sp/>Buffer<sp/>size.</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>buff<sp/>=<sp/>SmartBuffer.fromSize(1024);<sp/>//<sp/>Creates<sp/>instance<sp/>with<sp/>internal<sp/>Buffer<sp/>size<sp/>of<sp/>1024.</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>buff<sp/>=<sp/>SmartBuffer.fromSize(1024,<sp/>&apos;utf8&apos;);<sp/>//<sp/>Creates<sp/>instance<sp/>with<sp/>intenral<sp/>Buffer<sp/>size<sp/>of<sp/>1024,<sp/>and<sp/>utf8<sp/>encoding.<sp/></highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Creating<sp/>SmartBuffer<sp/>with<sp/>options<sp/>object.<sp/>This<sp/>one<sp/>specifies<sp/>size<sp/>and<sp/>encoding.</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>buff<sp/>=<sp/>SmartBuffer.fromOptions({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>size:<sp/>1024,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>encoding:<sp/>&apos;ascii&apos;</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Creating<sp/>SmartBuffer<sp/>with<sp/>options<sp/>object.<sp/>This<sp/>one<sp/>specified<sp/>an<sp/>existing<sp/>Buffer.</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>buff<sp/>=<sp/>SmartBuffer.fromOptions({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>buff:<sp/>buffer</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Just<sp/>want<sp/>a<sp/>regular<sp/>SmartBuffer<sp/>with<sp/>all<sp/>default<sp/>options?</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>buff<sp/>=<sp/>new<sp/>SmartBuffer();</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Backwards<sp/>Compatibility:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">All<sp/>constructors<sp/>used<sp/>prior<sp/>to<sp/>2.0<sp/>still<sp/>are<sp/>supported.<sp/>However<sp/>it&apos;s<sp/>not<sp/>recommended<sp/>to<sp/>use<sp/>these.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>writer<sp/>=<sp/>new<sp/>SmartBuffer();<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>Defaults<sp/>to<sp/>utf8,<sp/>4096<sp/>length<sp/>internal<sp/>Buffer.</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>writer<sp/>=<sp/>new<sp/>SmartBuffer(1024);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>Defaults<sp/>to<sp/>utf8,<sp/>1024<sp/>length<sp/>internal<sp/>Buffer.</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>writer<sp/>=<sp/>new<sp/>SmartBuffer(&apos;ascii&apos;);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>Sets<sp/>to<sp/>ascii<sp/>encoding,<sp/>4096<sp/>length<sp/>internal<sp/>buffer.</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>writer<sp/>=<sp/>new<sp/>SmartBuffer(1024,<sp/>&apos;ascii&apos;);<sp/><sp/>//<sp/>Sets<sp/>to<sp/>ascii<sp/>encoding,<sp/>1024<sp/>length<sp/>internal<sp/>buffer.</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Reading<sp/>Data</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">smart-buffer<sp/>supports<sp/>all<sp/>of<sp/>the<sp/>common<sp/>read<sp/>functions<sp/>you<sp/>will<sp/>find<sp/>in<sp/>the<sp/>vanilla<sp/>Buffer<sp/>class.<sp/>The<sp/>only<sp/>difference<sp/>is,<sp/>you<sp/>do<sp/>not<sp/>need<sp/>to<sp/>specify<sp/>which<sp/>location<sp/>to<sp/>start<sp/>reading<sp/>from.<sp/>This<sp/>is<sp/>possible<sp/>because<sp/>as<sp/>you<sp/>read<sp/>data<sp/>out<sp/>of<sp/>a<sp/>smart-buffer,<sp/>it<sp/>automatically<sp/>progresses<sp/>an<sp/>internal<sp/>read<sp/>offset/position<sp/>to<sp/>know<sp/>where<sp/>to<sp/>pick<sp/>up<sp/>from<sp/>on<sp/>the<sp/>next<sp/>read.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Reading<sp/>Numeric<sp/>Values</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>numeric<sp/>values,<sp/>you<sp/>simply<sp/>need<sp/>to<sp/>call<sp/>the<sp/>function<sp/>you<sp/>want,<sp/>and<sp/>the<sp/>data<sp/>is<sp/>returned.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Supported<sp/>Operations:</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>readInt8</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>readInt16BE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>readInt16LE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>readInt32BE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>readInt32LE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>readBigInt64LE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>readBigInt64BE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>readUInt8</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>readUInt16BE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>readUInt16LE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>readUInt32BE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>readUInt32LE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>readBigUInt64LE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>readBigUInt64BE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>readFloatBE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>readFloatLE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>readDoubleBE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>readDoubleLE</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>reader<sp/>=<sp/>new<sp/>SmartBuffer(somebuffer);</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>num<sp/>=<sp/>reader.readInt8();</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Reading<sp/>String<sp/>Values</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>reading<sp/>String<sp/>values,<sp/>you<sp/>can<sp/>either<sp/>choose<sp/>to<sp/>read<sp/>a<sp/>null<sp/>terminated<sp/>string,<sp/>or<sp/>a<sp/>string<sp/>of<sp/>a<sp/>specified<sp/>length.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>SmartBuffer.readStringNT(<sp/>[encoding]<sp/>)</highlight></codeline>
+<codeline><highlight class="normal">&gt;<sp/>`String`<sp/>**String<sp/>encoding<sp/>to<sp/>use**<sp/><sp/>-<sp/>Defaults<sp/>to<sp/>the<sp/>encoding<sp/>set<sp/>in<sp/>the<sp/>constructor.<sp/></highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">returns<sp/>`String`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>Note:<sp/>When<sp/>readStringNT<sp/>is<sp/>called<sp/>and<sp/>there<sp/>is<sp/>no<sp/>null<sp/>character<sp/>found,<sp/>smart-buffer<sp/>will<sp/>read<sp/>to<sp/>the<sp/>end<sp/>of<sp/>the<sp/>internal<sp/>Buffer.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>SmartBuffer.readString(<sp/>[length]<sp/>)</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>SmartBuffer.readString(<sp/>[encoding]<sp/>)</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>SmartBuffer.readString(<sp/>[length],<sp/>[encoding]<sp/>)</highlight></codeline>
+<codeline><highlight class="normal">&gt;<sp/>`Number`<sp/>**Length<sp/>of<sp/>the<sp/>string<sp/>to<sp/>read**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>`String`<sp/>**String<sp/>encoding<sp/>to<sp/>use**<sp/>-<sp/>Defaults<sp/>to<sp/>the<sp/>encoding<sp/>set<sp/>in<sp/>the<sp/>constructor,<sp/>or<sp/>utf8.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">returns<sp/>`String`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>Note:<sp/>When<sp/>readString<sp/>is<sp/>called<sp/>without<sp/>a<sp/>specified<sp/>length,<sp/>smart-buffer<sp/>will<sp/>read<sp/>to<sp/>the<sp/>end<sp/>of<sp/>the<sp/>internal<sp/>Buffer.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Reading<sp/>Buffer<sp/>Values</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>SmartBuffer.readBuffer(<sp/>length<sp/>)</highlight></codeline>
+<codeline><highlight class="normal">&gt;<sp/>`Number`<sp/>**Length<sp/>of<sp/>data<sp/>to<sp/>read<sp/>into<sp/>a<sp/>Buffer**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">returns<sp/>`Buffer`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>Note:<sp/>This<sp/>function<sp/>uses<sp/>`slice`<sp/>to<sp/>retrieve<sp/>the<sp/>Buffer.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>SmartBuffer.readBufferNT()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">returns<sp/>`Buffer`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>Note:<sp/>This<sp/>reads<sp/>the<sp/>next<sp/>sequence<sp/>of<sp/>bytes<sp/>in<sp/>the<sp/>buffer<sp/>until<sp/>a<sp/>null<sp/>(0x00)<sp/>value<sp/>is<sp/>found.<sp/>(Null<sp/>terminated<sp/>buffer)</highlight></codeline>
+<codeline><highlight class="normal">&gt;<sp/>Note:<sp/>This<sp/>function<sp/>uses<sp/>`slice`<sp/>to<sp/>retrieve<sp/>the<sp/>Buffer.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Writing<sp/>Data</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">smart-buffer<sp/>supports<sp/>all<sp/>of<sp/>the<sp/>common<sp/>write<sp/>functions<sp/>you<sp/>will<sp/>find<sp/>in<sp/>the<sp/>vanilla<sp/>Buffer<sp/>class.<sp/>The<sp/>only<sp/>difference<sp/>is,<sp/>you<sp/>do<sp/>not<sp/>need<sp/>to<sp/>specify<sp/>which<sp/>location<sp/>to<sp/>write<sp/>to<sp/>in<sp/>your<sp/>Buffer<sp/>by<sp/>default.<sp/>You<sp/>do<sp/>however<sp/>have<sp/>the<sp/>option<sp/>of<sp/>**inserting**<sp/>a<sp/>piece<sp/>of<sp/>data<sp/>into<sp/>your<sp/>smart-buffer<sp/>at<sp/>a<sp/>given<sp/>location.<sp/></highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Writing<sp/>Numeric<sp/>Values</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>numeric<sp/>values,<sp/>you<sp/>simply<sp/>need<sp/>to<sp/>call<sp/>the<sp/>function<sp/>you<sp/>want,<sp/>and<sp/>the<sp/>data<sp/>is<sp/>written<sp/>at<sp/>the<sp/>end<sp/>of<sp/>the<sp/>internal<sp/>Buffer&apos;s<sp/>current<sp/>write<sp/>position.<sp/>You<sp/>can<sp/>specify<sp/>a<sp/>offset/position<sp/>to<sp/>**insert**<sp/>the<sp/>given<sp/>value<sp/>at,<sp/>but<sp/>keep<sp/>in<sp/>mind<sp/>this<sp/>does<sp/>not<sp/>override<sp/>data<sp/>at<sp/>the<sp/>given<sp/>position.<sp/>This<sp/>feature<sp/>also<sp/>does<sp/>not<sp/>work<sp/>properly<sp/>when<sp/>inserting<sp/>a<sp/>value<sp/>beyond<sp/>the<sp/>current<sp/>internal<sp/>length<sp/>of<sp/>the<sp/>smart-buffer<sp/>(length<sp/>being<sp/>the<sp/>.length<sp/>property<sp/>of<sp/>the<sp/>smart-buffer<sp/>instance<sp/>you&apos;re<sp/>writing<sp/>to)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Supported<sp/>Operations:</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>writeInt8</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>writeInt16BE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>writeInt16LE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>writeInt32BE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>writeInt32LE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>writeBigInt64BE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>writeBigInt64LE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>writeUInt8</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>writeUInt16BE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>writeUInt16LE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>writeUInt32BE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>writeUInt32LE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>writeBigUInt64BE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>writeBigUInt64LE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>writeFloatBE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>writeFloatLE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>writeDoubleBE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>writeDoubleLE</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>following<sp/>signature<sp/>is<sp/>the<sp/>same<sp/>for<sp/>all<sp/>the<sp/>above<sp/>functions:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>SmartBuffer.writeInt8(<sp/>value,<sp/>[offset]<sp/>)</highlight></codeline>
+<codeline><highlight class="normal">&gt;<sp/>`Number`<sp/>**A<sp/>valid<sp/>Int8<sp/>number**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>`Number`<sp/>**The<sp/>position<sp/>to<sp/>insert<sp/>this<sp/>value<sp/>at**<sp/></highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">returns<sp/>this<sp/></highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>Note:<sp/>All<sp/>write<sp/>operations<sp/>return<sp/>`this`<sp/>to<sp/>allow<sp/>for<sp/>chaining.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Writing<sp/>String<sp/>Values</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>reading<sp/>String<sp/>values,<sp/>you<sp/>can<sp/>either<sp/>choose<sp/>to<sp/>write<sp/>a<sp/>null<sp/>terminated<sp/>string,<sp/>or<sp/>a<sp/>non<sp/>null<sp/>terminated<sp/>string.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>SmartBuffer.writeStringNT(<sp/>value,<sp/>[offset],<sp/>[encoding]<sp/>)</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>SmartBuffer.writeStringNT(<sp/>value,<sp/>[offset]<sp/>)</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>SmartBuffer.writeStringNT(<sp/>value,<sp/>[encoding]<sp/>)</highlight></codeline>
+<codeline><highlight class="normal">&gt;<sp/>`String`<sp/>**String<sp/>value<sp/>to<sp/>write**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>`Number`<sp/>**The<sp/>position<sp/>to<sp/>insert<sp/>this<sp/>String<sp/>at**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>`String`<sp/>**The<sp/>String<sp/>encoding<sp/>to<sp/>use.**<sp/>-<sp/>Defaults<sp/>to<sp/>the<sp/>encoding<sp/>set<sp/>in<sp/>the<sp/>constructor,<sp/>or<sp/>utf8.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">returns<sp/>this</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>SmartBuffer.writeString(<sp/>value,<sp/>[offset],<sp/>[encoding]<sp/>)</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>SmartBuffer.writeString(<sp/>value,<sp/>[offset]<sp/>)</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>SmartBuffer.writeString(<sp/>value,<sp/>[encoding]<sp/>)</highlight></codeline>
+<codeline><highlight class="normal">&gt;<sp/>`String`<sp/>**String<sp/>value<sp/>to<sp/>write**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>`Number`<sp/>**The<sp/>position<sp/>to<sp/>insert<sp/>this<sp/>String<sp/>at**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>`String`<sp/>**The<sp/>String<sp/>encoding<sp/>to<sp/>use**<sp/>-<sp/>Defaults<sp/>to<sp/>the<sp/>encoding<sp/>set<sp/>in<sp/>the<sp/>constructor,<sp/>or<sp/>utf8.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">returns<sp/>this</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Writing<sp/>Buffer<sp/>Values</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>SmartBuffer.writeBuffer(<sp/>value,<sp/>[offset]<sp/>)</highlight></codeline>
+<codeline><highlight class="normal">&gt;<sp/>`Buffer`<sp/>**Buffer<sp/>value<sp/>to<sp/>write**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>`Number`<sp/>**The<sp/>position<sp/>to<sp/>insert<sp/>this<sp/>Buffer&apos;s<sp/>content<sp/>at**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">returns<sp/>this</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>SmartBuffer.writeBufferNT(<sp/>value,<sp/>[offset]<sp/>)</highlight></codeline>
+<codeline><highlight class="normal">&gt;<sp/>`Buffer`<sp/>**Buffer<sp/>value<sp/>to<sp/>write**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>`Number`<sp/>**The<sp/>position<sp/>to<sp/>insert<sp/>this<sp/>Buffer&apos;s<sp/>content<sp/>at**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">returns<sp/>this</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Utility<sp/>Functions</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>SmartBuffer.clear()</highlight></codeline>
+<codeline><highlight class="normal">Resets<sp/>the<sp/>SmartBuffer<sp/>to<sp/>its<sp/>default<sp/>state<sp/>where<sp/>it<sp/>can<sp/>be<sp/>reused<sp/>for<sp/>reading<sp/>or<sp/>writing.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>SmartBuffer.remaining()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">returns<sp/>`Number`<sp/>The<sp/>amount<sp/>of<sp/>data<sp/>left<sp/>to<sp/>read<sp/>based<sp/>on<sp/>the<sp/>current<sp/>read<sp/>Position.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>SmartBuffer.skip(<sp/>value<sp/>)</highlight></codeline>
+<codeline><highlight class="normal">&gt;<sp/>`Number`<sp/>**The<sp/>amount<sp/>of<sp/>bytes<sp/>to<sp/>skip<sp/>ahead**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Skips<sp/>the<sp/>read<sp/>position<sp/>ahead<sp/>by<sp/>the<sp/>given<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">returns<sp/>this</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>SmartBuffer.rewind(<sp/>value<sp/>)</highlight></codeline>
+<codeline><highlight class="normal">&gt;<sp/>`Number`<sp/>**The<sp/>amount<sp/>of<sp/>bytes<sp/>to<sp/>reward<sp/>backwards**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Rewinds<sp/>the<sp/>read<sp/>position<sp/>backwards<sp/>by<sp/>the<sp/>given<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">returns<sp/>this</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>SmartBuffer.moveTo(<sp/>position<sp/>)</highlight></codeline>
+<codeline><highlight class="normal">&gt;<sp/>`Number`<sp/>**The<sp/>point<sp/>to<sp/>skip<sp/>the<sp/>read<sp/>position<sp/>to**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Moves<sp/>the<sp/>read<sp/>position<sp/>to<sp/>the<sp/>given<sp/>point.</highlight></codeline>
+<codeline><highlight class="normal">returns<sp/>this</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>SmartBuffer.toBuffer()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">returns<sp/>`Buffer`<sp/>A<sp/>Buffer<sp/>containing<sp/>the<sp/>contents<sp/>of<sp/>the<sp/>internal<sp/>Buffer.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>Note:<sp/>This<sp/>uses<sp/>the<sp/>slice<sp/>function.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>SmartBuffer.toString(<sp/>[encoding]<sp/>)</highlight></codeline>
+<codeline><highlight class="normal">&gt;<sp/>`String`<sp/>**The<sp/>String<sp/>encoding<sp/>to<sp/>use**<sp/>-<sp/>Defaults<sp/>to<sp/>the<sp/>encoding<sp/>set<sp/>in<sp/>the<sp/>constructor,<sp/>or<sp/>utf8.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">returns<sp/>`String`<sp/>The<sp/>internal<sp/>Buffer<sp/>in<sp/>String<sp/>representation.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Properties</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>SmartBuffer.length</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">returns<sp/>`Number`<sp/>**The<sp/>length<sp/>of<sp/>the<sp/>data<sp/>that<sp/>is<sp/>being<sp/>tracked<sp/>in<sp/>the<sp/>internal<sp/>Buffer**<sp/>-<sp/>Does<sp/>NOT<sp/>return<sp/>the<sp/>absolute<sp/>length<sp/>of<sp/>the<sp/>internal<sp/>Buffer<sp/>being<sp/>written<sp/>to.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>License</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>work<sp/>is<sp/>licensed<sp/>under<sp/>the<sp/>[MIT<sp/>license](http://en.wikipedia.org/wiki/MIT_License).</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/smart-buffer/docs/README_v3.md"/>
+  </compounddef>
+</doxygen>

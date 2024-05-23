@@ -1,0 +1,644 @@
+.TH "gyp.generator.make.MakefileWriter" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gyp.generator.make.MakefileWriter
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fB__init__\fP (self, \fBgenerator_flags\fP, \fBflavor\fP)"
+.br
+.ti -1c
+.RI "\fBWrite\fP (self, \fBqualified_target\fP, base_path, output_filename, spec, configs, part_of_all)"
+.br
+.ti -1c
+.RI "\fBWriteSubMake\fP (self, output_filename, makefile_path, targets, build_dir)"
+.br
+.ti -1c
+.RI "\fBWriteActions\fP (self, actions, extra_sources, extra_outputs, extra_mac_bundle_resources, part_of_all)"
+.br
+.ti -1c
+.RI "\fBWriteRules\fP (self, rules, extra_sources, extra_outputs, extra_mac_bundle_resources, part_of_all)"
+.br
+.ti -1c
+.RI "\fBWriteCopies\fP (self, copies, extra_outputs, part_of_all)"
+.br
+.ti -1c
+.RI "\fBWriteMacBundleResources\fP (self, resources, bundle_deps)"
+.br
+.ti -1c
+.RI "\fBWriteMacInfoPlist\fP (self, bundle_deps)"
+.br
+.ti -1c
+.RI "\fBWriteSources\fP (self, configs, deps, sources, extra_outputs, extra_link_deps, part_of_all, precompiled_header)"
+.br
+.ti -1c
+.RI "\fBWritePchTargets\fP (self, pch_commands)"
+.br
+.ti -1c
+.RI "\fBComputeOutputBasename\fP (self, spec)"
+.br
+.ti -1c
+.RI "\fBComputeOutput\fP (self, spec)"
+.br
+.ti -1c
+.RI "\fBComputeMacBundleOutput\fP (self, spec)"
+.br
+.ti -1c
+.RI "\fBComputeMacBundleBinaryOutput\fP (self, spec)"
+.br
+.ti -1c
+.RI "\fBComputeDeps\fP (self, spec)"
+.br
+.ti -1c
+.RI "\fBWriteDependencyOnExtraOutputs\fP (self, \fBtarget\fP, extra_outputs)"
+.br
+.ti -1c
+.RI "\fBWriteTarget\fP (self, spec, configs, deps, link_deps, bundle_deps, extra_outputs, part_of_all)"
+.br
+.ti -1c
+.RI "\fBWriteList\fP (self, value_list, variable=None, prefix='', quoter=\fBQuoteIfNecessary\fP)"
+.br
+.ti -1c
+.RI "\fBWriteDoCmd\fP (self, outputs, inputs, command, part_of_all, comment=None, postbuilds=False)"
+.br
+.ti -1c
+.RI "\fBWriteMakeRule\fP (self, outputs, inputs, actions=None, comment=None, order_only=False, force=False, phony=False, command=None)"
+.br
+.ti -1c
+.RI "\fBWriteAndroidNdkModuleRule\fP (self, module_name, all_sources, link_deps)"
+.br
+.ti -1c
+.RI "\fBWriteLn\fP (self, text='')"
+.br
+.ti -1c
+.RI "\fBGetSortedXcodeEnv\fP (self, additional_settings=None)"
+.br
+.ti -1c
+.RI "\fBGetSortedXcodePostbuildEnv\fP (self)"
+.br
+.ti -1c
+.RI "\fBWriteSortedXcodeEnv\fP (self, \fBtarget\fP, env)"
+.br
+.ti -1c
+.RI "\fBObjectify\fP (self, \fBpath\fP)"
+.br
+.ti -1c
+.RI "\fBPchify\fP (self, \fBpath\fP, lang)"
+.br
+.ti -1c
+.RI "\fBAbsolutify\fP (self, \fBpath\fP)"
+.br
+.ti -1c
+.RI "\fBExpandInputRoot\fP (self, template, expansion, dirname)"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBgenerator_flags\fP"
+.br
+.ti -1c
+.RI "\fBflavor\fP"
+.br
+.ti -1c
+.RI "\fBsuffix_rules_srcdir\fP"
+.br
+.ti -1c
+.RI "\fBsuffix_rules_objdir1\fP"
+.br
+.ti -1c
+.RI "\fBsuffix_rules_objdir2\fP"
+.br
+.ti -1c
+.RI "\fBfp\fP"
+.br
+.ti -1c
+.RI "\fBqualified_target\fP"
+.br
+.ti -1c
+.RI "\fBpath\fP"
+.br
+.ti -1c
+.RI "\fBtarget\fP"
+.br
+.ti -1c
+.RI "\fBtype\fP"
+.br
+.ti -1c
+.RI "\fBtoolset\fP"
+.br
+.ti -1c
+.RI "\fBis_mac_bundle\fP"
+.br
+.ti -1c
+.RI "\fBxcode_settings\fP"
+.br
+.ti -1c
+.RI "\fBoutput\fP"
+.br
+.ti -1c
+.RI "\fBoutput_binary\fP"
+.br
+.ti -1c
+.RI "\fBis_standalone_static_library\fP"
+.br
+.ti -1c
+.RI "\fBalias\fP"
+.br
+.ti -1c
+.RI "\fBPchify\fP"
+.br
+.ti -1c
+.RI "\fBAbsolutify\fP"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fB_InstallImmediately\fP (self)"
+.br
+.ti -1c
+.RI "\fB_InstallableTargetInstallPath\fP (self)"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fB_INSTALLABLE_TARGETS\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.PP
+.nf
+MakefileWriter packages up the writing of one target-specific foobar\&.mk\&.
+
+Its only real entry point is Write(), and is mostly used for namespacing\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB681\fP of file \fBmake\&.py\fP\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.__init__ ( self,  generator_flags,  flavor)"
+
+.PP
+Definition at line \fB687\fP of file \fBmake\&.py\fP\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&._InstallableTargetInstallPath ( self)\fR [protected]\fP"
+
+.PP
+.nf
+Returns the location of the final output for an installable target\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB2175\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&._InstallImmediately ( self)\fR [protected]\fP"
+
+.PP
+Definition at line \fB1504\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.Absolutify ( self,  path)"
+
+.PP
+.nf
+Convert a subdirectory-relative path into a base-relative path\&.
+Skips over paths that contain variables\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB2156\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.ComputeDeps ( self,  spec)"
+
+.PP
+.nf
+Compute the dependencies of a gyp spec\&.
+
+Returns a tuple (deps, link_deps), where each is a list of
+filenames that will need to be put in front of make for either
+building (deps) or linking (link_deps)\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1537\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.ComputeMacBundleBinaryOutput ( self,  spec)"
+
+.PP
+.nf
+Return the 'output' (full output path) to the binary in a bundle\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1532\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.ComputeMacBundleOutput ( self,  spec)"
+
+.PP
+.nf
+Return the 'output' (full output path) to a bundle output directory\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1526\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.ComputeOutput ( self,  spec)"
+
+.PP
+.nf
+Return the 'output' (full output path) of a gyp spec\&.
+
+E\&.g\&., the loadable module 'foobar' in directory 'baz' will produce
+  '$(obj)/baz/libfoobar\&.so'
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1512\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.ComputeOutputBasename ( self,  spec)"
+
+.PP
+.nf
+Return the 'output basename' of a gyp spec\&.
+
+E\&.g\&., the loadable module 'foobar' in directory 'baz' will produce
+  'libfoobar\&.so'
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1453\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.ExpandInputRoot ( self,  template,  expansion,  dirname)"
+
+.PP
+Definition at line \fB2166\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.GetSortedXcodeEnv ( self,  additional_settings = \fRNone\fP)"
+
+.PP
+Definition at line \fB2107\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.GetSortedXcodePostbuildEnv ( self)"
+
+.PP
+Definition at line \fB2116\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.Objectify ( self,  path)"
+
+.PP
+.nf
+Convert a path to its output directory form\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB2138\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.Pchify ( self,  path,  lang)"
+
+.PP
+.nf
+Convert a prefix header path to its output directory form\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB2146\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.Write ( self,  qualified_target,  base_path,  output_filename,  spec,  configs,  part_of_all)"
+
+.PP
+.nf
+The main entry point: writes a \&.mk file for a single target\&.
+
+Arguments:
+  qualified_target: target we're generating
+  base_path: path relative to source root we're building in, used to resolve
+             target-relative paths
+  output_filename: output \&.mk file name to write
+  spec, configs: gyp info
+  part_of_all: flag indicating this target is part of 'all'
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB734\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.WriteActions ( self,  actions,  extra_sources,  extra_outputs,  extra_mac_bundle_resources,  part_of_all)"
+
+.PP
+.nf
+Write Makefile code for any 'actions' from the gyp input\&.
+
+extra_sources: a list that will be filled in with newly generated source
+               files, if any
+extra_outputs: a list that will be filled in with any outputs of these
+               actions (used to make other pieces dependent on these
+               actions)
+part_of_all: flag indicating this target is part of 'all'
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB915\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.WriteAndroidNdkModuleRule ( self,  module_name,  all_sources,  link_deps)"
+
+.PP
+.nf
+Write a set of LOCAL_XXX definitions for Android NDK\&.
+
+These variable definitions will be used by Android NDK but do nothing for
+non-Android applications\&.
+
+Arguments:
+  module_name: Android NDK module name, which must be unique among all
+      module names\&.
+  all_sources: A list of source files (will be filtered by Compilable)\&.
+  link_deps: A list of link dependencies, which must be sorted in
+      the order from dependencies to dependents\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB2012\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.WriteCopies ( self,  copies,  extra_outputs,  part_of_all)"
+
+.PP
+.nf
+Write Makefile code for any 'copies' from the gyp input\&.
+
+extra_outputs: a list that will be filled in with any outputs of this action
+               (used to make other pieces dependent on this action)
+part_of_all: flag indicating this target is part of 'all'
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1176\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.WriteDependencyOnExtraOutputs ( self,  target,  extra_outputs)"
+
+.PP
+Definition at line \fB1563\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.WriteDoCmd ( self,  outputs,  inputs,  command,  part_of_all,  comment = \fRNone\fP,  postbuilds = \fRFalse\fP)"
+
+.PP
+.nf
+Write a Makefile rule that uses do_cmd\&.
+
+This makes the outputs dependent on the command line that was run,
+as well as support the V= make command line flag\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1912\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.WriteList ( self,  value_list,  variable = \fRNone\fP,  prefix = \fR''\fP,  quoter = \fR\fBQuoteIfNecessary\fP\fP)"
+
+.PP
+.nf
+Write a variable definition that is a list of values\&.
+
+E\&.g\&. WriteList(['a','b'], 'foo', prefix='blah') writes out
+     foo = blaha blahb
+but in a pretty-printed style\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1899\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.WriteLn ( self,  text = \fR''\fP)"
+
+.PP
+Definition at line \fB2104\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.WriteMacBundleResources ( self,  resources,  bundle_deps)"
+
+.PP
+.nf
+Writes Makefile code for 'mac_bundle_resources'\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1216\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.WriteMacInfoPlist ( self,  bundle_deps)"
+
+.PP
+.nf
+Write Makefile code for bundle Info\&.plist files\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1233\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.WriteMakeRule ( self,  outputs,  inputs,  actions = \fRNone\fP,  comment = \fRNone\fP,  order_only = \fRFalse\fP,  force = \fRFalse\fP,  phony = \fRFalse\fP,  command = \fRNone\fP)"
+
+.PP
+.nf
+Write a Makefile rule, with some extra tricks\&.
+
+outputs: a list of outputs for the rule (note: this is not directly
+         supported by make; see comments below)
+inputs: a list of inputs for the rule
+actions: a list of shell commands to run for the rule
+comment: a comment to put in the Makefile above the rule (also useful
+         for making this Python script's code self-documenting)
+order_only: if true, makes the dependency order-only
+force: if true, include FORCE_DO_CMD as an order-only dep
+phony: if true, the rule does not actually generate the named output, the
+       output is just a name to run the rule
+command: (optional) command name to generate unambiguous labels
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1939\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.WritePchTargets ( self,  pch_commands)"
+
+.PP
+.nf
+Writes make rules to compile prefix headers\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1422\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.WriteRules ( self,  rules,  extra_sources,  extra_outputs,  extra_mac_bundle_resources,  part_of_all)"
+
+.PP
+.nf
+Write Makefile code for any 'rules' from the gyp input\&.
+
+extra_sources: a list that will be filled in with newly generated source
+               files, if any
+extra_outputs: a list that will be filled in with any outputs of these
+               rules (used to make other pieces dependent on these rules)
+part_of_all: flag indicating this target is part of 'all'
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1032\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.WriteSortedXcodeEnv ( self,  target,  env)"
+
+.PP
+Definition at line \fB2128\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.WriteSources ( self,  configs,  deps,  sources,  extra_outputs,  extra_link_deps,  part_of_all,  precompiled_header)"
+
+.PP
+.nf
+Write Makefile code for any 'sources' from the gyp input\&.
+These are source files necessary to build the current target\&.
+
+configs, deps, sources: input from gyp\&.
+extra_outputs: a list of extra outputs this action should be dependent on;
+               used to serialize action/rules before compilation
+extra_link_deps: a list that will be filled in with any outputs of
+                 compilation (to be used in link lines)
+part_of_all: flag indicating this target is part of 'all'
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1273\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.WriteSubMake ( self,  output_filename,  makefile_path,  targets,  build_dir)"
+
+.PP
+.nf
+Write a 'sub-project' Makefile\&.
+
+This is a small, wrapper Makefile that calls the top-level Makefile to build
+the targets from a single gyp file (i\&.e\&. a sub-project)\&.
+
+Arguments:
+  output_filename: sub-project Makefile name to write
+  makefile_path: path to the top-level Makefile
+  targets: list of 'all' targets for this sub-project
+  build_dir: build output directory, relative to the sub-project
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB887\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.WriteTarget ( self,  spec,  configs,  deps,  link_deps,  bundle_deps,  extra_outputs,  part_of_all)"
+
+.PP
+.nf
+Write Makefile code to produce the final target of the gyp spec\&.
+
+spec, configs: input from gyp\&.
+deps, link_deps: dependency lists; see ComputeDeps()
+extra_outputs: any extra outputs that our target should depend on
+part_of_all: flag indicating this target is part of 'all'
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1571\fP of file \fBmake\&.py\fP\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&._INSTALLABLE_TARGETS\fR [protected]\fP"
+
+.PP
+Definition at line \fB785\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.Absolutify"
+
+.PP
+Definition at line \fB2060\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.alias"
+
+.PP
+Definition at line \fB787\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.flavor"
+
+.PP
+Definition at line \fB689\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.fp"
+
+.PP
+Definition at line \fB749\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.generator_flags"
+
+.PP
+Definition at line \fB688\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.is_mac_bundle"
+
+.PP
+Definition at line \fB759\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.is_standalone_static_library"
+
+.PP
+Definition at line \fB782\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.output"
+
+.PP
+Definition at line \fB777\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.output_binary"
+
+.PP
+Definition at line \fB778\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.path"
+
+.PP
+Definition at line \fB754\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.Pchify"
+
+.PP
+Definition at line \fB840\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.qualified_target"
+
+.PP
+Definition at line \fB753\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.suffix_rules_objdir1"
+
+.PP
+Definition at line \fB692\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.suffix_rules_objdir2"
+
+.PP
+Definition at line \fB693\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.suffix_rules_srcdir"
+
+.PP
+Definition at line \fB691\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.target"
+
+.PP
+Definition at line \fB755\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.toolset"
+
+.PP
+Definition at line \fB757\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.type"
+
+.PP
+Definition at line \fB756\fP of file \fBmake\&.py\fP\&.
+.SS "gyp\&.generator\&.make\&.MakefileWriter\&.xcode_settings"
+
+.PP
+Definition at line \fB761\fP of file \fBmake\&.py\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

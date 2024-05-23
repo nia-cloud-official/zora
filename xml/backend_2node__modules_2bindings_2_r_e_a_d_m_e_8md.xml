@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2bindings_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">node-bindings</highlight></codeline>
+<codeline><highlight class="normal">=============</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>Helper<sp/>module<sp/>for<sp/>loading<sp/>your<sp/>native<sp/>module&apos;s<sp/>`.node`<sp/>file</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>a<sp/>helper<sp/>module<sp/>for<sp/>authors<sp/>of<sp/>Node.js<sp/>native<sp/>addon<sp/>modules.</highlight></codeline>
+<codeline><highlight class="normal">It<sp/>is<sp/>basically<sp/>the<sp/>&quot;swiss<sp/>army<sp/>knife&quot;<sp/>of<sp/>`require()`ing<sp/>your<sp/>native<sp/>module&apos;s</highlight></codeline>
+<codeline><highlight class="normal">`.node`<sp/>file.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Throughout<sp/>the<sp/>course<sp/>of<sp/>Node&apos;s<sp/>native<sp/>addon<sp/>history,<sp/>addons<sp/>have<sp/>ended<sp/>up<sp/>being</highlight></codeline>
+<codeline><highlight class="normal">compiled<sp/>in<sp/>a<sp/>variety<sp/>of<sp/>different<sp/>places,<sp/>depending<sp/>on<sp/>which<sp/>build<sp/>tool<sp/>and<sp/>which</highlight></codeline>
+<codeline><highlight class="normal">version<sp/>of<sp/>node<sp/>was<sp/>used.<sp/>To<sp/>make<sp/>matters<sp/>worse,<sp/>now<sp/>the<sp/>`gyp`<sp/>build<sp/>tool<sp/>can</highlight></codeline>
+<codeline><highlight class="normal">produce<sp/>either<sp/>a<sp/>__Release__<sp/>or<sp/>__Debug__<sp/>build,<sp/>each<sp/>being<sp/>built<sp/>into<sp/>different</highlight></codeline>
+<codeline><highlight class="normal">locations.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>module<sp/>checks<sp/>_all_<sp/>the<sp/>possible<sp/>locations<sp/>that<sp/>a<sp/>native<sp/>addon<sp/>would<sp/>be<sp/>built</highlight></codeline>
+<codeline><highlight class="normal">at,<sp/>and<sp/>returns<sp/>the<sp/>first<sp/>one<sp/>that<sp/>loads<sp/>successfully.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Installation</highlight></codeline>
+<codeline><highlight class="normal">------------</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Install<sp/>with<sp/>`npm`:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>bash</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>--save<sp/>bindings</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Or<sp/>add<sp/>it<sp/>to<sp/>the<sp/>`&quot;dependencies&quot;`<sp/>section<sp/>of<sp/>your<sp/>`package.json`<sp/>file.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Example</highlight></codeline>
+<codeline><highlight class="normal">-------</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`require()`ing<sp/>the<sp/>proper<sp/>bindings<sp/>file<sp/>for<sp/>the<sp/>current<sp/>node<sp/>version,<sp/>platform</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>architecture<sp/>is<sp/>as<sp/>simple<sp/>as:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>bindings<sp/>=<sp/>require(&apos;bindings&apos;)(&apos;binding.node&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Use<sp/>your<sp/>bindings<sp/>defined<sp/>in<sp/>your<sp/>C<sp/>files</highlight></codeline>
+<codeline><highlight class="normal">bindings.your_c_function()</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Nice<sp/>Error<sp/>Output</highlight></codeline>
+<codeline><highlight class="normal">-----------------</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>the<sp/>`.node`<sp/>file<sp/>could<sp/>not<sp/>be<sp/>loaded,<sp/>`node-bindings`<sp/>throws<sp/>an<sp/>Error<sp/>with</highlight></codeline>
+<codeline><highlight class="normal">a<sp/>nice<sp/>error<sp/>message<sp/>telling<sp/>you<sp/>exactly<sp/>what<sp/>was<sp/>tried.<sp/>You<sp/>can<sp/>also<sp/>check<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">`err.tries`<sp/>Array<sp/>property.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">Error:<sp/>Could<sp/>not<sp/>load<sp/>the<sp/>bindings<sp/>file.<sp/>Tried:</highlight></codeline>
+<codeline><highlight class="normal"><sp/>→<sp/>/Users/nrajlich/ref/build/binding.node</highlight></codeline>
+<codeline><highlight class="normal"><sp/>→<sp/>/Users/nrajlich/ref/build/Debug/binding.node</highlight></codeline>
+<codeline><highlight class="normal"><sp/>→<sp/>/Users/nrajlich/ref/build/Release/binding.node</highlight></codeline>
+<codeline><highlight class="normal"><sp/>→<sp/>/Users/nrajlich/ref/out/Debug/binding.node</highlight></codeline>
+<codeline><highlight class="normal"><sp/>→<sp/>/Users/nrajlich/ref/Debug/binding.node</highlight></codeline>
+<codeline><highlight class="normal"><sp/>→<sp/>/Users/nrajlich/ref/out/Release/binding.node</highlight></codeline>
+<codeline><highlight class="normal"><sp/>→<sp/>/Users/nrajlich/ref/Release/binding.node</highlight></codeline>
+<codeline><highlight class="normal"><sp/>→<sp/>/Users/nrajlich/ref/build/default/binding.node</highlight></codeline>
+<codeline><highlight class="normal"><sp/>→<sp/>/Users/nrajlich/ref/compiled/0.8.2/darwin/x64/binding.node</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>bindings<sp/>(/Users/nrajlich/ref/node_modules/bindings/bindings.js:84:13)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>Object.&lt;anonymous&gt;<sp/>(/Users/nrajlich/ref/lib/ref.js:5:47)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>Module._compile<sp/>(module.js:449:26)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>Object.Module._extensions..js<sp/>(module.js:467:10)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>Module.load<sp/>(module.js:356:32)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>Function.Module._load<sp/>(module.js:312:12)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>...</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>searching<sp/>for<sp/>the<sp/>`.node`<sp/>file<sp/>will<sp/>originate<sp/>from<sp/>the<sp/>first<sp/>directory<sp/>in<sp/>which<sp/>has<sp/>a<sp/>`package.json`<sp/>file<sp/>is<sp/>found.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">License</highlight></codeline>
+<codeline><highlight class="normal">-------</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">(The<sp/>MIT<sp/>License)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Copyright<sp/>(c)<sp/>2012<sp/>Nathan<sp/>Rajlich<sp/>&amp;lt;nathan@tootallnate.net&amp;gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Permission<sp/>is<sp/>hereby<sp/>granted,<sp/>free<sp/>of<sp/>charge,<sp/>to<sp/>any<sp/>person<sp/>obtaining</highlight></codeline>
+<codeline><highlight class="normal">a<sp/>copy<sp/>of<sp/>this<sp/>software<sp/>and<sp/>associated<sp/>documentation<sp/>files<sp/>(the</highlight></codeline>
+<codeline><highlight class="normal">&apos;Software&apos;),<sp/>to<sp/>deal<sp/>in<sp/>the<sp/>Software<sp/>without<sp/>restriction,<sp/>including</highlight></codeline>
+<codeline><highlight class="normal">without<sp/>limitation<sp/>the<sp/>rights<sp/>to<sp/>use,<sp/>copy,<sp/>modify,<sp/>merge,<sp/>publish,</highlight></codeline>
+<codeline><highlight class="normal">distribute,<sp/>sublicense,<sp/>and/or<sp/>sell<sp/>copies<sp/>of<sp/>the<sp/>Software,<sp/>and<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">permit<sp/>persons<sp/>to<sp/>whom<sp/>the<sp/>Software<sp/>is<sp/>furnished<sp/>to<sp/>do<sp/>so,<sp/>subject<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>following<sp/>conditions:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>above<sp/>copyright<sp/>notice<sp/>and<sp/>this<sp/>permission<sp/>notice<sp/>shall<sp/>be</highlight></codeline>
+<codeline><highlight class="normal">included<sp/>in<sp/>all<sp/>copies<sp/>or<sp/>substantial<sp/>portions<sp/>of<sp/>the<sp/>Software.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">THE<sp/>SOFTWARE<sp/>IS<sp/>PROVIDED<sp/>&apos;AS<sp/>IS&apos;,<sp/>WITHOUT<sp/>WARRANTY<sp/>OF<sp/>ANY<sp/>KIND,</highlight></codeline>
+<codeline><highlight class="normal">EXPRESS<sp/>OR<sp/>IMPLIED,<sp/>INCLUDING<sp/>BUT<sp/>NOT<sp/>LIMITED<sp/>TO<sp/>THE<sp/>WARRANTIES<sp/>OF</highlight></codeline>
+<codeline><highlight class="normal">MERCHANTABILITY,<sp/>FITNESS<sp/>FOR<sp/>A<sp/>PARTICULAR<sp/>PURPOSE<sp/>AND<sp/>NONINFRINGEMENT.</highlight></codeline>
+<codeline><highlight class="normal">IN<sp/>NO<sp/>EVENT<sp/>SHALL<sp/>THE<sp/>AUTHORS<sp/>OR<sp/>COPYRIGHT<sp/>HOLDERS<sp/>BE<sp/>LIABLE<sp/>FOR<sp/>ANY</highlight></codeline>
+<codeline><highlight class="normal">CLAIM,<sp/>DAMAGES<sp/>OR<sp/>OTHER<sp/>LIABILITY,<sp/>WHETHER<sp/>IN<sp/>AN<sp/>ACTION<sp/>OF<sp/>CONTRACT,</highlight></codeline>
+<codeline><highlight class="normal">TORT<sp/>OR<sp/>OTHERWISE,<sp/>ARISING<sp/>FROM,<sp/>OUT<sp/>OF<sp/>OR<sp/>IN<sp/>CONNECTION<sp/>WITH<sp/>THE</highlight></codeline>
+<codeline><highlight class="normal">SOFTWARE<sp/>OR<sp/>THE<sp/>USE<sp/>OR<sp/>OTHER<sp/>DEALINGS<sp/>IN<sp/>THE<sp/>SOFTWARE.</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/bindings/README.md"/>
+  </compounddef>
+</doxygen>

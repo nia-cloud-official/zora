@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e</compoundname>
+    <title>iMurmurHash.js</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>An incremental implementation of the MurmurHash3 (32-bit) hashing algorithm for JavaScript based on <ulink url="https://github.com/garycourt/murmurhash-js">Gary Court&apos;s implementation</ulink> with <ulink url="https://github.com/kazuyukitanimura/murmurhash-js">kazuyukitanimura&apos;s modifications</ulink>.</para>
+<para>This version works significantly faster than the non-incremental version if you need to hash many small strings into a single hash, since string concatenation (to build the single string to pass the non-incremental version) is fairly costly. In one case tested, using the incremental version was about 50% faster than concatenating 5-10 strings and then hashing.</para>
+<sect1 id="md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_1autotoc_md1686">
+<title>Installation</title><para>To use iMurmurHash in the browser, <ulink url="https://raw.github.com/jensyt/imurmurhash-js/master/imurmurhash.min.js">download the latest version</ulink> and include it as a script on your site.</para>
+<para><programlisting filename=".html"><codeline><highlight class="normal">&lt;script<sp/>type=&quot;text/javascript&quot;<sp/>src=&quot;/scripts/imurmurhash.min.js&quot;&gt;&lt;/script&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;script&gt;</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Your<sp/>code<sp/>here,<sp/>access<sp/>iMurmurHash<sp/>using<sp/>the<sp/>global<sp/>object<sp/>MurmurHash3</highlight></codeline>
+<codeline><highlight class="normal">&lt;/script&gt;</highlight></codeline>
+</programlisting></para>
+<para><hruler/>
+</para>
+<para>To use iMurmurHash in Node.js, install the module using NPM:</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">npm<sp/>install<sp/>imurmurhash</highlight></codeline>
+</programlisting></para>
+<para>Then simply include it in your scripts:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">MurmurHash3<sp/>=<sp/>require(&apos;imurmurhash&apos;);</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_1autotoc_md1688">
+<title>Quick Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>Create<sp/>the<sp/>initial<sp/>hash</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>hashState<sp/>=<sp/>MurmurHash3(&apos;string&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Incrementally<sp/>add<sp/>text</highlight></codeline>
+<codeline><highlight class="normal">hashState.hash(&apos;more<sp/>strings&apos;);</highlight></codeline>
+<codeline><highlight class="normal">hashState.hash(&apos;even<sp/>more<sp/>strings&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>All<sp/>calls<sp/>can<sp/>be<sp/>chained<sp/>if<sp/>desired</highlight></codeline>
+<codeline><highlight class="normal">hashState.hash(&apos;and&apos;).hash(&apos;some&apos;).hash(&apos;more&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Get<sp/>a<sp/>result</highlight></codeline>
+<codeline><highlight class="normal">hashState.result();</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>returns<sp/>0xe4ccfe6b</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_1autotoc_md1689">
+<title>Functions</title><sect2 id="md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_1autotoc_md1690">
+<title>MurmurHash3 ([string], [seed])</title><para>Get a hash state object, optionally initialized with the given <emphasis>string</emphasis> and <emphasis>seed</emphasis>. <emphasis>Seed</emphasis> must be a positive integer if provided. Calling this function without the <computeroutput>new</computeroutput> keyword will return a cached state object that has been reset. This is safe to use as long as the object is only used from a single thread and no other hashes are created while operating on this one. If this constraint cannot be met, you can use <computeroutput>new</computeroutput> to create a new state object. For example:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>Use<sp/>the<sp/>cached<sp/>object,<sp/>calling<sp/>the<sp/>function<sp/>again<sp/>will<sp/>return<sp/>the<sp/>same</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>object<sp/>(but<sp/>reset,<sp/>so<sp/>the<sp/>current<sp/>state<sp/>would<sp/>be<sp/>lost)</highlight></codeline>
+<codeline><highlight class="normal">hashState<sp/>=<sp/>MurmurHash3();</highlight></codeline>
+<codeline><highlight class="normal">...</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Create<sp/>a<sp/>new<sp/>object<sp/>that<sp/>can<sp/>be<sp/>safely<sp/>used<sp/>however<sp/>you<sp/>wish.<sp/>Calling<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>function<sp/>again<sp/>will<sp/>simply<sp/>return<sp/>a<sp/>new<sp/>state<sp/>object,<sp/>and<sp/>no<sp/>state<sp/>loss</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>will<sp/>occur,<sp/>at<sp/>the<sp/>cost<sp/>of<sp/>creating<sp/>more<sp/>objects.</highlight></codeline>
+<codeline><highlight class="normal">hashState<sp/>=<sp/>new<sp/>MurmurHash3();</highlight></codeline>
+</programlisting></para>
+<para>Both methods can be mixed however you like if you have different use cases.</para>
+<para><hruler/>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_1autotoc_md1692">
+<title>MurmurHash3.prototype.hash (string)</title><para>Incrementally add <emphasis>string</emphasis> to the hash. This can be called as many times as you want for the hash state object, including after a call to <computeroutput>result()</computeroutput>. Returns <computeroutput>this</computeroutput> so calls can be chained.</para>
+<para><hruler/>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_1autotoc_md1694">
+<title>MurmurHash3.prototype.result ()</title><para>Get the result of the hash as a 32-bit positive integer. This performs the tail and finalizer portions of the algorithm, but does not store the result in the state object. This means that it is perfectly safe to get results and then continue adding strings via <computeroutput>hash</computeroutput>.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>Do<sp/>the<sp/>whole<sp/>string<sp/>at<sp/>once</highlight></codeline>
+<codeline><highlight class="normal">MurmurHash3(&apos;this<sp/>is<sp/>a<sp/>test<sp/>string&apos;).result();</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>0x70529328</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Do<sp/>part<sp/>of<sp/>the<sp/>string,<sp/>get<sp/>a<sp/>result,<sp/>then<sp/>the<sp/>other<sp/>part</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>m<sp/>=<sp/>MurmurHash3(&apos;this<sp/>is<sp/>a&apos;);</highlight></codeline>
+<codeline><highlight class="normal">m.result();</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>0xbfc4f834</highlight></codeline>
+<codeline><highlight class="normal">m.hash(&apos;<sp/>test<sp/>string&apos;).result();</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>0x70529328<sp/>(same<sp/>as<sp/>above)</highlight></codeline>
+</programlisting></para>
+<para><hruler/>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_1autotoc_md1696">
+<title>MurmurHash3.prototype.reset ([seed])</title><para>Reset the state object for reuse, optionally using the given <emphasis>seed</emphasis> (defaults to 0 like the constructor). Returns <computeroutput>this</computeroutput> so calls can be chained.</para>
+<para><hruler/>
+</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_1autotoc_md1698">
+<title>License (MIT)</title><para>Copyright (c) 2013 Gary Court, Jens Taylor</para>
+<para>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</para>
+<para>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</para>
+<para>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/imurmurhash/README.md"/>
+  </compounddef>
+</doxygen>

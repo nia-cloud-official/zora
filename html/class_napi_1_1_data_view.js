@@ -1,0 +1,25 @@
+var class_napi_1_1_data_view =
+[
+    [ "DataView", "class_napi_1_1_data_view.html#ac9ebdd1c98e82a8af36f483cbd56fead", null ],
+    [ "DataView", "class_napi_1_1_data_view.html#ab4fe248c46aa9f5425fc2d4e16cdc08d", null ],
+    [ "ArrayBuffer", "class_napi_1_1_data_view.html#a9ab069e4da2932751b2133282d19d71f", null ],
+    [ "ByteLength", "class_napi_1_1_data_view.html#a6ba26debdf1ff9b46b820be6c7119b3c", null ],
+    [ "ByteOffset", "class_napi_1_1_data_view.html#aa30cc2ba4ac676efb7f602ed425249ee", null ],
+    [ "Data", "class_napi_1_1_data_view.html#ae8eeb820afc14666dd4e7f56a6ae3189", null ],
+    [ "GetFloat32", "class_napi_1_1_data_view.html#ad4231947c2b26c89964b4c16c0b3e1e0", null ],
+    [ "GetFloat64", "class_napi_1_1_data_view.html#a0d90b76712c8f45c8b0153eacad11e27", null ],
+    [ "GetInt16", "class_napi_1_1_data_view.html#ae53e6edc1023dffffe97765f4997e718", null ],
+    [ "GetInt32", "class_napi_1_1_data_view.html#a22e36107c243dd86157faae08a1c5e2f", null ],
+    [ "GetInt8", "class_napi_1_1_data_view.html#a1b834981418760de0bf441c0d4007423", null ],
+    [ "GetUint16", "class_napi_1_1_data_view.html#a9813b0a974f7d43d785cbb0a0346c07d", null ],
+    [ "GetUint32", "class_napi_1_1_data_view.html#ae88432077139f319b93fa8034b95da66", null ],
+    [ "GetUint8", "class_napi_1_1_data_view.html#aad4415b1921816376847bc2b8f36c5a5", null ],
+    [ "SetFloat32", "class_napi_1_1_data_view.html#acb51e76367935b748fdcee6c737617c9", null ],
+    [ "SetFloat64", "class_napi_1_1_data_view.html#a67071c27d5389f1d2bbe0b9e36db1f6c", null ],
+    [ "SetInt16", "class_napi_1_1_data_view.html#aeff0499b7e682d8e221919791c1cba04", null ],
+    [ "SetInt32", "class_napi_1_1_data_view.html#a7f3c9e27c078aaa82cac90ace51b7cb5", null ],
+    [ "SetInt8", "class_napi_1_1_data_view.html#aad655380dd1b3758769d1e68f7678a5e", null ],
+    [ "SetUint16", "class_napi_1_1_data_view.html#aab69fd6fbf0ccd69dc9a0daa1cd62ecd", null ],
+    [ "SetUint32", "class_napi_1_1_data_view.html#afbbb949a75d92f5d5f8d4a28e9d02dd1", null ],
+    [ "SetUint8", "class_napi_1_1_data_view.html#a19c7501678559b9817e33bb73460d5f2", null ]
+];

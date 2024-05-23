@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2aproba_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2aproba_2_r_e_a_d_m_e</compoundname>
+    <title>aproba</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>A ridiculously light-weight function argument validator</para>
+<para><programlisting><codeline><highlight class="normal">var<sp/>validate<sp/>=<sp/>require(&quot;aproba&quot;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>myfunc(a,<sp/>b,<sp/>c)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>`a`<sp/>must<sp/>be<sp/>a<sp/>string,<sp/>`b`<sp/>a<sp/>number,<sp/>`c`<sp/>a<sp/>function</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>validate(&apos;SNF&apos;,<sp/>arguments)<sp/>//<sp/>[a,b,c]<sp/>is<sp/>also<sp/>valid</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">myfunc(&apos;test&apos;,<sp/>23,<sp/>function<sp/>()<sp/>{})<sp/>//<sp/>ok</highlight></codeline>
+<codeline><highlight class="normal">myfunc(123,<sp/>23,<sp/>function<sp/>()<sp/>{})<sp/>//<sp/>type<sp/>error</highlight></codeline>
+<codeline><highlight class="normal">myfunc(&apos;test&apos;,<sp/>23)<sp/>//<sp/>missing<sp/>arg<sp/>error</highlight></codeline>
+<codeline><highlight class="normal">myfunc(&apos;test&apos;,<sp/>23,<sp/>function<sp/>()<sp/>{},<sp/>true)<sp/>//<sp/>too<sp/>many<sp/>args<sp/>error</highlight></codeline>
+</programlisting></para>
+<para>Valid types are:</para>
+<para><table rows="10" cols="2"><row>
+<entry thead="yes" align='center'><para>type   </para>
+</entry><entry thead="yes" align='left'><para>description    </para>
+</entry></row>
+<row>
+<entry thead="no" align='center'><para>*   </para>
+</entry><entry thead="no" align='left'><para>matches any type    </para>
+</entry></row>
+<row>
+<entry thead="no" align='center'><para>A   </para>
+</entry><entry thead="no" align='left'><para><computeroutput>Array.isArray</computeroutput> OR an <computeroutput>arguments</computeroutput> object    </para>
+</entry></row>
+<row>
+<entry thead="no" align='center'><para>S   </para>
+</entry><entry thead="no" align='left'><para>typeof == string    </para>
+</entry></row>
+<row>
+<entry thead="no" align='center'><para>N   </para>
+</entry><entry thead="no" align='left'><para>typeof == number    </para>
+</entry></row>
+<row>
+<entry thead="no" align='center'><para>F   </para>
+</entry><entry thead="no" align='left'><para>typeof == function    </para>
+</entry></row>
+<row>
+<entry thead="no" align='center'><para>O   </para>
+</entry><entry thead="no" align='left'><para>typeof == object and not type A and not type E    </para>
+</entry></row>
+<row>
+<entry thead="no" align='center'><para>B   </para>
+</entry><entry thead="no" align='left'><para>typeof == boolean    </para>
+</entry></row>
+<row>
+<entry thead="no" align='center'><para>E   </para>
+</entry><entry thead="no" align='left'><para><computeroutput>instanceof Error</computeroutput> OR <computeroutput>null</computeroutput> **(special: see below)**    </para>
+</entry></row>
+<row>
+<entry thead="no" align='center'><para>Z   </para>
+</entry><entry thead="no" align='left'><para>== <computeroutput>null</computeroutput>   </para>
+</entry></row>
+</table>
+</para>
+<para>Validation failures throw one of three exception types, distinguished by a <computeroutput>code</computeroutput> property of <computeroutput>EMISSINGARG</computeroutput>, <computeroutput>EINVALIDTYPE</computeroutput> or <computeroutput>ETOOMANYARGS</computeroutput>.</para>
+<para>If you pass in an invalid type then it will throw with a code of <computeroutput>EUNKNOWNTYPE</computeroutput>.</para>
+<para>If an <bold>error</bold> argument is found and is not null then the remaining arguments are optional. That is, if you say <computeroutput>ESO</computeroutput> then that&apos;s like using a non-magical <computeroutput>E</computeroutput> in: <computeroutput>E|ESO|ZSO</computeroutput>.</para>
+<sect2 id="md_backend_2node__modules_2aproba_2_r_e_a_d_m_e_1autotoc_md179">
+<title>But I have optional arguments?!</title><para>You can provide more than one signature by separating them with pipes <computeroutput>|</computeroutput>. If any signature matches the arguments then they&apos;ll be considered valid.</para>
+<para>So for example, say you wanted to write a signature for <computeroutput>fs.createWriteStream</computeroutput>. The docs for it describe it thusly:</para>
+<para><programlisting><codeline><highlight class="normal">fs.createWriteStream(path[,<sp/>options])</highlight></codeline>
+</programlisting></para>
+<para>This would be a signature of <computeroutput>SO|S</computeroutput>. That is, a string and and object, or just a string.</para>
+<para>Now, if you read the full <computeroutput>fs</computeroutput> docs, you&apos;ll see that actually path can ALSO be a buffer. And options can be a string, that is: <programlisting><codeline><highlight class="normal">path<sp/>&lt;String&gt;<sp/>|<sp/>&lt;Buffer&gt;</highlight></codeline>
+<codeline><highlight class="normal">options<sp/>&lt;String&gt;<sp/>|<sp/>&lt;Object&gt;</highlight></codeline>
+</programlisting></para>
+<para>To reproduce this you have to fully enumerate all of the possible combinations and that implies a signature of <computeroutput>SO|SS|OO|OS|S|O</computeroutput>. The awkwardness is a feature: It reminds you of the complexity you&apos;re adding to your API when you do this sort of thing.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2aproba_2_r_e_a_d_m_e_1autotoc_md180">
+<title>Browser support</title><para>This has no dependencies and should work in browsers, though you&apos;ll have noisier stack traces.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2aproba_2_r_e_a_d_m_e_1autotoc_md181">
+<title>Why this exists</title><para>I wanted a very simple argument validator. It needed to do two things:</para>
+<para><orderedlist>
+<listitem><para>Be more concise and easier to use than assertions</para>
+</listitem><listitem><para>Not encourage an infinite bikeshed of DSLs</para>
+</listitem></orderedlist>
+</para>
+<para>This is why types are specified by a single character and there&apos;s no such thing as an optional argument.</para>
+<para>This is not intended to validate user data. This is specifically about asserting the interface of your functions.</para>
+<para>If you need greater validation, I encourage you to write them by hand or look elsewhere. </para>
+</sect2>
+    </detaileddescription>
+    <location file="backend/node_modules/aproba/README.md"/>
+  </compounddef>
+</doxygen>

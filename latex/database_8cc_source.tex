@@ -1,0 +1,757 @@
+\doxysection{database.\+cc}
+\hypertarget{database_8cc_source}{}\label{database_8cc_source}\index{backend/node\_modules/sqlite3/src/database.cc@{backend/node\_modules/sqlite3/src/database.cc}}
+\mbox{\hyperlink{database_8cc}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00001}00001\ \textcolor{preprocessor}{\#include\ <cstring>}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00002}00002\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{napi_8h}{napi.h}}>}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{macros_8h}{macros.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{backend_2node__modules_2sqlite3_2src_2database_8h}{database.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{statement_8h}{statement.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00008}00008\ \textcolor{keyword}{using\ namespace\ }\mbox{\hyperlink{namespacenode__sqlite3}{node\_sqlite3}};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00010}00010\ \textcolor{preprocessor}{\#if\ NAPI\_VERSION\ <\ 6}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00011}00011\ \mbox{\hyperlink{class_napi_1_1_function_reference}{Napi::FunctionReference}}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a4ce6e4ebd97485dbdc32c0b994a3c42d}{Database::constructor}};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00012}00012\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00014}\mbox{\hyperlink{classnode__sqlite3_1_1_database_a74347e00418fa1cfcb9e18c694c7a612}{00014}}\ \mbox{\hyperlink{class_napi_1_1_object}{Napi::Object}}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a74347e00418fa1cfcb9e18c694c7a612}{Database::Init}}(\mbox{\hyperlink{class_napi_1_1_env}{Napi::Env}}\ env,\ \mbox{\hyperlink{class_napi_1_1_object}{Napi::Object}}\ exports)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00015}00015\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00016}00016\ \ \ \ \ \textcolor{comment}{//\ declare\ napi\_default\_method\ here\ as\ it\ is\ only\ available\ in\ Node\ v14.12.0+}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00017}00017\ \ \ \ \ \textcolor{keyword}{auto}\ napi\_default\_method\ =\ \textcolor{keyword}{static\_cast<}napi\_property\_attributes\textcolor{keyword}{>}(napi\_writable\ |\ napi\_configurable);\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00019}00019\ \ \ \ \ \textcolor{keyword}{auto}\ t\ =\ \mbox{\hyperlink{class_napi_1_1_object_wrap_a0951856129efcd16c5db43efd7eb5528}{DefineClass}}(env,\ \textcolor{stringliteral}{"{}Database"{}},\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00020}00020\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_instance_wrap_afc90b95e3e63c0130a424b1e4a0f7899}{InstanceMethod}}(\textcolor{stringliteral}{"{}close"{}},\ \&Database::Close,\ napi\_default\_method),}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00021}00021\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_instance_wrap_afc90b95e3e63c0130a424b1e4a0f7899}{InstanceMethod}}(\textcolor{stringliteral}{"{}exec"{}},\ \&Database::Exec,\ napi\_default\_method),}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00022}00022\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_instance_wrap_afc90b95e3e63c0130a424b1e4a0f7899}{InstanceMethod}}(\textcolor{stringliteral}{"{}wait"{}},\ \&\mbox{\hyperlink{classnode__sqlite3_1_1_database_ad0ac82300cc104682201f24ce0735b7a}{Database::Wait}},\ napi\_default\_method),}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00023}00023\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_instance_wrap_afc90b95e3e63c0130a424b1e4a0f7899}{InstanceMethod}}(\textcolor{stringliteral}{"{}loadExtension"{}},\ \&Database::LoadExtension,\ napi\_default\_method),}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00024}00024\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_instance_wrap_afc90b95e3e63c0130a424b1e4a0f7899}{InstanceMethod}}(\textcolor{stringliteral}{"{}serialize"{}},\ \&\mbox{\hyperlink{classnode__sqlite3_1_1_database_adbd994e24d26b4118973a7e29097dae6}{Database::Serialize}},\ napi\_default\_method),}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00025}00025\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_instance_wrap_afc90b95e3e63c0130a424b1e4a0f7899}{InstanceMethod}}(\textcolor{stringliteral}{"{}parallelize"{}},\ \&\mbox{\hyperlink{classnode__sqlite3_1_1_database_a8c460e051020a07441f6050e60f6e85c}{Database::Parallelize}},\ napi\_default\_method),}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00026}00026\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_instance_wrap_afc90b95e3e63c0130a424b1e4a0f7899}{InstanceMethod}}(\textcolor{stringliteral}{"{}configure"{}},\ \&\mbox{\hyperlink{classnode__sqlite3_1_1_database_a372193fc006b0ee71755c20d67e456fb}{Database::Configure}},\ napi\_default\_method),}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00027}00027\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_instance_wrap_afc90b95e3e63c0130a424b1e4a0f7899}{InstanceMethod}}(\textcolor{stringliteral}{"{}interrupt"{}},\ \&\mbox{\hyperlink{classnode__sqlite3_1_1_database_a3e034b41857b837fe55ba2b8757e4ad8}{Database::Interrupt}},\ napi\_default\_method),}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00028}00028\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_instance_wrap_a85e0d750f20079806d4966708559290a}{InstanceAccessor}}(\textcolor{stringliteral}{"{}open"{}},\ \&Database::Open,\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00029}00029\ \ \ \ \ \});}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00031}00031\ \textcolor{preprocessor}{\#if\ NAPI\_VERSION\ <\ 6}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00032}00032\ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a4ce6e4ebd97485dbdc32c0b994a3c42d}{constructor}}\ =\ \mbox{\hyperlink{namespace_napi_a5a4b6e9efd6b3ee6094746b2b4034918}{Napi::Persistent}}(t);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00033}00033\ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a4ce6e4ebd97485dbdc32c0b994a3c42d}{constructor}}.\mbox{\hyperlink{class_napi_1_1_reference_a1dd310614fa3c053c9dc9468043096b3}{SuppressDestruct}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00034}00034\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00035}00035\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_function_reference}{Napi::FunctionReference}}*\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a4ce6e4ebd97485dbdc32c0b994a3c42d}{constructor}}\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_napi_1_1_function_reference}{Napi::FunctionReference}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00036}00036\ \ \ \ \ *\mbox{\hyperlink{classnode__sqlite3_1_1_database_a4ce6e4ebd97485dbdc32c0b994a3c42d}{constructor}}\ =\ \mbox{\hyperlink{namespace_napi_a5a4b6e9efd6b3ee6094746b2b4034918}{Napi::Persistent}}(t);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00037}00037\ \ \ \ \ env.SetInstanceData<\mbox{\hyperlink{class_napi_1_1_function_reference}{Napi::FunctionReference}}>(\mbox{\hyperlink{classnode__sqlite3_1_1_database_a4ce6e4ebd97485dbdc32c0b994a3c42d}{constructor}});}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00038}00038\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00040}00040\ \ \ \ \ exports.\mbox{\hyperlink{class_napi_1_1_object_ab58533f930d4f81b41cc5ef6e96ce589}{Set}}(\textcolor{stringliteral}{"{}Database"{}},\ t);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00041}00041\ \ \ \ \ \textcolor{keywordflow}{return}\ exports;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00042}00042\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00044}\mbox{\hyperlink{classnode__sqlite3_1_1_database_a9628e12a23157e0d51b02bcc76de9e01}{00044}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a9628e12a23157e0d51b02bcc76de9e01}{Database::Process}}()\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00045}00045\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ this-\/>\mbox{\hyperlink{class_napi_1_1_reference_a145936a59e9db2c455542576e76773ac}{Env}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00046}00046\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00048}00048\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{classnode__sqlite3_1_1_database_a1d4a84bf7166fe9d6d9de920e3b9f41d}{open}}\ \&\&\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a7de8d3be2dfa10d89187dd804f9626db}{locked}}\ \&\&\ !\mbox{\hyperlink{classnode__sqlite3_1_1_database_aa2f43d25ee95c8cb98a3e82c7551565c}{queue}}.empty())\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00049}00049\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a3311c5dacb4b8acfdc913e57bda331cc}{EXCEPTION}}(\mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}Database\ handle\ is\ closed"{}}),\ SQLITE\_MISUSE,\ exception);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00050}00050\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[]\ =\ \{\ exception\ \};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00051}00051\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ called\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00053}00053\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Call\ all\ callbacks\ with\ the\ error\ object.}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00054}00054\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (!\mbox{\hyperlink{classnode__sqlite3_1_1_database_aa2f43d25ee95c8cb98a3e82c7551565c}{queue}}.empty())\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ call\ =\ std::unique\_ptr<Call>(\mbox{\hyperlink{classnode__sqlite3_1_1_database_aa2f43d25ee95c8cb98a3e82c7551565c}{queue}}.front());}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_database_aa2f43d25ee95c8cb98a3e82c7551565c}{queue}}.pop();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ baton\ =\ std::unique\_ptr<Baton>(call-\/>baton);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}\ cb\ =\ baton-\/>callback.\mbox{\hyperlink{class_napi_1_1_value_a91352891b563fb744683240949e458e4}{Value}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{macros_8h_a95903770efc550331a040da389d5a911}{IS\_FUNCTION}}(cb))\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(this-\/>\mbox{\hyperlink{class_napi_1_1_reference_ae7f2d23d1f33cdbcfb4aa1b89193c5ae}{Value}}(),\ cb,\ 1,\ argv);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ called\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00063}00063\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00065}00065\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ When\ we\ couldn't\ call\ a\ callback\ function,\ emit\ an\ error\ on\ the}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00066}00066\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Database\ object.}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00067}00067\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!called)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ info[]\ =\ \{\ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}error"{}}),\ exception\ \};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a892be17d1363eec9b638cc05d901d0cf}{EMIT\_EVENT}}(\mbox{\hyperlink{class_napi_1_1_reference_ae7f2d23d1f33cdbcfb4aa1b89193c5ae}{Value}}(),\ 2,\ info);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00070}00070\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00071}00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00072}00072\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00074}00074\ \ \ \ \ \textcolor{keywordflow}{while}\ (\mbox{\hyperlink{classnode__sqlite3_1_1_database_a1d4a84bf7166fe9d6d9de920e3b9f41d}{open}}\ \&\&\ (!\mbox{\hyperlink{classnode__sqlite3_1_1_database_a7de8d3be2dfa10d89187dd804f9626db}{locked}}\ ||\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_abb549757669e26351497d04f1bb205cd}{pending}}\ ==\ 0)\ \&\&\ !\mbox{\hyperlink{classnode__sqlite3_1_1_database_aa2f43d25ee95c8cb98a3e82c7551565c}{queue}}.empty())\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00075}00075\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_call}{Call}}\ *c\ =\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_aa2f43d25ee95c8cb98a3e82c7551565c}{queue}}.front();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00077}00077\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (c-\/>\mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_call_a3ccb85f1f46bfa8be2ce5b9757dc7a89}{exclusive}}\ \&\&\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_abb549757669e26351497d04f1bb205cd}{pending}}\ >\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00079}00079\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00080}00080\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00081}00081\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_database_aa2f43d25ee95c8cb98a3e82c7551565c}{queue}}.pop();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00082}00082\ \ \ \ \ \ \ \ \ std::unique\_ptr<Call>\ call(c);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00083}00083\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a7de8d3be2dfa10d89187dd804f9626db}{locked}}\ =\ call-\/>exclusive;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00084}00084\ \ \ \ \ \ \ \ \ call-\/>callback(call-\/>baton);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00086}00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classnode__sqlite3_1_1_database_a7de8d3be2dfa10d89187dd804f9626db}{locked}})\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00087}00087\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00088}00088\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00090}\mbox{\hyperlink{classnode__sqlite3_1_1_database_a0f7143c8b39176377f7c732477d5d734}{00090}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a0f7143c8b39176377f7c732477d5d734}{Database::Schedule}}(Work\_Callback\ callback,\ \mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_baton}{Baton}}*\ baton,\ \textcolor{keywordtype}{bool}\ exclusive)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00091}00091\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ this-\/>\mbox{\hyperlink{class_napi_1_1_reference_a145936a59e9db2c455542576e76773ac}{Env}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00092}00092\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00094}00094\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{classnode__sqlite3_1_1_database_a1d4a84bf7166fe9d6d9de920e3b9f41d}{open}}\ \&\&\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a7de8d3be2dfa10d89187dd804f9626db}{locked}})\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00095}00095\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a3311c5dacb4b8acfdc913e57bda331cc}{EXCEPTION}}(\mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}Database\ is\ closed"{}}),\ SQLITE\_MISUSE,\ exception);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00096}00096\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}\ cb\ =\ baton-\/>\mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_baton_a77464416995c4dce846391b5b5c25f13}{callback}}.\mbox{\hyperlink{class_napi_1_1_reference_ae7f2d23d1f33cdbcfb4aa1b89193c5ae}{Value}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00097}00097\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ don't\ call\ the\ actual\ callback,\ so\ we\ have\ to\ make\ sure\ that}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00098}00098\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ baton\ gets\ destroyed.}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00099}00099\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ baton;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00100}00100\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{macros_8h_a95903770efc550331a040da389d5a911}{IS\_FUNCTION}}(cb))\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[]\ =\ \{\ exception\ \};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(\mbox{\hyperlink{class_napi_1_1_reference_ae7f2d23d1f33cdbcfb4aa1b89193c5ae}{Value}}(),\ cb,\ 1,\ argv);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00103}00103\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00104}00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[]\ =\ \{\ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}error"{}}),\ exception\ \};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a892be17d1363eec9b638cc05d901d0cf}{EMIT\_EVENT}}(\mbox{\hyperlink{class_napi_1_1_reference_ae7f2d23d1f33cdbcfb4aa1b89193c5ae}{Value}}(),\ 2,\ argv);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00107}00107\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00108}00108\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00109}00109\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00111}00111\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{classnode__sqlite3_1_1_database_a1d4a84bf7166fe9d6d9de920e3b9f41d}{open}}\ ||\ ((\mbox{\hyperlink{classnode__sqlite3_1_1_database_a7de8d3be2dfa10d89187dd804f9626db}{locked}}\ ||\ exclusive\ ||\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a801c7b0aad6fbc71adf4f3ad290d0587}{serialize}})\ \&\&\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_abb549757669e26351497d04f1bb205cd}{pending}}\ >\ 0))\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00112}00112\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_database_aa2f43d25ee95c8cb98a3e82c7551565c}{queue}}.emplace(\textcolor{keyword}{new}\ \mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_call}{Call}}(callback,\ baton,\ exclusive\ ||\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a801c7b0aad6fbc71adf4f3ad290d0587}{serialize}}));}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00113}00113\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00114}00114\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00115}00115\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a7de8d3be2dfa10d89187dd804f9626db}{locked}}\ =\ exclusive;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00116}00116\ \ \ \ \ \ \ \ \ callback(baton);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00117}00117\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00118}00118\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00119}00119\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00120}\mbox{\hyperlink{classnode__sqlite3_1_1_database_a33295029bca0f77a5c17ea4ce7b009f2}{00120}}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a33295029bca0f77a5c17ea4ce7b009f2}{Database::Database}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_napi_1_1_callback_info}{Napi::CallbackInfo}}\&\ info)\ :\ \mbox{\hyperlink{namespace_napi}{Napi}}::\mbox{\hyperlink{class_napi_1_1_object_wrap}{ObjectWrap}}<\mbox{\hyperlink{classnode__sqlite3_1_1_database}{Database}}>(info)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00121}00121\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_af5dda76cc6b32aa6816f60437249fa5c}{Env}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00123}00123\ \ \ \ \ \textcolor{keywordflow}{if}\ (info.\mbox{\hyperlink{class_napi_1_1_callback_info_a2450a932822d15c570762a4a0d321fd8}{Length}}()\ <=\ 0\ ||\ !info[0].IsString())\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00124}00124\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_type_error_a61771d5e0220d480f810097af673da92}{Napi::TypeError::New}}(env,\ \textcolor{stringliteral}{"{}String\ expected"{}}).\mbox{\hyperlink{class_napi_1_1_error_af657bb938d951eccca6cf9e4983601d9}{ThrowAsJavaScriptException}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00125}00125\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00126}00126\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00127}00127\ \ \ \ \ \textcolor{keyword}{auto}\ filename\ =\ info[0].As<\mbox{\hyperlink{class_napi_1_1_string}{Napi::String}}>().Utf8Value();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00128}00128\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00129}00129\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ pos\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00130}00130\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00131}00131\ \ \ \ \ \textcolor{keywordtype}{int}\ mode;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00132}00132\ \ \ \ \ \textcolor{keywordflow}{if}\ (info.\mbox{\hyperlink{class_napi_1_1_callback_info_a2450a932822d15c570762a4a0d321fd8}{Length}}()\ >=\ pos\ \&\&\ info[pos].IsNumber()\ \&\&\ \mbox{\hyperlink{macros_8h_a9a9cd9f3fd280cc03b0c9612b88c6ccb}{OtherIsInt}}(info[pos].As<Napi::Number>()))\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00133}00133\ \ \ \ \ \ \ \ \ mode\ =\ info[pos++].As<\mbox{\hyperlink{class_napi_1_1_number}{Napi::Number}}>().Int32Value();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00134}00134\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00135}00135\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00136}00136\ \ \ \ \ \ \ \ \ mode\ =\ SQLITE\_OPEN\_READWRITE\ |\ SQLITE\_OPEN\_CREATE\ |\ SQLITE\_OPEN\_FULLMUTEX;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00137}00137\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00138}00138\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00139}00139\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}\ callback;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00140}00140\ \ \ \ \ \textcolor{keywordflow}{if}\ (info.\mbox{\hyperlink{class_napi_1_1_callback_info_a2450a932822d15c570762a4a0d321fd8}{Length}}()\ >=\ pos\ \&\&\ info[pos].IsFunction())\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00141}00141\ \ \ \ \ \ \ \ \ callback\ =\ info[pos++].As<\mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}>();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00142}00142\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00143}00143\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00144}00144\ \ \ \ \ info.\mbox{\hyperlink{class_napi_1_1_callback_info_a216112c90346f2d3701b2d8cc14591c9}{This}}().\mbox{\hyperlink{class_napi_1_1_value_a9c1a9c4eca9617b0aafbe311c946982a}{As}}<\mbox{\hyperlink{class_napi_1_1_object}{Napi::Object}}>().DefineProperty(\mbox{\hyperlink{class_napi_1_1_property_descriptor_a30be11ee835fe628990a240e9df48002}{Napi::PropertyDescriptor::Value}}(\textcolor{stringliteral}{"{}filename"{}},\ info[0].As<Napi::String>(),\ napi\_default));}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00145}00145\ \ \ \ \ info.\mbox{\hyperlink{class_napi_1_1_callback_info_a216112c90346f2d3701b2d8cc14591c9}{This}}().\mbox{\hyperlink{class_napi_1_1_value_a9c1a9c4eca9617b0aafbe311c946982a}{As}}<\mbox{\hyperlink{class_napi_1_1_object}{Napi::Object}}>().DefineProperty(\mbox{\hyperlink{class_napi_1_1_property_descriptor_a30be11ee835fe628990a240e9df48002}{Napi::PropertyDescriptor::Value}}(\textcolor{stringliteral}{"{}mode"{}},\ \mbox{\hyperlink{class_napi_1_1_number_aeaf0a68807d700eb5b765e24025af147}{Napi::Number::New}}(env,\ mode),\ napi\_default));}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00146}00146\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00147}00147\ \ \ \ \ \textcolor{comment}{//\ Start\ opening\ the\ database.}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00148}00148\ \ \ \ \ \textcolor{keyword}{auto}*\ baton\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_open_baton}{OpenBaton}}(\textcolor{keyword}{this},\ callback,\ filename.c\_str(),\ mode);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00149}00149\ \ \ \ \ Work\_BeginOpen(baton);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00150}00150\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00151}00151\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00152}00152\ \textcolor{keywordtype}{void}\ Database::Work\_BeginOpen(Baton*\ baton)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00153}00153\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ baton-\/>db-\/>Env();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00154}00154\ \ \ \ \ \mbox{\hyperlink{macros_8h_af3b5fe6fbecd04ffb353562501539572}{CREATE\_WORK}}(\textcolor{stringliteral}{"{}sqlite3.Database.Open"{}},\ Work\_Open,\ Work\_AfterOpen);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00155}00155\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00156}00156\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00157}00157\ \textcolor{keywordtype}{void}\ Database::Work\_Open(napi\_env\ e,\ \textcolor{keywordtype}{void}*\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00158}00158\ \ \ \ \ \textcolor{keyword}{auto}*\ baton\ =\ \textcolor{keyword}{static\_cast<}OpenBaton*\textcolor{keyword}{>}(data);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00159}00159\ \ \ \ \ \textcolor{keyword}{auto}*\ db\ =\ baton-\/>db;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00160}00160\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00161}00161\ \ \ \ \ baton-\/>status\ =\ sqlite3\_open\_v2(}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00162}00162\ \ \ \ \ \ \ \ \ baton-\/>filename.c\_str(),}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00163}00163\ \ \ \ \ \ \ \ \ \&db-\/>\_handle,}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00164}00164\ \ \ \ \ \ \ \ \ baton-\/>mode,}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00165}00165\ \ \ \ \ \ \ \ \ NULL}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00166}00166\ \ \ \ \ );}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00168}00168\ \ \ \ \ \textcolor{keywordflow}{if}\ (baton-\/>status\ !=\ SQLITE\_OK)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00169}00169\ \ \ \ \ \ \ \ \ baton-\/>message\ =\ std::string(sqlite3\_errmsg(db-\/>\_handle));}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00170}00170\ \ \ \ \ \ \ \ \ sqlite3\_close(db-\/>\_handle);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00171}00171\ \ \ \ \ \ \ \ \ db-\/>\_handle\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00172}00172\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00173}00173\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00174}00174\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Set\ default\ database\ handle\ values.}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00175}00175\ \ \ \ \ \ \ \ \ sqlite3\_busy\_timeout(db-\/>\_handle,\ 1000);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00176}00176\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00177}00177\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00178}00178\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00179}00179\ \textcolor{keywordtype}{void}\ Database::Work\_AfterOpen(napi\_env\ e,\ napi\_status\ status,\ \textcolor{keywordtype}{void}*\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00180}00180\ \ \ \ \ std::unique\_ptr<OpenBaton>\ baton(\textcolor{keyword}{static\_cast<}OpenBaton*\textcolor{keyword}{>}(data));}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00181}00181\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00182}00182\ \ \ \ \ \textcolor{keyword}{auto}*\ db\ =\ baton-\/>db;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00183}00183\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00184}00184\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ db-\/>Env();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00185}00185\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00186}00186\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00187}00187\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[1];}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00188}00188\ \ \ \ \ \textcolor{keywordflow}{if}\ (baton-\/>status\ !=\ SQLITE\_OK)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00189}00189\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a3311c5dacb4b8acfdc913e57bda331cc}{EXCEPTION}}(\mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ baton-\/>message.c\_str()),\ baton-\/>status,\ exception);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00190}00190\ \ \ \ \ \ \ \ \ argv[0]\ =\ exception;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00191}00191\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00192}00192\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00193}00193\ \ \ \ \ \ \ \ \ db-\/>open\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00194}00194\ \ \ \ \ \ \ \ \ argv[0]\ =\ env.Null();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00195}00195\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00196}00196\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00197}00197\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}\ cb\ =\ baton-\/>callback.\mbox{\hyperlink{class_napi_1_1_value_a91352891b563fb744683240949e458e4}{Value}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00198}00198\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00199}00199\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{macros_8h_a95903770efc550331a040da389d5a911}{IS\_FUNCTION}}(cb))\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00200}00200\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(db-\/>Value(),\ cb,\ 1,\ argv);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00201}00201\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00202}00202\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (!db-\/>open)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00203}00203\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ info[]\ =\ \{\ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}error"{}}),\ argv[0]\ \};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00204}00204\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a892be17d1363eec9b638cc05d901d0cf}{EMIT\_EVENT}}(db-\/>Value(),\ 2,\ info);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00205}00205\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00206}00206\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00207}00207\ \ \ \ \ \textcolor{keywordflow}{if}\ (db-\/>open)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00208}00208\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ info[]\ =\ \{\ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}open"{}})\ \};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00209}00209\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a892be17d1363eec9b638cc05d901d0cf}{EMIT\_EVENT}}(db-\/>Value(),\ 1,\ info);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00210}00210\ \ \ \ \ \ \ \ \ db-\/>Process();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00211}00211\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00212}00212\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00213}00213\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00214}00214\ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ Database::Open(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_napi_1_1_callback_info}{Napi::CallbackInfo}}\&\ info)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00215}00215\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ this-\/>\mbox{\hyperlink{class_napi_1_1_reference_a145936a59e9db2c455542576e76773ac}{Env}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00216}00216\ \ \ \ \ \textcolor{keyword}{auto}*\ db\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00217}00217\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{class_napi_1_1_boolean_aabad369f3cb107c7c1f6ddd2c6054d0a}{Napi::Boolean::New}}(env,\ db-\/>open);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00218}00218\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00219}00219\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00220}00220\ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ Database::Close(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_napi_1_1_callback_info}{Napi::CallbackInfo}}\&\ info)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00221}00221\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_af5dda76cc6b32aa6816f60437249fa5c}{Env}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00222}00222\ \ \ \ \ \textcolor{keyword}{auto}*\ db\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00223}00223\ \ \ \ \ \mbox{\hyperlink{macros_8h_a0761db826ced391996c38485f138d0a0}{OPTIONAL\_ARGUMENT\_FUNCTION}}(0,\ callback);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00224}00224\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00225}00225\ \ \ \ \textcolor{keyword}{auto}*\ baton\ =\ \textcolor{keyword}{new}\ Baton(db,\ callback);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00226}00226\ \ \ \ \ db-\/>Schedule(Work\_BeginClose,\ baton,\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00227}00227\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00228}00228\ \ \ \ \ \textcolor{keywordflow}{return}\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_a216112c90346f2d3701b2d8cc14591c9}{This}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00229}00229\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00230}00230\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00231}00231\ \textcolor{keywordtype}{void}\ Database::Work\_BeginClose(Baton*\ baton)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00232}00232\ \ \ \ \ assert(baton-\/>db-\/>locked);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00233}00233\ \ \ \ \ assert(baton-\/>db-\/>open);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00234}00234\ \ \ \ \ assert(baton-\/>db-\/>\_handle);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00235}00235\ \ \ \ \ assert(baton-\/>db-\/>pending\ ==\ 0);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00236}00236\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00237}00237\ \ \ \ \ baton-\/>db-\/>pending++;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00238}00238\ \ \ \ \ baton-\/>db-\/>RemoveCallbacks();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00239}00239\ \ \ \ \ baton-\/>db-\/>closing\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00240}00240\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00241}00241\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ baton-\/>db-\/>Env();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00242}00242\ \ \ \ \ \mbox{\hyperlink{macros_8h_af3b5fe6fbecd04ffb353562501539572}{CREATE\_WORK}}(\textcolor{stringliteral}{"{}sqlite3.Database.Close"{}},\ Work\_Close,\ Work\_AfterClose);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00243}00243\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00244}00244\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00245}00245\ \textcolor{keywordtype}{void}\ Database::Work\_Close(napi\_env\ e,\ \textcolor{keywordtype}{void}*\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00246}00246\ \ \ \ \ \textcolor{keyword}{auto}*\ baton\ =\ \textcolor{keyword}{static\_cast<}Baton*\textcolor{keyword}{>}(data);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00247}00247\ \ \ \ \ \textcolor{keyword}{auto}*\ db\ =\ baton-\/>db;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00248}00248\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00249}00249\ \ \ \ \ baton-\/>status\ =\ sqlite3\_close(db-\/>\_handle);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00250}00250\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00251}00251\ \ \ \ \ \textcolor{keywordflow}{if}\ (baton-\/>status\ !=\ SQLITE\_OK)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00252}00252\ \ \ \ \ \ \ \ \ baton-\/>message\ =\ std::string(sqlite3\_errmsg(db-\/>\_handle));}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00253}00253\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00254}00254\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00255}00255\ \ \ \ \ \ \ \ \ db-\/>\_handle\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00256}00256\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00257}00257\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00258}00258\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00259}00259\ \textcolor{keywordtype}{void}\ Database::Work\_AfterClose(napi\_env\ e,\ napi\_status\ status,\ \textcolor{keywordtype}{void}*\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00260}00260\ \ \ \ \ std::unique\_ptr<Baton>\ baton(\textcolor{keyword}{static\_cast<}Baton*\textcolor{keyword}{>}(data));}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00261}00261\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00262}00262\ \ \ \ \ \textcolor{keyword}{auto}*\ db\ =\ baton-\/>db;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00263}00263\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00264}00264\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ db-\/>Env();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00265}00265\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00266}00266\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00267}00267\ \ \ \ \ db-\/>pending-\/-\/;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00268}00268\ \ \ \ \ db-\/>closing\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00269}00269\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00270}00270\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[1];}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00271}00271\ \ \ \ \ \textcolor{keywordflow}{if}\ (baton-\/>status\ !=\ SQLITE\_OK)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00272}00272\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a3311c5dacb4b8acfdc913e57bda331cc}{EXCEPTION}}(\mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ baton-\/>message.c\_str()),\ baton-\/>status,\ exception);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00273}00273\ \ \ \ \ \ \ \ \ argv[0]\ =\ exception;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00274}00274\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00275}00275\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00276}00276\ \ \ \ \ \ \ \ \ db-\/>open\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00277}00277\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Leave\ db-\/>locked\ to\ indicate\ that\ this\ db\ object\ has\ reached}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00278}00278\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ end\ of\ its\ life.}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00279}00279\ \ \ \ \ \ \ \ \ argv[0]\ =\ env.Null();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00280}00280\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00281}00281\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00282}00282\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}\ cb\ =\ baton-\/>callback.\mbox{\hyperlink{class_napi_1_1_value_a91352891b563fb744683240949e458e4}{Value}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00283}00283\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00284}00284\ \ \ \ \ \textcolor{comment}{//\ Fire\ callbacks.}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00285}00285\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{macros_8h_a95903770efc550331a040da389d5a911}{IS\_FUNCTION}}(cb))\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00286}00286\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(db-\/>Value(),\ cb,\ 1,\ argv);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00287}00287\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00288}00288\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (db-\/>open)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00289}00289\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ info[]\ =\ \{\ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}error"{}}),\ argv[0]\ \};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00290}00290\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a892be17d1363eec9b638cc05d901d0cf}{EMIT\_EVENT}}(db-\/>Value(),\ 2,\ info);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00291}00291\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00292}00292\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00293}00293\ \ \ \ \ \textcolor{keywordflow}{if}\ (!db-\/>open)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00294}00294\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ info[]\ =\ \{\ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}close"{}})\ \};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00295}00295\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a892be17d1363eec9b638cc05d901d0cf}{EMIT\_EVENT}}(db-\/>Value(),\ 1,\ info);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00296}00296\ \ \ \ \ \ \ \ \ db-\/>Process();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00297}00297\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00298}00298\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00299}00299\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00300}\mbox{\hyperlink{classnode__sqlite3_1_1_database_adbd994e24d26b4118973a7e29097dae6}{00300}}\ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_adbd994e24d26b4118973a7e29097dae6}{Database::Serialize}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_napi_1_1_callback_info}{Napi::CallbackInfo}}\&\ info)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00301}00301\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ this-\/>\mbox{\hyperlink{class_napi_1_1_reference_a145936a59e9db2c455542576e76773ac}{Env}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00302}00302\ \ \ \ \ \textcolor{keyword}{auto}*\ db\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00303}00303\ \ \ \ \ \mbox{\hyperlink{macros_8h_a0761db826ced391996c38485f138d0a0}{OPTIONAL\_ARGUMENT\_FUNCTION}}(0,\ callback);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00304}00304\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00305}00305\ \ \ \ \ \textcolor{keywordtype}{bool}\ before\ =\ db-\/>serialize;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00306}00306\ \ \ \ \ db-\/>serialize\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00307}00307\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00308}00308\ \ \ \ \ \textcolor{keywordflow}{if}\ (!callback.IsEmpty()\ \&\&\ callback.IsFunction())\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00309}00309\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(info.\mbox{\hyperlink{class_napi_1_1_callback_info_a216112c90346f2d3701b2d8cc14591c9}{This}}(),\ callback,\ 0,\ NULL,\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_a216112c90346f2d3701b2d8cc14591c9}{This}}());}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00310}00310\ \ \ \ \ \ \ \ \ db-\/>serialize\ =\ before;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00311}00311\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00312}00312\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00313}00313\ \ \ \ \ db-\/>Process();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00314}00314\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00315}00315\ \ \ \ \ \textcolor{keywordflow}{return}\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_a216112c90346f2d3701b2d8cc14591c9}{This}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00316}00316\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00317}00317\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00318}\mbox{\hyperlink{classnode__sqlite3_1_1_database_a8c460e051020a07441f6050e60f6e85c}{00318}}\ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a8c460e051020a07441f6050e60f6e85c}{Database::Parallelize}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_napi_1_1_callback_info}{Napi::CallbackInfo}}\&\ info)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00319}00319\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ this-\/>\mbox{\hyperlink{class_napi_1_1_reference_a145936a59e9db2c455542576e76773ac}{Env}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00320}00320\ \ \ \ \ \textcolor{keyword}{auto}*\ db\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00321}00321\ \ \ \ \ \mbox{\hyperlink{macros_8h_a0761db826ced391996c38485f138d0a0}{OPTIONAL\_ARGUMENT\_FUNCTION}}(0,\ callback);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00322}00322\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00323}00323\ \ \ \ \ \textcolor{keyword}{auto}\ before\ =\ db-\/>serialize;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00324}00324\ \ \ \ \ db-\/>serialize\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00325}00325\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00326}00326\ \ \ \ \ \textcolor{keywordflow}{if}\ (!callback.IsEmpty()\ \&\&\ callback.IsFunction())\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00327}00327\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(info.\mbox{\hyperlink{class_napi_1_1_callback_info_a216112c90346f2d3701b2d8cc14591c9}{This}}(),\ callback,\ 0,\ NULL,\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_a216112c90346f2d3701b2d8cc14591c9}{This}}());}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00328}00328\ \ \ \ \ \ \ \ \ db-\/>serialize\ =\ before;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00329}00329\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00330}00330\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00331}00331\ \ \ \ \ db-\/>Process();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00332}00332\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00333}00333\ \ \ \ \ \textcolor{keywordflow}{return}\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_a216112c90346f2d3701b2d8cc14591c9}{This}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00334}00334\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00335}00335\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00336}\mbox{\hyperlink{classnode__sqlite3_1_1_database_a372193fc006b0ee71755c20d67e456fb}{00336}}\ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a372193fc006b0ee71755c20d67e456fb}{Database::Configure}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_napi_1_1_callback_info}{Napi::CallbackInfo}}\&\ info)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00337}00337\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ this-\/>\mbox{\hyperlink{class_napi_1_1_reference_a145936a59e9db2c455542576e76773ac}{Env}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00338}00338\ \ \ \ \ \textcolor{keyword}{auto}*\ db\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00339}00339\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00340}00340\ \ \ \ \ \mbox{\hyperlink{macros_8h_a70d08145ebd8b1f449ca0aaf1d06d8ae}{REQUIRE\_ARGUMENTS}}(2);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00341}00341\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00342}00342\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}\ handle;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00343}00343\ \ \ \ \ \textcolor{keywordflow}{if}\ (info[0].StrictEquals(\ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}trace"{}})))\ \{\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00344}00344\ \ \ \ \ \ \ \ \textcolor{keyword}{auto}*\ baton\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_baton}{Baton}}(db,\ handle);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00345}00345\ \ \ \ \ \ \ \ \ db-\/>Schedule(\mbox{\hyperlink{classnode__sqlite3_1_1_database_a19fccd0db73e500b24aefcd9bc355fcc}{RegisterTraceCallback}},\ baton);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00346}00346\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00347}00347\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (info[0].StrictEquals(\ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}profile"{}})))\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00348}00348\ \ \ \ \ \ \ \ \textcolor{keyword}{auto}*\ baton\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_baton}{Baton}}(db,\ handle);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00349}00349\ \ \ \ \ \ \ \ \ db-\/>Schedule(\mbox{\hyperlink{classnode__sqlite3_1_1_database_ac8d25a1ca604819f56a8f556dfb33e82}{RegisterProfileCallback}},\ baton);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00350}00350\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00351}00351\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (info[0].StrictEquals(\ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}busyTimeout"{}})))\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00352}00352\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!info[1].IsNumber())\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_type_error_a61771d5e0220d480f810097af673da92}{Napi::TypeError::New}}(env,\ \textcolor{stringliteral}{"{}Value\ must\ be\ an\ integer"{}}).\mbox{\hyperlink{class_napi_1_1_error_af657bb938d951eccca6cf9e4983601d9}{ThrowAsJavaScriptException}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ env.Null();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00355}00355\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00356}00356\ \ \ \ \ \ \ \ \textcolor{keyword}{auto}*\ baton\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_baton}{Baton}}(db,\ handle);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00357}00357\ \ \ \ \ \ \ \ \ baton-\/>status\ =\ info[1].As<\mbox{\hyperlink{class_napi_1_1_number}{Napi::Number}}>().Int32Value();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00358}00358\ \ \ \ \ \ \ \ \ db-\/>Schedule(\mbox{\hyperlink{classnode__sqlite3_1_1_database_a7d497c21b4e18fb2b1000076456ecfcb}{SetBusyTimeout}},\ baton);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00359}00359\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00360}00360\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (info[0].StrictEquals(\ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}limit"{}})))\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00361}00361\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a70d08145ebd8b1f449ca0aaf1d06d8ae}{REQUIRE\_ARGUMENTS}}(3);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00362}00362\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!info[1].IsNumber())\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00363}00363\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_type_error_a61771d5e0220d480f810097af673da92}{Napi::TypeError::New}}(env,\ \textcolor{stringliteral}{"{}limit\ id\ must\ be\ an\ integer"{}}).\mbox{\hyperlink{class_napi_1_1_error_af657bb938d951eccca6cf9e4983601d9}{ThrowAsJavaScriptException}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00364}00364\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ env.Null();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00365}00365\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00366}00366\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!info[2].IsNumber())\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00367}00367\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_type_error_a61771d5e0220d480f810097af673da92}{Napi::TypeError::New}}(env,\ \textcolor{stringliteral}{"{}limit\ value\ must\ be\ an\ integer"{}}).\mbox{\hyperlink{class_napi_1_1_error_af657bb938d951eccca6cf9e4983601d9}{ThrowAsJavaScriptException}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00368}00368\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ env.Null();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00369}00369\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00370}00370\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id}\ =\ info[1].As<\mbox{\hyperlink{class_napi_1_1_number}{Napi::Number}}>().Int32Value();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00371}00371\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ value\ =\ info[2].As<\mbox{\hyperlink{class_napi_1_1_number}{Napi::Number}}>().Int32Value();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00372}00372\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_baton}{Baton}}*\ baton\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_limit_baton}{LimitBaton}}(db,\ handle,\ \textcolor{keywordtype}{id},\ value);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00373}00373\ \ \ \ \ \ \ \ \ db-\/>Schedule(\mbox{\hyperlink{classnode__sqlite3_1_1_database_ae85edf428956f3d965a708ec70ae9eba}{SetLimit}},\ baton);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00374}00374\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00375}00375\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (info[0].StrictEquals(\mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}change"{}})))\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00376}00376\ \ \ \ \ \ \ \ \textcolor{keyword}{auto}*\ baton\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_baton}{Baton}}(db,\ handle);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00377}00377\ \ \ \ \ \ \ \ \ db-\/>Schedule(\mbox{\hyperlink{classnode__sqlite3_1_1_database_ab7822246410e77a98a7f809eb64c8442}{RegisterUpdateCallback}},\ baton);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00378}00378\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00379}00379\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00380}00380\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_type_error_a61771d5e0220d480f810097af673da92}{Napi::TypeError::New}}(env,\ (\mbox{\hyperlink{macros_8h_a811d9537533f3fdd56b909621028b0df}{StringConcat}}(}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00381}00381\ \#\textcolor{keywordflow}{if}\ V8\_MAJOR\_VERSION\ >\ 6}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00382}00382\ \ \ \ \ \ \ \ \ \ \ \ \ info.GetIsolate(),}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00383}00383\ \#endif}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00384}00384\ \ \ \ \ \ \ \ \ \ \ \ \ info[0].As<\mbox{\hyperlink{class_napi_1_1_string}{Napi::String}}>(),}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00385}00385\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}\ is\ not\ a\ valid\ configuration\ option"{}})}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00386}00386\ \ \ \ \ \ \ \ \ )).Utf8Value().c\_str()).\mbox{\hyperlink{class_napi_1_1_error_af657bb938d951eccca6cf9e4983601d9}{ThrowAsJavaScriptException}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00387}00387\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ env.Null();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00388}00388\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00389}00389\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00390}00390\ \ \ \ \ db-\/>Process();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00391}00391\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00392}00392\ \ \ \ \ \textcolor{keywordflow}{return}\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_a216112c90346f2d3701b2d8cc14591c9}{This}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00393}00393\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00394}00394\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00395}\mbox{\hyperlink{classnode__sqlite3_1_1_database_a3e034b41857b837fe55ba2b8757e4ad8}{00395}}\ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a3e034b41857b837fe55ba2b8757e4ad8}{Database::Interrupt}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_napi_1_1_callback_info}{Napi::CallbackInfo}}\&\ info)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00396}00396\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ this-\/>\mbox{\hyperlink{class_napi_1_1_reference_a145936a59e9db2c455542576e76773ac}{Env}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00397}00397\ \ \ \ \ \textcolor{keyword}{auto}*\ db\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00398}00398\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00399}00399\ \ \ \ \ \textcolor{keywordflow}{if}\ (!db-\/>open)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00400}00400\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_error_a6a0571d56b4fcedf862b934a507a58ed}{Napi::Error::New}}(env,\ \textcolor{stringliteral}{"{}Database\ is\ not\ open"{}}).\mbox{\hyperlink{class_napi_1_1_error_af657bb938d951eccca6cf9e4983601d9}{ThrowAsJavaScriptException}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00401}00401\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ env.Null();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00402}00402\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00403}00403\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00404}00404\ \ \ \ \ \textcolor{keywordflow}{if}\ (db-\/>closing)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00405}00405\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_error_a6a0571d56b4fcedf862b934a507a58ed}{Napi::Error::New}}(env,\ \textcolor{stringliteral}{"{}Database\ is\ closing"{}}).\mbox{\hyperlink{class_napi_1_1_error_af657bb938d951eccca6cf9e4983601d9}{ThrowAsJavaScriptException}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00406}00406\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ env.Null();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00407}00407\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00408}00408\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00409}00409\ \ \ \ \ sqlite3\_interrupt(db-\/>\_handle);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00410}00410\ \ \ \ \ \textcolor{keywordflow}{return}\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_a216112c90346f2d3701b2d8cc14591c9}{This}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00411}00411\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00412}00412\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00413}\mbox{\hyperlink{classnode__sqlite3_1_1_database_a7d497c21b4e18fb2b1000076456ecfcb}{00413}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a7d497c21b4e18fb2b1000076456ecfcb}{Database::SetBusyTimeout}}(\mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_baton}{Baton}}*\ b)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00414}00414\ \ \ \ \ \textcolor{keyword}{auto}\ baton\ =\ std::unique\_ptr<Baton>(b);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00415}00415\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00416}00416\ \ \ \ \ assert(baton-\/>db-\/>open);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00417}00417\ \ \ \ \ assert(baton-\/>db-\/>\_handle);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00418}00418\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00419}00419\ \ \ \ \ \textcolor{comment}{//\ Abuse\ the\ status\ field\ for\ passing\ the\ timeout.}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00420}00420\ \ \ \ \ sqlite3\_busy\_timeout(baton-\/>db-\/>\_handle,\ baton-\/>status);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00421}00421\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00422}00422\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00423}\mbox{\hyperlink{classnode__sqlite3_1_1_database_ae85edf428956f3d965a708ec70ae9eba}{00423}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_ae85edf428956f3d965a708ec70ae9eba}{Database::SetLimit}}(\mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_baton}{Baton}}*\ b)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00424}00424\ \ \ \ \ std::unique\_ptr<LimitBaton>\ baton(\textcolor{keyword}{static\_cast<}\mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_limit_baton}{LimitBaton}}*\textcolor{keyword}{>}(b));}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00425}00425\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00426}00426\ \ \ \ \ assert(baton-\/>db-\/>open);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00427}00427\ \ \ \ \ assert(baton-\/>db-\/>\_handle);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00428}00428\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00429}00429\ \ \ \ \ sqlite3\_limit(baton-\/>db-\/>\_handle,\ baton-\/>id,\ baton-\/>value);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00430}00430\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00431}00431\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00432}\mbox{\hyperlink{classnode__sqlite3_1_1_database_a19fccd0db73e500b24aefcd9bc355fcc}{00432}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a19fccd0db73e500b24aefcd9bc355fcc}{Database::RegisterTraceCallback}}(\mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_baton}{Baton}}*\ b)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00433}00433\ \ \ \ \ \textcolor{keyword}{auto}\ baton\ =\ std::unique\_ptr<Baton>(b);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00434}00434\ \ \ \ \ assert(baton-\/>db-\/>open);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00435}00435\ \ \ \ \ assert(baton-\/>db-\/>\_handle);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00436}00436\ \ \ \ \ \textcolor{keyword}{auto}*\ db\ =\ baton-\/>db;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00437}00437\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00438}00438\ \ \ \ \ \textcolor{keywordflow}{if}\ (db-\/>debug\_trace\ ==\ NULL)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00439}00439\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Add\ it.}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00440}00440\ \ \ \ \ \ \ \ \ db-\/>debug\_trace\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_adc1b333fe36418ee6ea1d24ef194e7de}{AsyncTrace}}(db,\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a3c470baedb8e3c51da606636d5abedbd}{TraceCallback}});}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00441}00441\ \ \ \ \ \ \ \ \ sqlite3\_trace(db-\/>\_handle,\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a3c470baedb8e3c51da606636d5abedbd}{TraceCallback}},\ db);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00442}00442\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00443}00443\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00444}00444\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Remove\ it.}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00445}00445\ \ \ \ \ \ \ \ \ sqlite3\_trace(db-\/>\_handle,\ NULL,\ NULL);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00446}00446\ \ \ \ \ \ \ \ \ db-\/>debug\_trace-\/>finish();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00447}00447\ \ \ \ \ \ \ \ \ db-\/>debug\_trace\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00448}00448\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00449}00449\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00450}00450\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00451}\mbox{\hyperlink{classnode__sqlite3_1_1_database_a3c470baedb8e3c51da606636d5abedbd}{00451}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a3c470baedb8e3c51da606636d5abedbd}{Database::TraceCallback}}(\textcolor{keywordtype}{void}*\ db,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ sql)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00452}00452\ \ \ \ \ \textcolor{comment}{//\ Note:\ This\ function\ is\ called\ in\ the\ thread\ pool.}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00453}00453\ \ \ \ \ \textcolor{comment}{//\ Note:\ Some\ queries,\ such\ as\ "{}EXPLAIN"{}\ queries,\ are\ not\ sent\ through\ this.}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00454}00454\ \ \ \ \ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{classnode__sqlite3_1_1_database}{Database}}*\textcolor{keyword}{>}(db)-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_database_af6d9169250f5b409f74e295adfe2bfb5}{debug\_trace}}-\/>\mbox{\hyperlink{class_async_a590950da0b5310810dbca8222293f3ae}{send}}(\textcolor{keyword}{new}\ std::string(sql));}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00455}00455\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00456}00456\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00457}\mbox{\hyperlink{classnode__sqlite3_1_1_database_a96523c43a729e513516ff21bce7d528d}{00457}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a3c470baedb8e3c51da606636d5abedbd}{Database::TraceCallback}}(\mbox{\hyperlink{classnode__sqlite3_1_1_database}{Database}}*\ db,\ std::string*\ s)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00458}00458\ \ \ \ \ std::unique\_ptr<std::string>\ sql(s);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00459}00459\ \ \ \ \ \textcolor{comment}{//\ Note:\ This\ function\ is\ called\ in\ the\ main\ V8\ thread.}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00460}00460\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ db-\/>\mbox{\hyperlink{class_napi_1_1_reference_a145936a59e9db2c455542576e76773ac}{Env}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00461}00461\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00462}00462\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00463}00463\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[]\ =\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00464}00464\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}trace"{}}),}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00465}00465\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ sql-\/>c\_str())}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00466}00466\ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00467}00467\ \ \ \ \ \mbox{\hyperlink{macros_8h_a892be17d1363eec9b638cc05d901d0cf}{EMIT\_EVENT}}(db-\/>\mbox{\hyperlink{class_napi_1_1_reference_ae7f2d23d1f33cdbcfb4aa1b89193c5ae}{Value}}(),\ 2,\ argv);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00468}00468\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00469}00469\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00470}\mbox{\hyperlink{classnode__sqlite3_1_1_database_ac8d25a1ca604819f56a8f556dfb33e82}{00470}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_ac8d25a1ca604819f56a8f556dfb33e82}{Database::RegisterProfileCallback}}(\mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_baton}{Baton}}*\ b)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00471}00471\ \ \ \ \ \textcolor{keyword}{auto}\ baton\ =\ std::unique\_ptr<Baton>(b);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00472}00472\ \ \ \ \ assert(baton-\/>db-\/>open);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00473}00473\ \ \ \ \ assert(baton-\/>db-\/>\_handle);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00474}00474\ \ \ \ \ \textcolor{keyword}{auto}*\ db\ =\ baton-\/>db;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00475}00475\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00476}00476\ \ \ \ \ \textcolor{keywordflow}{if}\ (db-\/>debug\_profile\ ==\ NULL)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00477}00477\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Add\ it.}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00478}00478\ \ \ \ \ \ \ \ \ db-\/>debug\_profile\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a037b114d5be78e6975cb8039bc725f79}{AsyncProfile}}(db,\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a3c351a8f83873602988e45da9efade13}{ProfileCallback}});}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00479}00479\ \ \ \ \ \ \ \ \ sqlite3\_profile(db-\/>\_handle,\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a3c351a8f83873602988e45da9efade13}{ProfileCallback}},\ db);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00480}00480\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00481}00481\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00482}00482\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Remove\ it.}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00483}00483\ \ \ \ \ \ \ \ \ sqlite3\_profile(db-\/>\_handle,\ NULL,\ NULL);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00484}00484\ \ \ \ \ \ \ \ \ db-\/>debug\_profile-\/>finish();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00485}00485\ \ \ \ \ \ \ \ \ db-\/>debug\_profile\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00486}00486\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00487}00487\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00488}00488\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00489}\mbox{\hyperlink{classnode__sqlite3_1_1_database_a3c351a8f83873602988e45da9efade13}{00489}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a3c351a8f83873602988e45da9efade13}{Database::ProfileCallback}}(\textcolor{keywordtype}{void}*\ db,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ sql,\ sqlite3\_uint64\ nsecs)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00490}00490\ \ \ \ \ \textcolor{comment}{//\ Note:\ This\ function\ is\ called\ in\ the\ thread\ pool.}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00491}00491\ \ \ \ \ \textcolor{comment}{//\ Note:\ Some\ queries,\ such\ as\ "{}EXPLAIN"{}\ queries,\ are\ not\ sent\ through\ this.}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00492}00492\ \ \ \ \ \textcolor{keyword}{auto}*\ info\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_profile_info}{ProfileInfo}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00493}00493\ \ \ \ \ info-\/>sql\ =\ std::string(sql);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00494}00494\ \ \ \ \ info-\/>nsecs\ =\ nsecs;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00495}00495\ \ \ \ \ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{classnode__sqlite3_1_1_database}{Database}}*\textcolor{keyword}{>}(db)-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_database_a93eea639a426fa10151e65a0e52e33d1}{debug\_profile}}-\/>\mbox{\hyperlink{class_async_a590950da0b5310810dbca8222293f3ae}{send}}(info);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00496}00496\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00497}00497\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00498}\mbox{\hyperlink{classnode__sqlite3_1_1_database_a359329a4b5ffdf6d6218a262d5360e4c}{00498}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a3c351a8f83873602988e45da9efade13}{Database::ProfileCallback}}(\mbox{\hyperlink{classnode__sqlite3_1_1_database}{Database}}\ *db,\ \mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_profile_info}{ProfileInfo}}*\ i)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00499}00499\ \ \ \ \ \textcolor{keyword}{auto}\ info\ =\ std::unique\_ptr<ProfileInfo>(i);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00500}00500\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ db-\/>\mbox{\hyperlink{class_napi_1_1_reference_a145936a59e9db2c455542576e76773ac}{Env}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00501}00501\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00502}00502\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00503}00503\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[]\ =\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00504}00504\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}profile"{}}),}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00505}00505\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ info-\/>sql.c\_str()),}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00506}00506\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_number_aeaf0a68807d700eb5b765e24025af147}{Napi::Number::New}}(env,\ (\textcolor{keywordtype}{double})info-\/>nsecs\ /\ 1000000.0)}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00507}00507\ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00508}00508\ \ \ \ \ \mbox{\hyperlink{macros_8h_a892be17d1363eec9b638cc05d901d0cf}{EMIT\_EVENT}}(db-\/>\mbox{\hyperlink{class_napi_1_1_reference_ae7f2d23d1f33cdbcfb4aa1b89193c5ae}{Value}}(),\ 3,\ argv);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00509}00509\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00510}00510\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00511}\mbox{\hyperlink{classnode__sqlite3_1_1_database_ab7822246410e77a98a7f809eb64c8442}{00511}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_ab7822246410e77a98a7f809eb64c8442}{Database::RegisterUpdateCallback}}(\mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_baton}{Baton}}*\ b)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00512}00512\ \ \ \ \ \textcolor{keyword}{auto}\ baton\ =\ std::unique\_ptr<Baton>(b);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00513}00513\ \ \ \ \ assert(baton-\/>db-\/>open);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00514}00514\ \ \ \ \ assert(baton-\/>db-\/>\_handle);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00515}00515\ \ \ \ \ \textcolor{keyword}{auto}*\ db\ =\ baton-\/>db;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00516}00516\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00517}00517\ \ \ \ \ \textcolor{keywordflow}{if}\ (db-\/>update\_event\ ==\ NULL)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00518}00518\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Add\ it.}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00519}00519\ \ \ \ \ \ \ \ \ db-\/>update\_event\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_ab6532d3c2b888af037fe22eb0aa11d59}{AsyncUpdate}}(db,\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a3e0a191e4ef0b4ca8f23b9f25764c967}{UpdateCallback}});}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00520}00520\ \ \ \ \ \ \ \ \ sqlite3\_update\_hook(db-\/>\_handle,\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a3e0a191e4ef0b4ca8f23b9f25764c967}{UpdateCallback}},\ db);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00521}00521\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00522}00522\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00523}00523\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Remove\ it.}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00524}00524\ \ \ \ \ \ \ \ \ sqlite3\_update\_hook(db-\/>\_handle,\ NULL,\ NULL);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00525}00525\ \ \ \ \ \ \ \ \ db-\/>update\_event-\/>finish();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00526}00526\ \ \ \ \ \ \ \ \ db-\/>update\_event\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00527}00527\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00528}00528\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00529}00529\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00530}\mbox{\hyperlink{classnode__sqlite3_1_1_database_a3e0a191e4ef0b4ca8f23b9f25764c967}{00530}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a3e0a191e4ef0b4ca8f23b9f25764c967}{Database::UpdateCallback}}(\textcolor{keywordtype}{void}*\ db,\ \textcolor{keywordtype}{int}\ type,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{classdatabase}{database}},}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00531}00531\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ table,\ sqlite3\_int64\ rowid)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00532}00532\ \ \ \ \ \textcolor{comment}{//\ Note:\ This\ function\ is\ called\ in\ the\ thread\ pool.}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00533}00533\ \ \ \ \ \textcolor{comment}{//\ Note:\ Some\ queries,\ such\ as\ "{}EXPLAIN"{}\ queries,\ are\ not\ sent\ through\ this.}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00534}00534\ \ \ \ \ \textcolor{keyword}{auto}*\ info\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_update_info}{UpdateInfo}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00535}00535\ \ \ \ \ info-\/>type\ =\ type;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00536}00536\ \ \ \ \ info-\/>database\ =\ std::string(\mbox{\hyperlink{classdatabase}{database}});}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00537}00537\ \ \ \ \ info-\/>table\ =\ std::string(table);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00538}00538\ \ \ \ \ info-\/>rowid\ =\ rowid;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00539}00539\ \ \ \ \ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{classnode__sqlite3_1_1_database}{Database}}*\textcolor{keyword}{>}(db)-\/>\mbox{\hyperlink{classnode__sqlite3_1_1_database_a03c0628a5b374e33d2a96a0cc3340c86}{update\_event}}-\/>\mbox{\hyperlink{class_async_a590950da0b5310810dbca8222293f3ae}{send}}(info);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00540}00540\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00541}00541\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00542}\mbox{\hyperlink{classnode__sqlite3_1_1_database_a1774e178ce906f9d7a31e5b9158e78f0}{00542}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a3e0a191e4ef0b4ca8f23b9f25764c967}{Database::UpdateCallback}}(\mbox{\hyperlink{classnode__sqlite3_1_1_database}{Database}}\ *db,\ \mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_update_info}{UpdateInfo}}*\ i)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00543}00543\ \ \ \ \ \textcolor{keyword}{auto}\ info\ =\ std::unique\_ptr<UpdateInfo>(i);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00544}00544\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ db-\/>\mbox{\hyperlink{class_napi_1_1_reference_a145936a59e9db2c455542576e76773ac}{Env}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00545}00545\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00546}00546\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00547}00547\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[]\ =\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00548}00548\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}change"{}}),}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00549}00549\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \mbox{\hyperlink{macros_8h_acc1810e5be51d9b43c9c6b560e33abef}{sqlite\_authorizer\_string}}(info-\/>type)),}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00550}00550\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ info-\/>database.c\_str()),}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00551}00551\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ info-\/>table.c\_str()),}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00552}00552\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_number_aeaf0a68807d700eb5b765e24025af147}{Napi::Number::New}}(env,\ info-\/>rowid),}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00553}00553\ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00554}00554\ \ \ \ \ \mbox{\hyperlink{macros_8h_a892be17d1363eec9b638cc05d901d0cf}{EMIT\_EVENT}}(db-\/>\mbox{\hyperlink{class_napi_1_1_reference_ae7f2d23d1f33cdbcfb4aa1b89193c5ae}{Value}}(),\ 5,\ argv);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00555}00555\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00556}00556\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00557}00557\ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ Database::Exec(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_napi_1_1_callback_info}{Napi::CallbackInfo}}\&\ info)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00558}00558\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ this-\/>\mbox{\hyperlink{class_napi_1_1_reference_a145936a59e9db2c455542576e76773ac}{Env}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00559}00559\ \ \ \ \ \textcolor{keyword}{auto}*\ db\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00560}00560\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00561}00561\ \ \ \ \ \mbox{\hyperlink{macros_8h_a5e831cbb749ddcb47989bf3b0759d473}{REQUIRE\_ARGUMENT\_STRING}}(0,\ sql);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00562}00562\ \ \ \ \ \mbox{\hyperlink{macros_8h_a0761db826ced391996c38485f138d0a0}{OPTIONAL\_ARGUMENT\_FUNCTION}}(1,\ callback);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00563}00563\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00564}00564\ \ \ \ \ Baton*\ baton\ =\ \textcolor{keyword}{new}\ ExecBaton(db,\ callback,\ sql.c\_str());}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00565}00565\ \ \ \ \ db-\/>Schedule(Work\_BeginExec,\ baton,\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00566}00566\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00567}00567\ \ \ \ \ \textcolor{keywordflow}{return}\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_a216112c90346f2d3701b2d8cc14591c9}{This}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00568}00568\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00569}00569\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00570}00570\ \textcolor{keywordtype}{void}\ Database::Work\_BeginExec(Baton*\ baton)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00571}00571\ \ \ \ \ assert(baton-\/>db-\/>locked);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00572}00572\ \ \ \ \ assert(baton-\/>db-\/>open);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00573}00573\ \ \ \ \ assert(baton-\/>db-\/>\_handle);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00574}00574\ \ \ \ \ assert(baton-\/>db-\/>pending\ ==\ 0);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00575}00575\ \ \ \ \ baton-\/>db-\/>pending++;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00576}00576\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00577}00577\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ baton-\/>db-\/>Env();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00578}00578\ \ \ \ \ \mbox{\hyperlink{macros_8h_af3b5fe6fbecd04ffb353562501539572}{CREATE\_WORK}}(\textcolor{stringliteral}{"{}sqlite3.Database.Exec"{}},\ Work\_Exec,\ Work\_AfterExec);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00579}00579\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00580}00580\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00581}00581\ \textcolor{keywordtype}{void}\ Database::Work\_Exec(napi\_env\ e,\ \textcolor{keywordtype}{void}*\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00582}00582\ \ \ \ \ \textcolor{keyword}{auto}*\ baton\ =\ \textcolor{keyword}{static\_cast<}ExecBaton*\textcolor{keyword}{>}(data);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00583}00583\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00584}00584\ \ \ \ \ \textcolor{keywordtype}{char}*\ message\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00585}00585\ \ \ \ \ baton-\/>status\ =\ sqlite3\_exec(}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00586}00586\ \ \ \ \ \ \ \ \ baton-\/>db-\/>\_handle,}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00587}00587\ \ \ \ \ \ \ \ \ baton-\/>sql.c\_str(),}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00588}00588\ \ \ \ \ \ \ \ \ NULL,}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00589}00589\ \ \ \ \ \ \ \ \ NULL,}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00590}00590\ \ \ \ \ \ \ \ \ \&message}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00591}00591\ \ \ \ \ );}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00592}00592\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00593}00593\ \ \ \ \ \textcolor{keywordflow}{if}\ (baton-\/>status\ !=\ SQLITE\_OK\ \&\&\ message\ !=\ NULL)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00594}00594\ \ \ \ \ \ \ \ \ baton-\/>message\ =\ std::string(message);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00595}00595\ \ \ \ \ \ \ \ \ sqlite3\_free(message);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00596}00596\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00597}00597\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00598}00598\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00599}00599\ \textcolor{keywordtype}{void}\ Database::Work\_AfterExec(napi\_env\ e,\ napi\_status\ status,\ \textcolor{keywordtype}{void}*\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00600}00600\ \ \ \ \ std::unique\_ptr<ExecBaton>\ baton(\textcolor{keyword}{static\_cast<}ExecBaton*\textcolor{keyword}{>}(data));}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00601}00601\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00602}00602\ \ \ \ \ \textcolor{keyword}{auto}*\ db\ =\ baton-\/>db;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00603}00603\ \ \ \ \ db-\/>pending-\/-\/;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00604}00604\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00605}00605\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ db-\/>Env();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00606}00606\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00607}00607\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00608}00608\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}\ cb\ =\ baton-\/>callback.\mbox{\hyperlink{class_napi_1_1_value_a91352891b563fb744683240949e458e4}{Value}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00609}00609\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00610}00610\ \ \ \ \ \textcolor{keywordflow}{if}\ (baton-\/>status\ !=\ SQLITE\_OK)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00611}00611\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a3311c5dacb4b8acfdc913e57bda331cc}{EXCEPTION}}(\mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ baton-\/>message.c\_str()),\ baton-\/>status,\ exception);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00612}00612\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00613}00613\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{macros_8h_a95903770efc550331a040da389d5a911}{IS\_FUNCTION}}(cb))\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00614}00614\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[]\ =\ \{\ exception\ \};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00615}00615\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(db-\/>Value(),\ cb,\ 1,\ argv);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00616}00616\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00617}00617\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00618}00618\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ info[]\ =\ \{\ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}error"{}}),\ exception\ \};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00619}00619\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a892be17d1363eec9b638cc05d901d0cf}{EMIT\_EVENT}}(db-\/>Value(),\ 2,\ info);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00620}00620\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00621}00621\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00622}00622\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{macros_8h_a95903770efc550331a040da389d5a911}{IS\_FUNCTION}}(cb))\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00623}00623\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[]\ =\ \{\ env.Null()\ \};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00624}00624\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(db-\/>Value(),\ cb,\ 1,\ argv);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00625}00625\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00626}00626\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00627}00627\ \ \ \ \ db-\/>Process();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00628}00628\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00629}00629\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00630}\mbox{\hyperlink{classnode__sqlite3_1_1_database_ad0ac82300cc104682201f24ce0735b7a}{00630}}\ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_ad0ac82300cc104682201f24ce0735b7a}{Database::Wait}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_napi_1_1_callback_info}{Napi::CallbackInfo}}\&\ info)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00631}00631\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_af5dda76cc6b32aa6816f60437249fa5c}{Env}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00632}00632\ \ \ \ \ \textcolor{keyword}{auto}*\ db\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00633}00633\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00634}00634\ \ \ \ \ \mbox{\hyperlink{macros_8h_a0761db826ced391996c38485f138d0a0}{OPTIONAL\_ARGUMENT\_FUNCTION}}(0,\ callback);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00635}00635\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00636}00636\ \ \ \ \textcolor{keyword}{auto}*\ baton\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_baton}{Baton}}(db,\ callback);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00637}00637\ \ \ \ \ db-\/>Schedule(\mbox{\hyperlink{classnode__sqlite3_1_1_database_a6870cc0522d0d6423c639d1ecd9d8f2c}{Work\_Wait}},\ baton,\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00638}00638\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00639}00639\ \ \ \ \ \textcolor{keywordflow}{return}\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_a216112c90346f2d3701b2d8cc14591c9}{This}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00640}00640\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00641}00641\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00642}\mbox{\hyperlink{classnode__sqlite3_1_1_database_a6870cc0522d0d6423c639d1ecd9d8f2c}{00642}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a6870cc0522d0d6423c639d1ecd9d8f2c}{Database::Work\_Wait}}(\mbox{\hyperlink{structnode__sqlite3_1_1_database_1_1_baton}{Baton}}*\ b)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00643}00643\ \ \ \ \ \textcolor{keyword}{auto}\ baton\ =\ std::unique\_ptr<Baton>(b);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00644}00644\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00645}00645\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ baton-\/>db-\/>Env();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00646}00646\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00647}00647\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00648}00648\ \ \ \ \ assert(baton-\/>db-\/>locked);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00649}00649\ \ \ \ \ assert(baton-\/>db-\/>open);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00650}00650\ \ \ \ \ assert(baton-\/>db-\/>\_handle);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00651}00651\ \ \ \ \ assert(baton-\/>db-\/>pending\ ==\ 0);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00652}00652\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00653}00653\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}\ cb\ =\ baton-\/>callback.\mbox{\hyperlink{class_napi_1_1_value_a91352891b563fb744683240949e458e4}{Value}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00654}00654\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{macros_8h_a95903770efc550331a040da389d5a911}{IS\_FUNCTION}}(cb))\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00655}00655\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[]\ =\ \{\ env.Null()\ \};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00656}00656\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(baton-\/>db-\/>Value(),\ cb,\ 1,\ argv);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00657}00657\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00658}00658\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00659}00659\ \ \ \ \ baton-\/>db-\/>Process();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00660}00660\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00661}00661\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00662}00662\ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ Database::LoadExtension(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_napi_1_1_callback_info}{Napi::CallbackInfo}}\&\ info)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00663}00663\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ this-\/>\mbox{\hyperlink{class_napi_1_1_reference_a145936a59e9db2c455542576e76773ac}{Env}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00664}00664\ \ \ \ \ \textcolor{keyword}{auto}*\ db\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00665}00665\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00666}00666\ \ \ \ \ \mbox{\hyperlink{macros_8h_a5e831cbb749ddcb47989bf3b0759d473}{REQUIRE\_ARGUMENT\_STRING}}(0,\ filename);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00667}00667\ \ \ \ \ \mbox{\hyperlink{macros_8h_a0761db826ced391996c38485f138d0a0}{OPTIONAL\_ARGUMENT\_FUNCTION}}(1,\ callback);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00668}00668\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00669}00669\ \ \ \ \ Baton*\ baton\ =\ \textcolor{keyword}{new}\ LoadExtensionBaton(db,\ callback,\ filename.c\_str());}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00670}00670\ \ \ \ \ db-\/>Schedule(Work\_BeginLoadExtension,\ baton,\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00671}00671\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00672}00672\ \ \ \ \ \textcolor{keywordflow}{return}\ info.\mbox{\hyperlink{class_napi_1_1_callback_info_a216112c90346f2d3701b2d8cc14591c9}{This}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00673}00673\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00674}00674\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00675}00675\ \textcolor{keywordtype}{void}\ Database::Work\_BeginLoadExtension(Baton*\ baton)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00676}00676\ \ \ \ \ assert(baton-\/>db-\/>locked);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00677}00677\ \ \ \ \ assert(baton-\/>db-\/>open);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00678}00678\ \ \ \ \ assert(baton-\/>db-\/>\_handle);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00679}00679\ \ \ \ \ assert(baton-\/>db-\/>pending\ ==\ 0);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00680}00680\ \ \ \ \ baton-\/>db-\/>pending++;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00681}00681\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00682}00682\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ baton-\/>db-\/>Env();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00683}00683\ \ \ \ \ \mbox{\hyperlink{macros_8h_af3b5fe6fbecd04ffb353562501539572}{CREATE\_WORK}}(\textcolor{stringliteral}{"{}sqlite3.Database.LoadExtension"{}},\ Work\_LoadExtension,\ Work\_AfterLoadExtension);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00684}00684\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00685}00685\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00686}00686\ \textcolor{keywordtype}{void}\ Database::Work\_LoadExtension(napi\_env\ e,\ \textcolor{keywordtype}{void}*\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00687}00687\ \ \ \ \ \textcolor{keyword}{auto}*\ baton\ =\ \textcolor{keyword}{static\_cast<}LoadExtensionBaton*\textcolor{keyword}{>}(data);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00688}00688\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00689}00689\ \ \ \ \ sqlite3\_enable\_load\_extension(baton-\/>db-\/>\_handle,\ 1);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00690}00690\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00691}00691\ \ \ \ \ \textcolor{keywordtype}{char}*\ message\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00692}00692\ \ \ \ \ baton-\/>status\ =\ sqlite3\_load\_extension(}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00693}00693\ \ \ \ \ \ \ \ \ baton-\/>db-\/>\_handle,}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00694}00694\ \ \ \ \ \ \ \ \ baton-\/>filename.c\_str(),}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00695}00695\ \ \ \ \ \ \ \ \ 0,}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00696}00696\ \ \ \ \ \ \ \ \ \&message}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00697}00697\ \ \ \ \ );}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00698}00698\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00699}00699\ \ \ \ \ sqlite3\_enable\_load\_extension(baton-\/>db-\/>\_handle,\ 0);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00700}00700\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00701}00701\ \ \ \ \ \textcolor{keywordflow}{if}\ (baton-\/>status\ !=\ SQLITE\_OK\ \&\&\ message\ !=\ NULL)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00702}00702\ \ \ \ \ \ \ \ \ baton-\/>message\ =\ std::string(message);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00703}00703\ \ \ \ \ \ \ \ \ sqlite3\_free(message);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00704}00704\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00705}00705\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00706}00706\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00707}00707\ \textcolor{keywordtype}{void}\ Database::Work\_AfterLoadExtension(napi\_env\ e,\ napi\_status\ status,\ \textcolor{keywordtype}{void}*\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00708}00708\ \ \ \ \ std::unique\_ptr<LoadExtensionBaton>\ baton(\textcolor{keyword}{static\_cast<}LoadExtensionBaton*\textcolor{keyword}{>}(data));}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00709}00709\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00710}00710\ \ \ \ \ \textcolor{keyword}{auto}*\ db\ =\ baton-\/>db;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00711}00711\ \ \ \ \ db-\/>pending-\/-\/;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00712}00712\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00713}00713\ \ \ \ \ \textcolor{keyword}{auto}\ env\ =\ db-\/>Env();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00714}00714\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00715}00715\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00716}00716\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_function}{Napi::Function}}\ cb\ =\ baton-\/>callback.\mbox{\hyperlink{class_napi_1_1_value_a91352891b563fb744683240949e458e4}{Value}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00717}00717\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00718}00718\ \ \ \ \ \textcolor{keywordflow}{if}\ (baton-\/>status\ !=\ SQLITE\_OK)\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00719}00719\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a3311c5dacb4b8acfdc913e57bda331cc}{EXCEPTION}}(\mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ baton-\/>message.c\_str()),\ baton-\/>status,\ exception);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00720}00720\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00721}00721\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{macros_8h_a95903770efc550331a040da389d5a911}{IS\_FUNCTION}}(cb))\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00722}00722\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[]\ =\ \{\ exception\ \};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00723}00723\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(db-\/>Value(),\ cb,\ 1,\ argv);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00724}00724\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00725}00725\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00726}00726\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ info[]\ =\ \{\ \mbox{\hyperlink{class_napi_1_1_string_a6689d69d07bad4eea2be440333320925}{Napi::String::New}}(env,\ \textcolor{stringliteral}{"{}error"{}}),\ exception\ \};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00727}00727\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a892be17d1363eec9b638cc05d901d0cf}{EMIT\_EVENT}}(db-\/>Value(),\ 2,\ info);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00728}00728\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00729}00729\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00730}00730\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{macros_8h_a95903770efc550331a040da389d5a911}{IS\_FUNCTION}}(cb))\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00731}00731\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_value}{Napi::Value}}\ argv[]\ =\ \{\ env.Null()\ \};}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00732}00732\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_ac659ad69c618167394dd24399f145d3c}{TRY\_CATCH\_CALL}}(db-\/>Value(),\ cb,\ 1,\ argv);}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00733}00733\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00734}00734\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00735}00735\ \ \ \ \ db-\/>Process();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00736}00736\ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00737}00737\ }
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00738}\mbox{\hyperlink{classnode__sqlite3_1_1_database_a029b6555983a63150ea2fd38014af0dd}{00738}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a029b6555983a63150ea2fd38014af0dd}{Database::RemoveCallbacks}}()\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00739}00739\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classnode__sqlite3_1_1_database_af6d9169250f5b409f74e295adfe2bfb5}{debug\_trace}})\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00740}00740\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_database_af6d9169250f5b409f74e295adfe2bfb5}{debug\_trace}}-\/>\mbox{\hyperlink{class_async_a49d312d265f7601ed213ded041e53e91}{finish}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00741}00741\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_database_af6d9169250f5b409f74e295adfe2bfb5}{debug\_trace}}\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00742}00742\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00743}00743\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classnode__sqlite3_1_1_database_a93eea639a426fa10151e65a0e52e33d1}{debug\_profile}})\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00744}00744\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a93eea639a426fa10151e65a0e52e33d1}{debug\_profile}}-\/>\mbox{\hyperlink{class_async_a49d312d265f7601ed213ded041e53e91}{finish}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00745}00745\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a93eea639a426fa10151e65a0e52e33d1}{debug\_profile}}\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00746}00746\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00747}00747\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classnode__sqlite3_1_1_database_a03c0628a5b374e33d2a96a0cc3340c86}{update\_event}})\ \{}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00748}00748\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a03c0628a5b374e33d2a96a0cc3340c86}{update\_event}}-\/>\mbox{\hyperlink{class_async_a49d312d265f7601ed213ded041e53e91}{finish}}();}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00749}00749\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a03c0628a5b374e33d2a96a0cc3340c86}{update\_event}}\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00750}00750\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{database_8cc_source_l00751}00751\ \}}
+
+\end{DoxyCode}

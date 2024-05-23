@@ -1,0 +1,519 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2cacache_2_r_e_a_d_m_e</compoundname>
+    <title>cacache &lt;a href=&quot;https://npm.im/cacache&quot; &gt;&lt;img src=&quot;https://img.shields.io/npm/v/cacache.svg&quot; alt=&quot;npm version&quot;/&gt;&lt;/a&gt; &lt;a href=&quot;https://npm.im/cacache&quot; &gt;&lt;img src=&quot;https://img.shields.io/npm/l/cacache.svg&quot; alt=&quot;license&quot;/&gt;&lt;/a&gt; &lt;a href=&quot;https://travis-ci.org/npm/cacache&quot; &gt;&lt;img src=&quot;https://img.shields.io/travis/npm/cacache.svg&quot; alt=&quot;Travis&quot;/&gt;&lt;/a&gt; &lt;a href=&quot;https://ci.appveyor.com/project/npm/cacache&quot; &gt;&lt;img src=&quot;https://ci.appveyor.com/api/projects/status/github/npm/cacache?svg=true&quot; alt=&quot;AppVeyor&quot;/&gt;&lt;/a&gt; &lt;a href=&quot;https://coveralls.io/github/npm/cacache?branch=latest&quot; &gt;&lt;img src=&quot;https://coveralls.io/repos/github/npm/cacache/badge.svg?branch=latest&quot; alt=&quot;Coverage Status&quot;/&gt;&lt;/a&gt;</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md421"/> <ulink url="https://github.com/npm/cacache"><computeroutput>cacache</computeroutput></ulink> is a Node.js library for managing local key and content address caches. It&apos;s really fast, really good at concurrency, and it will never give you corrupted data, even if cache files get corrupted or manipulated.</para>
+<para>On systems that support user and group settings on files, cacache will match the <computeroutput>uid</computeroutput> and <computeroutput>gid</computeroutput> values to the folder where the cache lives, even when running as <computeroutput>root</computeroutput>.</para>
+<para>It was written to be used as <ulink url="https://npm.im">npm</ulink>&apos;s local cache, but can just as easily be used on its own.</para>
+<sect1 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md422">
+<title>Install</title><para><computeroutput>$ npm install --save cacache</computeroutput></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md423">
+<title>Table of Contents</title><para><itemizedlist>
+<listitem><para>Example</para>
+</listitem><listitem><para>Features</para>
+</listitem><listitem><para>Contributing</para>
+</listitem><listitem><para><ref refid="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1api" kindref="member">API</ref><itemizedlist>
+<listitem><para>Using localized APIs</para>
+</listitem><listitem><para>Reading<itemizedlist>
+<listitem><para>`ls`</para>
+</listitem><listitem><para>`ls.stream`</para>
+</listitem><listitem><para>`get`</para>
+</listitem><listitem><para>`get.stream`</para>
+</listitem><listitem><para>`get.info`</para>
+</listitem><listitem><para>`get.hasContent`</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para>Writing<itemizedlist>
+<listitem><para>`put`</para>
+</listitem><listitem><para>`put.stream`</para>
+</listitem><listitem><para>`rm.all`</para>
+</listitem><listitem><para>`rm.entry`</para>
+</listitem><listitem><para>`rm.content`</para>
+</listitem><listitem><para>`index.compact`</para>
+</listitem><listitem><para>`index.insert`</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para>Utilities<itemizedlist>
+<listitem><para>`clearMemoized`</para>
+</listitem><listitem><para>`tmp.mkdir`</para>
+</listitem><listitem><para>`tmp.withTmp`</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para>Integrity<itemizedlist>
+<listitem><para>Subresource Integrity</para>
+</listitem><listitem><para>`verify`</para>
+</listitem><listitem><para>`verify.lastRun`</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+<sect2 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md424">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>cacache<sp/>=<sp/>require(&apos;cacache&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>fs<sp/>=<sp/>require(&apos;fs&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>tarball<sp/>=<sp/>&apos;/path/to/mytar.tgz&apos;</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>cachePath<sp/>=<sp/>&apos;/tmp/my-toy-cache&apos;</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>key<sp/>=<sp/>&apos;my-unique-key-1234&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Cache<sp/>it!<sp/>Use<sp/>`cachePath`<sp/>as<sp/>the<sp/>root<sp/>of<sp/>the<sp/>content<sp/>cache</highlight></codeline>
+<codeline><highlight class="normal">cacache.put(cachePath,<sp/>key,<sp/>&apos;10293801983029384&apos;).then(integrity<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(`Saved<sp/>content<sp/>to<sp/>${cachePath}.`)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>destination<sp/>=<sp/>&apos;/tmp/mytar.tgz&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Copy<sp/>the<sp/>contents<sp/>out<sp/>of<sp/>the<sp/>cache<sp/>and<sp/>into<sp/>their<sp/>destination!</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>But<sp/>this<sp/>time,<sp/>use<sp/>stream<sp/>instead!</highlight></codeline>
+<codeline><highlight class="normal">cacache.get.stream(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cachePath,<sp/>key</highlight></codeline>
+<codeline><highlight class="normal">).pipe(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fs.createWriteStream(destination)</highlight></codeline>
+<codeline><highlight class="normal">).on(&apos;finish&apos;,<sp/>()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;done<sp/>extracting!&apos;)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>The<sp/>same<sp/>thing,<sp/>but<sp/>skip<sp/>the<sp/>key<sp/>index.</highlight></codeline>
+<codeline><highlight class="normal">cacache.get.byDigest(cachePath,<sp/>integrityHash).then(data<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fs.writeFile(destination,<sp/>data,<sp/>err<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(&apos;tarball<sp/>data<sp/>fetched<sp/>based<sp/>on<sp/>its<sp/>sha512sum<sp/>and<sp/>written<sp/>out!&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md425">
+<title>Features</title><para><itemizedlist>
+<listitem><para>Extraction by key or by content address (shasum, etc)</para>
+</listitem><listitem><para>Subresource Integrity web standard support</para>
+</listitem><listitem><para>Multi-hash support - safely host sha1, sha512, etc, in a single cache</para>
+</listitem><listitem><para>Automatic content deduplication</para>
+</listitem><listitem><para>Fault tolerance (immune to corruption, partial writes, process races, etc)</para>
+</listitem><listitem><para>Consistency guarantees on read and write (full data verification)</para>
+</listitem><listitem><para>Lockless, high-concurrency cache access</para>
+</listitem><listitem><para>Streaming support</para>
+</listitem><listitem><para>Promise support</para>
+</listitem><listitem><para>Fast <ndash/> sub-millisecond reads and writes including verification</para>
+</listitem><listitem><para>Arbitrary metadata storage</para>
+</listitem><listitem><para>Garbage collection and additional offline verification</para>
+</listitem><listitem><para>Thorough test coverage</para>
+</listitem><listitem><para>There&apos;s probably a bloom filter in there somewhere. Those are cool, right? 🤔</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md426">
+<title>Contributing</title><para>The cacache team enthusiastically welcomes contributions and project participation! There&apos;s a bunch of things you can do if you want to contribute! The <ref refid="readable-stream_2_c_o_n_t_r_i_b_u_t_i_n_g_8md" kindref="compound">Contributor Guide</ref> has all the information you need for everything from reporting bugs to contributing entire new features. Please don&apos;t hesitate to jump in if you&apos;d like to, or even ask us questions if something isn&apos;t clear.</para>
+<para>All participants and maintainers in this project are expected to follow <ref refid="_c_o_d_e___o_f___c_o_n_d_u_c_t_8md" kindref="compound">Code of Conduct</ref>, and just generally be excellent to each other.</para>
+<para>Please refer to the <ref refid="which_2_c_h_a_n_g_e_l_o_g_8md" kindref="compound">Changelog</ref> for project history details, too.</para>
+<para>Happy hacking!</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md427">
+<title>API</title><sect3 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md428">
+<title><anchor id="_1ls"/> <computeroutput>&gt; cacache.ls(cache) -&gt; Promise&lt;Object&gt;</computeroutput></title><para>Lists info for all entries currently in the cache as a single large object. Each entry in the object will be keyed by the unique index key, with corresponding `get.info` objects as the values.</para>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md429">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">cacache.ls(cachePath).then(console.log)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Output</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&apos;my-thing&apos;:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>key:<sp/>&apos;my-thing&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>integrity:<sp/>&apos;sha512-BaSe64/EnCoDED+HAsh==&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>path:<sp/>&apos;.testcache/content/deadbeef&apos;,<sp/>//<sp/>joined<sp/>with<sp/>`cachePath`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>time:<sp/>12345698490,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>size:<sp/>4023948,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>metadata:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>name:<sp/>&apos;blah&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>version:<sp/>&apos;1.2.3&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>description:<sp/>&apos;this<sp/>was<sp/>once<sp/>a<sp/>package<sp/>but<sp/>now<sp/>it<sp/>is<sp/>my-thing&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&apos;other-thing&apos;:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>key:<sp/>&apos;other-thing&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>integrity:<sp/>&apos;sha1-ANothER+hasH=&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>path:<sp/>&apos;.testcache/content/bada55&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>time:<sp/>11992309289,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>size:<sp/>111112</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md430">
+<title><anchor id="_1ls-stream"/> <computeroutput>&gt; cacache.ls.stream(cache) -&gt; Readable</computeroutput></title><para>Lists info for all entries currently in the cache as a single large object.</para>
+<para>This works just like `ls`, except `get.info` entries are returned as <lsquo/>&apos;data<rsquo/>` events on the returned stream.</para>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md431">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">cacache.ls.stream(cachePath).on(&apos;data&apos;,<sp/>console.log)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Output</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>key:<sp/>&apos;my-thing&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>integrity:<sp/>&apos;sha512-BaSe64HaSh&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>path:<sp/>&apos;.testcache/content/deadbeef&apos;,<sp/>//<sp/>joined<sp/>with<sp/>`cachePath`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>time:<sp/>12345698490,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>size:<sp/>13423,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>metadata:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>name:<sp/>&apos;blah&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>version:<sp/>&apos;1.2.3&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>description:<sp/>&apos;this<sp/>was<sp/>once<sp/>a<sp/>package<sp/>but<sp/>now<sp/>it<sp/>is<sp/>my-thing&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>key:<sp/>&apos;other-thing&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>integrity:<sp/>&apos;whirlpool-WoWSoMuchSupport&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>path:<sp/>&apos;.testcache/content/bada55&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>time:<sp/>11992309289,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>size:<sp/>498023984029</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>...</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md432">
+<title><anchor id="_1get-data"/> <computeroutput>&gt; cacache.get(cache, key, [opts]) -&gt; Promise({data, metadata, integrity})</computeroutput></title><para>Returns an object with the cached data, digest, and metadata identified by <computeroutput>key</computeroutput>. The <computeroutput>data</computeroutput> property of this object will be a <computeroutput>Buffer</computeroutput> instance that presumably holds some data that means something to you. I&apos;m sure you know what to do with it! cacache just won&apos;t care.</para>
+<para><computeroutput>integrity</computeroutput> is a Subresource Integrity string. That is, a string that can be used to verify <computeroutput>data</computeroutput>, which looks like <computeroutput>&lt;hash-algorithm&gt;-&lt;base64-integrity-hash&gt;</computeroutput>.</para>
+<para>If there is no content identified by <computeroutput>key</computeroutput>, or if the locally-stored data does not pass the validity checksum, the promise will be rejected.</para>
+<para>A sub-function, <computeroutput>get.byDigest</computeroutput> may be used for identical behavior, except lookup will happen by integrity hash, bypassing the index entirely. This version of the function <emphasis>only</emphasis> returns <computeroutput>data</computeroutput> itself, without any wrapper.</para>
+<para>See: options</para>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md433">
+<title>Note</title><para>This function loads the entire cache entry into memory before returning it. If you&apos;re dealing with Very Large data, consider using `get.stream` instead.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md434">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>Look<sp/>up<sp/>by<sp/>key</highlight></codeline>
+<codeline><highlight class="normal">cache.get(cachePath,<sp/>&apos;my-thing&apos;).then(console.log)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Output:</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>metadata:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>thingName:<sp/>&apos;my&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>integrity:<sp/>&apos;sha512-BaSe64HaSh&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>data:<sp/>Buffer#&lt;deadbeef&gt;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>size:<sp/>9320</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Look<sp/>up<sp/>by<sp/>digest</highlight></codeline>
+<codeline><highlight class="normal">cache.get.byDigest(cachePath,<sp/>&apos;sha512-BaSe64HaSh&apos;).then(console.log)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Output:</highlight></codeline>
+<codeline><highlight class="normal">Buffer#&lt;deadbeef&gt;</highlight></codeline>
+</programlisting></para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md435">
+<title><anchor id="_1get-stream"/> <computeroutput>&gt; cacache.get.stream(cache, key, [opts]) -&gt; Readable</computeroutput></title><para>Returns a <ulink url="https://nodejs.org/api/stream.html#stream_readable_streams">Readable Stream</ulink> of the cached data identified by <computeroutput>key</computeroutput>.</para>
+<para>If there is no content identified by <computeroutput>key</computeroutput>, or if the locally-stored data does not pass the validity checksum, an error will be emitted.</para>
+<para><computeroutput>metadata</computeroutput> and <computeroutput>integrity</computeroutput> events will be emitted before the stream closes, if you need to collect that extra data about the cached entry.</para>
+<para>A sub-function, <computeroutput>get.stream.byDigest</computeroutput> may be used for identical behavior, except lookup will happen by integrity hash, bypassing the index entirely. This version does not emit the <computeroutput>metadata</computeroutput> and <computeroutput>integrity</computeroutput> events at all.</para>
+<para>See: options</para>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md436">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>Look<sp/>up<sp/>by<sp/>key</highlight></codeline>
+<codeline><highlight class="normal">cache.get.stream(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cachePath,<sp/>&apos;my-thing&apos;</highlight></codeline>
+<codeline><highlight class="normal">).on(&apos;metadata&apos;,<sp/>metadata<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;metadata:&apos;,<sp/>metadata)</highlight></codeline>
+<codeline><highlight class="normal">}).on(&apos;integrity&apos;,<sp/>integrity<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;integrity:&apos;,<sp/>integrity)</highlight></codeline>
+<codeline><highlight class="normal">}).pipe(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fs.createWriteStream(&apos;./x.tgz&apos;)</highlight></codeline>
+<codeline><highlight class="normal">)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Outputs:</highlight></codeline>
+<codeline><highlight class="normal">metadata:<sp/>{<sp/>...<sp/>}</highlight></codeline>
+<codeline><highlight class="normal">integrity:<sp/>&apos;sha512-SoMeDIGest+64==&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Look<sp/>up<sp/>by<sp/>digest</highlight></codeline>
+<codeline><highlight class="normal">cache.get.stream.byDigest(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cachePath,<sp/>&apos;sha512-SoMeDIGest+64==&apos;</highlight></codeline>
+<codeline><highlight class="normal">).pipe(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fs.createWriteStream(&apos;./x.tgz&apos;)</highlight></codeline>
+<codeline><highlight class="normal">)</highlight></codeline>
+</programlisting></para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md437">
+<title><anchor id="_1get-info"/> <computeroutput>&gt; cacache.get.info(cache, key) -&gt; Promise</computeroutput></title><para>Looks up <computeroutput>key</computeroutput> in the cache index, returning information about the entry if one exists.</para>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md438">
+<title>Fields</title><para><itemizedlist>
+<listitem><para><computeroutput>key</computeroutput> - Key the entry was looked up under. Matches the <computeroutput>key</computeroutput> argument.</para>
+</listitem><listitem><para><computeroutput>integrity</computeroutput> - Subresource Integrity hash for the content this entry refers to.</para>
+</listitem><listitem><para><computeroutput>path</computeroutput> - Filesystem path where content is stored, joined with <computeroutput>cache</computeroutput> argument.</para>
+</listitem><listitem><para><computeroutput>time</computeroutput> - Timestamp the entry was first added on.</para>
+</listitem><listitem><para><computeroutput>metadata</computeroutput> - User-assigned metadata associated with the entry/content.</para>
+</listitem></itemizedlist>
+</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md439">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">cacache.get.info(cachePath,<sp/>&apos;my-thing&apos;).then(console.log)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Output</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>key:<sp/>&apos;my-thing&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>integrity:<sp/>&apos;sha256-MUSTVERIFY+ALL/THINGS==&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>path:<sp/>&apos;.testcache/content/deadbeef&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>time:<sp/>12345698490,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>size:<sp/>849234,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>metadata:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>name:<sp/>&apos;blah&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>version:<sp/>&apos;1.2.3&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>description:<sp/>&apos;this<sp/>was<sp/>once<sp/>a<sp/>package<sp/>but<sp/>now<sp/>it<sp/>is<sp/>my-thing&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md440">
+<title><anchor id="_1get-hasContent"/> <computeroutput>&gt; cacache.get.hasContent(cache, integrity) -&gt; Promise</computeroutput></title><para>Looks up a Subresource Integrity hash in the cache. If content exists for this <computeroutput>integrity</computeroutput>, it will return an object, with the specific single integrity hash that was found in <computeroutput>sri</computeroutput> key, and the size of the found content as <computeroutput>size</computeroutput>. If no content exists for this integrity, it will return <computeroutput>false</computeroutput>.</para>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md441">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">cacache.get.hasContent(cachePath,<sp/>&apos;sha256-MUSTVERIFY+ALL/THINGS==&apos;).then(console.log)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Output</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>sri:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>source:<sp/>&apos;sha256-MUSTVERIFY+ALL/THINGS==&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>algorithm:<sp/>&apos;sha256&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>digest:<sp/>&apos;MUSTVERIFY+ALL/THINGS==&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>options:<sp/>[]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>size:<sp/>9001</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">cacache.get.hasContent(cachePath,<sp/>&apos;sha521-NOT+IN/CACHE==&apos;).then(console.log)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Output</highlight></codeline>
+<codeline><highlight class="normal">false</highlight></codeline>
+</programlisting></para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md442">
+<title><anchor id="_1get-options"/> Options</title></sect4>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md443">
+<title><computeroutput>opts.integrity</computeroutput></title><para>If present, the pre-calculated digest for the inserted content. If this option is provided and does not match the post-insertion digest, insertion will fail with an <computeroutput>EINTEGRITY</computeroutput> error.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md444">
+<title><computeroutput>opts.memoize</computeroutput></title><para>Default: null</para>
+<para>If explicitly truthy, cacache will read from memory and memoize data on bulk read. If <computeroutput>false</computeroutput>, cacache will read from disk data. Reader functions by default read from in-memory cache.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md445">
+<title><computeroutput>opts.size</computeroutput></title><para>If provided, the data stream will be verified to check that enough data was passed through. If there&apos;s more or less data than expected, insertion will fail with an <computeroutput>EBADSIZE</computeroutput> error.</para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md446">
+<title><anchor id="_1put-data"/> <computeroutput>&gt; cacache.put(cache, key, data, [opts]) -&gt; Promise</computeroutput></title><para>Inserts data passed to it into the cache. The returned Promise resolves with a digest (generated according to `opts.algorithms`) after the cache entry has been successfully written.</para>
+<para>See: options</para>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md447">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">fetch(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&apos;https://registry.npmjs.org/cacache/-/cacache-1.0.0.tgz&apos;</highlight></codeline>
+<codeline><highlight class="normal">).then(data<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>cacache.put(cachePath,<sp/>&apos;registry.npmjs.org|cacache@1.0.0&apos;,<sp/>data)</highlight></codeline>
+<codeline><highlight class="normal">}).then(integrity<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;integrity<sp/>hash<sp/>is&apos;,<sp/>integrity)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md448">
+<title><anchor id="_1put-stream"/> <computeroutput>&gt; cacache.put.stream(cache, key, [opts]) -&gt; Writable</computeroutput></title><para>Returns a <ulink url="https://nodejs.org/api/stream.html#stream_writable_streams">Writable Stream</ulink> that inserts data written to it into the cache. Emits an <computeroutput>integrity</computeroutput> event with the digest of written contents when it succeeds.</para>
+<para>See: options</para>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md449">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">request.get(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&apos;https://registry.npmjs.org/cacache/-/cacache-1.0.0.tgz&apos;</highlight></codeline>
+<codeline><highlight class="normal">).pipe(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cacache.put.stream(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>cachePath,<sp/>&apos;registry.npmjs.org|cacache@1.0.0&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>).on(&apos;integrity&apos;,<sp/>d<sp/>=&gt;<sp/>console.log(`integrity<sp/>digest<sp/>is<sp/>${d}`))</highlight></codeline>
+<codeline><highlight class="normal">)</highlight></codeline>
+</programlisting></para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md450">
+<title><anchor id="_1put-options"/> Options</title></sect4>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md451">
+<title><computeroutput>opts.metadata</computeroutput></title><para>Arbitrary metadata to be attached to the inserted key.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md452">
+<title><computeroutput>opts.size</computeroutput></title><para>If provided, the data stream will be verified to check that enough data was passed through. If there&apos;s more or less data than expected, insertion will fail with an <computeroutput>EBADSIZE</computeroutput> error.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md453">
+<title><computeroutput>opts.integrity</computeroutput></title><para>If present, the pre-calculated digest for the inserted content. If this option is provided and does not match the post-insertion digest, insertion will fail with an <computeroutput>EINTEGRITY</computeroutput> error.</para>
+<para><computeroutput>algorithms</computeroutput> has no effect if this option is present.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md454">
+<title><computeroutput>opts.algorithms</computeroutput></title><para>Default: [&apos;sha512&apos;]</para>
+<para>Hashing algorithms to use when calculating the subresource integrity digest for inserted data. Can use any algorithm listed in <computeroutput>crypto.getHashes()</computeroutput> or <lsquo/>&apos;omakase<rsquo/><computeroutput>/</computeroutput>&apos;お任せします&apos;<computeroutput>to pick a random hash algorithm on each insertion. You may also use any anagram of</computeroutput>&apos;modnar&apos;` to use this feature.</para>
+<para>Currently only supports one algorithm at a time (i.e., an array length of exactly <computeroutput>1</computeroutput>). Has no effect if <computeroutput>opts.integrity</computeroutput> is present.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md455">
+<title><computeroutput>opts.memoize</computeroutput></title><para>Default: null</para>
+<para>If provided, cacache will memoize the given cache insertion in memory, bypassing any filesystem checks for that key or digest in future cache fetches. Nothing will be written to the in-memory cache unless this option is explicitly truthy.</para>
+<para>If <computeroutput>opts.memoize</computeroutput> is an object or a <computeroutput>Map</computeroutput>-like (that is, an object with <computeroutput>get</computeroutput> and <computeroutput>set</computeroutput> methods), it will be written to instead of the global memoization cache.</para>
+<para>Reading from disk data can be forced by explicitly passing <computeroutput>memoize: false</computeroutput> to the reader functions, but their default will be to read from memory.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md456">
+<title><computeroutput>opts.tmpPrefix</computeroutput></title><para>Default: null</para>
+<para>Prefix to append on the temporary directory name inside the cache&apos;s tmp dir.</para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md457">
+<title><anchor id="_1rm-all"/> <computeroutput>&gt; cacache.rm.all(cache) -&gt; Promise</computeroutput></title><para>Clears the entire cache. Mainly by blowing away the cache directory itself.</para>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md458">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">cacache.rm.all(cachePath).then(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;THE<sp/>APOCALYPSE<sp/>IS<sp/>UPON<sp/>US<sp/>😱&apos;)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md459">
+<title><anchor id="_1rm-entry"/> <computeroutput>&gt; cacache.rm.entry(cache, key, [opts]) -&gt; Promise</computeroutput></title><para>Alias: <computeroutput>cacache.rm</computeroutput></para>
+<para>Removes the index entry for <computeroutput>key</computeroutput>. Content will still be accessible if requested directly by content address (`get.stream.byDigest`).</para>
+<para>By default, this appends a new entry to the index with an integrity of <computeroutput>null</computeroutput>. If <computeroutput>opts.removeFully</computeroutput> is set to <computeroutput>true</computeroutput> then the index file itself will be physically deleted rather than appending a <computeroutput>null</computeroutput>.</para>
+<para>To remove the content itself (which might still be used by other entries), use `rm.content`. Or, to safely vacuum any unused content, use `verify`.</para>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md460">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">cacache.rm.entry(cachePath,<sp/>&apos;my-thing&apos;).then(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;I<sp/>did<sp/>not<sp/>like<sp/>it<sp/>anyway&apos;)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md461">
+<title><anchor id="_1rm-content"/> <computeroutput>&gt; cacache.rm.content(cache, integrity) -&gt; Promise</computeroutput></title><para>Removes the content identified by <computeroutput>integrity</computeroutput>. Any index entries referring to it will not be usable again until the content is re-added to the cache with an identical digest.</para>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md462">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">cacache.rm.content(cachePath,<sp/>&apos;sha512-SoMeDIGest/IN+BaSE64==&apos;).then(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;data<sp/>for<sp/>my-thing<sp/>is<sp/>gone!&apos;)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md463">
+<title><anchor id="_1index-compact"/> <computeroutput>&gt; cacache.index.compact(cache, key, matchFn, [opts]) -&gt; Promise</computeroutput></title><para>Uses <computeroutput>matchFn</computeroutput>, which must be a synchronous function that accepts two entries and returns a boolean indicating whether or not the two entries match, to deduplicate all entries in the cache for the given <computeroutput>key</computeroutput>.</para>
+<para>If <computeroutput>opts.validateEntry</computeroutput> is provided, it will be called as a function with the only parameter being a single index entry. The function must return a Boolean, if it returns <computeroutput>true</computeroutput> the entry is considered valid and will be kept in the index, if it returns <computeroutput>false</computeroutput> the entry will be removed from the index.</para>
+<para>If <computeroutput>opts.validateEntry</computeroutput> is not provided, however, every entry in the index will be deduplicated and kept until the first <computeroutput>null</computeroutput> integrity is reached, removing all entries that were written before the <computeroutput>null</computeroutput>.</para>
+<para>The deduplicated list of entries is both written to the index, replacing the existing content, and returned in the Promise.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md464">
+<title><anchor id="_1index-insert"/> <computeroutput>&gt; cacache.index.insert(cache, key, integrity, opts) -&gt; Promise</computeroutput></title><para>Writes an index entry to the cache for the given <computeroutput>key</computeroutput> without writing content.</para>
+<para>It is assumed if you are using this method, you have already stored the content some other way and you only wish to add a new index to that content. The <computeroutput>metadata</computeroutput> and <computeroutput>size</computeroutput> properties are read from <computeroutput>opts</computeroutput> and used as part of the index entry.</para>
+<para>Returns a Promise resolving to the newly added entry.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md465">
+<title><anchor id="_1clear-memoized"/> <computeroutput>&gt; cacache.clearMemoized()</computeroutput></title><para>Completely resets the in-memory entry cache.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md466">
+<title><anchor id="_1tmp-mkdir"/> <computeroutput>&gt; tmp.mkdir(cache, opts) -&gt; Promise&lt;Path&gt;</computeroutput></title><para>Returns a unique temporary directory inside the cache&apos;s <computeroutput>tmp</computeroutput> dir. This directory will use the same safe user assignment that all the other stuff use.</para>
+<para>Once the directory is made, it&apos;s the user&apos;s responsibility that all files within are given the appropriate <computeroutput>gid</computeroutput>/<computeroutput>uid</computeroutput> ownership settings to match the rest of the cache. If not, you can ask cacache to do it for you by calling `tmp.fix()`, which will fix all tmp directory permissions.</para>
+<para>If you want automatic cleanup of this directory, use `tmp.withTmp()`</para>
+<para>See: options</para>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md467">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">cacache.tmp.mkdir(cache).then(dir<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fs.writeFile(path.join(dir,<sp/>&apos;blablabla&apos;),<sp/>Buffer#&lt;1234&gt;,<sp/>...)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md468">
+<title><anchor id="_1tmp-fix"/> <computeroutput>&gt; tmp.fix(cache) -&gt; Promise</computeroutput></title><para>Sets the <computeroutput>uid</computeroutput> and <computeroutput>gid</computeroutput> properties on all files and folders within the tmp folder to match the rest of the cache.</para>
+<para>Use this after manually writing files into `tmp.mkdir` or `tmp.withTmp`.</para>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md469">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">cacache.tmp.mkdir(cache).then(dir<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>writeFile(path.join(dir,<sp/>&apos;file&apos;),<sp/>someData).then(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>make<sp/>sure<sp/>we<sp/>didn&apos;t<sp/>just<sp/>put<sp/>a<sp/>root-owned<sp/>file<sp/>in<sp/>the<sp/>cache</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>cacache.tmp.fix().then(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>all<sp/>uids<sp/>and<sp/>gids<sp/>match<sp/>now</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md470">
+<title><anchor id="_1with-tmp"/> <computeroutput>&gt; tmp.withTmp(cache, opts, cb) -&gt; Promise</computeroutput></title><para>Creates a temporary directory with `tmp.mkdir()` and calls <computeroutput>cb</computeroutput> with it. The created temporary directory will be removed when the return value of <computeroutput>cb()</computeroutput> resolves, the tmp directory will be automatically deleted once that promise completes.</para>
+<para>The same caveats apply when it comes to managing permissions for the tmp dir&apos;s contents.</para>
+<para>See: options</para>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md471">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">cacache.tmp.withTmp(cache,<sp/>dir<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>fs.writeFileAsync(path.join(dir,<sp/>&apos;blablabla&apos;),<sp/>Buffer#&lt;1234&gt;,<sp/>...)</highlight></codeline>
+<codeline><highlight class="normal">}).then(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>`dir`<sp/>no<sp/>longer<sp/>exists</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md472">
+<title><anchor id="_1tmp-options"/> Options</title></sect4>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md473">
+<title><computeroutput>opts.tmpPrefix</computeroutput></title><para>Default: null</para>
+<para>Prefix to append on the temporary directory name inside the cache&apos;s tmp dir.</para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md474">
+<title><anchor id="_1integrity"/> Subresource Integrity Digests</title><para>For content verification and addressing, cacache uses strings following the <ulink url="https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity">Subresource Integrity spec</ulink>. That is, any time cacache expects an <computeroutput>integrity</computeroutput> argument or option, it should be in the format <computeroutput>&lt;hashAlgorithm&gt;-&lt;base64-hash&gt;</computeroutput>.</para>
+<para>One deviation from the current spec is that cacache will support any hash algorithms supported by the underlying Node.js process. You can use <computeroutput>crypto.getHashes()</computeroutput> to see which ones you can use.</para>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md475">
+<title>Generating Digests Yourself</title><para>If you have an existing content shasum, they are generally formatted as a hexadecimal string (that is, a sha1 would look like: <computeroutput>5f5513f8822fdbe5145af33b64d8d970dcf95c6e</computeroutput>). In order to be compatible with cacache, you&apos;ll need to convert this to an equivalent subresource integrity string. For this example, the corresponding hash would be: <computeroutput>sha1-X1UT+IIv2+UUWvM7ZNjZcNz5XG4=</computeroutput>.</para>
+<para>If you want to generate an integrity string yourself for existing data, you can use something like this:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>crypto<sp/>=<sp/>require(&apos;crypto&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>hashAlgorithm<sp/>=<sp/>&apos;sha512&apos;</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>data<sp/>=<sp/>&apos;foobarbaz&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>integrity<sp/>=<sp/>(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>hashAlgorithm<sp/>+</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&apos;-&apos;<sp/>+</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>crypto.createHash(hashAlgorithm).update(data).digest(&apos;base64&apos;)</highlight></codeline>
+<codeline><highlight class="normal">)</highlight></codeline>
+</programlisting></para>
+<para>You can also use <ulink url="https://npm.im/ssri"><computeroutput>ssri</computeroutput></ulink> to have a richer set of functionality around SRI strings, including generation, parsing, and translating from existing hex-formatted strings.</para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md476">
+<title><anchor id="_1verify"/> <computeroutput>&gt; cacache.verify(cache, opts) -&gt; Promise</computeroutput></title><para>Checks out and fixes up your cache:</para>
+<para><itemizedlist>
+<listitem><para>Cleans up corrupted or invalid index entries.</para>
+</listitem><listitem><para>Custom entry filtering options.</para>
+</listitem><listitem><para>Garbage collects any content entries not referenced by the index.</para>
+</listitem><listitem><para>Checks integrity for all content entries and removes invalid content.</para>
+</listitem><listitem><para>Fixes cache ownership.</para>
+</listitem><listitem><para>Removes the <computeroutput>tmp</computeroutput> directory in the cache and all its contents.</para>
+</listitem></itemizedlist>
+</para>
+<para>When it&apos;s done, it&apos;ll return an object with various stats about the verification process, including amount of storage reclaimed, number of valid entries, number of entries removed, etc.</para>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md477">
+<title><anchor id="_1verify-options"/> Options</title></sect4>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md478">
+<title><computeroutput>opts.concurrency</computeroutput></title><para>Default: 20</para>
+<para>Number of concurrently read files in the filesystem while doing clean up.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md479">
+<title><computeroutput>opts.filter</computeroutput></title><para>Receives a formatted entry. Return false to remove it. Note: might be called more than once on the same entry.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md480">
+<title><computeroutput>opts.log</computeroutput></title><para>Custom logger function: <programlisting><codeline><highlight class="normal">log:<sp/>{<sp/>silly<sp/>()<sp/>{}<sp/>}</highlight></codeline>
+<codeline><highlight class="normal">log.silly(&apos;verify&apos;,<sp/>&apos;verifying<sp/>cache<sp/>at&apos;,<sp/>cache)</highlight></codeline>
+</programlisting></para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md481">
+<title>Example</title><para><programlisting filename=".sh"><codeline><highlight class="normal">echo<sp/>somegarbage<sp/>&gt;&gt;<sp/>$CACHEPATH/content/deadbeef</highlight></codeline>
+</programlisting></para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">cacache.verify(cachePath).then(stats<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>deadbeef<sp/>collected,<sp/>because<sp/>of<sp/>invalid<sp/>checksum.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;cache<sp/>is<sp/>much<sp/>nicer<sp/>now!<sp/>stats:&apos;,<sp/>stats)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect4>
+</sect3>
+<sect3 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md482">
+<title><anchor id="_1verify-last-run"/> <computeroutput>&gt; cacache.verify.lastRun(cache) -&gt; Promise</computeroutput></title><para>Returns a <computeroutput>Date</computeroutput> representing the last time <computeroutput>cacache.verify</computeroutput> was run on <computeroutput>cache</computeroutput>.</para>
+<sect4 id="md_backend_2node__modules_2cacache_2_r_e_a_d_m_e_1autotoc_md483">
+<title>Example</title><para><programlisting filename=".js"><codeline><highlight class="normal">cacache.verify(cachePath).then(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cacache.verify.lastRun(cachePath).then(lastTime<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(&apos;cacache.verify<sp/>was<sp/>last<sp/>called<sp/>on&apos;<sp/>+<sp/>lastTime)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting> </para>
+</sect4>
+</sect3>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/cacache/README.md"/>
+  </compounddef>
+</doxygen>

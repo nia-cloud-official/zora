@@ -1,0 +1,162 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2raw-body_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2raw-body_2_r_e_a_d_m_e</compoundname>
+    <title>raw-body</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2raw-body_2_r_e_a_d_m_e_1autotoc_md2932"/> <ulink url="https://npmjs.org/package/raw-body"><image type="html" name="https://img.shields.io/npm/v/raw-body.svg" alt="NPM Version" inline="yes"></image>
+</ulink> <ulink url="https://npmjs.org/package/raw-body"><image type="html" name="https://img.shields.io/npm/dm/raw-body.svg" alt="NPM Downloads" inline="yes"></image>
+</ulink> <ulink url="https://nodejs.org/en/download/"><image type="html" name="https://img.shields.io/node/v/raw-body.svg" alt="Node.js Version" inline="yes"></image>
+</ulink> <ulink url="https://github.com/jshttp/stream-utils/raw-body?query=workflow%3Aci"><image type="html" name="https://img.shields.io/github/actions/workflow/status/stream-utils/raw-body/ci.yml?branch=master&amp;label=ci" alt="Build status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/r/stream-utils/raw-body?branch=master"><image type="html" name="https://img.shields.io/coveralls/stream-utils/raw-body/master.svg" alt="Test coverage" inline="yes"></image>
+</ulink></para>
+<para>Gets the entire buffer of a stream either as a <computeroutput>Buffer</computeroutput> or a string. Validates the stream&apos;s length against an expected length and maximum limit. Ideal for parsing request bodies.</para>
+<sect1 id="md_backend_2node__modules_2raw-body_2_r_e_a_d_m_e_1autotoc_md2933">
+<title>Install</title><para>This is a <ulink url="https://nodejs.org/en/">Node.js</ulink> module available through the <ulink url="https://www.npmjs.com/">npm registry</ulink>. Installation is done using the <ulink url="https://docs.npmjs.com/getting-started/installing-npm-packages-locally"><computeroutput>npm install</computeroutput> command</ulink>:</para>
+<para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>raw-body</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2raw-body_2_r_e_a_d_m_e_1autotoc_md2934">
+<title>TypeScript</title><para>This module includes a <ulink url="https://www.typescriptlang.org/">TypeScript</ulink> declaration file to enable auto complete in compatible editors and type information for TypeScript projects. This module depends on the Node.js types, so install <computeroutput>@types/node</computeroutput>:</para>
+<para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>@types/node</highlight></codeline>
+</programlisting></para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2raw-body_2_r_e_a_d_m_e_1autotoc_md2935">
+<title>API</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>getRawBody<sp/>=<sp/>require(&apos;raw-body&apos;)</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2raw-body_2_r_e_a_d_m_e_1autotoc_md2936">
+<title>getRawBody(stream, [options], [callback])</title><para><bold>Returns a promise if no callback specified and global <computeroutput>Promise</computeroutput> exists.</bold></para>
+<para>Options:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>length</computeroutput> - The length of the stream. If the contents of the stream do not add up to this length, an <computeroutput>400</computeroutput> error code is returned.</para>
+</listitem><listitem><para><computeroutput>limit</computeroutput> - The byte limit of the body. This is the number of bytes or any string format supported by <ulink url="https://www.npmjs.com/package/bytes">bytes</ulink>, for example <computeroutput>1000</computeroutput>, <lsquo/>&apos;500kb<rsquo/><computeroutput>or</computeroutput>&apos;3mb&apos;<computeroutput>. If the body ends up being larger than this limit, a</computeroutput>413<computeroutput>error code is returned. -</computeroutput>encoding<computeroutput>- The encoding to use to decode the body into a string. By default, a</computeroutput>Buffer<computeroutput>instance will be returned when no encoding is specified. Most likely, you want</computeroutput>utf-8<computeroutput>, so setting</computeroutput>encoding<computeroutput>to</computeroutput>true<computeroutput>will decode as</computeroutput>utf-8`. You can use any type of encoding supported by <ulink url="https://www.npmjs.org/package/iconv-lite#readme">iconv-lite</ulink>.</para>
+</listitem></itemizedlist>
+</para>
+<para>You can also pass a string in place of options to just specify the encoding.</para>
+<para>If an error occurs, the stream will be paused, everything unpiped, and you are responsible for correctly disposing the stream. For HTTP requests, you may need to finish consuming the stream if you want to keep the socket open for future requests. For streams that use file descriptors, you should <computeroutput>stream.destroy()</computeroutput> or <computeroutput>stream.close()</computeroutput> to prevent leaks.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2raw-body_2_r_e_a_d_m_e_1autotoc_md2937">
+<title>Errors</title><para>This module creates errors depending on the error condition during reading. The error may be an error from the underlying Node.js implementation, but is otherwise an error created by this module, which has the following attributes:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>limit</computeroutput> - the limit in bytes</para>
+</listitem><listitem><para><computeroutput>length</computeroutput> and <computeroutput>expected</computeroutput> - the expected length of the stream</para>
+</listitem><listitem><para><computeroutput>received</computeroutput> - the received bytes</para>
+</listitem><listitem><para><computeroutput>encoding</computeroutput> - the invalid encoding</para>
+</listitem><listitem><para><computeroutput>status</computeroutput> and <computeroutput>statusCode</computeroutput> - the corresponding status code for the error</para>
+</listitem><listitem><para><computeroutput>type</computeroutput> - the error type</para>
+</listitem></itemizedlist>
+</para>
+<sect2 id="md_backend_2node__modules_2raw-body_2_r_e_a_d_m_e_1autotoc_md2938">
+<title>Types</title><para>The errors from this module have a <computeroutput>type</computeroutput> property which allows for the programmatic determination of the type of error returned.</para>
+<sect3 id="md_backend_2node__modules_2raw-body_2_r_e_a_d_m_e_1autotoc_md2939">
+<title>encoding.unsupported</title><para>This error will occur when the <computeroutput>encoding</computeroutput> option is specified, but the value does not map to an encoding supported by the <ulink url="https://www.npmjs.org/package/iconv-lite#readme">iconv-lite</ulink> module.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2raw-body_2_r_e_a_d_m_e_1autotoc_md2940">
+<title>entity.too.large</title><para>This error will occur when the <computeroutput>limit</computeroutput> option is specified, but the stream has an entity that is larger.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2raw-body_2_r_e_a_d_m_e_1autotoc_md2941">
+<title>request.aborted</title><para>This error will occur when the request stream is aborted by the client before reading the body has finished.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2raw-body_2_r_e_a_d_m_e_1autotoc_md2942">
+<title>request.size.invalid</title><para>This error will occur when the <computeroutput>length</computeroutput> option is specified, but the stream has emitted more bytes.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2raw-body_2_r_e_a_d_m_e_1autotoc_md2943">
+<title>stream.encoding.set</title><para>This error will occur when the given stream has an encoding set on it, making it a decoded stream. The stream should not have an encoding set and is expected to emit <computeroutput>Buffer</computeroutput> objects.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2raw-body_2_r_e_a_d_m_e_1autotoc_md2944">
+<title>stream.not.readable</title><para>This error will occur when the given stream is not readable.</para>
+</sect3>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2raw-body_2_r_e_a_d_m_e_1autotoc_md2945">
+<title>Examples</title><sect2 id="md_backend_2node__modules_2raw-body_2_r_e_a_d_m_e_1autotoc_md2946">
+<title>Simple Express example</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>contentType<sp/>=<sp/>require(&apos;content-type&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>express<sp/>=<sp/>require(&apos;express&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>getRawBody<sp/>=<sp/>require(&apos;raw-body&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>app<sp/>=<sp/>express()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">app.use(function<sp/>(req,<sp/>res,<sp/>next)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>getRawBody(req,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>length:<sp/>req.headers[&apos;content-length&apos;],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>limit:<sp/>&apos;1mb&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>encoding:<sp/>contentType.parse(req).parameters.charset</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},<sp/>function<sp/>(err,<sp/>string)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(err)<sp/>return<sp/>next(err)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>req.text<sp/>=<sp/>string</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>next()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>now<sp/>access<sp/>req.text</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2raw-body_2_r_e_a_d_m_e_1autotoc_md2947">
+<title>Simple Koa example</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>contentType<sp/>=<sp/>require(&apos;content-type&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>getRawBody<sp/>=<sp/>require(&apos;raw-body&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>koa<sp/>=<sp/>require(&apos;koa&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>app<sp/>=<sp/>koa()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">app.use(function<sp/>*<sp/>(next)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>this.text<sp/>=<sp/>yield<sp/>getRawBody(this.req,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>length:<sp/>this.req.headers[&apos;content-length&apos;],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>limit:<sp/>&apos;1mb&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>encoding:<sp/>contentType.parse(this.req).parameters.charset</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>yield<sp/>next</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>now<sp/>access<sp/>this.text</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2raw-body_2_r_e_a_d_m_e_1autotoc_md2948">
+<title>Using as a promise</title><para>To use this library as a promise, simply omit the <computeroutput>callback</computeroutput> and a promise is returned, provided that a global <computeroutput>Promise</computeroutput> is defined.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>getRawBody<sp/>=<sp/>require(&apos;raw-body&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>server<sp/>=<sp/>http.createServer(function<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>getRawBody(req)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.then(function<sp/>(buf)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>res.statusCode<sp/>=<sp/>200</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>res.end(buf.length<sp/>+<sp/>&apos;<sp/>bytes<sp/>submitted&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>.catch(function<sp/>(err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>res.statusCode<sp/>=<sp/>500</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>res.end(err.message)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">server.listen(3000)</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2raw-body_2_r_e_a_d_m_e_1autotoc_md2949">
+<title>Using with TypeScript</title><para><programlisting filename=".ts"><codeline><highlight class="normal">import<sp/>*<sp/>as<sp/>getRawBody<sp/>from<sp/>&apos;raw-body&apos;;</highlight></codeline>
+<codeline><highlight class="normal">import<sp/>*<sp/>as<sp/>http<sp/>from<sp/>&apos;http&apos;;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>server<sp/>=<sp/>http.createServer((req,<sp/>res)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>getRawBody(req)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>.then((buf)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.statusCode<sp/>=<sp/>200;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.end(buf.length<sp/>+<sp/>&apos;<sp/>bytes<sp/>submitted&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>.catch((err)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.statusCode<sp/>=<sp/>err.statusCode;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.end(err.message);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>});</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">server.listen(3000);</highlight></codeline>
+</programlisting></para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2raw-body_2_r_e_a_d_m_e_1autotoc_md2950">
+<title>License</title><para>[MIT](LICENSE) </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/raw-body/README.md"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,160 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2finalhandler_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>finalhandler</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![NPM<sp/>Version][npm-image]][npm-url]</highlight></codeline>
+<codeline><highlight class="normal">[![NPM<sp/>Downloads][downloads-image]][downloads-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Node.js<sp/>Version][node-image]][node-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Build<sp/>Status][github-actions-ci-image]][github-actions-ci-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Test<sp/>Coverage][coveralls-image]][coveralls-url]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Node.js<sp/>function<sp/>to<sp/>invoke<sp/>as<sp/>the<sp/>final<sp/>step<sp/>to<sp/>respond<sp/>to<sp/>HTTP<sp/>request.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Installation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>a<sp/>[Node.js](https://nodejs.org/en/)<sp/>module<sp/>available<sp/>through<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[npm<sp/>registry](https://www.npmjs.com/).<sp/>Installation<sp/>is<sp/>done<sp/>using<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[`npm<sp/>install`<sp/>command](https://docs.npmjs.com/getting-started/installing-npm-packages-locally):</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```sh</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>finalhandler</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>API</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>finalhandler<sp/>=<sp/>require(&apos;finalhandler&apos;)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>finalhandler(req,<sp/>res,<sp/>[options])</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>function<sp/>to<sp/>be<sp/>invoked<sp/>as<sp/>the<sp/>final<sp/>step<sp/>for<sp/>the<sp/>given<sp/>`req`<sp/>and<sp/>`res`.</highlight></codeline>
+<codeline><highlight class="normal">This<sp/>function<sp/>is<sp/>to<sp/>be<sp/>invoked<sp/>as<sp/>`fn(err)`.<sp/>If<sp/>`err`<sp/>is<sp/>falsy,<sp/>the<sp/>handler<sp/>will</highlight></codeline>
+<codeline><highlight class="normal">write<sp/>out<sp/>a<sp/>404<sp/>response<sp/>to<sp/>the<sp/>`res`.<sp/>If<sp/>it<sp/>is<sp/>truthy,<sp/>an<sp/>error<sp/>response<sp/>will</highlight></codeline>
+<codeline><highlight class="normal">be<sp/>written<sp/>out<sp/>to<sp/>the<sp/>`res`<sp/>or<sp/>`res`<sp/>will<sp/>be<sp/>terminated<sp/>if<sp/>a<sp/>response<sp/>has<sp/>already</highlight></codeline>
+<codeline><highlight class="normal">started.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>an<sp/>error<sp/>is<sp/>written,<sp/>the<sp/>following<sp/>information<sp/>is<sp/>added<sp/>to<sp/>the<sp/>response:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>The<sp/>`res.statusCode`<sp/>is<sp/>set<sp/>from<sp/>`err.status`<sp/>(or<sp/>`err.statusCode`).<sp/>If</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>this<sp/>value<sp/>is<sp/>outside<sp/>the<sp/>4xx<sp/>or<sp/>5xx<sp/>range,<sp/>it<sp/>will<sp/>be<sp/>set<sp/>to<sp/>500.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>The<sp/>`res.statusMessage`<sp/>is<sp/>set<sp/>according<sp/>to<sp/>the<sp/>status<sp/>code.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>The<sp/>body<sp/>will<sp/>be<sp/>the<sp/>HTML<sp/>of<sp/>the<sp/>status<sp/>code<sp/>message<sp/>if<sp/>`env`<sp/>is</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>`&apos;production&apos;`,<sp/>otherwise<sp/>will<sp/>be<sp/>`err.stack`.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>Any<sp/>headers<sp/>specified<sp/>in<sp/>an<sp/>`err.headers`<sp/>object.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>final<sp/>handler<sp/>will<sp/>also<sp/>unpipe<sp/>anything<sp/>from<sp/>`req`<sp/>when<sp/>it<sp/>is<sp/>invoked.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>options.env</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">By<sp/>default,<sp/>the<sp/>environment<sp/>is<sp/>determined<sp/>by<sp/>`NODE_ENV`<sp/>variable,<sp/>but<sp/>it<sp/>can<sp/>be</highlight></codeline>
+<codeline><highlight class="normal">overridden<sp/>by<sp/>this<sp/>option.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>options.onerror</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Provide<sp/>a<sp/>function<sp/>to<sp/>be<sp/>called<sp/>with<sp/>the<sp/>`err`<sp/>when<sp/>it<sp/>exists.<sp/>Can<sp/>be<sp/>used<sp/>for</highlight></codeline>
+<codeline><highlight class="normal">writing<sp/>errors<sp/>to<sp/>a<sp/>central<sp/>location<sp/>without<sp/>excessive<sp/>function<sp/>generation.<sp/>Called</highlight></codeline>
+<codeline><highlight class="normal">as<sp/>`onerror(err,<sp/>req,<sp/>res)`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Examples</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>always<sp/>404</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>finalhandler<sp/>=<sp/>require(&apos;finalhandler&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>server<sp/>=<sp/>http.createServer(function<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>done<sp/>=<sp/>finalhandler(req,<sp/>res)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>done()</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">server.listen(3000)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>perform<sp/>simple<sp/>action</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>finalhandler<sp/>=<sp/>require(&apos;finalhandler&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>fs<sp/>=<sp/>require(&apos;fs&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>server<sp/>=<sp/>http.createServer(function<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>done<sp/>=<sp/>finalhandler(req,<sp/>res)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fs.readFile(&apos;index.html&apos;,<sp/>function<sp/>(err,<sp/>buf)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(err)<sp/>return<sp/>done(err)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.setHeader(&apos;Content-Type&apos;,<sp/>&apos;text/html&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.end(buf)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">server.listen(3000)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>use<sp/>with<sp/>middleware-style<sp/>functions</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>finalhandler<sp/>=<sp/>require(&apos;finalhandler&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>serveStatic<sp/>=<sp/>require(&apos;serve-static&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>serve<sp/>=<sp/>serveStatic(&apos;public&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>server<sp/>=<sp/>http.createServer(function<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>done<sp/>=<sp/>finalhandler(req,<sp/>res)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>serve(req,<sp/>res,<sp/>done)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">server.listen(3000)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>keep<sp/>log<sp/>of<sp/>all<sp/>errors</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>finalhandler<sp/>=<sp/>require(&apos;finalhandler&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>fs<sp/>=<sp/>require(&apos;fs&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>server<sp/>=<sp/>http.createServer(function<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>done<sp/>=<sp/>finalhandler(req,<sp/>res,<sp/>{<sp/>onerror:<sp/>logerror<sp/>})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fs.readFile(&apos;index.html&apos;,<sp/>function<sp/>(err,<sp/>buf)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(err)<sp/>return<sp/>done(err)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.setHeader(&apos;Content-Type&apos;,<sp/>&apos;text/html&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.end(buf)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">server.listen(3000)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>logerror<sp/>(err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.error(err.stack<sp/>||<sp/>err.toString())</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>License</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[MIT](LICENSE)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[npm-image]:<sp/>https://img.shields.io/npm/v/finalhandler.svg</highlight></codeline>
+<codeline><highlight class="normal">[npm-url]:<sp/>https://npmjs.org/package/finalhandler</highlight></codeline>
+<codeline><highlight class="normal">[node-image]:<sp/>https://img.shields.io/node/v/finalhandler.svg</highlight></codeline>
+<codeline><highlight class="normal">[node-url]:<sp/>https://nodejs.org/en/download</highlight></codeline>
+<codeline><highlight class="normal">[coveralls-image]:<sp/>https://img.shields.io/coveralls/pillarjs/finalhandler.svg</highlight></codeline>
+<codeline><highlight class="normal">[coveralls-url]:<sp/>https://coveralls.io/r/pillarjs/finalhandler?branch=master</highlight></codeline>
+<codeline><highlight class="normal">[downloads-image]:<sp/>https://img.shields.io/npm/dm/finalhandler.svg</highlight></codeline>
+<codeline><highlight class="normal">[downloads-url]:<sp/>https://npmjs.org/package/finalhandler</highlight></codeline>
+<codeline><highlight class="normal">[github-actions-ci-image]:<sp/>https://img.shields.io/github/workflow/status/pillarjs/finalhandler/ci/master?label=ci</highlight></codeline>
+<codeline><highlight class="normal">[github-actions-ci-url]:<sp/>https://github.com/jshttp/pillarjs/finalhandler?query=workflow%3Aci</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/finalhandler/README.md"/>
+  </compounddef>
+</doxygen>

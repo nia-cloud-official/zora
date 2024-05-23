@@ -1,0 +1,31 @@
+.TH "md_backend_2node__modules_2inherits_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2inherits_2_r_e_a_d_m_e \- README 
+.PP
+Browser-friendly inheritance fully compatible with standard node\&.js \fRinherits\fP\&.
+.PP
+This package exports standard \fRinherits\fP from node\&.js \fRutil\fP module in node environment, but also provides alternative browser-friendly implementation through \fRbrowser field\fP\&. Alternative implementation is a literal copy of standard one located in standalone module to avoid requiring of \fRutil\fP\&. It also has a shim for old browsers with no \fRObject\&.create\fP support\&.
+.PP
+While keeping you sure you are using standard \fRinherits\fP implementation in node\&.js environment, it allows bundlers such as \fRbrowserify\fP to not include full \fRutil\fP package to your client code if all you need is just \fRinherits\fP function\&. It worth, because browser shim for \fRutil\fP package is large and \fRinherits\fP is often the single function you need from it\&.
+.PP
+It's recommended to use this package instead of `require('util')\&.inherits` for any code that has chances to be used not only in node\&.js but in browser too\&.
+.SS "usage"
+.PP
+.nf
+var inherits = require('inherits');
+// then use exactly as the standard one
+.fi
+.PP
+.SS "note on version ~1\&.0"
+Version ~1\&.0 had completely different motivation and is not compatible neither with 2\&.0 nor with standard node\&.js \fRinherits\fP\&.
+.PP
+If you are using version ~1\&.0 and planning to switch to ~2\&.0, be careful:
+.PP
+.IP "\(bu" 2
+new version uses \fRsuper_\fP instead of \fRsuper\fP for referencing superclass
+.IP "\(bu" 2
+new version overwrites current prototype while old one preserves any existing fields on it 
+.PP
+

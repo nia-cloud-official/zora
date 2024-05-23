@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2p-map_2readme" kind="page">
+    <compoundname>md_backend_2node__modules_2p-map_2readme</compoundname>
+    <title>p-map &lt;a href=&quot;https://travis-ci.org/sindresorhus/p-map&quot; &gt;&lt;img src=&quot;https://travis-ci.org/sindresorhus/p-map.svg?branch=master&quot; alt=&quot;Build Status&quot;/&gt;&lt;/a&gt;</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2p-map_2readme_1autotoc_md2641"/> <blockquote><para><zwj/>Map over promises concurrently </para>
+</blockquote></para>
+<para>Useful when you need to run promise-returning &amp; async functions multiple times with different inputs concurrently.</para>
+<sect1 id="md_backend_2node__modules_2p-map_2readme_1autotoc_md2642">
+<title>Install</title><para><programlisting><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>p-map</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2p-map_2readme_1autotoc_md2643">
+<title>Usage</title><para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>pMap<sp/>=<sp/>require(&apos;p-map&apos;);</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>got<sp/>=<sp/>require(&apos;got&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>sites<sp/>=<sp/>[</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>getWebsiteFromUsername(&apos;https://sindresorhus&apos;),<sp/>//=&gt;<sp/>Promise</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&apos;https://ava.li&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&apos;https://github.com&apos;</highlight></codeline>
+<codeline><highlight class="normal">];</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">(async<sp/>()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>const<sp/>mapper<sp/>=<sp/>async<sp/>site<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>const<sp/>{requestUrl}<sp/>=<sp/>await<sp/>got.head(site);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>requestUrl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>const<sp/>result<sp/>=<sp/>await<sp/>pMap(sites,<sp/>mapper,<sp/>{concurrency:<sp/>2});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(result);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//=&gt;<sp/>[&apos;https://sindresorhus.com/&apos;,<sp/>&apos;https://ava.li/&apos;,<sp/>&apos;https://github.com/&apos;]</highlight></codeline>
+<codeline><highlight class="normal">})();</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2p-map_2readme_1autotoc_md2644">
+<title>API</title><sect2 id="md_backend_2node__modules_2p-map_2readme_1autotoc_md2645">
+<title>pMap(input, mapper, options?)</title><para>Returns a <computeroutput>Promise</computeroutput> that is fulfilled when all promises in <computeroutput>input</computeroutput> and ones returned from <computeroutput>mapper</computeroutput> are fulfilled, or rejects if any of the promises reject. The fulfilled value is an <computeroutput>Array</computeroutput> of the fulfilled values returned from <computeroutput>mapper</computeroutput> in <computeroutput>input</computeroutput> order.</para>
+<sect3 id="md_backend_2node__modules_2p-map_2readme_1autotoc_md2646">
+<title>input</title><para>Type: <computeroutput>Iterable&lt;Promise | unknown&gt;</computeroutput></para>
+<para>Iterated over concurrently in the <computeroutput>mapper</computeroutput> function.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2p-map_2readme_1autotoc_md2647">
+<title>mapper(element, index)</title><para>Type: <computeroutput>Function</computeroutput></para>
+<para>Expected to return a <computeroutput>Promise</computeroutput> or value.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2p-map_2readme_1autotoc_md2648">
+<title>options</title><para>Type: <computeroutput>object</computeroutput></para>
+<sect4 id="md_backend_2node__modules_2p-map_2readme_1autotoc_md2649">
+<title>concurrency</title><para>Type: <computeroutput>number</computeroutput> (Integer)\ Default: <computeroutput>Infinity</computeroutput>\ Minimum: <computeroutput>1</computeroutput></para>
+<para>Number of concurrently pending promises returned by <computeroutput>mapper</computeroutput>.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2p-map_2readme_1autotoc_md2650">
+<title>stopOnError</title><para>Type: <computeroutput>boolean</computeroutput>\ Default: <computeroutput>true</computeroutput></para>
+<para>When set to <computeroutput>false</computeroutput>, instead of stopping when a promise rejects, it will wait for all the promises to settle and then reject with an <ulink url="https://github.com/sindresorhus/aggregate-error">aggregated error</ulink> containing all the errors from the rejected promises.</para>
+</sect4>
+</sect3>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2p-map_2readme_1autotoc_md2651">
+<title>p-map for enterprise</title><para>Available as part of the Tidelift Subscription.</para>
+<para>The maintainers of p-map and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use. <ulink url="https://tidelift.com/subscription/pkg/npm-p-map?utm_source=npm-p-map&amp;utm_medium=referral&amp;utm_campaign=enterprise&amp;utm_term=repo">Learn more.</ulink></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2p-map_2readme_1autotoc_md2652">
+<title>Related</title><para><itemizedlist>
+<listitem><para><ulink url="https://github.com/sindresorhus/p-all">p-all</ulink> - Run promise-returning &amp; async functions concurrently with optional limited concurrency</para>
+</listitem><listitem><para><ulink url="https://github.com/sindresorhus/p-filter">p-filter</ulink> - Filter promises concurrently</para>
+</listitem><listitem><para><ulink url="https://github.com/sindresorhus/p-times">p-times</ulink> - Run promise-returning &amp; async functions a specific number of times concurrently</para>
+</listitem><listitem><para><ulink url="https://github.com/sindresorhus/p-props">p-props</ulink> - Like <computeroutput>Promise.all()</computeroutput> but for <computeroutput>Map</computeroutput> and <computeroutput>Object</computeroutput></para>
+</listitem><listitem><para><ulink url="https://github.com/sindresorhus/p-map-series">p-map-series</ulink> - Map over promises serially</para>
+</listitem><listitem><para><ulink url="https://github.com/sindresorhus/p-queue">p-queue</ulink> - Promise queue with concurrency control</para>
+</listitem><listitem><para><ulink url="https://github.com/sindresorhus/promise-fun">More…</ulink> </para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/p-map/readme.md"/>
+  </compounddef>
+</doxygen>

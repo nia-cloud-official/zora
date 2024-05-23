@@ -1,0 +1,73 @@
+\chapter{Tools}
+\hypertarget{md_backend_2node__modules_2node-addon-api_2tools_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2node-addon-api_2tools_2_r_e_a_d_m_e}\index{Tools@{Tools}}
+\label{md_backend_2node__modules_2node-addon-api_2tools_2_r_e_a_d_m_e_autotoc_md2322}%
+\Hypertarget{md_backend_2node__modules_2node-addon-api_2tools_2_r_e_a_d_m_e_autotoc_md2322}%
+ \hypertarget{md_backend_2node__modules_2node-addon-api_2tools_2_r_e_a_d_m_e_autotoc_md2323}{}\doxysection{\texorpdfstring{clang-\/format}{clang-\/format}}\label{md_backend_2node__modules_2node-addon-api_2tools_2_r_e_a_d_m_e_autotoc_md2323}
+The clang-\/format checking tools is designed to check changed lines of code compared to given git-\/refs.\hypertarget{md_backend_2node__modules_2node-addon-api_2tools_2_r_e_a_d_m_e_autotoc_md2324}{}\doxysection{\texorpdfstring{Migration Script}{Migration Script}}\label{md_backend_2node__modules_2node-addon-api_2tools_2_r_e_a_d_m_e_autotoc_md2324}
+The migration tool is designed to reduce repetitive work in the migration process. However, the script is not aiming to convert every thing for you. There are usually some small fixes and major reconstruction required.\hypertarget{md_backend_2node__modules_2node-addon-api_2tools_2_r_e_a_d_m_e_autotoc_md2325}{}\doxysubsection{\texorpdfstring{How To Use}{How To Use}}\label{md_backend_2node__modules_2node-addon-api_2tools_2_r_e_a_d_m_e_autotoc_md2325}
+To run the conversion script, first make sure you have the latest {\ttfamily node-\/addon-\/api} in your {\ttfamily node\+\_\+modules} directory. 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ node-\/addon-\/api}
+
+\end{DoxyCode}
+
+
+Then run the script passing your project directory 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{node\ ./node\_modules/node-\/addon-\/api/tools/conversion.js\ ./}
+
+\end{DoxyCode}
+
+
+After finish, recompile and debug things that are missed by the script.\hypertarget{md_backend_2node__modules_2node-addon-api_2tools_2_r_e_a_d_m_e_autotoc_md2326}{}\doxysubsection{\texorpdfstring{Quick Fixes}{Quick Fixes}}\label{md_backend_2node__modules_2node-addon-api_2tools_2_r_e_a_d_m_e_autotoc_md2326}
+Here is the list of things that can be fixed easily.
+\begin{DoxyEnumerate}
+\item Change your methods\textquotesingle{} return value to void if it doesn\textquotesingle{}t return value to Java\+Script.
+\item Use {\ttfamily .} to access attribute or to invoke member function in \doxylink{class_napi_1_1_object}{Napi\+::\+Object} instead of {\ttfamily -\/\texorpdfstring{$>$}{>}}.
+\item {\ttfamily Napi\+::\+New(env, value);} to \`{}\+Napi\+::\mbox{[}Type\mbox{]}New(env, value);
+\end{DoxyEnumerate}\hypertarget{md_backend_2node__modules_2node-addon-api_2tools_2_r_e_a_d_m_e_autotoc_md2327}{}\doxysubsection{\texorpdfstring{Major Reconstructions}{Major Reconstructions}}\label{md_backend_2node__modules_2node-addon-api_2tools_2_r_e_a_d_m_e_autotoc_md2327}
+The implementation of {\ttfamily \doxylink{class_napi_1_1_object_wrap}{Napi\+::\+Object\+Wrap}} is significantly different from NAN\textquotesingle{}s. {\ttfamily \doxylink{class_napi_1_1_object_wrap}{Napi\+::\+Object\+Wrap}} takes a pointer to the wrapped object and creates a reference to the wrapped object inside Object\+Wrap constructor. {\ttfamily \doxylink{class_napi_1_1_object_wrap}{Napi\+::\+Object\+Wrap}} also associates wrapped object\textquotesingle{}s instance methods to Javascript module instead of static methods like NAN.
+
+So if you use Nan\+::\+Object\+Wrap in your module, you will need to execute the following steps.
+
+
+\begin{DoxyEnumerate}
+\item Convert your \mbox{[}Class\+Name\mbox{]}New function to a constructor function that takes a {\ttfamily \doxylink{class_napi_1_1_callback_info}{Napi\+::\+Callback\+Info}}. Declare it as 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[ClassName](const\ Napi::CallbackInfo\&\ info);}
+
+\end{DoxyCode}
+ and define it as 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[ClassName]::[ClassName](const\ Napi::CallbackInfo\&\ info)\ :\ Napi::ObjectWrap<[ClassName]>(info)\{}
+\DoxyCodeLine{\ \ ...}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ This way, the {\ttfamily \doxylink{class_napi_1_1_object_wrap}{Napi\+::\+Object\+Wrap}} constructor will be invoked after the object has been instantiated and {\ttfamily \doxylink{class_napi_1_1_object_wrap}{Napi\+::\+Object\+Wrap}} can use the {\ttfamily this} pointer to create a reference to the wrapped object.
+\item Move your original constructor code into the new constructor. Delete your original constructor.
+\item In your class initialization function, associate native methods in the following way. 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Napi::FunctionReference\ constructor;}
+\DoxyCodeLine{}
+\DoxyCodeLine{void\ [ClassName]::Init(Napi::Env\ env,\ Napi::Object\ exports,\ Napi::Object\ module)\ \{}
+\DoxyCodeLine{\ \ Napi::HandleScope\ scope(env);}
+\DoxyCodeLine{\ \ Napi::Function\ ctor\ =\ DefineClass(env,\ "{}Canvas"{},\ \{}
+\DoxyCodeLine{\ \ \ \ InstanceMethod<\&[ClassName]::Func1>("{}Func1"{}),}
+\DoxyCodeLine{\ \ \ \ InstanceMethod<\&[ClassName]::Func2>("{}Func2"{}),}
+\DoxyCodeLine{\ \ \ \ InstanceAccessor<\&[ClassName]::ValueGetter>("{}Value"{}),}
+\DoxyCodeLine{\ \ \ \ StaticMethod<\&[ClassName]::StaticMethod>("{}MethodName"{}),}
+\DoxyCodeLine{\ \ \ \ InstanceValue("{}Value"{},\ Napi::[Type]::New(env,\ value)),}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ constructor\ =\ Napi::Persistent(ctor);}
+\DoxyCodeLine{\ \ constructor\ .SuppressDestruct();}
+\DoxyCodeLine{\ \ exports.Set("{}[ClassName]"{},\ ctor);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+\item In function where you need to Unwrap the Object\+Wrap in NAN like {\ttfamily \mbox{[}Class\+Name\mbox{]}\texorpdfstring{$\ast$}{*} native = Nan\+::\+Object\+Wrap\+::\+Unwrap\texorpdfstring{$<$}{<}\mbox{[}Class\+Name\mbox{]}\texorpdfstring{$>$}{>}(info.\+This());}, use {\ttfamily this} pointer directly as the unwrapped object as each Object\+Wrap instance is associated with a unique object instance.
+\end{DoxyEnumerate}
+
+If you still find issues after following this guide, please leave us an issue describing your problem and we will try to resolve it. 

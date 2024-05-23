@@ -1,0 +1,494 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2agent-base_2node__modules_2debug_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>debug</highlight></codeline>
+<codeline><highlight class="normal">[![Build<sp/>Status](https://travis-ci.org/debug-js/debug.svg?branch=master)](https://travis-ci.org/debug-js/debug)<sp/><sp/>[![Coverage<sp/>Status](https://coveralls.io/repos/github/debug-js/debug/badge.svg?branch=master)](https://coveralls.io/github/debug-js/debug?branch=master)<sp/><sp/>[![Slack](https://visionmedia-community-slackin.now.sh/badge.svg)](https://visionmedia-community-slackin.now.sh/)<sp/>[![OpenCollective](https://opencollective.com/debug/backers/badge.svg)](#backers)</highlight></codeline>
+<codeline><highlight class="normal">[![OpenCollective](https://opencollective.com/debug/sponsors/badge.svg)](#sponsors)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;img<sp/>width=&quot;647&quot;<sp/>src=&quot;https://user-images.githubusercontent.com/71256/29091486-fa38524c-7c37-11e7-895f-e7ec8e1039b6.png&quot;&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>tiny<sp/>JavaScript<sp/>debugging<sp/>utility<sp/>modelled<sp/>after<sp/>Node.js<sp/>core&apos;s<sp/>debugging</highlight></codeline>
+<codeline><highlight class="normal">technique.<sp/>Works<sp/>in<sp/>Node.js<sp/>and<sp/>web<sp/>browsers.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Installation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```bash</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>debug</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Usage</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`debug`<sp/>exposes<sp/>a<sp/>function;<sp/>simply<sp/>pass<sp/>this<sp/>function<sp/>the<sp/>name<sp/>of<sp/>your<sp/>module,<sp/>and<sp/>it<sp/>will<sp/>return<sp/>a<sp/>decorated<sp/>version<sp/>of<sp/>`console.error`<sp/>for<sp/>you<sp/>to<sp/>pass<sp/>debug<sp/>statements<sp/>to.<sp/>This<sp/>will<sp/>allow<sp/>you<sp/>to<sp/>toggle<sp/>the<sp/>debug<sp/>output<sp/>for<sp/>different<sp/>parts<sp/>of<sp/>your<sp/>module<sp/>as<sp/>well<sp/>as<sp/>the<sp/>module<sp/>as<sp/>a<sp/>whole.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Example<sp/>[_app.js_](./examples/node/app.js):</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>debug<sp/>=<sp/>require(&apos;debug&apos;)(&apos;http&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>,<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>,<sp/>name<sp/>=<sp/>&apos;My<sp/>App&apos;;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>fake<sp/>app</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">debug(&apos;booting<sp/>%o&apos;,<sp/>name);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">http.createServer(function(req,<sp/>res){</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>debug(req.method<sp/>+<sp/>&apos;<sp/>&apos;<sp/>+<sp/>req.url);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.end(&apos;hello\n&apos;);</highlight></codeline>
+<codeline><highlight class="normal">}).listen(3000,<sp/>function(){</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>debug(&apos;listening&apos;);</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>fake<sp/>worker<sp/>of<sp/>some<sp/>kind</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">require(&apos;./worker&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Example<sp/>[_worker.js_](./examples/node/worker.js):</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>a<sp/>=<sp/>require(&apos;debug&apos;)(&apos;worker:a&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>,<sp/>b<sp/>=<sp/>require(&apos;debug&apos;)(&apos;worker:b&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>work()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>a(&apos;doing<sp/>lots<sp/>of<sp/>uninteresting<sp/>work&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>setTimeout(work,<sp/>Math.random()<sp/>*<sp/>1000);</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">work();</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>workb()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>b(&apos;doing<sp/>some<sp/>work&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>setTimeout(workb,<sp/>Math.random()<sp/>*<sp/>2000);</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">workb();</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`DEBUG`<sp/>environment<sp/>variable<sp/>is<sp/>then<sp/>used<sp/>to<sp/>enable<sp/>these<sp/>based<sp/>on<sp/>space<sp/>or</highlight></codeline>
+<codeline><highlight class="normal">comma-delimited<sp/>names.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Here<sp/>are<sp/>some<sp/>examples:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;img<sp/>width=&quot;647&quot;<sp/>alt=&quot;screen<sp/>shot<sp/>2017-08-08<sp/>at<sp/>12<sp/>53<sp/>04<sp/>pm&quot;<sp/>src=&quot;https://user-images.githubusercontent.com/71256/29091703-a6302cdc-7c38-11e7-8304-7c0b3bc600cd.png&quot;&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;img<sp/>width=&quot;647&quot;<sp/>alt=&quot;screen<sp/>shot<sp/>2017-08-08<sp/>at<sp/>12<sp/>53<sp/>38<sp/>pm&quot;<sp/>src=&quot;https://user-images.githubusercontent.com/71256/29091700-a62a6888-7c38-11e7-800b-db911291ca2b.png&quot;&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;img<sp/>width=&quot;647&quot;<sp/>alt=&quot;screen<sp/>shot<sp/>2017-08-08<sp/>at<sp/>12<sp/>53<sp/>25<sp/>pm&quot;<sp/>src=&quot;https://user-images.githubusercontent.com/71256/29091701-a62ea114-7c38-11e7-826a-2692bedca740.png&quot;&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Windows<sp/>command<sp/>prompt<sp/>notes</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>CMD</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">On<sp/>Windows<sp/>the<sp/>environment<sp/>variable<sp/>is<sp/>set<sp/>using<sp/>the<sp/>`set`<sp/>command.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```cmd</highlight></codeline>
+<codeline><highlight class="normal">set<sp/>DEBUG=*,-not_this</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Example:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```cmd</highlight></codeline>
+<codeline><highlight class="normal">set<sp/>DEBUG=*<sp/>&amp;<sp/>node<sp/>app.js</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>PowerShell<sp/>(VS<sp/>Code<sp/>default)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">PowerShell<sp/>uses<sp/>different<sp/>syntax<sp/>to<sp/>set<sp/>environment<sp/>variables.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```cmd</highlight></codeline>
+<codeline><highlight class="normal">$env:DEBUG<sp/>=<sp/>&quot;*,-not_this&quot;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Example:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```cmd</highlight></codeline>
+<codeline><highlight class="normal">$env:DEBUG=&apos;app&apos;;node<sp/>app.js</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Then,<sp/>run<sp/>the<sp/>program<sp/>to<sp/>be<sp/>debugged<sp/>as<sp/>usual.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">npm<sp/>script<sp/>example:</highlight></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;windowsDebug&quot;:<sp/>&quot;@powershell<sp/>-Command<sp/>$env:DEBUG=&apos;*&apos;;node<sp/>app.js&quot;,</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Namespace<sp/>Colors</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Every<sp/>debug<sp/>instance<sp/>has<sp/>a<sp/>color<sp/>generated<sp/>for<sp/>it<sp/>based<sp/>on<sp/>its<sp/>namespace<sp/>name.</highlight></codeline>
+<codeline><highlight class="normal">This<sp/>helps<sp/>when<sp/>visually<sp/>parsing<sp/>the<sp/>debug<sp/>output<sp/>to<sp/>identify<sp/>which<sp/>debug<sp/>instance</highlight></codeline>
+<codeline><highlight class="normal">a<sp/>debug<sp/>line<sp/>belongs<sp/>to.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Node.js</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">In<sp/>Node.js,<sp/>colors<sp/>are<sp/>enabled<sp/>when<sp/>stderr<sp/>is<sp/>a<sp/>TTY.<sp/>You<sp/>also<sp/>_should_<sp/>install</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>[`supports-color`](https://npmjs.org/supports-color)<sp/>module<sp/>alongside<sp/>debug,</highlight></codeline>
+<codeline><highlight class="normal">otherwise<sp/>debug<sp/>will<sp/>only<sp/>use<sp/>a<sp/>small<sp/>handful<sp/>of<sp/>basic<sp/>colors.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;img<sp/>width=&quot;521&quot;<sp/>src=&quot;https://user-images.githubusercontent.com/71256/29092181-47f6a9e6-7c3a-11e7-9a14-1928d8a711cd.png&quot;&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Web<sp/>Browser</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Colors<sp/>are<sp/>also<sp/>enabled<sp/>on<sp/>&quot;Web<sp/>Inspectors&quot;<sp/>that<sp/>understand<sp/>the<sp/>`%c`<sp/>formatting</highlight></codeline>
+<codeline><highlight class="normal">option.<sp/>These<sp/>are<sp/>WebKit<sp/>web<sp/>inspectors,<sp/>Firefox<sp/>([since<sp/>version</highlight></codeline>
+<codeline><highlight class="normal">31](https://hacks.mozilla.org/2014/05/editable-box-model-multiple-selection-sublime-text-keys-much-more-firefox-developer-tools-episode-31/))</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>the<sp/>Firebug<sp/>plugin<sp/>for<sp/>Firefox<sp/>(any<sp/>version).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;img<sp/>width=&quot;524&quot;<sp/>src=&quot;https://user-images.githubusercontent.com/71256/29092033-b65f9f2e-7c39-11e7-8e32-f6f0d8e865c1.png&quot;&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Millisecond<sp/>diff</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>actively<sp/>developing<sp/>an<sp/>application<sp/>it<sp/>can<sp/>be<sp/>useful<sp/>to<sp/>see<sp/>when<sp/>the<sp/>time<sp/>spent<sp/>between<sp/>one<sp/>`debug()`<sp/>call<sp/>and<sp/>the<sp/>next.<sp/>Suppose<sp/>for<sp/>example<sp/>you<sp/>invoke<sp/>`debug()`<sp/>before<sp/>requesting<sp/>a<sp/>resource,<sp/>and<sp/>after<sp/>as<sp/>well,<sp/>the<sp/>&quot;+NNNms&quot;<sp/>will<sp/>show<sp/>you<sp/>how<sp/>much<sp/>time<sp/>was<sp/>spent<sp/>between<sp/>calls.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;img<sp/>width=&quot;647&quot;<sp/>src=&quot;https://user-images.githubusercontent.com/71256/29091486-fa38524c-7c37-11e7-895f-e7ec8e1039b6.png&quot;&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>stdout<sp/>is<sp/>not<sp/>a<sp/>TTY,<sp/>`Date#toISOString()`<sp/>is<sp/>used,<sp/>making<sp/>it<sp/>more<sp/>useful<sp/>for<sp/>logging<sp/>the<sp/>debug<sp/>information<sp/>as<sp/>shown<sp/>below:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;img<sp/>width=&quot;647&quot;<sp/>src=&quot;https://user-images.githubusercontent.com/71256/29091956-6bd78372-7c39-11e7-8c55-c948396d6edd.png&quot;&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Conventions</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you&apos;re<sp/>using<sp/>this<sp/>in<sp/>one<sp/>or<sp/>more<sp/>of<sp/>your<sp/>libraries,<sp/>you<sp/>_should_<sp/>use<sp/>the<sp/>name<sp/>of<sp/>your<sp/>library<sp/>so<sp/>that<sp/>developers<sp/>may<sp/>toggle<sp/>debugging<sp/>as<sp/>desired<sp/>without<sp/>guessing<sp/>names.<sp/>If<sp/>you<sp/>have<sp/>more<sp/>than<sp/>one<sp/>debuggers<sp/>you<sp/>_should_<sp/>prefix<sp/>them<sp/>with<sp/>your<sp/>library<sp/>name<sp/>and<sp/>use<sp/>&quot;:&quot;<sp/>to<sp/>separate<sp/>features.<sp/>For<sp/>example<sp/>&quot;bodyParser&quot;<sp/>from<sp/>Connect<sp/>would<sp/>then<sp/>be<sp/>&quot;connect:bodyParser&quot;.<sp/><sp/>If<sp/>you<sp/>append<sp/>a<sp/>&quot;*&quot;<sp/>to<sp/>the<sp/>end<sp/>of<sp/>your<sp/>name,<sp/>it<sp/>will<sp/>always<sp/>be<sp/>enabled<sp/>regardless<sp/>of<sp/>the<sp/>setting<sp/>of<sp/>the<sp/>DEBUG<sp/>environment<sp/>variable.<sp/><sp/>You<sp/>can<sp/>then<sp/>use<sp/>it<sp/>for<sp/>normal<sp/>output<sp/>as<sp/>well<sp/>as<sp/>debug<sp/>output.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Wildcards</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`*`<sp/>character<sp/>may<sp/>be<sp/>used<sp/>as<sp/>a<sp/>wildcard.<sp/>Suppose<sp/>for<sp/>example<sp/>your<sp/>library<sp/>has</highlight></codeline>
+<codeline><highlight class="normal">debuggers<sp/>named<sp/>&quot;connect:bodyParser&quot;,<sp/>&quot;connect:compress&quot;,<sp/>&quot;connect:session&quot;,</highlight></codeline>
+<codeline><highlight class="normal">instead<sp/>of<sp/>listing<sp/>all<sp/>three<sp/>with</highlight></codeline>
+<codeline><highlight class="normal">`DEBUG=connect:bodyParser,connect:compress,connect:session`,<sp/>you<sp/>may<sp/>simply<sp/>do</highlight></codeline>
+<codeline><highlight class="normal">`DEBUG=connect:*`,<sp/>or<sp/>to<sp/>run<sp/>everything<sp/>using<sp/>this<sp/>module<sp/>simply<sp/>use<sp/>`DEBUG=*`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>also<sp/>exclude<sp/>specific<sp/>debuggers<sp/>by<sp/>prefixing<sp/>them<sp/>with<sp/>a<sp/>&quot;-&quot;<sp/>character.</highlight></codeline>
+<codeline><highlight class="normal">For<sp/>example,<sp/>`DEBUG=*,-connect:*`<sp/>would<sp/>include<sp/>all<sp/>debuggers<sp/>except<sp/>those</highlight></codeline>
+<codeline><highlight class="normal">starting<sp/>with<sp/>&quot;connect:&quot;.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Environment<sp/>Variables</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>running<sp/>through<sp/>Node.js,<sp/>you<sp/>can<sp/>set<sp/>a<sp/>few<sp/>environment<sp/>variables<sp/>that<sp/>will</highlight></codeline>
+<codeline><highlight class="normal">change<sp/>the<sp/>behavior<sp/>of<sp/>the<sp/>debug<sp/>logging:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">|<sp/>Name<sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Purpose<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|-----------|-------------------------------------------------|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`DEBUG`<sp/><sp/><sp/>|<sp/>Enables/disables<sp/>specific<sp/>debugging<sp/>namespaces.<sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`DEBUG_HIDE_DATE`<sp/>|<sp/>Hide<sp/>date<sp/>from<sp/>debug<sp/>output<sp/>(non-TTY).<sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`DEBUG_COLORS`|<sp/>Whether<sp/>or<sp/>not<sp/>to<sp/>use<sp/>colors<sp/>in<sp/>the<sp/>debug<sp/>output.<sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`DEBUG_DEPTH`<sp/>|<sp/>Object<sp/>inspection<sp/>depth.<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`DEBUG_SHOW_HIDDEN`<sp/>|<sp/>Shows<sp/>hidden<sp/>properties<sp/>on<sp/>inspected<sp/>objects.<sp/>|</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">__Note:__<sp/>The<sp/>environment<sp/>variables<sp/>beginning<sp/>with<sp/>`DEBUG_`<sp/>end<sp/>up<sp/>being</highlight></codeline>
+<codeline><highlight class="normal">converted<sp/>into<sp/>an<sp/>Options<sp/>object<sp/>that<sp/>gets<sp/>used<sp/>with<sp/>`%o`/`%O`<sp/>formatters.</highlight></codeline>
+<codeline><highlight class="normal">See<sp/>the<sp/>Node.js<sp/>documentation<sp/>for</highlight></codeline>
+<codeline><highlight class="normal">[`util.inspect()`](https://nodejs.org/api/util.html#util_util_inspect_object_options)</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>the<sp/>complete<sp/>list.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Formatters</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Debug<sp/>uses<sp/>[printf-style](https://wikipedia.org/wiki/Printf_format_string)<sp/>formatting.</highlight></codeline>
+<codeline><highlight class="normal">Below<sp/>are<sp/>the<sp/>officially<sp/>supported<sp/>formatters:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">|<sp/>Formatter<sp/>|<sp/>Representation<sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|-----------|----------------|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`%O`<sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Pretty-print<sp/>an<sp/>Object<sp/>on<sp/>multiple<sp/>lines.<sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`%o`<sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Pretty-print<sp/>an<sp/>Object<sp/>all<sp/>on<sp/>a<sp/>single<sp/>line.<sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`%s`<sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>String.<sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`%d`<sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Number<sp/>(both<sp/>integer<sp/>and<sp/>float).<sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`%j`<sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>JSON.<sp/>Replaced<sp/>with<sp/>the<sp/>string<sp/>&apos;[Circular]&apos;<sp/>if<sp/>the<sp/>argument<sp/>contains<sp/>circular<sp/>references.<sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>`%%`<sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Single<sp/>percent<sp/>sign<sp/>(&apos;%&apos;).<sp/>This<sp/>does<sp/>not<sp/>consume<sp/>an<sp/>argument.<sp/>|</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Custom<sp/>formatters</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>add<sp/>custom<sp/>formatters<sp/>by<sp/>extending<sp/>the<sp/>`debug.formatters`<sp/>object.</highlight></codeline>
+<codeline><highlight class="normal">For<sp/>example,<sp/>if<sp/>you<sp/>wanted<sp/>to<sp/>add<sp/>support<sp/>for<sp/>rendering<sp/>a<sp/>Buffer<sp/>as<sp/>hex<sp/>with</highlight></codeline>
+<codeline><highlight class="normal">`%h`,<sp/>you<sp/>could<sp/>do<sp/>something<sp/>like:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>createDebug<sp/>=<sp/>require(&apos;debug&apos;)</highlight></codeline>
+<codeline><highlight class="normal">createDebug.formatters.h<sp/>=<sp/>(v)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>v.toString(&apos;hex&apos;)</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>…elsewhere</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>debug<sp/>=<sp/>createDebug(&apos;foo&apos;)</highlight></codeline>
+<codeline><highlight class="normal">debug(&apos;this<sp/>is<sp/>hex:<sp/>%h&apos;,<sp/>new<sp/>Buffer(&apos;hello<sp/>world&apos;))</highlight></codeline>
+<codeline><highlight class="normal">//<sp/><sp/><sp/>foo<sp/>this<sp/>is<sp/>hex:<sp/>68656c6c6f20776f726c6421<sp/>+0ms</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Browser<sp/>Support</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>build<sp/>a<sp/>browser-ready<sp/>script<sp/>using<sp/>[browserify](https://github.com/substack/node-browserify),</highlight></codeline>
+<codeline><highlight class="normal">or<sp/>just<sp/>use<sp/>the<sp/>[browserify-as-a-service](https://wzrd.in/)<sp/>[build](https://wzrd.in/standalone/debug@latest),</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>you<sp/>don&apos;t<sp/>want<sp/>to<sp/>build<sp/>it<sp/>yourself.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Debug&apos;s<sp/>enable<sp/>state<sp/>is<sp/>currently<sp/>persisted<sp/>by<sp/>`localStorage`.</highlight></codeline>
+<codeline><highlight class="normal">Consider<sp/>the<sp/>situation<sp/>shown<sp/>below<sp/>where<sp/>you<sp/>have<sp/>`worker:a`<sp/>and<sp/>`worker:b`,</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>wish<sp/>to<sp/>debug<sp/>both.<sp/>You<sp/>can<sp/>enable<sp/>this<sp/>using<sp/>`localStorage.debug`:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">localStorage.debug<sp/>=<sp/>&apos;worker:*&apos;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">And<sp/>then<sp/>refresh<sp/>the<sp/>page.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">a<sp/>=<sp/>debug(&apos;worker:a&apos;);</highlight></codeline>
+<codeline><highlight class="normal">b<sp/>=<sp/>debug(&apos;worker:b&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">setInterval(function(){</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>a(&apos;doing<sp/>some<sp/>work&apos;);</highlight></codeline>
+<codeline><highlight class="normal">},<sp/>1000);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">setInterval(function(){</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>b(&apos;doing<sp/>some<sp/>work&apos;);</highlight></codeline>
+<codeline><highlight class="normal">},<sp/>1200);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">In<sp/>Chromium-based<sp/>web<sp/>browsers<sp/>(e.g.<sp/>Brave,<sp/>Chrome,<sp/>and<sp/>Electron),<sp/>the<sp/>JavaScript<sp/>console<sp/>will—by<sp/>default—only<sp/>show<sp/>messages<sp/>logged<sp/>by<sp/>`debug`<sp/>if<sp/>the<sp/>&quot;Verbose&quot;<sp/>log<sp/>level<sp/>is<sp/>_enabled_.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;img<sp/>width=&quot;647&quot;<sp/>src=&quot;https://user-images.githubusercontent.com/7143133/152083257-29034707-c42c-4959-8add-3cee850e6fcf.png&quot;&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Output<sp/>streams</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>By<sp/>default<sp/>`debug`<sp/>will<sp/>log<sp/>to<sp/>stderr,<sp/>however<sp/>this<sp/>can<sp/>be<sp/>configured<sp/>per-namespace<sp/>by<sp/>overriding<sp/>the<sp/>`log`<sp/>method:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Example<sp/>[_stdout.js_](./examples/node/stdout.js):</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>debug<sp/>=<sp/>require(&apos;debug&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>error<sp/>=<sp/>debug(&apos;app:error&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>by<sp/>default<sp/>stderr<sp/>is<sp/>used</highlight></codeline>
+<codeline><highlight class="normal">error(&apos;goes<sp/>to<sp/>stderr!&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>log<sp/>=<sp/>debug(&apos;app:log&apos;);</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>set<sp/>this<sp/>namespace<sp/>to<sp/>log<sp/>via<sp/>console.log</highlight></codeline>
+<codeline><highlight class="normal">log.log<sp/>=<sp/>console.log.bind(console);<sp/>//<sp/>don&apos;t<sp/>forget<sp/>to<sp/>bind<sp/>to<sp/>console!</highlight></codeline>
+<codeline><highlight class="normal">log(&apos;goes<sp/>to<sp/>stdout&apos;);</highlight></codeline>
+<codeline><highlight class="normal">error(&apos;still<sp/>goes<sp/>to<sp/>stderr!&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>set<sp/>all<sp/>output<sp/>to<sp/>go<sp/>via<sp/>console.info</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>overrides<sp/>all<sp/>per-namespace<sp/>log<sp/>settings</highlight></codeline>
+<codeline><highlight class="normal">debug.log<sp/>=<sp/>console.info.bind(console);</highlight></codeline>
+<codeline><highlight class="normal">error(&apos;now<sp/>goes<sp/>to<sp/>stdout<sp/>via<sp/>console.info&apos;);</highlight></codeline>
+<codeline><highlight class="normal">log(&apos;still<sp/>goes<sp/>to<sp/>stdout,<sp/>but<sp/>via<sp/>console.info<sp/>now&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Extend</highlight></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>simply<sp/>extend<sp/>debugger<sp/></highlight></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>log<sp/>=<sp/>require(&apos;debug&apos;)(&apos;auth&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//creates<sp/>new<sp/>debug<sp/>instance<sp/>with<sp/>extended<sp/>namespace</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>logSign<sp/>=<sp/>log.extend(&apos;sign&apos;);</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>logLogin<sp/>=<sp/>log.extend(&apos;login&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">log(&apos;hello&apos;);<sp/>//<sp/>auth<sp/>hello</highlight></codeline>
+<codeline><highlight class="normal">logSign(&apos;hello&apos;);<sp/>//auth:sign<sp/>hello</highlight></codeline>
+<codeline><highlight class="normal">logLogin(&apos;hello&apos;);<sp/>//auth:login<sp/>hello</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Set<sp/>dynamically</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>also<sp/>enable<sp/>debug<sp/>dynamically<sp/>by<sp/>calling<sp/>the<sp/>`enable()`<sp/>method<sp/>:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>debug<sp/>=<sp/>require(&apos;debug&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">console.log(1,<sp/>debug.enabled(&apos;test&apos;));</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">debug.enable(&apos;test&apos;);</highlight></codeline>
+<codeline><highlight class="normal">console.log(2,<sp/>debug.enabled(&apos;test&apos;));</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">debug.disable();</highlight></codeline>
+<codeline><highlight class="normal">console.log(3,<sp/>debug.enabled(&apos;test&apos;));</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">print<sp/>:<sp/><sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">1<sp/>false</highlight></codeline>
+<codeline><highlight class="normal">2<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">3<sp/>false</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Usage<sp/>:<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">`enable(namespaces)`<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">`namespaces`<sp/>can<sp/>include<sp/>modes<sp/>separated<sp/>by<sp/>a<sp/>colon<sp/>and<sp/>wildcards.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">Note<sp/>that<sp/>calling<sp/>`enable()`<sp/>completely<sp/>overrides<sp/>previously<sp/>set<sp/>DEBUG<sp/>variable<sp/>:<sp/></highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>DEBUG=foo<sp/>node<sp/>-e<sp/>&apos;var<sp/>dbg<sp/>=<sp/>require(&quot;debug&quot;);<sp/>dbg.enable(&quot;bar&quot;);<sp/>console.log(dbg.enabled(&quot;foo&quot;))&apos;</highlight></codeline>
+<codeline><highlight class="normal">=&gt;<sp/>false</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`disable()`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Will<sp/>disable<sp/>all<sp/>namespaces.<sp/>The<sp/>functions<sp/>returns<sp/>the<sp/>namespaces<sp/>currently</highlight></codeline>
+<codeline><highlight class="normal">enabled<sp/>(and<sp/>skipped).<sp/>This<sp/>can<sp/>be<sp/>useful<sp/>if<sp/>you<sp/>want<sp/>to<sp/>disable<sp/>debugging</highlight></codeline>
+<codeline><highlight class="normal">temporarily<sp/>without<sp/>knowing<sp/>what<sp/>was<sp/>enabled<sp/>to<sp/>begin<sp/>with.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>example:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>debug<sp/>=<sp/>require(&apos;debug&apos;);</highlight></codeline>
+<codeline><highlight class="normal">debug.enable(&apos;foo:*,-foo:bar&apos;);</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>namespaces<sp/>=<sp/>debug.disable();</highlight></codeline>
+<codeline><highlight class="normal">debug.enable(namespaces);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note:<sp/>There<sp/>is<sp/>no<sp/>guarantee<sp/>that<sp/>the<sp/>string<sp/>will<sp/>be<sp/>identical<sp/>to<sp/>the<sp/>initial</highlight></codeline>
+<codeline><highlight class="normal">enable<sp/>string,<sp/>but<sp/>semantically<sp/>they<sp/>will<sp/>be<sp/>identical.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Checking<sp/>whether<sp/>a<sp/>debug<sp/>target<sp/>is<sp/>enabled</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">After<sp/>you&apos;ve<sp/>created<sp/>a<sp/>debug<sp/>instance,<sp/>you<sp/>can<sp/>determine<sp/>whether<sp/>or<sp/>not<sp/>it<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">enabled<sp/>by<sp/>checking<sp/>the<sp/>`enabled`<sp/>property:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>debug<sp/>=<sp/>require(&apos;debug&apos;)(&apos;http&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">if<sp/>(debug.enabled)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>do<sp/>stuff...</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>also<sp/>manually<sp/>toggle<sp/>this<sp/>property<sp/>to<sp/>force<sp/>the<sp/>debug<sp/>instance<sp/>to<sp/>be</highlight></codeline>
+<codeline><highlight class="normal">enabled<sp/>or<sp/>disabled.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Usage<sp/>in<sp/>child<sp/>processes</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Due<sp/>to<sp/>the<sp/>way<sp/>`debug`<sp/>detects<sp/>if<sp/>the<sp/>output<sp/>is<sp/>a<sp/>TTY<sp/>or<sp/>not,<sp/>colors<sp/>are<sp/>not<sp/>shown<sp/>in<sp/>child<sp/>processes<sp/>when<sp/>`stderr`<sp/>is<sp/>piped.<sp/>A<sp/>solution<sp/>is<sp/>to<sp/>pass<sp/>the<sp/>`DEBUG_COLORS=1`<sp/>environment<sp/>variable<sp/>to<sp/>the<sp/>child<sp/>process.<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">For<sp/>example:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">worker<sp/>=<sp/>fork(WORKER_WRAP_PATH,<sp/>[workerPath],<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>stdio:<sp/>[</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>/*<sp/>stdin:<sp/>*/<sp/>0,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>/*<sp/>stdout:<sp/>*/<sp/>&apos;pipe&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>/*<sp/>stderr:<sp/>*/<sp/>&apos;pipe&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&apos;ipc&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>env:<sp/>Object.assign({},<sp/>process.env,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>DEBUG_COLORS:<sp/>1<sp/>//<sp/>without<sp/>this<sp/>settings,<sp/>colors<sp/>won&apos;t<sp/>be<sp/>shown</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}),</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">worker.stderr.pipe(process.stderr,<sp/>{<sp/>end:<sp/>false<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Authors</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/>-<sp/>TJ<sp/>Holowaychuk</highlight></codeline>
+<codeline><highlight class="normal"><sp/>-<sp/>Nathan<sp/>Rajlich</highlight></codeline>
+<codeline><highlight class="normal"><sp/>-<sp/>Andrew<sp/>Rhyne</highlight></codeline>
+<codeline><highlight class="normal"><sp/>-<sp/>Josh<sp/>Junon</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Backers</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Support<sp/>us<sp/>with<sp/>a<sp/>monthly<sp/>donation<sp/>and<sp/>help<sp/>us<sp/>continue<sp/>our<sp/>activities.<sp/>[[Become<sp/>a<sp/>backer](https://opencollective.com/debug#backer)]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/0/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/0/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/1/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/1/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/2/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/2/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/3/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/3/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/4/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/4/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/5/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/5/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/6/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/6/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/7/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/7/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/8/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/8/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/9/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/9/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/10/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/10/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/11/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/11/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/12/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/12/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/13/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/13/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/14/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/14/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/15/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/15/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/16/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/16/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/17/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/17/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/18/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/18/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/19/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/19/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/20/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/20/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/21/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/21/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/22/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/22/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/23/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/23/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/24/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/24/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/25/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/25/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/26/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/26/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/27/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/27/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/28/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/28/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/backer/29/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/backer/29/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Sponsors</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Become<sp/>a<sp/>sponsor<sp/>and<sp/>get<sp/>your<sp/>logo<sp/>on<sp/>our<sp/>README<sp/>on<sp/>Github<sp/>with<sp/>a<sp/>link<sp/>to<sp/>your<sp/>site.<sp/>[[Become<sp/>a<sp/>sponsor](https://opencollective.com/debug#sponsor)]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/0/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/0/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/1/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/1/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/2/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/2/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/3/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/3/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/4/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/4/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/5/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/5/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/6/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/6/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/7/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/7/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/8/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/8/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/9/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/9/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/10/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/10/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/11/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/11/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/12/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/12/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/13/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/13/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/14/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/14/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/15/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/15/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/16/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/16/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/17/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/17/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/18/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/18/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/19/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/19/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/20/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/20/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/21/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/21/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/22/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/22/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/23/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/23/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/24/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/24/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/25/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/25/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/26/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/26/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/27/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/27/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/28/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/28/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://opencollective.com/debug/sponsor/29/website&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;img<sp/>src=&quot;https://opencollective.com/debug/sponsor/29/avatar.svg&quot;&gt;&lt;/a&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>License</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">(The<sp/>MIT<sp/>License)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Copyright<sp/>(c)<sp/>2014-2017<sp/>TJ<sp/>Holowaychuk<sp/>&amp;lt;tj@vision-media.ca&amp;gt;</highlight></codeline>
+<codeline><highlight class="normal">Copyright<sp/>(c)<sp/>2018-2021<sp/>Josh<sp/>Junon</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Permission<sp/>is<sp/>hereby<sp/>granted,<sp/>free<sp/>of<sp/>charge,<sp/>to<sp/>any<sp/>person<sp/>obtaining</highlight></codeline>
+<codeline><highlight class="normal">a<sp/>copy<sp/>of<sp/>this<sp/>software<sp/>and<sp/>associated<sp/>documentation<sp/>files<sp/>(the</highlight></codeline>
+<codeline><highlight class="normal">&apos;Software&apos;),<sp/>to<sp/>deal<sp/>in<sp/>the<sp/>Software<sp/>without<sp/>restriction,<sp/>including</highlight></codeline>
+<codeline><highlight class="normal">without<sp/>limitation<sp/>the<sp/>rights<sp/>to<sp/>use,<sp/>copy,<sp/>modify,<sp/>merge,<sp/>publish,</highlight></codeline>
+<codeline><highlight class="normal">distribute,<sp/>sublicense,<sp/>and/or<sp/>sell<sp/>copies<sp/>of<sp/>the<sp/>Software,<sp/>and<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">permit<sp/>persons<sp/>to<sp/>whom<sp/>the<sp/>Software<sp/>is<sp/>furnished<sp/>to<sp/>do<sp/>so,<sp/>subject<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>following<sp/>conditions:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>above<sp/>copyright<sp/>notice<sp/>and<sp/>this<sp/>permission<sp/>notice<sp/>shall<sp/>be</highlight></codeline>
+<codeline><highlight class="normal">included<sp/>in<sp/>all<sp/>copies<sp/>or<sp/>substantial<sp/>portions<sp/>of<sp/>the<sp/>Software.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">THE<sp/>SOFTWARE<sp/>IS<sp/>PROVIDED<sp/>&apos;AS<sp/>IS&apos;,<sp/>WITHOUT<sp/>WARRANTY<sp/>OF<sp/>ANY<sp/>KIND,</highlight></codeline>
+<codeline><highlight class="normal">EXPRESS<sp/>OR<sp/>IMPLIED,<sp/>INCLUDING<sp/>BUT<sp/>NOT<sp/>LIMITED<sp/>TO<sp/>THE<sp/>WARRANTIES<sp/>OF</highlight></codeline>
+<codeline><highlight class="normal">MERCHANTABILITY,<sp/>FITNESS<sp/>FOR<sp/>A<sp/>PARTICULAR<sp/>PURPOSE<sp/>AND<sp/>NONINFRINGEMENT.</highlight></codeline>
+<codeline><highlight class="normal">IN<sp/>NO<sp/>EVENT<sp/>SHALL<sp/>THE<sp/>AUTHORS<sp/>OR<sp/>COPYRIGHT<sp/>HOLDERS<sp/>BE<sp/>LIABLE<sp/>FOR<sp/>ANY</highlight></codeline>
+<codeline><highlight class="normal">CLAIM,<sp/>DAMAGES<sp/>OR<sp/>OTHER<sp/>LIABILITY,<sp/>WHETHER<sp/>IN<sp/>AN<sp/>ACTION<sp/>OF<sp/>CONTRACT,</highlight></codeline>
+<codeline><highlight class="normal">TORT<sp/>OR<sp/>OTHERWISE,<sp/>ARISING<sp/>FROM,<sp/>OUT<sp/>OF<sp/>OR<sp/>IN<sp/>CONNECTION<sp/>WITH<sp/>THE</highlight></codeline>
+<codeline><highlight class="normal">SOFTWARE<sp/>OR<sp/>THE<sp/>USE<sp/>OR<sp/>OTHER<sp/>DEALINGS<sp/>IN<sp/>THE<sp/>SOFTWARE.</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/agent-base/node_modules/debug/README.md"/>
+  </compounddef>
+</doxygen>

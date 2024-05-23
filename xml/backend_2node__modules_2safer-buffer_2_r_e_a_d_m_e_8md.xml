@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2safer-buffer_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>Readme.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>safer-buffer<sp/>[![travis][travis-image]][travis-url]<sp/>[![npm][npm-image]][npm-url]<sp/>[![javascript<sp/>style<sp/>guide][standard-image]][standard-url]<sp/>[![Security<sp/>Responsible<sp/>Disclosure][secuirty-image]][secuirty-url]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[travis-image]:<sp/>https://travis-ci.org/ChALkeR/safer-buffer.svg?branch=master</highlight></codeline>
+<codeline><highlight class="normal">[travis-url]:<sp/>https://travis-ci.org/ChALkeR/safer-buffer</highlight></codeline>
+<codeline><highlight class="normal">[npm-image]:<sp/>https://img.shields.io/npm/v/safer-buffer.svg</highlight></codeline>
+<codeline><highlight class="normal">[npm-url]:<sp/>https://npmjs.org/package/safer-buffer</highlight></codeline>
+<codeline><highlight class="normal">[standard-image]:<sp/>https://img.shields.io/badge/code_style-standard-brightgreen.svg</highlight></codeline>
+<codeline><highlight class="normal">[standard-url]:<sp/>https://standardjs.com</highlight></codeline>
+<codeline><highlight class="normal">[secuirty-image]:<sp/>https://img.shields.io/badge/Security-Responsible%20Disclosure-green.svg</highlight></codeline>
+<codeline><highlight class="normal">[secuirty-url]:<sp/>https://github.com/nodejs/security-wg/blob/master/processes/responsible_disclosure_template.md</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Modern<sp/>Buffer<sp/>API<sp/>polyfill<sp/>without<sp/>footguns,<sp/>working<sp/>on<sp/>Node.js<sp/>from<sp/>0.8<sp/>to<sp/>current.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>How<sp/>to<sp/>use?</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">First,<sp/>port<sp/>all<sp/>`Buffer()`<sp/>and<sp/>`new<sp/>Buffer()`<sp/>calls<sp/>to<sp/>`Buffer.alloc()`<sp/>and<sp/>`Buffer.from()`<sp/>API.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Then,<sp/>to<sp/>achieve<sp/>compatibility<sp/>with<sp/>outdated<sp/>Node.js<sp/>versions<sp/>(`&lt;4.5.0`<sp/>and<sp/>5.x<sp/>`&lt;5.9.0`),<sp/>use</highlight></codeline>
+<codeline><highlight class="normal">`const<sp/>Buffer<sp/>=<sp/>require(&apos;safer-buffer&apos;).Buffer`<sp/>in<sp/>all<sp/>files<sp/>where<sp/>you<sp/>make<sp/>calls<sp/>to<sp/>the<sp/>new</highlight></codeline>
+<codeline><highlight class="normal">Buffer<sp/>API.<sp/>_Use<sp/>`var`<sp/>instead<sp/>of<sp/>`const`<sp/>if<sp/>you<sp/>need<sp/>that<sp/>for<sp/>your<sp/>Node.js<sp/>version<sp/>range<sp/>support._</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Also,<sp/>see<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[porting<sp/>Buffer](https://github.com/ChALkeR/safer-buffer/blob/master/Porting-Buffer.md)<sp/>guide.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Do<sp/>I<sp/>need<sp/>it?</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Hopefully,<sp/>not<sp/>—<sp/>dropping<sp/>support<sp/>for<sp/>outdated<sp/>Node.js<sp/>versions<sp/>should<sp/>be<sp/>fine<sp/>nowdays,<sp/>and<sp/>that</highlight></codeline>
+<codeline><highlight class="normal">is<sp/>the<sp/>recommended<sp/>path<sp/>forward.<sp/>You<sp/>_do_<sp/>need<sp/>to<sp/>port<sp/>to<sp/>the<sp/>`Buffer.alloc()`<sp/>and<sp/>`Buffer.from()`</highlight></codeline>
+<codeline><highlight class="normal">though.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">See<sp/>the<sp/>[porting<sp/>guide](https://github.com/ChALkeR/safer-buffer/blob/master/Porting-Buffer.md)</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>a<sp/>better<sp/>description.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Why<sp/>not<sp/>[safe-buffer](https://npmjs.com/safe-buffer)?</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">_In<sp/>short:<sp/>while<sp/>`safe-buffer`<sp/>serves<sp/>as<sp/>a<sp/>polyfill<sp/>for<sp/>the<sp/>new<sp/>API,<sp/>it<sp/>allows<sp/>old<sp/>API<sp/>usage<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">itself<sp/>contains<sp/>footguns._</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`safe-buffer`<sp/>could<sp/>be<sp/>used<sp/>safely<sp/>to<sp/>get<sp/>the<sp/>new<sp/>API<sp/>while<sp/>still<sp/>keeping<sp/>support<sp/>for<sp/>older</highlight></codeline>
+<codeline><highlight class="normal">Node.js<sp/>versions<sp/>(like<sp/>this<sp/>module),<sp/>but<sp/>while<sp/>analyzing<sp/>ecosystem<sp/>usage<sp/>of<sp/>the<sp/>old<sp/>Buffer<sp/>API</highlight></codeline>
+<codeline><highlight class="normal">I<sp/>found<sp/>out<sp/>that<sp/>`safe-buffer`<sp/>is<sp/>itself<sp/>causing<sp/>problems<sp/>in<sp/>some<sp/>cases.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>example,<sp/>consider<sp/>the<sp/>following<sp/>snippet:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```console</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>cat<sp/>example.unsafe.js</highlight></codeline>
+<codeline><highlight class="normal">console.log(Buffer(20))</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>./node-v6.13.0-linux-x64/bin/node<sp/>example.unsafe.js</highlight></codeline>
+<codeline><highlight class="normal">&lt;Buffer<sp/>0a<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>28<sp/>13<sp/>de<sp/>02<sp/>00<sp/>00<sp/>00<sp/>00<sp/>05<sp/>00<sp/>00<sp/>00&gt;</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>standard<sp/>example.unsafe.js</highlight></codeline>
+<codeline><highlight class="normal">standard:<sp/>Use<sp/>JavaScript<sp/>Standard<sp/>Style<sp/>(https://standardjs.com)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>/home/chalker/repo/safer-buffer/example.unsafe.js:2:13:<sp/>&apos;Buffer()&apos;<sp/>was<sp/>deprecated<sp/>since<sp/>v6.<sp/>Use<sp/>&apos;Buffer.alloc()&apos;<sp/>or<sp/>&apos;Buffer.from()&apos;<sp/>(use<sp/>&apos;https://www.npmjs.com/package/safe-buffer&apos;<sp/>for<sp/>&apos;&lt;4.5.0&apos;)<sp/>instead.</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>allocates<sp/>and<sp/>writes<sp/>to<sp/>console<sp/>an<sp/>uninitialized<sp/>chunk<sp/>of<sp/>memory.</highlight></codeline>
+<codeline><highlight class="normal">[standard](https://www.npmjs.com/package/standard)<sp/>linter<sp/>(among<sp/>others)<sp/>catch<sp/>that<sp/>and<sp/>warn<sp/>people</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>avoid<sp/>using<sp/>unsafe<sp/>API.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Let&apos;s<sp/>now<sp/>throw<sp/>in<sp/>`safe-buffer`!</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```console</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>cat<sp/>example.safe-buffer.js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>Buffer<sp/>=<sp/>require(&apos;safe-buffer&apos;).Buffer</highlight></codeline>
+<codeline><highlight class="normal">console.log(Buffer(20))</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>standard<sp/>example.safe-buffer.js</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>./node-v6.13.0-linux-x64/bin/node<sp/>example.safe-buffer.js</highlight></codeline>
+<codeline><highlight class="normal">&lt;Buffer<sp/>08<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>28<sp/>58<sp/>01<sp/>82<sp/>fe<sp/>7f<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00&gt;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">See<sp/>the<sp/>problem?<sp/>Adding<sp/>in<sp/>`safe-buffer`<sp/>_magically<sp/>removes<sp/>the<sp/>lint<sp/>warning_,<sp/>but<sp/>the<sp/>behavior</highlight></codeline>
+<codeline><highlight class="normal">remains<sp/>identiсal<sp/>to<sp/>what<sp/>we<sp/>had<sp/>before,<sp/>and<sp/>when<sp/>launched<sp/>on<sp/>Node.js<sp/>6.x<sp/>LTS<sp/>—<sp/>this<sp/>dumps<sp/>out</highlight></codeline>
+<codeline><highlight class="normal">chunks<sp/>of<sp/>uninitialized<sp/>memory.</highlight></codeline>
+<codeline><highlight class="normal">_And<sp/>this<sp/>code<sp/>will<sp/>still<sp/>emit<sp/>runtime<sp/>warnings<sp/>on<sp/>Node.js<sp/>10.x<sp/>and<sp/>above._</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">That<sp/>was<sp/>done<sp/>by<sp/>design.<sp/>I<sp/>first<sp/>considered<sp/>changing<sp/>`safe-buffer`,<sp/>prohibiting<sp/>old<sp/>API<sp/>usage<sp/>or</highlight></codeline>
+<codeline><highlight class="normal">emitting<sp/>warnings<sp/>on<sp/>it,<sp/>but<sp/>that<sp/>significantly<sp/>diverges<sp/>from<sp/>`safe-buffer`<sp/>design.<sp/>After<sp/>some</highlight></codeline>
+<codeline><highlight class="normal">discussion,<sp/>it<sp/>was<sp/>decided<sp/>to<sp/>move<sp/>my<sp/>approach<sp/>into<sp/>a<sp/>separate<sp/>package,<sp/>and<sp/>_this<sp/>is<sp/>that<sp/>separate</highlight></codeline>
+<codeline><highlight class="normal">package_.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>footgun<sp/>is<sp/>not<sp/>imaginary<sp/>—<sp/>I<sp/>observed<sp/>top-downloaded<sp/>packages<sp/>doing<sp/>that<sp/>kind<sp/>of<sp/>thing,</highlight></codeline>
+<codeline><highlight class="normal">«fixing»<sp/>the<sp/>lint<sp/>warning<sp/>by<sp/>blindly<sp/>including<sp/>`safe-buffer`<sp/>without<sp/>any<sp/>actual<sp/>changes.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Also<sp/>in<sp/>some<sp/>cases,<sp/>even<sp/>if<sp/>the<sp/>API<sp/>_was_<sp/>migrated<sp/>to<sp/>use<sp/>of<sp/>safe<sp/>Buffer<sp/>API<sp/>—<sp/>a<sp/>random<sp/>pull<sp/>request</highlight></codeline>
+<codeline><highlight class="normal">can<sp/>bring<sp/>unsafe<sp/>Buffer<sp/>API<sp/>usage<sp/>back<sp/>to<sp/>the<sp/>codebase<sp/>by<sp/>adding<sp/>new<sp/>calls<sp/>—<sp/>and<sp/>that<sp/>could<sp/>go</highlight></codeline>
+<codeline><highlight class="normal">unnoticed<sp/>even<sp/>if<sp/>you<sp/>have<sp/>a<sp/>linter<sp/>prohibiting<sp/>that<sp/>(becase<sp/>of<sp/>the<sp/>reason<sp/>stated<sp/>above),<sp/>and<sp/>even</highlight></codeline>
+<codeline><highlight class="normal">pass<sp/>CI.<sp/>_I<sp/>also<sp/>observed<sp/>that<sp/>being<sp/>done<sp/>in<sp/>popular<sp/>packages._</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Some<sp/>examples:</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>[webdriverio](https://github.com/webdriverio/webdriverio/commit/05cbd3167c12e4930f09ef7cf93b127ba4effae4#diff-124380949022817b90b622871837d56cR31)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>(a<sp/>module<sp/>with<sp/>548<sp/>759<sp/>downloads/month),</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>[websocket-stream](https://github.com/maxogden/websocket-stream/commit/c9312bd24d08271687d76da0fe3c83493871cf61)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>(218<sp/>288<sp/>d/m,<sp/>fix<sp/>in<sp/>[maxogden/websocket-stream#142](https://github.com/maxogden/websocket-stream/pull/142)),</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>[node-serialport](https://github.com/node-serialport/node-serialport/commit/e8d9d2b16c664224920ce1c895199b1ce2def48c)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>(113<sp/>138<sp/>d/m,<sp/>fix<sp/>in<sp/>[node-serialport/node-serialport#1510](https://github.com/node-serialport/node-serialport/pull/1510)),</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>[karma](https://github.com/karma-runner/karma/commit/3d94b8cf18c695104ca195334dc75ff054c74eec)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>(3<sp/>973<sp/>193<sp/>d/m,<sp/>fix<sp/>in<sp/>[karma-runner/karma#2947](https://github.com/karma-runner/karma/pull/2947)),</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>[spdy-transport](https://github.com/spdy-http2/spdy-transport/commit/5375ac33f4a62a4f65bcfc2827447d42a5dbe8b1)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>(5<sp/>970<sp/>727<sp/>d/m,<sp/>fix<sp/>in<sp/>[spdy-http2/spdy-transport#53](https://github.com/spdy-http2/spdy-transport/pull/53)).</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>And<sp/>there<sp/>are<sp/>a<sp/>lot<sp/>more<sp/>over<sp/>the<sp/>ecosystem.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">I<sp/>filed<sp/>a<sp/>PR<sp/>at</highlight></codeline>
+<codeline><highlight class="normal">[mysticatea/eslint-plugin-node#110](https://github.com/mysticatea/eslint-plugin-node/pull/110)<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">partially<sp/>fix<sp/>that<sp/>(for<sp/>cases<sp/>when<sp/>that<sp/>lint<sp/>rule<sp/>is<sp/>used),<sp/>but<sp/>it<sp/>is<sp/>a<sp/>semver-major<sp/>change<sp/>for</highlight></codeline>
+<codeline><highlight class="normal">linter<sp/>rules<sp/>and<sp/>presets,<sp/>so<sp/>it<sp/>would<sp/>take<sp/>significant<sp/>time<sp/>for<sp/>that<sp/>to<sp/>reach<sp/>actual<sp/>setups.</highlight></codeline>
+<codeline><highlight class="normal">_It<sp/>also<sp/>hasn&apos;t<sp/>been<sp/>released<sp/>yet<sp/>(2018-03-20)._</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Also,<sp/>`safer-buffer`<sp/>discourages<sp/>the<sp/>usage<sp/>of<sp/>`.allocUnsafe()`,<sp/>which<sp/>is<sp/>often<sp/>done<sp/>by<sp/>a<sp/>mistake.</highlight></codeline>
+<codeline><highlight class="normal">It<sp/>still<sp/>supports<sp/>it<sp/>with<sp/>an<sp/>explicit<sp/>concern<sp/>barier,<sp/>by<sp/>placing<sp/>it<sp/>under</highlight></codeline>
+<codeline><highlight class="normal">`require(&apos;safer-buffer/dangereous&apos;)`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>But<sp/>isn&apos;t<sp/>throwing<sp/>bad?</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Not<sp/>really.<sp/>It&apos;s<sp/>an<sp/>error<sp/>that<sp/>could<sp/>be<sp/>noticed<sp/>and<sp/>fixed<sp/>early,<sp/>instead<sp/>of<sp/>causing<sp/>havoc<sp/>later<sp/>like</highlight></codeline>
+<codeline><highlight class="normal">unguarded<sp/>`new<sp/>Buffer()`<sp/>calls<sp/>that<sp/>end<sp/>up<sp/>receiving<sp/>user<sp/>input<sp/>can<sp/>do.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>package<sp/>affects<sp/>only<sp/>the<sp/>files<sp/>where<sp/>`var<sp/>Buffer<sp/>=<sp/>require(&apos;safer-buffer&apos;).Buffer`<sp/>was<sp/>done,<sp/>so</highlight></codeline>
+<codeline><highlight class="normal">it<sp/>is<sp/>really<sp/>simple<sp/>to<sp/>keep<sp/>track<sp/>of<sp/>things<sp/>and<sp/>make<sp/>sure<sp/>that<sp/>you<sp/>don&apos;t<sp/>mix<sp/>old<sp/>API<sp/>usage<sp/>with<sp/>that.</highlight></codeline>
+<codeline><highlight class="normal">Also,<sp/>CI<sp/>should<sp/>hint<sp/>anything<sp/>that<sp/>you<sp/>might<sp/>have<sp/>missed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">New<sp/>commits,<sp/>if<sp/>tested,<sp/>won&apos;t<sp/>land<sp/>new<sp/>usage<sp/>of<sp/>unsafe<sp/>Buffer<sp/>API<sp/>this<sp/>way.</highlight></codeline>
+<codeline><highlight class="normal">_Node.js<sp/>10.x<sp/>also<sp/>deals<sp/>with<sp/>that<sp/>by<sp/>printing<sp/>a<sp/>runtime<sp/>depecation<sp/>warning._</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Would<sp/>it<sp/>affect<sp/>third-party<sp/>modules?</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">No,<sp/>unless<sp/>you<sp/>explicitly<sp/>do<sp/>an<sp/>awful<sp/>thing<sp/>like<sp/>monkey-patching<sp/>or<sp/>overriding<sp/>the<sp/>built-in<sp/>`Buffer`.</highlight></codeline>
+<codeline><highlight class="normal">Don&apos;t<sp/>do<sp/>that.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>But<sp/>I<sp/>don&apos;t<sp/>want<sp/>throwing…</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">That<sp/>is<sp/>also<sp/>fine!</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Also,<sp/>it<sp/>could<sp/>be<sp/>better<sp/>in<sp/>some<sp/>cases<sp/>when<sp/>you<sp/>don&apos;t<sp/>comprehensive<sp/>enough<sp/>test<sp/>coverage.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">In<sp/>that<sp/>case<sp/>—<sp/>just<sp/>don&apos;t<sp/>override<sp/>`Buffer`<sp/>and<sp/>use</highlight></codeline>
+<codeline><highlight class="normal">`var<sp/>SaferBuffer<sp/>=<sp/>require(&apos;safer-buffer&apos;).Buffer`<sp/>instead.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">That<sp/>way,<sp/>everything<sp/>using<sp/>`Buffer`<sp/>natively<sp/>would<sp/>still<sp/>work,<sp/>but<sp/>there<sp/>would<sp/>be<sp/>two<sp/>drawbacks:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`Buffer.from`/`Buffer.alloc`<sp/>won&apos;t<sp/>be<sp/>polyfilled<sp/>—<sp/>use<sp/>`SaferBuffer.from`<sp/>and</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`SaferBuffer.alloc`<sp/>instead.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>You<sp/>are<sp/>still<sp/>open<sp/>to<sp/>accidentally<sp/>using<sp/>the<sp/>insecure<sp/>deprecated<sp/>API<sp/>—<sp/>use<sp/>a<sp/>linter<sp/>to<sp/>catch<sp/>that.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note<sp/>that<sp/>using<sp/>a<sp/>linter<sp/>to<sp/>catch<sp/>accidential<sp/>`Buffer`<sp/>constructor<sp/>usage<sp/>in<sp/>this<sp/>case<sp/>is<sp/>strongly</highlight></codeline>
+<codeline><highlight class="normal">recommended.<sp/>`Buffer`<sp/>is<sp/>not<sp/>overriden<sp/>in<sp/>this<sp/>usecase,<sp/>so<sp/>linters<sp/>won&apos;t<sp/>get<sp/>confused.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>«Without<sp/>footguns»?</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Well,<sp/>it<sp/>is<sp/>still<sp/>possible<sp/>to<sp/>do<sp/>_some_<sp/>things<sp/>with<sp/>`Buffer`<sp/>API,<sp/>e.g.<sp/>accessing<sp/>`.buffer`<sp/>property</highlight></codeline>
+<codeline><highlight class="normal">on<sp/>older<sp/>versions<sp/>and<sp/>duping<sp/>things<sp/>from<sp/>there.<sp/>You<sp/>shouldn&apos;t<sp/>do<sp/>that<sp/>in<sp/>your<sp/>code,<sp/>probabably.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>intention<sp/>is<sp/>to<sp/>remove<sp/>the<sp/>most<sp/>significant<sp/>footguns<sp/>that<sp/>affect<sp/>lots<sp/>of<sp/>packages<sp/>in<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">ecosystem,<sp/>and<sp/>to<sp/>do<sp/>it<sp/>in<sp/>the<sp/>proper<sp/>way.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Also,<sp/>this<sp/>package<sp/>doesn&apos;t<sp/>protect<sp/>against<sp/>security<sp/>issues<sp/>affecting<sp/>some<sp/>Node.js<sp/>versions,<sp/>so<sp/>for</highlight></codeline>
+<codeline><highlight class="normal">usage<sp/>in<sp/>your<sp/>own<sp/>production<sp/>code,<sp/>it<sp/>is<sp/>still<sp/>recommended<sp/>to<sp/>update<sp/>to<sp/>a<sp/>Node.js<sp/>version</highlight></codeline>
+<codeline><highlight class="normal">[supported<sp/>by<sp/>upstream](https://github.com/nodejs/release#release-schedule).</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/safer-buffer/Readme.md"/>
+  </compounddef>
+</doxygen>

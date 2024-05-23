@@ -1,0 +1,172 @@
+\chapter{README}
+\hypertarget{md_backend_2node__modules_2retry_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2retry_2_r_e_a_d_m_e}\index{README@{README}}
+\href{http://travis-ci.org/tim-kos/node-retry}{\texttt{ }} \href{https://codecov.io/gh/tim-kos/node-retry}{\texttt{ }}\hypertarget{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2980}{}\doxysection{\texorpdfstring{retry}{retry}}\label{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2980}
+Abstraction for exponential and custom retry strategies for failed operations.\hypertarget{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2981}{}\doxysubsection{\texorpdfstring{Installation}{Installation}}\label{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2981}
+\begin{DoxyVerb}npm install retry
+\end{DoxyVerb}
+ \hypertarget{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2982}{}\doxysubsection{\texorpdfstring{Current Status}{Current Status}}\label{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2982}
+This module has been tested and is ready to be used.\hypertarget{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2983}{}\doxysubsection{\texorpdfstring{Tutorial}{Tutorial}}\label{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2983}
+The example below will retry a potentially failing {\ttfamily dns.\+resolve} operation {\ttfamily 10} times using an exponential backoff strategy. With the default settings, this means the last attempt is made after {\ttfamily 17 minutes and 3 seconds}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ javascript}
+\DoxyCodeLine{var\ dns\ =\ require('dns');}
+\DoxyCodeLine{var\ retry\ =\ require('retry');}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ faultTolerantResolve(address,\ cb)\ \{}
+\DoxyCodeLine{\ \ var\ operation\ =\ retry.operation();}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ operation.attempt(function(currentAttempt)\ \{}
+\DoxyCodeLine{\ \ \ \ dns.resolve(address,\ function(err,\ addresses)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ if\ (operation.retry(err))\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return;}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ cb(err\ ?\ operation.mainError()\ :\ null,\ addresses);}
+\DoxyCodeLine{\ \ \ \ \});}
+\DoxyCodeLine{\ \ \});}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{faultTolerantResolve('nodejs.org',\ function(err,\ addresses)\ \{}
+\DoxyCodeLine{\ \ console.log(err,\ addresses);}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+
+
+Of course you can also configure the factors that go into the exponential backoff. See the API documentation below for all available settings. current\+Attempt is an int representing the number of attempts so far.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ javascript}
+\DoxyCodeLine{var\ operation\ =\ retry.operation(\{}
+\DoxyCodeLine{\ \ retries:\ 5,}
+\DoxyCodeLine{\ \ factor:\ 3,}
+\DoxyCodeLine{\ \ minTimeout:\ 1\ *\ 1000,}
+\DoxyCodeLine{\ \ maxTimeout:\ 60\ *\ 1000,}
+\DoxyCodeLine{\ \ randomize:\ true,}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2984}{}\doxysubsection{\texorpdfstring{API}{API}}\label{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2984}
+\hypertarget{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2985}{}\doxysubsubsection{\texorpdfstring{retry.\+operation(\mbox{[}options\mbox{]})}{retry.\+operation(\mbox{[}options\mbox{]})}}\label{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2985}
+Creates a new {\ttfamily Retry\+Operation} object. {\ttfamily options} is the same as {\ttfamily retry.\+timeouts()}\textquotesingle{}s {\ttfamily options}, with two additions\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily forever}\+: Whether to retry forever, defaults to {\ttfamily false}.
+\item {\ttfamily unref}\+: Whether to \href{https://nodejs.org/api/timers.html\#timers_unref}{\texttt{ unref}} the set\+Timeout\textquotesingle{}s, defaults to {\ttfamily false}.
+\item {\ttfamily max\+Retry\+Time}\+: The maximum time (in milliseconds) that the retried operation is allowed to run. Default is {\ttfamily Infinity}. ~\newline
+
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2986}{}\doxysubsubsection{\texorpdfstring{retry.\+timeouts(\mbox{[}options\mbox{]})}{retry.\+timeouts(\mbox{[}options\mbox{]})}}\label{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2986}
+Returns an array of timeouts. All time {\ttfamily options} and return values are in milliseconds. If {\ttfamily options} is an array, a copy of that array is returned.
+
+{\ttfamily options} is a JS object that can contain any of the following keys\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily retries}\+: The maximum amount of times to retry the operation. Default is {\ttfamily 10}. Seting this to {\ttfamily 1} means {\ttfamily do it once, then retry it once}.
+\item {\ttfamily factor}\+: The exponential factor to use. Default is {\ttfamily 2}.
+\item {\ttfamily min\+Timeout}\+: The number of milliseconds before starting the first retry. Default is {\ttfamily 1000}.
+\item {\ttfamily max\+Timeout}\+: The maximum number of milliseconds between two retries. Default is {\ttfamily Infinity}.
+\item {\ttfamily randomize}\+: Randomizes the timeouts by multiplying with a factor between {\ttfamily 1} to {\ttfamily 2}. Default is {\ttfamily false}.
+\end{DoxyItemize}
+
+The formula used to calculate the individual timeouts is\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Math.min(random\ *\ minTimeout\ *\ Math.pow(factor,\ attempt),\ maxTimeout)}
+
+\end{DoxyCode}
+
+
+Have a look at \href{http://dthain.blogspot.com/2009/02/exponential-backoff-in-distributed.html}{\texttt{ this article}} for a better explanation of approach.
+
+If you want to tune your {\ttfamily factor} / {\ttfamily times} settings to attempt the last retry after a certain amount of time, you can use wolfram alpha. For example in order to tune for {\ttfamily 10} attempts in {\ttfamily 5 minutes}, you can use this equation\+:
+
+
+
+Explaining the various values from left to right\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily k = 0 ... 9}\+: The {\ttfamily retries} value (10)
+\item {\ttfamily 1000}\+: The {\ttfamily min\+Timeout} value in ms (1000)
+\item {\ttfamily x\texorpdfstring{$^\wedge$}{\string^}k}\+: No need to change this, {\ttfamily x} will be your resulting factor
+\item {\ttfamily 5 \texorpdfstring{$\ast$}{*} 60 \texorpdfstring{$\ast$}{*} 1000}\+: The desired total amount of time for retrying in ms (5 minutes)
+\end{DoxyItemize}
+
+To make this a little easier for you, use wolfram alpha to do the calculations\+:
+
+\texorpdfstring{$<$}{<}\href{http://www.wolframalpha.com/input/?i=Sum\%5B1000}{\texttt{ http\+://www.\+wolframalpha.\+com/input/?i=\+Sum\%5\+B1000}}\texorpdfstring{$\ast$}{*}x\texorpdfstring{$^\wedge$}{\string^}k\%2C+\{k\%2C+0\%2C+9\}\%5D+\%3D+5+\texorpdfstring{$\ast$}{*}+60+\texorpdfstring{$\ast$}{*}+1000\texorpdfstring{$>$}{>}\hypertarget{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2987}{}\doxysubsubsection{\texorpdfstring{retry.\+create\+Timeout(attempt, opts)}{retry.\+create\+Timeout(attempt, opts)}}\label{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2987}
+Returns a new {\ttfamily timeout} (integer in milliseconds) based on the given parameters.
+
+{\ttfamily attempt} is an integer representing for which retry the timeout should be calculated. If your retry operation was executed 4 times you had one attempt and 3 retries. If you then want to calculate a new timeout, you should set {\ttfamily attempt} to 4 (attempts are zero-\/indexed).
+
+{\ttfamily opts} can include {\ttfamily factor}, {\ttfamily min\+Timeout}, {\ttfamily randomize} (boolean) and {\ttfamily max\+Timeout}. They are documented above.
+
+{\ttfamily retry.\+create\+Timeout()} is used internally by {\ttfamily retry.\+timeouts()} and is public for you to be able to create your own timeouts for reinserting an item, see \href{https://github.com/tim-kos/node-retry/issues/13}{\texttt{ issue \#13}}.\hypertarget{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2988}{}\doxysubsubsection{\texorpdfstring{retry.\+wrap(obj, \mbox{[}options\mbox{]}, \mbox{[}method\+Names\mbox{]})}{retry.\+wrap(obj, \mbox{[}options\mbox{]}, \mbox{[}method\+Names\mbox{]})}}\label{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2988}
+Wrap all functions of the {\ttfamily obj} with retry. Optionally you can pass operation options and an array of method names which need to be wrapped.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{retry.wrap(obj)}
+\DoxyCodeLine{}
+\DoxyCodeLine{retry.wrap(obj,\ ['method1',\ 'method2'])}
+\DoxyCodeLine{}
+\DoxyCodeLine{retry.wrap(obj,\ \{retries:\ 3\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{retry.wrap(obj,\ \{retries:\ 3\},\ ['method1',\ 'method2'])}
+
+\end{DoxyCode}
+ The {\ttfamily options} object can take any options that the usual call to {\ttfamily retry.\+operation} can take.\hypertarget{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2989}{}\doxysubsubsection{\texorpdfstring{new Retry\+Operation(timeouts, \mbox{[}options\mbox{]})}{new Retry\+Operation(timeouts, \mbox{[}options\mbox{]})}}\label{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2989}
+Creates a new {\ttfamily Retry\+Operation} where {\ttfamily timeouts} is an array where each value is a timeout given in milliseconds.
+
+Available options\+:
+\begin{DoxyItemize}
+\item {\ttfamily forever}\+: Whether to retry forever, defaults to {\ttfamily false}.
+\item {\ttfamily unref}\+: Wether to \href{https://nodejs.org/api/timers.html\#timers_unref}{\texttt{ unref}} the set\+Timeout\textquotesingle{}s, defaults to {\ttfamily false}.
+\end{DoxyItemize}
+
+If {\ttfamily forever} is true, the following changes happen\+:
+\begin{DoxyItemize}
+\item {\ttfamily Retry\+Operation.\+errors()} will only output an array of one item\+: the last error.
+\item {\ttfamily Retry\+Operation} will repeatedly use the {\ttfamily timeouts} array. Once all of its timeouts have been used up, it restarts with the first timeout, then uses the second and so on.
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2990}{}\doxysubsubsubsection{\texorpdfstring{retry\+Operation.\+errors()}{retry\+Operation.\+errors()}}\label{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2990}
+Returns an array of all errors that have been passed to {\ttfamily retry\+Operation.\+retry()} so far. The returning array has the errors ordered chronologically based on when they were passed to {\ttfamily retry\+Operation.\+retry()}, which means the first passed error is at index zero and the last is at the last index.\hypertarget{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2991}{}\doxysubsubsubsection{\texorpdfstring{retry\+Operation.\+main\+Error()}{retry\+Operation.\+main\+Error()}}\label{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2991}
+A reference to the error object that occured most frequently. Errors are compared using the {\ttfamily error.\+message} property.
+
+If multiple error messages occured the same amount of time, the last error object with that message is returned.
+
+If no errors occured so far, the value is {\ttfamily null}.\hypertarget{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2992}{}\doxysubsubsubsection{\texorpdfstring{retry\+Operation.\+attempt(fn, timeout\+Ops)}{retry\+Operation.\+attempt(fn, timeout\+Ops)}}\label{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2992}
+Defines the function {\ttfamily fn} that is to be retried and executes it for the first time right away. The {\ttfamily fn} function can receive an optional {\ttfamily current\+Attempt} callback that represents the number of attempts to execute {\ttfamily fn} so far.
+
+Optionally defines {\ttfamily timeout\+Ops} which is an object having a property {\ttfamily timeout} in miliseconds and a property {\ttfamily cb} callback function. Whenever your retry operation takes longer than {\ttfamily timeout} to execute, the timeout callback function {\ttfamily cb} is called.\hypertarget{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2993}{}\doxysubsubsubsection{\texorpdfstring{retry\+Operation.\+try(fn)}{retry\+Operation.\+try(fn)}}\label{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2993}
+This is an alias for {\ttfamily retry\+Operation.\+attempt(fn)}. This is deprecated. Please use {\ttfamily retry\+Operation.\+attempt(fn)} instead.\hypertarget{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2994}{}\doxysubsubsubsection{\texorpdfstring{retry\+Operation.\+start(fn)}{retry\+Operation.\+start(fn)}}\label{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2994}
+This is an alias for {\ttfamily retry\+Operation.\+attempt(fn)}. This is deprecated. Please use {\ttfamily retry\+Operation.\+attempt(fn)} instead.\hypertarget{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2995}{}\doxysubsubsubsection{\texorpdfstring{retry\+Operation.\+retry(error)}{retry\+Operation.\+retry(error)}}\label{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2995}
+Returns {\ttfamily false} when no {\ttfamily error} value is given, or the maximum amount of retries has been reached.
+
+Otherwise it returns {\ttfamily true}, and retries the operation after the timeout for the current attempt number.\hypertarget{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2996}{}\doxysubsubsubsection{\texorpdfstring{retry\+Operation.\+stop()}{retry\+Operation.\+stop()}}\label{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2996}
+Allows you to stop the operation being retried. Useful for aborting the operation on a fatal error etc.\hypertarget{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2997}{}\doxysubsubsubsection{\texorpdfstring{retry\+Operation.\+reset()}{retry\+Operation.\+reset()}}\label{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2997}
+Resets the internal state of the operation object, so that you can call {\ttfamily attempt()} again as if this was a new operation object.\hypertarget{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2998}{}\doxysubsubsubsection{\texorpdfstring{retry\+Operation.\+attempts()}{retry\+Operation.\+attempts()}}\label{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2998}
+Returns an int representing the number of attempts it took to call {\ttfamily fn} before it was successful.\hypertarget{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2999}{}\doxysubsection{\texorpdfstring{License}{License}}\label{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md2999}
+retry is licensed under the MIT license.\hypertarget{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md3000}{}\doxysection{\texorpdfstring{Changelog}{Changelog}}\label{md_backend_2node__modules_2retry_2_r_e_a_d_m_e_autotoc_md3000}
+0.\+10.\+0 Adding {\ttfamily stop} functionality, thanks to @maxnachlinger.
+
+0.\+9.\+0 Adding {\ttfamily unref} functionality, thanks to @satazor.
+
+0.\+8.\+0 Implementing retry.\+wrap.
+
+0.\+7.\+0 Some bug fixes and made retry.\+create\+Timeout() public. Fixed issues \href{https://github.com/tim-kos/node-retry/issues/10}{\texttt{ \#10}}, \href{https://github.com/tim-kos/node-retry/issues/12}{\texttt{ \#12}}, and \href{https://github.com/tim-kos/node-retry/issues/13}{\texttt{ \#13}}.
+
+0.\+6.\+0 Introduced optional time\+Ops parameter for the attempt() function which is an object having a property timeout in milliseconds and a property cb callback function. Whenever your retry operation takes longer than timeout to execute, the timeout callback function cb is called.
+
+0.\+5.\+0 Some minor refactoring.
+
+0.\+4.\+0 Changed retry\+Operation.\+try() to retry\+Operation.\+attempt(). Deprecated the aliases start() and \doxylink{site_8config_8php_abe4cc9788f52e49485473dc699537388}{try()} for it.
+
+0.\+3.\+0 Added retry\+Operation.\+start() which is an alias for retry\+Operation.\+try().
+
+0.\+2.\+0 Added attempts() function and parameter to retry\+Operation.\+try() representing the number of attempts it took to call fn(). 

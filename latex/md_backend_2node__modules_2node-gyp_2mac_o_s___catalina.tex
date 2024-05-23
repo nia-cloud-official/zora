@@ -1,0 +1,121 @@
+\chapter{Installation notes for mac\+OS Catalina (v10.15)}
+\hypertarget{md_backend_2node__modules_2node-gyp_2mac_o_s___catalina}{}\label{md_backend_2node__modules_2node-gyp_2mac_o_s___catalina}\index{Installation notes for macOS Catalina (v10.15)@{Installation notes for macOS Catalina (v10.15)}}
+\label{md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_autotoc_md2454}%
+\Hypertarget{md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_autotoc_md2454}%
+ {\itshape This document specifically refers to upgrades from previous versions of mac\+OS to Catalina (10.\+15). It should be removed from the source repository when Catalina ceases to be the latest mac\+OS version or when future Catalina versions no longer raise these issues.}
+
+{\bfseries{Both upgrading to mac\+OS Catalina and running a Software Update in Catalina may cause normal {\ttfamily node-\/gyp} installations to fail. This might manifest as the following error during {\ttfamily npm install}\+:}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{gyp:\ No\ Xcode\ or\ CLT\ version\ detected!}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_autotoc_md2455}{}\doxysection{\texorpdfstring{node-\/gyp v7}{node-\/gyp v7}}\label{md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_autotoc_md2455}
+The newest release of {\ttfamily node-\/gyp} should solve this problem. If you are using {\ttfamily node-\/gyp} directly then you should be able to install v7 and use it as-\/is.
+
+If you need to use {\ttfamily node-\/gyp} from within {\ttfamily npm} (e.\+g. through {\ttfamily npm install}), you will have to install {\ttfamily node-\/gyp} (either globally with {\ttfamily -\/g} or to a predictable location) and tell {\ttfamily npm} where the new version is. Either use\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily npm config set node\+\_\+gyp \texorpdfstring{$<$}{<}path to node-\/gyp\texorpdfstring{$>$}{>}}; or
+\item run {\ttfamily npm} with an environment variable prefix\+: {\ttfamily npm\+\_\+config\+\_\+node\+\_\+gyp=\texorpdfstring{$<$}{<}path to node-\/gyp\texorpdfstring{$>$}{>} npm install}
+\end{DoxyItemize}
+
+Where "{}path to node-\/gyp"{} is to the {\ttfamily node-\/gyp} executable which may be a symlink in your global bin directory (e.\+g. {\ttfamily /usr/local/bin/node-\/gyp}), or a path to the {\ttfamily node-\/gyp} installation directory and the {\ttfamily bin/node-\/gyp.\+js} file within it (e.\+g. {\ttfamily /usr/local/lib/node\+\_\+modules/node-\/gyp/bin/node-\/gyp.js}).
+
+{\bfseries{If you use {\ttfamily npm config set} to change your global {\ttfamily node\+\_\+gyp} you are responsible for keeping it up to date and can\textquotesingle{}t rely on {\ttfamily npm} to give you a newer version when available.}} Use {\ttfamily npm config delete node\+\_\+gyp} to unset this configuration option.\hypertarget{md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_autotoc_md2456}{}\doxysection{\texorpdfstring{Fixing Catalina for older versions of {\ttfamily node-\/gyp}}{Fixing Catalina for older versions of {\ttfamily node-\/gyp}}}\label{md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_autotoc_md2456}
+\hypertarget{md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_autotoc_md2457}{}\doxysubsection{\texorpdfstring{Is my Mac running mac\+OS Catalina?}{Is my Mac running mac\+OS Catalina?}}\label{md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_autotoc_md2457}
+Let\textquotesingle{}s first make sure that your Mac is running Catalina\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\%\ sw\_vers}
+\DoxyCodeLine{\ \ \ \ ProductName:\ \ \ \ Mac\ OS\ X}
+\DoxyCodeLine{\ \ \ \ ProductVersion:\ 10.15}
+\DoxyCodeLine{\ \ \ \ BuildVersion:\ \ \ 19A602}
+
+\end{DoxyCode}
+ If {\ttfamily Product\+Version} is less then {\ttfamily 10.\+15} then this document is not for you. Normal install docs for {\ttfamily node-\/gyp} on mac\+OS can be found at \href{https://github.com/nodejs/node-gyp\#on-macos}{\texttt{ https\+://github.\+com/nodejs/node-\/gyp\#on-\/macos}}\hypertarget{md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_autotoc_md2458}{}\doxysubsection{\texorpdfstring{The acid test}{The acid test}}\label{md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_autotoc_md2458}
+To see if {\ttfamily Xcode Command Line Tools} is installed in a way that will work with {\ttfamily node-\/gyp}, run\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{curl\ -\/sL\ https://github.com/nodejs/node-\/gyp/raw/master/macOS\_Catalina\_acid\_test.sh\ |\ bash}
+
+\end{DoxyCode}
+
+
+If test succeeded, {\itshape you are done}! You should be ready to \href{https://github.com/nodejs/node-gyp\#installation}{\texttt{ install}} {\ttfamily node-\/gyp}.
+
+If test failed, there is a problem with your Xcode Command Line Tools installation. Continue to Solutions.\hypertarget{md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_autotoc_md2459}{}\doxysubsection{\texorpdfstring{Solutions}{Solutions}}\label{md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_autotoc_md2459}
+There are three ways to install the Xcode libraries {\ttfamily node-\/gyp} needs on mac\+OS. People running Catalina have had success with some but not others in a way that has been unpredictable.
+
+
+\begin{DoxyEnumerate}
+\item With the full Xcode (\texorpdfstring{$\sim$}{\string~}7.6 GB download) from the {\ttfamily App Store} app.
+\item With the {\itshape much} smaller Xcode Command Line Tools via {\ttfamily xcode-\/select -\/-\/install}
+\item With the {\itshape much} smaller Xcode Command Line Tools via manual download. {\bfseries{For people running the latest version of Catalina (10.\+15.\+2 at the time of this writing), this has worked when the other two solutions haven\textquotesingle{}t.}}
+\end{DoxyEnumerate}\hypertarget{md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_autotoc_md2460}{}\doxysubsection{\texorpdfstring{Installing {\ttfamily node-\/gyp} using the full Xcode}{Installing {\ttfamily node-\/gyp} using the full Xcode}}\label{md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_autotoc_md2460}
+
+\begin{DoxyEnumerate}
+\item {\ttfamily xcodebuild -\/version} should show {\ttfamily Xcode 11.\+1} or later.
+\begin{DoxyItemize}
+\item If not, then install/upgrade Xcode from the App Store app.
+\end{DoxyItemize}
+\item Open the Xcode app and...
+\begin{DoxyItemize}
+\item Under {\bfseries{Preferences \texorpdfstring{$>$}{>} Locations}} select the tools if their location is empty.
+\item Allow Xcode app to do an essential install of the most recent compiler tools.
+\end{DoxyItemize}
+\item Once all installations are {\itshape complete}, quit out of Xcode.
+\item {\ttfamily sudo xcodebuild -\/license accept} \# If you agree with the licensing terms.
+\item {\ttfamily softwareupdate -\/l} \# No listing is a good sign.
+\begin{DoxyItemize}
+\item If Xcode or Tools upgrades are listed, use "{}\+Software Upgrade"{} to install them.
+\end{DoxyItemize}
+\item {\ttfamily xcode-\/select -\/version} \# Should return {\ttfamily xcode-\/select version 2370} or later.
+\item {\ttfamily xcode-\/select -\/print-\/path} \# Should return {\ttfamily /\+Applications/\+Xcode.app/\+Contents/\+Developer}
+\item Try the \+\_\+acid test\+\_\+ steps above to see if your Mac is ready.
+\item If the {\itshape acid test} does {\itshape not} pass then...
+\item {\ttfamily sudo xcode-\/select -\/-\/reset} \# Enter root password. No output is normal.
+\item Repeat step 7 above. Is the path different this time? Repeat the {\itshape acid test}.
+\end{DoxyEnumerate}\hypertarget{md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_autotoc_md2461}{}\doxysubsection{\texorpdfstring{Installing {\ttfamily node-\/gyp} using the Xcode Command Line Tools via {\ttfamily xcode-\/select -\/-\/install}}{Installing {\ttfamily node-\/gyp} using the Xcode Command Line Tools via {\ttfamily xcode-\/select -\/-\/install}}}\label{md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_autotoc_md2461}
+
+\begin{DoxyEnumerate}
+\item If the {\itshape acid test} has not succeeded, then try {\ttfamily xcode-\/select -\/-\/install}
+\item If the installation command returns {\ttfamily xcode-\/select\+: error\+: command line tools are already installed, use "{}\+Software Update"{} to install updates}, continue to remove and reinstall
+\item Wait until the install process is {\itshape complete}.
+\item {\ttfamily softwareupdate -\/l} \# No listing is a good sign.
+\begin{DoxyItemize}
+\item If Xcode or Tools upgrades are listed, use "{}\+Software Update"{} to install them.
+\end{DoxyItemize}
+\item {\ttfamily xcode-\/select -\/version} \# Should return {\ttfamily xcode-\/select version 2370} or later.
+\item {\ttfamily xcode-\/select -\/print-\/path} \# Should return {\ttfamily /\+Library/\+Developer/\+Command\+Line\+Tools}
+\item Try the \+\_\+acid test\+\_\+ steps above to see if your Mac is ready.
+\item If the {\itshape acid test} does {\itshape not} pass then...
+\item {\ttfamily sudo xcode-\/select -\/-\/reset} \# Enter root password. No output is normal.
+\item Repeat step 5 above. Is the path different this time? Repeat the {\itshape acid test}.
+\end{DoxyEnumerate}\hypertarget{md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_autotoc_md2462}{}\doxysubsection{\texorpdfstring{Installing {\ttfamily node-\/gyp} using the Xcode Command Line Tools via manual download}{Installing {\ttfamily node-\/gyp} using the Xcode Command Line Tools via manual download}}\label{md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_autotoc_md2462}
+
+\begin{DoxyEnumerate}
+\item Download the appropriate version of the "{}\+Command Line Tools for Xcode"{} for your version of Catalina from \href{https://developer.apple.com/download/more/}{\texttt{ https\+://developer.\+apple.\+com/download/more/}}. As of Mac\+OS 10.\+15.\+5, that\textquotesingle{}s \href{https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.5/Command_Line_Tools_for_Xcode_11.5.dmg}{\texttt{ Command\+\_\+\+Line\+\_\+\+Tools\+\_\+for\+\_\+\+Xcode\+\_\+11.\+5.\+dmg}}
+\item Install the package.
+\item Run the \+\_\+acid test\+\_\+ steps above.
+\end{DoxyEnumerate}\hypertarget{md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_autotoc_md2463}{}\doxysubsection{\texorpdfstring{I did all that and the acid test still does not pass \+:-\/(}{I did all that and the acid test still does not pass \+:-\/(}}\label{md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_autotoc_md2463}
+
+\begin{DoxyEnumerate}
+\item {\ttfamily sudo rm -\/rf \$(xcode-\/select -\/print-\/path)} \# Enter root password. No output is normal.
+\item {\ttfamily sudo rm -\/rf /\+Library/\+Developer/\+Command\+Line\+Tools} \# Enter root password.
+\item {\ttfamily sudo xcode-\/select -\/-\/reset}
+\item {\ttfamily xcode-\/select -\/-\/install}
+\item If the \+\_\+acid test\+\_\+ steps above still does {\itshape not} pass then...
+\item {\ttfamily npm explore npm -\/g -\/-\/ npm install node-\/gyp@latest}
+\item {\ttfamily npm explore npm -\/g -\/-\/ npm explore npm-\/lifecycle -\/-\/ npm install node-\/gyp@latest}
+\item If the {\itshape acid test} still does {\itshape not} pass then...
+\item Add a comment to \href{https://github.com/nodejs/node-gyp/issues/1927}{\texttt{ https\+://github.\+com/nodejs/node-\/gyp/issues/1927}} so we can improve.
+\end{DoxyEnumerate}
+
+Lessons learned from\+:
+\begin{DoxyItemize}
+\item \href{https://github.com/nodejs/node-gyp/issues/1779}{\texttt{ https\+://github.\+com/nodejs/node-\/gyp/issues/1779}}
+\item \href{https://github.com/nodejs/node-gyp/issues/1861}{\texttt{ https\+://github.\+com/nodejs/node-\/gyp/issues/1861}}
+\item \href{https://github.com/nodejs/node-gyp/issues/1927}{\texttt{ https\+://github.\+com/nodejs/node-\/gyp/issues/1927}} and elsewhere
+\item Thanks to @rrrix for discovering Solution 3 
+\end{DoxyItemize}

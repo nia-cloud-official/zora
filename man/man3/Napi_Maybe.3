@@ -1,0 +1,104 @@
+.TH "Napi::Maybe< T >" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Napi::Maybe< T >
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fR#include <napi\&.h>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "bool \fBIsNothing\fP () const"
+.br
+.ti -1c
+.RI "bool \fBIsJust\fP () const"
+.br
+.ti -1c
+.RI "void \fBCheck\fP () const"
+.br
+.ti -1c
+.RI "T \fBUnwrap\fP () const"
+.br
+.ti -1c
+.RI "T \fBUnwrapOr\fP (const T &default_value) const"
+.br
+.ti -1c
+.RI "bool \fBUnwrapTo\fP (T *out) const"
+.br
+.ti -1c
+.RI "bool \fBoperator==\fP (const \fBMaybe\fP &other) const"
+.br
+.ti -1c
+.RI "bool \fBoperator!=\fP (const \fBMaybe\fP &other) const"
+.br
+.in -1c
+.SS "Friends"
+
+.in +1c
+.ti -1c
+.RI "template<class U > \fBMaybe\fP< U > \fBNothing\fP ()"
+.br
+.ti -1c
+.RI "template<class U > \fBMaybe\fP< U > \fBJust\fP (const U &u)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.SS "template<class T>
+.br
+class Napi::Maybe< T >"A simple \fBMaybe\fP type, representing an object which may or may not have a value\&.
+.PP
+If an API method returns a Maybe<>, the API method can potentially fail either because an exception is thrown, or because an exception is pending, e\&.g\&. because a previous API call threw an exception that hasn't been caught yet\&. In that case, a 'Nothing' value is returned\&. 
+.PP
+Definition at line \fB229\fP of file \fBnapi\&.h\fP\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "template<class T > void \fBNapi::Maybe\fP< T >::Check () const"
+Short-hand for \fBUnwrap()\fP, which doesn't return a value\&. Could be used where the actual value of the \fBMaybe\fP is not needed like \fBObject::Set\fP\&. If this \fBMaybe\fP is nothing (empty), node-addon-api will crash the process\&. 
+.PP
+Definition at line \fB397\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<class T > bool \fBNapi::Maybe\fP< T >::IsJust () const"
+
+.PP
+Definition at line \fB392\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<class T > bool \fBNapi::Maybe\fP< T >::IsNothing () const"
+
+.PP
+Definition at line \fB387\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<class T > bool \fBNapi::Maybe\fP< T >::operator!= (const \fBMaybe\fP< T > & other) const"
+
+.PP
+Definition at line \fB428\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<class T > bool \fBNapi::Maybe\fP< T >::operator== (const \fBMaybe\fP< T > & other) const"
+
+.PP
+Definition at line \fB422\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<class T > T \fBNapi::Maybe\fP< T >::Unwrap () const"
+Return the value of type T contained in the \fBMaybe\fP\&. If this \fBMaybe\fP is nothing (empty), node-addon-api will crash the process\&. 
+.PP
+Definition at line \fB402\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<class T > T \fBNapi::Maybe\fP< T >::UnwrapOr (const T & default_value) const"
+Return the value of type T contained in the \fBMaybe\fP, or using a default value if this \fBMaybe\fP is nothing (empty)\&. 
+.PP
+Definition at line \fB408\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "template<class T > bool \fBNapi::Maybe\fP< T >::UnwrapTo (T * out) const"
+Converts this \fBMaybe\fP to a value of type T in the out\&. If this \fBMaybe\fP is nothing (empty), \fRfalse\fP is returned and \fRout\fP is left untouched\&. 
+.PP
+Definition at line \fB413\fP of file \fBnapi\-inl\&.h\fP\&.
+.SH "Friends And Related Symbol Documentation"
+.PP 
+.SS "template<class T > template<class U > \fBMaybe\fP< U > Just (const U & u)\fR [friend]\fP"
+
+.SS "template<class T > template<class U > \fBMaybe\fP< U > Nothing ()\fR [friend]\fP"
+
+.PP
+Definition at line \fB439\fP of file \fBnapi\-inl\&.h\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

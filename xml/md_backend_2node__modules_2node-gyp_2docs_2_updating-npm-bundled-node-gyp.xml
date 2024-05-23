@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2node-gyp_2docs_2_updating-npm-bundled-node-gyp" kind="page">
+    <compoundname>md_backend_2node__modules_2node-gyp_2docs_2_updating-npm-bundled-node-gyp</compoundname>
+    <title>Updating the npm-bundled version of node-gyp</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2node-gyp_2docs_2_updating-npm-bundled-node-gyp_1autotoc_md2398"/> <ulink url="https://github.com/nodejs/node-gyp/labels/ERR%21%20node-gyp%20-v%20%3C%3D%20v5.1.0">Many issues</ulink> are opened by users who are not running a <ulink url="https://github.com/nodejs/node-gyp/releases">current version of node-gyp</ulink>.</para>
+<para><computeroutput>npm</computeroutput> bundles its own, internal, copy of <computeroutput>node-gyp</computeroutput>. This internal copy is independent of any globally installed copy of node-gyp that may have been installed via <computeroutput>npm install -g node-gyp</computeroutput>.</para>
+<para>Generally, npm&apos;s library files are installed inside your global &quot;node_modules&quot;, where npm is installed (run <computeroutput>npm prefix</computeroutput> and add <computeroutput>lib/node_modules</computeroutput>, or just <computeroutput>node_modules</computeroutput> for Windows). There are some exceptions to this. Inside this global <computeroutput>node_modules/</computeroutput> there will be an <computeroutput>npm/</computeroutput> directory and inside this you&apos;ll find a <computeroutput>node_modules/node-gyp/</computeroutput> directory. So it may look something like <computeroutput>/usr/local/lib/node_modules/npm/node_modules/node-gyp/</computeroutput>. This is the version of node-gyp that ships with npm.</para>
+<para>When you install a <emphasis>new</emphasis> version of node-gyp outside of npm, it&apos;ll go into your global node_modules, but not under the <computeroutput>npm/node_modules</computeroutput>. So that may look like <computeroutput>/usr/local/lib/node_modules/node-gyp/</computeroutput>. It&apos;ll have the <computeroutput>node-gyp</computeroutput> executable linked into your <computeroutput>PATH</computeroutput> so running <computeroutput>node-gyp</computeroutput> will use this version.</para>
+<para>The catch is that npm won&apos;t use this version unless you tell it to, it&apos;ll keep on using the one you have installed. You need to instruct it to by setting the <computeroutput>node_gyp</computeroutput> config variable (which goes into your <computeroutput>~/.npmrc</computeroutput>). You do this by running the <computeroutput>npm config set</computeroutput> command as below. Then npm will use the command in the path you supply whenever it needs to build a native addon.</para>
+<para><bold>Important</bold>: You also need to remember to unset this when you upgrade npm with a newer version of node-gyp, or you have to manually keep your globally installed node-gyp to date. See &quot;Undo&quot; below.</para>
+<sect1 id="md_backend_2node__modules_2node-gyp_2docs_2_updating-npm-bundled-node-gyp_1autotoc_md2399">
+<title>Linux and macOS</title><para><programlisting><codeline><highlight class="normal">npm<sp/>install<sp/>--global<sp/>node-gyp@latest</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>config<sp/>set<sp/>node_gyp<sp/>$(npm<sp/>prefix<sp/>-g)/lib/node_modules/node-gyp/bin/node-gyp.js</highlight></codeline>
+</programlisting></para>
+<para><computeroutput>sudo</computeroutput> may be required for the first command if you get a permission error.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2node-gyp_2docs_2_updating-npm-bundled-node-gyp_1autotoc_md2400">
+<title>Windows</title><sect2 id="md_backend_2node__modules_2node-gyp_2docs_2_updating-npm-bundled-node-gyp_1autotoc_md2401">
+<title>Windows Command Prompt</title><para><programlisting><codeline><highlight class="normal">npm<sp/>install<sp/>--global<sp/>node-gyp@latest</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>/f<sp/>&quot;delims=&quot;<sp/>%P<sp/>in<sp/>(&apos;npm<sp/>prefix<sp/>-g&apos;)<sp/>do<sp/>npm<sp/>config<sp/>set<sp/>node_gyp<sp/>&quot;%P\node_modules\node-gyp\bin\node-gyp.js&quot;</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2node-gyp_2docs_2_updating-npm-bundled-node-gyp_1autotoc_md2402">
+<title>Powershell</title><para><programlisting><codeline><highlight class="normal">npm<sp/>install<sp/>--global<sp/>node-gyp@latest</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>prefix<sp/>-g<sp/>|<sp/>%<sp/>{npm<sp/>config<sp/>set<sp/>node_gyp<sp/>&quot;$_\node_modules\node-gyp\bin\node-gyp.js&quot;}</highlight></codeline>
+</programlisting></para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2node-gyp_2docs_2_updating-npm-bundled-node-gyp_1autotoc_md2403">
+<title>Undo</title><para><bold>Beware</bold> if you don&apos;t unset the <computeroutput>node_gyp</computeroutput> config option, npm will continue to use the globally installed version of node-gyp rather than the one it ships with, which may end up being newer.</para>
+<para><programlisting><codeline><highlight class="normal">npm<sp/>config<sp/>delete<sp/>node_gyp</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>uninstall<sp/>--global<sp/>node-gyp</highlight></codeline>
+</programlisting> </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/node-gyp/docs/Updating-npm-bundled-node-gyp.md"/>
+  </compounddef>
+</doxygen>

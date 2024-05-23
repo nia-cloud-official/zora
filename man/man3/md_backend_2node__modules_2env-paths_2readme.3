@@ -1,0 +1,122 @@
+.TH "md_backend_2node__modules_2env-paths_2readme" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2env-paths_2readme \- env-paths 
+.PP
+ 
+.PP
+.RS 4
+Get paths for storing things like data, config, cache, etc 
+.RE
+.PP
+.PP
+Uses the correct OS-specific paths\&. Most developers get this wrong\&.
+.SH "Install"
+.PP
+.PP
+.nf
+$ npm install env\-paths
+.fi
+.PP
+.SH "Usage"
+.PP
+.PP
+.nf
+const envPaths = require('env\-paths');
+
+const paths = envPaths('MyApp');
+
+paths\&.data;
+//=> '/home/sindresorhus/\&.local/share/MyApp\-nodejs'
+
+paths\&.config
+//=> '/home/sindresorhus/\&.config/MyApp\-nodejs'
+.fi
+.PP
+.SH "API"
+.PP
+.SS "paths = envPaths(name, options?)"
+Note: It only generates the path strings\&. It doesn't create the directories for you\&. You could use \fR\fRmake-dir\fP\fP to create the directories\&.
+.SS "name"
+Type: \fRstring\fP
+.PP
+Name of your project\&. Used to generate the paths\&.
+.SS "options"
+Type: \fRobject\fP
+.SS "suffix"
+Type: \fRstring\fP
+.br
+ Default: `'nodejs'`
+.PP
+\fBDon't use this option unless you really have to!\fP
+.br
+ Suffix appended to the project name to avoid name conflicts with native apps\&. Pass an empty string to disable it\&.
+.SS "paths\&.data"
+Directory for data files\&.
+.PP
+Example locations (with the default \fRnodejs\fP \fBsuffix\fP):
+.PP
+.IP "\(bu" 2
+macOS: \fR~/Library/Application Support/MyApp-nodejs\fP
+.IP "\(bu" 2
+Windows: \fRLOCALAPPDATA%\\MyApp-nodejs\\Data\fP (for example, \fRC:\\Users\\USERNAME\\AppData\\Local\\MyApp-nodejs\\Data\fP)
+.IP "\(bu" 2
+Linux: \fR~/\&.local/share/MyApp-nodejs\fP (or \fR$XDG_DATA_HOME/MyApp-nodejs\fP)
+.PP
+.SS "paths\&.config"
+Directory for config files\&.
+.PP
+Example locations (with the default \fRnodejs\fP \fBsuffix\fP):
+.PP
+.IP "\(bu" 2
+macOS: \fR~/Library/Preferences/MyApp-nodejs\fP
+.IP "\(bu" 2
+Windows: \fRAPPDATA%\\MyApp-nodejs\\Config\fP (for example, \fRC:\\Users\\USERNAME\\AppData\\Roaming\\MyApp-nodejs\\Config\fP)
+.IP "\(bu" 2
+Linux: \fR~/\&.config/MyApp-nodejs\fP (or \fR$XDG_CONFIG_HOME/MyApp-nodejs\fP)
+.PP
+.SS "paths\&.cache"
+Directory for non-essential data files\&.
+.PP
+Example locations (with the default \fRnodejs\fP \fBsuffix\fP):
+.PP
+.IP "\(bu" 2
+macOS: \fR~/Library/Caches/MyApp-nodejs\fP
+.IP "\(bu" 2
+Windows: \fRLOCALAPPDATA%\\MyApp-nodejs\\Cache\fP (for example, \fRC:\\Users\\USERNAME\\AppData\\Local\\MyApp-nodejs\\Cache\fP)
+.IP "\(bu" 2
+Linux: \fR~/\&.cache/MyApp-nodejs\fP (or \fR$XDG_CACHE_HOME/MyApp-nodejs\fP)
+.PP
+.SS "paths\&.log"
+Directory for log files\&.
+.PP
+Example locations (with the default \fRnodejs\fP \fBsuffix\fP):
+.PP
+.IP "\(bu" 2
+macOS: \fR~/Library/Logs/MyApp-nodejs\fP
+.IP "\(bu" 2
+Windows: \fRLOCALAPPDATA%\\MyApp-nodejs\\Log\fP (for example, \fRC:\\Users\\USERNAME\\AppData\\Local\\MyApp-nodejs\\Log\fP)
+.IP "\(bu" 2
+Linux: \fR~/\&.local/state/MyApp-nodejs\fP (or \fR$XDG_STATE_HOME/MyApp-nodejs\fP)
+.PP
+.SS "paths\&.temp"
+Directory for temporary files\&.
+.PP
+Example locations (with the default \fRnodejs\fP \fBsuffix\fP):
+.PP
+.IP "\(bu" 2
+macOS: \fR/var/folders/jf/f2twvvvs5jl_m49tf034ffpw0000gn/T/MyApp-nodejs\fP
+.IP "\(bu" 2
+Windows: \fRLOCALAPPDATA%\\Temp\\MyApp-nodejs\fP (for example, \fRC:\\Users\\USERNAME\\AppData\\Local\\Temp\\MyApp-nodejs\fP)
+.IP "\(bu" 2
+Linux: \fR/tmp/USERNAME/MyApp-nodejs\fP
+.PP
+.PP
+.PP
+.PP
+ \fB \fRGet professional support for this package with a Tidelift subscription\fP \fP 
+.br
+ \*< Tidelift helps make open source sustainable for maintainers while giving companies
+.br
+assurances about security, maintenance, and licensing for their dependencies\&. \*>   

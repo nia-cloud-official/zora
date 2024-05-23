@@ -1,0 +1,72 @@
+.TH "md_backend_2node__modules_2pump_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2pump_2_r_e_a_d_m_e \- pump 
+.PP
+ pump is a small node module that pipes streams together and destroys all of them if one of them closes\&.
+.PP
+.PP
+.nf
+npm install pump
+.fi
+.PP
+.PP
+\fR\fP.SH "What problem does it solve?"
+.PP
+When using standard \fRsource\&.pipe(dest)\fP source will \fInot\fP be destroyed if dest emits close or an error\&. You are also not able to provide a callback to tell when then pipe has finished\&.
+.PP
+pump does these two things for you
+.SH "Usage"
+.PP
+Simply pass the streams you want to pipe together to pump and add an optional callback
+.PP
+.PP
+.nf
+ js
+var pump = require('pump')
+var fs = require('fs')
+
+var source = fs\&.createReadStream('/dev/random')
+var dest = fs\&.createWriteStream('/dev/null')
+
+pump(source, dest, function(err) {
+  console\&.log('pipe finished', err)
+})
+
+setTimeout(function() {
+  dest\&.destroy() // when dest is closed pump will destroy source
+}, 1000)
+.fi
+.PP
+.PP
+You can use pump to pipe more than two streams together as well
+.PP
+.PP
+.nf
+ js
+var transform = someTransformStream()
+
+pump(source, transform, anotherTransform, dest, function(err) {
+  console\&.log('pipe finished', err)
+})
+.fi
+.PP
+.PP
+If \fRsource\fP, \fRtransform\fP, \fRanotherTransform\fP or \fRdest\fP closes all of them will be destroyed\&.
+.PP
+Similarly to \fRstream\&.pipe()\fP, \fRpump()\fP returns the last stream passed in, so you can do:
+.PP
+.PP
+.nf
+return pump(s1, s2) // returns s2
+.fi
+.PP
+.PP
+If you want to return a stream that combines \fIboth\fP s1 and s2 to a single stream use \fRpumpify\fP instead\&.
+.SH "License"
+.PP
+MIT
+.SH "Related"
+.PP
+\fRpump\fP is part of the \fRmississippi stream utility collection\fP which includes more useful stream modules similar to this one\&. 

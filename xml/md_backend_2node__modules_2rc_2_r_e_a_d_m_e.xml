@@ -1,0 +1,180 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2rc_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2rc_2_r_e_a_d_m_e</compoundname>
+    <title>rc</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2rc_2_r_e_a_d_m_e_1autotoc_md2953"/> The non-configurable configuration loader for lazy people.</para>
+<sect1 id="md_backend_2node__modules_2rc_2_r_e_a_d_m_e_1autotoc_md2954">
+<title>Usage</title><para>The only option is to pass rc the name of your app, and your default configuration.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>conf<sp/>=<sp/>require(&apos;rc&apos;)(appname,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//defaults<sp/>go<sp/>here.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>port:<sp/>2468,</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//defaults<sp/>which<sp/>are<sp/>objects<sp/>will<sp/>be<sp/>merged,<sp/>not<sp/>replaced</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>views:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>engine:<sp/>&apos;jade&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+</programlisting></para>
+<para><computeroutput>rc</computeroutput> will return your configuration options merged with the defaults you specify. If you pass in a predefined defaults object, it will be mutated:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>conf<sp/>=<sp/>{};</highlight></codeline>
+<codeline><highlight class="normal">require(&apos;rc&apos;)(appname,<sp/>conf);</highlight></codeline>
+</programlisting></para>
+<para>If <computeroutput>rc</computeroutput> finds any config files for your app, the returned config object will have a <computeroutput>configs</computeroutput> array containing their paths:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>appCfg<sp/>=<sp/>require(&apos;rc&apos;)(appname,<sp/>conf);</highlight></codeline>
+<codeline><highlight class="normal">appCfg.configs[0]<sp/>//<sp/>/etc/appnamerc</highlight></codeline>
+<codeline><highlight class="normal">appCfg.configs[1]<sp/>//<sp/>/home/dominictarr/.config/appname</highlight></codeline>
+<codeline><highlight class="normal">appCfg.config<sp/>//<sp/>same<sp/>as<sp/>appCfg.configs[appCfg.configs.length<sp/>-<sp/>1]</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2rc_2_r_e_a_d_m_e_1autotoc_md2955">
+<title>Standards</title><para>Given your application name (<computeroutput>appname</computeroutput>), rc will look in all the obvious places for configuration.</para>
+<para><itemizedlist>
+<listitem><para>command line arguments, parsed by minimist _(e.g. <computeroutput>--foo baz</computeroutput>, also nested: <computeroutput>--foo.bar=baz</computeroutput>)_</para>
+</listitem><listitem><para>environment variables prefixed with <computeroutput>${appname}_</computeroutput><itemizedlist>
+<listitem><para>or use &quot;\_\_&quot; to indicate nested properties <linebreak/>
+ _(e.g. <computeroutput>appname_foo__bar__baz</computeroutput> =&gt; <computeroutput>foo.bar.baz</computeroutput>)_</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para>if you passed an option <computeroutput>--config file</computeroutput> then from that file</para>
+</listitem><listitem><para>a local <computeroutput>.${appname}rc</computeroutput> or the first found looking in <computeroutput>./ ../ ../../ ../../../</computeroutput> etc.</para>
+</listitem><listitem><para><computeroutput>$HOME/.${appname}rc</computeroutput></para>
+</listitem><listitem><para><computeroutput>$HOME/.${appname}/config</computeroutput></para>
+</listitem><listitem><para><computeroutput>$HOME/.config/${appname}</computeroutput></para>
+</listitem><listitem><para><computeroutput>$HOME/.config/${appname}/config</computeroutput></para>
+</listitem><listitem><para><computeroutput>/etc/${appname}rc</computeroutput></para>
+</listitem><listitem><para><computeroutput>/etc/${appname}/config</computeroutput></para>
+</listitem><listitem><para>the defaults object you passed in.</para>
+</listitem></itemizedlist>
+</para>
+<para>All configuration sources that were found will be flattened into one object, so that sources <bold>earlier</bold> in this list override later ones.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2rc_2_r_e_a_d_m_e_1autotoc_md2956">
+<title>Configuration File Formats</title><para>Configuration files (e.g. <computeroutput>.appnamerc</computeroutput>) may be in either <ulink url="http://json.org/example">json</ulink> or <ulink url="http://en.wikipedia.org/wiki/INI_file">ini</ulink> format. <bold>No</bold> file extension (<computeroutput>.json</computeroutput> or <computeroutput>.ini</computeroutput>) should be used. The example configurations below are equivalent:</para>
+<sect3 id="md_backend_2node__modules_2rc_2_r_e_a_d_m_e_1autotoc_md2957">
+<title>Formatted as <computeroutput>ini</computeroutput></title><para><programlisting><codeline><highlight class="normal">;<sp/>You<sp/>can<sp/>include<sp/>comments<sp/>in<sp/>`ini`<sp/>format<sp/>if<sp/>you<sp/>want.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">dependsOn=0.10.0</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">;<sp/>`rc`<sp/>has<sp/>built-in<sp/>support<sp/>for<sp/>ini<sp/>sections,<sp/>see?</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[commands]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>www<sp/><sp/><sp/><sp/><sp/>=<sp/>./commands/www</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console<sp/>=<sp/>./commands/repl</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">;<sp/>You<sp/>can<sp/>even<sp/>do<sp/>nested<sp/>sections</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[generators.options]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>engine<sp/><sp/>=<sp/>ejs</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[generators.modules]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>new<sp/><sp/><sp/><sp/><sp/>=<sp/>generate-new</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>engine<sp/><sp/>=<sp/>generate-backend</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2rc_2_r_e_a_d_m_e_1autotoc_md2958">
+<title>Formatted as <computeroutput>json</computeroutput></title><para><programlisting filename=".js"><codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>You<sp/>can<sp/>even<sp/>comment<sp/>your<sp/>JSON,<sp/>if<sp/>you<sp/>want</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;dependsOn&quot;:<sp/>&quot;0.10.0&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;commands&quot;:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;www&quot;:<sp/>&quot;./commands/www&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;console&quot;:<sp/>&quot;./commands/repl&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;generators&quot;:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;options&quot;:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>&quot;engine&quot;:<sp/>&quot;ejs&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;modules&quot;:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>&quot;new&quot;:<sp/>&quot;generate-new&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>&quot;backend&quot;:<sp/>&quot;generate-backend&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+<para>Comments are stripped from JSON config via <ulink url="https://github.com/sindresorhus/strip-json-comments">strip-json-comments</ulink>.</para>
+<para><blockquote><para><zwj/>Since ini, and env variables do not have a standard for types, your application needs be prepared for strings. </para>
+</blockquote></para>
+<para>To ensure that string representations of booleans and numbers are always converted into their proper types (especially useful if you intend to do strict <computeroutput>===</computeroutput> comparisons), consider using a module such as <ulink url="https://github.com/anselanza/parse-strings-in-object">parse-strings-in-object</ulink> to wrap the config object returned from rc.</para>
+</sect3>
+</sect1>
+<sect1 id="md_backend_2node__modules_2rc_2_r_e_a_d_m_e_1autotoc_md2959">
+<title>Simple example demonstrating precedence</title><para>Assume you have an application like this (notice the hard-coded defaults passed to rc): <programlisting><codeline><highlight class="normal">const<sp/>conf<sp/>=<sp/>require(&apos;rc&apos;)(&apos;myapp&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>12345,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>mode:<sp/>&apos;test&apos;</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">console.log(JSON.stringify(conf,<sp/>null,<sp/>2));</highlight></codeline>
+</programlisting> You also have a file <computeroutput>config.json</computeroutput>, with these contents: <programlisting><codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;port&quot;:<sp/>9000,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;foo&quot;:<sp/>&quot;from<sp/>config<sp/>json&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;something&quot;:<sp/>&quot;else&quot;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> And a file <computeroutput>.myapprc</computeroutput> in the same folder, with these contents: <programlisting><codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;port&quot;:<sp/>&quot;3001&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;foo&quot;:<sp/>&quot;bar&quot;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> Here is the expected output from various commands:</para>
+<para><computeroutput>node .</computeroutput> <programlisting><codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;port&quot;:<sp/>&quot;3001&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;mode&quot;:<sp/>&quot;test&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;foo&quot;:<sp/>&quot;bar&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;_&quot;:<sp/>[],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;configs&quot;:<sp/>[</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;/Users/stephen/repos/conftest/.myapprc&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;config&quot;:<sp/>&quot;/Users/stephen/repos/conftest/.myapprc&quot;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> <emphasis>Default <computeroutput>mode</computeroutput> from hard-coded object is retained, but port is overridden by <computeroutput>.myapprc</computeroutput> file (automatically found based on appname match), and <computeroutput>foo</computeroutput> is added.</emphasis></para>
+<para><computeroutput>node . --foo baz</computeroutput> <programlisting><codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;port&quot;:<sp/>&quot;3001&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;mode&quot;:<sp/>&quot;test&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;foo&quot;:<sp/>&quot;baz&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;_&quot;:<sp/>[],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;configs&quot;:<sp/>[</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;/Users/stephen/repos/conftest/.myapprc&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;config&quot;:<sp/>&quot;/Users/stephen/repos/conftest/.myapprc&quot;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> <emphasis>Same result as above but <computeroutput>foo</computeroutput> is overridden because command-line arguments take precedence over <computeroutput>.myapprc</computeroutput> file.</emphasis></para>
+<para><computeroutput>node . --foo barbar --config config.json</computeroutput> <programlisting><codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;port&quot;:<sp/>9000,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;mode&quot;:<sp/>&quot;test&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;foo&quot;:<sp/>&quot;barbar&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;something&quot;:<sp/>&quot;else&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;_&quot;:<sp/>[],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;config&quot;:<sp/>&quot;config.json&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;configs&quot;:<sp/>[</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;/Users/stephen/repos/conftest/.myapprc&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;config.json&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>]</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> <emphasis>Now the <computeroutput>port</computeroutput> comes from the <computeroutput>config.json</computeroutput> file specified (overriding the value from <computeroutput>.myapprc</computeroutput>), and <computeroutput>foo</computeroutput> value is overriden by command-line despite also being specified in the <computeroutput>config.json</computeroutput> file.</emphasis></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2rc_2_r_e_a_d_m_e_1autotoc_md2960">
+<title>Advanced Usage</title><sect3 id="md_backend_2node__modules_2rc_2_r_e_a_d_m_e_1autotoc_md2961">
+<title>Pass in your own <computeroutput>argv</computeroutput></title><para>You may pass in your own <computeroutput>argv</computeroutput> as the third argument to <computeroutput>rc</computeroutput>. This is in case you want to <ulink url="https://github.com/dominictarr/rc/pull/12">use your own command-line opts parser</ulink>.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">require(&apos;rc&apos;)(appname,<sp/>defaults,<sp/>customArgvParser);</highlight></codeline>
+</programlisting></para>
+</sect3>
+</sect1>
+<sect1 id="md_backend_2node__modules_2rc_2_r_e_a_d_m_e_1autotoc_md2962">
+<title>Pass in your own parser</title><para>If you have a special need to use a non-standard parser, you can do so by passing in the parser as the 4th argument. (leave the 3rd as null to get the default args parser)</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">require(&apos;rc&apos;)(appname,<sp/>defaults,<sp/>null,<sp/>parser);</highlight></codeline>
+</programlisting></para>
+<para>This may also be used to force a more strict format, such as strict, valid JSON only.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2rc_2_r_e_a_d_m_e_1autotoc_md2963">
+<title>Note on Performance</title><para><computeroutput>rc</computeroutput> is running <computeroutput>fs.statSync</computeroutput><ndash/> so make sure you don&apos;t use it in a hot code path (e.g. a request handler)</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2rc_2_r_e_a_d_m_e_1autotoc_md2964">
+<title>License</title><para>Multi-licensed under the two-clause BSD License, MIT License, or Apache License, version 2.0 </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/rc/README.md"/>
+  </compounddef>
+</doxygen>

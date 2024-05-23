@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2inflight_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2inflight_2_r_e_a_d_m_e</compoundname>
+    <title>inflight</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2inflight_2_r_e_a_d_m_e_1autotoc_md1714"/> Add callbacks to requests in flight to avoid async duplication</para>
+<sect1 id="md_backend_2node__modules_2inflight_2_r_e_a_d_m_e_1autotoc_md1715">
+<title>USAGE</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>inflight<sp/>=<sp/>require(&apos;inflight&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>some<sp/>request<sp/>that<sp/>does<sp/>some<sp/>stuff</highlight></codeline>
+<codeline><highlight class="normal">function<sp/>req(key,<sp/>callback)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>key<sp/>is<sp/>any<sp/>random<sp/>string.<sp/><sp/>like<sp/>a<sp/>url<sp/>or<sp/>filename<sp/>or<sp/>whatever.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>will<sp/>return<sp/>either<sp/>a<sp/>falsey<sp/>value,<sp/>indicating<sp/>that<sp/>the</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>request<sp/>for<sp/>this<sp/>key<sp/>is<sp/>already<sp/>in<sp/>flight,<sp/>or<sp/>a<sp/>new<sp/>callback</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>which<sp/>when<sp/>called<sp/>will<sp/>call<sp/>all<sp/>callbacks<sp/>passed<sp/>to<sp/>inflightk</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>with<sp/>the<sp/>same<sp/>key</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>callback<sp/>=<sp/>inflight(key,<sp/>callback)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>If<sp/>we<sp/>got<sp/>a<sp/>falsey<sp/>value<sp/>back,<sp/>then<sp/>there&apos;s<sp/>already<sp/>a<sp/>req<sp/>going</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(!callback)<sp/>return</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>this<sp/>is<sp/>where<sp/>you&apos;d<sp/>fetch<sp/>the<sp/>url<sp/>or<sp/>whatever</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>callback<sp/>is<sp/>also<sp/>once()-ified,<sp/>so<sp/>it<sp/>can<sp/>safely<sp/>be<sp/>assigned</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>to<sp/>multiple<sp/>events<sp/>etc.<sp/><sp/>First<sp/>call<sp/>wins.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>setTimeout(function()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>callback(null,<sp/>key)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},<sp/>100)</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>only<sp/>assigns<sp/>a<sp/>single<sp/>setTimeout</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>when<sp/>it<sp/>dings,<sp/>all<sp/>cbs<sp/>get<sp/>called</highlight></codeline>
+<codeline><highlight class="normal">req(&apos;foo&apos;,<sp/>cb1)</highlight></codeline>
+<codeline><highlight class="normal">req(&apos;foo&apos;,<sp/>cb2)</highlight></codeline>
+<codeline><highlight class="normal">req(&apos;foo&apos;,<sp/>cb3)</highlight></codeline>
+<codeline><highlight class="normal">req(&apos;foo&apos;,<sp/>cb4)</highlight></codeline>
+</programlisting> </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/inflight/README.md"/>
+  </compounddef>
+</doxygen>

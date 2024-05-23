@@ -1,0 +1,105 @@
+.TH "md_backend_2node__modules_2encodeurl_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2encodeurl_2_r_e_a_d_m_e \- encodeurl 
+.PP
+ \fR\fP \fR\fP \fR\fP \fR\fP \fR\fP
+.PP
+Encode a URL to a percent-encoded form, excluding already-encoded sequences
+.SH "Installation"
+.PP
+This is a \fRNode\&.js\fP module available through the \fRnpm registry\fP\&. Installation is done using the \fR\fRnpm install\fP command\fP:
+.PP
+.PP
+.nf
+$ npm install encodeurl
+.fi
+.PP
+.SH "API"
+.PP
+.PP
+.nf
+var encodeUrl = require('encodeurl')
+.fi
+.PP
+.SS "encodeUrl(url)"
+Encode a URL to a percent-encoded form, excluding already-encoded sequences\&.
+.PP
+This function will take an already-encoded URL and encode all the non-URL code points (as UTF-8 byte sequences)\&. This function will not encode the '%' character unless it is not part of a valid sequence (\fR%20\fP will be left as-is, but \fRfoo\fP will be encoded as \fR%25foo\fP)\&.
+.PP
+This encode is meant to be 'safe' and does not throw errors\&. It will try as hard as it can to properly encode the given URL, including replacing any raw, unpaired surrogate pairs with the Unicode replacement character prior to encoding\&.
+.PP
+This function is \fIsimilar\fP to the intrinsic function \fRencodeURI\fP, except it will not encode the \fR%\fP character if that is part of a valid sequence, will not encode \fR[\fP and \fR]\fP (for IPv6 hostnames) and will replace raw, unpaired surrogate pairs with the Unicode replacement character (instead of throwing)\&.
+.SH "Examples"
+.PP
+.SS "Encode a URL containing user-controled data"
+.PP
+.nf
+var encodeUrl = require('encodeurl')
+var escapeHtml = require('escape\-html')
+
+http\&.createServer(function onRequest (req, res) {
+  // get encoded form of inbound url
+  var url = encodeUrl(req\&.url)
+
+  // create html message
+  var body = '<p>Location ' + escapeHtml(url) + ' not found</p>'
+
+  // send a 404
+  res\&.statusCode = 404
+  res\&.setHeader('Content\-Type', 'text/html; charset=UTF\-8')
+  res\&.setHeader('Content\-Length', String(Buffer\&.byteLength(body, 'utf\-8')))
+  res\&.end(body, 'utf\-8')
+})
+.fi
+.PP
+.SS "Encode a URL for use in a header field"
+.PP
+.nf
+var encodeUrl = require('encodeurl')
+var escapeHtml = require('escape\-html')
+var url = require('url')
+
+http\&.createServer(function onRequest (req, res) {
+  // parse inbound url
+  var href = url\&.parse(req)
+
+  // set new host for redirect
+  href\&.host = 'localhost'
+  href\&.protocol = 'https:'
+  href\&.slashes = true
+
+  // create location header
+  var location = encodeUrl(url\&.format(href))
+
+  // create html message
+  var body = '<p>Redirecting to new site: ' + escapeHtml(location) + '</p>'
+
+  // send a 301
+  res\&.statusCode = 301
+  res\&.setHeader('Content\-Type', 'text/html; charset=UTF\-8')
+  res\&.setHeader('Content\-Length', String(Buffer\&.byteLength(body, 'utf\-8')))
+  res\&.setHeader('Location', location)
+  res\&.end(body, 'utf\-8')
+})
+.fi
+.PP
+.SH "Testing"
+.PP
+.PP
+.nf
+$ npm test
+$ npm run lint
+.fi
+.PP
+.SH "References"
+.PP
+.IP "\(bu" 2
+\fRRFC 3986: Uniform Resource Identifier (URI): Generic Syntax\fP
+.IP "\(bu" 2
+\fRWHATWG URL Living Standard\fP
+.PP
+.SH "License"
+.PP
+[MIT](LICENSE) 

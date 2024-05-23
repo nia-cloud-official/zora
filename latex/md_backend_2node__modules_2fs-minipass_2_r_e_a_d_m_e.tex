@@ -1,0 +1,56 @@
+\chapter{fs-\/minipass}
+\hypertarget{md_backend_2node__modules_2fs-minipass_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2fs-minipass_2_r_e_a_d_m_e}\index{fs-\/minipass@{fs-\/minipass}}
+\label{md_backend_2node__modules_2fs-minipass_2_r_e_a_d_m_e_autotoc_md1318}%
+\Hypertarget{md_backend_2node__modules_2fs-minipass_2_r_e_a_d_m_e_autotoc_md1318}%
+ Filesystem streams based on \href{http://npm.im/minipass}{\texttt{ minipass}}.
+
+4 classes are exported\+:
+
+
+\begin{DoxyItemize}
+\item Read\+Stream
+\item Read\+Stream\+Sync
+\item Write\+Stream
+\item Write\+Stream\+Sync
+\end{DoxyItemize}
+
+When using {\ttfamily Read\+Stream\+Sync}, all of the data is made available immediately upon consuming the stream. Nothing is buffered in memory when the stream is constructed. If the stream is piped to a writer, then it will synchronously {\ttfamily read()} and emit data into the writer as fast as the writer can consume it. (That is, it will respect backpressure.) If you call {\ttfamily stream.\+read()} then it will read the entire file and return the contents.
+
+When using {\ttfamily Write\+Stream\+Sync}, every write is flushed to the file synchronously. If your writes all come in a single tick, then it\textquotesingle{}ll write it all out in a single tick. It\textquotesingle{}s as synchronous as you are.
+
+The async versions work much like their node builtin counterparts, with the exception of introducing significantly less Stream machinery overhead.\hypertarget{md_backend_2node__modules_2fs-minipass_2_r_e_a_d_m_e_autotoc_md1319}{}\doxysection{\texorpdfstring{USAGE}{USAGE}}\label{md_backend_2node__modules_2fs-minipass_2_r_e_a_d_m_e_autotoc_md1319}
+It\textquotesingle{}s just streams, you pipe them or read() them or write() to them.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ fsm\ =\ require('fs-\/minipass')}
+\DoxyCodeLine{const\ readStream\ =\ new\ fsm.ReadStream('file.txt')}
+\DoxyCodeLine{const\ writeStream\ =\ new\ fsm.WriteStream('output.txt')}
+\DoxyCodeLine{writeStream.write('some\ file\ header\ or\ whatever\(\backslash\)n')}
+\DoxyCodeLine{readStream.pipe(writeStream)}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2fs-minipass_2_r_e_a_d_m_e_autotoc_md1320}{}\doxysection{\texorpdfstring{Read\+Stream(path, options)}{Read\+Stream(path, options)}}\label{md_backend_2node__modules_2fs-minipass_2_r_e_a_d_m_e_autotoc_md1320}
+Path string is required, but somewhat irrelevant if an open file descriptor is passed in as an option.
+
+Options\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily fd} Pass in a numeric file descriptor, if the file is already open.
+\item {\ttfamily read\+Size} The size of reads to do, defaults to 16MB
+\item {\ttfamily size} The size of the file, if known. Prevents zero-\/byte read() call at the end.
+\item {\ttfamily auto\+Close} Set to {\ttfamily false} to prevent the file descriptor from being closed when the file is done being read.
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2fs-minipass_2_r_e_a_d_m_e_autotoc_md1321}{}\doxysection{\texorpdfstring{Write\+Stream(path, options)}{Write\+Stream(path, options)}}\label{md_backend_2node__modules_2fs-minipass_2_r_e_a_d_m_e_autotoc_md1321}
+Path string is required, but somewhat irrelevant if an open file descriptor is passed in as an option.
+
+Options\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily fd} Pass in a numeric file descriptor, if the file is already open.
+\item {\ttfamily mode} The mode to create the file with. Defaults to {\ttfamily 0o666}.
+\item {\ttfamily start} The position in the file to start reading. If not specified, then the file will start writing at position zero, and be truncated by default.
+\item {\ttfamily auto\+Close} Set to {\ttfamily false} to prevent the file descriptor from being closed when the stream is ended.
+\item {\ttfamily flags} Flags to use when opening the file. Irrelevant if {\ttfamily fd} is passed in, since file won\textquotesingle{}t be opened in that case. Defaults to `\textquotesingle{}a'{\ttfamily if a}pos{\ttfamily is specified, or}\textquotesingle{}w\textquotesingle{}\`{} otherwise. 
+\end{DoxyItemize}

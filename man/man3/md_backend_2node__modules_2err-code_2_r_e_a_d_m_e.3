@@ -1,0 +1,57 @@
+.TH "md_backend_2node__modules_2err-code_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2err-code_2_r_e_a_d_m_e \- err-code 
+.PP
+ \fR\fP \fR\fP \fR\fP \fR\fP \fR\fP \fR\fP
+.PP
+Create new error instances with a code and additional properties\&.
+.SH "Installation"
+.PP
+.PP
+.nf
+$ npm install err\-code
+// or
+$ bower install err\-code
+.fi
+.PP
+.PP
+The browser file is named index\&.umd\&.js which supports CommonJS, AMD and globals (errCode)\&.
+.SH "Why"
+.PP
+I find myself doing this repeatedly:
+.PP
+.PP
+.nf
+var err = new Error('My message');
+err\&.code = 'SOMECODE';
+err\&.detail = 'Additional information about the error';
+throw err;
+.fi
+.PP
+.SH "Usage"
+.PP
+Simple usage\&.
+.PP
+.PP
+.nf
+var errcode = require('err\-code');
+
+// fill error with message + code
+throw errcode(new Error('My message'), 'ESOMECODE');
+// fill error with message + code + props
+throw errcode(new Error('My message'), 'ESOMECODE', { detail: 'Additional information about the error' });
+// fill error with message + props
+throw errcode(new Error('My message'), { detail: 'Additional information about the error' });
+.fi
+.PP
+.SH "Pre-existing fields"
+.PP
+If the passed \fRError\fP already has a \fR\&.code\fP field, or fields specified in the third argument to \fRerrcode\fP they will be overwritten, unless the fields are read only or otherwise throw during assignment in which case a new object will be created that shares a prototype chain with the original \fRError\fP\&. The \fR\&.stack\fP and \fR\&.message\fP properties will be carried over from the original error and \fR\&.code\fP or any passed properties will be set on it\&.
+.SH "Tests"
+.PP
+\fR$ npm test\fP
+.SH "License"
+.PP
+Released under the \fRMIT License\fP\&. 

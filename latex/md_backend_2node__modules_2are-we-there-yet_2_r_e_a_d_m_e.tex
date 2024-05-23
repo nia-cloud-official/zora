@@ -1,0 +1,223 @@
+\chapter{are-\/we-\/there-\/yet}
+\hypertarget{md_backend_2node__modules_2are-we-there-yet_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2are-we-there-yet_2_r_e_a_d_m_e}\index{are-\/we-\/there-\/yet@{are-\/we-\/there-\/yet}}
+Track complex hierarchies of asynchronous task completion statuses. This is intended to give you a way of recording and reporting the progress of the big recursive fan-\/out and gather type workflows that are so common in async.
+
+What you do with this completion data is up to you, but the most common use case is to feed it to one of the many progress bar modules.
+
+Most progress bar modules include a rudimentary version of this, but my needs were more complex.\hypertarget{md_backend_2node__modules_2are-we-there-yet_2_r_e_a_d_m_e_autotoc_md182}{}\doxysection{\texorpdfstring{Usage}{Usage}}\label{md_backend_2node__modules_2are-we-there-yet_2_r_e_a_d_m_e_autotoc_md182}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ TrackerGroup\ =\ require("{}are-\/we-\/there-\/yet"{}).TrackerGroup}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ top\ =\ new\ TrackerGroup("{}program"{})}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ single\ =\ top.newItem("{}one\ thing"{},\ 100)}
+\DoxyCodeLine{single.completeWork(20)}
+\DoxyCodeLine{}
+\DoxyCodeLine{console.log(top.completed())\ //\ 0.2}
+\DoxyCodeLine{}
+\DoxyCodeLine{fs.stat("{}file"{},\ function(er,\ stat)\ \{}
+\DoxyCodeLine{\ \ if\ (er)\ throw\ er\ \ }
+\DoxyCodeLine{\ \ var\ stream\ =\ top.newStream("{}file"{},\ stat.size)}
+\DoxyCodeLine{\ \ console.log(top.completed())\ //\ now\ 0.1\ as\ single\ is\ 50\%\ of\ the\ job\ and\ is\ 20\%\ complete}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ and\ 50\%\ *\ 20\%\ ==\ 10\%}
+\DoxyCodeLine{\ \ fs.createReadStream("{}file"{}).pipe(stream).on("{}data"{},\ function\ (chunk)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ do\ stuff\ with\ chunk}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\ \ top.on("{}change"{},\ function\ (name)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ called\ each\ time\ a\ chunk\ is\ read\ from\ "{}file"{}}
+\DoxyCodeLine{\ \ \ \ //\ top.completed()\ will\ start\ at\ 0.1\ and\ fill\ up\ to\ 0.6\ as\ the\ file\ is\ read}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2are-we-there-yet_2_r_e_a_d_m_e_autotoc_md183}{}\doxysection{\texorpdfstring{Shared Methods}{Shared Methods}}\label{md_backend_2node__modules_2are-we-there-yet_2_r_e_a_d_m_e_autotoc_md183}
+
+\begin{DoxyItemize}
+\item var completed = tracker.\+completed()
+\end{DoxyItemize}
+
+Implemented in\+: {\ttfamily Tracker}, {\ttfamily Tracker\+Group}, {\ttfamily Tracker\+Stream}
+
+Returns the ratio of completed work to work to be done. Range of 0 to 1.
+
+
+\begin{DoxyItemize}
+\item tracker.\+finish()
+\end{DoxyItemize}
+
+Implemented in\+: {\ttfamily Tracker}, {\ttfamily Tracker\+Group}
+
+Marks the tracker as completed. With a Tracker\+Group this marks all of its components as completed.
+
+Marks all of the components of this tracker as finished, which in turn means that {\ttfamily tracker.\+completed()} for this will now be 1.
+
+This will result in one or more {\ttfamily change} events being emitted.\hypertarget{md_backend_2node__modules_2are-we-there-yet_2_r_e_a_d_m_e_autotoc_md184}{}\doxysection{\texorpdfstring{Events}{Events}}\label{md_backend_2node__modules_2are-we-there-yet_2_r_e_a_d_m_e_autotoc_md184}
+All tracker objects emit {\ttfamily change} events with the following arguments\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{function\ (name,\ completed,\ tracker)}
+
+\end{DoxyCode}
+
+
+{\ttfamily name} is the name of the tracker that originally emitted the event, or if it didn\textquotesingle{}t have one, the first containing tracker group that had one.
+
+{\ttfamily completed} is the percent complete (as returned by {\ttfamily tracker.\+completed()} method).
+
+{\ttfamily tracker} is the tracker object that you are listening for events on.\hypertarget{md_backend_2node__modules_2are-we-there-yet_2_r_e_a_d_m_e_autotoc_md185}{}\doxysection{\texorpdfstring{Tracker\+Group}{Tracker\+Group}}\label{md_backend_2node__modules_2are-we-there-yet_2_r_e_a_d_m_e_autotoc_md185}
+
+\begin{DoxyItemize}
+\item var tracker = new Tracker\+Group({\bfseries{name}})
+\begin{DoxyItemize}
+\item {\bfseries{name}} \texorpdfstring{$\ast$}{*}(optional)\texorpdfstring{$\ast$}{*} -\/ The name of this tracker group, used in change notifications if the component updating didn\textquotesingle{}t have a name. Defaults to undefined.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Creates a new empty tracker aggregation group. These are trackers whose completion status is determined by the completion status of other trackers added to this aggregation group.
+
+Ex.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ tracker\ =\ new\ TrackerGroup("{}parent"{})}
+\DoxyCodeLine{var\ foo\ =\ tracker.newItem("{}firstChild"{},\ 100)}
+\DoxyCodeLine{var\ bar\ =\ tracker.newItem("{}secondChild"{},\ 100)}
+\DoxyCodeLine{}
+\DoxyCodeLine{foo.finish()}
+\DoxyCodeLine{console.log(tracker.completed())\ //\ 0.5}
+\DoxyCodeLine{bar.finish()}
+\DoxyCodeLine{console.log(tracker.completed())\ //\ 1}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item tracker.\+add\+Unit({\bfseries{other\+Tracker}}, {\bfseries{weight}})
+\begin{DoxyItemize}
+\item {\bfseries{other\+Tracker}} -\/ Any of the other are-\/we-\/there-\/yet tracker objects
+\item {\bfseries{weight}} \texorpdfstring{$\ast$}{*}(optional)\texorpdfstring{$\ast$}{*} -\/ The weight to give the tracker, defaults to 1.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Adds the {\bfseries{other\+Tracker}} to this aggregation group. The weight determines how long you expect this tracker to take to complete in proportion to other units. So for instance, if you add one tracker with a weight of 1 and another with a weight of 2, you\textquotesingle{}re saying the second will take twice as long to complete as the first. As such, the first will account for 33\% of the completion of this tracker and the second will account for the other 67\%.
+
+Returns {\bfseries{other\+Tracker}}.
+
+
+\begin{DoxyItemize}
+\item var sub\+Group = tracker.\+new\+Group({\bfseries{name}}, {\bfseries{weight}})
+\end{DoxyItemize}
+
+The above is exactly equivalent to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ subGroup\ =\ tracker.addUnit(new\ TrackerGroup(name),\ weight)}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item var sub\+Item = tracker.\+new\+Item({\bfseries{name}}, {\bfseries{todo}}, {\bfseries{weight}})
+\end{DoxyItemize}
+
+The above is exactly equivalent to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ subItem\ =\ tracker.addUnit(new\ Tracker(name,\ todo),\ weight)}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item var sub\+Stream = tracker.\+new\+Stream({\bfseries{name}}, {\bfseries{todo}}, {\bfseries{weight}})
+\end{DoxyItemize}
+
+The above is exactly equivalent to\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ subStream\ =\ tracker.addUnit(new\ TrackerStream(name,\ todo),\ weight)}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item console.\+log( tracker.\+debug() )
+\end{DoxyItemize}
+
+Returns a tree showing the completion of this tracker group and all of its children, including recursively entering all of the children.\hypertarget{md_backend_2node__modules_2are-we-there-yet_2_r_e_a_d_m_e_autotoc_md186}{}\doxysection{\texorpdfstring{Tracker}{Tracker}}\label{md_backend_2node__modules_2are-we-there-yet_2_r_e_a_d_m_e_autotoc_md186}
+
+\begin{DoxyItemize}
+\item var tracker = new Tracker({\bfseries{name}}, {\bfseries{todo}})
+\begin{DoxyItemize}
+\item {\bfseries{name}} \texorpdfstring{$\ast$}{*}(optional)\texorpdfstring{$\ast$}{*} The name of this counter to report in change events. Defaults to undefined.
+\item {\bfseries{todo}} \texorpdfstring{$\ast$}{*}(optional)\texorpdfstring{$\ast$}{*} The amount of work todo (a number). Defaults to 0.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Ordinarily these are constructed as a part of a tracker group (via {\ttfamily new\+Item}).
+
+
+\begin{DoxyItemize}
+\item var completed = tracker.\+completed()
+\end{DoxyItemize}
+
+Returns the ratio of completed work to work to be done. Range of 0 to 1. If total work to be done is 0 then it will return 0.
+
+
+\begin{DoxyItemize}
+\item tracker.\+add\+Work({\bfseries{todo}})
+\begin{DoxyItemize}
+\item {\bfseries{todo}} A number to add to the amount of work to be done.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Increases the amount of work to be done, thus decreasing the completion percentage. Triggers a {\ttfamily change} event.
+
+
+\begin{DoxyItemize}
+\item tracker.\+complete\+Work({\bfseries{completed}})
+\begin{DoxyItemize}
+\item {\bfseries{completed}} A number to add to the work complete
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Increase the amount of work complete, thus increasing the completion percentage. Will never increase the work completed past the amount of work todo. That is, percentages \texorpdfstring{$>$}{>} 100\% are not allowed. Triggers a {\ttfamily change} event.
+
+
+\begin{DoxyItemize}
+\item tracker.\+finish()
+\end{DoxyItemize}
+
+Marks this tracker as finished, tracker.\+completed() will now be 1. Triggers a {\ttfamily change} event.\hypertarget{md_backend_2node__modules_2are-we-there-yet_2_r_e_a_d_m_e_autotoc_md187}{}\doxysection{\texorpdfstring{Tracker\+Stream}{Tracker\+Stream}}\label{md_backend_2node__modules_2are-we-there-yet_2_r_e_a_d_m_e_autotoc_md187}
+
+\begin{DoxyItemize}
+\item var tracker = new Tracker\+Stream({\bfseries{name}}, {\bfseries{size}}, {\bfseries{options}})
+\begin{DoxyItemize}
+\item {\bfseries{name}} \texorpdfstring{$\ast$}{*}(optional)\texorpdfstring{$\ast$}{*} The name of this counter to report in change events. Defaults to undefined.
+\item {\bfseries{size}} \texorpdfstring{$\ast$}{*}(optional)\texorpdfstring{$\ast$}{*} The number of bytes being sent through this stream.
+\item {\bfseries{options}} \texorpdfstring{$\ast$}{*}(optional)\texorpdfstring{$\ast$}{*} A hash of stream options
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+The tracker stream object is a pass through stream that updates an internal tracker object each time a block passes through. It\textquotesingle{}s intended to track downloads, file extraction and other related activities. You use it by piping your data source into it and then using it as your data source.
+
+If your data has a length attribute then that\textquotesingle{}s used as the amount of work completed when the chunk is passed through. If it does not (eg, object streams) then each chunk counts as completing 1 unit of work, so your size should be the total number of objects being streamed.
+
+
+\begin{DoxyItemize}
+\item tracker.\+add\+Work({\bfseries{todo}})
+\begin{DoxyItemize}
+\item {\bfseries{todo}} Increase the expected overall size by {\bfseries{todo}} bytes.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Increases the amount of work to be done, thus decreasing the completion percentage. Triggers a {\ttfamily change} event. 

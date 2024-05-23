@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2emoji-regex_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2emoji-regex_2_r_e_a_d_m_e</compoundname>
+    <title>emoji-regex &lt;a href=&quot;https://travis-ci.org/mathiasbynens/emoji-regex&quot; &gt;&lt;img src=&quot;https://travis-ci.org/mathiasbynens/emoji-regex.svg?branch=master&quot; alt=&quot;Build status&quot;/&gt;&lt;/a&gt;</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2emoji-regex_2_r_e_a_d_m_e_1autotoc_md806"/> <emphasis>emoji-regex</emphasis> offers a regular expression to match all emoji symbols (including textual representations of emoji) as per the Unicode Standard.</para>
+<para>This repository contains a script that generates this regular expression based on <ulink url="https://github.com/mathiasbynens/unicode-12.0.0">the data from Unicode v12</ulink>. Because of this, the regular expression can easily be updated whenever new emoji are added to the Unicode standard.</para>
+<sect1 id="md_backend_2node__modules_2emoji-regex_2_r_e_a_d_m_e_1autotoc_md807">
+<title>Installation</title><para>Via <ulink url="https://www.npmjs.com/">npm</ulink>:</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">npm<sp/>install<sp/>emoji-regex</highlight></codeline>
+</programlisting></para>
+<para>In <ulink url="https://nodejs.org/">Node.js</ulink>:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>emojiRegex<sp/>=<sp/>require(&apos;emoji-regex&apos;);</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Note:<sp/>because<sp/>the<sp/>regular<sp/>expression<sp/>has<sp/>the<sp/>global<sp/>flag<sp/>set,<sp/>this<sp/>module</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>exports<sp/>a<sp/>function<sp/>that<sp/>returns<sp/>the<sp/>regex<sp/>rather<sp/>than<sp/>exporting<sp/>the<sp/>regular</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>expression<sp/>itself,<sp/>to<sp/>make<sp/>it<sp/>impossible<sp/>to<sp/>(accidentally)<sp/>mutate<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>original<sp/>regular<sp/>expression.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>text<sp/>=<sp/>`</highlight></codeline>
+<codeline><highlight class="normal">\u{231A}:<sp/>⌚<sp/>default<sp/>emoji<sp/>presentation<sp/>character<sp/>(Emoji_Presentation)</highlight></codeline>
+<codeline><highlight class="normal">\u{2194}\u{FE0F}:<sp/>↔️<sp/>default<sp/>text<sp/>presentation<sp/>character<sp/>rendered<sp/>as<sp/>emoji</highlight></codeline>
+<codeline><highlight class="normal">\u{1F469}:<sp/>👩<sp/>emoji<sp/>modifier<sp/>base<sp/>(Emoji_Modifier_Base)</highlight></codeline>
+<codeline><highlight class="normal">\u{1F469}\u{1F3FF}:<sp/>👩🏿<sp/>emoji<sp/>modifier<sp/>base<sp/>followed<sp/>by<sp/>a<sp/>modifier</highlight></codeline>
+<codeline><highlight class="normal">`;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>regex<sp/>=<sp/>emojiRegex();</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>match;</highlight></codeline>
+<codeline><highlight class="normal">while<sp/>(match<sp/>=<sp/>regex.exec(text))<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>const<sp/>emoji<sp/>=<sp/>match[0];</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(`Matched<sp/>sequence<sp/>${<sp/>emoji<sp/>}<sp/>—<sp/>code<sp/>points:<sp/>${<sp/>[...emoji].length<sp/>}`);</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+<para>Console output:</para>
+<para><programlisting><codeline><highlight class="normal">Matched<sp/>sequence<sp/>⌚<sp/>—<sp/>code<sp/>points:<sp/>1</highlight></codeline>
+<codeline><highlight class="normal">Matched<sp/>sequence<sp/>⌚<sp/>—<sp/>code<sp/>points:<sp/>1</highlight></codeline>
+<codeline><highlight class="normal">Matched<sp/>sequence<sp/>↔️<sp/>—<sp/>code<sp/>points:<sp/>2</highlight></codeline>
+<codeline><highlight class="normal">Matched<sp/>sequence<sp/>↔️<sp/>—<sp/>code<sp/>points:<sp/>2</highlight></codeline>
+<codeline><highlight class="normal">Matched<sp/>sequence<sp/>👩<sp/>—<sp/>code<sp/>points:<sp/>1</highlight></codeline>
+<codeline><highlight class="normal">Matched<sp/>sequence<sp/>👩<sp/>—<sp/>code<sp/>points:<sp/>1</highlight></codeline>
+<codeline><highlight class="normal">Matched<sp/>sequence<sp/>👩🏿<sp/>—<sp/>code<sp/>points:<sp/>2</highlight></codeline>
+<codeline><highlight class="normal">Matched<sp/>sequence<sp/>👩🏿<sp/>—<sp/>code<sp/>points:<sp/>2</highlight></codeline>
+</programlisting></para>
+<para>To match emoji in their textual representation as well (i.e. emoji that are not <computeroutput>Emoji_Presentation</computeroutput> symbols and that aren’t forced to render as emoji by a variation selector), <computeroutput>require</computeroutput> the other regex:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>emojiRegex<sp/>=<sp/>require(&apos;emoji-regex/text.js&apos;);</highlight></codeline>
+</programlisting></para>
+<para>Additionally, in environments which support ES2015 Unicode escapes, you may <computeroutput>require</computeroutput> ES2015-style versions of the regexes:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>emojiRegex<sp/>=<sp/>require(&apos;emoji-regex/es2015/index.js&apos;);</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>emojiRegexText<sp/>=<sp/>require(&apos;emoji-regex/es2015/text.js&apos;);</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2emoji-regex_2_r_e_a_d_m_e_1autotoc_md808">
+<title>Author</title><para><table rows="2" cols="1"><row>
+<entry thead="yes"><para><ulink url="https://twitter.com/mathias"><image type="html" name="https://gravatar.com/avatar/24e08a9ea84deb17ae121074d0f17125?s=70" alt="twitter/mathias" inline="yes"></image>
+</ulink>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para><ulink url="https://mathiasbynens.be/">Mathias Bynens</ulink>   </para>
+</entry></row>
+</table>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2emoji-regex_2_r_e_a_d_m_e_1autotoc_md809">
+<title>License</title><para><emphasis>emoji-regex</emphasis> is available under the <ulink url="https://mths.be/mit">MIT</ulink> license. </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/emoji-regex/README.md"/>
+  </compounddef>
+</doxygen>

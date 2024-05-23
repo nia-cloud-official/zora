@@ -1,0 +1,213 @@
+.TH "md_backend_2node__modules_2http-cache-semantics_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2http-cache-semantics_2_r_e_a_d_m_e \- Can I cache this? \fR\fP 
+.PP
+ \fRCachePolicy\fP tells when responses can be reused from a cache, taking into account \fRHTTP RFC 7234\fP rules for user agents and shared caches\&. It also implements \fRRFC 5861\fP, implementing \fRstale-if-error\fP and \fRstale-while-revalidate\fP\&. It's aware of many tricky details such as the \fRVary\fP header, proxy revalidation, and authenticated responses\&.
+.SH "Usage"
+.PP
+Cacheability of an HTTP response depends on how it was requested, so both \fRrequest\fP and \fRresponse\fP are required to create the policy\&.
+.PP
+.PP
+.nf
+const policy = new CachePolicy(request, response, options);
+
+if (!policy\&.storable()) {
+    // throw the response away, it's not usable at all
+    return;
+}
+
+// Cache the data AND the policy object in your cache
+// (this is pseudocode, roll your own cache (lru\-cache package works))
+letsPretendThisIsSomeCache\&.set(
+    request\&.url,
+    { policy, response },
+    policy\&.timeToLive()
+);
+.fi
+.PP
+.PP
+.PP
+.nf
+// And later, when you receive a new request:
+const { policy, response } = letsPretendThisIsSomeCache\&.get(newRequest\&.url);
+
+// It's not enough that it exists in the cache, it has to match the new request, too:
+if (policy && policy\&.satisfiesWithoutRevalidation(newRequest)) {
+    // OK, the previous response can be used to respond to the `newRequest`\&.
+    // Response headers have to be updated, e\&.g\&. to add Age and remove uncacheable headers\&.
+    response\&.headers = policy\&.responseHeaders();
+    return response;
+}
+.fi
+.PP
+.PP
+It may be surprising, but it's not enough for an HTTP response to be \fBfresh\fP to satisfy a request\&. It may need to match request headers specified in \fRVary\fP\&. Even a matching fresh response may still not be usable if the new request restricted cacheability, etc\&.
+.PP
+The key method is \fRsatisfiesWithoutRevalidation(newRequest)\fP, which checks whether the \fRnewRequest\fP is compatible with the original request and whether all caching conditions are met\&.
+.SS "Constructor options"
+Request and response must have a \fRheaders\fP property with all header names in lower case\&. \fRurl\fP, \fRstatus\fP and \fRmethod\fP are optional (defaults are any URL, status \fR200\fP, and \fRGET\fP method)\&.
+.PP
+.PP
+.nf
+const request = {
+    url: '/',
+    method: 'GET',
+    headers: {
+        accept: '*/*',
+    },
+};
+
+const response = {
+    status: 200,
+    headers: {
+        'cache\-control': 'public, max\-age=7234',
+    },
+};
+
+const options = {
+    shared: true,
+    cacheHeuristic: 0\&.1,
+    immutableMinTimeToLive: 24 * 3600 * 1000, // 24h
+    ignoreCargoCult: false,
+};
+.fi
+.PP
+.PP
+If \fRoptions\&.shared\fP is \fRtrue\fP (default), then the response is evaluated from a perspective of a shared cache (i\&.e\&. \fRprivate\fP is not cacheable and \fRs-maxage\fP is respected)\&. If \fRoptions\&.shared\fP is \fRfalse\fP, then the response is evaluated from a perspective of a single-user cache (i\&.e\&. \fRprivate\fP is cacheable and \fRs-maxage\fP is ignored)\&. \fRshared: true\fP is recommended for HTTP clients\&.
+.PP
+\fRoptions\&.cacheHeuristic\fP is a fraction of response's age that is used as a fallback cache duration\&. The default is 0\&.1 (10%), e\&.g\&. if a file hasn't been modified for 100 days, it'll be cached for 100*0\&.1 = 10 days\&.
+.PP
+\fRoptions\&.immutableMinTimeToLive\fP is a number of milliseconds to assume as the default time to cache responses with \fRCache-Control: immutable\fP\&. Note that \fRper RFC\fP these can become stale, so \fRmax-age\fP still overrides the default\&.
+.PP
+If \fRoptions\&.ignoreCargoCult\fP is true, common anti-cache directives will be completely ignored if the non-standard \fRpre-check\fP and \fRpost-check\fP directives are present\&. These two useless directives are most commonly found in bad StackOverflow answers and PHP's 'session limiter' defaults\&.
+.SS "\fRstorable()\fP"
+Returns \fRtrue\fP if the response can be stored in a cache\&. If it's \fRfalse\fP then you MUST NOT store either the request or the response\&.
+.SS "\fRsatisfiesWithoutRevalidation(newRequest)\fP"
+This is the most important method\&. Use this method to check whether the cached response is still fresh in the context of the new request\&.
+.PP
+If it returns \fRtrue\fP, then the given \fRrequest\fP matches the original response this cache policy has been created with, and the response can be reused without contacting the server\&. Note that the old response can't be returned without being updated, see \fRresponseHeaders()\fP\&.
+.PP
+If it returns \fRfalse\fP, then the response may not be matching at all (e\&.g\&. it's for a different URL or method), or may require to be refreshed first (see \fRrevalidationHeaders()\fP)\&.
+.SS "\fRresponseHeaders()\fP"
+Returns updated, filtered set of response headers to return to clients receiving the cached response\&. This function is necessary, because proxies MUST always remove hop-by-hop headers (such as \fRTE\fP and \fRConnection\fP) and update response's \fRAge\fP to avoid doubling cache time\&.
+.PP
+.PP
+.nf
+cachedResponse\&.headers = cachePolicy\&.responseHeaders(cachedResponse);
+.fi
+.PP
+.SS "\fRtimeToLive()\fP"
+Returns approximate time in \fImilliseconds\fP until the response becomes stale (i\&.e\&. not fresh)\&.
+.PP
+After that time (when \fRtimeToLive() <= 0\fP) the response might not be usable without revalidation\&. However, there are exceptions, e\&.g\&. a client can explicitly allow stale responses, so always check with \fRsatisfiesWithoutRevalidation()\fP\&. \fRstale-if-error\fP and \fRstale-while-revalidate\fP extend the time to live of the cache, that can still be used if stale\&.
+.SS "\fRtoObject()\fP/\fRfromObject(json)\fP"
+Chances are you'll want to store the \fRCachePolicy\fP object along with the cached response\&. \fRobj = policy\&.toObject()\fP gives a plain JSON-serializable object\&. \fRpolicy = CachePolicy\&.fromObject(obj)\fP creates an instance from it\&.
+.SS "Refreshing stale cache (revalidation)"
+When a cached response has expired, it can be made fresh again by making a request to the origin server\&. The server may respond with status 304 (Not Modified) without sending the response body again, saving bandwidth\&.
+.PP
+The following methods help perform the update efficiently and correctly\&.
+.SS "\fRrevalidationHeaders(newRequest)\fP"
+Returns updated, filtered set of request headers to send to the origin server to check if the cached response can be reused\&. These headers allow the origin server to return status 304 indicating the response is still fresh\&. All headers unrelated to caching are passed through as-is\&.
+.PP
+Use this method when updating cache from the origin server\&.
+.PP
+.PP
+.nf
+updateRequest\&.headers = cachePolicy\&.revalidationHeaders(updateRequest);
+.fi
+.PP
+.SS "\fRrevalidatedPolicy(revalidationRequest, revalidationResponse)\fP"
+Use this method to update the cache after receiving a new response from the origin server\&. It returns an object with two keys:
+.PP
+.IP "\(bu" 2
+\fRpolicy\fP — A new \fRCachePolicy\fP with HTTP headers updated from \fRrevalidationResponse\fP\&. You can always replace the old cached \fRCachePolicy\fP with the new one\&.
+.IP "\(bu" 2
+\fRmodified\fP — Boolean indicating whether the response body has changed\&.
+.IP "  \(bu" 4
+If \fRfalse\fP, then a valid 304 Not Modified response has been received, and you can reuse the old cached response body\&. This is also affected by \fRstale-if-error\fP\&.
+.IP "  \(bu" 4
+If \fRtrue\fP, you should use new response's body (if present), or make another request to the origin server without any conditional headers (i\&.e\&. don't use \fRrevalidationHeaders()\fP this time) to get the new resource\&.
+.PP
+
+.PP
+.PP
+.PP
+.nf
+// When serving requests from cache:
+const { oldPolicy, oldResponse } = letsPretendThisIsSomeCache\&.get(
+    newRequest\&.url
+);
+
+if (!oldPolicy\&.satisfiesWithoutRevalidation(newRequest)) {
+    // Change the request to ask the origin server if the cached response can be used
+    newRequest\&.headers = oldPolicy\&.revalidationHeaders(newRequest);
+
+    // Send request to the origin server\&. The server may respond with status 304
+    const newResponse = await makeRequest(newRequest);
+
+    // Create updated policy and combined response from the old and new data
+    const { policy, modified } = oldPolicy\&.revalidatedPolicy(
+        newRequest,
+        newResponse
+    );
+    const response = modified ? newResponse : oldResponse;
+
+    // Update the cache with the newer/fresher response
+    letsPretendThisIsSomeCache\&.set(
+        newRequest\&.url,
+        { policy, response },
+        policy\&.timeToLive()
+    );
+
+    // And proceed returning cached response as usual
+    response\&.headers = policy\&.responseHeaders();
+    return response;
+}
+.fi
+.PP
+.SH "Yo, FRESH"
+.PP
+.SS "Used by"
+.IP "\(bu" 2
+\fRImageOptim API\fP, \fRmake-fetch-happen\fP, \fRcacheable-request\fP (\fRgot\fP), \fRnpm/registry-fetch\fP, \fRetc\&.\fP
+.PP
+.SS "Implemented"
+.IP "\(bu" 2
+\fRCache-Control\fP response header with all the quirks\&.
+.IP "\(bu" 2
+\fRExpires\fP with check for bad clocks\&.
+.IP "\(bu" 2
+\fRPragma\fP response header\&.
+.IP "\(bu" 2
+\fRAge\fP response header\&.
+.IP "\(bu" 2
+\fRVary\fP response header\&.
+.IP "\(bu" 2
+Default cacheability of statuses and methods\&.
+.IP "\(bu" 2
+Requests for stale data\&.
+.IP "\(bu" 2
+Filtering of hop-by-hop headers\&.
+.IP "\(bu" 2
+Basic revalidation request
+.IP "\(bu" 2
+\fRstale-if-error\fP
+.PP
+.SS "Unimplemented"
+.IP "\(bu" 2
+Merging of range requests, \fRIf-Range\fP (but correctly supports them as non-cacheable)
+.IP "\(bu" 2
+Revalidation of multiple representations
+.PP
+.SS "Trusting server \fRDate\fP"
+Per the RFC, the cache should take into account the time between server-supplied \fRDate\fP and the time it received the response\&. The RFC-mandated behavior creates two problems:
+.PP
+.IP "\(bu" 2
+Servers with incorrectly set timezone may add several hours to cache age (or more, if the clock is completely wrong)\&.
+.IP "\(bu" 2
+Even reasonably correct clocks may be off by a couple of seconds, breaking \fRmax-age=1\fP trick (which is useful for reverse proxies on high-traffic servers)\&.
+.PP
+.PP
+Previous versions of this library had an option to ignore the server date if it was 'too inaccurate'\&. To support the \fRmax-age=1\fP trick the library also has to ignore dates that pretty accurate\&. There's no point of having an option to trust dates that are only a bit inaccurate, so this library won't trust any server dates\&. \fRmax-age\fP will be interpreted from the time the response has been received, not from when it has been sent\&. This will affect only \fRRFC 1149 networks\fP\&. 

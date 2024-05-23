@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2ini_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2ini_2_r_e_a_d_m_e</compoundname>
+    <title>README</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>An ini format parser and serializer for node.</para>
+<para>Sections are treated as nested objects. Items before the first heading are saved on the object directly.</para>
+<sect2 id="md_backend_2node__modules_2ini_2_r_e_a_d_m_e_1autotoc_md1718">
+<title>Usage</title><para>Consider an ini-file <computeroutput>config.ini</computeroutput> that looks like this: <verbatim>; this comment is being ignored
+scope = global
+
+[database]
+user = dbuser
+password = dbpassword
+database = use_this_database
+
+[paths.default]
+datadir = /var/lib/data
+array[] = first value
+array[] = second value
+array[] = third value
+</verbatim> You can read, manipulate and write the ini-file like so: <verbatim>var fs = require(&apos;fs&apos;)
+  , ini = require(&apos;ini&apos;)
+
+var config = ini.parse(fs.readFileSync(&apos;./config.ini&apos;, &apos;utf-8&apos;))
+
+config.scope = &apos;local&apos;
+config.database.database = &apos;use_another_database&apos;
+config.paths.default.tmpdir = &apos;/tmp&apos;
+delete config.paths.default.datadir
+config.paths.default.array.push(&apos;fourth value&apos;)
+
+fs.writeFileSync(&apos;./config_modified.ini&apos;, ini.stringify(config, { section: &apos;section&apos; }))
+</verbatim> This will result in a file called <computeroutput>config_modified.ini</computeroutput> being written to the filesystem with the following content: <verbatim>[section]
+scope=local
+[section.database]
+user=dbuser
+password=dbpassword
+database=use_another_database
+[section.paths.default]
+tmpdir=/tmp
+array[]=first value
+array[]=second value
+array[]=third value
+array[]=fourth value
+</verbatim></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2ini_2_r_e_a_d_m_e_1autotoc_md1719">
+<title>API</title><sect3 id="md_backend_2node__modules_2ini_2_r_e_a_d_m_e_1autotoc_md1720">
+<title>decode(inistring)</title><para>Decode the ini-style formatted <computeroutput>inistring</computeroutput> into a nested object.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2ini_2_r_e_a_d_m_e_1autotoc_md1721">
+<title>parse(inistring)</title><para>Alias for <computeroutput>decode(inistring)</computeroutput></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2ini_2_r_e_a_d_m_e_1autotoc_md1722">
+<title>encode(object, [options])</title><para>Encode the object <computeroutput>object</computeroutput> into an ini-style formatted string. If the optional parameter <computeroutput>section</computeroutput> is given, then all top-level properties of the object are put into this section and the <computeroutput>section</computeroutput>-string is prepended to all sub-sections, see the usage example above.</para>
+<para>The <computeroutput>options</computeroutput> object may contain the following:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>section</computeroutput> A string which will be the first <computeroutput>section</computeroutput> in the encoded ini data. Defaults to none.</para>
+</listitem><listitem><para><computeroutput>whitespace</computeroutput> Boolean to specify whether to put whitespace around the <computeroutput>=</computeroutput> character. By default, whitespace is omitted, to be friendly to some persnickety old parsers that don&apos;t tolerate it well. But some find that it&apos;s more human-readable and pretty with the whitespace.</para>
+</listitem></itemizedlist>
+</para>
+<para>For backwards compatibility reasons, if a <computeroutput>string</computeroutput> options is passed in, then it is assumed to be the <computeroutput>section</computeroutput> value.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2ini_2_r_e_a_d_m_e_1autotoc_md1723">
+<title>stringify(object, [options])</title><para>Alias for <computeroutput>encode(object, [options])</computeroutput></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2ini_2_r_e_a_d_m_e_1autotoc_md1724">
+<title>safe(val)</title><para>Escapes the string <computeroutput>val</computeroutput> such that it is safe to be used as a key or value in an ini-file. Basically escapes quotes. For example <verbatim>ini.safe(&apos;&quot;unsafe string&quot;&apos;)
+</verbatim> would result in <verbatim>&quot;\&quot;unsafe string\&quot;&quot;
+</verbatim> </para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2ini_2_r_e_a_d_m_e_1autotoc_md1725">
+<title>unsafe(val)</title><para>Unescapes the string <computeroutput>val</computeroutput> </para>
+</sect3>
+</sect2>
+    </detaileddescription>
+    <location file="backend/node_modules/ini/README.md"/>
+  </compounddef>
+</doxygen>

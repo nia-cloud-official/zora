@@ -1,0 +1,45 @@
+\doxysection{win\+\_\+delay\+\_\+load\+\_\+hook.\+cc}
+\hypertarget{win__delay__load__hook_8cc_source}{}\label{win__delay__load__hook_8cc_source}\index{backend/node\_modules/node-\/gyp/src/win\_delay\_load\_hook.cc@{backend/node\_modules/node-\/gyp/src/win\_delay\_load\_hook.cc}}
+\mbox{\hyperlink{win__delay__load__hook_8cc}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00001}00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00002}00002\ \textcolor{comment}{\ *\ When\ this\ file\ is\ linked\ to\ a\ DLL,\ it\ sets\ up\ a\ delay-\/load\ hook\ that}}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00003}00003\ \textcolor{comment}{\ *\ intervenes\ when\ the\ DLL\ is\ trying\ to\ load\ the\ host\ executable}}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00004}00004\ \textcolor{comment}{\ *\ dynamically.\ Instead\ of\ trying\ to\ locate\ the\ .exe\ file\ it'll\ just}}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00005}00005\ \textcolor{comment}{\ *\ return\ a\ handle\ to\ the\ process\ image.}}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00006}00006\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00007}00007\ \textcolor{comment}{\ *\ This\ allows\ compiled\ addons\ to\ work\ when\ the\ host\ executable\ is\ renamed.}}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00008}00008\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00010}00010\ \textcolor{preprocessor}{\#ifdef\ \_MSC\_VER}}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00012}00012\ \textcolor{preprocessor}{\#pragma\ managed(push,\ off)}}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00014}00014\ \textcolor{preprocessor}{\#ifndef\ WIN32\_LEAN\_AND\_MEAN}}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00015}00015\ \textcolor{preprocessor}{\#define\ WIN32\_LEAN\_AND\_MEAN}}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00016}00016\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00018}00018\ \textcolor{preprocessor}{\#include\ <windows.h>}}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00020}00020\ \textcolor{preprocessor}{\#include\ <delayimp.h>}}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00021}00021\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00023}00023\ \textcolor{keyword}{static}\ FARPROC\ WINAPI\ load\_exe\_hook(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ event,\ DelayLoadInfo*\ info)\ \{}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00024}00024\ \ \ HMODULE\ m;}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00025}00025\ \ \ \textcolor{keywordflow}{if}\ (event\ !=\ dliNotePreLoadLibrary)}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00026}00026\ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00028}00028\ \ \ \textcolor{keywordflow}{if}\ (\_stricmp(info-\/>szDll,\ HOST\_BINARY)\ !=\ 0)}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00029}00029\ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00031}00031\ \ \ m\ =\ GetModuleHandle(NULL);}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00032}00032\ \ \ \textcolor{keywordflow}{return}\ (FARPROC)\ m;}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00033}00033\ \}}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00035}00035\ \textcolor{keyword}{decltype}(\_\_pfnDliNotifyHook2)\ \_\_pfnDliNotifyHook2\ =\ load\_exe\_hook;}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00037}00037\ \textcolor{preprocessor}{\#pragma\ managed(pop)}}
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{win__delay__load__hook_8cc_source_l00039}00039\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

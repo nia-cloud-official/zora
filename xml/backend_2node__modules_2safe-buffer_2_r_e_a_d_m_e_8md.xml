@@ -1,0 +1,597 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2safe-buffer_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>safe-buffer<sp/>[![travis][travis-image]][travis-url]<sp/>[![npm][npm-image]][npm-url]<sp/>[![downloads][downloads-image]][downloads-url]<sp/>[![javascript<sp/>style<sp/>guide][standard-image]][standard-url]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[travis-image]:<sp/>https://img.shields.io/travis/feross/safe-buffer/master.svg</highlight></codeline>
+<codeline><highlight class="normal">[travis-url]:<sp/>https://travis-ci.org/feross/safe-buffer</highlight></codeline>
+<codeline><highlight class="normal">[npm-image]:<sp/>https://img.shields.io/npm/v/safe-buffer.svg</highlight></codeline>
+<codeline><highlight class="normal">[npm-url]:<sp/>https://npmjs.org/package/safe-buffer</highlight></codeline>
+<codeline><highlight class="normal">[downloads-image]:<sp/>https://img.shields.io/npm/dm/safe-buffer.svg</highlight></codeline>
+<codeline><highlight class="normal">[downloads-url]:<sp/>https://npmjs.org/package/safe-buffer</highlight></codeline>
+<codeline><highlight class="normal">[standard-image]:<sp/>https://img.shields.io/badge/code_style-standard-brightgreen.svg</highlight></codeline>
+<codeline><highlight class="normal">[standard-url]:<sp/>https://standardjs.com</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Safer<sp/>Node.js<sp/>Buffer<sp/>API</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Use<sp/>the<sp/>new<sp/>Node.js<sp/>Buffer<sp/>APIs<sp/>(`Buffer.from`,<sp/>`Buffer.alloc`,</highlight></codeline>
+<codeline><highlight class="normal">`Buffer.allocUnsafe`,<sp/>`Buffer.allocUnsafeSlow`)<sp/>in<sp/>all<sp/>versions<sp/>of<sp/>Node.js.**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Uses<sp/>the<sp/>built-in<sp/>implementation<sp/>when<sp/>available.**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>install</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>install<sp/>safe-buffer</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>usage</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>goal<sp/>of<sp/>this<sp/>package<sp/>is<sp/>to<sp/>provide<sp/>a<sp/>safe<sp/>replacement<sp/>for<sp/>the<sp/>node.js<sp/>`Buffer`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It&apos;s<sp/>a<sp/>drop-in<sp/>replacement<sp/>for<sp/>`Buffer`.<sp/>You<sp/>can<sp/>use<sp/>it<sp/>by<sp/>adding<sp/>one<sp/>`require`<sp/>line<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>top<sp/>of<sp/>your<sp/>node.js<sp/>modules:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>Buffer<sp/>=<sp/>require(&apos;safe-buffer&apos;).Buffer</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Existing<sp/>buffer<sp/>code<sp/>will<sp/>continue<sp/>to<sp/>work<sp/>without<sp/>issues:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">new<sp/>Buffer(&apos;hey&apos;,<sp/>&apos;utf8&apos;)</highlight></codeline>
+<codeline><highlight class="normal">new<sp/>Buffer([1,<sp/>2,<sp/>3],<sp/>&apos;utf8&apos;)</highlight></codeline>
+<codeline><highlight class="normal">new<sp/>Buffer(obj)</highlight></codeline>
+<codeline><highlight class="normal">new<sp/>Buffer(16)<sp/>//<sp/>create<sp/>an<sp/>uninitialized<sp/>buffer<sp/>(potentially<sp/>unsafe)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>But<sp/>you<sp/>can<sp/>use<sp/>these<sp/>new<sp/>explicit<sp/>APIs<sp/>to<sp/>make<sp/>clear<sp/>what<sp/>you<sp/>want:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Buffer.from(&apos;hey&apos;,<sp/>&apos;utf8&apos;)<sp/>//<sp/>convert<sp/>from<sp/>many<sp/>types<sp/>to<sp/>a<sp/>Buffer</highlight></codeline>
+<codeline><highlight class="normal">Buffer.alloc(16)<sp/>//<sp/>create<sp/>a<sp/>zero-filled<sp/>buffer<sp/>(safe)</highlight></codeline>
+<codeline><highlight class="normal">Buffer.allocUnsafe(16)<sp/>//<sp/>create<sp/>an<sp/>uninitialized<sp/>buffer<sp/>(potentially<sp/>unsafe)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>api</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Class<sp/>Method:<sp/>Buffer.from(array)</highlight></codeline>
+<codeline><highlight class="normal">&lt;!--<sp/>YAML</highlight></codeline>
+<codeline><highlight class="normal">added:<sp/>v3.0.0</highlight></codeline>
+<codeline><highlight class="normal">--&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`array`<sp/>{Array}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Allocates<sp/>a<sp/>new<sp/>`Buffer`<sp/>using<sp/>an<sp/>`array`<sp/>of<sp/>octets.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buf<sp/>=<sp/>Buffer.from([0x62,0x75,0x66,0x66,0x65,0x72]);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>creates<sp/>a<sp/>new<sp/>Buffer<sp/>containing<sp/>ASCII<sp/>bytes</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>[&apos;b&apos;,&apos;u&apos;,&apos;f&apos;,&apos;f&apos;,&apos;e&apos;,&apos;r&apos;]</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>`TypeError`<sp/>will<sp/>be<sp/>thrown<sp/>if<sp/>`array`<sp/>is<sp/>not<sp/>an<sp/>`Array`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Class<sp/>Method:<sp/>Buffer.from(arrayBuffer[,<sp/>byteOffset[,<sp/>length]])</highlight></codeline>
+<codeline><highlight class="normal">&lt;!--<sp/>YAML</highlight></codeline>
+<codeline><highlight class="normal">added:<sp/>v5.10.0</highlight></codeline>
+<codeline><highlight class="normal">--&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`arrayBuffer`<sp/>{ArrayBuffer}<sp/>The<sp/>`.buffer`<sp/>property<sp/>of<sp/>a<sp/>`TypedArray`<sp/>or</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>a<sp/>`new<sp/>ArrayBuffer()`</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`byteOffset`<sp/>{Number}<sp/>Default:<sp/>`0`</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`length`<sp/>{Number}<sp/>Default:<sp/>`arrayBuffer.length<sp/>-<sp/>byteOffset`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>passed<sp/>a<sp/>reference<sp/>to<sp/>the<sp/>`.buffer`<sp/>property<sp/>of<sp/>a<sp/>`TypedArray`<sp/>instance,</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>newly<sp/>created<sp/>`Buffer`<sp/>will<sp/>share<sp/>the<sp/>same<sp/>allocated<sp/>memory<sp/>as<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">TypedArray.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>arr<sp/>=<sp/>new<sp/>Uint16Array(2);</highlight></codeline>
+<codeline><highlight class="normal">arr[0]<sp/>=<sp/>5000;</highlight></codeline>
+<codeline><highlight class="normal">arr[1]<sp/>=<sp/>4000;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>buf<sp/>=<sp/>Buffer.from(arr.buffer);<sp/>//<sp/>shares<sp/>the<sp/>memory<sp/>with<sp/>arr;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">console.log(buf);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Prints:<sp/>&lt;Buffer<sp/>88<sp/>13<sp/>a0<sp/>0f&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>changing<sp/>the<sp/>TypedArray<sp/>changes<sp/>the<sp/>Buffer<sp/>also</highlight></codeline>
+<codeline><highlight class="normal">arr[1]<sp/>=<sp/>6000;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">console.log(buf);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Prints:<sp/>&lt;Buffer<sp/>88<sp/>13<sp/>70<sp/>17&gt;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>optional<sp/>`byteOffset`<sp/>and<sp/>`length`<sp/>arguments<sp/>specify<sp/>a<sp/>memory<sp/>range<sp/>within</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>`arrayBuffer`<sp/>that<sp/>will<sp/>be<sp/>shared<sp/>by<sp/>the<sp/>`Buffer`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>ab<sp/>=<sp/>new<sp/>ArrayBuffer(10);</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buf<sp/>=<sp/>Buffer.from(ab,<sp/>0,<sp/>2);</highlight></codeline>
+<codeline><highlight class="normal">console.log(buf.length);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Prints:<sp/>2</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>`TypeError`<sp/>will<sp/>be<sp/>thrown<sp/>if<sp/>`arrayBuffer`<sp/>is<sp/>not<sp/>an<sp/>`ArrayBuffer`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Class<sp/>Method:<sp/>Buffer.from(buffer)</highlight></codeline>
+<codeline><highlight class="normal">&lt;!--<sp/>YAML</highlight></codeline>
+<codeline><highlight class="normal">added:<sp/>v3.0.0</highlight></codeline>
+<codeline><highlight class="normal">--&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`buffer`<sp/>{Buffer}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Copies<sp/>the<sp/>passed<sp/>`buffer`<sp/>data<sp/>onto<sp/>a<sp/>new<sp/>`Buffer`<sp/>instance.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buf1<sp/>=<sp/>Buffer.from(&apos;buffer&apos;);</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buf2<sp/>=<sp/>Buffer.from(buf1);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">buf1[0]<sp/>=<sp/>0x61;</highlight></codeline>
+<codeline><highlight class="normal">console.log(buf1.toString());</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>&apos;auffer&apos;</highlight></codeline>
+<codeline><highlight class="normal">console.log(buf2.toString());</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>&apos;buffer&apos;<sp/>(copy<sp/>is<sp/>not<sp/>changed)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>`TypeError`<sp/>will<sp/>be<sp/>thrown<sp/>if<sp/>`buffer`<sp/>is<sp/>not<sp/>a<sp/>`Buffer`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Class<sp/>Method:<sp/>Buffer.from(str[,<sp/>encoding])</highlight></codeline>
+<codeline><highlight class="normal">&lt;!--<sp/>YAML</highlight></codeline>
+<codeline><highlight class="normal">added:<sp/>v5.10.0</highlight></codeline>
+<codeline><highlight class="normal">--&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`str`<sp/>{String}<sp/>String<sp/>to<sp/>encode.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`encoding`<sp/>{String}<sp/>Encoding<sp/>to<sp/>use,<sp/>Default:<sp/>`&apos;utf8&apos;`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Creates<sp/>a<sp/>new<sp/>`Buffer`<sp/>containing<sp/>the<sp/>given<sp/>JavaScript<sp/>string<sp/>`str`.<sp/>If</highlight></codeline>
+<codeline><highlight class="normal">provided,<sp/>the<sp/>`encoding`<sp/>parameter<sp/>identifies<sp/>the<sp/>character<sp/>encoding.</highlight></codeline>
+<codeline><highlight class="normal">If<sp/>not<sp/>provided,<sp/>`encoding`<sp/>defaults<sp/>to<sp/>`&apos;utf8&apos;`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buf1<sp/>=<sp/>Buffer.from(&apos;this<sp/>is<sp/>a<sp/>tést&apos;);</highlight></codeline>
+<codeline><highlight class="normal">console.log(buf1.toString());</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>prints:<sp/>this<sp/>is<sp/>a<sp/>tést</highlight></codeline>
+<codeline><highlight class="normal">console.log(buf1.toString(&apos;ascii&apos;));</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>prints:<sp/>this<sp/>is<sp/>a<sp/>tC)st</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>buf2<sp/>=<sp/>Buffer.from(&apos;7468697320697320612074c3a97374&apos;,<sp/>&apos;hex&apos;);</highlight></codeline>
+<codeline><highlight class="normal">console.log(buf2.toString());</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>prints:<sp/>this<sp/>is<sp/>a<sp/>tést</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>`TypeError`<sp/>will<sp/>be<sp/>thrown<sp/>if<sp/>`str`<sp/>is<sp/>not<sp/>a<sp/>string.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Class<sp/>Method:<sp/>Buffer.alloc(size[,<sp/>fill[,<sp/>encoding]])</highlight></codeline>
+<codeline><highlight class="normal">&lt;!--<sp/>YAML</highlight></codeline>
+<codeline><highlight class="normal">added:<sp/>v5.10.0</highlight></codeline>
+<codeline><highlight class="normal">--&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`size`<sp/>{Number}</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`fill`<sp/>{Value}<sp/>Default:<sp/>`undefined`</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`encoding`<sp/>{String}<sp/>Default:<sp/>`utf8`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Allocates<sp/>a<sp/>new<sp/>`Buffer`<sp/>of<sp/>`size`<sp/>bytes.<sp/>If<sp/>`fill`<sp/>is<sp/>`undefined`,<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">`Buffer`<sp/>will<sp/>be<sp/>*zero-filled*.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buf<sp/>=<sp/>Buffer.alloc(5);</highlight></codeline>
+<codeline><highlight class="normal">console.log(buf);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>&lt;Buffer<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00&gt;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`size`<sp/>must<sp/>be<sp/>less<sp/>than<sp/>or<sp/>equal<sp/>to<sp/>the<sp/>value<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">`require(&apos;buffer&apos;).kMaxLength`<sp/>(on<sp/>64-bit<sp/>architectures,<sp/>`kMaxLength`<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">`(2^31)-1`).<sp/>Otherwise,<sp/>a<sp/>[`RangeError`][]<sp/>is<sp/>thrown.<sp/>A<sp/>zero-length<sp/>Buffer<sp/>will</highlight></codeline>
+<codeline><highlight class="normal">be<sp/>created<sp/>if<sp/>a<sp/>`size`<sp/>less<sp/>than<sp/>or<sp/>equal<sp/>to<sp/>0<sp/>is<sp/>specified.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`fill`<sp/>is<sp/>specified,<sp/>the<sp/>allocated<sp/>`Buffer`<sp/>will<sp/>be<sp/>initialized<sp/>by<sp/>calling</highlight></codeline>
+<codeline><highlight class="normal">`buf.fill(fill)`.<sp/>See<sp/>[`buf.fill()`][]<sp/>for<sp/>more<sp/>information.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buf<sp/>=<sp/>Buffer.alloc(5,<sp/>&apos;a&apos;);</highlight></codeline>
+<codeline><highlight class="normal">console.log(buf);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>&lt;Buffer<sp/>61<sp/>61<sp/>61<sp/>61<sp/>61&gt;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>both<sp/>`fill`<sp/>and<sp/>`encoding`<sp/>are<sp/>specified,<sp/>the<sp/>allocated<sp/>`Buffer`<sp/>will<sp/>be</highlight></codeline>
+<codeline><highlight class="normal">initialized<sp/>by<sp/>calling<sp/>`buf.fill(fill,<sp/>encoding)`.<sp/>For<sp/>example:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buf<sp/>=<sp/>Buffer.alloc(11,<sp/>&apos;aGVsbG8gd29ybGQ=&apos;,<sp/>&apos;base64&apos;);</highlight></codeline>
+<codeline><highlight class="normal">console.log(buf);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>&lt;Buffer<sp/>68<sp/>65<sp/>6c<sp/>6c<sp/>6f<sp/>20<sp/>77<sp/>6f<sp/>72<sp/>6c<sp/>64&gt;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Calling<sp/>`Buffer.alloc(size)`<sp/>can<sp/>be<sp/>significantly<sp/>slower<sp/>than<sp/>the<sp/>alternative</highlight></codeline>
+<codeline><highlight class="normal">`Buffer.allocUnsafe(size)`<sp/>but<sp/>ensures<sp/>that<sp/>the<sp/>newly<sp/>created<sp/>`Buffer`<sp/>instance</highlight></codeline>
+<codeline><highlight class="normal">contents<sp/>will<sp/>*never<sp/>contain<sp/>sensitive<sp/>data*.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>`TypeError`<sp/>will<sp/>be<sp/>thrown<sp/>if<sp/>`size`<sp/>is<sp/>not<sp/>a<sp/>number.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Class<sp/>Method:<sp/>Buffer.allocUnsafe(size)</highlight></codeline>
+<codeline><highlight class="normal">&lt;!--<sp/>YAML</highlight></codeline>
+<codeline><highlight class="normal">added:<sp/>v5.10.0</highlight></codeline>
+<codeline><highlight class="normal">--&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`size`<sp/>{Number}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Allocates<sp/>a<sp/>new<sp/>*non-zero-filled*<sp/>`Buffer`<sp/>of<sp/>`size`<sp/>bytes.<sp/><sp/>The<sp/>`size`<sp/>must</highlight></codeline>
+<codeline><highlight class="normal">be<sp/>less<sp/>than<sp/>or<sp/>equal<sp/>to<sp/>the<sp/>value<sp/>of<sp/>`require(&apos;buffer&apos;).kMaxLength`<sp/>(on<sp/>64-bit</highlight></codeline>
+<codeline><highlight class="normal">architectures,<sp/>`kMaxLength`<sp/>is<sp/>`(2^31)-1`).<sp/>Otherwise,<sp/>a<sp/>[`RangeError`][]<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">thrown.<sp/>A<sp/>zero-length<sp/>Buffer<sp/>will<sp/>be<sp/>created<sp/>if<sp/>a<sp/>`size`<sp/>less<sp/>than<sp/>or<sp/>equal<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">0<sp/>is<sp/>specified.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>underlying<sp/>memory<sp/>for<sp/>`Buffer`<sp/>instances<sp/>created<sp/>in<sp/>this<sp/>way<sp/>is<sp/>*not</highlight></codeline>
+<codeline><highlight class="normal">initialized*.<sp/>The<sp/>contents<sp/>of<sp/>the<sp/>newly<sp/>created<sp/>`Buffer`<sp/>are<sp/>unknown<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">*may<sp/>contain<sp/>sensitive<sp/>data*.<sp/>Use<sp/>[`buf.fill(0)`][]<sp/>to<sp/>initialize<sp/>such</highlight></codeline>
+<codeline><highlight class="normal">`Buffer`<sp/>instances<sp/>to<sp/>zeroes.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buf<sp/>=<sp/>Buffer.allocUnsafe(5);</highlight></codeline>
+<codeline><highlight class="normal">console.log(buf);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>&lt;Buffer<sp/>78<sp/>e0<sp/>82<sp/>02<sp/>01&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>(octets<sp/>will<sp/>be<sp/>different,<sp/>every<sp/>time)</highlight></codeline>
+<codeline><highlight class="normal">buf.fill(0);</highlight></codeline>
+<codeline><highlight class="normal">console.log(buf);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>&lt;Buffer<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00&gt;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>`TypeError`<sp/>will<sp/>be<sp/>thrown<sp/>if<sp/>`size`<sp/>is<sp/>not<sp/>a<sp/>number.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note<sp/>that<sp/>the<sp/>`Buffer`<sp/>module<sp/>pre-allocates<sp/>an<sp/>internal<sp/>`Buffer`<sp/>instance<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">size<sp/>`Buffer.poolSize`<sp/>that<sp/>is<sp/>used<sp/>as<sp/>a<sp/>pool<sp/>for<sp/>the<sp/>fast<sp/>allocation<sp/>of<sp/>new</highlight></codeline>
+<codeline><highlight class="normal">`Buffer`<sp/>instances<sp/>created<sp/>using<sp/>`Buffer.allocUnsafe(size)`<sp/>(and<sp/>the<sp/>deprecated</highlight></codeline>
+<codeline><highlight class="normal">`new<sp/>Buffer(size)`<sp/>constructor)<sp/>only<sp/>when<sp/>`size`<sp/>is<sp/>less<sp/>than<sp/>or<sp/>equal<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">`Buffer.poolSize<sp/>&gt;&gt;<sp/>1`<sp/>(floor<sp/>of<sp/>`Buffer.poolSize`<sp/>divided<sp/>by<sp/>two).<sp/>The<sp/>default</highlight></codeline>
+<codeline><highlight class="normal">value<sp/>of<sp/>`Buffer.poolSize`<sp/>is<sp/>`8192`<sp/>but<sp/>can<sp/>be<sp/>modified.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Use<sp/>of<sp/>this<sp/>pre-allocated<sp/>internal<sp/>memory<sp/>pool<sp/>is<sp/>a<sp/>key<sp/>difference<sp/>between</highlight></codeline>
+<codeline><highlight class="normal">calling<sp/>`Buffer.alloc(size,<sp/>fill)`<sp/>vs.<sp/>`Buffer.allocUnsafe(size).fill(fill)`.</highlight></codeline>
+<codeline><highlight class="normal">Specifically,<sp/>`Buffer.alloc(size,<sp/>fill)`<sp/>will<sp/>*never*<sp/>use<sp/>the<sp/>internal<sp/>Buffer</highlight></codeline>
+<codeline><highlight class="normal">pool,<sp/>while<sp/>`Buffer.allocUnsafe(size).fill(fill)`<sp/>*will*<sp/>use<sp/>the<sp/>internal</highlight></codeline>
+<codeline><highlight class="normal">Buffer<sp/>pool<sp/>if<sp/>`size`<sp/>is<sp/>less<sp/>than<sp/>or<sp/>equal<sp/>to<sp/>half<sp/>`Buffer.poolSize`.<sp/>The</highlight></codeline>
+<codeline><highlight class="normal">difference<sp/>is<sp/>subtle<sp/>but<sp/>can<sp/>be<sp/>important<sp/>when<sp/>an<sp/>application<sp/>requires<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">additional<sp/>performance<sp/>that<sp/>`Buffer.allocUnsafe(size)`<sp/>provides.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Class<sp/>Method:<sp/>Buffer.allocUnsafeSlow(size)</highlight></codeline>
+<codeline><highlight class="normal">&lt;!--<sp/>YAML</highlight></codeline>
+<codeline><highlight class="normal">added:<sp/>v5.10.0</highlight></codeline>
+<codeline><highlight class="normal">--&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`size`<sp/>{Number}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Allocates<sp/>a<sp/>new<sp/>*non-zero-filled*<sp/>and<sp/>non-pooled<sp/>`Buffer`<sp/>of<sp/>`size`<sp/>bytes.<sp/><sp/>The</highlight></codeline>
+<codeline><highlight class="normal">`size`<sp/>must<sp/>be<sp/>less<sp/>than<sp/>or<sp/>equal<sp/>to<sp/>the<sp/>value<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">`require(&apos;buffer&apos;).kMaxLength`<sp/>(on<sp/>64-bit<sp/>architectures,<sp/>`kMaxLength`<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">`(2^31)-1`).<sp/>Otherwise,<sp/>a<sp/>[`RangeError`][]<sp/>is<sp/>thrown.<sp/>A<sp/>zero-length<sp/>Buffer<sp/>will</highlight></codeline>
+<codeline><highlight class="normal">be<sp/>created<sp/>if<sp/>a<sp/>`size`<sp/>less<sp/>than<sp/>or<sp/>equal<sp/>to<sp/>0<sp/>is<sp/>specified.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>underlying<sp/>memory<sp/>for<sp/>`Buffer`<sp/>instances<sp/>created<sp/>in<sp/>this<sp/>way<sp/>is<sp/>*not</highlight></codeline>
+<codeline><highlight class="normal">initialized*.<sp/>The<sp/>contents<sp/>of<sp/>the<sp/>newly<sp/>created<sp/>`Buffer`<sp/>are<sp/>unknown<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">*may<sp/>contain<sp/>sensitive<sp/>data*.<sp/>Use<sp/>[`buf.fill(0)`][]<sp/>to<sp/>initialize<sp/>such</highlight></codeline>
+<codeline><highlight class="normal">`Buffer`<sp/>instances<sp/>to<sp/>zeroes.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>using<sp/>`Buffer.allocUnsafe()`<sp/>to<sp/>allocate<sp/>new<sp/>`Buffer`<sp/>instances,</highlight></codeline>
+<codeline><highlight class="normal">allocations<sp/>under<sp/>4KB<sp/>are,<sp/>by<sp/>default,<sp/>sliced<sp/>from<sp/>a<sp/>single<sp/>pre-allocated</highlight></codeline>
+<codeline><highlight class="normal">`Buffer`.<sp/>This<sp/>allows<sp/>applications<sp/>to<sp/>avoid<sp/>the<sp/>garbage<sp/>collection<sp/>overhead<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">creating<sp/>many<sp/>individually<sp/>allocated<sp/>Buffers.<sp/>This<sp/>approach<sp/>improves<sp/>both</highlight></codeline>
+<codeline><highlight class="normal">performance<sp/>and<sp/>memory<sp/>usage<sp/>by<sp/>eliminating<sp/>the<sp/>need<sp/>to<sp/>track<sp/>and<sp/>cleanup<sp/>as</highlight></codeline>
+<codeline><highlight class="normal">many<sp/>`Persistent`<sp/>objects.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">However,<sp/>in<sp/>the<sp/>case<sp/>where<sp/>a<sp/>developer<sp/>may<sp/>need<sp/>to<sp/>retain<sp/>a<sp/>small<sp/>chunk<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">memory<sp/>from<sp/>a<sp/>pool<sp/>for<sp/>an<sp/>indeterminate<sp/>amount<sp/>of<sp/>time,<sp/>it<sp/>may<sp/>be<sp/>appropriate</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>create<sp/>an<sp/>un-pooled<sp/>Buffer<sp/>instance<sp/>using<sp/>`Buffer.allocUnsafeSlow()`<sp/>then</highlight></codeline>
+<codeline><highlight class="normal">copy<sp/>out<sp/>the<sp/>relevant<sp/>bits.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>need<sp/>to<sp/>keep<sp/>around<sp/>a<sp/>few<sp/>small<sp/>chunks<sp/>of<sp/>memory</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>store<sp/>=<sp/>[];</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">socket.on(&apos;readable&apos;,<sp/>()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>const<sp/>data<sp/>=<sp/>socket.read();</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>allocate<sp/>for<sp/>retained<sp/>data</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>const<sp/>sb<sp/>=<sp/>Buffer.allocUnsafeSlow(10);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>copy<sp/>the<sp/>data<sp/>into<sp/>the<sp/>new<sp/>allocation</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>data.copy(sb,<sp/>0,<sp/>0,<sp/>10);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>store.push(sb);</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Use<sp/>of<sp/>`Buffer.allocUnsafeSlow()`<sp/>should<sp/>be<sp/>used<sp/>only<sp/>as<sp/>a<sp/>last<sp/>resort<sp/>*after*</highlight></codeline>
+<codeline><highlight class="normal">a<sp/>developer<sp/>has<sp/>observed<sp/>undue<sp/>memory<sp/>retention<sp/>in<sp/>their<sp/>applications.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>`TypeError`<sp/>will<sp/>be<sp/>thrown<sp/>if<sp/>`size`<sp/>is<sp/>not<sp/>a<sp/>number.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>All<sp/>the<sp/>Rest</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>rest<sp/>of<sp/>the<sp/>`Buffer`<sp/>API<sp/>is<sp/>exactly<sp/>the<sp/>same<sp/>as<sp/>in<sp/>node.js.</highlight></codeline>
+<codeline><highlight class="normal">[See<sp/>the<sp/>docs](https://nodejs.org/api/buffer.html).</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Related<sp/>links</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>[Node.js<sp/>issue:<sp/>Buffer(number)<sp/>is<sp/>unsafe](https://github.com/nodejs/node/issues/4660)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[Node.js<sp/>Enhancement<sp/>Proposal:<sp/>Buffer.from/Buffer.alloc/Buffer.zalloc/Buffer()<sp/>soft-deprecate](https://github.com/nodejs/node-eps/pull/4)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Why<sp/>is<sp/>`Buffer`<sp/>unsafe?</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Today,<sp/>the<sp/>node.js<sp/>`Buffer`<sp/>constructor<sp/>is<sp/>overloaded<sp/>to<sp/>handle<sp/>many<sp/>different<sp/>argument</highlight></codeline>
+<codeline><highlight class="normal">types<sp/>like<sp/>`String`,<sp/>`Array`,<sp/>`Object`,<sp/>`TypedArrayView`<sp/>(`Uint8Array`,<sp/>etc.),</highlight></codeline>
+<codeline><highlight class="normal">`ArrayBuffer`,<sp/>and<sp/>also<sp/>`Number`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>API<sp/>is<sp/>optimized<sp/>for<sp/>convenience:<sp/>you<sp/>can<sp/>throw<sp/>any<sp/>type<sp/>at<sp/>it,<sp/>and<sp/>it<sp/>will<sp/>try<sp/>to<sp/>do</highlight></codeline>
+<codeline><highlight class="normal">what<sp/>you<sp/>want.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Because<sp/>the<sp/>Buffer<sp/>constructor<sp/>is<sp/>so<sp/>powerful,<sp/>you<sp/>often<sp/>see<sp/>code<sp/>like<sp/>this:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Convert<sp/>UTF-8<sp/>strings<sp/>to<sp/>hex</highlight></codeline>
+<codeline><highlight class="normal">function<sp/>toHex<sp/>(str)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>new<sp/>Buffer(str).toString(&apos;hex&apos;)</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">***But<sp/>what<sp/>happens<sp/>if<sp/>`toHex`<sp/>is<sp/>called<sp/>with<sp/>a<sp/>`Number`<sp/>argument?***</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Remote<sp/>Memory<sp/>Disclosure</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>an<sp/>attacker<sp/>can<sp/>make<sp/>your<sp/>program<sp/>call<sp/>the<sp/>`Buffer`<sp/>constructor<sp/>with<sp/>a<sp/>`Number`</highlight></codeline>
+<codeline><highlight class="normal">argument,<sp/>then<sp/>they<sp/>can<sp/>make<sp/>it<sp/>allocate<sp/>uninitialized<sp/>memory<sp/>from<sp/>the<sp/>node.js<sp/>process.</highlight></codeline>
+<codeline><highlight class="normal">This<sp/>could<sp/>potentially<sp/>disclose<sp/>TLS<sp/>private<sp/>keys,<sp/>user<sp/>data,<sp/>or<sp/>database<sp/>passwords.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>the<sp/>`Buffer`<sp/>constructor<sp/>is<sp/>passed<sp/>a<sp/>`Number`<sp/>argument,<sp/>it<sp/>returns<sp/>an</highlight></codeline>
+<codeline><highlight class="normal">**UNINITIALIZED**<sp/>block<sp/>of<sp/>memory<sp/>of<sp/>the<sp/>specified<sp/>`size`.<sp/>When<sp/>you<sp/>create<sp/>a<sp/>`Buffer`<sp/>like</highlight></codeline>
+<codeline><highlight class="normal">this,<sp/>you<sp/>**MUST**<sp/>overwrite<sp/>the<sp/>contents<sp/>before<sp/>returning<sp/>it<sp/>to<sp/>the<sp/>user.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">From<sp/>the<sp/>[node.js<sp/>docs](https://nodejs.org/api/buffer.html#buffer_new_buffer_size):</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>`new<sp/>Buffer(size)`</highlight></codeline>
+<codeline><highlight class="normal">&gt;</highlight></codeline>
+<codeline><highlight class="normal">&gt;<sp/>-<sp/>`size`<sp/>Number</highlight></codeline>
+<codeline><highlight class="normal">&gt;</highlight></codeline>
+<codeline><highlight class="normal">&gt;<sp/>The<sp/>underlying<sp/>memory<sp/>for<sp/>`Buffer`<sp/>instances<sp/>created<sp/>in<sp/>this<sp/>way<sp/>is<sp/>not<sp/>initialized.</highlight></codeline>
+<codeline><highlight class="normal">&gt;<sp/>**The<sp/>contents<sp/>of<sp/>a<sp/>newly<sp/>created<sp/>`Buffer`<sp/>are<sp/>unknown<sp/>and<sp/>could<sp/>contain<sp/>sensitive</highlight></codeline>
+<codeline><highlight class="normal">&gt;<sp/>data.**<sp/>Use<sp/>`buf.fill(0)`<sp/>to<sp/>initialize<sp/>a<sp/>Buffer<sp/>to<sp/>zeroes.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">(Emphasis<sp/>our<sp/>own.)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Whenever<sp/>the<sp/>programmer<sp/>intended<sp/>to<sp/>create<sp/>an<sp/>uninitialized<sp/>`Buffer`<sp/>you<sp/>often<sp/>see<sp/>code</highlight></codeline>
+<codeline><highlight class="normal">like<sp/>this:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>buf<sp/>=<sp/>new<sp/>Buffer(16)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Immediately<sp/>overwrite<sp/>the<sp/>uninitialized<sp/>buffer<sp/>with<sp/>data<sp/>from<sp/>another<sp/>buffer</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>(var<sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>buf.length;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>buf[i]<sp/>=<sp/>otherBuf[i]</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Would<sp/>this<sp/>ever<sp/>be<sp/>a<sp/>problem<sp/>in<sp/>real<sp/>code?</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Yes.<sp/>It&apos;s<sp/>surprisingly<sp/>common<sp/>to<sp/>forget<sp/>to<sp/>check<sp/>the<sp/>type<sp/>of<sp/>your<sp/>variables<sp/>in<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">dynamically-typed<sp/>language<sp/>like<sp/>JavaScript.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Usually<sp/>the<sp/>consequences<sp/>of<sp/>assuming<sp/>the<sp/>wrong<sp/>type<sp/>is<sp/>that<sp/>your<sp/>program<sp/>crashes<sp/>with<sp/>an</highlight></codeline>
+<codeline><highlight class="normal">uncaught<sp/>exception.<sp/>But<sp/>the<sp/>failure<sp/>mode<sp/>for<sp/>forgetting<sp/>to<sp/>check<sp/>the<sp/>type<sp/>of<sp/>arguments<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>`Buffer`<sp/>constructor<sp/>is<sp/>more<sp/>catastrophic.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Here&apos;s<sp/>an<sp/>example<sp/>of<sp/>a<sp/>vulnerable<sp/>service<sp/>that<sp/>takes<sp/>a<sp/>JSON<sp/>payload<sp/>and<sp/>converts<sp/>it<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">hex:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Take<sp/>a<sp/>JSON<sp/>payload<sp/>{str:<sp/>&quot;some<sp/>string&quot;}<sp/>and<sp/>convert<sp/>it<sp/>to<sp/>hex</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>server<sp/>=<sp/>http.createServer(function<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>data<sp/>=<sp/>&apos;&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>req.setEncoding(&apos;utf8&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>req.on(&apos;data&apos;,<sp/>function<sp/>(chunk)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>data<sp/>+=<sp/>chunk</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>req.on(&apos;end&apos;,<sp/>function<sp/>()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>var<sp/>body<sp/>=<sp/>JSON.parse(data)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.end(new<sp/>Buffer(body.str).toString(&apos;hex&apos;))</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">server.listen(8080)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">In<sp/>this<sp/>example,<sp/>an<sp/>http<sp/>client<sp/>just<sp/>has<sp/>to<sp/>send:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```json</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;str&quot;:<sp/>1000</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">and<sp/>it<sp/>will<sp/>get<sp/>back<sp/>1,000<sp/>bytes<sp/>of<sp/>uninitialized<sp/>memory<sp/>from<sp/>the<sp/>server.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>a<sp/>very<sp/>serious<sp/>bug.<sp/>It&apos;s<sp/>similar<sp/>in<sp/>severity<sp/>to<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[the<sp/>Heartbleed<sp/>bug](http://heartbleed.com/)<sp/>that<sp/>allowed<sp/>disclosure<sp/>of<sp/>OpenSSL<sp/>process</highlight></codeline>
+<codeline><highlight class="normal">memory<sp/>by<sp/>remote<sp/>attackers.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Which<sp/>real-world<sp/>packages<sp/>were<sp/>vulnerable?</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>[`bittorrent-dht`](https://www.npmjs.com/package/bittorrent-dht)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[Mathias<sp/>Buus](https://github.com/mafintosh)<sp/>and<sp/>I</highlight></codeline>
+<codeline><highlight class="normal">([Feross<sp/>Aboukhadijeh](http://feross.org/))<sp/>found<sp/>this<sp/>issue<sp/>in<sp/>one<sp/>of<sp/>our<sp/>own<sp/>packages,</highlight></codeline>
+<codeline><highlight class="normal">[`bittorrent-dht`](https://www.npmjs.com/package/bittorrent-dht).<sp/>The<sp/>bug<sp/>would<sp/>allow</highlight></codeline>
+<codeline><highlight class="normal">anyone<sp/>on<sp/>the<sp/>internet<sp/>to<sp/>send<sp/>a<sp/>series<sp/>of<sp/>messages<sp/>to<sp/>a<sp/>user<sp/>of<sp/>`bittorrent-dht`<sp/>and<sp/>get</highlight></codeline>
+<codeline><highlight class="normal">them<sp/>to<sp/>reveal<sp/>20<sp/>bytes<sp/>at<sp/>a<sp/>time<sp/>of<sp/>uninitialized<sp/>memory<sp/>from<sp/>the<sp/>node.js<sp/>process.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Here&apos;s</highlight></codeline>
+<codeline><highlight class="normal">[the<sp/>commit](https://github.com/feross/bittorrent-dht/commit/6c7da04025d5633699800a99ec3fbadf70ad35b8)</highlight></codeline>
+<codeline><highlight class="normal">that<sp/>fixed<sp/>it.<sp/>We<sp/>released<sp/>a<sp/>new<sp/>fixed<sp/>version,<sp/>created<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">[Node<sp/>Security<sp/>Project<sp/>disclosure](https://nodesecurity.io/advisories/68),<sp/>and<sp/>deprecated<sp/>all</highlight></codeline>
+<codeline><highlight class="normal">vulnerable<sp/>versions<sp/>on<sp/>npm<sp/>so<sp/>users<sp/>will<sp/>get<sp/>a<sp/>warning<sp/>to<sp/>upgrade<sp/>to<sp/>a<sp/>newer<sp/>version.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>[`ws`](https://www.npmjs.com/package/ws)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">That<sp/>got<sp/>us<sp/>wondering<sp/>if<sp/>there<sp/>were<sp/>other<sp/>vulnerable<sp/>packages.<sp/>Sure<sp/>enough,<sp/>within<sp/>a<sp/>short</highlight></codeline>
+<codeline><highlight class="normal">period<sp/>of<sp/>time,<sp/>we<sp/>found<sp/>the<sp/>same<sp/>issue<sp/>in<sp/>[`ws`](https://www.npmjs.com/package/ws),<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">most<sp/>popular<sp/>WebSocket<sp/>implementation<sp/>in<sp/>node.js.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>certain<sp/>APIs<sp/>were<sp/>called<sp/>with<sp/>`Number`<sp/>parameters<sp/>instead<sp/>of<sp/>`String`<sp/>or<sp/>`Buffer`<sp/>as</highlight></codeline>
+<codeline><highlight class="normal">expected,<sp/>then<sp/>uninitialized<sp/>server<sp/>memory<sp/>would<sp/>be<sp/>disclosed<sp/>to<sp/>the<sp/>remote<sp/>peer.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">These<sp/>were<sp/>the<sp/>vulnerable<sp/>methods:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">socket.send(number)</highlight></codeline>
+<codeline><highlight class="normal">socket.ping(number)</highlight></codeline>
+<codeline><highlight class="normal">socket.pong(number)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Here&apos;s<sp/>a<sp/>vulnerable<sp/>socket<sp/>server<sp/>with<sp/>some<sp/>echo<sp/>functionality:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">server.on(&apos;connection&apos;,<sp/>function<sp/>(socket)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>socket.on(&apos;message&apos;,<sp/>function<sp/>(message)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>message<sp/>=<sp/>JSON.parse(message)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(message.type<sp/>===<sp/>&apos;echo&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>socket.send(message.data)<sp/>//<sp/>send<sp/>back<sp/>the<sp/>user&apos;s<sp/>message</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`socket.send(number)`<sp/>called<sp/>on<sp/>the<sp/>server,<sp/>will<sp/>disclose<sp/>server<sp/>memory.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Here&apos;s<sp/>[the<sp/>release](https://github.com/websockets/ws/releases/tag/1.0.1)<sp/>where<sp/>the<sp/>issue</highlight></codeline>
+<codeline><highlight class="normal">was<sp/>fixed,<sp/>with<sp/>a<sp/>more<sp/>detailed<sp/>explanation.<sp/>Props<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">[Arnout<sp/>Kazemier](https://github.com/3rd-Eden)<sp/>for<sp/>the<sp/>quick<sp/>fix.<sp/>Here&apos;s<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[Node<sp/>Security<sp/>Project<sp/>disclosure](https://nodesecurity.io/advisories/67).</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>What&apos;s<sp/>the<sp/>solution?</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It&apos;s<sp/>important<sp/>that<sp/>node.js<sp/>offers<sp/>a<sp/>fast<sp/>way<sp/>to<sp/>get<sp/>memory<sp/>otherwise<sp/>performance-critical</highlight></codeline>
+<codeline><highlight class="normal">applications<sp/>would<sp/>needlessly<sp/>get<sp/>a<sp/>lot<sp/>slower.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">But<sp/>we<sp/>need<sp/>a<sp/>better<sp/>way<sp/>to<sp/>*signal<sp/>our<sp/>intent*<sp/>as<sp/>programmers.<sp/>**When<sp/>we<sp/>want</highlight></codeline>
+<codeline><highlight class="normal">uninitialized<sp/>memory,<sp/>we<sp/>should<sp/>request<sp/>it<sp/>explicitly.**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Sensitive<sp/>functionality<sp/>should<sp/>not<sp/>be<sp/>packed<sp/>into<sp/>a<sp/>developer-friendly<sp/>API<sp/>that<sp/>loosely</highlight></codeline>
+<codeline><highlight class="normal">accepts<sp/>many<sp/>different<sp/>types.<sp/>This<sp/>type<sp/>of<sp/>API<sp/>encourages<sp/>the<sp/>lazy<sp/>practice<sp/>of<sp/>passing</highlight></codeline>
+<codeline><highlight class="normal">variables<sp/>in<sp/>without<sp/>checking<sp/>the<sp/>type<sp/>very<sp/>carefully.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>A<sp/>new<sp/>API:<sp/>`Buffer.allocUnsafe(number)`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>functionality<sp/>of<sp/>creating<sp/>buffers<sp/>with<sp/>uninitialized<sp/>memory<sp/>should<sp/>be<sp/>part<sp/>of<sp/>another</highlight></codeline>
+<codeline><highlight class="normal">API.<sp/>We<sp/>propose<sp/>`Buffer.allocUnsafe(number)`.<sp/>This<sp/>way,<sp/>it&apos;s<sp/>not<sp/>part<sp/>of<sp/>an<sp/>API<sp/>that</highlight></codeline>
+<codeline><highlight class="normal">frequently<sp/>gets<sp/>user<sp/>input<sp/>of<sp/>all<sp/>sorts<sp/>of<sp/>different<sp/>types<sp/>passed<sp/>into<sp/>it.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>buf<sp/>=<sp/>Buffer.allocUnsafe(16)<sp/>//<sp/>careful,<sp/>uninitialized<sp/>memory!</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Immediately<sp/>overwrite<sp/>the<sp/>uninitialized<sp/>buffer<sp/>with<sp/>data<sp/>from<sp/>another<sp/>buffer</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>(var<sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>buf.length;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>buf[i]<sp/>=<sp/>otherBuf[i]</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>How<sp/>do<sp/>we<sp/>fix<sp/>node.js<sp/>core?</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">We<sp/>sent<sp/>[a<sp/>PR<sp/>to<sp/>node.js<sp/>core](https://github.com/nodejs/node/pull/4514)<sp/>(merged<sp/>as</highlight></codeline>
+<codeline><highlight class="normal">`semver-major`)<sp/>which<sp/>defends<sp/>against<sp/>one<sp/>case:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>str<sp/>=<sp/>16</highlight></codeline>
+<codeline><highlight class="normal">new<sp/>Buffer(str,<sp/>&apos;utf8&apos;)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">In<sp/>this<sp/>situation,<sp/>it&apos;s<sp/>implied<sp/>that<sp/>the<sp/>programmer<sp/>intended<sp/>the<sp/>first<sp/>argument<sp/>to<sp/>be<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">string,<sp/>since<sp/>they<sp/>passed<sp/>an<sp/>encoding<sp/>as<sp/>a<sp/>second<sp/>argument.<sp/>Today,<sp/>node.js<sp/>will<sp/>allocate</highlight></codeline>
+<codeline><highlight class="normal">uninitialized<sp/>memory<sp/>in<sp/>the<sp/>case<sp/>of<sp/>`new<sp/>Buffer(number,<sp/>encoding)`,<sp/>which<sp/>is<sp/>probably<sp/>not</highlight></codeline>
+<codeline><highlight class="normal">what<sp/>the<sp/>programmer<sp/>intended.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">But<sp/>this<sp/>is<sp/>only<sp/>a<sp/>partial<sp/>solution,<sp/>since<sp/>if<sp/>the<sp/>programmer<sp/>does<sp/>`new<sp/>Buffer(variable)`</highlight></codeline>
+<codeline><highlight class="normal">(without<sp/>an<sp/>`encoding`<sp/>parameter)<sp/>there&apos;s<sp/>no<sp/>way<sp/>to<sp/>know<sp/>what<sp/>they<sp/>intended.<sp/>If<sp/>`variable`</highlight></codeline>
+<codeline><highlight class="normal">is<sp/>sometimes<sp/>a<sp/>number,<sp/>then<sp/>uninitialized<sp/>memory<sp/>will<sp/>sometimes<sp/>be<sp/>returned.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>What&apos;s<sp/>the<sp/>real<sp/>long-term<sp/>fix?</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">We<sp/>could<sp/>deprecate<sp/>and<sp/>remove<sp/>`new<sp/>Buffer(number)`<sp/>and<sp/>use<sp/>`Buffer.allocUnsafe(number)`<sp/>when</highlight></codeline>
+<codeline><highlight class="normal">we<sp/>need<sp/>uninitialized<sp/>memory.<sp/>But<sp/>that<sp/>would<sp/>break<sp/>1000s<sp/>of<sp/>packages.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">~~We<sp/>believe<sp/>the<sp/>best<sp/>solution<sp/>is<sp/>to:~~</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">~~1.<sp/>Change<sp/>`new<sp/>Buffer(number)`<sp/>to<sp/>return<sp/>safe,<sp/>zeroed-out<sp/>memory~~</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">~~2.<sp/>Create<sp/>a<sp/>new<sp/>API<sp/>for<sp/>creating<sp/>uninitialized<sp/>Buffers.<sp/>We<sp/>propose:<sp/>`Buffer.allocUnsafe(number)`~~</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Update</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">We<sp/>now<sp/>support<sp/>adding<sp/>three<sp/>new<sp/>APIs:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>`Buffer.from(value)`<sp/>-<sp/>convert<sp/>from<sp/>any<sp/>type<sp/>to<sp/>a<sp/>buffer</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`Buffer.alloc(size)`<sp/>-<sp/>create<sp/>a<sp/>zero-filled<sp/>buffer</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`Buffer.allocUnsafe(size)`<sp/>-<sp/>create<sp/>an<sp/>uninitialized<sp/>buffer<sp/>with<sp/>given<sp/>size</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>solves<sp/>the<sp/>core<sp/>problem<sp/>that<sp/>affected<sp/>`ws`<sp/>and<sp/>`bittorrent-dht`<sp/>which<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">`Buffer(variable)`<sp/>getting<sp/>tricked<sp/>into<sp/>taking<sp/>a<sp/>number<sp/>argument.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>way,<sp/>existing<sp/>code<sp/>continues<sp/>working<sp/>and<sp/>the<sp/>impact<sp/>on<sp/>the<sp/>npm<sp/>ecosystem<sp/>will<sp/>be</highlight></codeline>
+<codeline><highlight class="normal">minimal.<sp/>Over<sp/>time,<sp/>npm<sp/>maintainers<sp/>can<sp/>migrate<sp/>performance-critical<sp/>code<sp/>to<sp/>use</highlight></codeline>
+<codeline><highlight class="normal">`Buffer.allocUnsafe(number)`<sp/>instead<sp/>of<sp/>`new<sp/>Buffer(number)`.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Conclusion</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">We<sp/>think<sp/>there&apos;s<sp/>a<sp/>serious<sp/>design<sp/>issue<sp/>with<sp/>the<sp/>`Buffer`<sp/>API<sp/>as<sp/>it<sp/>exists<sp/>today.<sp/>It</highlight></codeline>
+<codeline><highlight class="normal">promotes<sp/>insecure<sp/>software<sp/>by<sp/>putting<sp/>high-risk<sp/>functionality<sp/>into<sp/>a<sp/>convenient<sp/>API</highlight></codeline>
+<codeline><highlight class="normal">with<sp/>friendly<sp/>&quot;developer<sp/>ergonomics&quot;.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>wasn&apos;t<sp/>merely<sp/>a<sp/>theoretical<sp/>exercise<sp/>because<sp/>we<sp/>found<sp/>the<sp/>issue<sp/>in<sp/>some<sp/>of<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">most<sp/>popular<sp/>npm<sp/>packages.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Fortunately,<sp/>there&apos;s<sp/>an<sp/>easy<sp/>fix<sp/>that<sp/>can<sp/>be<sp/>applied<sp/>today.<sp/>Use<sp/>`safe-buffer`<sp/>in<sp/>place<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">`buffer`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>Buffer<sp/>=<sp/>require(&apos;safe-buffer&apos;).Buffer</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Eventually,<sp/>we<sp/>hope<sp/>that<sp/>node.js<sp/>core<sp/>can<sp/>switch<sp/>to<sp/>this<sp/>new,<sp/>safer<sp/>behavior.<sp/>We<sp/>believe</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>impact<sp/>on<sp/>the<sp/>ecosystem<sp/>would<sp/>be<sp/>minimal<sp/>since<sp/>it&apos;s<sp/>not<sp/>a<sp/>breaking<sp/>change.</highlight></codeline>
+<codeline><highlight class="normal">Well-maintained,<sp/>popular<sp/>packages<sp/>would<sp/>be<sp/>updated<sp/>to<sp/>use<sp/>`Buffer.alloc`<sp/>quickly,<sp/>while</highlight></codeline>
+<codeline><highlight class="normal">older,<sp/>insecure<sp/>packages<sp/>would<sp/>magically<sp/>become<sp/>safe<sp/>from<sp/>this<sp/>attack<sp/>vector.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>links</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>[Node.js<sp/>PR:<sp/>buffer:<sp/>throw<sp/>if<sp/>both<sp/>length<sp/>and<sp/>enc<sp/>are<sp/>passed](https://github.com/nodejs/node/pull/4514)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[Node<sp/>Security<sp/>Project<sp/>disclosure<sp/>for<sp/>`ws`](https://nodesecurity.io/advisories/67)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[Node<sp/>Security<sp/>Project<sp/>disclosure<sp/>for`bittorrent-dht`](https://nodesecurity.io/advisories/68)</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>credit</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>original<sp/>issues<sp/>in<sp/>`bittorrent-dht`</highlight></codeline>
+<codeline><highlight class="normal">([disclosure](https://nodesecurity.io/advisories/68))<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">`ws`<sp/>([disclosure](https://nodesecurity.io/advisories/67))<sp/>were<sp/>discovered<sp/>by</highlight></codeline>
+<codeline><highlight class="normal">[Mathias<sp/>Buus](https://github.com/mafintosh)<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">[Feross<sp/>Aboukhadijeh](http://feross.org/).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Thanks<sp/>to<sp/>[Adam<sp/>Baldwin](https://github.com/evilpacket)<sp/>for<sp/>helping<sp/>disclose<sp/>these<sp/>issues</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>for<sp/>his<sp/>work<sp/>running<sp/>the<sp/>[Node<sp/>Security<sp/>Project](https://nodesecurity.io/).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Thanks<sp/>to<sp/>[John<sp/>Hiesey](https://github.com/jhiesey)<sp/>for<sp/>proofreading<sp/>this<sp/>README<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">auditing<sp/>the<sp/>code.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>license</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">MIT.<sp/>Copyright<sp/>(C)<sp/>[Feross<sp/>Aboukhadijeh](http://feross.org)</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/safe-buffer/README.md"/>
+  </compounddef>
+</doxygen>

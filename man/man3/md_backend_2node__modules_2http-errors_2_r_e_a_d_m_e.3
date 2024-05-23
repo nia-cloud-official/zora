@@ -1,0 +1,108 @@
+.TH "md_backend_2node__modules_2http-errors_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2http-errors_2_r_e_a_d_m_e \- http-errors 
+.PP
+ \fR\fP \fR\fP \fR\fP \fR\fP \fR\fP
+.PP
+Create HTTP errors for Express, Koa, Connect, etc\&. with ease\&.
+.SH "Install"
+.PP
+This is a \fRNode\&.js\fP module available through the \fRnpm registry\fP\&. Installation is done using the \fR\fRnpm install\fP command\fP:
+.PP
+.PP
+.nf
+$ npm install http\-errors
+.fi
+.PP
+.SH "Example"
+.PP
+.PP
+.nf
+var createError = require('http\-errors')
+var express = require('express')
+var app = express()
+
+app\&.use(function (req, res, next) {
+  if (!req\&.user) return next(createError(401, 'Please login to view this page\&.'))
+  next()
+})
+.fi
+.PP
+.SH "API"
+.PP
+This is the current API, currently extracted from Koa and subject to change\&.
+.SS "Error Properties"
+.IP "\(bu" 2
+\fRexpose\fP - can be used to signal if \fRmessage\fP should be sent to the client, defaulting to \fRfalse\fP when \fRstatus\fP >= 500
+.IP "\(bu" 2
+\fRheaders\fP - can be an object of header names to values to be sent to the client, defaulting to \fRundefined\fP\&. When defined, the key names should all be lower-cased
+.IP "\(bu" 2
+\fRmessage\fP - the traditional error message, which should be kept short and all single line
+.IP "\(bu" 2
+\fRstatus\fP - the status code of the error, mirroring \fRstatusCode\fP for general compatibility
+.IP "\(bu" 2
+\fRstatusCode\fP - the status code of the error, defaulting to \fR500\fP
+.PP
+.SS "createError([status], [message], [properties])"
+Create a new error object with the given message \fRmsg\fP\&. The error object inherits from \fRcreateError\&.HttpError\fP\&.
+.PP
+.PP
+.nf
+var err = createError(404, 'This video does not exist!')
+.fi
+.PP
+.PP
+.IP "\(bu" 2
+\fRstatus: 500\fP - the status code as a number
+.IP "\(bu" 2
+\fRmessage\fP - the message of the error, defaulting to node's text for that status code\&.
+.IP "\(bu" 2
+\fRproperties\fP - custom properties to attach to the object
+.PP
+.SS "createError([status], [error], [properties])"
+Extend the given \fRerror\fP object with \fRcreateError\&.HttpError\fP properties\&. This will not alter the inheritance of the given \fRerror\fP object, and the modified \fRerror\fP object is the return value\&.
+.PP
+.PP
+.nf
+fs\&.readFile('foo\&.txt', function (err, buf) {
+  if (err) {
+    if (err\&.code === 'ENOENT') {
+      var httpError = createError(404, err, { expose: false })
+    } else {
+      var httpError = createError(500, err)
+    }
+  }
+})
+.fi
+.PP
+.PP
+.IP "\(bu" 2
+\fRstatus\fP - the status code as a number
+.IP "\(bu" 2
+\fRerror\fP - the error object to extend
+.IP "\(bu" 2
+\fRproperties\fP - custom properties to attach to the object
+.PP
+.SS "createError\&.isHttpError(val)"
+Determine if the provided \fRval\fP is an \fRHttpError\fP\&. This will return \fRtrue\fP if the error inherits from the \fRHttpError\fP constructor of this module or matches the 'duck type' for an error this module creates\&. All outputs from the \fRcreateError\fP factory will return \fRtrue\fP for this function, including if an non-\fRHttpError\fP was passed into the factory\&.
+.SS "new createError[code || name]([msg]))"
+Create a new error object with the given message \fRmsg\fP\&. The error object inherits from \fRcreateError\&.HttpError\fP\&.
+.PP
+.PP
+.nf
+var err = new createError\&.NotFound()
+.fi
+.PP
+.PP
+.IP "\(bu" 2
+\fRcode\fP - the status code as a number
+.IP "\(bu" 2
+\fRname\fP - the name of the error as a 'bumpy case', i\&.e\&. \fRNotFound\fP or \fRInternalServerError\fP\&.
+.PP
+.SS "List of all constructors"
+Status Code   Constructor Name    400   BadRequest    401   Unauthorized    402   PaymentRequired    403   Forbidden    404   NotFound    405   MethodNotAllowed    406   NotAcceptable    407   ProxyAuthenticationRequired    408   RequestTimeout    409   Conflict    410   Gone    411   LengthRequired    412   PreconditionFailed    413   PayloadTooLarge    414   URITooLong    415   UnsupportedMediaType    416   RangeNotSatisfiable    417   ExpectationFailed    418   ImATeapot    421   MisdirectedRequest    422   UnprocessableEntity    423   Locked    424   FailedDependency    425   TooEarly    426   UpgradeRequired    428   PreconditionRequired    429   TooManyRequests    431   RequestHeaderFieldsTooLarge    451   UnavailableForLegalReasons    500   InternalServerError    501   NotImplemented    502   BadGateway    503   ServiceUnavailable    504   GatewayTimeout    505   HTTPVersionNotSupported    506   VariantAlsoNegotiates    507   InsufficientStorage    508   LoopDetected    509   BandwidthLimitExceeded    510   NotExtended    511   NetworkAuthenticationRequired   
+.SH "License"
+.PP
+[MIT](LICENSE) 

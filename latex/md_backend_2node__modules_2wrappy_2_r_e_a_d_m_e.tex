@@ -1,0 +1,38 @@
+\chapter{wrappy}
+\hypertarget{md_backend_2node__modules_2wrappy_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2wrappy_2_r_e_a_d_m_e}\index{wrappy@{wrappy}}
+\label{md_backend_2node__modules_2wrappy_2_r_e_a_d_m_e_autotoc_md3991}%
+\Hypertarget{md_backend_2node__modules_2wrappy_2_r_e_a_d_m_e_autotoc_md3991}%
+ Callback wrapping utility\hypertarget{md_backend_2node__modules_2wrappy_2_r_e_a_d_m_e_autotoc_md3992}{}\doxysection{\texorpdfstring{USAGE}{USAGE}}\label{md_backend_2node__modules_2wrappy_2_r_e_a_d_m_e_autotoc_md3992}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ wrappy\ =\ require("{}wrappy"{})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ var\ wrapper\ =\ wrappy(wrapperFunction)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ make\ sure\ a\ cb\ is\ called\ only\ once}
+\DoxyCodeLine{//\ See\ also:\ http://npm.im/once\ for\ this\ specific\ use\ case}
+\DoxyCodeLine{var\ once\ =\ wrappy(function\ (cb)\ \{}
+\DoxyCodeLine{\ \ var\ called\ =\ false}
+\DoxyCodeLine{\ \ return\ function\ ()\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (called)\ return}
+\DoxyCodeLine{\ \ \ \ called\ =\ true}
+\DoxyCodeLine{\ \ \ \ return\ cb.apply(this,\ arguments)}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{function\ printBoo\ ()\ \{}
+\DoxyCodeLine{\ \ console.log('boo')}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{//\ has\ some\ rando\ property}
+\DoxyCodeLine{printBoo.iAmBooPrinter\ =\ true}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ onlyPrintOnce\ =\ once(printBoo)}
+\DoxyCodeLine{}
+\DoxyCodeLine{onlyPrintOnce()\ //\ prints\ 'boo'}
+\DoxyCodeLine{onlyPrintOnce()\ //\ does\ nothing}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ random\ property\ is\ retained!}
+\DoxyCodeLine{assert.equal(onlyPrintOnce.iAmBooPrinter,\ true)}
+
+\end{DoxyCode}
+ 

@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2mime_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2mime_2_r_e_a_d_m_e</compoundname>
+    <title>mime</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2mime_2_r_e_a_d_m_e_1autotoc_md2040"/> Comprehensive MIME type mapping API based on mime-db module.</para>
+<sect1 id="md_backend_2node__modules_2mime_2_r_e_a_d_m_e_1autotoc_md2041">
+<title>Install</title><para>Install with <ulink url="http://github.com/isaacs/npm">npm</ulink>: <verbatim>npm install mime
+</verbatim> </para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2mime_2_r_e_a_d_m_e_1autotoc_md2042">
+<title>Contributing / Testing</title><para><verbatim>npm run test
+</verbatim> </para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2mime_2_r_e_a_d_m_e_1autotoc_md2043">
+<title>Command Line</title><para><verbatim>mime [path_string]
+</verbatim> E.g. <verbatim>&gt; mime scripts/jquery.js
+application/javascript
+</verbatim> </para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2mime_2_r_e_a_d_m_e_1autotoc_md2044">
+<title>API - Queries</title><sect2 id="md_backend_2node__modules_2mime_2_r_e_a_d_m_e_1autotoc_md2045">
+<title>mime.lookup(path)</title><para>Get the mime type associated with a file, if no mime type is found <computeroutput>application/octet-stream</computeroutput> is returned. Performs a case-insensitive lookup using the extension in <computeroutput>path</computeroutput> (the substring after the last &apos;/&apos; or &apos;.&apos;). E.g.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>mime<sp/>=<sp/>require(&apos;mime&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">mime.lookup(&apos;/path/to/file.txt&apos;);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>=&gt;<sp/>&apos;text/plain&apos;</highlight></codeline>
+<codeline><highlight class="normal">mime.lookup(&apos;file.txt&apos;);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>=&gt;<sp/>&apos;text/plain&apos;</highlight></codeline>
+<codeline><highlight class="normal">mime.lookup(&apos;.TXT&apos;);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>=&gt;<sp/>&apos;text/plain&apos;</highlight></codeline>
+<codeline><highlight class="normal">mime.lookup(&apos;htm&apos;);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>=&gt;<sp/>&apos;text/html&apos;</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2mime_2_r_e_a_d_m_e_1autotoc_md2046">
+<title>mime.default_type</title><para>Sets the mime type returned when <computeroutput>mime.lookup</computeroutput> fails to find the extension searched for. (Default is <computeroutput>application/octet-stream</computeroutput>.)</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2mime_2_r_e_a_d_m_e_1autotoc_md2047">
+<title>mime.extension(type)</title><para>Get the default extension for <computeroutput>type</computeroutput></para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">mime.extension(&apos;text/html&apos;);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>=&gt;<sp/>&apos;html&apos;</highlight></codeline>
+<codeline><highlight class="normal">mime.extension(&apos;application/octet-stream&apos;);<sp/><sp/>//<sp/>=&gt;<sp/>&apos;bin&apos;</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2mime_2_r_e_a_d_m_e_1autotoc_md2048">
+<title>mime.charsets.lookup()</title><para>Map mime-type to charset</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">mime.charsets.lookup(&apos;text/plain&apos;);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>=&gt;<sp/>&apos;UTF-8&apos;</highlight></codeline>
+</programlisting></para>
+<para>(The logic for charset lookups is pretty rudimentary. Feel free to suggest improvements.)</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2mime_2_r_e_a_d_m_e_1autotoc_md2049">
+<title>API - Defining Custom Types</title><para>Custom type mappings can be added on a per-project basis via the following APIs.</para>
+<sect2 id="md_backend_2node__modules_2mime_2_r_e_a_d_m_e_1autotoc_md2050">
+<title>mime.define()</title><para>Add custom mime/extension mappings</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">mime.define({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&apos;text/x-some-format&apos;:<sp/>[&apos;x-sf&apos;,<sp/>&apos;x-sft&apos;,<sp/>&apos;x-sfml&apos;],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&apos;application/x-my-type&apos;:<sp/>[&apos;x-mt&apos;,<sp/>&apos;x-mtt&apos;],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>etc<sp/>...</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">mime.lookup(&apos;x-sft&apos;);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>=&gt;<sp/>&apos;text/x-some-format&apos;</highlight></codeline>
+</programlisting></para>
+<para>The first entry in the extensions array is returned by <computeroutput>mime.extension()</computeroutput>. E.g.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">mime.extension(&apos;text/x-some-format&apos;);<sp/>//<sp/>=&gt;<sp/>&apos;x-sf&apos;</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2mime_2_r_e_a_d_m_e_1autotoc_md2051">
+<title>mime.load(filepath)</title><para>Load mappings from an Apache &quot;.types&quot; format file</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">mime.load(&apos;./my_project.types&apos;);</highlight></codeline>
+</programlisting> The .types file format is simple - See the <computeroutput>types</computeroutput> dir for examples. </para>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/mime/README.md"/>
+  </compounddef>
+</doxygen>

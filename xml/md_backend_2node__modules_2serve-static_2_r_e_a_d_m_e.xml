@@ -1,0 +1,180 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e</compoundname>
+    <title>serve-static</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3226"/> <ulink url="https://npmjs.org/package/serve-static"><image type="html" name="https://badgen.net/npm/v/serve-static" alt="NPM Version" inline="yes"></image>
+</ulink> <ulink url="https://npmjs.org/package/serve-static"><image type="html" name="https://badgen.net/npm/dm/serve-static" alt="NPM Downloads" inline="yes"></image>
+</ulink> <ulink url="https://github.com/expressjs/serve-static/actions/workflows/ci.yml"><image type="html" name="https://badgen.net/github/checks/expressjs/serve-static/master?label=linux" alt="Linux Build" inline="yes"></image>
+</ulink> <ulink url="https://ci.appveyor.com/project/dougwilson/serve-static"><image type="html" name="https://badgen.net/appveyor/ci/dougwilson/serve-static/master?label=windows" alt="Windows Build" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/r/expressjs/serve-static?branch=master"><image type="html" name="https://badgen.net/coveralls/c/github/expressjs/serve-static/master" alt="Test Coverage" inline="yes"></image>
+</ulink></para>
+<sect1 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3227">
+<title>Install</title><para>This is a <ulink url="https://nodejs.org/en/">Node.js</ulink> module available through the <ulink url="https://www.npmjs.com/">npm registry</ulink>. Installation is done using the <ulink url="https://docs.npmjs.com/getting-started/installing-npm-packages-locally"><computeroutput>npm install</computeroutput> command</ulink>:</para>
+<para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>serve-static</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3228">
+<title>API</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>serveStatic<sp/>=<sp/>require(&apos;serve-static&apos;)</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3229">
+<title>serveStatic(root, options)</title><para>Create a new middleware function to serve files from within a given root directory. The file to serve will be determined by combining <computeroutput>req.url</computeroutput> with the provided root directory. When a file is not found, instead of sending a 404 response, this module will instead call <computeroutput>next()</computeroutput> to move on to the next middleware, allowing for stacking and fall-backs.</para>
+<sect3 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3230">
+<title>Options</title><sect4 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3231">
+<title>acceptRanges</title><para>Enable or disable accepting ranged requests, defaults to true. Disabling this will not send <computeroutput>Accept-Ranges</computeroutput> and ignore the contents of the <computeroutput>Range</computeroutput> request header.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3232">
+<title>cacheControl</title><para>Enable or disable setting <computeroutput>Cache-Control</computeroutput> response header, defaults to true. Disabling this will ignore the <computeroutput>immutable</computeroutput> and <computeroutput>maxAge</computeroutput> options.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3233">
+<title>dotfiles</title><para>Set how &quot;dotfiles&quot; are treated when encountered. A dotfile is a file or directory that begins with a dot (&quot;.&quot;). Note this check is done on the path itself without checking if the path actually exists on the disk. If <computeroutput>root</computeroutput> is specified, only the dotfiles above the root are checked (i.e. the root itself can be within a dotfile when set to &quot;deny&quot;).</para>
+<para><itemizedlist>
+<listitem><para><lsquo/>&apos;allow<rsquo/><computeroutput>No special treatment for dotfiles. -</computeroutput>&apos;deny&apos;<computeroutput>Deny a request for a dotfile and 403/</computeroutput>next()<computeroutput>. -</computeroutput>&apos;ignore&apos;<computeroutput>Pretend like the dotfile does not exist and 404/</computeroutput>next()`.</para>
+</listitem></itemizedlist>
+</para>
+<para>The default value is similar to <lsquo/>&apos;ignore<rsquo/>`, with the exception that this default will not ignore the files within a directory that begins with a dot.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3234">
+<title>etag</title><para>Enable or disable etag generation, defaults to true.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3235">
+<title>extensions</title><para>Set file extension fallbacks. When set, if a file is not found, the given extensions will be added to the file name and search for. The first that exists will be served. Example: <lsquo/>[&apos;html<rsquo/>, &apos;htm&apos;]`.</para>
+<para>The default value is <computeroutput>false</computeroutput>.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3236">
+<title>fallthrough</title><para>Set the middleware to have client errors fall-through as just unhandled requests, otherwise forward a client error. The difference is that client errors like a bad request or a request to a non-existent file will cause this middleware to simply <computeroutput>next()</computeroutput> to your next middleware when this value is <computeroutput>true</computeroutput>. When this value is <computeroutput>false</computeroutput>, these errors (even 404s), will invoke <computeroutput>next(err)</computeroutput>.</para>
+<para>Typically <computeroutput>true</computeroutput> is desired such that multiple physical directories can be mapped to the same web address or for routes to fill in non-existent files.</para>
+<para>The value <computeroutput>false</computeroutput> can be used if this middleware is mounted at a path that is designed to be strictly a single file system directory, which allows for short-circuiting 404s for less overhead. This middleware will also reply to all methods.</para>
+<para>The default value is <computeroutput>true</computeroutput>.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3237">
+<title>immutable</title><para>Enable or disable the <computeroutput>immutable</computeroutput> directive in the <computeroutput>Cache-Control</computeroutput> response header, defaults to <computeroutput>false</computeroutput>. If set to <computeroutput>true</computeroutput>, the <computeroutput>maxAge</computeroutput> option should also be specified to enable caching. The <computeroutput>immutable</computeroutput> directive will prevent supported clients from making conditional requests during the life of the <computeroutput>maxAge</computeroutput> option to check if the file has changed.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3238">
+<title>index</title><para>By default this module will send &quot;index.html&quot; files in response to a request on a directory. To disable this set <computeroutput>false</computeroutput> or to supply a new index pass a string or an array in preferred order.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3239">
+<title>lastModified</title><para>Enable or disable <computeroutput>Last-Modified</computeroutput> header, defaults to true. Uses the file system&apos;s last modified value.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3240">
+<title>maxAge</title><para>Provide a max-age in milliseconds for http caching, defaults to 0. This can also be a string accepted by the <ulink url="https://www.npmjs.org/package/ms#readme">ms</ulink> module.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3241">
+<title>redirect</title><para>Redirect to trailing &quot;/&quot; when the pathname is a dir. Defaults to <computeroutput>true</computeroutput>.</para>
+</sect4>
+<sect4 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3242">
+<title>setHeaders</title><para>Function to set custom headers on response. Alterations to the headers need to occur synchronously. The function is called as <computeroutput>fn(res, path, stat)</computeroutput>, where the arguments are:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>res</computeroutput> the response object</para>
+</listitem><listitem><para><computeroutput>path</computeroutput> the file path that is being sent</para>
+</listitem><listitem><para><computeroutput>stat</computeroutput> the stat object of the file that is being sent</para>
+</listitem></itemizedlist>
+</para>
+</sect4>
+</sect3>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3243">
+<title>Examples</title><sect2 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3244">
+<title>Serve files with vanilla node.js http server</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>finalhandler<sp/>=<sp/>require(&apos;finalhandler&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>serveStatic<sp/>=<sp/>require(&apos;serve-static&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Serve<sp/>up<sp/>public/ftp<sp/>folder</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>serve<sp/>=<sp/>serveStatic(&apos;public/ftp&apos;,<sp/>{<sp/>index:<sp/>[&apos;index.html&apos;,<sp/>&apos;index.htm&apos;]<sp/>})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Create<sp/>server</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>server<sp/>=<sp/>http.createServer(function<sp/>onRequest<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>serve(req,<sp/>res,<sp/>finalhandler(req,<sp/>res))</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Listen</highlight></codeline>
+<codeline><highlight class="normal">server.listen(3000)</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3245">
+<title>Serve all files as downloads</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>contentDisposition<sp/>=<sp/>require(&apos;content-disposition&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>finalhandler<sp/>=<sp/>require(&apos;finalhandler&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>serveStatic<sp/>=<sp/>require(&apos;serve-static&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Serve<sp/>up<sp/>public/ftp<sp/>folder</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>serve<sp/>=<sp/>serveStatic(&apos;public/ftp&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>index:<sp/>false,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>setHeaders:<sp/>setHeaders</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Set<sp/>header<sp/>to<sp/>force<sp/>download</highlight></codeline>
+<codeline><highlight class="normal">function<sp/>setHeaders<sp/>(res,<sp/>path)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.setHeader(&apos;Content-Disposition&apos;,<sp/>contentDisposition(path))</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Create<sp/>server</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>server<sp/>=<sp/>http.createServer(function<sp/>onRequest<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>serve(req,<sp/>res,<sp/>finalhandler(req,<sp/>res))</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Listen</highlight></codeline>
+<codeline><highlight class="normal">server.listen(3000)</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3246">
+<title>Serving using express</title><sect3 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3247">
+<title>Simple</title><para>This is a simple example of using Express.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>express<sp/>=<sp/>require(&apos;express&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>serveStatic<sp/>=<sp/>require(&apos;serve-static&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>app<sp/>=<sp/>express()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">app.use(serveStatic(&apos;public/ftp&apos;,<sp/>{<sp/>index:<sp/>[&apos;default.html&apos;,<sp/>&apos;default.htm&apos;]<sp/>}))</highlight></codeline>
+<codeline><highlight class="normal">app.listen(3000)</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3248">
+<title>Multiple roots</title><para>This example shows a simple way to search through multiple directories. Files are searched for in <computeroutput>public-optimized/</computeroutput> first, then <computeroutput>public/</computeroutput> second as a fallback.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>express<sp/>=<sp/>require(&apos;express&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>path<sp/>=<sp/>require(&apos;path&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>serveStatic<sp/>=<sp/>require(&apos;serve-static&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>app<sp/>=<sp/>express()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">app.use(serveStatic(path.join(__dirname,<sp/>&apos;public-optimized&apos;)))</highlight></codeline>
+<codeline><highlight class="normal">app.use(serveStatic(path.join(__dirname,<sp/>&apos;public&apos;)))</highlight></codeline>
+<codeline><highlight class="normal">app.listen(3000)</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3249">
+<title>Different settings for paths</title><para>This example shows how to set a different max age depending on the served file type. In this example, HTML files are not cached, while everything else is for 1 day.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>express<sp/>=<sp/>require(&apos;express&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>path<sp/>=<sp/>require(&apos;path&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>serveStatic<sp/>=<sp/>require(&apos;serve-static&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>app<sp/>=<sp/>express()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">app.use(serveStatic(path.join(__dirname,<sp/>&apos;public&apos;),<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>maxAge:<sp/>&apos;1d&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>setHeaders:<sp/>setCustomCacheControl</highlight></codeline>
+<codeline><highlight class="normal">}))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">app.listen(3000)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>setCustomCacheControl<sp/>(res,<sp/>path)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(serveStatic.mime.lookup(path)<sp/>===<sp/>&apos;text/html&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Custom<sp/>Cache-Control<sp/>for<sp/>HTML<sp/>files</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.setHeader(&apos;Cache-Control&apos;,<sp/>&apos;public,<sp/>max-age=0&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+</sect3>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2serve-static_2_r_e_a_d_m_e_1autotoc_md3250">
+<title>License</title><para>[MIT](LICENSE) </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/serve-static/README.md"/>
+  </compounddef>
+</doxygen>

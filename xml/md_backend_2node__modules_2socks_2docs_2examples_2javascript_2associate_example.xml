@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2socks_2docs_2examples_2javascript_2associate_example" kind="page">
+    <compoundname>md_backend_2node__modules_2socks_2docs_2examples_2javascript_2associate_example</compoundname>
+    <title>socks examples</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2socks_2docs_2examples_2javascript_2associate_example_1autotoc_md3525"/> </para>
+<sect1 id="md_backend_2node__modules_2socks_2docs_2examples_2javascript_2associate_example_1autotoc_md3526">
+<title>Example for SOCKS &apos;associate&apos; command</title><para>The associate command tells the SOCKS proxy server to establish a UDP relay. The server binds to a new UDP port and communicates the newly opened port back to the origin client. From here, any SOCKS UDP frame packets sent to this special UDP port on the Proxy server will be forwarded to the desired destination, and any responses will be forwarded back to the origin client (you).</para>
+<para>This can be used for things such as DNS queries, and other UDP communicates.</para>
+<para><bold>Connection Steps</bold></para>
+<para><orderedlist>
+<listitem><para>Client -(associate)-&gt; Proxy (Tells the proxy to create a UDP relay and bind on a new port)</para>
+</listitem><listitem><para>Client &lt;-(port)- Proxy (Tells the origin client which port it opened and is accepting UDP frame packets on)</para>
+</listitem></orderedlist>
+</para>
+<para>At this point the proxy is accepting UDP frames on the specified port.</para>
+<para><orderedlist>
+<listitem><para>Client <ndash/>(udp frame) -&gt; Proxy -&gt; Destination (The origin client sends a UDP frame to the proxy on the UDP port, and the proxy then forwards it to the destination specified in the UDP frame.)</para>
+</listitem><listitem><para>Client &lt;<ndash/>(udp frame) &lt;<ndash/> Proxy &lt;<ndash/> Destination (The destination client responds to the udp packet sent in #3)</para>
+</listitem></orderedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2socks_2docs_2examples_2javascript_2associate_example_1autotoc_md3527">
+<title>Usage</title><para>The &apos;associate&apos; command can only be used by creating a new SocksClient instance and listening for the &apos;established&apos; event.</para>
+<para><bold>Note:</bold> UDP packets relayed through the proxy servers are encompassed in a special Socks UDP frame format. SocksClient.createUDPFrame() and SocksClient.parseUDPFrame() create and parse these special UDP packets.</para>
+<para><programlisting filename=".typescript"><codeline><highlight class="normal">const<sp/>dgram<sp/>=<sp/>require(&apos;dgram&apos;);</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>SocksClient<sp/>=<sp/>require(&apos;socks&apos;).SocksClient;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Create<sp/>a<sp/>local<sp/>UDP<sp/>socket<sp/>for<sp/>sending/receiving<sp/>packets<sp/>to/from<sp/>the<sp/>proxy.</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>udpSocket<sp/>=<sp/>dgram.createSocket(&apos;udp4&apos;);</highlight></codeline>
+<codeline><highlight class="normal">udpSocket.bind();</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Listen<sp/>for<sp/>incoming<sp/>UDP<sp/>packets<sp/>from<sp/>the<sp/>proxy<sp/>server.</highlight></codeline>
+<codeline><highlight class="normal">udpSocket.on(&apos;message&apos;,<sp/>(message,<sp/>rinfo)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(SocksClient.parseUDPFrame(message));</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>/*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>{<sp/>frameNumber:<sp/>0,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>remoteHost:<sp/>{<sp/>host:<sp/>&apos;8.8.8.8&apos;,<sp/>port:<sp/>53<sp/>},<sp/>//<sp/>The<sp/>remote<sp/>host<sp/>that<sp/>replied<sp/>with<sp/>a<sp/>UDP<sp/>packet</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>data:<sp/>&lt;Buffer<sp/>74<sp/>65<sp/>73<sp/>74<sp/>0a&gt;<sp/>//<sp/>The<sp/>data</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>options<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>proxy:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;104.131.124.203&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>1081,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>type:<sp/>5</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>This<sp/>should<sp/>be<sp/>the<sp/>ip<sp/>and<sp/>port<sp/>of<sp/>the<sp/>expected<sp/>client<sp/>that<sp/>will<sp/>be<sp/>sending<sp/>UDP<sp/>frames<sp/>to<sp/>the<sp/>newly<sp/>opened<sp/>UDP<sp/>port<sp/>on<sp/>the<sp/>server.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Most<sp/>SOCKS<sp/>servers<sp/>accept<sp/>0.0.0.0<sp/>as<sp/>a<sp/>wildcard<sp/>address<sp/>to<sp/>accept<sp/>UDP<sp/>frames<sp/>from<sp/>any<sp/>source.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>destination:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;0.0.0.0&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>command:<sp/>&apos;associate&apos;</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>client<sp/>=<sp/>new<sp/>SocksClient(options);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>This<sp/>event<sp/>is<sp/>fired<sp/>when<sp/>the<sp/>SOCKS<sp/>server<sp/>has<sp/>started<sp/>listening<sp/>on<sp/>a<sp/>new<sp/>UDP<sp/>port<sp/>for<sp/>UDP<sp/>relaying.</highlight></codeline>
+<codeline><highlight class="normal">client.on(&apos;established&apos;,<sp/>info<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(info);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>/*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>socket:<sp/>&lt;Socket<sp/>...&gt;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>remoteHost:<sp/>{<sp/>//<sp/>This<sp/>is<sp/>the<sp/>remote<sp/>port<sp/>on<sp/>the<sp/>SOCKS<sp/>proxy<sp/>server<sp/>to<sp/>send<sp/>UDP<sp/>frame<sp/>packets<sp/>to.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>host:<sp/>&apos;104.131.124.203&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>port:<sp/>58232</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*/</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Send<sp/>a<sp/>udp<sp/>frame<sp/>to<sp/>8.8.8.8<sp/>on<sp/>port<sp/>53<sp/>through<sp/>the<sp/>proxy.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>const<sp/>packet<sp/>=<sp/>SocksClient.createUDPFrame({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>remoteHost:<sp/>{<sp/>host:<sp/>&apos;8.8.8.8&apos;,<sp/>port:<sp/>53<sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>data:<sp/>Buffer.from(&apos;hello&apos;)<sp/>//<sp/>A<sp/>DNS<sp/>lookup<sp/>in<sp/>the<sp/>real<sp/>world.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Send<sp/>packet.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>udpSocket.send(packet,<sp/>info.remoteHost.port,<sp/>info.remoteHost.host);</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>SOCKS<sp/>proxy<sp/>failed<sp/>to<sp/>bind.</highlight></codeline>
+<codeline><highlight class="normal">client.on(&apos;error&apos;,<sp/>()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Handle<sp/>errors</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+</programlisting> </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/socks/docs/examples/javascript/associateExample.md"/>
+  </compounddef>
+</doxygen>

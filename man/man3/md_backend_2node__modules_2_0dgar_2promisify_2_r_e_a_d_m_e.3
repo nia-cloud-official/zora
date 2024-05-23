@@ -1,0 +1,62 @@
+.TH "md_backend_2node__modules_2_0dgar_2promisify_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2_0dgar_2promisify_2_r_e_a_d_m_e \- @gar/promisify 
+.PP
+ 
+.SS "Promisify an entire object or class instance"
+This module leverages es6 Proxy and Reflect to promisify every function in an object or class instance\&.
+.PP
+It assumes the callback that the function is expecting is the last parameter, and that it is an error-first callback with only one value, i\&.e\&. \fR(err, value) => \&.\&.\&.\fP\&. This mirrors node's \fRutil\&.promisify\fP method\&.
+.PP
+In order that you can use it as a one-stop-shop for all your promisify needs, you can also pass it a function\&. That function will be promisified as normal using node's built-in \fRutil\&.promisify\fP method\&.
+.PP
+\fRnode's custom promisified functions\fP will also be mirrored, further allowing this to be a drop-in replacement for the built-in \fRutil\&.promisify\fP\&.
+.SS "Examples"
+Promisify an entire object
+.PP
+.PP
+.nf
+const promisify = require('@gar/promisify')
+
+class Foo {
+  constructor (attr) {
+    this\&.attr = attr
+  }
+
+  double (input, cb) {
+    cb(null, input * 2)
+  }
+
+const foo = new Foo('baz')
+const promisified = promisify(foo)
+
+console\&.log(promisified\&.attr)
+console\&.log(await promisified\&.double(1024))
+.fi
+.PP
+.PP
+Promisify a function
+.PP
+.PP
+.nf
+const promisify = require('@gar/promisify')
+
+function foo (a, cb) {
+  if (a !== 'bad') {
+    return cb(null, 'ok')
+  }
+  return cb('not ok')
+}
+
+const promisified = promisify(foo)
+
+// This will resolve to 'ok'
+promisified('good')
+
+// this will reject
+promisified('bad')
+.fi
+.PP
+ 

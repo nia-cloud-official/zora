@@ -1,0 +1,85 @@
+\chapter{socks examples}
+\hypertarget{md_backend_2node__modules_2socks_2docs_2examples_2javascript_2bind_example}{}\label{md_backend_2node__modules_2socks_2docs_2examples_2javascript_2bind_example}\index{socks examples@{socks examples}}
+\label{md_backend_2node__modules_2socks_2docs_2examples_2javascript_2bind_example_autotoc_md3528}%
+\Hypertarget{md_backend_2node__modules_2socks_2docs_2examples_2javascript_2bind_example_autotoc_md3528}%
+ \hypertarget{md_backend_2node__modules_2socks_2docs_2examples_2javascript_2bind_example_autotoc_md3529}{}\doxysection{\texorpdfstring{Example for SOCKS \textquotesingle{}bind\textquotesingle{} command}{Example for SOCKS \textquotesingle{}bind\textquotesingle{} command}}\label{md_backend_2node__modules_2socks_2docs_2examples_2javascript_2bind_example_autotoc_md3529}
+The bind command tells the SOCKS proxy server to bind and listen on a new TCP port for an incoming connection. It communicates the newly opened port back to the origin client. Once a incoming connection is accepted by the SOCKS proxy server it then communicates the remote host that connected to the SOCKS proxy back through the same initial connection via the origin client.
+
+This can be used for things such as FTP clients which require incoming TCP connections, etc.
+
+{\bfseries{Connection Steps}}
+
+
+\begin{DoxyEnumerate}
+\item Client -\/(bind)-\/\texorpdfstring{$>$}{>} Proxy (Tells the proxy to bind to a new port)
+\item Client \texorpdfstring{$<$}{<}-\/(port)-\/ Proxy (Tells the origin client which port it opened)
+\item Client2 -\/-\/\texorpdfstring{$>$}{>} Proxy (Other client connects to the proxy on this port)
+\item Client \texorpdfstring{$<$}{<}--(client2\textquotesingle{}s host info) (Proxy tells the origin client who connected to it)
+\item Original connection to the proxy is now a full TCP stream between client (you) and client2.
+\item Client \texorpdfstring{$<$}{<}-\/-\/\texorpdfstring{$>$}{>} Proxy \texorpdfstring{$<$}{<}-\/-\/\texorpdfstring{$>$}{>} Client2
+\end{DoxyEnumerate}\hypertarget{md_backend_2node__modules_2socks_2docs_2examples_2javascript_2bind_example_autotoc_md3530}{}\doxysection{\texorpdfstring{Usage}{Usage}}\label{md_backend_2node__modules_2socks_2docs_2examples_2javascript_2bind_example_autotoc_md3530}
+The \textquotesingle{}bind\textquotesingle{} command can only be used by creating a new Socks\+Client instance and listening for \textquotesingle{}bound\textquotesingle{} and \textquotesingle{}established\textquotesingle{} events.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ SocksClient\ =\ require('socks').SocksClient;}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ options\ =\ \{}
+\DoxyCodeLine{\ \ proxy:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ '104.131.124.203',}
+\DoxyCodeLine{\ \ \ \ port:\ 1081,}
+\DoxyCodeLine{\ \ \ \ type:\ 5}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ This\ should\ be\ the\ ip\ and\ port\ of\ the\ expected\ client\ that\ will\ connect\ to\ the\ SOCKS\ proxy\ server\ on\ the\ newly\ bound\ port.}
+\DoxyCodeLine{\ \ //\ Most\ SOCKS\ servers\ accept\ 0.0.0.0\ as\ a\ wildcard\ address\ to\ accept\ any\ client.}
+\DoxyCodeLine{\ \ destination:\ \{}
+\DoxyCodeLine{\ \ \ \ host:\ '0.0.0.0',}
+\DoxyCodeLine{\ \ \ \ port:\ 0}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ command:\ 'bind'}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ client\ =\ new\ SocksClient(options);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ This\ event\ is\ fired\ when\ the\ SOCKS\ server\ has\ started\ listening\ on\ a\ new\ port\ for\ incoming\ connections.}
+\DoxyCodeLine{client.on('bound',\ (info)\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(info);}
+\DoxyCodeLine{\ \ /*}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ socket:\ <Socket\ ...>,}
+\DoxyCodeLine{\ \ \ \ remoteHost:\ \{\ //\ This\ is\ the\ remote\ ip\ and\ port\ of\ the\ SOCKS\ proxy\ that\ is\ now\ accepting\ incoming\ connections.}
+\DoxyCodeLine{\ \ \ \ \ \ host:\ '104.131.124.203',}
+\DoxyCodeLine{\ \ \ \ \ \ port:\ 49928}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ */}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ This\ event\ is\ fired\ when\ the\ SOCKS\ server\ has\ accepted\ an\ incoming\ connection\ on\ the\ newly\ bound\ port.}
+\DoxyCodeLine{client.on('established',\ (info)\ =>\ \{}
+\DoxyCodeLine{\ \ console.log(info);}
+\DoxyCodeLine{\ \ /*}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ socket:\ <Socket\ ...>,}
+\DoxyCodeLine{\ \ \ \ remoteHost:\ \{\ //\ This\ is\ the\ remote\ ip\ and\ port\ that\ connected\ to\ the\ SOCKS\ proxy\ on\ the\ newly\ bound\ port.}
+\DoxyCodeLine{\ \ \ \ \ \ host:\ '1.2.3.4',}
+\DoxyCodeLine{\ \ \ \ \ \ port:\ 58232}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ */}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ //\ At\ this\ point\ info.socket\ is\ a\ regular\ net.Socket\ TCP\ connection\ between\ client\ and\ client2\ (1.2.3.4)\ (the\ client\ which\ connected\ to\ the\ proxy\ on\ the\ newly\ bound\ port.)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ console.log(info.socket);}
+\DoxyCodeLine{\ \ //\ <Socket\ ...>\ \ (this\ is\ a\ raw\ net.Socket\ that\ is\ established\ to\ the\ destination\ host\ through\ the\ given\ proxy\ servers)}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ SOCKS\ proxy\ failed\ to\ bind.}
+\DoxyCodeLine{client.on('error',\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ //\ Handle\ errors}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+ 

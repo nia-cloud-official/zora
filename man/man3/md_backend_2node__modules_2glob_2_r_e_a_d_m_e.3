@@ -1,0 +1,314 @@
+.TH "md_backend_2node__modules_2glob_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2glob_2_r_e_a_d_m_e \- Glob 
+.PP
+ Match files using the patterns the shell uses, like stars and stuff\&.
+.PP
+\fR\fP \fR\fP \fR\fP
+.PP
+This is a glob implementation in JavaScript\&. It uses the \fRminimatch\fP library to do its matching\&.
+.PP
+.SH "Usage"
+.PP
+Install with npm
+.PP
+.PP
+.nf
+npm i glob
+.fi
+.PP
+.PP
+.PP
+.nf
+var glob = require("glob")
+
+// options is optional
+glob("**/*\&.js", options, function (er, files) {
+  // files is an array of filenames\&.
+  // If the `nonull` option is set, and nothing
+  // was found, then files is ["**/*\&.js"]
+  // er is an error object or null\&.
+})
+.fi
+.PP
+.SH "Glob Primer"
+.PP
+'Globs' are the patterns you type when you do stuff like \fRls *\&.js\fP on the command line, or put \fRbuild/*\fP in a \fR\&.gitignore\fP file\&.
+.PP
+Before parsing the path part patterns, braced sections are expanded into a set\&. Braced sections start with \fR{\fP and end with \fR}\fP, with any number of comma-delimited sections within\&. Braced sections may contain slash characters, so \fRa{/b/c,bcd}\fP would expand into \fRa/b/c\fP and \fRabcd\fP\&.
+.PP
+The following characters have special magic meaning when used in a path portion:
+.PP
+.IP "\(bu" 2
+\fR*\fP Matches 0 or more characters in a single path portion
+.IP "\(bu" 2
+\fR?\fP Matches 1 character
+.IP "\(bu" 2
+\fR[\&.\&.\&.]\fP Matches a range of characters, similar to a RegExp range\&. If the first character of the range is \fR!\fP or \fR^\fP then it matches any character not in the range\&.
+.IP "\(bu" 2
+\fR!(pattern|pattern|pattern)\fP Matches anything that does not match any of the patterns provided\&.
+.IP "\(bu" 2
+\fR?(pattern|pattern|pattern)\fP Matches zero or one occurrence of the patterns provided\&.
+.IP "\(bu" 2
+\fR+(pattern|pattern|pattern)\fP Matches one or more occurrences of the patterns provided\&.
+.IP "\(bu" 2
+\fR*(a|b|c)\fP Matches zero or more occurrences of the patterns provided
+.IP "\(bu" 2
+\fR@(pattern|pat*|pat?erN)\fP Matches exactly one of the patterns provided
+.IP "\(bu" 2
+\fR**\fP If a 'globstar' is alone in a path portion, then it matches zero or more directories and subdirectories searching for matches\&. It does not crawl symlinked directories\&.
+.PP
+.SS "Dots"
+If a file or directory path portion has a \fR\&.\fP as the first character, then it will not match any glob pattern unless that pattern's corresponding path part also has a \fR\&.\fP as its first character\&.
+.PP
+For example, the pattern \fRa/\&.*/c\fP would match the file at \fRa/\&.b/c\fP\&. However the pattern \fRa/*/c\fP would not, because \fR*\fP does not start with a dot character\&.
+.PP
+You can make glob treat dots as normal characters by setting \fRdot:true\fP in the options\&.
+.SS "Basename Matching"
+If you set \fRmatchBase:true\fP in the options, and the pattern has no slashes in it, then it will seek for any file anywhere in the tree with a matching basename\&. For example, \fR*\&.js\fP would match \fRtest/simple/basic\&.js\fP\&.
+.SS "Empty Sets"
+If no matching files are found, then an empty array is returned\&. This differs from the shell, where the pattern itself is returned\&. For example: 
+.PP
+.nf
+$ echo a*s*d*f
+a*s*d*f
+
+.fi
+.PP
+ To get the bash-style behavior, set the \fRnonull:true\fP in the options\&.
+.SS "See Also:"
+.IP "\(bu" 2
+\fRman sh\fP
+.IP "\(bu" 2
+\fRman bash\fP (Search for 'Pattern Matching')
+.IP "\(bu" 2
+\fRman 3 fnmatch\fP
+.IP "\(bu" 2
+\fRman 5 gitignore\fP
+.IP "\(bu" 2
+\fRminimatch documentation\fP
+.PP
+.SH "glob\&.hasMagic(pattern, [options])"
+.PP
+Returns \fRtrue\fP if there are any special characters in the pattern, and \fRfalse\fP otherwise\&.
+.PP
+Note that the options affect the results\&. If \fRnoext:true\fP is set in the options object, then \fR+(a|b)\fP will not be considered a magic pattern\&. If the pattern has a brace expansion, like \fRa/{b/c,x/y}\fP then that is considered magical, unless \fRnobrace:true\fP is set in the options\&.
+.SH "glob(pattern, [options], cb)"
+.PP
+.IP "\(bu" 2
+\fRpattern\fP \fR{String}\fP Pattern to be matched
+.IP "\(bu" 2
+\fRoptions\fP \fR{Object}\fP
+.IP "\(bu" 2
+\fRcb\fP \fR{Function}\fP
+.IP "  \(bu" 4
+\fRerr\fP \fR{Error | null}\fP
+.IP "  \(bu" 4
+\fRmatches\fP \fR{Array<String>}\fP filenames found matching the pattern
+.PP
+
+.PP
+.PP
+Perform an asynchronous glob search\&.
+.SH "glob\&.sync(pattern, [options])"
+.PP
+.IP "\(bu" 2
+\fRpattern\fP \fR{String}\fP Pattern to be matched
+.IP "\(bu" 2
+\fRoptions\fP \fR{Object}\fP
+.IP "\(bu" 2
+return: \fR{Array<String>}\fP filenames found matching the pattern
+.PP
+.PP
+Perform a synchronous glob search\&.
+.SH "Class: glob\&.Glob"
+.PP
+Create a Glob object by instantiating the \fRglob\&.Glob\fP class\&.
+.PP
+.PP
+.nf
+var Glob = require("glob")\&.Glob
+var mg = new Glob(pattern, options, cb)
+.fi
+.PP
+.PP
+It's an EventEmitter, and starts walking the filesystem to find matches immediately\&.
+.SS "new glob\&.Glob(pattern, [options], [cb])"
+.IP "\(bu" 2
+\fRpattern\fP \fR{String}\fP pattern to search for
+.IP "\(bu" 2
+\fRoptions\fP \fR{Object}\fP
+.IP "\(bu" 2
+\fRcb\fP \fR{Function}\fP Called when an error occurs, or matches are found
+.IP "  \(bu" 4
+\fRerr\fP \fR{Error | null}\fP
+.IP "  \(bu" 4
+\fRmatches\fP \fR{Array<String>}\fP filenames found matching the pattern
+.PP
+
+.PP
+.PP
+Note that if the \fRsync\fP flag is set in the options, then matches will be immediately available on the \fRg\&.found\fP member\&.
+.SS "Properties"
+.IP "\(bu" 2
+\fRminimatch\fP The minimatch object that the glob uses\&.
+.IP "\(bu" 2
+\fRoptions\fP The options object passed in\&.
+.IP "\(bu" 2
+\fRaborted\fP Boolean which is set to true when calling \fRabort()\fP\&. There is no way at this time to continue a glob search after aborting, but you can re-use the statCache to avoid having to duplicate syscalls\&.
+.IP "\(bu" 2
+\fRcache\fP Convenience object\&. Each field has the following possible values:
+.IP "  \(bu" 4
+\fRfalse\fP - Path does not exist
+.IP "  \(bu" 4
+\fRtrue\fP - Path exists
+.IP "  \(bu" 4
+`'FILE'\fR- Path exists, and is not a directory *\fP'DIR'\fR- Path exists, and is a directory *\fP[file, entries, \&.\&.\&.]\fR- Path exists, is a directory, and the array value is the results of\fPfs\&.readdir\fR *\fPstatCache\fRCache of\fPfs\&.stat\fRresults, to prevent statting the same path multiple times\&. *\fPsymlinks\fRA record of which paths are symbolic links, which is relevant in resolving\fP**\fRpatterns\&. *\fPrealpathCache\fRAn optional object which is passed to\fPfs\&.realpath` to minimize unnecessary syscalls\&. It is stored on the instantiated Glob object, and may be re-used\&.
+.PP
+
+.PP
+.SS "Events"
+.IP "\(bu" 2
+\fRend\fP When the matching is finished, this is emitted with all the matches found\&. If the \fRnonull\fP option is set, and no match was found, then the \fRmatches\fP list contains the original pattern\&. The matches are sorted, unless the \fRnosort\fP flag is set\&.
+.IP "\(bu" 2
+\fRmatch\fP Every time a match is found, this is emitted with the specific thing that matched\&. It is not deduplicated or resolved to a realpath\&.
+.IP "\(bu" 2
+\fRerror\fP Emitted when an unexpected error is encountered, or whenever any fs error occurs if \fRoptions\&.strict\fP is set\&.
+.IP "\(bu" 2
+\fRabort\fP When \fRabort()\fP is called, this event is raised\&.
+.PP
+.SS "Methods"
+.IP "\(bu" 2
+\fRpause\fP Temporarily stop the search
+.IP "\(bu" 2
+\fRresume\fP Resume the search
+.IP "\(bu" 2
+\fRabort\fP Stop the search forever
+.PP
+.SS "Options"
+All the options that can be passed to Minimatch can also be passed to Glob to change pattern matching behavior\&. Also, some have been added, or have glob-specific ramifications\&.
+.PP
+All options are false by default, unless otherwise noted\&.
+.PP
+All options are added to the Glob object, as well\&.
+.PP
+If you are running many \fRglob\fP operations, you can pass a Glob object as the \fRoptions\fP argument to a subsequent operation to shortcut some \fRstat\fP and \fRreaddir\fP calls\&. At the very least, you may pass in shared \fRsymlinks\fP, \fRstatCache\fP, \fRrealpathCache\fP, and \fRcache\fP options, so that parallel glob operations will be sped up by sharing information about the filesystem\&.
+.PP
+.IP "\(bu" 2
+\fRcwd\fP The current working directory in which to search\&. Defaults to \fRprocess\&.cwd()\fP\&.
+.IP "\(bu" 2
+\fRroot\fP The place where patterns starting with \fR/\fP will be mounted onto\&. Defaults to \fRpath\&.resolve(options\&.cwd, '/')\fP (\fR/\fP on Unix systems, and \fRC:\\\fP or some such on Windows\&.)
+.IP "\(bu" 2
+\fRdot\fP Include \fR\&.dot\fP files in normal matches and \fRglobstar\fP matches\&. Note that an explicit dot in a portion of the pattern will always match dot files\&.
+.IP "\(bu" 2
+\fRnomount\fP By default, a pattern starting with a forward-slash will be 'mounted' onto the root setting, so that a valid filesystem path is returned\&. Set this flag to disable that behavior\&.
+.IP "\(bu" 2
+\fRmark\fP Add a \fR/\fP character to directory matches\&. Note that this requires additional stat calls\&.
+.IP "\(bu" 2
+\fRnosort\fP Don't sort the results\&.
+.IP "\(bu" 2
+\fRstat\fP Set to true to stat \fIall\fP results\&. This reduces performance somewhat, and is completely unnecessary, unless \fRreaddir\fP is presumed to be an untrustworthy indicator of file existence\&.
+.IP "\(bu" 2
+\fRsilent\fP When an unusual error is encountered when attempting to read a directory, a warning will be printed to stderr\&. Set the \fRsilent\fP option to true to suppress these warnings\&.
+.IP "\(bu" 2
+\fRstrict\fP When an unusual error is encountered when attempting to read a directory, the process will just continue on in search of other matches\&. Set the \fRstrict\fP option to raise an error in these cases\&.
+.IP "\(bu" 2
+\fRcache\fP See \fRcache\fP property above\&. Pass in a previously generated cache object to save some fs calls\&.
+.IP "\(bu" 2
+\fRstatCache\fP A cache of results of filesystem information, to prevent unnecessary stat calls\&. While it should not normally be necessary to set this, you may pass the statCache from one glob() call to the options object of another, if you know that the filesystem will not change between calls\&. (See 'Race Conditions' below\&.)
+.IP "\(bu" 2
+\fRsymlinks\fP A cache of known symbolic links\&. You may pass in a previously generated \fRsymlinks\fP object to save \fRlstat\fP calls when resolving \fR**\fP matches\&.
+.IP "\(bu" 2
+\fRsync\fP DEPRECATED: use \fRglob\&.sync(pattern, opts)\fP instead\&.
+.IP "\(bu" 2
+\fRnounique\fP In some cases, brace-expanded patterns can result in the same file showing up multiple times in the result set\&. By default, this implementation prevents duplicates in the result set\&. Set this flag to disable that behavior\&.
+.IP "\(bu" 2
+\fRnonull\fP Set to never return an empty set, instead returning a set containing the pattern itself\&. This is the default in glob(3)\&.
+.IP "\(bu" 2
+\fRdebug\fP Set to enable debug logging in minimatch and glob\&.
+.IP "\(bu" 2
+\fRnobrace\fP Do not expand \fR{a,b}\fP and \fR{1\&.\&.3}\fP brace sets\&.
+.IP "\(bu" 2
+\fRnoglobstar\fP Do not match \fR**\fP against multiple filenames\&. (Ie, treat it as a normal \fR*\fP instead\&.)
+.IP "\(bu" 2
+\fRnoext\fP Do not match \fR+(a|b)\fP 'extglob' patterns\&.
+.IP "\(bu" 2
+\fRnocase\fP Perform a case-insensitive match\&. Note: on case-insensitive filesystems, non-magic patterns will match by default, since \fRstat\fP and \fRreaddir\fP will not raise errors\&.
+.IP "\(bu" 2
+\fRmatchBase\fP Perform a basename-only match if the pattern does not contain any slash characters\&. That is, \fR*\&.js\fP would be treated as equivalent to \fR**/*\&.js\fP, matching all js files in all directories\&.
+.IP "\(bu" 2
+\fRnodir\fP Do not match directories, only files\&. (Note: to match \fIonly\fP directories, simply put a \fR/\fP at the end of the pattern\&.)
+.IP "\(bu" 2
+\fRignore\fP Add a pattern or an array of glob patterns to exclude matches\&. Note: \fRignore\fP patterns are \fIalways\fP in \fRdot:true\fP mode, regardless of any other settings\&.
+.IP "\(bu" 2
+\fRfollow\fP Follow symlinked directories when expanding \fR**\fP patterns\&. Note that this can result in a lot of duplicate references in the presence of cyclic links\&.
+.IP "\(bu" 2
+\fRrealpath\fP Set to true to call \fRfs\&.realpath\fP on all of the results\&. In the case of a symlink that cannot be resolved, the full absolute path to the matched entry is returned (though it will usually be a broken symlink)
+.IP "\(bu" 2
+\fRabsolute\fP Set to true to always receive absolute paths for matched files\&. Unlike \fRrealpath\fP, this also affects the values returned in the \fRmatch\fP event\&.
+.IP "\(bu" 2
+\fRfs\fP File-system object with Node's \fRfs\fP API\&. By default, the built-in \fRfs\fP module will be used\&. Set to a volume provided by a library like \fRmemfs\fP to avoid using the 'real' file-system\&.
+.PP
+.SH "Comparisons to other fnmatch/glob implementations"
+.PP
+While strict compliance with the existing standards is a worthwhile goal, some discrepancies exist between node-glob and other implementations, and are intentional\&.
+.PP
+The double-star character \fR**\fP is supported by default, unless the \fRnoglobstar\fP flag is set\&. This is supported in the manner of bsdglob and bash 4\&.3, where \fR**\fP only has special significance if it is the only thing in a path part\&. That is, \fRa/**/b\fP will match \fRa/x/y/b\fP, but \fRa/**b\fP will not\&.
+.PP
+Note that symlinked directories are not crawled as part of a \fR**\fP, though their contents may match against subsequent portions of the pattern\&. This prevents infinite loops and duplicates and the like\&.
+.PP
+If an escaped pattern has no matches, and the \fRnonull\fP flag is set, then glob returns the pattern as-provided, rather than interpreting the character escapes\&. For example, \fRglob\&.match([], '\\\\*a\\\\?')\fP will return \fR'\\\\*a\\\\?'\fP rather than \fR'*a?'\fP\&. This is akin to setting the \fRnullglob\fP option in bash, except that it does not resolve escaped pattern characters\&.
+.PP
+If brace expansion is not disabled, then it is performed before any other interpretation of the glob pattern\&. Thus, a pattern like \fR+(a|{b),c)}\fP, which would not be valid in bash or zsh, is expanded \fBfirst\fP into the set of \fR+(a|b)\fP and \fR+(a|c)\fP, and those patterns are checked for validity\&. Since those two are valid, matching proceeds\&.
+.SS "Comments and Negation"
+Previously, this module let you mark a pattern as a 'comment' if it started with a \fR#\fP character, or a 'negated' pattern if it started with a \fR!\fP character\&.
+.PP
+These options were deprecated in version 5, and removed in version 6\&.
+.PP
+To specify things that should not match, use the \fRignore\fP option\&.
+.SH "Windows"
+.PP
+\fBPlease only use forward-slashes in glob expressions\&.\fP
+.PP
+Though windows uses either \fR/\fP or \fR\\\fP as its path separator, only \fR/\fP characters are used by this glob implementation\&. You must use forward-slashes \fBonly\fP in glob expressions\&. Back-slashes will always be interpreted as escape characters, not path separators\&.
+.PP
+Results from absolute patterns such as \fR/foo/*\fP are mounted onto the root setting using \fRpath\&.join\fP\&. On windows, this will by default result in \fR/foo/*\fP matching \fRC:\\foo\\bar\&.txt\fP\&.
+.SH "Race Conditions"
+.PP
+Glob searching, by its very nature, is susceptible to race conditions, since it relies on directory walking and such\&.
+.PP
+As a result, it is possible that a file that exists when glob looks for it may have been deleted or modified by the time it returns the result\&.
+.PP
+As part of its internal implementation, this program caches all stat and readdir calls that it makes, in order to cut down on system overhead\&. However, this also makes it even more susceptible to races, especially if the cache or statCache objects are reused between glob calls\&.
+.PP
+Users are thus advised not to use a glob result as a guarantee of filesystem state in the face of rapid changes\&. For the vast majority of operations, this is never a problem\&.
+.SH "Glob Logo"
+.PP
+Glob's logo was created by \fRTanya Brassie\fP\&. Logo files can be found \fRhere\fP\&.
+.PP
+The logo is licensed under a \fRCreative Commons Attribution-ShareAlike 4\&.0 International License\fP\&.
+.SH "Contributing"
+.PP
+Any change to behavior (including bugfixes) must come with a test\&.
+.PP
+Patches that fail tests or reduce performance will be rejected\&.
+.PP
+.PP
+.nf
+# to run tests
+npm test
+
+# to re\-generate test fixtures
+npm run test\-regen
+
+# to benchmark against bash/zsh
+npm run bench
+
+# to profile javascript
+npm run prof
+.fi
+.PP
+.PP
+ 

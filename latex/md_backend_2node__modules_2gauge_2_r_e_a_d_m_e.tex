@@ -1,0 +1,251 @@
+\chapter{gauge}
+\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e}\index{gauge@{gauge}}
+A nearly stateless terminal based horizontal gauge / progress bar.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ Gauge\ =\ require("{}gauge"{})}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ gauge\ =\ new\ Gauge()}
+\DoxyCodeLine{}
+\DoxyCodeLine{gauge.show("{}working…"{},\ 0)}
+\DoxyCodeLine{setTimeout(()\ =>\ \{\ gauge.pulse();\ gauge.show("{}working…"{},\ 0.25)\ \},\ 500)}
+\DoxyCodeLine{setTimeout(()\ =>\ \{\ gauge.pulse();\ gauge.show("{}working…"{},\ 0.50)\ \},\ 1000)}
+\DoxyCodeLine{setTimeout(()\ =>\ \{\ gauge.pulse();\ gauge.show("{}working…"{},\ 0.75)\ \},\ 1500)}
+\DoxyCodeLine{setTimeout(()\ =>\ \{\ gauge.pulse();\ gauge.show("{}working…"{},\ 0.99)\ \},\ 2000)}
+\DoxyCodeLine{setTimeout(()\ =>\ gauge.hide(),\ 2300)}
+
+\end{DoxyCode}
+
+
+See also the \href{docs/demo.js}{\texttt{ demos}}\+:
+
+\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1345}{}\doxysubsection{\texorpdfstring{CHANGES FROM 1.\+x}{CHANGES FROM 1.\+x}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1345}
+Gauge 2.\+x is breaking release, please see the \doxylink{which_2_c_h_a_n_g_e_l_o_g_8md}{changelog} for details on what\textquotesingle{}s changed if you were previously a user of this module.\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1346}{}\doxysubsection{\texorpdfstring{THE GAUGE CLASS}{THE GAUGE CLASS}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1346}
+This is the typical interface to the module– it provides a pretty fire-\/and-\/forget interface to displaying your status information.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ Gauge\ =\ require("{}gauge"{})}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ gauge\ =\ new\ Gauge([stream],\ [options])}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item {\bfseries{stream}} – \texorpdfstring{$\ast$}{*}(optional, default STDERR)\texorpdfstring{$\ast$}{*} A stream that progress bar updates are to be written to. Gauge honors backpressure and will pause most writing if it is indicated.
+\item {\bfseries{options}} – \texorpdfstring{$\ast$}{*}(optional)\texorpdfstring{$\ast$}{*} An option object.
+\end{DoxyItemize}
+
+Constructs a new gauge. Gauges are drawn on a single line, and are not drawn if {\bfseries{stream}} isn\textquotesingle{}t a tty and a tty isn\textquotesingle{}t explicitly provided.
+
+If {\bfseries{stream}} is a terminal or if you pass in {\bfseries{tty}} to {\bfseries{options}} then we will detect terminal resizes and redraw to fit. We do this by watching for {\ttfamily resize} events on the tty. (To work around a bug in versions of Node prior to 2.\+5.\+0, we watch for them on stdout if the tty is stderr.) Resizes to larger window sizes will be clean, but shrinking the window will always result in some cruft.
+
+{\bfseries{IMPORTANT\+:}} If you previously were passing in a non-\/tty stream but you still want output (for example, a stream wrapped by the {\ttfamily ansi} module) then you need to pass in the {\bfseries{tty}} option below, as {\ttfamily gauge} needs access to the underlying tty in order to do things like terminal resizes and terminal width detection.
+
+The {\bfseries{options}} object can have the following properties, all of which are optional\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{update\+Interval}}\+: How often gauge updates should be drawn, in milliseconds.
+\item {\bfseries{fixed\+Framerate}}\+: Defaults to false on node 0.\+8, true on everything else. When this is true a timer is created to trigger once every {\ttfamily update\+Interval} ms, when false, updates are printed as soon as they come in but updates more often than {\ttfamily update\+Interval} are ignored. The reason 0.\+8 doesn\textquotesingle{}t have this set to true is that it can\textquotesingle{}t {\ttfamily unref} its timer and so it would stop your program from exiting– if you want to use this feature with 0.\+8 just make sure you call {\ttfamily gauge.\+disable()} before you expect your program to exit.
+\item {\bfseries{themes}}\+: A themeset to use when selecting the theme to use. Defaults to {\ttfamily gauge/themes}, see the themes documentation for details.
+\item {\bfseries{theme}}\+: Select a theme for use, it can be a\+:
+\begin{DoxyItemize}
+\item Theme object, in which case the {\bfseries{themes}} is not used.
+\item The name of a theme, which will be looked up in the current {\itshape themes} object.
+\item A configuration object with any of {\ttfamily has\+Unicode}, {\ttfamily has\+Color} or {\ttfamily platform} keys, which if will be used to override our guesses when making a default theme selection.
+\end{DoxyItemize}
+
+If no theme is selected then a default is picked using a combination of our best guesses at your OS, color support and unicode support.
+\item {\bfseries{template}}\+: Describes what you want your gauge to look like. The default is what npm uses. Detailed documentation is later in this document.
+\item {\bfseries{hide\+Cursor}}\+: Defaults to true. If true, then the cursor will be hidden while the gauge is displayed.
+\item {\bfseries{tty}}\+: The tty that you\textquotesingle{}re ultimately writing to. Defaults to the same as {\bfseries{stream}}. This is used for detecting the width of the terminal and resizes. The width used is {\ttfamily tty.\+columns -\/ 1}. If no tty is available then a width of {\ttfamily 79} is assumed.
+\item {\bfseries{enabled}}\+: Defaults to true if {\ttfamily tty} is a TTY, false otherwise. If true the gauge starts enabled. If disabled then all update commands are ignored and no gauge will be printed until you call {\ttfamily .enable()}.
+\item {\bfseries{Plumbing}}\+: The class to use to actually generate the gauge for printing. This defaults to `require(\textquotesingle{}gauge/plumbing')\`{} and ordinarily you shouldn\textquotesingle{}t need to override this.
+\item {\bfseries{cleanup\+On\+Exit}}\+: Defaults to true. Ordinarily we register an exit handler to make sure your cursor is turned back on and the progress bar erased when your process exits, even if you Ctrl-\/C out or otherwise exit unexpectedly. You can disable this and it won\textquotesingle{}t register the exit handler.
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1347}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gauge.\+show(section \texorpdfstring{$\vert$}{|} status, \mbox{[}completed\mbox{]})}}{{\ttfamily gauge.\+show(section \texorpdfstring{$\vert$}{|} status, \mbox{[}completed\mbox{]})}}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1347}
+The first argument is either the section, the name of the current thing contributing to progress, or an object with keys like {\bfseries{section}}, {\bfseries{subsection}} \& {\bfseries{completed}} (or any others you have types for in a custom template). If you don\textquotesingle{}t want to update or set any of these you can pass {\ttfamily null} and it will be ignored.
+
+The second argument is the percent completed as a value between 0 and 1. Without it, completion is just not updated. You\textquotesingle{}ll also note that completion can be passed in as part of a status object as the first argument. If both it and the completed argument are passed in, the completed argument wins.\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1348}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gauge.\+hide(\mbox{[}cb\mbox{]})}}{{\ttfamily gauge.\+hide(\mbox{[}cb\mbox{]})}}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1348}
+Removes the gauge from the terminal. Optionally, callback {\ttfamily cb} after IO has had an opportunity to happen (currently this just means after {\ttfamily set\+Immediate} has called back.)
+
+It turns out this is important when you\textquotesingle{}re pausing the progress bar on one filehandle and printing to another– otherwise (with a big enough print) node can end up printing the "{}end progress bar"{} bits to the progress bar filehandle while other stuff is printing to another filehandle. These getting interleaved can cause corruption in some terminals.\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1349}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gauge.\+pulse(\mbox{[}subsection\mbox{]})}}{{\ttfamily gauge.\+pulse(\mbox{[}subsection\mbox{]})}}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1349}
+
+\begin{DoxyItemize}
+\item {\bfseries{subsection}} – \texorpdfstring{$\ast$}{*}(optional)\texorpdfstring{$\ast$}{*} The specific thing that triggered this pulse
+\end{DoxyItemize}
+
+Spins the spinner in the gauge to show output. If {\bfseries{subsection}} is included then it will be combined with the last name passed to {\ttfamily gauge.\+show}.\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1350}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gauge.\+disable()}}{{\ttfamily gauge.\+disable()}}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1350}
+Hides the gauge and ignores further calls to {\ttfamily show} or {\ttfamily pulse}.\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1351}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gauge.\+enable()}}{{\ttfamily gauge.\+enable()}}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1351}
+Shows the gauge and resumes updating when {\ttfamily show} or {\ttfamily pulse} is called.\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1352}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gauge.\+is\+Enabled()}}{{\ttfamily gauge.\+is\+Enabled()}}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1352}
+Returns true if the gauge is enabled.\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1353}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gauge.\+set\+Themeset(themes)}}{{\ttfamily gauge.\+set\+Themeset(themes)}}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1353}
+Change the themeset to select a theme from. The same as the {\ttfamily themes} option used in the constructor. The theme will be reselected from this themeset.\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1354}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gauge.\+set\+Theme(theme)}}{{\ttfamily gauge.\+set\+Theme(theme)}}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1354}
+Change the active theme, will be displayed with the next show or pulse. This can be\+:
+
+
+\begin{DoxyItemize}
+\item Theme object, in which case the {\bfseries{themes}} is not used.
+\item The name of a theme, which will be looked up in the current {\itshape themes} object.
+\item A configuration object with any of {\ttfamily has\+Unicode}, {\ttfamily has\+Color} or {\ttfamily platform} keys, which if will be used to override our guesses when making a default theme selection.
+\end{DoxyItemize}
+
+If no theme is selected then a default is picked using a combination of our best guesses at your OS, color support and unicode support.\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1355}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gauge.\+set\+Template(template)}}{{\ttfamily gauge.\+set\+Template(template)}}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1355}
+Change the active template, will be displayed with the next show or pulse\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1356}{}\doxysubsection{\texorpdfstring{Tracking Completion}{Tracking Completion}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1356}
+If you have more than one thing going on that you want to track completion of, you may find the related \href{https://www.npmjs.com/package/are-we-there-yet}{\texttt{ are-\/we-\/there-\/yet}} helpful. It\textquotesingle{}s {\ttfamily change} event can be wired up to the {\ttfamily show} method to get a more traditional progress bar interface.\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1357}{}\doxysubsection{\texorpdfstring{THEMES}{THEMES}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1357}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ themes\ =\ require('gauge/themes')}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ fetch\ the\ default\ color\ unicode\ theme\ for\ this\ platform}
+\DoxyCodeLine{var\ ourTheme\ =\ themes(\{hasUnicode:\ true,\ hasColor:\ true\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ fetch\ the\ default\ non-\/color\ unicode\ theme\ for\ osx}
+\DoxyCodeLine{var\ ourTheme\ =\ themes(\{hasUnicode:\ true,\ hasColor:\ false,\ platform:\ 'darwin'\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ create\ a\ new\ theme\ based\ on\ the\ color\ ascii\ theme\ for\ this\ platform}
+\DoxyCodeLine{//\ that\ brackets\ the\ progress\ bar\ with\ arrows}
+\DoxyCodeLine{var\ ourTheme\ =\ themes.newTheme(themes(\{hasUnicode:\ false,\ hasColor:\ true\}),\ \{}
+\DoxyCodeLine{\ \ preProgressbar:\ '→',}
+\DoxyCodeLine{\ \ postProgressbar:\ '←'}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+The object returned by {\ttfamily gauge/themes} is an instance of the {\ttfamily Theme\+Set} class.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ ThemeSet\ =\ require('gauge/theme-\/set')}
+\DoxyCodeLine{var\ themes\ =\ new\ ThemeSet()}
+\DoxyCodeLine{//\ or}
+\DoxyCodeLine{var\ themes\ =\ require('gauge/themes')}
+\DoxyCodeLine{var\ mythemes\ =\ themes.newThemeSet()\ //\ creates\ a\ new\ themeset\ based\ on\ the\ default\ themes}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1358}{}\doxysubsubsection{\texorpdfstring{themes(opts)}{themes(opts)}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1358}
+\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1359}{}\doxysubsubsection{\texorpdfstring{themes.\+get\+Default(opts)}{themes.\+get\+Default(opts)}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1359}
+Theme objects are a function that fetches the default theme based on platform, unicode and color support.
+
+Options is an object with the following properties\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{has\+Unicode}} -\/ If true, fetch a unicode theme, if no unicode theme is available then a non-\/unicode theme will be used.
+\item {\bfseries{has\+Color}} -\/ If true, fetch a color theme, if no color theme is available a non-\/color theme will be used.
+\item {\bfseries{platform}} (optional) -\/ Defaults to {\ttfamily process.\+platform}. If no platform match is available then {\ttfamily fallback} is used instead.
+\end{DoxyItemize}
+
+If no compatible theme can be found then an error will be thrown with a {\ttfamily code} of {\ttfamily EMISSINGTHEME}.\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1360}{}\doxysubsubsection{\texorpdfstring{themes.\+add\+Theme(theme\+Name, theme\+Obj)}{themes.\+add\+Theme(theme\+Name, theme\+Obj)}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1360}
+\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1361}{}\doxysubsubsection{\texorpdfstring{themes.\+add\+Theme(theme\+Name, \mbox{[}parent\+Theme\mbox{]}, new\+Theme)}{themes.\+add\+Theme(theme\+Name, \mbox{[}parent\+Theme\mbox{]}, new\+Theme)}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1361}
+Adds a named theme to the themeset. You can pass in either a theme object, as returned by {\ttfamily themes.\+new\+Theme} or the arguments you\textquotesingle{}d pass to {\ttfamily themes.\+new\+Theme}.\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1362}{}\doxysubsubsection{\texorpdfstring{themes.\+get\+Theme\+Names()}{themes.\+get\+Theme\+Names()}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1362}
+Return a list of all of the names of the themes in this themeset. Suitable for use in {\ttfamily themes.\+get\+Theme(…)}.\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1363}{}\doxysubsubsection{\texorpdfstring{themes.\+get\+Theme(name)}{themes.\+get\+Theme(name)}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1363}
+Returns the theme object from this theme set named {\ttfamily name}.
+
+If {\ttfamily name} does not exist in this themeset an error will be thrown with a {\ttfamily code} of {\ttfamily EMISSINGTHEME}.\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1364}{}\doxysubsubsection{\texorpdfstring{themes.\+set\+Default(\mbox{[}opts\mbox{]}, theme\+Name)}{themes.\+set\+Default(\mbox{[}opts\mbox{]}, theme\+Name)}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1364}
+{\ttfamily opts} is an object with the following properties.
+
+
+\begin{DoxyItemize}
+\item {\bfseries{platform}} -\/ Defaults to `\textquotesingle{}fallback'{\ttfamily . If your theme is platform specific, specify that here with the platform from}process.\+platform{\ttfamily , eg, }win32{\ttfamily ,}darwin{\ttfamily , etc.}
+\item {\ttfamily \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}has\+Unicode\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*} -\/ Defaults to}false{\ttfamily . If your theme uses unicode you should set this to true.}
+\item {\ttfamily \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}has\+Color\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*} -\/ Defaults to}false\`{}. If your theme uses color you should set this to true.
+\end{DoxyItemize}
+
+{\ttfamily theme\+Name} is the name of the theme (as given to {\ttfamily add\+Theme}) to use for this set of {\ttfamily opts}.\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1365}{}\doxysubsubsection{\texorpdfstring{themes.\+new\+Theme(\mbox{[}parent\+Theme,\mbox{]} new\+Theme)}{themes.\+new\+Theme(\mbox{[}parent\+Theme,\mbox{]} new\+Theme)}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1365}
+Create a new theme object based on {\ttfamily parent\+Theme}. If no {\ttfamily parent\+Theme} is provided then a minimal parent\+Theme that defines functions for rendering the activity indicator (spinner) and progress bar will be defined. (This fallback parent is defined in {\ttfamily gauge/base-\/theme}.)
+
+new\+Theme should be a bare object– we\textquotesingle{}ll start by discussing the properties defined by the default themes\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{pre\+Progressbar}} -\/ displayed prior to the progress bar, if the progress bar is displayed.
+\item {\bfseries{post\+Progressbar}} -\/ displayed after the progress bar, if the progress bar is displayed.
+\item {\bfseries{progress\+Bar\+Theme}} -\/ The subtheme passed through to the progress bar renderer, it\textquotesingle{}s an object with {\ttfamily complete} and {\ttfamily remaining} properties that are the strings you want repeated for those sections of the progress bar.
+\item {\bfseries{activity\+Indicator\+Theme}} -\/ The theme for the activity indicator (spinner), this can either be a string, in which each character is a different step, or an array of strings.
+\item {\bfseries{pre\+Subsection}} -\/ Displayed as a separator between the {\ttfamily section} and {\ttfamily subsection} when the latter is printed.
+\end{DoxyItemize}
+
+More generally, themes can have any value that would be a valid value when rendering templates. The properties in the theme are used when their name matches a type in the template. Their values can be\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{strings \& numbers}} -\/ They\textquotesingle{}ll be included as is
+\item {\bfseries{function (values, theme, width)}} -\/ Should return what you want in your output. {\itshape values} is an object with values provided via {\ttfamily gauge.\+show}, {\itshape theme} is the theme specific to this item (see below) or this theme object, and {\itshape width} is the number of characters wide your result should be.
+\end{DoxyItemize}
+
+There are a couple of special prefixes\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{pre}} -\/ Is shown prior to the property, if its displayed.
+\item {\bfseries{post}} -\/ Is shown after the property, if its displayed.
+\end{DoxyItemize}
+
+And one special suffix\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Theme}} -\/ Its value is passed to a function-\/type item as the theme.
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1366}{}\doxysubsubsection{\texorpdfstring{themes.\+add\+To\+All\+Themes(theme)}{themes.\+add\+To\+All\+Themes(theme)}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1366}
+This {\itshape mixes-\/in} {\ttfamily theme} into all themes currently defined. It also adds it to the default parent theme for this themeset, so future themes added to this themeset will get the values from {\ttfamily theme} by default.\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1367}{}\doxysubsubsection{\texorpdfstring{themes.\+new\+Theme\+Set()}{themes.\+new\+Theme\+Set()}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1367}
+Copy the current themeset into a new one. This allows you to easily inherit one themeset from another.\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1368}{}\doxysubsection{\texorpdfstring{TEMPLATES}{TEMPLATES}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1368}
+A template is an array of objects and strings that, after being evaluated, will be turned into the gauge line. The default template is\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[}
+\DoxyCodeLine{\ \ \ \ \{type:\ 'progressbar',\ length:\ 20\},}
+\DoxyCodeLine{\ \ \ \ \{type:\ 'activityIndicator',\ kerning:\ 1,\ length:\ 1\},}
+\DoxyCodeLine{\ \ \ \ \{type:\ 'section',\ kerning:\ 1,\ default:\ ''\},}
+\DoxyCodeLine{\ \ \ \ \{type:\ 'subsection',\ kerning:\ 1,\ default:\ ''\}}
+\DoxyCodeLine{]}
+
+\end{DoxyCode}
+
+
+The various template elements can either be {\bfseries{plain strings}}, in which case they will be be included verbatum in the output, or objects with the following properties\+:
+
+
+\begin{DoxyItemize}
+\item {\itshape type} can be any of the following plus any keys you pass into {\ttfamily gauge.\+show} plus any keys you have on a custom theme.
+\begin{DoxyItemize}
+\item {\ttfamily section} – What big thing you\textquotesingle{}re working on now.
+\item {\ttfamily subsection} – What component of that thing is currently working.
+\item {\ttfamily activity\+Indicator} – Shows a spinner using the {\ttfamily activity\+Indicator\+Theme} from your active theme.
+\item {\ttfamily progressbar} – A progress bar representing your current {\ttfamily completed} using the {\ttfamily progressbar\+Theme} from your active theme.
+\end{DoxyItemize}
+\item {\itshape kerning} – Number of spaces that must be between this item and other items, if this item is displayed at all.
+\item {\itshape max\+Length} – \+The maximum length for this element. If its value is longer it will be truncated.
+\item {\itshape min\+Length} – The minimum length for this element. If its value is shorter it will be padded according to the {\itshape align} value.
+\item {\itshape align} – (Default\+: left) Possible values "{}left"{}, "{}right"{} and "{}center"{}. Works as you\textquotesingle{}d expect from word processors.
+\item {\itshape length} – Provides a single value for both {\itshape min\+Length} and {\itshape max\+Length}. If both {\itshape length} and {\itshape min\+Length or \texorpdfstring{$\ast$}{*}max\+Length} are specified then the latter take precedence.
+\item {\itshape value} – A literal value to use for this template item.
+\item {\itshape default} – A default value to use for this template item if a value wasn\textquotesingle{}t otherwise passed in.
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1369}{}\doxysubsection{\texorpdfstring{PLUMBING}{PLUMBING}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1369}
+This is the super simple, assume nothing, do no magic internals used by gauge to implement its ordinary interface.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ Plumbing\ =\ require('gauge/plumbing')}
+\DoxyCodeLine{var\ gauge\ =\ new\ Plumbing(theme,\ template,\ width)}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item {\bfseries{theme}}\+: The theme to use.
+\item {\bfseries{template}}\+: The template to use.
+\item {\bfseries{width}}\+: How wide your gauge should be
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1370}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gauge.\+set\+Theme(theme)}}{{\ttfamily gauge.\+set\+Theme(theme)}}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1370}
+Change the active theme.\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1371}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gauge.\+set\+Template(template)}}{{\ttfamily gauge.\+set\+Template(template)}}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1371}
+Change the active template.\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1372}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gauge.\+set\+Width(width)}}{{\ttfamily gauge.\+set\+Width(width)}}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1372}
+Change the width to render at.\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1373}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gauge.\+hide()}}{{\ttfamily gauge.\+hide()}}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1373}
+Return the string necessary to hide the progress bar\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1374}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gauge.\+hide\+Cursor()}}{{\ttfamily gauge.\+hide\+Cursor()}}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1374}
+Return a string to hide the cursor.\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1375}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gauge.\+show\+Cursor()}}{{\ttfamily gauge.\+show\+Cursor()}}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1375}
+Return a string to show the cursor.\hypertarget{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1376}{}\doxysubsubsection{\texorpdfstring{{\ttfamily gauge.\+show(status)}}{{\ttfamily gauge.\+show(status)}}}\label{md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_autotoc_md1376}
+Using {\ttfamily status} for values, render the provided template with the theme and return a string that is suitable for printing to update the gauge. 

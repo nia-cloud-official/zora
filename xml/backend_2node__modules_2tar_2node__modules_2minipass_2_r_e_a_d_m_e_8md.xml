@@ -1,0 +1,782 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>minipass</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>_very_<sp/>minimal<sp/>implementation<sp/>of<sp/>a<sp/>[PassThrough</highlight></codeline>
+<codeline><highlight class="normal">stream](https://nodejs.org/api/stream.html#stream_class_stream_passthrough)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[It&apos;s<sp/>very</highlight></codeline>
+<codeline><highlight class="normal">fast](https://docs.google.com/spreadsheets/d/1K_HR5oh3r80b8WVMWCPPjfuWXUgfkmhlX7FGI6JJ8tY/edit?usp=sharing)</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>objects,<sp/>strings,<sp/>and<sp/>buffers.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Supports<sp/>`pipe()`ing<sp/>(including<sp/>multi-`pipe()`<sp/>and<sp/>backpressure</highlight></codeline>
+<codeline><highlight class="normal">transmission),<sp/>buffering<sp/>data<sp/>until<sp/>either<sp/>a<sp/>`data`<sp/>event<sp/>handler</highlight></codeline>
+<codeline><highlight class="normal">or<sp/>`pipe()`<sp/>is<sp/>added<sp/>(so<sp/>you<sp/>don&apos;t<sp/>lose<sp/>the<sp/>first<sp/>chunk),<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">most<sp/>other<sp/>cases<sp/>where<sp/>PassThrough<sp/>is<sp/>a<sp/>good<sp/>idea.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">There<sp/>is<sp/>a<sp/>`read()`<sp/>method,<sp/>but<sp/>it&apos;s<sp/>much<sp/>more<sp/>efficient<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">consume<sp/>data<sp/>from<sp/>this<sp/>stream<sp/>via<sp/>`&apos;data&apos;`<sp/>events<sp/>or<sp/>by<sp/>calling</highlight></codeline>
+<codeline><highlight class="normal">`pipe()`<sp/>into<sp/>some<sp/>other<sp/>stream.<sp/>Calling<sp/>`read()`<sp/>requires<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">buffer<sp/>to<sp/>be<sp/>flattened<sp/>in<sp/>some<sp/>cases,<sp/>which<sp/>requires<sp/>copying</highlight></codeline>
+<codeline><highlight class="normal">memory.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>set<sp/>`objectMode:<sp/>true`<sp/>in<sp/>the<sp/>options,<sp/>then<sp/>whatever<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">written<sp/>will<sp/>be<sp/>emitted.<sp/>Otherwise,<sp/>it&apos;ll<sp/>do<sp/>a<sp/>minimal<sp/>amount<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">Buffer<sp/>copying<sp/>to<sp/>ensure<sp/>proper<sp/>Streams<sp/>semantics<sp/>when<sp/>`read(n)`</highlight></codeline>
+<codeline><highlight class="normal">is<sp/>called.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`objectMode`<sp/>can<sp/>also<sp/>be<sp/>set<sp/>by<sp/>doing<sp/>`stream.objectMode<sp/>=<sp/>true`,</highlight></codeline>
+<codeline><highlight class="normal">or<sp/>by<sp/>writing<sp/>any<sp/>non-string/non-buffer<sp/>data.<sp/>`objectMode`<sp/>cannot</highlight></codeline>
+<codeline><highlight class="normal">be<sp/>set<sp/>to<sp/>false<sp/>once<sp/>it<sp/>is<sp/>set.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>not<sp/>a<sp/>`through`<sp/>or<sp/>`through2`<sp/>stream.<sp/>It<sp/>doesn&apos;t</highlight></codeline>
+<codeline><highlight class="normal">transform<sp/>the<sp/>data,<sp/>it<sp/>just<sp/>passes<sp/>it<sp/>right<sp/>through.<sp/>If<sp/>you<sp/>want</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>transform<sp/>the<sp/>data,<sp/>extend<sp/>the<sp/>class,<sp/>and<sp/>override<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">`write()`<sp/>method.<sp/>Once<sp/>you&apos;re<sp/>done<sp/>transforming<sp/>the<sp/>data<sp/>however</highlight></codeline>
+<codeline><highlight class="normal">you<sp/>want,<sp/>call<sp/>`super.write()`<sp/>with<sp/>the<sp/>transform<sp/>output.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>some<sp/>examples<sp/>of<sp/>streams<sp/>that<sp/>extend<sp/>Minipass<sp/>in<sp/>various</highlight></codeline>
+<codeline><highlight class="normal">ways,<sp/>check<sp/>out:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>[minizlib](http://npm.im/minizlib)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[fs-minipass](http://npm.im/fs-minipass)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[tar](http://npm.im/tar)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[minipass-collect](http://npm.im/minipass-collect)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[minipass-flush](http://npm.im/minipass-flush)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[minipass-pipeline](http://npm.im/minipass-pipeline)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[tap](http://npm.im/tap)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[tap-parser](http://npm.im/tap-parser)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[treport](http://npm.im/treport)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[minipass-fetch](http://npm.im/minipass-fetch)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[pacote](http://npm.im/pacote)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[make-fetch-happen](http://npm.im/make-fetch-happen)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[cacache](http://npm.im/cacache)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[ssri](http://npm.im/ssri)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[npm-registry-fetch](http://npm.im/npm-registry-fetch)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[minipass-json-stream](http://npm.im/minipass-json-stream)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[minipass-sized](http://npm.im/minipass-sized)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Differences<sp/>from<sp/>Node.js<sp/>Streams</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">There<sp/>are<sp/>several<sp/>things<sp/>that<sp/>make<sp/>Minipass<sp/>streams<sp/>different</highlight></codeline>
+<codeline><highlight class="normal">from<sp/>(and<sp/>in<sp/>some<sp/>ways<sp/>superior<sp/>to)<sp/>Node.js<sp/>core<sp/>streams.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Please<sp/>read<sp/>these<sp/>caveats<sp/>if<sp/>you<sp/>are<sp/>familiar<sp/>with<sp/>node-core</highlight></codeline>
+<codeline><highlight class="normal">streams<sp/>and<sp/>intend<sp/>to<sp/>use<sp/>Minipass<sp/>streams<sp/>in<sp/>your<sp/>programs.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>avoid<sp/>most<sp/>of<sp/>these<sp/>differences<sp/>entirely<sp/>(for<sp/>a<sp/>very</highlight></codeline>
+<codeline><highlight class="normal">small<sp/>performance<sp/>penalty)<sp/>by<sp/>setting<sp/>`{async:<sp/>true}`<sp/>in<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">constructor<sp/>options.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Timing</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Minipass<sp/>streams<sp/>are<sp/>designed<sp/>to<sp/>support<sp/>synchronous<sp/>use-cases.</highlight></codeline>
+<codeline><highlight class="normal">Thus,<sp/>data<sp/>is<sp/>emitted<sp/>as<sp/>soon<sp/>as<sp/>it<sp/>is<sp/>available,<sp/>always.<sp/>It<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">buffered<sp/>until<sp/>read,<sp/>but<sp/>no<sp/>longer.<sp/>Another<sp/>way<sp/>to<sp/>look<sp/>at<sp/>it<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">that<sp/>Minipass<sp/>streams<sp/>are<sp/>exactly<sp/>as<sp/>synchronous<sp/>as<sp/>the<sp/>logic</highlight></codeline>
+<codeline><highlight class="normal">that<sp/>writes<sp/>into<sp/>them.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>can<sp/>be<sp/>surprising<sp/>if<sp/>your<sp/>code<sp/>relies<sp/>on</highlight></codeline>
+<codeline><highlight class="normal">`PassThrough.write()`<sp/>always<sp/>providing<sp/>data<sp/>on<sp/>the<sp/>next<sp/>tick</highlight></codeline>
+<codeline><highlight class="normal">rather<sp/>than<sp/>the<sp/>current<sp/>one,<sp/>or<sp/>being<sp/>able<sp/>to<sp/>call<sp/>`resume()`<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">not<sp/>have<sp/>the<sp/>entire<sp/>buffer<sp/>disappear<sp/>immediately.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">However,<sp/>without<sp/>this<sp/>synchronicity<sp/>guarantee,<sp/>there<sp/>would<sp/>be<sp/>no</highlight></codeline>
+<codeline><highlight class="normal">way<sp/>for<sp/>Minipass<sp/>to<sp/>achieve<sp/>the<sp/>speeds<sp/>it<sp/>does,<sp/>or<sp/>support<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">synchronous<sp/>use<sp/>cases<sp/>that<sp/>it<sp/>does.<sp/>Simply<sp/>put,<sp/>waiting<sp/>takes</highlight></codeline>
+<codeline><highlight class="normal">time.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>non-deferring<sp/>approach<sp/>makes<sp/>Minipass<sp/>streams<sp/>much<sp/>easier<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">reason<sp/>about,<sp/>especially<sp/>in<sp/>the<sp/>context<sp/>of<sp/>Promises<sp/>and<sp/>other</highlight></codeline>
+<codeline><highlight class="normal">flow-control<sp/>mechanisms.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Example:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>hybrid<sp/>module,<sp/>either<sp/>works</highlight></codeline>
+<codeline><highlight class="normal">import<sp/>{<sp/>Minipass<sp/>}<sp/>from<sp/>&apos;minipass&apos;</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>or:</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>Minipass<sp/>}<sp/>=<sp/>require(&apos;minipass&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>stream<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline><highlight class="normal">stream.on(&apos;data&apos;,<sp/>()<sp/>=&gt;<sp/>console.log(&apos;data<sp/>event&apos;))</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;before<sp/>write&apos;)</highlight></codeline>
+<codeline><highlight class="normal">stream.write(&apos;hello&apos;)</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;after<sp/>write&apos;)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>output:</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>before<sp/>write</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>data<sp/>event</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>after<sp/>write</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Exception:<sp/>Async<sp/>Opt-In</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>wish<sp/>to<sp/>have<sp/>a<sp/>Minipass<sp/>stream<sp/>with<sp/>behavior<sp/>that<sp/>more</highlight></codeline>
+<codeline><highlight class="normal">closely<sp/>mimics<sp/>Node.js<sp/>core<sp/>streams,<sp/>you<sp/>can<sp/>set<sp/>the<sp/>stream<sp/>in</highlight></codeline>
+<codeline><highlight class="normal">async<sp/>mode<sp/>either<sp/>by<sp/>setting<sp/>`async:<sp/>true`<sp/>in<sp/>the<sp/>constructor</highlight></codeline>
+<codeline><highlight class="normal">options,<sp/>or<sp/>by<sp/>setting<sp/>`stream.async<sp/>=<sp/>true`<sp/>later<sp/>on.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>hybrid<sp/>module,<sp/>either<sp/>works</highlight></codeline>
+<codeline><highlight class="normal">import<sp/>{<sp/>Minipass<sp/>}<sp/>from<sp/>&apos;minipass&apos;</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>or:</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>Minipass<sp/>}<sp/>=<sp/>require(&apos;minipass&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>asyncStream<sp/>=<sp/>new<sp/>Minipass({<sp/>async:<sp/>true<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">asyncStream.on(&apos;data&apos;,<sp/>()<sp/>=&gt;<sp/>console.log(&apos;data<sp/>event&apos;))</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;before<sp/>write&apos;)</highlight></codeline>
+<codeline><highlight class="normal">asyncStream.write(&apos;hello&apos;)</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;after<sp/>write&apos;)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>output:</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>before<sp/>write</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>after<sp/>write</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>data<sp/>event<sp/>&lt;--<sp/>this<sp/>is<sp/>deferred<sp/>until<sp/>the<sp/>next<sp/>tick</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Switching<sp/>_out_<sp/>of<sp/>async<sp/>mode<sp/>is<sp/>unsafe,<sp/>as<sp/>it<sp/>could<sp/>cause<sp/>data</highlight></codeline>
+<codeline><highlight class="normal">corruption,<sp/>and<sp/>so<sp/>is<sp/>not<sp/>enabled.<sp/>Example:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">import<sp/>{<sp/>Minipass<sp/>}<sp/>from<sp/>&apos;minipass&apos;</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>stream<sp/>=<sp/>new<sp/>Minipass({<sp/>encoding:<sp/>&apos;utf8&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">stream.on(&apos;data&apos;,<sp/>chunk<sp/>=&gt;<sp/>console.log(chunk))</highlight></codeline>
+<codeline><highlight class="normal">stream.async<sp/>=<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;before<sp/>writes&apos;)</highlight></codeline>
+<codeline><highlight class="normal">stream.write(&apos;hello&apos;)</highlight></codeline>
+<codeline><highlight class="normal">setStreamSyncAgainSomehow(stream)<sp/>//<sp/>&lt;--<sp/>this<sp/>doesn&apos;t<sp/>actually<sp/>exist!</highlight></codeline>
+<codeline><highlight class="normal">stream.write(&apos;world&apos;)</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;after<sp/>writes&apos;)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>hypothetical<sp/>output<sp/>would<sp/>be:</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>before<sp/>writes</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>world</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>after<sp/>writes</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>hello</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>NOT<sp/>GOOD!</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>avoid<sp/>this<sp/>problem,<sp/>once<sp/>set<sp/>into<sp/>async<sp/>mode,<sp/>any<sp/>attempt<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">make<sp/>the<sp/>stream<sp/>sync<sp/>again<sp/>will<sp/>be<sp/>ignored.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>Minipass<sp/>}<sp/>=<sp/>require(&apos;minipass&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>stream<sp/>=<sp/>new<sp/>Minipass({<sp/>encoding:<sp/>&apos;utf8&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">stream.on(&apos;data&apos;,<sp/>chunk<sp/>=&gt;<sp/>console.log(chunk))</highlight></codeline>
+<codeline><highlight class="normal">stream.async<sp/>=<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;before<sp/>writes&apos;)</highlight></codeline>
+<codeline><highlight class="normal">stream.write(&apos;hello&apos;)</highlight></codeline>
+<codeline><highlight class="normal">stream.async<sp/>=<sp/>false<sp/>//<sp/>&lt;--<sp/>no-op,<sp/>stream<sp/>already<sp/>async</highlight></codeline>
+<codeline><highlight class="normal">stream.write(&apos;world&apos;)</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;after<sp/>writes&apos;)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>actual<sp/>output:</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>before<sp/>writes</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>after<sp/>writes</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>hello</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>world</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>No<sp/>High/Low<sp/>Water<sp/>Marks</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Node.js<sp/>core<sp/>streams<sp/>will<sp/>optimistically<sp/>fill<sp/>up<sp/>a<sp/>buffer,</highlight></codeline>
+<codeline><highlight class="normal">returning<sp/>`true`<sp/>on<sp/>all<sp/>writes<sp/>until<sp/>the<sp/>limit<sp/>is<sp/>hit,<sp/>even<sp/>if</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>data<sp/>has<sp/>nowhere<sp/>to<sp/>go.<sp/>Then,<sp/>they<sp/>will<sp/>not<sp/>attempt<sp/>to<sp/>draw</highlight></codeline>
+<codeline><highlight class="normal">more<sp/>data<sp/>in<sp/>until<sp/>the<sp/>buffer<sp/>size<sp/>dips<sp/>below<sp/>a<sp/>minimum<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Minipass<sp/>streams<sp/>are<sp/>much<sp/>simpler.<sp/>The<sp/>`write()`<sp/>method<sp/>will</highlight></codeline>
+<codeline><highlight class="normal">return<sp/>`true`<sp/>if<sp/>the<sp/>data<sp/>has<sp/>somewhere<sp/>to<sp/>go<sp/>(which<sp/>is<sp/>to<sp/>say,</highlight></codeline>
+<codeline><highlight class="normal">given<sp/>the<sp/>timing<sp/>guarantees,<sp/>that<sp/>the<sp/>data<sp/>is<sp/>already<sp/>there<sp/>by</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>time<sp/>`write()`<sp/>returns).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>the<sp/>data<sp/>has<sp/>nowhere<sp/>to<sp/>go,<sp/>then<sp/>`write()`<sp/>returns<sp/>false,<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>data<sp/>sits<sp/>in<sp/>a<sp/>buffer,<sp/>to<sp/>be<sp/>drained<sp/>out<sp/>immediately<sp/>as<sp/>soon</highlight></codeline>
+<codeline><highlight class="normal">as<sp/>anyone<sp/>consumes<sp/>it.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Since<sp/>nothing<sp/>is<sp/>ever<sp/>buffered<sp/>unnecessarily,<sp/>there<sp/>is<sp/>much<sp/>less</highlight></codeline>
+<codeline><highlight class="normal">copying<sp/>data,<sp/>and<sp/>less<sp/>bookkeeping<sp/>about<sp/>buffer<sp/>capacity<sp/>levels.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Hazards<sp/>of<sp/>Buffering<sp/>(or:<sp/>Why<sp/>Minipass<sp/>Is<sp/>So<sp/>Fast)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Since<sp/>data<sp/>written<sp/>to<sp/>a<sp/>Minipass<sp/>stream<sp/>is<sp/>immediately<sp/>written</highlight></codeline>
+<codeline><highlight class="normal">all<sp/>the<sp/>way<sp/>through<sp/>the<sp/>pipeline,<sp/>and<sp/>`write()`<sp/>always<sp/>returns</highlight></codeline>
+<codeline><highlight class="normal">true/false<sp/>based<sp/>on<sp/>whether<sp/>the<sp/>data<sp/>was<sp/>fully<sp/>flushed,</highlight></codeline>
+<codeline><highlight class="normal">backpressure<sp/>is<sp/>communicated<sp/>immediately<sp/>to<sp/>the<sp/>upstream<sp/>caller.</highlight></codeline>
+<codeline><highlight class="normal">This<sp/>minimizes<sp/>buffering.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Consider<sp/>this<sp/>case:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>PassThrough<sp/>}<sp/>=<sp/>require(&apos;stream&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>p1<sp/>=<sp/>new<sp/>PassThrough({<sp/>highWaterMark:<sp/>1024<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>p2<sp/>=<sp/>new<sp/>PassThrough({<sp/>highWaterMark:<sp/>1024<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>p3<sp/>=<sp/>new<sp/>PassThrough({<sp/>highWaterMark:<sp/>1024<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>p4<sp/>=<sp/>new<sp/>PassThrough({<sp/>highWaterMark:<sp/>1024<sp/>})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">p1.pipe(p2).pipe(p3).pipe(p4)</highlight></codeline>
+<codeline><highlight class="normal">p4.on(&apos;data&apos;,<sp/>()<sp/>=&gt;<sp/>console.log(&apos;made<sp/>it<sp/>through&apos;))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>this<sp/>returns<sp/>false<sp/>and<sp/>buffers,<sp/>then<sp/>writes<sp/>to<sp/>p2<sp/>on<sp/>next<sp/>tick<sp/>(1)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>p2<sp/>returns<sp/>false<sp/>and<sp/>buffers,<sp/>pausing<sp/>p1,<sp/>then<sp/>writes<sp/>to<sp/>p3<sp/>on<sp/>next<sp/>tick<sp/>(2)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>p3<sp/>returns<sp/>false<sp/>and<sp/>buffers,<sp/>pausing<sp/>p2,<sp/>then<sp/>writes<sp/>to<sp/>p4<sp/>on<sp/>next<sp/>tick<sp/>(3)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>p4<sp/>returns<sp/>false<sp/>and<sp/>buffers,<sp/>pausing<sp/>p3,<sp/>then<sp/>emits<sp/>&apos;data&apos;<sp/>and<sp/>&apos;drain&apos;</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>on<sp/>next<sp/>tick<sp/>(4)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>p3<sp/>sees<sp/>p4&apos;s<sp/>&apos;drain&apos;<sp/>event,<sp/>and<sp/>calls<sp/>resume(),<sp/>emitting<sp/>&apos;resume&apos;<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;drain&apos;<sp/>on<sp/>next<sp/>tick<sp/>(5)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>p2<sp/>sees<sp/>p3&apos;s<sp/>&apos;drain&apos;,<sp/>calls<sp/>resume(),<sp/>emits<sp/>&apos;resume&apos;<sp/>and<sp/>&apos;drain&apos;<sp/>on<sp/>next<sp/>tick<sp/>(6)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>p1<sp/>sees<sp/>p2&apos;s<sp/>&apos;drain&apos;,<sp/>calls<sp/>resume(),<sp/>emits<sp/>&apos;resume&apos;<sp/>and<sp/>&apos;drain&apos;<sp/>on<sp/>next</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>tick<sp/>(7)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">p1.write(Buffer.alloc(2048))<sp/>//<sp/>returns<sp/>false</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Along<sp/>the<sp/>way,<sp/>the<sp/>data<sp/>was<sp/>buffered<sp/>and<sp/>deferred<sp/>at<sp/>each<sp/>stage,</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>multiple<sp/>event<sp/>deferrals<sp/>happened,<sp/>for<sp/>an<sp/>unblocked<sp/>pipeline</highlight></codeline>
+<codeline><highlight class="normal">where<sp/>it<sp/>was<sp/>perfectly<sp/>safe<sp/>to<sp/>write<sp/>all<sp/>the<sp/>way<sp/>through!</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Furthermore,<sp/>setting<sp/>a<sp/>`highWaterMark`<sp/>of<sp/>`1024`<sp/>might<sp/>lead</highlight></codeline>
+<codeline><highlight class="normal">someone<sp/>reading<sp/>the<sp/>code<sp/>to<sp/>think<sp/>an<sp/>advisory<sp/>maximum<sp/>of<sp/>1KiB<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">being<sp/>set<sp/>for<sp/>the<sp/>pipeline.<sp/>However,<sp/>the<sp/>actual<sp/>advisory</highlight></codeline>
+<codeline><highlight class="normal">buffering<sp/>level<sp/>is<sp/>the<sp/>_sum_<sp/>of<sp/>`highWaterMark`<sp/>values,<sp/>since</highlight></codeline>
+<codeline><highlight class="normal">each<sp/>one<sp/>has<sp/>its<sp/>own<sp/>bucket.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Consider<sp/>the<sp/>Minipass<sp/>case:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>m1<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>m2<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>m3<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>m4<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">m1.pipe(m2).pipe(m3).pipe(m4)</highlight></codeline>
+<codeline><highlight class="normal">m4.on(&apos;data&apos;,<sp/>()<sp/>=&gt;<sp/>console.log(&apos;made<sp/>it<sp/>through&apos;))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>m1<sp/>is<sp/>flowing,<sp/>so<sp/>it<sp/>writes<sp/>the<sp/>data<sp/>to<sp/>m2<sp/>immediately</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>m2<sp/>is<sp/>flowing,<sp/>so<sp/>it<sp/>writes<sp/>the<sp/>data<sp/>to<sp/>m3<sp/>immediately</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>m3<sp/>is<sp/>flowing,<sp/>so<sp/>it<sp/>writes<sp/>the<sp/>data<sp/>to<sp/>m4<sp/>immediately</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>m4<sp/>is<sp/>flowing,<sp/>so<sp/>it<sp/>fires<sp/>the<sp/>&apos;data&apos;<sp/>event<sp/>immediately,<sp/>returns<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>m4&apos;s<sp/>write<sp/>returned<sp/>true,<sp/>so<sp/>m3<sp/>is<sp/>still<sp/>flowing,<sp/>returns<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>m3&apos;s<sp/>write<sp/>returned<sp/>true,<sp/>so<sp/>m2<sp/>is<sp/>still<sp/>flowing,<sp/>returns<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>m2&apos;s<sp/>write<sp/>returned<sp/>true,<sp/>so<sp/>m1<sp/>is<sp/>still<sp/>flowing,<sp/>returns<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>No<sp/>event<sp/>deferrals<sp/>or<sp/>buffering<sp/>along<sp/>the<sp/>way!</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">m1.write(Buffer.alloc(2048))<sp/>//<sp/>returns<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It<sp/>is<sp/>extremely<sp/>unlikely<sp/>that<sp/>you<sp/>_don&apos;t_<sp/>want<sp/>to<sp/>buffer<sp/>any<sp/>data</highlight></codeline>
+<codeline><highlight class="normal">written,<sp/>or<sp/>_ever_<sp/>buffer<sp/>data<sp/>that<sp/>can<sp/>be<sp/>flushed<sp/>all<sp/>the<sp/>way</highlight></codeline>
+<codeline><highlight class="normal">through.<sp/>Neither<sp/>node-core<sp/>streams<sp/>nor<sp/>Minipass<sp/>ever<sp/>fail<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">buffer<sp/>written<sp/>data,<sp/>but<sp/>node-core<sp/>streams<sp/>do<sp/>a<sp/>lot<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">unnecessary<sp/>buffering<sp/>and<sp/>pausing.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">As<sp/>always,<sp/>the<sp/>faster<sp/>implementation<sp/>is<sp/>the<sp/>one<sp/>that<sp/>does<sp/>less</highlight></codeline>
+<codeline><highlight class="normal">stuff<sp/>and<sp/>waits<sp/>less<sp/>time<sp/>to<sp/>do<sp/>it.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Immediately<sp/>emit<sp/>`end`<sp/>for<sp/>empty<sp/>streams<sp/>(when<sp/>not<sp/>paused)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>a<sp/>stream<sp/>is<sp/>not<sp/>paused,<sp/>and<sp/>`end()`<sp/>is<sp/>called<sp/>before<sp/>writing</highlight></codeline>
+<codeline><highlight class="normal">any<sp/>data<sp/>into<sp/>it,<sp/>then<sp/>it<sp/>will<sp/>emit<sp/>`end`<sp/>immediately.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>have<sp/>logic<sp/>that<sp/>occurs<sp/>on<sp/>the<sp/>`end`<sp/>event<sp/>which<sp/>you<sp/>don&apos;t</highlight></codeline>
+<codeline><highlight class="normal">want<sp/>to<sp/>potentially<sp/>happen<sp/>immediately<sp/>(for<sp/>example,<sp/>closing<sp/>file</highlight></codeline>
+<codeline><highlight class="normal">descriptors,<sp/>moving<sp/>on<sp/>to<sp/>the<sp/>next<sp/>entry<sp/>in<sp/>an<sp/>archive<sp/>parse</highlight></codeline>
+<codeline><highlight class="normal">stream,<sp/>etc.)<sp/>then<sp/>be<sp/>sure<sp/>to<sp/>call<sp/>`stream.pause()`<sp/>on<sp/>creation,</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>then<sp/>`stream.resume()`<sp/>once<sp/>you<sp/>are<sp/>ready<sp/>to<sp/>respond<sp/>to<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">`end`<sp/>event.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">However,<sp/>this<sp/>is<sp/>_usually_<sp/>not<sp/>a<sp/>problem<sp/>because:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Emit<sp/>`end`<sp/>When<sp/>Asked</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">One<sp/>hazard<sp/>of<sp/>immediately<sp/>emitting<sp/>`&apos;end&apos;`<sp/>is<sp/>that<sp/>you<sp/>may<sp/>not</highlight></codeline>
+<codeline><highlight class="normal">yet<sp/>have<sp/>had<sp/>a<sp/>chance<sp/>to<sp/>add<sp/>a<sp/>listener.<sp/>In<sp/>order<sp/>to<sp/>avoid<sp/>this</highlight></codeline>
+<codeline><highlight class="normal">hazard,<sp/>Minipass<sp/>streams<sp/>safely<sp/>re-emit<sp/>the<sp/>`&apos;end&apos;`<sp/>event<sp/>if<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">new<sp/>listener<sp/>is<sp/>added<sp/>after<sp/>`&apos;end&apos;`<sp/>has<sp/>been<sp/>emitted.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Ie,<sp/>if<sp/>you<sp/>do<sp/>`stream.on(&apos;end&apos;,<sp/>someFunction)`,<sp/>and<sp/>the<sp/>stream</highlight></codeline>
+<codeline><highlight class="normal">has<sp/>already<sp/>emitted<sp/>`end`,<sp/>then<sp/>it<sp/>will<sp/>call<sp/>the<sp/>handler<sp/>right</highlight></codeline>
+<codeline><highlight class="normal">away.<sp/>(You<sp/>can<sp/>think<sp/>of<sp/>this<sp/>somewhat<sp/>like<sp/>attaching<sp/>a<sp/>new</highlight></codeline>
+<codeline><highlight class="normal">`.then(fn)`<sp/>to<sp/>a<sp/>previously-resolved<sp/>Promise.)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>prevent<sp/>calling<sp/>handlers<sp/>multiple<sp/>times<sp/>who<sp/>would<sp/>not<sp/>expect</highlight></codeline>
+<codeline><highlight class="normal">multiple<sp/>ends<sp/>to<sp/>occur,<sp/>all<sp/>listeners<sp/>are<sp/>removed<sp/>from<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">`&apos;end&apos;`<sp/>event<sp/>whenever<sp/>it<sp/>is<sp/>emitted.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Emit<sp/>`error`<sp/>When<sp/>Asked</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>most<sp/>recent<sp/>error<sp/>object<sp/>passed<sp/>to<sp/>the<sp/>`&apos;error&apos;`<sp/>event<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">stored<sp/>on<sp/>the<sp/>stream.<sp/>If<sp/>a<sp/>new<sp/>`&apos;error&apos;`<sp/>event<sp/>handler<sp/>is<sp/>added,</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>an<sp/>error<sp/>was<sp/>previously<sp/>emitted,<sp/>then<sp/>the<sp/>event<sp/>handler<sp/>will</highlight></codeline>
+<codeline><highlight class="normal">be<sp/>called<sp/>immediately<sp/>(or<sp/>on<sp/>`process.nextTick`<sp/>in<sp/>the<sp/>case<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">async<sp/>streams).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>makes<sp/>it<sp/>much<sp/>more<sp/>difficult<sp/>to<sp/>end<sp/>up<sp/>trying<sp/>to<sp/>interact</highlight></codeline>
+<codeline><highlight class="normal">with<sp/>a<sp/>broken<sp/>stream,<sp/>if<sp/>the<sp/>error<sp/>handler<sp/>is<sp/>added<sp/>after<sp/>an</highlight></codeline>
+<codeline><highlight class="normal">error<sp/>was<sp/>previously<sp/>emitted.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Impact<sp/>of<sp/>&quot;immediate<sp/>flow&quot;<sp/>on<sp/>Tee-streams</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>&quot;tee<sp/>stream&quot;<sp/>is<sp/>a<sp/>stream<sp/>piping<sp/>to<sp/>multiple<sp/>destinations:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>tee<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline><highlight class="normal">t.pipe(dest1)</highlight></codeline>
+<codeline><highlight class="normal">t.pipe(dest2)</highlight></codeline>
+<codeline><highlight class="normal">t.write(&apos;foo&apos;)<sp/>//<sp/>goes<sp/>to<sp/>both<sp/>destinations</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Since<sp/>Minipass<sp/>streams<sp/>_immediately_<sp/>process<sp/>any<sp/>pending<sp/>data</highlight></codeline>
+<codeline><highlight class="normal">through<sp/>the<sp/>pipeline<sp/>when<sp/>a<sp/>new<sp/>pipe<sp/>destination<sp/>is<sp/>added,<sp/>this</highlight></codeline>
+<codeline><highlight class="normal">can<sp/>have<sp/>surprising<sp/>effects,<sp/>especially<sp/>when<sp/>a<sp/>stream<sp/>comes<sp/>in</highlight></codeline>
+<codeline><highlight class="normal">from<sp/>some<sp/>other<sp/>function<sp/>and<sp/>may<sp/>or<sp/>may<sp/>not<sp/>have<sp/>data<sp/>in<sp/>its</highlight></codeline>
+<codeline><highlight class="normal">buffer.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>WARNING!<sp/>WILL<sp/>LOSE<sp/>DATA!</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>src<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline><highlight class="normal">src.write(&apos;foo&apos;)</highlight></codeline>
+<codeline><highlight class="normal">src.pipe(dest1)<sp/>//<sp/>&apos;foo&apos;<sp/>chunk<sp/>flows<sp/>to<sp/>dest1<sp/>immediately,<sp/>and<sp/>is<sp/>gone</highlight></codeline>
+<codeline><highlight class="normal">src.pipe(dest2)<sp/>//<sp/>gets<sp/>nothing!</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">One<sp/>solution<sp/>is<sp/>to<sp/>create<sp/>a<sp/>dedicated<sp/>tee-stream<sp/>junction<sp/>that</highlight></codeline>
+<codeline><highlight class="normal">pipes<sp/>to<sp/>both<sp/>locations,<sp/>and<sp/>then<sp/>pipe<sp/>to<sp/>_that_<sp/>instead.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Safe<sp/>example:<sp/>tee<sp/>to<sp/>both<sp/>places</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>src<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline><highlight class="normal">src.write(&apos;foo&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>tee<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline><highlight class="normal">tee.pipe(dest1)</highlight></codeline>
+<codeline><highlight class="normal">tee.pipe(dest2)</highlight></codeline>
+<codeline><highlight class="normal">src.pipe(tee)<sp/>//<sp/>tee<sp/>gets<sp/>&apos;foo&apos;,<sp/>pipes<sp/>to<sp/>both<sp/>locations</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>same<sp/>caveat<sp/>applies<sp/>to<sp/>`on(&apos;data&apos;)`<sp/>event<sp/>listeners.<sp/>The</highlight></codeline>
+<codeline><highlight class="normal">first<sp/>one<sp/>added<sp/>will<sp/>_immediately_<sp/>receive<sp/>all<sp/>of<sp/>the<sp/>data,</highlight></codeline>
+<codeline><highlight class="normal">leaving<sp/>nothing<sp/>for<sp/>the<sp/>second:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>WARNING!<sp/>WILL<sp/>LOSE<sp/>DATA!</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>src<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline><highlight class="normal">src.write(&apos;foo&apos;)</highlight></codeline>
+<codeline><highlight class="normal">src.on(&apos;data&apos;,<sp/>handler1)<sp/>//<sp/>receives<sp/>&apos;foo&apos;<sp/>right<sp/>away</highlight></codeline>
+<codeline><highlight class="normal">src.on(&apos;data&apos;,<sp/>handler2)<sp/>//<sp/>nothing<sp/>to<sp/>see<sp/>here!</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Using<sp/>a<sp/>dedicated<sp/>tee-stream<sp/>can<sp/>be<sp/>used<sp/>in<sp/>this<sp/>case<sp/>as<sp/>well:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Safe<sp/>example:<sp/>tee<sp/>to<sp/>both<sp/>data<sp/>handlers</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>src<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline><highlight class="normal">src.write(&apos;foo&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>tee<sp/>=<sp/>new<sp/>Minipass()</highlight></codeline>
+<codeline><highlight class="normal">tee.on(&apos;data&apos;,<sp/>handler1)</highlight></codeline>
+<codeline><highlight class="normal">tee.on(&apos;data&apos;,<sp/>handler2)</highlight></codeline>
+<codeline><highlight class="normal">src.pipe(tee)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">All<sp/>of<sp/>the<sp/>hazards<sp/>in<sp/>this<sp/>section<sp/>are<sp/>avoided<sp/>by<sp/>setting<sp/>`{</highlight></codeline>
+<codeline><highlight class="normal">async:<sp/>true<sp/>}`<sp/>in<sp/>the<sp/>Minipass<sp/>constructor,<sp/>or<sp/>by<sp/>setting</highlight></codeline>
+<codeline><highlight class="normal">`stream.async<sp/>=<sp/>true`<sp/>afterwards.<sp/>Note<sp/>that<sp/>this<sp/>does<sp/>add<sp/>some</highlight></codeline>
+<codeline><highlight class="normal">overhead,<sp/>so<sp/>should<sp/>only<sp/>be<sp/>done<sp/>in<sp/>cases<sp/>where<sp/>you<sp/>are<sp/>willing</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>lose<sp/>a<sp/>bit<sp/>of<sp/>performance<sp/>in<sp/>order<sp/>to<sp/>avoid<sp/>having<sp/>to<sp/>refactor</highlight></codeline>
+<codeline><highlight class="normal">program<sp/>logic.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>USAGE</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It&apos;s<sp/>a<sp/>stream!<sp/>Use<sp/>it<sp/>like<sp/>a<sp/>stream<sp/>and<sp/>it&apos;ll<sp/>most<sp/>likely<sp/>do<sp/>what</highlight></codeline>
+<codeline><highlight class="normal">you<sp/>want.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">import<sp/>{<sp/>Minipass<sp/>}<sp/>from<sp/>&apos;minipass&apos;</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>mp<sp/>=<sp/>new<sp/>Minipass(options)<sp/>//<sp/>optional:<sp/>{<sp/>encoding,<sp/>objectMode<sp/>}</highlight></codeline>
+<codeline><highlight class="normal">mp.write(&apos;foo&apos;)</highlight></codeline>
+<codeline><highlight class="normal">mp.pipe(someOtherStream)</highlight></codeline>
+<codeline><highlight class="normal">mp.end(&apos;bar&apos;)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>OPTIONS</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>`encoding`<sp/>How<sp/>would<sp/>you<sp/>like<sp/>the<sp/>data<sp/>coming<sp/>_out_<sp/>of<sp/>the</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>stream<sp/>to<sp/>be<sp/>encoded?<sp/>Accepts<sp/>any<sp/>values<sp/>that<sp/>can<sp/>be<sp/>passed<sp/>to</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`Buffer.toString()`.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`objectMode`<sp/>Emit<sp/>data<sp/>exactly<sp/>as<sp/>it<sp/>comes<sp/>in.<sp/>This<sp/>will<sp/>be</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>flipped<sp/>on<sp/>by<sp/>default<sp/>if<sp/>you<sp/>write()<sp/>something<sp/>other<sp/>than<sp/>a</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>string<sp/>or<sp/>Buffer<sp/>at<sp/>any<sp/>point.<sp/>Setting<sp/>`objectMode:<sp/>true`<sp/>will</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>prevent<sp/>setting<sp/>any<sp/>encoding<sp/>value.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`async`<sp/>Defaults<sp/>to<sp/>`false`.<sp/>Set<sp/>to<sp/>`true`<sp/>to<sp/>defer<sp/>data</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>emission<sp/>until<sp/>next<sp/>tick.<sp/>This<sp/>reduces<sp/>performance<sp/>slightly,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>but<sp/>makes<sp/>Minipass<sp/>streams<sp/>use<sp/>timing<sp/>behavior<sp/>closer<sp/>to<sp/>Node</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>core<sp/>streams.<sp/>See<sp/>[Timing](#timing)<sp/>for<sp/>more<sp/>details.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`signal`<sp/>An<sp/>`AbortSignal`<sp/>that<sp/>will<sp/>cause<sp/>the<sp/>stream<sp/>to<sp/>unhook</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>itself<sp/>from<sp/>everything<sp/>and<sp/>become<sp/>as<sp/>inert<sp/>as<sp/>possible.<sp/>Note</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>that<sp/>providing<sp/>a<sp/>`signal`<sp/>parameter<sp/>will<sp/>make<sp/>`&apos;error&apos;`<sp/>events</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>no<sp/>longer<sp/>throw<sp/>if<sp/>they<sp/>are<sp/>unhandled,<sp/>but<sp/>they<sp/>will<sp/>still<sp/>be</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>emitted<sp/>to<sp/>handlers<sp/>if<sp/>any<sp/>are<sp/>attached.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>API</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Implements<sp/>the<sp/>user-facing<sp/>portions<sp/>of<sp/>Node.js&apos;s<sp/>`Readable`<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">`Writable`<sp/>streams.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Methods</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>`write(chunk,<sp/>[encoding],<sp/>[callback])`<sp/>-<sp/>Put<sp/>data<sp/>in.<sp/>(Note</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>that,<sp/>in<sp/>the<sp/>base<sp/>Minipass<sp/>class,<sp/>the<sp/>same<sp/>data<sp/>will<sp/>come<sp/>out.)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Returns<sp/>`false`<sp/>if<sp/>the<sp/>stream<sp/>will<sp/>buffer<sp/>the<sp/>next<sp/>write,<sp/>or</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>true<sp/>if<sp/>it&apos;s<sp/>still<sp/>in<sp/>&quot;flowing&quot;<sp/>mode.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`end([chunk,<sp/>[encoding]],<sp/>[callback])`<sp/>-<sp/>Signal<sp/>that<sp/>you<sp/>have</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>no<sp/>more<sp/>data<sp/>to<sp/>write.<sp/>This<sp/>will<sp/>queue<sp/>an<sp/>`end`<sp/>event<sp/>to<sp/>be</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fired<sp/>when<sp/>all<sp/>the<sp/>data<sp/>has<sp/>been<sp/>consumed.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`setEncoding(encoding)`<sp/>-<sp/>Set<sp/>the<sp/>encoding<sp/>for<sp/>data<sp/>coming<sp/>of</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>the<sp/>stream.<sp/>This<sp/>can<sp/>only<sp/>be<sp/>done<sp/>once.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`pause()`<sp/>-<sp/>No<sp/>more<sp/>data<sp/>for<sp/>a<sp/>while,<sp/>please.<sp/>This<sp/>also</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>prevents<sp/>`end`<sp/>from<sp/>being<sp/>emitted<sp/>for<sp/>empty<sp/>streams<sp/>until<sp/>the</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>stream<sp/>is<sp/>resumed.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`resume()`<sp/>-<sp/>Resume<sp/>the<sp/>stream.<sp/>If<sp/>there&apos;s<sp/>data<sp/>in<sp/>the<sp/>buffer,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>it<sp/>is<sp/>all<sp/>discarded.<sp/>Any<sp/>buffered<sp/>events<sp/>are<sp/>immediately</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>emitted.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`pipe(dest)`<sp/>-<sp/>Send<sp/>all<sp/>output<sp/>to<sp/>the<sp/>stream<sp/>provided.<sp/>When</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>data<sp/>is<sp/>emitted,<sp/>it<sp/>is<sp/>immediately<sp/>written<sp/>to<sp/>any<sp/>and<sp/>all<sp/>pipe</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>destinations.<sp/>(Or<sp/>written<sp/>on<sp/>next<sp/>tick<sp/>in<sp/>`async`<sp/>mode.)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`unpipe(dest)`<sp/>-<sp/>Stop<sp/>piping<sp/>to<sp/>the<sp/>destination<sp/>stream.<sp/>This<sp/>is</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>immediate,<sp/>meaning<sp/>that<sp/>any<sp/>asynchronously<sp/>queued<sp/>data<sp/>will</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>_not_<sp/>make<sp/>it<sp/>to<sp/>the<sp/>destination<sp/>when<sp/>running<sp/>in<sp/>`async`<sp/>mode.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>`options.end`<sp/>-<sp/>Boolean,<sp/>end<sp/>the<sp/>destination<sp/>stream<sp/>when<sp/>the</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>source<sp/>stream<sp/>ends.<sp/>Default<sp/>`true`.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>`options.proxyErrors`<sp/>-<sp/>Boolean,<sp/>proxy<sp/>`error`<sp/>events<sp/>from</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>the<sp/>source<sp/>stream<sp/>to<sp/>the<sp/>destination<sp/>stream.<sp/>Note<sp/>that<sp/>errors</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>are<sp/>_not_<sp/>proxied<sp/>after<sp/>the<sp/>pipeline<sp/>terminates,<sp/>either<sp/>due</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>to<sp/>the<sp/>source<sp/>emitting<sp/>`&apos;end&apos;`<sp/>or<sp/>manually<sp/>unpiping<sp/>with</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>`src.unpipe(dest)`.<sp/>Default<sp/>`false`.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`on(ev,<sp/>fn)`,<sp/>`emit(ev,<sp/>fn)`<sp/>-<sp/>Minipass<sp/>streams<sp/>are</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>EventEmitters.<sp/>Some<sp/>events<sp/>are<sp/>given<sp/>special<sp/>treatment,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>however.<sp/>(See<sp/>below<sp/>under<sp/>&quot;events&quot;.)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`promise()`<sp/>-<sp/>Returns<sp/>a<sp/>Promise<sp/>that<sp/>resolves<sp/>when<sp/>the<sp/>stream</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>emits<sp/>`end`,<sp/>or<sp/>rejects<sp/>if<sp/>the<sp/>stream<sp/>emits<sp/>`error`.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`collect()`<sp/>-<sp/>Return<sp/>a<sp/>Promise<sp/>that<sp/>resolves<sp/>on<sp/>`end`<sp/>with<sp/>an</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>array<sp/>containing<sp/>each<sp/>chunk<sp/>of<sp/>data<sp/>that<sp/>was<sp/>emitted,<sp/>or</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>rejects<sp/>if<sp/>the<sp/>stream<sp/>emits<sp/>`error`.<sp/>Note<sp/>that<sp/>this<sp/>consumes</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>the<sp/>stream<sp/>data.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`concat()`<sp/>-<sp/>Same<sp/>as<sp/>`collect()`,<sp/>but<sp/>concatenates<sp/>the<sp/>data</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>into<sp/>a<sp/>single<sp/>Buffer<sp/>object.<sp/>Will<sp/>reject<sp/>the<sp/>returned<sp/>promise</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>the<sp/>stream<sp/>is<sp/>in<sp/>objectMode,<sp/>or<sp/>if<sp/>it<sp/>goes<sp/>into<sp/>objectMode</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>by<sp/>the<sp/>end<sp/>of<sp/>the<sp/>data.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`read(n)`<sp/>-<sp/>Consume<sp/>`n`<sp/>bytes<sp/>of<sp/>data<sp/>out<sp/>of<sp/>the<sp/>buffer.<sp/>If<sp/>`n`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>is<sp/>not<sp/>provided,<sp/>then<sp/>consume<sp/>all<sp/>of<sp/>it.<sp/>If<sp/>`n`<sp/>bytes<sp/>are<sp/>not</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>available,<sp/>then<sp/>it<sp/>returns<sp/>null.<sp/>**Note**<sp/>consuming<sp/>streams<sp/>in</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>this<sp/>way<sp/>is<sp/>less<sp/>efficient,<sp/>and<sp/>can<sp/>lead<sp/>to<sp/>unnecessary<sp/>Buffer</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>copying.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`destroy([er])`<sp/>-<sp/>Destroy<sp/>the<sp/>stream.<sp/>If<sp/>an<sp/>error<sp/>is<sp/>provided,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>then<sp/>an<sp/>`&apos;error&apos;`<sp/>event<sp/>is<sp/>emitted.<sp/>If<sp/>the<sp/>stream<sp/>has<sp/>a</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`close()`<sp/>method,<sp/>and<sp/>has<sp/>not<sp/>emitted<sp/>a<sp/>`&apos;close&apos;`<sp/>event<sp/>yet,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>then<sp/>`stream.close()`<sp/>will<sp/>be<sp/>called.<sp/>Any<sp/>Promises<sp/>returned<sp/>by</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`.promise()`,<sp/>`.collect()`<sp/>or<sp/>`.concat()`<sp/>will<sp/>be<sp/>rejected.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>After<sp/>being<sp/>destroyed,<sp/>writing<sp/>to<sp/>the<sp/>stream<sp/>will<sp/>emit<sp/>an</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>error.<sp/>No<sp/>more<sp/>data<sp/>will<sp/>be<sp/>emitted<sp/>if<sp/>the<sp/>stream<sp/>is<sp/>destroyed,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>even<sp/>if<sp/>it<sp/>was<sp/>previously<sp/>buffered.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Properties</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>`bufferLength`<sp/>Read-only.<sp/>Total<sp/>number<sp/>of<sp/>bytes<sp/>buffered,<sp/>or<sp/>in</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>the<sp/>case<sp/>of<sp/>objectMode,<sp/>the<sp/>total<sp/>number<sp/>of<sp/>objects.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`encoding`<sp/>The<sp/>encoding<sp/>that<sp/>has<sp/>been<sp/>set.<sp/>(Setting<sp/>this<sp/>is</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>equivalent<sp/>to<sp/>calling<sp/>`setEncoding(enc)`<sp/>and<sp/>has<sp/>the<sp/>same</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>prohibition<sp/>against<sp/>setting<sp/>multiple<sp/>times.)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`flowing`<sp/>Read-only.<sp/>Boolean<sp/>indicating<sp/>whether<sp/>a<sp/>chunk<sp/>written</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>to<sp/>the<sp/>stream<sp/>will<sp/>be<sp/>immediately<sp/>emitted.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`emittedEnd`<sp/>Read-only.<sp/>Boolean<sp/>indicating<sp/>whether<sp/>the<sp/>end-ish</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>events<sp/>(ie,<sp/>`end`,<sp/>`prefinish`,<sp/>`finish`)<sp/>have<sp/>been<sp/>emitted.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Note<sp/>that<sp/>listening<sp/>on<sp/>any<sp/>end-ish<sp/>event<sp/>will<sp/>immediateyl</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>re-emit<sp/>it<sp/>if<sp/>it<sp/>has<sp/>already<sp/>been<sp/>emitted.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`writable`<sp/>Whether<sp/>the<sp/>stream<sp/>is<sp/>writable.<sp/>Default<sp/>`true`.<sp/>Set</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>to<sp/>`false`<sp/>when<sp/>`end()`</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`readable`<sp/>Whether<sp/>the<sp/>stream<sp/>is<sp/>readable.<sp/>Default<sp/>`true`.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`pipes`<sp/>An<sp/>array<sp/>of<sp/>Pipe<sp/>objects<sp/>referencing<sp/>streams<sp/>that<sp/>this</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>stream<sp/>is<sp/>piping<sp/>into.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`destroyed`<sp/>A<sp/>getter<sp/>that<sp/>indicates<sp/>whether<sp/>the<sp/>stream<sp/>was</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>destroyed.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`paused`<sp/>True<sp/>if<sp/>the<sp/>stream<sp/>has<sp/>been<sp/>explicitly<sp/>paused,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>otherwise<sp/>false.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`objectMode`<sp/>Indicates<sp/>whether<sp/>the<sp/>stream<sp/>is<sp/>in<sp/>`objectMode`.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Once<sp/>set<sp/>to<sp/>`true`,<sp/>it<sp/>cannot<sp/>be<sp/>set<sp/>to<sp/>`false`.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`aborted`<sp/>Readonly<sp/>property<sp/>set<sp/>when<sp/>the<sp/>`AbortSignal`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>dispatches<sp/>an<sp/>`abort`<sp/>event.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Events</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>`data`<sp/>Emitted<sp/>when<sp/>there&apos;s<sp/>data<sp/>to<sp/>read.<sp/>Argument<sp/>is<sp/>the<sp/>data</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>to<sp/>read.<sp/>This<sp/>is<sp/>never<sp/>emitted<sp/>while<sp/>not<sp/>flowing.<sp/>If<sp/>a<sp/>listener</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>is<sp/>attached,<sp/>that<sp/>will<sp/>resume<sp/>the<sp/>stream.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`end`<sp/>Emitted<sp/>when<sp/>there&apos;s<sp/>no<sp/>more<sp/>data<sp/>to<sp/>read.<sp/>This<sp/>will<sp/>be</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>emitted<sp/>immediately<sp/>for<sp/>empty<sp/>streams<sp/>when<sp/>`end()`<sp/>is<sp/>called.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>If<sp/>a<sp/>listener<sp/>is<sp/>attached,<sp/>and<sp/>`end`<sp/>was<sp/>already<sp/>emitted,<sp/>then</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>it<sp/>will<sp/>be<sp/>emitted<sp/>again.<sp/>All<sp/>listeners<sp/>are<sp/>removed<sp/>when<sp/>`end`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>is<sp/>emitted.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`prefinish`<sp/>An<sp/>end-ish<sp/>event<sp/>that<sp/>follows<sp/>the<sp/>same<sp/>logic<sp/>as</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`end`<sp/>and<sp/>is<sp/>emitted<sp/>in<sp/>the<sp/>same<sp/>conditions<sp/>where<sp/>`end`<sp/>is</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>emitted.<sp/>Emitted<sp/>after<sp/>`&apos;end&apos;`.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`finish`<sp/>An<sp/>end-ish<sp/>event<sp/>that<sp/>follows<sp/>the<sp/>same<sp/>logic<sp/>as<sp/>`end`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>and<sp/>is<sp/>emitted<sp/>in<sp/>the<sp/>same<sp/>conditions<sp/>where<sp/>`end`<sp/>is<sp/>emitted.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Emitted<sp/>after<sp/>`&apos;prefinish&apos;`.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`close`<sp/>An<sp/>indication<sp/>that<sp/>an<sp/>underlying<sp/>resource<sp/>has<sp/>been</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>released.<sp/>Minipass<sp/>does<sp/>not<sp/>emit<sp/>this<sp/>event,<sp/>but<sp/>will<sp/>defer<sp/>it</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>until<sp/>after<sp/>`end`<sp/>has<sp/>been<sp/>emitted,<sp/>since<sp/>it<sp/>throws<sp/>off<sp/>some</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>stream<sp/>libraries<sp/>otherwise.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`drain`<sp/>Emitted<sp/>when<sp/>the<sp/>internal<sp/>buffer<sp/>empties,<sp/>and<sp/>it<sp/>is</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>again<sp/>suitable<sp/>to<sp/>`write()`<sp/>into<sp/>the<sp/>stream.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`readable`<sp/>Emitted<sp/>when<sp/>data<sp/>is<sp/>buffered<sp/>and<sp/>ready<sp/>to<sp/>be<sp/>read</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>by<sp/>a<sp/>consumer.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`resume`<sp/>Emitted<sp/>when<sp/>stream<sp/>changes<sp/>state<sp/>from<sp/>buffering<sp/>to</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>flowing<sp/>mode.<sp/>(Ie,<sp/>when<sp/>`resume`<sp/>is<sp/>called,<sp/>`pipe`<sp/>is<sp/>called,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>or<sp/>a<sp/>`data`<sp/>event<sp/>listener<sp/>is<sp/>added.)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Static<sp/>Methods</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>`Minipass.isStream(stream)`<sp/>Returns<sp/>`true`<sp/>if<sp/>the<sp/>argument<sp/>is<sp/>a</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>stream,<sp/>and<sp/>false<sp/>otherwise.<sp/>To<sp/>be<sp/>considered<sp/>a<sp/>stream,<sp/>the</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>object<sp/>must<sp/>be<sp/>either<sp/>an<sp/>instance<sp/>of<sp/>Minipass,<sp/>or<sp/>an</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>EventEmitter<sp/>that<sp/>has<sp/>either<sp/>a<sp/>`pipe()`<sp/>method,<sp/>or<sp/>both</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`write()`<sp/>and<sp/>`end()`<sp/>methods.<sp/>(Pretty<sp/>much<sp/>any<sp/>stream<sp/>in</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>node-land<sp/>will<sp/>return<sp/>`true`<sp/>for<sp/>this.)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>EXAMPLES</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Here<sp/>are<sp/>some<sp/>examples<sp/>of<sp/>things<sp/>you<sp/>can<sp/>do<sp/>with<sp/>Minipass</highlight></codeline>
+<codeline><highlight class="normal">streams.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>simple<sp/>&quot;are<sp/>you<sp/>done<sp/>yet&quot;<sp/>promise</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">mp.promise().then(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>stream<sp/>is<sp/>finished</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>er<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>stream<sp/>emitted<sp/>an<sp/>error</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>collecting</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">mp.collect().then(all<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>all<sp/>is<sp/>an<sp/>array<sp/>of<sp/>all<sp/>the<sp/>data<sp/>emitted</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>encoding<sp/>is<sp/>supported<sp/>in<sp/>this<sp/>case,<sp/>so</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>so<sp/>the<sp/>result<sp/>will<sp/>be<sp/>a<sp/>collection<sp/>of<sp/>strings<sp/>if</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>an<sp/>encoding<sp/>is<sp/>specified,<sp/>or<sp/>buffers/objects<sp/>if<sp/>not.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>In<sp/>an<sp/>async<sp/>function,<sp/>you<sp/>may<sp/>do</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>const<sp/>data<sp/>=<sp/>await<sp/>stream.collect()</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>collecting<sp/>into<sp/>a<sp/>single<sp/>blob</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>a<sp/>bit<sp/>slower<sp/>because<sp/>it<sp/>concatenates<sp/>the<sp/>data<sp/>into<sp/>one</highlight></codeline>
+<codeline><highlight class="normal">chunk<sp/>for<sp/>you,<sp/>but<sp/>if<sp/>you&apos;re<sp/>going<sp/>to<sp/>do<sp/>it<sp/>yourself<sp/>anyway,<sp/>it&apos;s</highlight></codeline>
+<codeline><highlight class="normal">convenient<sp/>this<sp/>way:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">mp.concat().then(onebigchunk<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>onebigchunk<sp/>is<sp/>a<sp/>string<sp/>if<sp/>the<sp/>stream</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>had<sp/>an<sp/>encoding<sp/>set,<sp/>or<sp/>a<sp/>buffer<sp/>otherwise.</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>iteration</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>iterate<sp/>over<sp/>streams<sp/>synchronously<sp/>or<sp/>asynchronously<sp/>in</highlight></codeline>
+<codeline><highlight class="normal">platforms<sp/>that<sp/>support<sp/>it.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Synchronous<sp/>iteration<sp/>will<sp/>end<sp/>when<sp/>the<sp/>currently<sp/>available<sp/>data</highlight></codeline>
+<codeline><highlight class="normal">is<sp/>consumed,<sp/>even<sp/>if<sp/>the<sp/>`end`<sp/>event<sp/>has<sp/>not<sp/>been<sp/>reached.<sp/>In</highlight></codeline>
+<codeline><highlight class="normal">string<sp/>and<sp/>buffer<sp/>mode,<sp/>the<sp/>data<sp/>is<sp/>concatenated,<sp/>so<sp/>unless</highlight></codeline>
+<codeline><highlight class="normal">multiple<sp/>writes<sp/>are<sp/>occurring<sp/>in<sp/>the<sp/>same<sp/>tick<sp/>as<sp/>the<sp/>`read()`,</highlight></codeline>
+<codeline><highlight class="normal">sync<sp/>iteration<sp/>loops<sp/>will<sp/>generally<sp/>only<sp/>have<sp/>a<sp/>single<sp/>iteration.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>consume<sp/>chunks<sp/>in<sp/>this<sp/>way<sp/>exactly<sp/>as<sp/>they<sp/>have<sp/>been<sp/>written,</highlight></codeline>
+<codeline><highlight class="normal">with<sp/>no<sp/>flattening,<sp/>create<sp/>the<sp/>stream<sp/>with<sp/>the<sp/>`{<sp/>objectMode:</highlight></codeline>
+<codeline><highlight class="normal">true<sp/>}`<sp/>option.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>mp<sp/>=<sp/>new<sp/>Minipass({<sp/>objectMode:<sp/>true<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">mp.write(&apos;a&apos;)</highlight></codeline>
+<codeline><highlight class="normal">mp.write(&apos;b&apos;)</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>(let<sp/>letter<sp/>of<sp/>mp)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(letter)<sp/>//<sp/>a,<sp/>b</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">mp.write(&apos;c&apos;)</highlight></codeline>
+<codeline><highlight class="normal">mp.write(&apos;d&apos;)</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>(let<sp/>letter<sp/>of<sp/>mp)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(letter)<sp/>//<sp/>c,<sp/>d</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">mp.write(&apos;e&apos;)</highlight></codeline>
+<codeline><highlight class="normal">mp.end()</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>(let<sp/>letter<sp/>of<sp/>mp)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(letter)<sp/>//<sp/>e</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>(let<sp/>letter<sp/>of<sp/>mp)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(letter)<sp/>//<sp/>nothing</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Asynchronous<sp/>iteration<sp/>will<sp/>continue<sp/>until<sp/>the<sp/>end<sp/>event<sp/>is<sp/>reached,</highlight></codeline>
+<codeline><highlight class="normal">consuming<sp/>all<sp/>of<sp/>the<sp/>data.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>mp<sp/>=<sp/>new<sp/>Minipass({<sp/>encoding:<sp/>&apos;utf8&apos;<sp/>})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>some<sp/>source<sp/>of<sp/>some<sp/>data</highlight></codeline>
+<codeline><highlight class="normal">let<sp/>i<sp/>=<sp/>5</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>inter<sp/>=<sp/>setInterval(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(i--<sp/>&gt;<sp/>0)<sp/>mp.write(Buffer.from(&apos;foo\n&apos;,<sp/>&apos;utf8&apos;))</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>mp.end()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>clearInterval(inter)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">},<sp/>100)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>consume<sp/>the<sp/>data<sp/>with<sp/>asynchronous<sp/>iteration</highlight></codeline>
+<codeline><highlight class="normal">async<sp/>function<sp/>consume()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>for<sp/>await<sp/>(let<sp/>chunk<sp/>of<sp/>mp)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(chunk)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>&apos;ok&apos;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">consume().then(res<sp/>=&gt;<sp/>console.log(res))</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>logs<sp/>`foo\n`<sp/>5<sp/>times,<sp/>and<sp/>then<sp/>`ok`</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>subclass<sp/>that<sp/>`console.log()`s<sp/>everything<sp/>written<sp/>into<sp/>it</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">class<sp/>Logger<sp/>extends<sp/>Minipass<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>write(chunk,<sp/>encoding,<sp/>callback)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(&apos;WRITE&apos;,<sp/>chunk,<sp/>encoding)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>super.write(chunk,<sp/>encoding,<sp/>callback)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>end(chunk,<sp/>encoding,<sp/>callback)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(&apos;END&apos;,<sp/>chunk,<sp/>encoding)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>super.end(chunk,<sp/>encoding,<sp/>callback)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">someSource.pipe(new<sp/>Logger()).pipe(someDest)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>same<sp/>thing,<sp/>but<sp/>using<sp/>an<sp/>inline<sp/>anonymous<sp/>class</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>js<sp/>classes<sp/>are<sp/>fun</highlight></codeline>
+<codeline><highlight class="normal">someSource</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>.pipe(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>new<sp/>(class<sp/>extends<sp/>Minipass<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>emit(ev,<sp/>...data)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>let&apos;s<sp/>also<sp/>log<sp/>events,<sp/>because<sp/>debugging<sp/>some<sp/>weird<sp/>thing</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>console.log(&apos;EMIT&apos;,<sp/>ev)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>super.emit(ev,<sp/>...data)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>write(chunk,<sp/>encoding,<sp/>callback)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>console.log(&apos;WRITE&apos;,<sp/>chunk,<sp/>encoding)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>super.write(chunk,<sp/>encoding,<sp/>callback)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>end(chunk,<sp/>encoding,<sp/>callback)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>console.log(&apos;END&apos;,<sp/>chunk,<sp/>encoding)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>super.end(chunk,<sp/>encoding,<sp/>callback)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>})()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>.pipe(someDest)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>subclass<sp/>that<sp/>defers<sp/>&apos;end&apos;<sp/>for<sp/>some<sp/>reason</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">class<sp/>SlowEnd<sp/>extends<sp/>Minipass<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>emit(ev,<sp/>...args)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(ev<sp/>===<sp/>&apos;end&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>console.log(&apos;going<sp/>to<sp/>end,<sp/>hold<sp/>on<sp/>a<sp/>sec&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>setTimeout(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>console.log(&apos;ok,<sp/>ready<sp/>to<sp/>end<sp/>now&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>super.emit(&apos;end&apos;,<sp/>...args)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>},<sp/>100)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>super.emit(ev,<sp/>...args)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>transform<sp/>that<sp/>creates<sp/>newline-delimited<sp/>JSON</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">class<sp/>NDJSONEncode<sp/>extends<sp/>Minipass<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>write(obj,<sp/>cb)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>try<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>JSON.stringify<sp/>can<sp/>throw,<sp/>emit<sp/>an<sp/>error<sp/>on<sp/>that</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>super.write(JSON.stringify(obj)<sp/>+<sp/>&apos;\n&apos;,<sp/>&apos;utf8&apos;,<sp/>cb)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/>catch<sp/>(er)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>this.emit(&apos;error&apos;,<sp/>er)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>end(obj,<sp/>cb)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(typeof<sp/>obj<sp/>===<sp/>&apos;function&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>cb<sp/>=<sp/>obj</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>obj<sp/>=<sp/>undefined</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(obj<sp/>!==<sp/>undefined)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>this.write(obj)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>super.end(cb)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>transform<sp/>that<sp/>parses<sp/>newline-delimited<sp/>JSON</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">class<sp/>NDJSONDecode<sp/>extends<sp/>Minipass<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>constructor<sp/>(options)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>always<sp/>be<sp/>in<sp/>object<sp/>mode,<sp/>as<sp/>far<sp/>as<sp/>Minipass<sp/>is<sp/>concerned</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>super({<sp/>objectMode:<sp/>true<sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>this._jsonBuffer<sp/>=<sp/>&apos;&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>write<sp/>(chunk,<sp/>encoding,<sp/>cb)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(typeof<sp/>chunk<sp/>===<sp/>&apos;string&apos;<sp/>&amp;&amp;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>typeof<sp/>encoding<sp/>===<sp/>&apos;string&apos;<sp/>&amp;&amp;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>encoding<sp/>!==<sp/>&apos;utf8&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>chunk<sp/>=<sp/>Buffer.from(chunk,<sp/>encoding).toString()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/>else<sp/>if<sp/>(Buffer.isBuffer(chunk))<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>chunk<sp/>=<sp/>chunk.toString()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(typeof<sp/>encoding<sp/>===<sp/>&apos;function&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>cb<sp/>=<sp/>encoding</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>const<sp/>jsonData<sp/>=<sp/>(this._jsonBuffer<sp/>+<sp/>chunk).split(&apos;\n&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>this._jsonBuffer<sp/>=<sp/>jsonData.pop()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>for<sp/>(let<sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>jsonData.length;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>try<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>JSON.parse<sp/>can<sp/>throw,<sp/>emit<sp/>an<sp/>error<sp/>on<sp/>that</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>super.write(JSON.parse(jsonData[i]))</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/>catch<sp/>(er)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>this.emit(&apos;error&apos;,<sp/>er)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>continue</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(cb)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>cb()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/tar/node_modules/minipass/README.md"/>
+  </compounddef>
+</doxygen>

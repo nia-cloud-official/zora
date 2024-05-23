@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2aggregate-error_2readme" kind="page">
+    <compoundname>md_backend_2node__modules_2aggregate-error_2readme</compoundname>
+    <title>aggregate-error &lt;a href=&quot;https://travis-ci.org/sindresorhus/aggregate-error&quot; &gt;&lt;img src=&quot;https://travis-ci.org/sindresorhus/aggregate-error.svg?branch=master&quot; alt=&quot;Build Status&quot;/&gt;&lt;/a&gt;</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2aggregate-error_2readme_1autotoc_md162"/> <blockquote><para><zwj/>Create an error from multiple errors </para>
+</blockquote></para>
+<sect1 id="md_backend_2node__modules_2aggregate-error_2readme_1autotoc_md163">
+<title>Install</title><para><programlisting><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>aggregate-error</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2aggregate-error_2readme_1autotoc_md164">
+<title>Usage</title><para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>AggregateError<sp/>=<sp/>require(&apos;aggregate-error&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>error<sp/>=<sp/>new<sp/>AggregateError([new<sp/>Error(&apos;foo&apos;),<sp/>&apos;bar&apos;,<sp/>{message:<sp/>&apos;baz&apos;}]);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">throw<sp/>error;</highlight></codeline>
+<codeline><highlight class="normal">/*</highlight></codeline>
+<codeline><highlight class="normal">AggregateError:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Error:<sp/>foo</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>at<sp/>Object.&lt;anonymous&gt;<sp/>(/Users/sindresorhus/dev/aggregate-error/example.js:3:33)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Error:<sp/>bar</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>at<sp/>Object.&lt;anonymous&gt;<sp/>(/Users/sindresorhus/dev/aggregate-error/example.js:3:13)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Error:<sp/>baz</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>at<sp/>Object.&lt;anonymous&gt;<sp/>(/Users/sindresorhus/dev/aggregate-error/example.js:3:13)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>AggregateError<sp/>(/Users/sindresorhus/dev/aggregate-error/index.js:19:3)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>Object.&lt;anonymous&gt;<sp/>(/Users/sindresorhus/dev/aggregate-error/example.js:3:13)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>Module._compile<sp/>(module.js:556:32)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>Object.Module._extensions..js<sp/>(module.js:565:10)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>Module.load<sp/>(module.js:473:32)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>tryModuleLoad<sp/>(module.js:432:12)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>Function.Module._load<sp/>(module.js:424:3)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>Module.runMain<sp/>(module.js:590:10)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>run<sp/>(bootstrap_node.js:394:7)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>at<sp/>startup<sp/>(bootstrap_node.js:149:9)</highlight></codeline>
+<codeline><highlight class="normal">*/</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">for<sp/>(const<sp/>individualError<sp/>of<sp/>error)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(individualError);</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">//=&gt;<sp/>[Error:<sp/>foo]</highlight></codeline>
+<codeline><highlight class="normal">//=&gt;<sp/>[Error:<sp/>bar]</highlight></codeline>
+<codeline><highlight class="normal">//=&gt;<sp/>[Error:<sp/>baz]</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2aggregate-error_2readme_1autotoc_md165">
+<title>API</title><sect2 id="md_backend_2node__modules_2aggregate-error_2readme_1autotoc_md166">
+<title>AggregateError(errors)</title><para>Returns an <computeroutput>Error</computeroutput> that is also an <ulink url="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_Generators#Iterables"><computeroutput>Iterable</computeroutput></ulink> for the individual errors.</para>
+<sect3 id="md_backend_2node__modules_2aggregate-error_2readme_1autotoc_md167">
+<title>errors</title><para>Type: <computeroutput>Array&lt;Error|Object|string&gt;</computeroutput></para>
+<para>If a string, a new <computeroutput>Error</computeroutput> is created with the string as the error message.<linebreak/>
+ If a non-Error object, a new <computeroutput>Error</computeroutput> is created with all properties from the object copied over. </para>
+</sect3>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/aggregate-error/readme.md"/>
+  </compounddef>
+</doxygen>

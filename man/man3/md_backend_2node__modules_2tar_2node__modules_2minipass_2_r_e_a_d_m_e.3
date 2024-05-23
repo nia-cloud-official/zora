@@ -1,0 +1,615 @@
+.TH "md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2tar_2node__modules_2minipass_2_r_e_a_d_m_e \- minipass 
+.PP
+ A \fIvery\fP minimal implementation of a \fRPassThrough stream\fP
+.PP
+\fRIt's very fast\fP for objects, strings, and buffers\&.
+.PP
+Supports \fRpipe()\fPing (including multi-\fRpipe()\fP and backpressure transmission), buffering data until either a \fRdata\fP event handler or \fRpipe()\fP is added (so you don't lose the first chunk), and most other cases where PassThrough is a good idea\&.
+.PP
+There is a \fRread()\fP method, but it's much more efficient to consume data from this stream via `'data'\fRevents or by calling \fPpipe()\fRinto some other stream\&. Calling\fPread()` requires the buffer to be flattened in some cases, which requires copying memory\&.
+.PP
+If you set \fRobjectMode: true\fP in the options, then whatever is written will be emitted\&. Otherwise, it'll do a minimal amount of Buffer copying to ensure proper Streams semantics when \fRread(n)\fP is called\&.
+.PP
+\fRobjectMode\fP can also be set by doing \fRstream\&.objectMode = true\fP, or by writing any non-string/non-buffer data\&. \fRobjectMode\fP cannot be set to false once it is set\&.
+.PP
+This is not a \fRthrough\fP or \fRthrough2\fP stream\&. It doesn't transform the data, it just passes it right through\&. If you want to transform the data, extend the class, and override the \fRwrite()\fP method\&. Once you're done transforming the data however you want, call \fRsuper\&.write()\fP with the transform output\&.
+.PP
+For some examples of streams that extend Minipass in various ways, check out:
+.PP
+.IP "\(bu" 2
+\fRminizlib\fP
+.IP "\(bu" 2
+\fRfs-minipass\fP
+.IP "\(bu" 2
+\fRtar\fP
+.IP "\(bu" 2
+\fRminipass-collect\fP
+.IP "\(bu" 2
+\fRminipass-flush\fP
+.IP "\(bu" 2
+\fRminipass-pipeline\fP
+.IP "\(bu" 2
+\fRtap\fP
+.IP "\(bu" 2
+\fRtap-parser\fP
+.IP "\(bu" 2
+\fRtreport\fP
+.IP "\(bu" 2
+\fRminipass-fetch\fP
+.IP "\(bu" 2
+\fRpacote\fP
+.IP "\(bu" 2
+\fRmake-fetch-happen\fP
+.IP "\(bu" 2
+\fRcacache\fP
+.IP "\(bu" 2
+\fRssri\fP
+.IP "\(bu" 2
+\fRnpm-registry-fetch\fP
+.IP "\(bu" 2
+\fRminipass-json-stream\fP
+.IP "\(bu" 2
+\fRminipass-sized\fP
+.PP
+.SH "Differences from Node\&.js Streams"
+.PP
+There are several things that make Minipass streams different from (and in some ways superior to) Node\&.js core streams\&.
+.PP
+Please read these caveats if you are familiar with node-core streams and intend to use Minipass streams in your programs\&.
+.PP
+You can avoid most of these differences entirely (for a very small performance penalty) by setting \fR{async: true}\fP in the constructor options\&.
+.SS "Timing"
+Minipass streams are designed to support synchronous use-cases\&. Thus, data is emitted as soon as it is available, always\&. It is buffered until read, but no longer\&. Another way to look at it is that Minipass streams are exactly as synchronous as the logic that writes into them\&.
+.PP
+This can be surprising if your code relies on \fRPassThrough\&.write()\fP always providing data on the next tick rather than the current one, or being able to call \fRresume()\fP and not have the entire buffer disappear immediately\&.
+.PP
+However, without this synchronicity guarantee, there would be no way for Minipass to achieve the speeds it does, or support the synchronous use cases that it does\&. Simply put, waiting takes time\&.
+.PP
+This non-deferring approach makes Minipass streams much easier to reason about, especially in the context of Promises and other flow-control mechanisms\&.
+.PP
+Example:
+.PP
+.PP
+.nf
+// hybrid module, either works
+import { Minipass } from 'minipass'
+// or:
+const { Minipass } = require('minipass')
+
+const stream = new Minipass()
+stream\&.on('data', () => console\&.log('data event'))
+console\&.log('before write')
+stream\&.write('hello')
+console\&.log('after write')
+// output:
+// before write
+// data event
+// after write
+.fi
+.PP
+.SS "Exception: Async Opt-In"
+If you wish to have a Minipass stream with behavior that more closely mimics Node\&.js core streams, you can set the stream in async mode either by setting \fRasync: true\fP in the constructor options, or by setting \fRstream\&.async = true\fP later on\&.
+.PP
+.PP
+.nf
+// hybrid module, either works
+import { Minipass } from 'minipass'
+// or:
+const { Minipass } = require('minipass')
+
+const asyncStream = new Minipass({ async: true })
+asyncStream\&.on('data', () => console\&.log('data event'))
+console\&.log('before write')
+asyncStream\&.write('hello')
+console\&.log('after write')
+// output:
+// before write
+// after write
+// data event <\-\- this is deferred until the next tick
+.fi
+.PP
+.PP
+Switching \fIout\fP of async mode is unsafe, as it could cause data corruption, and so is not enabled\&. Example:
+.PP
+.PP
+.nf
+import { Minipass } from 'minipass'
+const stream = new Minipass({ encoding: 'utf8' })
+stream\&.on('data', chunk => console\&.log(chunk))
+stream\&.async = true
+console\&.log('before writes')
+stream\&.write('hello')
+setStreamSyncAgainSomehow(stream) // <\-\- this doesn't actually exist!
+stream\&.write('world')
+console\&.log('after writes')
+// hypothetical output would be:
+// before writes
+// world
+// after writes
+// hello
+// NOT GOOD!
+.fi
+.PP
+.PP
+To avoid this problem, once set into async mode, any attempt to make the stream sync again will be ignored\&.
+.PP
+.PP
+.nf
+const { Minipass } = require('minipass')
+const stream = new Minipass({ encoding: 'utf8' })
+stream\&.on('data', chunk => console\&.log(chunk))
+stream\&.async = true
+console\&.log('before writes')
+stream\&.write('hello')
+stream\&.async = false // <\-\- no\-op, stream already async
+stream\&.write('world')
+console\&.log('after writes')
+// actual output:
+// before writes
+// after writes
+// hello
+// world
+.fi
+.PP
+.SS "No High/Low Water Marks"
+Node\&.js core streams will optimistically fill up a buffer, returning \fRtrue\fP on all writes until the limit is hit, even if the data has nowhere to go\&. Then, they will not attempt to draw more data in until the buffer size dips below a minimum value\&.
+.PP
+Minipass streams are much simpler\&. The \fRwrite()\fP method will return \fRtrue\fP if the data has somewhere to go (which is to say, given the timing guarantees, that the data is already there by the time \fRwrite()\fP returns)\&.
+.PP
+If the data has nowhere to go, then \fRwrite()\fP returns false, and the data sits in a buffer, to be drained out immediately as soon as anyone consumes it\&.
+.PP
+Since nothing is ever buffered unnecessarily, there is much less copying data, and less bookkeeping about buffer capacity levels\&.
+.SS "Hazards of Buffering (or: Why Minipass Is So Fast)"
+Since data written to a Minipass stream is immediately written all the way through the pipeline, and \fRwrite()\fP always returns true/false based on whether the data was fully flushed, backpressure is communicated immediately to the upstream caller\&. This minimizes buffering\&.
+.PP
+Consider this case:
+.PP
+.PP
+.nf
+const { PassThrough } = require('stream')
+const p1 = new PassThrough({ highWaterMark: 1024 })
+const p2 = new PassThrough({ highWaterMark: 1024 })
+const p3 = new PassThrough({ highWaterMark: 1024 })
+const p4 = new PassThrough({ highWaterMark: 1024 })
+
+p1\&.pipe(p2)\&.pipe(p3)\&.pipe(p4)
+p4\&.on('data', () => console\&.log('made it through'))
+
+// this returns false and buffers, then writes to p2 on next tick (1)
+// p2 returns false and buffers, pausing p1, then writes to p3 on next tick (2)
+// p3 returns false and buffers, pausing p2, then writes to p4 on next tick (3)
+// p4 returns false and buffers, pausing p3, then emits 'data' and 'drain'
+// on next tick (4)
+// p3 sees p4's 'drain' event, and calls resume(), emitting 'resume' and
+// 'drain' on next tick (5)
+// p2 sees p3's 'drain', calls resume(), emits 'resume' and 'drain' on next tick (6)
+// p1 sees p2's 'drain', calls resume(), emits 'resume' and 'drain' on next
+// tick (7)
+
+p1\&.write(Buffer\&.alloc(2048)) // returns false
+.fi
+.PP
+.PP
+Along the way, the data was buffered and deferred at each stage, and multiple event deferrals happened, for an unblocked pipeline where it was perfectly safe to write all the way through!
+.PP
+Furthermore, setting a \fRhighWaterMark\fP of \fR1024\fP might lead someone reading the code to think an advisory maximum of 1KiB is being set for the pipeline\&. However, the actual advisory buffering level is the \fIsum\fP of \fRhighWaterMark\fP values, since each one has its own bucket\&.
+.PP
+Consider the Minipass case:
+.PP
+.PP
+.nf
+const m1 = new Minipass()
+const m2 = new Minipass()
+const m3 = new Minipass()
+const m4 = new Minipass()
+
+m1\&.pipe(m2)\&.pipe(m3)\&.pipe(m4)
+m4\&.on('data', () => console\&.log('made it through'))
+
+// m1 is flowing, so it writes the data to m2 immediately
+// m2 is flowing, so it writes the data to m3 immediately
+// m3 is flowing, so it writes the data to m4 immediately
+// m4 is flowing, so it fires the 'data' event immediately, returns true
+// m4's write returned true, so m3 is still flowing, returns true
+// m3's write returned true, so m2 is still flowing, returns true
+// m2's write returned true, so m1 is still flowing, returns true
+// No event deferrals or buffering along the way!
+
+m1\&.write(Buffer\&.alloc(2048)) // returns true
+.fi
+.PP
+.PP
+It is extremely unlikely that you \fIdon't\fP want to buffer any data written, or \fIever\fP buffer data that can be flushed all the way through\&. Neither node-core streams nor Minipass ever fail to buffer written data, but node-core streams do a lot of unnecessary buffering and pausing\&.
+.PP
+As always, the faster implementation is the one that does less stuff and waits less time to do it\&.
+.SS "Immediately emit \fRend\fP for empty streams (when not paused)"
+If a stream is not paused, and \fRend()\fP is called before writing any data into it, then it will emit \fRend\fP immediately\&.
+.PP
+If you have logic that occurs on the \fRend\fP event which you don't want to potentially happen immediately (for example, closing file descriptors, moving on to the next entry in an archive parse stream, etc\&.) then be sure to call \fRstream\&.pause()\fP on creation, and then \fRstream\&.resume()\fP once you are ready to respond to the \fRend\fP event\&.
+.PP
+However, this is \fIusually\fP not a problem because:
+.SS "Emit \fRend\fP When Asked"
+One hazard of immediately emitting `'end'\fRis that you may not yet have had a chance to add a listener\&. In order to avoid this hazard, Minipass streams safely re-emit the\fP'end'\fRevent if a new listener is added after\fP'end'` has been emitted\&.
+.PP
+Ie, if you do `stream\&.on('end', someFunction)\fR, and the stream has already emitted\fPend\fR, then it will call the handler right away\&. (You can think of this somewhat like attaching a new \fP\&.then(fn)` to a previously-resolved Promise\&.)
+.PP
+To prevent calling handlers multiple times who would not expect multiple ends to occur, all listeners are removed from the `'end'` event whenever it is emitted\&.
+.SS "Emit \fRerror\fP When Asked"
+The most recent error object passed to the `'error'\fRevent is stored on the stream\&. If a new\fP'error'\fRevent handler is added, and an error was previously emitted, then the event handler will be called immediately (or on\fPprocess\&.nextTick` in the case of async streams)\&.
+.PP
+This makes it much more difficult to end up trying to interact with a broken stream, if the error handler is added after an error was previously emitted\&.
+.SS "Impact of 'immediate flow' on Tee-streams"
+A 'tee stream' is a stream piping to multiple destinations:
+.PP
+.PP
+.nf
+const tee = new Minipass()
+t\&.pipe(dest1)
+t\&.pipe(dest2)
+t\&.write('foo') // goes to both destinations
+.fi
+.PP
+.PP
+Since Minipass streams \fIimmediately\fP process any pending data through the pipeline when a new pipe destination is added, this can have surprising effects, especially when a stream comes in from some other function and may or may not have data in its buffer\&.
+.PP
+.PP
+.nf
+// WARNING! WILL LOSE DATA!
+const src = new Minipass()
+src\&.write('foo')
+src\&.pipe(dest1) // 'foo' chunk flows to dest1 immediately, and is gone
+src\&.pipe(dest2) // gets nothing!
+.fi
+.PP
+.PP
+One solution is to create a dedicated tee-stream junction that pipes to both locations, and then pipe to \fIthat\fP instead\&.
+.PP
+.PP
+.nf
+// Safe example: tee to both places
+const src = new Minipass()
+src\&.write('foo')
+const tee = new Minipass()
+tee\&.pipe(dest1)
+tee\&.pipe(dest2)
+src\&.pipe(tee) // tee gets 'foo', pipes to both locations
+.fi
+.PP
+.PP
+The same caveat applies to `on('data')` event listeners\&. The first one added will \fIimmediately\fP receive all of the data, leaving nothing for the second:
+.PP
+.PP
+.nf
+// WARNING! WILL LOSE DATA!
+const src = new Minipass()
+src\&.write('foo')
+src\&.on('data', handler1) // receives 'foo' right away
+src\&.on('data', handler2) // nothing to see here!
+.fi
+.PP
+.PP
+Using a dedicated tee-stream can be used in this case as well:
+.PP
+.PP
+.nf
+// Safe example: tee to both data handlers
+const src = new Minipass()
+src\&.write('foo')
+const tee = new Minipass()
+tee\&.on('data', handler1)
+tee\&.on('data', handler2)
+src\&.pipe(tee)
+.fi
+.PP
+.PP
+All of the hazards in this section are avoided by setting \fR{ async: true }\fP in the Minipass constructor, or by setting \fRstream\&.async = true\fP afterwards\&. Note that this does add some overhead, so should only be done in cases where you are willing to lose a bit of performance in order to avoid having to refactor program logic\&.
+.SH "USAGE"
+.PP
+It's a stream! Use it like a stream and it'll most likely do what you want\&.
+.PP
+.PP
+.nf
+import { Minipass } from 'minipass'
+const mp = new Minipass(options) // optional: { encoding, objectMode }
+mp\&.write('foo')
+mp\&.pipe(someOtherStream)
+mp\&.end('bar')
+.fi
+.PP
+.SS "OPTIONS"
+.IP "\(bu" 2
+\fRencoding\fP How would you like the data coming \fIout\fP of the stream to be encoded? Accepts any values that can be passed to \fRBuffer\&.toString()\fP\&.
+.IP "\(bu" 2
+\fRobjectMode\fP Emit data exactly as it comes in\&. This will be flipped on by default if you write() something other than a string or Buffer at any point\&. Setting \fRobjectMode: true\fP will prevent setting any encoding value\&.
+.IP "\(bu" 2
+\fRasync\fP Defaults to \fRfalse\fP\&. Set to \fRtrue\fP to defer data emission until next tick\&. This reduces performance slightly, but makes Minipass streams use timing behavior closer to Node core streams\&. See \fBTiming\fP for more details\&.
+.IP "\(bu" 2
+\fRsignal\fP An \fRAbortSignal\fP that will cause the stream to unhook itself from everything and become as inert as possible\&. Note that providing a \fRsignal\fP parameter will make `'error'` events no longer throw if they are unhandled, but they will still be emitted to handlers if any are attached\&.
+.PP
+.SS "API"
+Implements the user-facing portions of Node\&.js's \fRReadable\fP and \fRWritable\fP streams\&.
+.SS "Methods"
+.IP "\(bu" 2
+\fRwrite(chunk, [encoding], [callback])\fP - Put data in\&. (Note that, in the base Minipass class, the same data will come out\&.) Returns \fRfalse\fP if the stream will buffer the next write, or true if it's still in 'flowing' mode\&.
+.IP "\(bu" 2
+\fRend([chunk, [encoding]], [callback])\fP - Signal that you have no more data to write\&. This will queue an \fRend\fP event to be fired when all the data has been consumed\&.
+.IP "\(bu" 2
+\fRsetEncoding(encoding)\fP - Set the encoding for data coming of the stream\&. This can only be done once\&.
+.IP "\(bu" 2
+\fRpause()\fP - No more data for a while, please\&. This also prevents \fRend\fP from being emitted for empty streams until the stream is resumed\&.
+.IP "\(bu" 2
+\fRresume()\fP - Resume the stream\&. If there's data in the buffer, it is all discarded\&. Any buffered events are immediately emitted\&.
+.IP "\(bu" 2
+\fRpipe(dest)\fP - Send all output to the stream provided\&. When data is emitted, it is immediately written to any and all pipe destinations\&. (Or written on next tick in \fRasync\fP mode\&.)
+.IP "\(bu" 2
+\fRunpipe(dest)\fP - Stop piping to the destination stream\&. This is immediate, meaning that any asynchronously queued data will \fInot\fP make it to the destination when running in \fRasync\fP mode\&.
+.IP "  \(bu" 4
+\fRoptions\&.end\fP - Boolean, end the destination stream when the source stream ends\&. Default \fRtrue\fP\&.
+.IP "  \(bu" 4
+\fRoptions\&.proxyErrors\fP - Boolean, proxy \fRerror\fP events from the source stream to the destination stream\&. Note that errors are \fInot\fP proxied after the pipeline terminates, either due to the source emitting `'end'\fRor manually unpiping with \fPsrc\&.unpipe(dest)\fR\&. Default\fPfalse\fR\&. -\fPon(ev, fn)\fR,\fPemit(ev, fn)\fR- Minipass streams are EventEmitters\&. Some events are given special treatment, however\&. (See below under 'events'\&.) -\fPpromise()\fR- Returns a Promise that resolves when the stream emits\fPend\fR, or rejects if the stream emits\fPerror\fR\&. -\fPcollect()\fR- Return a Promise that resolves on\fPend\fRwith an array containing each chunk of data that was emitted, or rejects if the stream emits\fPerror\fR\&. Note that this consumes the stream data\&. -\fPconcat()\fR- Same as\fPcollect()\fR, but concatenates the data into a single Buffer object\&. Will reject the returned promise if the stream is in objectMode, or if it goes into objectMode by the end of the data\&. -\fPread(n)\fR- Consume\fPn\fRbytes of data out of the buffer\&. If\fPn\fR is not provided, then consume all of it\&. If\fPn\fRbytes are not available, then it returns null\&. **Note** consuming streams in this way is less efficient, and can lead to unnecessary Buffer copying\&. -\fPdestroy([er])\fR- Destroy the stream\&. If an error is provided, then an\fP'error'\fRevent is emitted\&. If the stream has a \fPclose()\fRmethod, and has not emitted a\fP'close'\fRevent yet, then\fPstream\&.close()\fRwill be called\&. Any Promises returned by \fP\&.promise()\fR,\fP\&.collect()\fRor\fP\&.concat()` will be rejected\&. After being destroyed, writing to the stream will emit an error\&. No more data will be emitted if the stream is destroyed, even if it was previously buffered\&.
+.PP
+
+.PP
+.SS "Properties"
+.IP "\(bu" 2
+\fRbufferLength\fP Read-only\&. Total number of bytes buffered, or in the case of objectMode, the total number of objects\&.
+.IP "\(bu" 2
+\fRencoding\fP The encoding that has been set\&. (Setting this is equivalent to calling \fRsetEncoding(enc)\fP and has the same prohibition against setting multiple times\&.)
+.IP "\(bu" 2
+\fRflowing\fP Read-only\&. Boolean indicating whether a chunk written to the stream will be immediately emitted\&.
+.IP "\(bu" 2
+\fRemittedEnd\fP Read-only\&. Boolean indicating whether the end-ish events (ie, \fRend\fP, \fRprefinish\fP, \fRfinish\fP) have been emitted\&. Note that listening on any end-ish event will immediateyl re-emit it if it has already been emitted\&.
+.IP "\(bu" 2
+\fRwritable\fP Whether the stream is writable\&. Default \fRtrue\fP\&. Set to \fRfalse\fP when \fRend()\fP
+.IP "\(bu" 2
+\fRreadable\fP Whether the stream is readable\&. Default \fRtrue\fP\&.
+.IP "\(bu" 2
+\fRpipes\fP An array of Pipe objects referencing streams that this stream is piping into\&.
+.IP "\(bu" 2
+\fRdestroyed\fP A getter that indicates whether the stream was destroyed\&.
+.IP "\(bu" 2
+\fRpaused\fP True if the stream has been explicitly paused, otherwise false\&.
+.IP "\(bu" 2
+\fRobjectMode\fP Indicates whether the stream is in \fRobjectMode\fP\&. Once set to \fRtrue\fP, it cannot be set to \fRfalse\fP\&.
+.IP "\(bu" 2
+\fRaborted\fP Readonly property set when the \fRAbortSignal\fP dispatches an \fRabort\fP event\&.
+.PP
+.SS "Events"
+.IP "\(bu" 2
+\fRdata\fP Emitted when there's data to read\&. Argument is the data to read\&. This is never emitted while not flowing\&. If a listener is attached, that will resume the stream\&.
+.IP "\(bu" 2
+\fRend\fP Emitted when there's no more data to read\&. This will be emitted immediately for empty streams when \fRend()\fP is called\&. If a listener is attached, and \fRend\fP was already emitted, then it will be emitted again\&. All listeners are removed when \fRend\fP is emitted\&.
+.IP "\(bu" 2
+\fRprefinish\fP An end-ish event that follows the same logic as \fRend\fP and is emitted in the same conditions where \fRend\fP is emitted\&. Emitted after `'end'\fR\&. -\fPfinish\fRAn end-ish event that follows the same logic as\fPend\fR and is emitted in the same conditions where\fPend\fRis emitted\&. Emitted after\fP'prefinish'\fR\&. -\fPclose\fRAn indication that an underlying resource has been released\&. Minipass does not emit this event, but will defer it until after\fPend\fRhas been emitted, since it throws off some stream libraries otherwise\&. -\fPdrain\fREmitted when the internal buffer empties, and it is again suitable to\fPwrite()\fRinto the stream\&. -\fPreadable\fREmitted when data is buffered and ready to be read by a consumer\&. -\fPresume\fREmitted when stream changes state from buffering to flowing mode\&. (Ie, when\fPresume\fRis called,\fPpipe\fRis called, or a\fPdata` event listener is added\&.)
+.PP
+.SS "Static Methods"
+.IP "\(bu" 2
+\fRMinipass\&.isStream(stream)\fP Returns \fRtrue\fP if the argument is a stream, and false otherwise\&. To be considered a stream, the object must be either an instance of Minipass, or an EventEmitter that has either a \fRpipe()\fP method, or both \fRwrite()\fP and \fRend()\fP methods\&. (Pretty much any stream in node-land will return \fRtrue\fP for this\&.)
+.PP
+.SH "EXAMPLES"
+.PP
+Here are some examples of things you can do with Minipass streams\&.
+.SS "simple 'are you done yet' promise"
+.PP
+.nf
+mp\&.promise()\&.then(
+  () => {
+    // stream is finished
+  },
+  er => {
+    // stream emitted an error
+  }
+)
+.fi
+.PP
+.SS "collecting"
+.PP
+.nf
+mp\&.collect()\&.then(all => {
+  // all is an array of all the data emitted
+  // encoding is supported in this case, so
+  // so the result will be a collection of strings if
+  // an encoding is specified, or buffers/objects if not\&.
+  //
+  // In an async function, you may do
+  // const data = await stream\&.collect()
+})
+.fi
+.PP
+.SS "collecting into a single blob"
+This is a bit slower because it concatenates the data into one chunk for you, but if you're going to do it yourself anyway, it's convenient this way:
+.PP
+.PP
+.nf
+mp\&.concat()\&.then(onebigchunk => {
+  // onebigchunk is a string if the stream
+  // had an encoding set, or a buffer otherwise\&.
+})
+.fi
+.PP
+.SS "iteration"
+You can iterate over streams synchronously or asynchronously in platforms that support it\&.
+.PP
+Synchronous iteration will end when the currently available data is consumed, even if the \fRend\fP event has not been reached\&. In string and buffer mode, the data is concatenated, so unless multiple writes are occurring in the same tick as the \fRread()\fP, sync iteration loops will generally only have a single iteration\&.
+.PP
+To consume chunks in this way exactly as they have been written, with no flattening, create the stream with the \fR{ objectMode: true }\fP option\&.
+.PP
+.PP
+.nf
+const mp = new Minipass({ objectMode: true })
+mp\&.write('a')
+mp\&.write('b')
+for (let letter of mp) {
+  console\&.log(letter) // a, b
+}
+mp\&.write('c')
+mp\&.write('d')
+for (let letter of mp) {
+  console\&.log(letter) // c, d
+}
+mp\&.write('e')
+mp\&.end()
+for (let letter of mp) {
+  console\&.log(letter) // e
+}
+for (let letter of mp) {
+  console\&.log(letter) // nothing
+}
+.fi
+.PP
+.PP
+Asynchronous iteration will continue until the end event is reached, consuming all of the data\&.
+.PP
+.PP
+.nf
+const mp = new Minipass({ encoding: 'utf8' })
+
+// some source of some data
+let i = 5
+const inter = setInterval(() => {
+  if (i\-\- > 0) mp\&.write(Buffer\&.from('foo\\n', 'utf8'))
+  else {
+    mp\&.end()
+    clearInterval(inter)
+  }
+}, 100)
+
+// consume the data with asynchronous iteration
+async function consume() {
+  for await (let chunk of mp) {
+    console\&.log(chunk)
+  }
+  return 'ok'
+}
+
+consume()\&.then(res => console\&.log(res))
+// logs `foo\\n` 5 times, and then `ok`
+.fi
+.PP
+.SS "subclass that \fRconsole\&.log()\fPs everything written into it"
+.PP
+.nf
+class Logger extends Minipass {
+  write(chunk, encoding, callback) {
+    console\&.log('WRITE', chunk, encoding)
+    return super\&.write(chunk, encoding, callback)
+  }
+  end(chunk, encoding, callback) {
+    console\&.log('END', chunk, encoding)
+    return super\&.end(chunk, encoding, callback)
+  }
+}
+
+someSource\&.pipe(new Logger())\&.pipe(someDest)
+.fi
+.PP
+.SS "same thing, but using an inline anonymous class"
+.PP
+.nf
+// js classes are fun
+someSource
+  \&.pipe(
+    new (class extends Minipass {
+      emit(ev, \&.\&.\&.data) {
+        // let's also log events, because debugging some weird thing
+        console\&.log('EMIT', ev)
+        return super\&.emit(ev, \&.\&.\&.data)
+      }
+      write(chunk, encoding, callback) {
+        console\&.log('WRITE', chunk, encoding)
+        return super\&.write(chunk, encoding, callback)
+      }
+      end(chunk, encoding, callback) {
+        console\&.log('END', chunk, encoding)
+        return super\&.end(chunk, encoding, callback)
+      }
+    })()
+  )
+  \&.pipe(someDest)
+.fi
+.PP
+.SS "subclass that defers 'end' for some reason"
+.PP
+.nf
+class SlowEnd extends Minipass {
+  emit(ev, \&.\&.\&.args) {
+    if (ev === 'end') {
+      console\&.log('going to end, hold on a sec')
+      setTimeout(() => {
+        console\&.log('ok, ready to end now')
+        super\&.emit('end', \&.\&.\&.args)
+      }, 100)
+    } else {
+      return super\&.emit(ev, \&.\&.\&.args)
+    }
+  }
+}
+.fi
+.PP
+.SS "transform that creates newline-delimited JSON"
+.PP
+.nf
+class NDJSONEncode extends Minipass {
+  write(obj, cb) {
+    try {
+      // JSON\&.stringify can throw, emit an error on that
+      return super\&.write(JSON\&.stringify(obj) + '\\n', 'utf8', cb)
+    } catch (er) {
+      this\&.emit('error', er)
+    }
+  }
+  end(obj, cb) {
+    if (typeof obj === 'function') {
+      cb = obj
+      obj = undefined
+    }
+    if (obj !== undefined) {
+      this\&.write(obj)
+    }
+    return super\&.end(cb)
+  }
+}
+.fi
+.PP
+.SS "transform that parses newline-delimited JSON"
+.PP
+.nf
+class NDJSONDecode extends Minipass {
+  constructor (options) {
+    // always be in object mode, as far as Minipass is concerned
+    super({ objectMode: true })
+    this\&._jsonBuffer = ''
+  }
+  write (chunk, encoding, cb) {
+    if (typeof chunk === 'string' &&
+        typeof encoding === 'string' &&
+        encoding !== 'utf8') {
+      chunk = Buffer\&.from(chunk, encoding)\&.toString()
+    } else if (Buffer\&.isBuffer(chunk)) {
+      chunk = chunk\&.toString()
+    }
+    if (typeof encoding === 'function') {
+      cb = encoding
+    }
+    const jsonData = (this\&._jsonBuffer + chunk)\&.split('\\n')
+    this\&._jsonBuffer = jsonData\&.pop()
+    for (let i = 0; i < jsonData\&.length; i++) {
+      try {
+        // JSON\&.parse can throw, emit an error on that
+        super\&.write(JSON\&.parse(jsonData[i]))
+      } catch (er) {
+        this\&.emit('error', er)
+        continue
+      }
+    }
+    if (cb)
+      cb()
+  }
+}
+.fi
+.PP
+ 

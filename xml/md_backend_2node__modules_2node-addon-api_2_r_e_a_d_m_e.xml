@@ -1,0 +1,309 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e</compoundname>
+    <title>README</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>NOTE: The default branch has been renamed! master is now named main</para>
+<para>If you have a local clone, you can update it by running:</para>
+<para><programlisting filename=".shell"><codeline><highlight class="normal">git<sp/>branch<sp/>-m<sp/>master<sp/>main</highlight></codeline>
+<codeline><highlight class="normal">git<sp/>fetch<sp/>origin</highlight></codeline>
+<codeline><highlight class="normal">git<sp/>branch<sp/>-u<sp/>origin/main<sp/>main</highlight></codeline>
+</programlisting></para>
+<sect1 id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1autotoc_md2307">
+<title><bold>node-addon-api module</bold></title><para>This module contains <bold>header-only C++ wrapper classes</bold> which simplify the use of the C based <ulink url="https://nodejs.org/dist/latest/docs/api/n-api.html">Node-API</ulink> provided by Node.js when using C++. It provides a C++ object model and exception handling semantics with low overhead.</para>
+<para>There are three options for implementing addons: Node-API, nan, or direct use of internal V8, libuv, and Node.js libraries. Unless there is a need for direct access to functionality that is not exposed by Node-API as outlined in <ulink url="https://nodejs.org/dist/latest/docs/api/addons.html">C/C++ addons</ulink> in Node.js core, use Node-API. Refer to <ulink url="https://nodejs.org/dist/latest/docs/api/n-api.html">C/C++ addons with Node-API</ulink> for more information on Node-API.</para>
+<para>Node-API is an ABI stable C interface provided by Node.js for building native addons. It is independent of the underlying JavaScript runtime (e.g. V8 or ChakraCore) and is maintained as part of Node.js itself. It is intended to insulate native addons from changes in the underlying JavaScript engine and allow modules compiled for one version to run on later versions of Node.js without recompilation.</para>
+<para>The <computeroutput>node-addon-api</computeroutput> module, which is not part of Node.js, preserves the benefits of the Node-API as it consists only of inline code that depends only on the stable API provided by Node-API. As such, modules built against one version of Node.js using node-addon-api should run without having to be rebuilt with newer versions of Node.js.</para>
+<para>It is important to remember that <emphasis>other</emphasis> Node.js interfaces such as <computeroutput>libuv</computeroutput> (included in a project via <computeroutput>#include &lt;uv.h&gt;</computeroutput>) are not ABI-stable across Node.js major versions. Thus, an addon must use Node-API and/or <computeroutput>node-addon-api</computeroutput> exclusively and build against a version of Node.js that includes an implementation of Node-API (meaning an active LTS version of Node.js) in order to benefit from ABI stability across Node.js major versions. Node.js provides an <ulink url="https://nodejs.org/en/docs/guides/abi-stability/">ABI stability guide</ulink> containing a detailed explanation of ABI stability in general, and the Node-API ABI stability guarantee in particular.</para>
+<para>As new APIs are added to Node-API, node-addon-api must be updated to provide wrappers for those new APIs. For this reason, node-addon-api provides methods that allow callers to obtain the underlying Node-API handles so direct calls to Node-API and the use of the objects/methods provided by node-addon-api can be used together. For example, in order to be able to use an API for which the node-addon-api does not yet provide a wrapper.</para>
+<para>APIs exposed by node-addon-api are generally used to create and manipulate JavaScript values. Concepts and operations generally map to ideas specified in the <bold>ECMA262 Language Specification</bold>.</para>
+<para>The <ulink url="https://nodejs.github.io/node-addon-examples/">Node-API Resource</ulink> offers an excellent orientation and tips for developers just getting started with Node-API and node-addon-api.</para>
+<para><itemizedlist>
+<listitem><para><bold><ref refid="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1setup" kindref="member">Setup</ref></bold></para>
+</listitem><listitem><para><bold><ref refid="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1api" kindref="member">API Documentation</ref></bold></para>
+</listitem><listitem><para><bold><ref refid="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1examples" kindref="member">Examples</ref></bold></para>
+</listitem><listitem><para><bold><ref refid="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1tests" kindref="member">Tests</ref></bold></para>
+</listitem><listitem><para><bold><ref refid="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1resources" kindref="member">More resource and info about native Addons</ref></bold></para>
+</listitem><listitem><para><bold><ref refid="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1badges" kindref="member">Badges</ref></bold></para>
+</listitem><listitem><para><bold><ref refid="_c_o_d_e___o_f___c_o_n_d_u_c_t_8md" kindref="compound">Code of Conduct</ref></bold></para>
+</listitem><listitem><para><bold><ref refid="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1contributors" kindref="member">Contributors</ref></bold></para>
+</listitem><listitem><para><bold><ref refid="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1license" kindref="member">License</ref></bold></para>
+</listitem></itemizedlist>
+</para>
+<sect2 id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1autotoc_md2308">
+<title><bold>Current version: 7.1.0</bold></title><para>(See <ref refid="which_2_c_h_a_n_g_e_l_o_g_8md" kindref="compound">CHANGELOG.md</ref> for complete Changelog)</para>
+<para><ulink url="https://nodei.co/npm/node-addon-api/"><image type="html" name="https://nodei.co/npm/node-addon-api.png?downloads=true&amp;downloadRank=true" alt="NPM" inline="yes"></image>
+</ulink> <ulink url="https://nodei.co/npm/node-addon-api/"><image type="html" name="https://nodei.co/npm-dl/node-addon-api.png?months=6&amp;height=1" alt="NPM" inline="yes"></image>
+</ulink></para>
+<para><anchor id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1setup"/></para>
+<para>node-addon-api is based on <ulink url="https://nodejs.org/api/n-api.html">Node-API</ulink> and supports using different Node-API versions. This allows addons built with it to run with Node.js versions which support the targeted Node-API version. <bold>However</bold> the node-addon-api support model is to support only the active LTS Node.js versions. This means that every year there will be a new major which drops support for the Node.js LTS version which has gone out of service.</para>
+<para>The oldest Node.js version supported by the current version of node-addon-api is Node.js 16.x.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1autotoc_md2309">
+<title>Setup</title><para><itemizedlist>
+<listitem><para>Installation and usage</para>
+</listitem><listitem><para>node-gyp</para>
+</listitem><listitem><para>cmake-js</para>
+</listitem><listitem><para>Conversion tool</para>
+</listitem><listitem><para>Checker tool</para>
+</listitem><listitem><para>Generator</para>
+</listitem><listitem><para>Prebuild tools</para>
+</listitem></itemizedlist>
+</para>
+<para><anchor id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1api"/></para>
+<sect3 id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1autotoc_md2310">
+<title><bold>API Documentation</bold></title><para>The following is the documentation for node-addon-api.</para>
+<para><itemizedlist>
+<listitem><para>Full Class Hierarchy</para>
+</listitem><listitem><para>Addon Structure</para>
+</listitem><listitem><para>Data Types:<itemizedlist>
+<listitem><para>Env</para>
+</listitem><listitem><para>CallbackInfo</para>
+</listitem><listitem><para>Reference</para>
+</listitem><listitem><para>Value<itemizedlist>
+<listitem><para>Name<itemizedlist>
+<listitem><para>Symbol</para>
+</listitem><listitem><para>String</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para>Number</para>
+</listitem><listitem><para>Date</para>
+</listitem><listitem><para>BigInt</para>
+</listitem><listitem><para>Boolean</para>
+</listitem><listitem><para>External</para>
+</listitem><listitem><para>Object<itemizedlist>
+<listitem><para>Array</para>
+</listitem><listitem><para>ObjectReference</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para>PropertyDescriptor</para>
+</listitem><listitem><para>Function<itemizedlist>
+<listitem><para>FunctionReference</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para>ObjectWrap<itemizedlist>
+<listitem><para>ClassPropertyDescriptor</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para>Buffer</para>
+</listitem><listitem><para>ArrayBuffer</para>
+</listitem><listitem><para>TypedArray<itemizedlist>
+<listitem><para>TypedArrayOf</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para>DataView</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para>Error Handling<itemizedlist>
+<listitem><para>Error<itemizedlist>
+<listitem><para>TypeError</para>
+</listitem><listitem><para>RangeError</para>
+</listitem><listitem><para>SyntaxError</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para>Object Lifetime Management<itemizedlist>
+<listitem><para>HandleScope</para>
+</listitem><listitem><para>EscapableHandleScope</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para>Memory Management</para>
+</listitem><listitem><para>Async Operations<itemizedlist>
+<listitem><para>AsyncWorker</para>
+</listitem><listitem><para>AsyncContext</para>
+</listitem><listitem><para>AsyncWorker Variants</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para>Thread-safe Functions<itemizedlist>
+<listitem><para>ThreadSafeFunction</para>
+</listitem><listitem><para>TypedThreadSafeFunction</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para>Promises</para>
+</listitem><listitem><para>Version management</para>
+</listitem></itemizedlist>
+</para>
+<para><anchor id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1examples"/></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1autotoc_md2311">
+<title><bold>Examples</bold></title><para>Are you new to <bold>node-addon-api</bold>? Take a look at our <bold><ulink url="https://github.com/nodejs/node-addon-examples">examples</ulink></bold></para>
+<para><itemizedlist>
+<listitem><para><bold><ulink url="https://github.com/nodejs/node-addon-examples/tree/main/src/1-getting-started/1_hello_world">Hello World</ulink></bold></para>
+</listitem><listitem><para><bold><ulink url="https://github.com/nodejs/node-addon-examples/tree/main/src/1-getting-started/2_function_arguments/node-addon-api">Pass arguments to a function</ulink></bold></para>
+</listitem><listitem><para><bold><ulink url="https://github.com/nodejs/node-addon-examples/tree/main/src/1-getting-started/3_callbacks/node-addon-api">Callbacks</ulink></bold></para>
+</listitem><listitem><para><bold><ulink url="https://github.com/nodejs/node-addon-examples/tree/main/src/1-getting-started/4_object_factory/node-addon-api">Object factory</ulink></bold></para>
+</listitem><listitem><para><bold><ulink url="https://github.com/nodejs/node-addon-examples/tree/main/src/1-getting-started/5_function_factory/node-addon-api">Function factory</ulink></bold></para>
+</listitem><listitem><para><bold><ulink url="https://github.com/nodejs/node-addon-examples/tree/main/src/1-getting-started/6_object_wrap/node-addon-api">Wrapping C++ Object</ulink></bold></para>
+</listitem><listitem><para><bold><ulink url="https://github.com/nodejs/node-addon-examples/tree/main/src/1-getting-started/7_factory_wrap/node-addon-api">Factory of wrapped object</ulink></bold></para>
+</listitem><listitem><para><bold><ulink url="https://github.com/nodejs/node-addon-examples/tree/main/src/2-js-to-native-conversion/8_passing_wrapped/node-addon-api">Passing wrapped object around</ulink></bold></para>
+</listitem></itemizedlist>
+</para>
+<para><anchor id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1tests"/></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1autotoc_md2312">
+<title><bold>Tests</bold></title><para>To run the <bold>node-addon-api</bold> tests do:</para>
+<para><programlisting><codeline><highlight class="normal">npm<sp/>install</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>test</highlight></codeline>
+</programlisting></para>
+<para>To avoid testing the deprecated portions of the API run <programlisting><codeline><highlight class="normal">npm<sp/>install</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>test<sp/>--disable-deprecated</highlight></codeline>
+</programlisting></para>
+<para>To run the tests targeting a specific version of Node-API run <programlisting><codeline><highlight class="normal">npm<sp/>install</highlight></codeline>
+<codeline><highlight class="normal">export<sp/>NAPI_VERSION=X</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>test<sp/>--NAPI_VERSION=X</highlight></codeline>
+</programlisting></para>
+<para>where X is the version of Node-API you want to target.</para>
+<para>To run a specific unit test, filter conditions are available</para>
+<para><bold>Example:</bold> compile and run only tests on objectwrap.cc and objectwrap.js <programlisting><codeline><highlight class="normal">npm<sp/>run<sp/>unit<sp/>--filter=objectwrap</highlight></codeline>
+</programlisting></para>
+<para>Multiple unit tests cane be selected with wildcards</para>
+<para><bold>Example:</bold> compile and run all test files ending with &quot;reference&quot; -&gt; function_reference.cc, object_reference.cc, reference.cc <programlisting><codeline><highlight class="normal">npm<sp/>run<sp/>unit<sp/>--filter=*reference</highlight></codeline>
+</programlisting></para>
+<para>Multiple filter conditions can be joined to broaden the test selection</para>
+<para><bold>Example:</bold> compile and run all tests under folders threadsafe_function and typed_threadsafe_function and also the objectwrap.cc file npm run unit <ndash/>filter=&apos;*function objectwrap&apos;</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1autotoc_md2313">
+<title><bold>Debug</bold></title><para>To run the <bold>node-addon-api</bold> tests with <computeroutput>--debug</computeroutput> option:</para>
+<para><programlisting><codeline><highlight class="normal">npm<sp/>run-script<sp/>dev</highlight></codeline>
+</programlisting></para>
+<para>If you want a faster build, you might use the following option:</para>
+<para><programlisting><codeline><highlight class="normal">npm<sp/>run-script<sp/>dev:incremental</highlight></codeline>
+</programlisting></para>
+<para>Take a look and get inspired by our <bold><ulink url="https://github.com/nodejs/node-addon-api/tree/HEAD/test">test suite</ulink></bold></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1autotoc_md2314">
+<title><bold>Benchmarks</bold></title><para>You can run the available benchmarks using the following command:</para>
+<para><programlisting><codeline><highlight class="normal">npm<sp/>run-script<sp/>benchmark</highlight></codeline>
+</programlisting></para>
+<para>See benchmark/README.md for more details about running and adding benchmarks.</para>
+<para><anchor id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1resources"/></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1autotoc_md2315">
+<title><bold>More resource and info about native Addons</bold></title><para><itemizedlist>
+<listitem><para><bold><ulink url="https://nodejs.org/dist/latest/docs/api/addons.html">C++ Addons</ulink></bold></para>
+</listitem><listitem><para><bold><ulink url="https://nodejs.org/dist/latest/docs/api/n-api.html">Node-API</ulink></bold></para>
+</listitem><listitem><para><bold><ulink url="https://youtu.be/-Oniup60Afs">Node-API - Next Generation Node API for Native Modules</ulink></bold></para>
+</listitem><listitem><para><bold><ulink url="https://developer.mongodb.com/article/realm-javascript-nan-to-n-api">How We Migrated Realm JavaScript From NAN to Node-API</ulink></bold></para>
+</listitem></itemizedlist>
+</para>
+<para>As node-addon-api&apos;s core mission is to expose the plain C Node-API as C++ wrappers, tools that facilitate n-api/node-addon-api providing more convenient patterns for developing a Node.js add-on with n-api/node-addon-api can be published to NPM as standalone packages. It is also recommended to tag such packages with <computeroutput>node-addon-api</computeroutput> to provide more visibility to the community.</para>
+<para>Quick links to NPM searches: <ulink url="https://www.npmjs.com/search?q=keywords%3Anode-addon-api">keywords:node-addon-api</ulink>.</para>
+<para><anchor id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1other-bindings"/></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1autotoc_md2316">
+<title><bold>Other bindings</bold></title><para><itemizedlist>
+<listitem><para><bold><ulink url="https://napi.rs">napi-rs</ulink></bold> - (<computeroutput>Rust</computeroutput>)</para>
+</listitem></itemizedlist>
+</para>
+<para><anchor id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1badges"/></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1autotoc_md2317">
+<title><bold>Badges</bold></title><para>The use of badges is recommended to indicate the minimum version of Node-API required for the module. This helps to determine which Node.js major versions are supported. Addon maintainers can consult the <ulink url="https://nodejs.org/dist/latest/docs/api/n-api.html#n_api_n_api_version_matrix">Node-API support matrix</ulink> to determine which Node.js versions provide a given Node-API version. The following badges are available:</para>
+<para><image type="html" name="https://github.com/nodejs/abi-stable-node/blob/doc/assets/Node-API%20v1%20Badge.svg" alt="Node-API v1 Badge" inline="yes"></image>
+ <image type="html" name="https://github.com/nodejs/abi-stable-node/blob/doc/assets/Node-API%20v2%20Badge.svg" alt="Node-API v2 Badge" inline="yes"></image>
+ <image type="html" name="https://github.com/nodejs/abi-stable-node/blob/doc/assets/Node-API%20v3%20Badge.svg" alt="Node-API v3 Badge" inline="yes"></image>
+ <image type="html" name="https://github.com/nodejs/abi-stable-node/blob/doc/assets/Node-API%20v4%20Badge.svg" alt="Node-API v4 Badge" inline="yes"></image>
+ <image type="html" name="https://github.com/nodejs/abi-stable-node/blob/doc/assets/Node-API%20v5%20Badge.svg" alt="Node-API v5 Badge" inline="yes"></image>
+ <image type="html" name="https://github.com/nodejs/abi-stable-node/blob/doc/assets/Node-API%20v6%20Badge.svg" alt="Node-API v6 Badge" inline="yes"></image>
+ <image type="html" name="https://github.com/nodejs/abi-stable-node/blob/doc/assets/Node-API%20v7%20Badge.svg" alt="Node-API v7 Badge" inline="yes"></image>
+ <image type="html" name="https://github.com/nodejs/abi-stable-node/blob/doc/assets/Node-API%20v8%20Badge.svg" alt="Node-API v8 Badge" inline="yes"></image>
+ <image type="html" name="https://github.com/nodejs/abi-stable-node/blob/doc/assets/Node-API%20v9%20Badge.svg" alt="Node-API v9 Badge" inline="yes"></image>
+ <image type="html" name="https://github.com/nodejs/abi-stable-node/blob/doc/assets/Node-API%20Experimental%20Version%20Badge.svg" alt="Node-API Experimental Version Badge" inline="yes"></image>
+</para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1autotoc_md2318">
+<title><bold>Contributing</bold></title><para>We love contributions from the community to <bold>node-addon-api</bold>! See <ref refid="readable-stream_2_c_o_n_t_r_i_b_u_t_i_n_g_8md" kindref="compound">CONTRIBUTING.md</ref> for more details on our philosophy around extending this module.</para>
+<para><anchor id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1contributors"/></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1autotoc_md2319">
+<title>Team members</title><sect3 id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1autotoc_md2320">
+<title>Active</title><para><table rows="8" cols="2"><row>
+<entry thead="yes"><para>Name   </para>
+</entry><entry thead="yes"><para>GitHub Link    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Anna Henningsen   </para>
+</entry><entry thead="no"><para><ulink url="https://github.com/addaleax">addaleax</ulink>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Chengzhong Wu   </para>
+</entry><entry thead="no"><para><ulink url="https://github.com/legendecas">legendecas</ulink>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Jack Xia   </para>
+</entry><entry thead="no"><para><ulink url="https://github.com/JckXia">JckXia</ulink>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Kevin Eady   </para>
+</entry><entry thead="no"><para><ulink url="https://github.com/KevinEady">KevinEady</ulink>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Michael Dawson   </para>
+</entry><entry thead="no"><para><ulink url="https://github.com/mhdawson">mhdawson</ulink>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Nicola Del Gobbo   </para>
+</entry><entry thead="no"><para><ulink url="https://github.com/NickNaso">NickNaso</ulink>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Vladimir Morozov   </para>
+</entry><entry thead="no"><para><ulink url="https://github.com/vmoroz">vmoroz</ulink>   </para>
+</entry></row>
+</table>
+</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1autotoc_md2321">
+<title>Emeritus</title><para><table rows="9" cols="2"><row>
+<entry thead="yes"><para>Name   </para>
+</entry><entry thead="yes"><para>GitHub Link    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Arunesh Chandra   </para>
+</entry><entry thead="no"><para><ulink url="https://github.com/aruneshchandra">aruneshchandra</ulink>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Benjamin Byholm   </para>
+</entry><entry thead="no"><para><ulink url="https://github.com/kkoopa">kkoopa</ulink>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Gabriel Schulhof   </para>
+</entry><entry thead="no"><para><ulink url="https://github.com/gabrielschulhof">gabrielschulhof</ulink>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Hitesh Kanwathirtha   </para>
+</entry><entry thead="no"><para><ulink url="https://github.com/digitalinfinity">digitalinfinity</ulink>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Jason Ginchereau   </para>
+</entry><entry thead="no"><para><ulink url="https://github.com/jasongin">jasongin</ulink>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Jim Schlight   </para>
+</entry><entry thead="no"><para><ulink url="https://github.com/jschlight">jschlight</ulink>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Sampson Gao   </para>
+</entry><entry thead="no"><para><ulink url="https://github.com/sampsongao">sampsongao</ulink>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Taylor Woll   </para>
+</entry><entry thead="no"><para><ulink url="https://github.com/boingoing">boingoing</ulink>   </para>
+</entry></row>
+</table>
+</para>
+<para><anchor id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1license"/></para>
+<para>Licensed under <ref refid="md_backend_2node__modules_2node-addon-api_2_l_i_c_e_n_s_e" kindref="compound">MIT</ref> </para>
+</sect3>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/node-addon-api/README.md"/>
+  </compounddef>
+</doxygen>

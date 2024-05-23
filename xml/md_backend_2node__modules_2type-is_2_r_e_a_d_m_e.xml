@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2type-is_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2type-is_2_r_e_a_d_m_e</compoundname>
+    <title>type-is</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2type-is_2_r_e_a_d_m_e_1autotoc_md3908"/> <ulink url="https://npmjs.org/package/type-is"><image type="html" name="https://badgen.net/npm/v/type-is" alt="NPM Version" inline="yes"></image>
+</ulink> <ulink url="https://npmjs.org/package/type-is"><image type="html" name="https://badgen.net/npm/dm/type-is" alt="NPM Downloads" inline="yes"></image>
+</ulink> <ulink url="https://nodejs.org/en/download"><image type="html" name="https://badgen.net/npm/node/type-is" alt="Node.js Version" inline="yes"></image>
+</ulink> <ulink url="https://travis-ci.org/jshttp/type-is"><image type="html" name="https://badgen.net/travis/jshttp/type-is/master" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/r/jshttp/type-is?branch=master"><image type="html" name="https://badgen.net/coveralls/c/github/jshttp/type-is/master" alt="Test Coverage" inline="yes"></image>
+</ulink></para>
+<para>Infer the content-type of a request.</para>
+<sect2 id="md_backend_2node__modules_2type-is_2_r_e_a_d_m_e_1autotoc_md3909">
+<title>Install</title><para>This is a <ulink url="https://nodejs.org/en/">Node.js</ulink> module available through the <ulink url="https://www.npmjs.com/">npm registry</ulink>. Installation is done using the <ulink url="https://docs.npmjs.com/getting-started/installing-npm-packages-locally"><computeroutput>npm install</computeroutput> command</ulink>:</para>
+<para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>type-is</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect1 id="md_backend_2node__modules_2type-is_2_r_e_a_d_m_e_1autotoc_md3910">
+<title>API</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>typeis<sp/>=<sp/>require(&apos;type-is&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">http.createServer(function<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>istext<sp/>=<sp/>typeis(req,<sp/>[&apos;text/*&apos;])</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.end(&apos;you<sp/>&apos;<sp/>+<sp/>(istext<sp/>?<sp/>&apos;sent&apos;<sp/>:<sp/>&apos;did<sp/>not<sp/>send&apos;)<sp/>+<sp/>&apos;<sp/>me<sp/>text&apos;)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2type-is_2_r_e_a_d_m_e_1autotoc_md3911">
+<title>typeis(request, types)</title><para>Checks if the <computeroutput>request</computeroutput> is one of the <computeroutput>types</computeroutput>. If the request has no body, even if there is a <computeroutput>Content-Type</computeroutput> header, then <computeroutput>null</computeroutput> is returned. If the <computeroutput>Content-Type</computeroutput> header is invalid or does not matches any of the <computeroutput>types</computeroutput>, then <computeroutput>false</computeroutput> is returned. Otherwise, a string of the type that matched is returned.</para>
+<para>The <computeroutput>request</computeroutput> argument is expected to be a Node.js HTTP request. The <computeroutput>types</computeroutput> argument is an array of type strings.</para>
+<para>Each type in the <computeroutput>types</computeroutput> array can be one of the following:</para>
+<para><itemizedlist>
+<listitem><para>A file extension name such as <computeroutput>json</computeroutput>. This name will be returned if matched.</para>
+</listitem><listitem><para>A mime type such as <computeroutput>application/json</computeroutput>.</para>
+</listitem><listitem><para>A mime type with a wildcard such as <computeroutput>*/*</computeroutput> or <computeroutput>*/json</computeroutput> or <computeroutput>application/*</computeroutput>. The full mime type will be returned if matched.</para>
+</listitem><listitem><para>A suffix such as <computeroutput>+json</computeroutput>. This can be combined with a wildcard such as <computeroutput>*/vnd+json</computeroutput> or <computeroutput>application/*+json</computeroutput>. The full mime type will be returned if matched.</para>
+</listitem></itemizedlist>
+</para>
+<para>Some examples to illustrate the inputs and returned value:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>req.headers.content-type<sp/>=<sp/>&apos;application/json&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">typeis(req,<sp/>[&apos;json&apos;])<sp/>//<sp/>=&gt;<sp/>&apos;json&apos;</highlight></codeline>
+<codeline><highlight class="normal">typeis(req,<sp/>[&apos;html&apos;,<sp/>&apos;json&apos;])<sp/>//<sp/>=&gt;<sp/>&apos;json&apos;</highlight></codeline>
+<codeline><highlight class="normal">typeis(req,<sp/>[&apos;application/*&apos;])<sp/>//<sp/>=&gt;<sp/>&apos;application/json&apos;</highlight></codeline>
+<codeline><highlight class="normal">typeis(req,<sp/>[&apos;application/json&apos;])<sp/>//<sp/>=&gt;<sp/>&apos;application/json&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">typeis(req,<sp/>[&apos;html&apos;])<sp/>//<sp/>=&gt;<sp/>false</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2type-is_2_r_e_a_d_m_e_1autotoc_md3912">
+<title>typeis.hasBody(request)</title><para>Returns a Boolean if the given <computeroutput>request</computeroutput> has a body, regardless of the <computeroutput>Content-Type</computeroutput> header.</para>
+<para>Having a body has no relation to how large the body is (it may be 0 bytes). This is similar to how file existence works. If a body does exist, then this indicates that there is data to read from the Node.js request stream.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">if<sp/>(typeis.hasBody(req))<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>read<sp/>the<sp/>body,<sp/>since<sp/>there<sp/>is<sp/>one</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>req.on(&apos;data&apos;,<sp/>function<sp/>(chunk)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>...</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2type-is_2_r_e_a_d_m_e_1autotoc_md3913">
+<title>typeis.is(mediaType, types)</title><para>Checks if the <computeroutput>mediaType</computeroutput> is one of the <computeroutput>types</computeroutput>. If the <computeroutput>mediaType</computeroutput> is invalid or does not matches any of the <computeroutput>types</computeroutput>, then <computeroutput>false</computeroutput> is returned. Otherwise, a string of the type that matched is returned.</para>
+<para>The <computeroutput>mediaType</computeroutput> argument is expected to be a <ulink url="https://tools.ietf.org/html/rfc6838">media type</ulink> string. The <computeroutput>types</computeroutput> argument is an array of type strings.</para>
+<para>Each type in the <computeroutput>types</computeroutput> array can be one of the following:</para>
+<para><itemizedlist>
+<listitem><para>A file extension name such as <computeroutput>json</computeroutput>. This name will be returned if matched.</para>
+</listitem><listitem><para>A mime type such as <computeroutput>application/json</computeroutput>.</para>
+</listitem><listitem><para>A mime type with a wildcard such as <computeroutput>*/*</computeroutput> or <computeroutput>*/json</computeroutput> or <computeroutput>application/*</computeroutput>. The full mime type will be returned if matched.</para>
+</listitem><listitem><para>A suffix such as <computeroutput>+json</computeroutput>. This can be combined with a wildcard such as <computeroutput>*/vnd+json</computeroutput> or <computeroutput>application/*+json</computeroutput>. The full mime type will be returned if matched.</para>
+</listitem></itemizedlist>
+</para>
+<para>Some examples to illustrate the inputs and returned value:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>mediaType<sp/>=<sp/>&apos;application/json&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">typeis.is(mediaType,<sp/>[&apos;json&apos;])<sp/>//<sp/>=&gt;<sp/>&apos;json&apos;</highlight></codeline>
+<codeline><highlight class="normal">typeis.is(mediaType,<sp/>[&apos;html&apos;,<sp/>&apos;json&apos;])<sp/>//<sp/>=&gt;<sp/>&apos;json&apos;</highlight></codeline>
+<codeline><highlight class="normal">typeis.is(mediaType,<sp/>[&apos;application/*&apos;])<sp/>//<sp/>=&gt;<sp/>&apos;application/json&apos;</highlight></codeline>
+<codeline><highlight class="normal">typeis.is(mediaType,<sp/>[&apos;application/json&apos;])<sp/>//<sp/>=&gt;<sp/>&apos;application/json&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">typeis.is(mediaType,<sp/>[&apos;html&apos;])<sp/>//<sp/>=&gt;<sp/>false</highlight></codeline>
+</programlisting></para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2type-is_2_r_e_a_d_m_e_1autotoc_md3914">
+<title>Examples</title><sect2 id="md_backend_2node__modules_2type-is_2_r_e_a_d_m_e_1autotoc_md3915">
+<title>Example body parser</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>express<sp/>=<sp/>require(&apos;express&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>typeis<sp/>=<sp/>require(&apos;type-is&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>app<sp/>=<sp/>express()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">app.use(function<sp/>bodyParser<sp/>(req,<sp/>res,<sp/>next)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(!typeis.hasBody(req))<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>next()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>switch<sp/>(typeis(req,<sp/>[&apos;urlencoded&apos;,<sp/>&apos;json&apos;,<sp/>&apos;multipart&apos;]))<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>case<sp/>&apos;urlencoded&apos;:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>parse<sp/>urlencoded<sp/>body</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>throw<sp/>new<sp/>Error(&apos;implement<sp/>urlencoded<sp/>body<sp/>parsing&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>case<sp/>&apos;json&apos;:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>parse<sp/>json<sp/>body</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>throw<sp/>new<sp/>Error(&apos;implement<sp/>json<sp/>body<sp/>parsing&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>case<sp/>&apos;multipart&apos;:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>parse<sp/>multipart<sp/>body</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>throw<sp/>new<sp/>Error(&apos;implement<sp/>multipart<sp/>body<sp/>parsing&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>default:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>415<sp/>error<sp/>code</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>res.statusCode<sp/>=<sp/>415</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>res.end()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>break</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2type-is_2_r_e_a_d_m_e_1autotoc_md3916">
+<title>License</title><para>[MIT](LICENSE) </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/type-is/README.md"/>
+  </compounddef>
+</doxygen>

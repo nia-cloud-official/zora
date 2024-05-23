@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="typescript_2associate_example_8md" kind="file" language="Markdown">
+    <compoundname>associateExample.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>socks<sp/>examples</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Example<sp/>for<sp/>SOCKS<sp/>&apos;associate&apos;<sp/>command</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>associate<sp/>command<sp/>tells<sp/>the<sp/>SOCKS<sp/>proxy<sp/>server<sp/>to<sp/>establish<sp/>a<sp/>UDP<sp/>relay.<sp/>The<sp/>server<sp/>binds<sp/>to<sp/>a<sp/>new<sp/>UDP<sp/>port<sp/>and<sp/>communicates<sp/>the<sp/>newly<sp/>opened<sp/>port<sp/>back<sp/>to<sp/>the<sp/>origin<sp/>client.<sp/>From<sp/>here,<sp/>any<sp/>SOCKS<sp/>UDP<sp/>frame<sp/>packets<sp/>sent<sp/>to<sp/>this<sp/>special<sp/>UDP<sp/>port<sp/>on<sp/>the<sp/>Proxy<sp/>server<sp/>will<sp/>be<sp/>forwarded<sp/>to<sp/>the<sp/>desired<sp/>destination,<sp/>and<sp/>any<sp/>responses<sp/>will<sp/>be<sp/>forwarded<sp/>back<sp/>to<sp/>the<sp/>origin<sp/>client<sp/>(you).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>can<sp/>be<sp/>used<sp/>for<sp/>things<sp/>such<sp/>as<sp/>DNS<sp/>queries,<sp/>and<sp/>other<sp/>UDP<sp/>communicates.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Connection<sp/>Steps**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">1.<sp/>Client<sp/>-(associate)-&gt;<sp/>Proxy<sp/>(Tells<sp/>the<sp/>proxy<sp/>to<sp/>create<sp/>a<sp/>UDP<sp/>relay<sp/>and<sp/>bind<sp/>on<sp/>a<sp/>new<sp/>port)</highlight></codeline>
+<codeline><highlight class="normal">2.<sp/>Client<sp/>&lt;-(port)-<sp/>Proxy<sp/>(Tells<sp/>the<sp/>origin<sp/>client<sp/>which<sp/>port<sp/>it<sp/>opened<sp/>and<sp/>is<sp/>accepting<sp/>UDP<sp/>frame<sp/>packets<sp/>on)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">At<sp/>this<sp/>point<sp/>the<sp/>proxy<sp/>is<sp/>accepting<sp/>UDP<sp/>frames<sp/>on<sp/>the<sp/>specified<sp/>port.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">3.<sp/>Client<sp/>--(udp<sp/>frame)<sp/>-&gt;<sp/>Proxy<sp/>-&gt;<sp/>Destination<sp/>(The<sp/>origin<sp/>client<sp/>sends<sp/>a<sp/>UDP<sp/>frame<sp/>to<sp/>the<sp/>proxy<sp/>on<sp/>the<sp/>UDP<sp/>port,<sp/>and<sp/>the<sp/>proxy<sp/>then<sp/>forwards<sp/>it<sp/>to<sp/>the<sp/>destination<sp/>specified<sp/>in<sp/>the<sp/>UDP<sp/>frame.)</highlight></codeline>
+<codeline><highlight class="normal">4.<sp/>Client<sp/>&lt;--(udp<sp/>frame)<sp/>&lt;--<sp/>Proxy<sp/>&lt;--<sp/>Destination<sp/>(The<sp/>destination<sp/>client<sp/>responds<sp/>to<sp/>the<sp/>udp<sp/>packet<sp/>sent<sp/>in<sp/>#3)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Usage</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>&apos;associate&apos;<sp/>command<sp/>can<sp/>only<sp/>be<sp/>used<sp/>by<sp/>creating<sp/>a<sp/>new<sp/>SocksClient<sp/>instance<sp/>and<sp/>listening<sp/>for<sp/>the<sp/>&apos;established&apos;<sp/>event.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Note:**<sp/>UDP<sp/>packets<sp/>relayed<sp/>through<sp/>the<sp/>proxy<sp/>servers<sp/>are<sp/>packaged<sp/>in<sp/>a<sp/>special<sp/>Socks<sp/>UDP<sp/>frame<sp/>format.<sp/>SocksClient.createUDPFrame()<sp/>and<sp/>SocksClient.parseUDPFrame()<sp/>create<sp/>and<sp/>parse<sp/>these<sp/>special<sp/>UDP<sp/>packets.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```typescript</highlight></codeline>
+<codeline><highlight class="normal">import<sp/>*<sp/>as<sp/>dgram<sp/>from<sp/>&apos;dgram&apos;;</highlight></codeline>
+<codeline><highlight class="normal">import<sp/>{<sp/>SocksClient,<sp/>SocksClientOptions<sp/>}<sp/>from<sp/>&apos;socks&apos;;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Create<sp/>a<sp/>local<sp/>UDP<sp/>socket<sp/>for<sp/>sending/receiving<sp/>packets<sp/>to/from<sp/>the<sp/>proxy.</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>udpSocket<sp/>=<sp/>dgram.createSocket(&apos;udp4&apos;);</highlight></codeline>
+<codeline><highlight class="normal">udpSocket.bind();</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Listen<sp/>for<sp/>incoming<sp/>UDP<sp/>packets<sp/>from<sp/>the<sp/>proxy<sp/>server.</highlight></codeline>
+<codeline><highlight class="normal">udpSocket.on(&apos;message&apos;,<sp/>(message,<sp/>rinfo)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(SocksClient.parseUDPFrame(message));</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>/*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>{<sp/>frameNumber:<sp/>0,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>remoteHost:<sp/>{<sp/>host:<sp/>&apos;8.8.8.8&apos;,<sp/>port:<sp/>53<sp/>},<sp/>//<sp/>The<sp/>remote<sp/>host<sp/>that<sp/>replied<sp/>with<sp/>a<sp/>UDP<sp/>packet</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>data:<sp/>&lt;Buffer<sp/>74<sp/>65<sp/>73<sp/>74<sp/>0a&gt;<sp/>//<sp/>The<sp/>data</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>options:<sp/>SocksClientOptions<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>proxy:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;104.131.124.203&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>1081,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>type:<sp/>5</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>This<sp/>should<sp/>be<sp/>the<sp/>ip<sp/>and<sp/>port<sp/>of<sp/>the<sp/>expected<sp/>client<sp/>that<sp/>will<sp/>be<sp/>sending<sp/>UDP<sp/>frames<sp/>to<sp/>the<sp/>newly<sp/>opened<sp/>UDP<sp/>port<sp/>on<sp/>the<sp/>server.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Most<sp/>SOCKS<sp/>servers<sp/>accept<sp/>0.0.0.0<sp/>as<sp/>a<sp/>wildcard<sp/>address<sp/>to<sp/>accept<sp/>UDP<sp/>frames<sp/>from<sp/>any<sp/>source.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>destination:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;0.0.0.0&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>command:<sp/>&apos;associate&apos;</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>client<sp/>=<sp/>new<sp/>SocksClient(options);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>This<sp/>event<sp/>is<sp/>fired<sp/>when<sp/>the<sp/>SOCKS<sp/>server<sp/>has<sp/>started<sp/>listening<sp/>on<sp/>a<sp/>new<sp/>UDP<sp/>port<sp/>for<sp/>UDP<sp/>relaying.</highlight></codeline>
+<codeline><highlight class="normal">client.on(&apos;established&apos;,<sp/>info<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(info);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>/*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>socket:<sp/>&lt;Socket<sp/>...&gt;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>remoteHost:<sp/>{<sp/>//<sp/>This<sp/>is<sp/>the<sp/>remote<sp/>port<sp/>on<sp/>the<sp/>SOCKS<sp/>proxy<sp/>server<sp/>to<sp/>send<sp/>UDP<sp/>frame<sp/>packets<sp/>to.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>host:<sp/>&apos;104.131.124.203&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>port:<sp/>58232</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*/</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Send<sp/>a<sp/>udp<sp/>frame<sp/>to<sp/>8.8.8.8<sp/>on<sp/>port<sp/>53<sp/>through<sp/>the<sp/>proxy.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>const<sp/>packet<sp/>=<sp/>SocksClient.createUDPFrame({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>remoteHost:<sp/>{<sp/>host:<sp/>&apos;8.8.8.8&apos;,<sp/>port:<sp/>53<sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>data:<sp/>Buffer.from(&apos;hello&apos;)<sp/>//<sp/>A<sp/>DNS<sp/>lookup<sp/>in<sp/>the<sp/>real<sp/>world.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Send<sp/>packet.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>udpSocket.send(packet,<sp/>info.remoteHost.port,<sp/>info.remoteHost.host);</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>SOCKS<sp/>proxy<sp/>failed<sp/>to<sp/>bind.</highlight></codeline>
+<codeline><highlight class="normal">client.on(&apos;error&apos;,<sp/>()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Handle<sp/>errors</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Start<sp/>connection</highlight></codeline>
+<codeline><highlight class="normal">client.connect();</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/socks/docs/examples/typescript/associateExample.md"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="flock__tool_8py" kind="file" language="Python">
+    <compoundname>flock_tool.py</compoundname>
+    <innerclass refid="classgyp_1_1flock__tool_1_1_flock_tool" prot="public">gyp::flock_tool::FlockTool</innerclass>
+    <innernamespace refid="namespacegyp">gyp</innernamespace>
+    <innernamespace refid="namespacegyp_1_1flock__tool">gyp::flock_tool</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1" refid="namespacegyp_1_1flock__tool" refkind="compound"><highlight class="comment">#!/usr/bin/env<sp/>python3</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">#<sp/>Copyright<sp/>(c)<sp/>2011<sp/>Google<sp/>Inc.<sp/>All<sp/>rights<sp/>reserved.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">#<sp/>Use<sp/>of<sp/>this<sp/>source<sp/>code<sp/>is<sp/>governed<sp/>by<sp/>a<sp/>BSD-style<sp/>license<sp/>that<sp/>can<sp/>be</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">#<sp/>found<sp/>in<sp/>the<sp/>LICENSE<sp/>file.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="stringliteral">&quot;&quot;&quot;These<sp/>functions<sp/>are<sp/>executed<sp/>via<sp/>gyp-flock-tool<sp/>when<sp/>using<sp/>the<sp/>Makefile</highlight></codeline>
+<codeline lineno="7"><highlight class="stringliteral">generator.<sp/><sp/>Used<sp/>on<sp/>systems<sp/>that<sp/>don&apos;t<sp/>have<sp/>a<sp/>built-in<sp/>flock.&quot;&quot;&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>fcntl</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>os</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>struct</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>subprocess</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>sys</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="namespacegyp_1_1flock__tool_1a90964771d6fc6bdfd95379431421ad13" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="namespacegyp_1_1flock__tool_1a90964771d6fc6bdfd95379431421ad13" kindref="member">main</ref>(args):</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/>executor<sp/>=<sp/><ref refid="classgyp_1_1flock__tool_1_1_flock_tool" kindref="compound">FlockTool</ref>()</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/>executor.Dispatch(args)</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21" refid="classgyp_1_1flock__tool_1_1_flock_tool" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classgyp_1_1flock__tool_1_1_flock_tool" kindref="compound">FlockTool</ref>:</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;&quot;&quot;This<sp/>class<sp/>emulates<sp/>the<sp/>&apos;flock&apos;<sp/>command.&quot;&quot;&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24" refid="classgyp_1_1flock__tool_1_1_flock_tool_1a1dbd5e7c90f3172d42e20d29fd92420e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="classgyp_1_1flock__tool_1_1_flock_tool_1a1dbd5e7c90f3172d42e20d29fd92420e" kindref="member">Dispatch</ref>(self,<sp/>args):</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;&quot;&quot;Dispatches<sp/>a<sp/>string<sp/>command<sp/>to<sp/>a<sp/>method.&quot;&quot;&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>len(args)<sp/>&lt;<sp/>1:</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">raise</highlight><highlight class="normal"><sp/>Exception(</highlight><highlight class="stringliteral">&quot;Not<sp/>enough<sp/>arguments&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>method<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;Exec%s&quot;</highlight><highlight class="normal"><sp/>%<sp/>self.<ref refid="classgyp_1_1flock__tool_1_1_flock_tool_1ab3145340e2c63233dbac98493c1f37ce" kindref="member">_CommandifyName</ref>(args[0])</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>getattr(self,<sp/>method)(*args[1:])</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32" refid="classgyp_1_1flock__tool_1_1_flock_tool_1ab3145340e2c63233dbac98493c1f37ce" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="classgyp_1_1flock__tool_1_1_flock_tool_1ab3145340e2c63233dbac98493c1f37ce" kindref="member">_CommandifyName</ref>(self,<sp/>name_string):</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;&quot;&quot;Transforms<sp/>a<sp/>tool<sp/>name<sp/>like<sp/>copy-info-plist<sp/>to<sp/>CopyInfoPlist&quot;&quot;&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>name_string.title().replace(</highlight><highlight class="stringliteral">&quot;-&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36" refid="classgyp_1_1flock__tool_1_1_flock_tool_1acd07e9f3b39e736c4cb84dd6135205c1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal"><ref refid="classgyp_1_1flock__tool_1_1_flock_tool_1acd07e9f3b39e736c4cb84dd6135205c1" kindref="member">ExecFlock</ref>(self,<sp/>lockfile,<sp/>*cmd_list):</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;&quot;&quot;Emulates<sp/>the<sp/>most<sp/>basic<sp/>behavior<sp/>of<sp/>Linux&apos;s<sp/>flock(1).&quot;&quot;&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>Rely<sp/>on<sp/>exception<sp/>handling<sp/>to<sp/>report<sp/>errors.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>Note<sp/>that<sp/>the<sp/>stock<sp/>python<sp/>on<sp/>SunOS<sp/>has<sp/>a<sp/>bug</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>where<sp/>fcntl.flock(fd,<sp/>LOCK_EX)<sp/>always<sp/>fails</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>with<sp/>EBADF,<sp/>that&apos;s<sp/>why<sp/>we<sp/>use<sp/>this<sp/>F_SETLK</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>hack<sp/>instead.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>fd<sp/>=<sp/>os.open(lockfile,<sp/>os.O_WRONLY<sp/>|<sp/>os.O_NOCTTY<sp/>|<sp/>os.O_CREAT,<sp/>0o666)</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>sys.platform.startswith(</highlight><highlight class="stringliteral">&quot;aix&quot;</highlight><highlight class="normal">):</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>Python<sp/>on<sp/>AIX<sp/>is<sp/>compiled<sp/>with<sp/>LARGEFILE<sp/>support,<sp/>which<sp/>changes<sp/>the</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>struct<sp/>size.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>op<sp/>=<sp/>struct.pack(</highlight><highlight class="stringliteral">&quot;hhIllqq&quot;</highlight><highlight class="normal">,<sp/>fcntl.F_WRLCK,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0)</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>op<sp/>=<sp/>struct.pack(</highlight><highlight class="stringliteral">&quot;hhllhhl&quot;</highlight><highlight class="normal">,<sp/>fcntl.F_WRLCK,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0)</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>fcntl.fcntl(fd,<sp/>fcntl.F_SETLK,<sp/>op)</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>subprocess.call(cmd_list)</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;__main__&quot;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/>sys.exit(<ref refid="namespacegyp_1_1flock__tool_1a90964771d6fc6bdfd95379431421ad13" kindref="member">main</ref>(sys.argv[1:]))</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/node-gyp/gyp/pylib/gyp/flock_tool.py"/>
+  </compounddef>
+</doxygen>

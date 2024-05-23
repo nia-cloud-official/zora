@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2minipass-collect_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2minipass-collect_2_r_e_a_d_m_e</compoundname>
+    <title>minipass-collect</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2minipass-collect_2_r_e_a_d_m_e_1autotoc_md2156"/> A Minipass stream that collects all the data into a single chunk</para>
+<para>Note that this buffers ALL data written to it, so it&apos;s only good for situations where you are sure the entire stream fits in memory.</para>
+<para>Note: this is primarily useful for the <computeroutput>Collect.PassThrough</computeroutput> class, since Minipass streams already have a <computeroutput>.collect()</computeroutput> method which returns a promise that resolves to the array of chunks, and a <computeroutput>.concat()</computeroutput> method that returns the data concatenated into a single Buffer or String.</para>
+<sect1 id="md_backend_2node__modules_2minipass-collect_2_r_e_a_d_m_e_1autotoc_md2157">
+<title>USAGE</title><para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>Collect<sp/>=<sp/>require(&apos;minipass-collect&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>collector<sp/>=<sp/>new<sp/>Collect()</highlight></codeline>
+<codeline><highlight class="normal">collector.on(&apos;data&apos;,<sp/>allTheData<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;all<sp/>the<sp/>data!&apos;,<sp/>allTheData)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">someSourceOfData.pipe(collector)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>note<sp/>that<sp/>you<sp/>can<sp/>also<sp/>simply<sp/>do:</highlight></codeline>
+<codeline><highlight class="normal">someSourceOfData.pipe(new<sp/>Minipass()).concat().then(data<sp/>=&gt;<sp/>...)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>or<sp/>even,<sp/>if<sp/>someSourceOfData<sp/>is<sp/>a<sp/>Minipass:</highlight></codeline>
+<codeline><highlight class="normal">someSourceOfData.concat().then(data<sp/>=&gt;<sp/>...)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>but<sp/>you<sp/>might<sp/>prefer<sp/>to<sp/>have<sp/>it<sp/>stream-shaped<sp/>rather<sp/>than</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Promise-shaped<sp/>in<sp/>some<sp/>scenarios.</highlight></codeline>
+</programlisting></para>
+<para>If you want to collect the data, but <emphasis>also</emphasis> act as a passthrough stream, then use <computeroutput>Collect.PassThrough</computeroutput> instead (for example to memoize streaming responses), and listen on the <computeroutput>collect</computeroutput> event.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>Collect<sp/>=<sp/>require(&apos;minipass-collect&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>collector<sp/>=<sp/>new<sp/>Collect.PassThrough()</highlight></codeline>
+<codeline><highlight class="normal">collector.on(&apos;collect&apos;,<sp/>allTheData<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;all<sp/>the<sp/>data!&apos;,<sp/>allTheData)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">someSourceOfData.pipe(collector).pipe(someOtherStream)</highlight></codeline>
+</programlisting></para>
+<para>All <ulink url="http://npm.im/minipass">minipass options</ulink> are supported. </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/minipass-collect/README.md"/>
+  </compounddef>
+</doxygen>

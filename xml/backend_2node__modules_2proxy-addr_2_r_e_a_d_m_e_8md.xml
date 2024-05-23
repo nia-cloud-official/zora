@@ -1,0 +1,152 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2proxy-addr_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>proxy-addr</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![NPM<sp/>Version][npm-version-image]][npm-url]</highlight></codeline>
+<codeline><highlight class="normal">[![NPM<sp/>Downloads][npm-downloads-image]][npm-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Node.js<sp/>Version][node-image]][node-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Build<sp/>Status][ci-image]][ci-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Test<sp/>Coverage][coveralls-image]][coveralls-url]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Determine<sp/>address<sp/>of<sp/>proxied<sp/>request</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Install</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>a<sp/>[Node.js](https://nodejs.org/en/)<sp/>module<sp/>available<sp/>through<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[npm<sp/>registry](https://www.npmjs.com/).<sp/>Installation<sp/>is<sp/>done<sp/>using<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[`npm<sp/>install`<sp/>command](https://docs.npmjs.com/getting-started/installing-npm-packages-locally):</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```sh</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>proxy-addr</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>API</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>proxyaddr<sp/>=<sp/>require(&apos;proxy-addr&apos;)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>proxyaddr(req,<sp/>trust)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Return<sp/>the<sp/>address<sp/>of<sp/>the<sp/>request,<sp/>using<sp/>the<sp/>given<sp/>`trust`<sp/>parameter.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`trust`<sp/>argument<sp/>is<sp/>a<sp/>function<sp/>that<sp/>returns<sp/>`true`<sp/>if<sp/>you<sp/>trust</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>address,<sp/>`false`<sp/>if<sp/>you<sp/>don&apos;t.<sp/>The<sp/>closest<sp/>untrusted<sp/>address<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">returned.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">proxyaddr(req,<sp/>function<sp/>(addr)<sp/>{<sp/>return<sp/>addr<sp/>===<sp/>&apos;127.0.0.1&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">proxyaddr(req,<sp/>function<sp/>(addr,<sp/>i)<sp/>{<sp/>return<sp/>i<sp/>&lt;<sp/>1<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`trust`<sp/>arugment<sp/>may<sp/>also<sp/>be<sp/>a<sp/>single<sp/>IP<sp/>address<sp/>string<sp/>or<sp/>an</highlight></codeline>
+<codeline><highlight class="normal">array<sp/>of<sp/>trusted<sp/>addresses,<sp/>as<sp/>plain<sp/>IP<sp/>addresses,<sp/>CIDR-formatted</highlight></codeline>
+<codeline><highlight class="normal">strings,<sp/>or<sp/>IP/netmask<sp/>strings.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">proxyaddr(req,<sp/>&apos;127.0.0.1&apos;)</highlight></codeline>
+<codeline><highlight class="normal">proxyaddr(req,<sp/>[&apos;127.0.0.0/8&apos;,<sp/>&apos;10.0.0.0/8&apos;])</highlight></codeline>
+<codeline><highlight class="normal">proxyaddr(req,<sp/>[&apos;127.0.0.0/255.0.0.0&apos;,<sp/>&apos;192.168.0.0/255.255.0.0&apos;])</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>module<sp/>also<sp/>supports<sp/>IPv6.<sp/>Your<sp/>IPv6<sp/>addresses<sp/>will<sp/>be<sp/>normalized</highlight></codeline>
+<codeline><highlight class="normal">automatically<sp/>(i.e.<sp/>`fe80::00ed:1`<sp/>equals<sp/>`fe80:0:0:0:0:0:ed:1`).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">proxyaddr(req,<sp/>&apos;::1&apos;)</highlight></codeline>
+<codeline><highlight class="normal">proxyaddr(req,<sp/>[&apos;::1/128&apos;,<sp/>&apos;fe80::/10&apos;])</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>module<sp/>will<sp/>automatically<sp/>work<sp/>with<sp/>IPv4-mapped<sp/>IPv6<sp/>addresses</highlight></codeline>
+<codeline><highlight class="normal">as<sp/>well<sp/>to<sp/>support<sp/>node.js<sp/>in<sp/>IPv6-only<sp/>mode.<sp/>This<sp/>means<sp/>that<sp/>you<sp/>do</highlight></codeline>
+<codeline><highlight class="normal">not<sp/>have<sp/>to<sp/>specify<sp/>both<sp/>`::ffff:a00:1`<sp/>and<sp/>`10.0.0.1`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">As<sp/>a<sp/>convenience,<sp/>this<sp/>module<sp/>also<sp/>takes<sp/>certain<sp/>pre-defined<sp/>names</highlight></codeline>
+<codeline><highlight class="normal">in<sp/>addition<sp/>to<sp/>IP<sp/>addresses,<sp/>which<sp/>expand<sp/>into<sp/>IP<sp/>addresses:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">proxyaddr(req,<sp/>&apos;loopback&apos;)</highlight></codeline>
+<codeline><highlight class="normal">proxyaddr(req,<sp/>[&apos;loopback&apos;,<sp/>&apos;fc00:ac:1ab5:fff::1/64&apos;])</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`loopback`:<sp/>IPv4<sp/>and<sp/>IPv6<sp/>loopback<sp/>addresses<sp/>(like<sp/>`::1`<sp/>and</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>`127.0.0.1`).</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`linklocal`:<sp/>IPv4<sp/>and<sp/>IPv6<sp/>link-local<sp/>addresses<sp/>(like</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>`fe80::1:1:1:1`<sp/>and<sp/>`169.254.0.1`).</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`uniquelocal`:<sp/>IPv4<sp/>private<sp/>addresses<sp/>and<sp/>IPv6<sp/>unique-local</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>addresses<sp/>(like<sp/>`fc00:ac:1ab5:fff::1`<sp/>and<sp/>`192.168.0.1`).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>`trust`<sp/>is<sp/>specified<sp/>as<sp/>a<sp/>function,<sp/>it<sp/>will<sp/>be<sp/>called<sp/>for<sp/>each</highlight></codeline>
+<codeline><highlight class="normal">address<sp/>to<sp/>determine<sp/>if<sp/>it<sp/>is<sp/>a<sp/>trusted<sp/>address.<sp/>The<sp/>function<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">given<sp/>two<sp/>arguments:<sp/>`addr`<sp/>and<sp/>`i`,<sp/>where<sp/>`addr`<sp/>is<sp/>a<sp/>string<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>address<sp/>to<sp/>check<sp/>and<sp/>`i`<sp/>is<sp/>a<sp/>number<sp/>that<sp/>represents<sp/>the<sp/>distance</highlight></codeline>
+<codeline><highlight class="normal">from<sp/>the<sp/>socket<sp/>address.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>proxyaddr.all(req,<sp/>[trust])</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Return<sp/>all<sp/>the<sp/>addresses<sp/>of<sp/>the<sp/>request,<sp/>optionally<sp/>stopping<sp/>at<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">first<sp/>untrusted.<sp/>This<sp/>array<sp/>is<sp/>ordered<sp/>from<sp/>closest<sp/>to<sp/>furthest</highlight></codeline>
+<codeline><highlight class="normal">(i.e.<sp/>`arr[0]<sp/>===<sp/>req.connection.remoteAddress`).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">proxyaddr.all(req)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>optional<sp/>`trust`<sp/>argument<sp/>takes<sp/>the<sp/>same<sp/>arguments<sp/>as<sp/>`trust`</highlight></codeline>
+<codeline><highlight class="normal">does<sp/>in<sp/>`proxyaddr(req,<sp/>trust)`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">proxyaddr.all(req,<sp/>&apos;loopback&apos;)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>proxyaddr.compile(val)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Compiles<sp/>argument<sp/>`val`<sp/>into<sp/>a<sp/>`trust`<sp/>function.<sp/>This<sp/>function<sp/>takes</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>same<sp/>arguments<sp/>as<sp/>`trust`<sp/>does<sp/>in<sp/>`proxyaddr(req,<sp/>trust)`<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">returns<sp/>a<sp/>function<sp/>suitable<sp/>for<sp/>`proxyaddr(req,<sp/>trust)`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>trust<sp/>=<sp/>proxyaddr.compile(&apos;loopback&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>addr<sp/>=<sp/>proxyaddr(req,<sp/>trust)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>function<sp/>is<sp/>meant<sp/>to<sp/>be<sp/>optimized<sp/>for<sp/>use<sp/>against<sp/>every<sp/>request.</highlight></codeline>
+<codeline><highlight class="normal">It<sp/>is<sp/>recommend<sp/>to<sp/>compile<sp/>a<sp/>trust<sp/>function<sp/>up-front<sp/>for<sp/>the<sp/>trusted</highlight></codeline>
+<codeline><highlight class="normal">configuration<sp/>and<sp/>pass<sp/>that<sp/>to<sp/>`proxyaddr(req,<sp/>trust)`<sp/>for<sp/>each<sp/>request.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Testing</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```sh</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>test</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Benchmarks</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```sh</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>run-script<sp/>bench</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>License</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[MIT](LICENSE)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[ci-image]:<sp/>https://badgen.net/github/checks/jshttp/proxy-addr/master?label=ci</highlight></codeline>
+<codeline><highlight class="normal">[ci-url]:<sp/>https://github.com/jshttp/proxy-addr/actions?query=workflow%3Aci</highlight></codeline>
+<codeline><highlight class="normal">[coveralls-image]:<sp/>https://badgen.net/coveralls/c/github/jshttp/proxy-addr/master</highlight></codeline>
+<codeline><highlight class="normal">[coveralls-url]:<sp/>https://coveralls.io/r/jshttp/proxy-addr?branch=master</highlight></codeline>
+<codeline><highlight class="normal">[node-image]:<sp/>https://badgen.net/npm/node/proxy-addr</highlight></codeline>
+<codeline><highlight class="normal">[node-url]:<sp/>https://nodejs.org/en/download</highlight></codeline>
+<codeline><highlight class="normal">[npm-downloads-image]:<sp/>https://badgen.net/npm/dm/proxy-addr</highlight></codeline>
+<codeline><highlight class="normal">[npm-url]:<sp/>https://npmjs.org/package/proxy-addr</highlight></codeline>
+<codeline><highlight class="normal">[npm-version-image]:<sp/>https://badgen.net/npm/v/proxy-addr</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/proxy-addr/README.md"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,55 @@
+.TH "md_backend_2node__modules_2minizlib_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2minizlib_2_r_e_a_d_m_e \- minizlib 
+.PP
+ A fast zlib stream built on \fRminipass\fP and Node\&.js's zlib binding\&.
+.PP
+This module was created to serve the needs of \fRnode-tar\fP and \fRminipass-fetch\fP\&.
+.PP
+Brotli is supported in versions of node with a Brotli binding\&.
+.SH "How does this differ from the streams in `require('zlib')`?"
+.PP
+First, there are no convenience methods to compress or decompress a buffer\&. If you want those, use the built-in \fRzlib\fP module\&. This is only streams\&. That being said, Minipass streams to make it fairly easy to use as one-liners: \fRnew zlib\&.Deflate()\&.end(data)\&.read()\fP will return the deflate compressed result\&.
+.PP
+This module compresses and decompresses the data as fast as you feed it in\&. It is synchronous, and runs on the main process thread\&. Zlib and Brotli operations can be high CPU, but they're very fast, and doing it this way means much less bookkeeping and artificial deferral\&.
+.PP
+Node's built in zlib streams are built on top of \fRstream\&.Transform\fP\&. They do the maximally safe thing with respect to consistent asynchrony, buffering, and backpressure\&.
+.PP
+See \fRMinipass\fP for more on the differences between Node\&.js core streams and Minipass streams, and the convenience methods provided by that class\&.
+.SH "Classes"
+.PP
+.IP "\(bu" 2
+Deflate
+.IP "\(bu" 2
+Inflate
+.IP "\(bu" 2
+Gzip
+.IP "\(bu" 2
+Gunzip
+.IP "\(bu" 2
+DeflateRaw
+.IP "\(bu" 2
+InflateRaw
+.IP "\(bu" 2
+Unzip
+.IP "\(bu" 2
+BrotliCompress (Node v10 and higher)
+.IP "\(bu" 2
+BrotliDecompress (Node v10 and higher)
+.PP
+.SH "USAGE"
+.PP
+.PP
+.nf
+const zlib = require('minizlib')
+const input = sourceOfCompressedData()
+const decode = new zlib\&.BrotliDecompress()
+const output = whereToWriteTheDecodedData()
+input\&.pipe(decode)\&.pipe(output)
+.fi
+.PP
+.SH "REPRODUCIBLE BUILDS"
+.PP
+To create reproducible gzip compressed files across different operating systems, set \fRportable: true\fP in the options\&. This causes minizlib to set the \fROS\fP indicator in byte 9 of the extended gzip header to \fR0xFF\fP for 'unknown'\&. 

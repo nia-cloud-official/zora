@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2fresh_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2fresh_2_r_e_a_d_m_e</compoundname>
+    <title>fresh</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2fresh_2_r_e_a_d_m_e_1autotoc_md1306"/> <ulink url="https://npmjs.org/package/fresh"><image type="html" name="https://img.shields.io/npm/v/fresh.svg" alt="NPM Version" inline="yes"></image>
+</ulink> <ulink url="https://npmjs.org/package/fresh"><image type="html" name="https://img.shields.io/npm/dm/fresh.svg" alt="NPM Downloads" inline="yes"></image>
+</ulink> <ulink url="https://nodejs.org/en/"><image type="html" name="https://img.shields.io/node/v/fresh.svg" alt="Node.js Version" inline="yes"></image>
+</ulink> <ulink url="https://travis-ci.org/jshttp/fresh"><image type="html" name="https://img.shields.io/travis/jshttp/fresh/master.svg" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/r/jshttp/fresh?branch=master"><image type="html" name="https://img.shields.io/coveralls/jshttp/fresh/master.svg" alt="Test Coverage" inline="yes"></image>
+</ulink></para>
+<para>HTTP response freshness testing</para>
+<sect1 id="md_backend_2node__modules_2fresh_2_r_e_a_d_m_e_1autotoc_md1307">
+<title>Installation</title><para>This is a <ulink url="https://nodejs.org/en/">Node.js</ulink> module available through the <ulink url="https://www.npmjs.com/">npm registry</ulink>. Installation is done using the <ulink url="https://docs.npmjs.com/getting-started/installing-npm-packages-locally"><computeroutput>npm install</computeroutput> command</ulink>:</para>
+<para><programlisting><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>fresh</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2fresh_2_r_e_a_d_m_e_1autotoc_md1308">
+<title>API</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>fresh<sp/>=<sp/>require(&apos;fresh&apos;)</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2fresh_2_r_e_a_d_m_e_1autotoc_md1309">
+<title>fresh(reqHeaders, resHeaders)</title><para>Check freshness of the response using request and response headers.</para>
+<para>When the response is still &quot;fresh&quot; in the client&apos;s cache <computeroutput>true</computeroutput> is returned, otherwise <computeroutput>false</computeroutput> is returned to indicate that the client cache is now stale and the full response should be sent.</para>
+<para>When a client sends the <computeroutput>Cache-Control: no-cache</computeroutput> request header to indicate an end-to-end reload request, this module will return <computeroutput>false</computeroutput> to make handling these requests transparent.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2fresh_2_r_e_a_d_m_e_1autotoc_md1310">
+<title>Known Issues</title><para>This module is designed to only follow the HTTP specifications, not to work-around all kinda of client bugs (especially since this module typically does not recieve enough information to understand what the client actually is).</para>
+<para>There is a known issue that in certain versions of Safari, Safari will incorrectly make a request that allows this module to validate freshness of the resource even when Safari does not have a representation of the resource in the cache. The module <ulink url="https://www.npmjs.com/package/jumanji">jumanji</ulink> can be used in an Express application to work-around this issue and also provides links to further reading on this Safari bug.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2fresh_2_r_e_a_d_m_e_1autotoc_md1311">
+<title>Example</title><sect2 id="md_backend_2node__modules_2fresh_2_r_e_a_d_m_e_1autotoc_md1312">
+<title>API usage</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>reqHeaders<sp/>=<sp/>{<sp/>&apos;if-none-match&apos;:<sp/>&apos;&quot;foo&quot;&apos;<sp/>}</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>resHeaders<sp/>=<sp/>{<sp/>&apos;etag&apos;:<sp/>&apos;&quot;bar&quot;&apos;<sp/>}</highlight></codeline>
+<codeline><highlight class="normal">fresh(reqHeaders,<sp/>resHeaders)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>=&gt;<sp/>false</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>reqHeaders<sp/>=<sp/>{<sp/>&apos;if-none-match&apos;:<sp/>&apos;&quot;foo&quot;&apos;<sp/>}</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>resHeaders<sp/>=<sp/>{<sp/>&apos;etag&apos;:<sp/>&apos;&quot;foo&quot;&apos;<sp/>}</highlight></codeline>
+<codeline><highlight class="normal">fresh(reqHeaders,<sp/>resHeaders)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>=&gt;<sp/>true</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2fresh_2_r_e_a_d_m_e_1autotoc_md1313">
+<title>Using with Node.js http server</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>fresh<sp/>=<sp/>require(&apos;fresh&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>server<sp/>=<sp/>http.createServer(function<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>perform<sp/>server<sp/>logic</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>...<sp/>including<sp/>adding<sp/>ETag<sp/>/<sp/>Last-Modified<sp/>response<sp/>headers</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(isFresh(req,<sp/>res))<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>client<sp/>has<sp/>a<sp/>fresh<sp/>copy<sp/>of<sp/>resource</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.statusCode<sp/>=<sp/>304</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.end()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>send<sp/>the<sp/>resource</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.statusCode<sp/>=<sp/>200</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.end(&apos;hello,<sp/>world!&apos;)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>isFresh<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>fresh(req.headers,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&apos;etag&apos;:<sp/>res.getHeader(&apos;ETag&apos;),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&apos;last-modified&apos;:<sp/>res.getHeader(&apos;Last-Modified&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">server.listen(3000)</highlight></codeline>
+</programlisting></para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2fresh_2_r_e_a_d_m_e_1autotoc_md1314">
+<title>License</title><para>[MIT](LICENSE) </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/fresh/README.md"/>
+  </compounddef>
+</doxygen>

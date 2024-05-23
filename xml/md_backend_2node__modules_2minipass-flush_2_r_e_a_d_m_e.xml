@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2minipass-flush_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2minipass-flush_2_r_e_a_d_m_e</compoundname>
+    <title>minipass-flush</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2minipass-flush_2_r_e_a_d_m_e_1autotoc_md2161"/> A Minipass stream that calls a flush function before emitting &apos;end&apos;</para>
+<sect1 id="md_backend_2node__modules_2minipass-flush_2_r_e_a_d_m_e_1autotoc_md2162">
+<title>USAGE</title><para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>Flush<sp/>=<sp/>require(&apos;minipass-flush&apos;)</highlight></codeline>
+<codeline><highlight class="normal">cons<sp/>f<sp/>=<sp/>new<sp/>Flush({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>flush<sp/>(cb)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>call<sp/>the<sp/>cb<sp/>when<sp/>done,<sp/>or<sp/>return<sp/>a<sp/>promise</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>the<sp/>&apos;end&apos;<sp/>event<sp/>will<sp/>wait<sp/>for<sp/>it,<sp/>along<sp/>with</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>close,<sp/>finish,<sp/>and<sp/>prefinish.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>call<sp/>the<sp/>cb<sp/>with<sp/>an<sp/>error,<sp/>or<sp/>return<sp/>a<sp/>rejecting</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>promise<sp/>to<sp/>emit<sp/>&apos;error&apos;<sp/>instead<sp/>of<sp/>doing<sp/>the<sp/>&apos;end&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>rerouteAllEncryptions().then(()<sp/>=&gt;<sp/>clearAllChannels())</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>all<sp/>other<sp/>minipass<sp/>options<sp/>accepted<sp/>as<sp/>well</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">someDataSource.pipe(f).on(&apos;end&apos;,<sp/>()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>proper<sp/>flushing<sp/>has<sp/>been<sp/>accomplished</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Or<sp/>as<sp/>a<sp/>subclass<sp/>implementing<sp/>a<sp/>&apos;flush&apos;<sp/>method:</highlight></codeline>
+<codeline><highlight class="normal">class<sp/>MyFlush<sp/>extends<sp/>Flush<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>flush<sp/>(cb)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>old<sp/>fashioned<sp/>callback<sp/>style!</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>rerouteAllEncryptions(er<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>if<sp/>(er)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>cb(er)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>clearAllChannels(er<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>if<sp/>(er)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cb(er)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cb()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+<para>That&apos;s about it.</para>
+<para>If your <computeroutput>flush</computeroutput> method doesn&apos;t have to do anything asynchronous, then it&apos;s better to call the callback right away in this tick, rather than returning <computeroutput>Promise.resolve()</computeroutput>, so that the <computeroutput>end</computeroutput> event can happen as soon as possible. </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/minipass-flush/README.md"/>
+  </compounddef>
+</doxygen>

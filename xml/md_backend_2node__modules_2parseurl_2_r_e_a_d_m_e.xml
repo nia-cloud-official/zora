@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2parseurl_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2parseurl_2_r_e_a_d_m_e</compoundname>
+    <title>parseurl</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2parseurl_2_r_e_a_d_m_e_1autotoc_md2663"/> <ulink url="https://npmjs.org/package/parseurl"><image type="html" name="https://badgen.net/npm/v/parseurl" alt="NPM Version" inline="yes"></image>
+</ulink> <ulink url="https://npmjs.org/package/parseurl"><image type="html" name="https://badgen.net/npm/dm/parseurl" alt="NPM Downloads" inline="yes"></image>
+</ulink> <ulink url="https://nodejs.org/en/download"><image type="html" name="https://badgen.net/npm/node/parseurl" alt="Node.js Version" inline="yes"></image>
+</ulink> <ulink url="https://travis-ci.org/pillarjs/parseurl"><image type="html" name="https://badgen.net/travis/pillarjs/parseurl/master" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/r/pillarjs/parseurl?branch=master"><image type="html" name="https://badgen.net/coveralls/c/github/pillarjs/parseurl/master" alt="Test Coverage" inline="yes"></image>
+</ulink></para>
+<para>Parse a URL with memoization.</para>
+<sect1 id="md_backend_2node__modules_2parseurl_2_r_e_a_d_m_e_1autotoc_md2664">
+<title>Install</title><para>This is a <ulink url="https://nodejs.org/en/">Node.js</ulink> module available through the <ulink url="https://www.npmjs.com/">npm registry</ulink>. Installation is done using the <ulink url="https://docs.npmjs.com/getting-started/installing-npm-packages-locally"><computeroutput>npm install</computeroutput> command</ulink>:</para>
+<para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>parseurl</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2parseurl_2_r_e_a_d_m_e_1autotoc_md2665">
+<title>API</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>parseurl<sp/>=<sp/>require(&apos;parseurl&apos;)</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2parseurl_2_r_e_a_d_m_e_1autotoc_md2666">
+<title>parseurl(req)</title><para>Parse the URL of the given request object (looks at the <computeroutput>req.url</computeroutput> property) and return the result. The result is the same as <computeroutput>url.parse</computeroutput> in Node.js core. Calling this function multiple times on the same <computeroutput>req</computeroutput> where <computeroutput>req.url</computeroutput> does not change will return a cached parsed object, rather than parsing again.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2parseurl_2_r_e_a_d_m_e_1autotoc_md2667">
+<title>parseurl.original(req)</title><para>Parse the original URL of the given request object and return the result. This works by trying to parse <computeroutput>req.originalUrl</computeroutput> if it is a string, otherwise parses <computeroutput>req.url</computeroutput>. The result is the same as <computeroutput>url.parse</computeroutput> in Node.js core. Calling this function multiple times on the same <computeroutput>req</computeroutput> where <computeroutput>req.originalUrl</computeroutput> does not change will return a cached parsed object, rather than parsing again.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2parseurl_2_r_e_a_d_m_e_1autotoc_md2668">
+<title>Benchmark</title><para><programlisting filename=".bash"><codeline><highlight class="normal">$<sp/>npm<sp/>run-script<sp/>bench</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>parseurl@1.3.3<sp/>bench<sp/>nodejs-parseurl</highlight></codeline>
+<codeline><highlight class="normal">&gt;<sp/>node<sp/>benchmark/index.js</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>http_parser@2.8.0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>node@10.6.0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>v8@6.7.288.46-node.13</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>uv@1.21.0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>zlib@1.2.11</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>ares@1.14.0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>modules@64</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nghttp2@1.32.0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>napi@3</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>openssl@1.1.0h</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>icu@61.1</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>unicode@10.0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cldr@33.0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>tz@2018c</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>node<sp/>benchmark/fullurl.js</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Parsing<sp/>URL<sp/>&quot;http://localhost:8888/foo/bar?user=tj&amp;pet=fluffy&quot;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>4<sp/>tests<sp/>completed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fasturl<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>2,207,842<sp/>ops/sec<sp/>±3.76%<sp/>(184<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nativeurl<sp/>-<sp/>legacy<sp/>x<sp/><sp/><sp/>507,180<sp/>ops/sec<sp/>±0.82%<sp/>(191<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nativeurl<sp/>-<sp/>whatwg<sp/>x<sp/><sp/><sp/>290,044<sp/>ops/sec<sp/>±1.96%<sp/>(189<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parseurl<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/><sp/><sp/>488,907<sp/>ops/sec<sp/>±2.13%<sp/>(192<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>node<sp/>benchmark/pathquery.js</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Parsing<sp/>URL<sp/>&quot;/foo/bar?user=tj&amp;pet=fluffy&quot;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>4<sp/>tests<sp/>completed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fasturl<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>3,812,564<sp/>ops/sec<sp/>±3.15%<sp/>(188<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nativeurl<sp/>-<sp/>legacy<sp/>x<sp/>2,651,631<sp/>ops/sec<sp/>±1.68%<sp/>(189<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nativeurl<sp/>-<sp/>whatwg<sp/>x<sp/><sp/><sp/>161,837<sp/>ops/sec<sp/>±2.26%<sp/>(189<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parseurl<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>4,166,338<sp/>ops/sec<sp/>±2.23%<sp/>(184<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>node<sp/>benchmark/samerequest.js</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Parsing<sp/>URL<sp/>&quot;/foo/bar?user=tj&amp;pet=fluffy&quot;<sp/>on<sp/>same<sp/>request<sp/>object</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>4<sp/>tests<sp/>completed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fasturl<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/><sp/>3,821,651<sp/>ops/sec<sp/>±2.42%<sp/>(185<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nativeurl<sp/>-<sp/>legacy<sp/>x<sp/><sp/>2,651,162<sp/>ops/sec<sp/>±1.90%<sp/>(187<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nativeurl<sp/>-<sp/>whatwg<sp/>x<sp/><sp/><sp/><sp/>175,166<sp/>ops/sec<sp/>±1.44%<sp/>(188<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parseurl<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>14,912,606<sp/>ops/sec<sp/>±3.59%<sp/>(183<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>node<sp/>benchmark/simplepath.js</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Parsing<sp/>URL<sp/>&quot;/foo/bar&quot;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>4<sp/>tests<sp/>completed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fasturl<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>12,421,765<sp/>ops/sec<sp/>±2.04%<sp/>(191<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nativeurl<sp/>-<sp/>legacy<sp/>x<sp/><sp/>7,546,036<sp/>ops/sec<sp/>±1.41%<sp/>(188<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nativeurl<sp/>-<sp/>whatwg<sp/>x<sp/><sp/><sp/><sp/>198,843<sp/>ops/sec<sp/>±1.83%<sp/>(189<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parseurl<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>24,244,006<sp/>ops/sec<sp/>±0.51%<sp/>(194<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>node<sp/>benchmark/slash.js</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Parsing<sp/>URL<sp/>&quot;/&quot;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>4<sp/>tests<sp/>completed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fasturl<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>17,159,456<sp/>ops/sec<sp/>±3.25%<sp/>(188<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nativeurl<sp/>-<sp/>legacy<sp/>x<sp/>11,635,097<sp/>ops/sec<sp/>±3.79%<sp/>(184<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nativeurl<sp/>-<sp/>whatwg<sp/>x<sp/><sp/><sp/><sp/>240,693<sp/>ops/sec<sp/>±0.83%<sp/>(189<sp/>runs<sp/>sampled)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>parseurl<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>42,279,067<sp/>ops/sec<sp/>±0.55%<sp/>(190<sp/>runs<sp/>sampled)</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2parseurl_2_r_e_a_d_m_e_1autotoc_md2669">
+<title>License</title><para>[MIT](LICENSE) </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/parseurl/README.md"/>
+  </compounddef>
+</doxygen>

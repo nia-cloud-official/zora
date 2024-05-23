@@ -1,0 +1,342 @@
+.TH "md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2agentkeepalive_2_r_e_a_d_m_e \- agentkeepalive 
+.PP
+ \fR\fP \fR\fP \fR\fP \fR\fP
+.PP
+The enhancement features \fRkeep alive\fP \fRhttp\&.Agent\fP\&. Support \fRhttp\fP and \fRhttps\fP\&.
+.SH "What's different from original \fRhttp\&.Agent\fP?"
+.PP
+.IP "\(bu" 2
+\fRkeepAlive=true\fP by default
+.IP "\(bu" 2
+Disable Nagle's algorithm: \fRsocket\&.setNoDelay(true)\fP
+.IP "\(bu" 2
+Add free socket timeout: avoid long time inactivity socket leak in the free-sockets queue\&.
+.IP "\(bu" 2
+Add active socket timeout: avoid long time inactivity socket leak in the active-sockets queue\&.
+.IP "\(bu" 2
+TTL for active socket\&.
+.PP
+.SH "Node\&.js version required"
+.PP
+Support Node\&.js >= \fR8\&.0\&.0\fP
+.SH "Install"
+.PP
+.PP
+.nf
+$ npm install agentkeepalive \-\-save
+.fi
+.PP
+.SH "new Agent([options])"
+.PP
+.IP "\(bu" 2
+\fRoptions\fP {Object} Set of configurable options to set on the agent\&. Can have the following fields:
+.IP "  \(bu" 4
+\fRkeepAlive\fP {Boolean} Keep sockets around in a pool to be used by other requests in the future\&. Default = \fRtrue\fP\&.
+.IP "  \(bu" 4
+\fRkeepAliveMsecs\fP {Number} When using the keepAlive option, specifies the initial delay for TCP Keep-Alive packets\&. Ignored when the keepAlive option is false or undefined\&. Defaults to 1000\&. Default = \fR1000\fP\&. Only relevant if \fRkeepAlive\fP is set to \fRtrue\fP\&.
+.IP "  \(bu" 4
+\fRfreeSocketTimeout\fP: {Number} Sets the free socket to timeout after \fRfreeSocketTimeout\fP milliseconds of inactivity on the free socket\&. The default \fRserver-side timeout\fP is 5000 milliseconds, to \fRavoid ECONNRESET exceptions\fP, we set the default value to \fR4000\fP milliseconds\&. Only relevant if \fRkeepAlive\fP is set to \fRtrue\fP\&.
+.IP "  \(bu" 4
+\fRtimeout\fP: {Number} Sets the working socket to timeout after \fRtimeout\fP milliseconds of inactivity on the working socket\&. Default is \fRfreeSocketTimeout * 2\fP so long as that value is greater than or equal to 8 seconds, otherwise the default is 8 seconds\&.
+.IP "  \(bu" 4
+\fRmaxSockets\fP {Number} Maximum number of sockets to allow per host\&. Default = \fRInfinity\fP\&.
+.IP "  \(bu" 4
+\fRmaxFreeSockets\fP {Number} Maximum number of sockets (per host) to leave open in a free state\&. Only relevant if \fRkeepAlive\fP is set to \fRtrue\fP\&. Default = \fR256\fP\&.
+.IP "  \(bu" 4
+\fRsocketActiveTTL\fP {Number} Sets the socket active time to live, even if it's in use\&. If not set, the behaviour keeps the same (the socket will be released only when free) Default = \fRnull\fP\&.
+.PP
+
+.PP
+.SH "Usage"
+.PP
+.PP
+.nf
+const http = require('http');
+const Agent = require('agentkeepalive');
+
+const keepaliveAgent = new Agent({
+  maxSockets: 100,
+  maxFreeSockets: 10,
+  timeout: 60000, // active socket keepalive for 60 seconds
+  freeSocketTimeout: 30000, // free socket keepalive for 30 seconds
+});
+
+const options = {
+  host: 'cnodejs\&.org',
+  port: 80,
+  path: '/',
+  method: 'GET',
+  agent: keepaliveAgent,
+};
+
+const req = http\&.request(options, res => {
+  console\&.log('STATUS: ' + res\&.statusCode);
+  console\&.log('HEADERS: ' + JSON\&.stringify(res\&.headers));
+  res\&.setEncoding('utf8');
+  res\&.on('data', function (chunk) {
+    console\&.log('BODY: ' + chunk);
+  });
+});
+req\&.on('error', e => {
+  console\&.log('problem with request: ' + e\&.message);
+});
+req\&.end();
+
+setTimeout(() => {
+  if (keepaliveAgent\&.statusChanged) {
+    console\&.log('[%s] agent status changed: %j', Date(), keepaliveAgent\&.getCurrentStatus());
+  }
+}, 2000);
+.fi
+.PP
+.SS "\fRgetter agent\&.statusChanged\fP"
+counters have change or not after last checkpoint\&.
+.SS "\fRagent\&.getCurrentStatus()\fP"
+\fRagent\&.getCurrentStatus()\fP will return a object to show the status of this agent:
+.PP
+.PP
+.nf
+{
+  createSocketCount: 10,
+  closeSocketCount: 5,
+  timeoutSocketCount: 0,
+  requestCount: 5,
+  freeSockets: { 'localhost:57479:': 3 },
+  sockets: { 'localhost:57479:': 5 },
+  requests: {}
+}
+.fi
+.PP
+.SS "Support \fRhttps\fP"
+.PP
+.nf
+const https = require('https');
+const HttpsAgent = require('agentkeepalive')\&.HttpsAgent;
+
+const keepaliveAgent = new HttpsAgent();
+// https://www\&.google\&.com/search?q=nodejs&sugexp=chrome,mod=12&sourceid=chrome&ie=UTF\-8
+const options = {
+  host: 'www\&.google\&.com',
+  port: 443,
+  path: '/search?q=nodejs&sugexp=chrome,mod=12&sourceid=chrome&ie=UTF\-8',
+  method: 'GET',
+  agent: keepaliveAgent,
+};
+
+const req = https\&.request(options, res => {
+  console\&.log('STATUS: ' + res\&.statusCode);
+  console\&.log('HEADERS: ' + JSON\&.stringify(res\&.headers));
+  res\&.setEncoding('utf8');
+  res\&.on('data', chunk => {
+    console\&.log('BODY: ' + chunk);
+  });
+});
+
+req\&.on('error', e => {
+  console\&.log('problem with request: ' + e\&.message);
+});
+req\&.end();
+
+setTimeout(() => {
+  console\&.log('agent status: %j', keepaliveAgent\&.getCurrentStatus());
+}, 2000);
+.fi
+.PP
+.SS "Support \fRreq\&.reusedSocket\fP"
+This agent implements the \fRreq\&.reusedSocket\fP to determine whether a request is send through a reused socket\&.
+.PP
+When server closes connection at unfortunate time (\fRkeep-alive race\fP), the http client will throw a \fRECONNRESET\fP error\&. Under this circumstance, \fRreq\&.reusedSocket\fP is useful when we want to retry the request automatically\&.
+.PP
+.PP
+.nf
+const http = require('http');
+const Agent = require('agentkeepalive');
+const agent = new Agent();
+
+const req = http
+  \&.get('http://localhost:3000', { agent }, (res) => {
+    // \&.\&.\&.
+  })
+  \&.on('error', (err) => {
+    if (req\&.reusedSocket && err\&.code === 'ECONNRESET') {
+      // retry the request or anything else\&.\&.\&.
+    }
+  })
+.fi
+.PP
+.PP
+This behavior is consistent with Node\&.js core\&. But through \fRagentkeepalive\fP, you can use this feature in older Node\&.js version\&.
+.SH "\fRBenchmark\fP"
+.PP
+run the benchmark:
+.PP
+.PP
+.nf
+cd benchmark
+sh start\&.sh
+.fi
+.PP
+.PP
+Intel(R) Core(TM)2 Duo CPU P8600 @ 2\&.40GHz
+.PP
+node@v0\&.8\&.9
+.PP
+50 maxSockets, 60 concurrent, 1000 requests per concurrent, 5ms delay
+.PP
+Keep alive agent (30 seconds):
+.PP
+.PP
+.nf
+Transactions:          60000 hits
+Availability:         100\&.00 %
+Elapsed time:          29\&.70 secs
+Data transferred:        14\&.88 MB
+Response time:            0\&.03 secs
+Transaction rate:      2020\&.20 trans/sec
+Throughput:           0\&.50 MB/sec
+Concurrency:           59\&.84
+Successful transactions:       60000
+Failed transactions:             0
+Longest transaction:          0\&.15
+Shortest transaction:         0\&.01
+.fi
+.PP
+.PP
+Normal agent:
+.PP
+.PP
+.nf
+Transactions:          60000 hits
+Availability:         100\&.00 %
+Elapsed time:          46\&.53 secs
+Data transferred:        14\&.88 MB
+Response time:            0\&.05 secs
+Transaction rate:      1289\&.49 trans/sec
+Throughput:           0\&.32 MB/sec
+Concurrency:           59\&.81
+Successful transactions:       60000
+Failed transactions:             0
+Longest transaction:          0\&.45
+Shortest transaction:         0\&.00
+.fi
+.PP
+.PP
+Socket created:
+.PP
+.PP
+.nf
+[proxy\&.js:120000] keepalive, 50 created, 60000 requestFinished, 1200 req/socket, 0 requests, 0 sockets, 0 unusedSockets, 50 timeout
+{" <10ms":662," <15ms":17825," <20ms":20552," <30ms":17646," <40ms":2315," <50ms":567," <100ms":377," <150ms":56," <200ms":0," >=200ms+":0}
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+[proxy\&.js:120000] normal   , 53866 created, 84260 requestFinished, 1\&.56 req/socket, 0 requests, 0 sockets
+{" <10ms":75," <15ms":1112," <20ms":10947," <30ms":32130," <40ms":8228," <50ms":3002," <100ms":4274," <150ms":181," <200ms":18," >=200ms+":33}
+.fi
+.PP
+.SH "License"
+.PP
+[MIT](LICENSE)
+.SH "Contributors"
+.PP
+\fR
+.br
+\*<\fBfengmk2\fP\*> \fP
+.br
+   \fR
+.br
+\*<\fBdead-horse\fP\*> \fP
+.br
+   \fR
+.br
+\*<\fBAndrewLeedham\fP\*> \fP
+.br
+   \fR
+.br
+\*<\fBngot\fP\*> \fP
+.br
+   \fR
+.br
+\*<\fBwrynearson\fP\*> \fP
+.br
+   \fR
+.br
+\*<\fBaaronArinder\fP\*> \fP
+.br
+    \fR
+.br
+\*<\fBalexpenev-s\fP\*> \fP
+.br
+   \fR
+.br
+\*<\fBblemoine\fP\*> \fP
+.br
+   \fR
+.br
+\*<\fBbdehamer\fP\*> \fP
+.br
+   \fR
+.br
+\*<\fBDylanPiercey\fP\*> \fP
+.br
+   \fR
+.br
+\*<\fBcixel\fP\*> \fP
+.br
+   \fR
+.br
+\*<\fBHerringtonDarkholme\fP\*> \fP
+.br
+    \fR
+.br
+\*<\fBdenghongcai\fP\*> \fP
+.br
+   \fR
+.br
+\*<\fBkibertoad\fP\*> \fP
+.br
+   \fR
+.br
+\*<\fBpangorgo\fP\*> \fP
+.br
+   \fR
+.br
+\*<\fBmattiash\fP\*> \fP
+.br
+   \fR
+.br
+\*<\fBnabeelbukhari\fP\*> \fP
+.br
+   \fR
+.br
+\*<\fBpmalouin\fP\*> \fP
+.br
+    \fR
+.br
+\*<\fBSimenB\fP\*> \fP
+.br
+   \fR
+.br
+\*<\fBvinaybedre\fP\*> \fP
+.br
+   \fR
+.br
+\*<\fBstarkwang\fP\*> \fP
+.br
+   \fR
+.br
+\*<\fBkillagu\fP\*> \fP
+.br
+   \fR
+.br
+\*<\fBtony-gutierrez\fP\*> \fP
+.br
+   \fR
+.br
+\*<\fBwhxaxes\fP\*> \fP
+.br
+   
+.PP
+This project follows the git-contributor \fRspec\fP, auto updated at \fRSat Aug 05 2023 02:36:31 GMT+0800\fP\&. 

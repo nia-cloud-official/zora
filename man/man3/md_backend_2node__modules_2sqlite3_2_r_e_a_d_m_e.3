@@ -1,0 +1,295 @@
+.TH "md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2sqlite3_2_r_e_a_d_m_e \- ⚙️ node-sqlite3 
+.PP
+ Asynchronous, non-blocking \fRSQLite3\fP bindings for \fRNode\&.js\fP\&.
+.PP
+\fR\fP  \fR\fP \fR\fP \fR\fP
+.SH "Features"
+.PP
+.IP "\(bu" 2
+Straightforward query and parameter binding interface
+.IP "\(bu" 2
+Full Buffer/Blob support
+.IP "\(bu" 2
+Extensive \fRdebugging support\fP
+.IP "\(bu" 2
+\fRQuery serialization\fP API
+.IP "\(bu" 2
+\fRExtension support\fP, including bundled support for the \fRjson1 extension\fP
+.IP "\(bu" 2
+Big test suite
+.IP "\(bu" 2
+Written in modern C++ and tested for memory leaks
+.IP "\(bu" 2
+Bundles SQLite v3\&.44\&.2, or you can build using a local SQLite
+.PP
+.SH "Installing"
+.PP
+You can use \fR\fRnpm\fP\fP or \fR\fRyarn\fP\fP to install \fRsqlite3\fP:
+.PP
+.IP "\(bu" 2
+(recommended) Latest published package: 
+.PP
+.nf
+npm install sqlite3
+# or
+yarn add sqlite3
+
+.fi
+.PP
+
+.IP "\(bu" 2
+GitHub's \fRmaster\fP branch: \fRnpm install https://github.com/tryghost/node-sqlite3/tarball/master\fP
+.PP
+.SS "Prebuilt binaries"
+\fRsqlite3\fP v5+ was rewritten to use \fRNode-API\fP so prebuilt binaries do not need to be built for specific Node versions\&. \fRsqlite3\fP currently builds for both Node-API v3 and v6\&. Check the \fRNode-API version matrix\fP to ensure your Node version supports one of these\&. The prebuilt binaries should be supported on Node v10+\&.
+.PP
+The module uses \fR\fRprebuild-install\fP\fP to download the prebuilt binary for your platform, if it exists\&. These binaries are hosted on GitHub Releases for \fRsqlite3\fP versions above 5\&.0\&.2, and they are hosted on S3 otherwise\&. The following targets are currently provided:
+.PP
+.IP "\(bu" 2
+\fRdarwin-arm64\fP
+.IP "\(bu" 2
+\fRdarwin-x64\fP
+.IP "\(bu" 2
+\fRlinux-arm64\fP
+.IP "\(bu" 2
+\fRlinux-x64\fP
+.IP "\(bu" 2
+\fRlinuxmusl-arm64\fP
+.IP "\(bu" 2
+\fRlinuxmusl-x64\fP
+.IP "\(bu" 2
+\fRwin32-ia32\fP
+.IP "\(bu" 2
+\fRwin32-x64\fP
+.PP
+.PP
+Unfortunately, \fRprebuild\fP cannot differentiate between \fRarmv6\fP and \fRarmv7\fP, and instead uses \fRarm\fP as the \fR{arch}\fP\&. Until that is fixed, you will still need to install \fRsqlite3\fP from \fBsource\fP\&.
+.PP
+Support for other platforms and architectures may be added in the future if CI supports building on them\&.
+.PP
+If your environment isn't supported, it'll use \fRnode-gyp\fP to build SQLite, but you will need to install a C++ compiler and linker\&.
+.SS "Other ways to install"
+It is also possible to make your own build of \fRsqlite3\fP from its source instead of its npm package (\fBSee below\&.\fP)\&.
+.PP
+The \fRsqlite3\fP module also works with \fRnode-webkit\fP if node-webkit contains a supported version of Node\&.js engine\&. \fB(See below\&.)\fP
+.PP
+SQLite's \fRSQLCipher extension\fP is also supported\&. \fB(See below\&.)\fP
+.SH "API"
+.PP
+See the \fRAPI documentation\fP in the wiki\&.
+.SH "Usage"
+.PP
+\fBNote:\fP the module must be \fBinstalled\fP before use\&.
+.PP
+.PP
+.nf
+ js
+const sqlite3 = require('sqlite3')\&.verbose();
+const db = new sqlite3\&.Database(':memory:');
+
+db\&.serialize(() => {
+    db\&.run("CREATE TABLE lorem (info TEXT)");
+
+    const stmt = db\&.prepare("INSERT INTO lorem VALUES (?)");
+    for (let i = 0; i < 10; i++) {
+        stmt\&.run("Ipsum " + i);
+    }
+    stmt\&.finalize();
+
+    db\&.each("SELECT rowid AS id, info FROM lorem", (err, row) => {
+        console\&.log(row\&.id + ": " + row\&.info);
+    });
+});
+
+db\&.close();
+.fi
+.PP
+.SS "Source install"
+To skip searching for pre-compiled binaries, and force a build from source, use
+.PP
+.PP
+.nf
+npm install \-\-build\-from\-source
+.fi
+.PP
+.PP
+The sqlite3 module depends only on libsqlite3\&. However, by default, an internal/bundled copy of sqlite will be built and statically linked, so an externally installed sqlite3 is not required\&.
+.PP
+If you wish to install against an external sqlite then you need to pass the \fR--sqlite\fP argument to \fRnpm\fP wrapper:
+.PP
+.PP
+.nf
+npm install \-\-build\-from\-source \-\-sqlite=/usr/local
+.fi
+.PP
+.PP
+If building against an external sqlite3 make sure to have the development headers available\&. Mac OS X ships with these by default\&. If you don't have them installed, install the \fR-dev\fP package with your package manager, e\&.g\&. \fRapt-get install libsqlite3-dev\fP for Debian/Ubuntu\&. Make sure that you have at least \fRlibsqlite3\fP >= 3\&.6\&.
+.PP
+Note, if building against homebrew-installed sqlite on OS X you can do:
+.PP
+.PP
+.nf
+npm install \-\-build\-from\-source \-\-sqlite=/usr/local/opt/sqlite/
+.fi
+.PP
+.SS "Custom file header (magic)"
+The default sqlite file header is 'SQLite format 3'\&. You can specify a different magic, though this will make standard tools and libraries unable to work with your files\&.
+.PP
+.PP
+.nf
+npm install \-\-build\-from\-source \-\-sqlite_magic="MyCustomMagic15"
+.fi
+.PP
+.PP
+Note that the magic \fImust\fP be exactly 15 characters long (16 bytes including null terminator)\&.
+.SS "Building for node-webkit"
+Because of ABI differences, \fRsqlite3\fP must be built in a custom to be used with \fRnode-webkit\fP\&.
+.PP
+To build \fRsqlite3\fP for node-webkit:
+.PP
+.IP "1." 4
+Install \fR\fRnw-gyp\fP\fP globally: \fRnpm install nw-gyp -g\fP *(unless already installed)*
+.IP "2." 4
+Build the module with the custom flags of \fR--runtime\fP, \fR--target_arch\fP, and \fR--target\fP:
+.PP
+.PP
+.PP
+.nf
+NODE_WEBKIT_VERSION="0\&.8\&.6" # see latest version at https://github\&.com/rogerwang/node\-webkit#downloads
+npm install sqlite3 \-\-build\-from\-source \-\-runtime=node\-webkit \-\-target_arch=ia32 \-\-target=$(NODE_WEBKIT_VERSION)
+.fi
+.PP
+.PP
+You can also run this command from within a \fRsqlite3\fP checkout:
+.PP
+.PP
+.nf
+npm install \-\-build\-from\-source \-\-runtime=node\-webkit \-\-target_arch=ia32 \-\-target=$(NODE_WEBKIT_VERSION)
+.fi
+.PP
+.PP
+Remember the following:
+.PP
+.IP "\(bu" 2
+You must provide the right \fR--target_arch\fP flag\&. \fRia32\fP is needed to target 32bit node-webkit builds, while \fRx64\fP will target 64bit node-webkit builds (if available for your platform)\&.
+.IP "\(bu" 2
+After the \fRsqlite3\fP package is built for node-webkit it cannot run in the vanilla Node\&.js (and vice versa)\&.
+.IP "  \(bu" 4
+For example, \fRnpm test\fP of the node-webkit's package would fail\&.
+.PP
+
+.PP
+.PP
+Visit the “\fRUsing Node modules\fP” article in the node-webkit's wiki for more details\&.
+.SS "Building for SQLCipher"
+For instructions on building SQLCipher, see \fRBuilding SQLCipher for Node\&.js\fP\&. Alternatively, you can install it with your local package manager\&.
+.PP
+To run against SQLCipher, you need to compile \fRsqlite3\fP from source by passing build options like:
+.PP
+.PP
+.nf
+npm install sqlite3 \-\-build\-from\-source \-\-sqlite_libname=sqlcipher \-\-sqlite=/usr/
+
+node \-e 'require("sqlite3")'
+.fi
+.PP
+.PP
+If your SQLCipher is installed in a custom location (if you compiled and installed it yourself), you'll need to set some environment variables:
+.SS "On OS X with Homebrew"
+Set the location where \fRbrew\fP installed it:
+.PP
+.PP
+.nf
+export LDFLAGS="\-L`brew \-\-prefix`/opt/sqlcipher/lib"
+export CPPFLAGS="\-I`brew \-\-prefix`/opt/sqlcipher/include/sqlcipher"
+npm install sqlite3 \-\-build\-from\-source \-\-sqlite_libname=sqlcipher \-\-sqlite=`brew \-\-prefix`
+
+node \-e 'require("sqlite3")'
+.fi
+.PP
+.SS "On most Linuxes (including Raspberry Pi)"
+Set the location where \fRmake\fP installed it:
+.PP
+.PP
+.nf
+export LDFLAGS="\-L/usr/local/lib"
+export CPPFLAGS="\-I/usr/local/include \-I/usr/local/include/sqlcipher"
+export CXXFLAGS="$CPPFLAGS"
+npm install sqlite3 \-\-build\-from\-source \-\-sqlite_libname=sqlcipher \-\-sqlite=/usr/local \-\-verbose
+
+node \-e 'require("sqlite3")'
+.fi
+.PP
+.SS "Custom builds and Electron"
+Running \fRsqlite3\fP through \fRelectron-rebuild\fP does not preserve the SQLCipher extension, so some additional flags are needed to make this build Electron compatible\&. Your \fRnpm install sqlite3 --build-from-source\fP command needs these additional flags (be sure to replace the target version with the current Electron version you are working with):
+.PP
+.PP
+.nf
+\-\-runtime=electron \-\-target=18\&.2\&.1 \-\-dist\-url=https://electronjs\&.org/headers
+.fi
+.PP
+.PP
+In the case of MacOS with Homebrew, the command should look like the following:
+.PP
+.PP
+.nf
+npm install sqlite3 \-\-build\-from\-source \-\-sqlite_libname=sqlcipher \-\-sqlite=`brew \-\-prefix` \-\-runtime=electron \-\-target=18\&.2\&.1 \-\-dist\-url=https://electronjs\&.org/headers
+.fi
+.PP
+.SH "Testing"
+.PP
+.PP
+.nf
+npm test
+.fi
+.PP
+.SH "Contributors"
+.PP
+.IP "\(bu" 2
+\fRDaniel Lockyer\fP
+.IP "\(bu" 2
+\fRKonstantin Käfer\fP
+.IP "\(bu" 2
+\fRDane Springmeyer\fP
+.IP "\(bu" 2
+\fRWill White\fP
+.IP "\(bu" 2
+\fROrlando Vazquez\fP
+.IP "\(bu" 2
+\fRArtem Kustikov\fP
+.IP "\(bu" 2
+\fREric Fredricksen\fP
+.IP "\(bu" 2
+\fRJohn Wright\fP
+.IP "\(bu" 2
+\fRRyan Dahl\fP
+.IP "\(bu" 2
+\fRTom MacWright\fP
+.IP "\(bu" 2
+\fRCarter Thaxton\fP
+.IP "\(bu" 2
+\fRAudrius Kažukauskas\fP
+.IP "\(bu" 2
+\fRJohannes Schauer\fP
+.IP "\(bu" 2
+\fRMithgol\fP
+.IP "\(bu" 2
+\fRKewde\fP
+.PP
+.SH "Acknowledgments"
+.PP
+Thanks to \fROrlando Vazquez\fP, \fREric Fredricksen\fP and \fRRyan Dahl\fP for their SQLite bindings for node, and to mraleph on Freenode's #v8 for answering questions\&.
+.PP
+This module was originally created by \fRMapbox\fP & is now maintained by \fRGhost\fP\&.
+.SH "Changelog"
+.PP
+We use \fRGitHub releases\fP for notes on the latest versions\&. See \fRCHANGELOG\&.md\fP in git history for details on older versions\&.
+.SH "License"
+.PP
+\fRnode-sqlite3\fP is \fRBSD licensed\fP\&.
+.PP
+\fR\fP 

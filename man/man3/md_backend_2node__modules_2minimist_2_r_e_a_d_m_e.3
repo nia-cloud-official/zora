@@ -1,0 +1,113 @@
+.TH "md_backend_2node__modules_2minimist_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2minimist_2_r_e_a_d_m_e \- minimist \*{\fR\fP\*}  
+.PP
+ \fR\fP \fR\fP [][license-url] \fR\fP
+.PP
+\fR\fP.PP
+parse argument options
+.PP
+This module is the guts of optimist's argument parser without all the fanciful decoration\&.
+.SH "example"
+.PP
+.PP
+.nf
+ js
+var argv = require('minimist')(process\&.argv\&.slice(2));
+console\&.log(argv);
+.fi
+.PP
+.PP
+.PP
+.nf
+$ node example/parse\&.js \-a beep \-b boop
+{ _: [], a: 'beep', b: 'boop' }
+.fi
+.PP
+.PP
+.PP
+.nf
+$ node example/parse\&.js \-x 3 \-y 4 \-n5 \-abc \-\-beep=boop foo bar baz
+{
+    _: ['foo', 'bar', 'baz'],
+    x: 3,
+    y: 4,
+    n: 5,
+    a: true,
+    b: true,
+    c: true,
+    beep: 'boop'
+}
+.fi
+.PP
+.SH "security"
+.PP
+Previous versions had a prototype pollution bug that could cause privilege escalation in some circumstances when handling untrusted user input\&.
+.PP
+Please use version 1\&.2\&.6 or later:
+.PP
+.IP "\(bu" 2
+https://security.snyk.io/vuln/SNYK-JS-MINIMIST-2429795 (version <=1\&.2\&.5)
+.IP "\(bu" 2
+https://snyk.io/vuln/SNYK-JS-MINIMIST-559764 (version <=1\&.2\&.3)
+.PP
+.SH "methods"
+.PP
+.PP
+.nf
+ js
+var parseArgs = require('minimist')
+.fi
+.PP
+.SS "var argv = parseArgs(args, opts={})"
+Return an argument object \fRargv\fP populated with the array arguments from \fRargs\fP\&.
+.PP
+\fRargv\&._\fP contains all the arguments that didn't have an option associated with them\&.
+.PP
+Numeric-looking arguments will be returned as numbers unless \fRopts\&.string\fP or \fRopts\&.boolean\fP is set for that argument name\&.
+.PP
+Any arguments after `'--'\fRwill not be parsed and will end up in\fPargv\&._`\&.
+.PP
+options can be:
+.PP
+.IP "\(bu" 2
+\fRopts\&.string\fP - a string or array of strings argument names to always treat as strings
+.IP "\(bu" 2
+\fRopts\&.boolean\fP - a boolean, string or array of strings to always treat as booleans\&. if \fRtrue\fP will treat all double hyphenated arguments without equal signs as boolean (e\&.g\&. affects \fR--foo\fP, not \fR-f\fP or \fR--foo=bar\fP)
+.IP "\(bu" 2
+\fRopts\&.alias\fP - an object mapping string names to strings or arrays of string argument names to use as aliases
+.IP "\(bu" 2
+\fRopts\&.default\fP - an object mapping string argument names to default values
+.IP "\(bu" 2
+\fRopts\&.stopEarly\fP - when true, populate \fRargv\&._\fP with everything after the first non-option
+.IP "\(bu" 2
+`opts['--']\fR- when true, populate\fPargv\&._\fRwith everything before the\fP--\fR and\fPargv['--']\fRwith everything after the\fP--`\&. Here's an example:
+.PP
+.PP
+.nf
+> require('\&./')('one two three \-\- four five \-\-six'\&.split(' '), { '\-\-': true })
+{
+  _: ['one', 'two', 'three'],
+  '\-\-': ['four', 'five', '\-\-six']
+}
+.fi
+.PP
+.PP
+Note that with `opts['--']\fRset, parsing for arguments still stops after the \fP--`\&.
+.IP "\(bu" 2
+\fRopts\&.unknown\fP - a function which is invoked with a command line parameter not defined in the \fRopts\fP configuration object\&. If the function returns \fRfalse\fP, the unknown option is not added to \fRargv\fP\&.
+.PP
+.SH "install"
+.PP
+With \fRnpm\fP do:
+.PP
+.PP
+.nf
+npm install minimist
+.fi
+.PP
+.SH "license"
+.PP
+MIT 

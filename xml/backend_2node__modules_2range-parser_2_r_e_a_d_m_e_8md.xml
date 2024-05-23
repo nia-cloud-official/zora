@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2range-parser_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>range-parser</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![NPM<sp/>Version][npm-version-image]][npm-url]</highlight></codeline>
+<codeline><highlight class="normal">[![NPM<sp/>Downloads][npm-downloads-image]][npm-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Node.js<sp/>Version][node-image]][node-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Build<sp/>Status][travis-image]][travis-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Test<sp/>Coverage][coveralls-image]][coveralls-url]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Range<sp/>header<sp/>field<sp/>parser.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Installation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>a<sp/>[Node.js](https://nodejs.org/en/)<sp/>module<sp/>available<sp/>through<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[npm<sp/>registry](https://www.npmjs.com/).<sp/>Installation<sp/>is<sp/>done<sp/>using<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[`npm<sp/>install`<sp/>command](https://docs.npmjs.com/getting-started/installing-npm-packages-locally):</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```sh</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>range-parser</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>API</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;!--<sp/>eslint-disable<sp/>no-unused-vars<sp/>--&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>parseRange<sp/>=<sp/>require(&apos;range-parser&apos;)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>parseRange(size,<sp/>header,<sp/>options)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Parse<sp/>the<sp/>given<sp/>`header`<sp/>string<sp/>where<sp/>`size`<sp/>is<sp/>the<sp/>maximum<sp/>size<sp/>of<sp/>the<sp/>resource.</highlight></codeline>
+<codeline><highlight class="normal">An<sp/>array<sp/>of<sp/>ranges<sp/>will<sp/>be<sp/>returned<sp/>or<sp/>negative<sp/>numbers<sp/>indicating<sp/>an<sp/>error<sp/>parsing.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`-2`<sp/>signals<sp/>a<sp/>malformed<sp/>header<sp/>string</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`-1`<sp/>signals<sp/>an<sp/>unsatisfiable<sp/>range</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;!--<sp/>eslint-disable<sp/>no-undef<sp/>--&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>parse<sp/>header<sp/>from<sp/>request</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>range<sp/>=<sp/>parseRange(size,<sp/>req.headers.range)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>the<sp/>type<sp/>of<sp/>the<sp/>range</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>(range.type<sp/>===<sp/>&apos;bytes&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>the<sp/>ranges</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>range.forEach(function<sp/>(r)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>do<sp/>something<sp/>with<sp/>r.start<sp/>and<sp/>r.end</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Options</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">These<sp/>properties<sp/>are<sp/>accepted<sp/>in<sp/>the<sp/>options<sp/>object.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>combine</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Specifies<sp/>if<sp/>overlapping<sp/>&amp;<sp/>adjacent<sp/>ranges<sp/>should<sp/>be<sp/>combined,<sp/>defaults<sp/>to<sp/>`false`.</highlight></codeline>
+<codeline><highlight class="normal">When<sp/>`true`,<sp/>ranges<sp/>will<sp/>be<sp/>combined<sp/>and<sp/>returned<sp/>as<sp/>if<sp/>they<sp/>were<sp/>specified<sp/>that</highlight></codeline>
+<codeline><highlight class="normal">way<sp/>in<sp/>the<sp/>header.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;!--<sp/>eslint-disable<sp/>no-undef<sp/>--&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">parseRange(100,<sp/>&apos;bytes=50-55,0-10,5-10,56-60&apos;,<sp/>{<sp/>combine:<sp/>true<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>=&gt;<sp/>[</highlight></codeline>
+<codeline><highlight class="normal">//<sp/><sp/><sp/><sp/><sp/><sp/>{<sp/>start:<sp/>0,<sp/><sp/>end:<sp/>10<sp/>},</highlight></codeline>
+<codeline><highlight class="normal">//<sp/><sp/><sp/><sp/><sp/><sp/>{<sp/>start:<sp/>50,<sp/>end:<sp/>60<sp/>}</highlight></codeline>
+<codeline><highlight class="normal">//<sp/><sp/><sp/><sp/>]</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>License</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[MIT](LICENSE)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[coveralls-image]:<sp/>https://badgen.net/coveralls/c/github/jshttp/range-parser/master</highlight></codeline>
+<codeline><highlight class="normal">[coveralls-url]:<sp/>https://coveralls.io/r/jshttp/range-parser?branch=master</highlight></codeline>
+<codeline><highlight class="normal">[node-image]:<sp/>https://badgen.net/npm/node/range-parser</highlight></codeline>
+<codeline><highlight class="normal">[node-url]:<sp/>https://nodejs.org/en/download</highlight></codeline>
+<codeline><highlight class="normal">[npm-downloads-image]:<sp/>https://badgen.net/npm/dm/range-parser</highlight></codeline>
+<codeline><highlight class="normal">[npm-url]:<sp/>https://npmjs.org/package/range-parser</highlight></codeline>
+<codeline><highlight class="normal">[npm-version-image]:<sp/>https://badgen.net/npm/v/range-parser</highlight></codeline>
+<codeline><highlight class="normal">[travis-image]:<sp/>https://badgen.net/travis/jshttp/range-parser/master</highlight></codeline>
+<codeline><highlight class="normal">[travis-url]:<sp/>https://travis-ci.org/jshttp/range-parser</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/range-parser/README.md"/>
+  </compounddef>
+</doxygen>

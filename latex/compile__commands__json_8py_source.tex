@@ -1,0 +1,126 @@
+\doxysection{compile\+\_\+commands\+\_\+json.\+py}
+\hypertarget{compile__commands__json_8py_source}{}\label{compile__commands__json_8py_source}\index{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/generator/compile\_commands\_json.py@{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/generator/compile\_commands\_json.py}}
+\mbox{\hyperlink{compile__commands__json_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00001}\mbox{\hyperlink{namespacegyp_1_1generator_1_1compile__commands__json}{00001}}\ \textcolor{comment}{\#\ Copyright\ (c)\ 2016\ Ben\ Noordhuis\ <info@bnoordhuis.nl>.\ All\ rights\ reserved.}}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00002}00002\ \textcolor{comment}{\#\ Use\ of\ this\ source\ code\ is\ governed\ by\ a\ BSD-\/style\ license\ that\ can\ be}}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00003}00003\ \textcolor{comment}{\#\ found\ in\ the\ LICENSE\ file.}}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00005}00005\ \textcolor{keyword}{import}\ \mbox{\hyperlink{namespacegyp_1_1common}{gyp.common}}}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00006}00006\ \textcolor{keyword}{import}\ \mbox{\hyperlink{namespacegyp_1_1xcode__emulation}{gyp.xcode\_emulation}}}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00007}00007\ \textcolor{keyword}{import}\ json}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00008}00008\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00010}\mbox{\hyperlink{namespacegyp_1_1generator_1_1compile__commands__json_aa0fcb734c01f8caf48aa4551dd5ee49d}{00010}}\ generator\_additional\_non\_configuration\_keys\ =\ []}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00011}\mbox{\hyperlink{namespacegyp_1_1generator_1_1compile__commands__json_a85d527e3cd620040838122674a83256d}{00011}}\ generator\_additional\_path\_sections\ =\ []}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00012}\mbox{\hyperlink{namespacegyp_1_1generator_1_1compile__commands__json_a56c7239af01d40d5d80bdcb54d1b6abe}{00012}}\ generator\_extra\_sources\_for\_rules\ =\ []}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00013}\mbox{\hyperlink{namespacegyp_1_1generator_1_1compile__commands__json_a401761b8269371876794b86610bc3a30}{00013}}\ generator\_filelist\_paths\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00014}\mbox{\hyperlink{namespacegyp_1_1generator_1_1compile__commands__json_abb314725896f707b4779322322f431bf}{00014}}\ generator\_supports\_multiple\_toolsets\ =\ \textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00015}\mbox{\hyperlink{namespacegyp_1_1generator_1_1compile__commands__json_a32bb3140fa2ec36c7bfe9b6de76c8800}{00015}}\ generator\_wants\_sorted\_dependencies\ =\ \textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00017}00017\ \textcolor{comment}{\#\ Lifted\ from\ make.py.\ \ The\ actual\ values\ don't\ matter\ much.}}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00018}\mbox{\hyperlink{namespacegyp_1_1generator_1_1compile__commands__json_aebd3e81d78f9a78653fd855ec1120059}{00018}}\ generator\_default\_variables\ =\ \{}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00019}00019\ \ \ \ \ \textcolor{stringliteral}{"{}CONFIGURATION\_NAME"{}}:\ \textcolor{stringliteral}{"{}\$(BUILDTYPE)"{}},}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00020}00020\ \ \ \ \ \textcolor{stringliteral}{"{}EXECUTABLE\_PREFIX"{}}:\ \textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00021}00021\ \ \ \ \ \textcolor{stringliteral}{"{}EXECUTABLE\_SUFFIX"{}}:\ \textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00022}00022\ \ \ \ \ \textcolor{stringliteral}{"{}INTERMEDIATE\_DIR"{}}:\ \textcolor{stringliteral}{"{}\$(obj).\$(TOOLSET)/\$(TARGET)/geni"{}},}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00023}00023\ \ \ \ \ \textcolor{stringliteral}{"{}PRODUCT\_DIR"{}}:\ \textcolor{stringliteral}{"{}\$(builddir)"{}},}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00024}00024\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_DIRNAME"{}}:\ \textcolor{stringliteral}{"{}\%(INPUT\_DIRNAME)s"{}},}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00025}00025\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_EXT"{}}:\ \textcolor{stringliteral}{"{}\$(suffix\ \$<)"{}},}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00026}00026\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_NAME"{}}:\ \textcolor{stringliteral}{"{}\$(notdir\ \$<)"{}},}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00027}00027\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_PATH"{}}:\ \textcolor{stringliteral}{"{}\$(abspath\ \$<)"{}},}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00028}00028\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_ROOT"{}}:\ \textcolor{stringliteral}{"{}\%(INPUT\_ROOT)s"{}},}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00029}00029\ \ \ \ \ \textcolor{stringliteral}{"{}SHARED\_INTERMEDIATE\_DIR"{}}:\ \textcolor{stringliteral}{"{}\$(obj)/gen"{}},}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00030}00030\ \ \ \ \ \textcolor{stringliteral}{"{}SHARED\_LIB\_PREFIX"{}}:\ \textcolor{stringliteral}{"{}lib"{}},}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00031}00031\ \ \ \ \ \textcolor{stringliteral}{"{}STATIC\_LIB\_PREFIX"{}}:\ \textcolor{stringliteral}{"{}lib"{}},}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00032}00032\ \ \ \ \ \textcolor{stringliteral}{"{}STATIC\_LIB\_SUFFIX"{}}:\ \textcolor{stringliteral}{"{}.a"{}},}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00033}00033\ \}}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00036}\mbox{\hyperlink{namespacegyp_1_1generator_1_1compile__commands__json_aea34c2a1f84a852694f0551b2683d876}{00036}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1compile__commands__json_aea34c2a1f84a852694f0551b2683d876}{IsMac}}(params):}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00037}00037\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}mac"{}}\ ==\ \mbox{\hyperlink{namespacegyp_1_1common_aeb48ab17a03cd7c40f5ad72fac713486}{gyp.common.GetFlavor}}(params)}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00040}\mbox{\hyperlink{namespacegyp_1_1generator_1_1compile__commands__json_a7f921f97258c386770819cad894c51a0}{00040}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1compile__commands__json_a7f921f97258c386770819cad894c51a0}{CalculateVariables}}(default\_variables,\ params):}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00041}00041\ \ \ \ \ default\_variables.setdefault(\textcolor{stringliteral}{"{}OS"{}},\ \mbox{\hyperlink{namespacegyp_1_1common_aeb48ab17a03cd7c40f5ad72fac713486}{gyp.common.GetFlavor}}(params))}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00044}\mbox{\hyperlink{namespacegyp_1_1generator_1_1compile__commands__json_a06921fafce8d5c140125c70c680338d8}{00044}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1compile__commands__json_a06921fafce8d5c140125c70c680338d8}{AddCommandsForTarget}}(cwd,\ target,\ params,\ per\_config\_commands):}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00045}00045\ \ \ \ \ output\_dir\ =\ params[\textcolor{stringliteral}{"{}generator\_flags"{}}].get(\textcolor{stringliteral}{"{}output\_dir"{}},\ \textcolor{stringliteral}{"{}out"{}})}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00046}00046\ \ \ \ \ \textcolor{keywordflow}{for}\ configuration\_name,\ configuration\ \textcolor{keywordflow}{in}\ target[\textcolor{stringliteral}{"{}configurations"{}}].items():}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1compile__commands__json_aea34c2a1f84a852694f0551b2683d876}{IsMac}}(params):}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ xcode\_settings\ =\ \mbox{\hyperlink{classgyp_1_1xcode__emulation_1_1_xcode_settings}{gyp.xcode\_emulation.XcodeSettings}}(target)}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ cflags\ =\ xcode\_settings.GetCflags(configuration\_name)}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ cflags\_c\ =\ xcode\_settings.GetCflagsC(configuration\_name)}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ cflags\_cc\ =\ xcode\_settings.GetCflagsCC(configuration\_name)}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ cflags\ =\ configuration.get(\textcolor{stringliteral}{"{}cflags"{}},\ [])}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ cflags\_c\ =\ configuration.get(\textcolor{stringliteral}{"{}cflags\_c"{}},\ [])}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ cflags\_cc\ =\ configuration.get(\textcolor{stringliteral}{"{}cflags\_cc"{}},\ [])}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ cflags\_c\ =\ cflags\ +\ cflags\_c}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ cflags\_cc\ =\ cflags\ +\ cflags\_cc}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ defines\ =\ configuration.get(\textcolor{stringliteral}{"{}defines"{}},\ [])}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ defines\ =\ [\textcolor{stringliteral}{"{}-\/D"{}}\ +\ s\ \textcolor{keywordflow}{for}\ s\ \textcolor{keywordflow}{in}\ defines]}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ TODO(bnoordhuis)\ Handle\ generated\ source\ files.}}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ extensions\ =\ (\textcolor{stringliteral}{"{}.c"{}},\ \textcolor{stringliteral}{"{}.cc"{}},\ \textcolor{stringliteral}{"{}.cpp"{}},\ \textcolor{stringliteral}{"{}.cxx"{}})}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ sources\ =\ [s\ \textcolor{keywordflow}{for}\ s\ \textcolor{keywordflow}{in}\ target.get(\textcolor{stringliteral}{"{}sources"{}},\ [])\ \textcolor{keywordflow}{if}\ s.endswith(extensions)]}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \textcolor{keyword}{def\ }resolve(filename):}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.abspath(os.path.join(cwd,\ filename))}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ TODO(bnoordhuis)\ Handle\ generated\ header\ files.}}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ include\_dirs\ =\ configuration.get(\textcolor{stringliteral}{"{}include\_dirs"{}},\ [])}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ include\_dirs\ =\ [s\ \textcolor{keywordflow}{for}\ s\ \textcolor{keywordflow}{in}\ include\_dirs\ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ s.startswith(\textcolor{stringliteral}{"{}\$(obj)"{}})]}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ includes\ =\ [\textcolor{stringliteral}{"{}-\/I"{}}\ +\ resolve(s)\ \textcolor{keywordflow}{for}\ s\ \textcolor{keywordflow}{in}\ include\_dirs]}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ defines\ =\ \mbox{\hyperlink{namespacegyp_1_1common_a1681405bb09a2eda416079b3ed7de917}{gyp.common.EncodePOSIXShellList}}(defines)}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ includes\ =\ \mbox{\hyperlink{namespacegyp_1_1common_a1681405bb09a2eda416079b3ed7de917}{gyp.common.EncodePOSIXShellList}}(includes)}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ cflags\_c\ =\ \mbox{\hyperlink{namespacegyp_1_1common_a1681405bb09a2eda416079b3ed7de917}{gyp.common.EncodePOSIXShellList}}(cflags\_c)}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ cflags\_cc\ =\ \mbox{\hyperlink{namespacegyp_1_1common_a1681405bb09a2eda416079b3ed7de917}{gyp.common.EncodePOSIXShellList}}(cflags\_cc)}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ commands\ =\ per\_config\_commands.setdefault(configuration\_name,\ [])}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ source\ \textcolor{keywordflow}{in}\ sources:}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ file\ =\ resolve(source)}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ isc\ =\ source.endswith(\textcolor{stringliteral}{"{}.c"{}})}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ cc\ =\ \textcolor{stringliteral}{"{}cc"{}}\ \textcolor{keywordflow}{if}\ isc\ \textcolor{keywordflow}{else}\ \textcolor{stringliteral}{"{}c++"{}}}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ cflags\ =\ cflags\_c\ \textcolor{keywordflow}{if}\ isc\ \textcolor{keywordflow}{else}\ cflags\_cc}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ command\ =\ \textcolor{stringliteral}{"{}\ "{}}.join(}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cc,}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defines,}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ includes,}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cflags,}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/c"{}},}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1common_a2e45d4d865602a9046dc070c5545e87b}{gyp.common.EncodePOSIXShellArgument}}(file),}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ commands.append(dict(command=command,\ directory=output\_dir,\ file=file))}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00098}00098\ }
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00099}\mbox{\hyperlink{namespacegyp_1_1generator_1_1compile__commands__json_aa8678a61e33a0648e66e79e106b41fed}{00099}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1compile__commands__json_aa8678a61e33a0648e66e79e106b41fed}{GenerateOutput}}(target\_list,\ target\_dicts,\ data,\ params):}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00100}00100\ \ \ \ \ per\_config\_commands\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00101}00101\ \ \ \ \ \textcolor{keywordflow}{for}\ qualified\_target,\ target\ \textcolor{keywordflow}{in}\ target\_dicts.items():}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ build\_file,\ target\_name,\ toolset\ =\ \mbox{\hyperlink{namespacegyp_1_1common_a51180f038e57ff79c30f6231d1d7958f}{gyp.common.ParseQualifiedTarget}}(}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ qualified\_target}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \mbox{\hyperlink{namespacegyp_1_1generator_1_1compile__commands__json_aea34c2a1f84a852694f0551b2683d876}{IsMac}}(params):}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ settings\ =\ data[build\_file]}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1xcode__emulation_a96f95b2f8275df1b0ce296a4559cbe32}{gyp.xcode\_emulation.MergeGlobalXcodeSettingsToSpec}}(settings,\ target)}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ cwd\ =\ os.path.dirname(build\_file)}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1generator_1_1compile__commands__json_a06921fafce8d5c140125c70c680338d8}{AddCommandsForTarget}}(cwd,\ target,\ params,\ per\_config\_commands)}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00111}00111\ \ \ \ \ output\_dir\ =\ params[\textcolor{stringliteral}{"{}generator\_flags"{}}].get(\textcolor{stringliteral}{"{}output\_dir"{}},\ \textcolor{stringliteral}{"{}out"{}})}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00112}00112\ \ \ \ \ \textcolor{keywordflow}{for}\ configuration\_name,\ commands\ \textcolor{keywordflow}{in}\ per\_config\_commands.items():}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ filename\ =\ os.path.join(output\_dir,\ configuration\_name,\ \textcolor{stringliteral}{"{}compile\_commands.json"{}})}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00114}00114\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1common_a62411b7ed9f7220bb951ea26e91e4e15}{gyp.common.EnsureDirExists}}(filename)}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ fp\ =\ open(filename,\ \textcolor{stringliteral}{"{}w"{}})}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ json.dump(commands,\ fp=fp,\ indent=0,\ check\_circular=\textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00118}00118\ }
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00119}\mbox{\hyperlink{namespacegyp_1_1generator_1_1compile__commands__json_ad5acb4a0625c82b9191345bc66d35891}{00119}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1compile__commands__json_ad5acb4a0625c82b9191345bc66d35891}{PerformBuild}}(data,\ configurations,\ params):}
+\DoxyCodeLine{\Hypertarget{compile__commands__json_8py_source_l00120}00120\ \ \ \ \ \textcolor{keywordflow}{pass}}
+
+\end{DoxyCode}

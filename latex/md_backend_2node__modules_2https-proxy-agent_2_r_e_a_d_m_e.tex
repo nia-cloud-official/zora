@@ -1,0 +1,105 @@
+\chapter{https-\/proxy-\/agent}
+\hypertarget{md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e}\index{https-\/proxy-\/agent@{https-\/proxy-\/agent}}
+\hypertarget{md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_autotoc_md1629}{}\doxysubsection{\texorpdfstring{An HTTP(s) proxy {\ttfamily http.\+Agent} implementation for HTTPS}{An HTTP(s) proxy {\ttfamily http.\+Agent} implementation for HTTPS}}\label{md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_autotoc_md1629}
+\href{https://github.com/TooTallNate/node-https-proxy-agent/actions?workflow=Node+CI}{\texttt{ }}
+
+This module provides an {\ttfamily http.\+Agent} implementation that connects to a specified HTTP or HTTPS proxy server, and can be used with the built-\/in {\ttfamily https} module.
+
+Specifically, this {\ttfamily Agent} implementation connects to an intermediary "{}proxy"{} server and issues the \href{http://en.wikipedia.org/wiki/HTTP_tunnel\#HTTP_CONNECT_Tunneling}{\texttt{ CONNECT HTTP method}}, which tells the proxy to open a direct TCP connection to the destination server.
+
+Since this agent implements the CONNECT HTTP method, it also works with other protocols that use this method when connecting over proxies (i.\+e. Web\+Sockets). See the "{}\+Examples"{} section below for more.\hypertarget{md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_autotoc_md1630}{}\doxysection{\texorpdfstring{Installation}{Installation}}\label{md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_autotoc_md1630}
+Install with {\ttfamily npm}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ bash}
+\DoxyCodeLine{\$\ npm\ install\ https-\/proxy-\/agent}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_autotoc_md1631}{}\doxysection{\texorpdfstring{Examples}{Examples}}\label{md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_autotoc_md1631}
+\hypertarget{md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_autotoc_md1632}{}\doxysubsubsection{\texorpdfstring{{\ttfamily https} module example}{{\ttfamily https} module example}}\label{md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_autotoc_md1632}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ url\ =\ require('url');}
+\DoxyCodeLine{var\ https\ =\ require('https');}
+\DoxyCodeLine{var\ HttpsProxyAgent\ =\ require('https-\/proxy-\/agent');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ HTTP/HTTPS\ proxy\ to\ connect\ to}
+\DoxyCodeLine{var\ proxy\ =\ process.env.http\_proxy\ ||\ 'http://168.63.76.32:3128';}
+\DoxyCodeLine{console.log('using\ proxy\ server\ \%j',\ proxy);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ HTTPS\ endpoint\ for\ the\ proxy\ to\ connect\ to}
+\DoxyCodeLine{var\ endpoint\ =\ process.argv[2]\ ||\ 'https://graph.facebook.com/tootallnate';}
+\DoxyCodeLine{console.log('attempting\ to\ GET\ \%j',\ endpoint);}
+\DoxyCodeLine{var\ options\ =\ url.parse(endpoint);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ create\ an\ instance\ of\ the\ \`{}HttpsProxyAgent`\ class\ with\ the\ proxy\ server\ information}
+\DoxyCodeLine{var\ agent\ =\ new\ HttpsProxyAgent(proxy);}
+\DoxyCodeLine{options.agent\ =\ agent;}
+\DoxyCodeLine{}
+\DoxyCodeLine{https.get(options,\ function\ (res)\ \{}
+\DoxyCodeLine{\ \ console.log('"{}response"{}\ event!',\ res.headers);}
+\DoxyCodeLine{\ \ res.pipe(process.stdout);}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_autotoc_md1633}{}\doxysubsubsection{\texorpdfstring{{\ttfamily ws} Web\+Socket connection example}{{\ttfamily ws} Web\+Socket connection example}}\label{md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_autotoc_md1633}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ url\ =\ require('url');}
+\DoxyCodeLine{var\ WebSocket\ =\ require('ws');}
+\DoxyCodeLine{var\ HttpsProxyAgent\ =\ require('https-\/proxy-\/agent');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ HTTP/HTTPS\ proxy\ to\ connect\ to}
+\DoxyCodeLine{var\ proxy\ =\ process.env.http\_proxy\ ||\ 'http://168.63.76.32:3128';}
+\DoxyCodeLine{console.log('using\ proxy\ server\ \%j',\ proxy);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ WebSocket\ endpoint\ for\ the\ proxy\ to\ connect\ to}
+\DoxyCodeLine{var\ endpoint\ =\ process.argv[2]\ ||\ 'ws://echo.websocket.org';}
+\DoxyCodeLine{var\ parsed\ =\ url.parse(endpoint);}
+\DoxyCodeLine{console.log('attempting\ to\ connect\ to\ WebSocket\ \%j',\ endpoint);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ create\ an\ instance\ of\ the\ \`{}HttpsProxyAgent`\ class\ with\ the\ proxy\ server\ information}
+\DoxyCodeLine{var\ options\ =\ url.parse(proxy);}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ agent\ =\ new\ HttpsProxyAgent(options);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ finally,\ initiate\ the\ WebSocket\ connection}
+\DoxyCodeLine{var\ socket\ =\ new\ WebSocket(endpoint,\ \{\ agent:\ agent\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{socket.on('open',\ function\ ()\ \{}
+\DoxyCodeLine{\ \ console.log('"{}open"{}\ event!');}
+\DoxyCodeLine{\ \ socket.send('hello\ world');}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{socket.on('message',\ function\ (data,\ flags)\ \{}
+\DoxyCodeLine{\ \ console.log('"{}message"{}\ event!\ \%j\ \%j',\ data,\ flags);}
+\DoxyCodeLine{\ \ socket.close();}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_autotoc_md1634}{}\doxysection{\texorpdfstring{API}{API}}\label{md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_autotoc_md1634}
+\hypertarget{md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_autotoc_md1635}{}\doxysubsection{\texorpdfstring{new Https\+Proxy\+Agent(\+Object options)}{new Https\+Proxy\+Agent(\+Object options)}}\label{md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_autotoc_md1635}
+The {\ttfamily Https\+Proxy\+Agent} class implements an {\ttfamily http.\+Agent} subclass that connects to the specified "{}\+HTTP(s) proxy server"{} in order to proxy HTTPS and/or Web\+Socket requests. This is achieved by using the \href{http://en.wikipedia.org/wiki/HTTP_tunnel\#HTTP_CONNECT_Tunneling}{\texttt{ HTTP {\ttfamily CONNECT} method}}.
+
+The {\ttfamily options} argument may either be a string URI of the proxy server to use, or an "{}options"{} object with more specific properties\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily host} -\/ String -\/ Proxy host to connect to (may use {\ttfamily hostname} as well). Required.
+\item {\ttfamily port} -\/ Number -\/ Proxy port to connect to. Required.
+\item {\ttfamily protocol} -\/ String -\/ If {\ttfamily https\+:}, then use TLS to connect to the proxy.
+\item {\ttfamily headers} -\/ Object -\/ Additional HTTP headers to be sent on the HTTP CONNECT method.
+\item Any other options given are passed to the {\ttfamily net.\+connect()}/{\ttfamily tls.\+connect()} functions.
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_autotoc_md1636}{}\doxysection{\texorpdfstring{License}{License}}\label{md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_autotoc_md1636}
+(The MIT License)
+
+Copyright (c) 2013 Nathan Rajlich \texorpdfstring{$<$}{<}\href{mailto:nathan@tootallnate.net}{\texttt{ nathan@tootallnate.\+net}}\texorpdfstring{$>$}{>}
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \textquotesingle{}Software\textquotesingle{}), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions\+:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED \textquotesingle{}AS IS\textquotesingle{}, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 

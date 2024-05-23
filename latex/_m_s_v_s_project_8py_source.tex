@@ -1,0 +1,212 @@
+\doxysection{MSVSProject.\+py}
+\hypertarget{_m_s_v_s_project_8py_source}{}\label{_m_s_v_s_project_8py_source}\index{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/MSVSProject.py@{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/MSVSProject.py}}
+\mbox{\hyperlink{_m_s_v_s_project_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00001}\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_project}{00001}}\ \textcolor{comment}{\#\ Copyright\ (c)\ 2012\ Google\ Inc.\ All\ rights\ reserved.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00002}00002\ \textcolor{comment}{\#\ Use\ of\ this\ source\ code\ is\ governed\ by\ a\ BSD-\/style\ license\ that\ can\ be}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00003}00003\ \textcolor{comment}{\#\ found\ in\ the\ LICENSE\ file.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00005}00005\ \textcolor{stringliteral}{"{}"{}"{}Visual\ Studio\ project\ reader/writer."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00007}00007\ \textcolor{keyword}{import}\ \mbox{\hyperlink{namespacegyp_1_1easy__xml}{gyp.easy\_xml}}\ \textcolor{keyword}{as}\ easy\_xml}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00009}00009\ \textcolor{comment}{\#\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00012}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_tool}{00012}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_tool}{Tool}}:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00013}00013\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Visual\ Studio\ tool."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00015}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_tool_a8914f25a75f30f07d67b4c8b5f2599a8}{00015}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_tool_a8914f25a75f30f07d67b4c8b5f2599a8}{\_\_init\_\_}}(self,\ name,\ attrs=None):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00016}00016\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Initializes\ the\ tool.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00017}00017\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00018}00018\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00019}00019\ \textcolor{stringliteral}{\ \ \ \ \ \ name:\ Tool\ name.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00020}00020\ \textcolor{stringliteral}{\ \ \ \ \ \ attrs:\ Dict\ of\ tool\ attributes;\ may\ be\ None.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00021}00021\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00022}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_tool_ab35ee4ef89f33ba8621cf30f5498ce06}{00022}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_tool_ab35ee4ef89f33ba8621cf30f5498ce06}{\_attrs}}\ =\ attrs\ \textcolor{keywordflow}{or}\ \{\}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00023}00023\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_tool_ab35ee4ef89f33ba8621cf30f5498ce06}{\_attrs}}[\textcolor{stringliteral}{"{}Name"{}}]\ =\ name}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00025}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_tool_a7b15bafc37501ded8c6b7789cf20541d}{00025}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_tool_a7b15bafc37501ded8c6b7789cf20541d}{\_GetSpecification}}(self):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00026}00026\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Creates\ an\ element\ for\ the\ tool.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00027}00027\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00028}00028\ \textcolor{stringliteral}{\ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00029}00029\ \textcolor{stringliteral}{\ \ \ \ \ \ A\ new\ xml.dom.Element\ for\ the\ tool.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00030}00030\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00031}00031\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ [\textcolor{stringliteral}{"{}Tool"{}},\ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_tool_ab35ee4ef89f33ba8621cf30f5498ce06}{\_attrs}}]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00034}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_filter}{00034}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_filter}{Filter}}:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00035}00035\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Visual\ Studio\ filter\ -\/\ that\ is,\ a\ virtual\ folder."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00037}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_filter_a7e3ce6ea2c16f2cb0630c0f1e8af69bf}{00037}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_filter_a7e3ce6ea2c16f2cb0630c0f1e8af69bf}{\_\_init\_\_}}(self,\ name,\ contents=None):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Initializes\ the\ folder.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00039}00039\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00040}00040\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00041}00041\ \textcolor{stringliteral}{\ \ \ \ \ \ name:\ Filter\ (folder)\ name.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00042}00042\ \textcolor{stringliteral}{\ \ \ \ \ \ contents:\ List\ of\ filenames\ and/or\ Filter\ objects\ contained.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00043}00043\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00044}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_filter_a6fb713a8b258eec537a8e3d23dfb8491}{00044}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_filter_a6fb713a8b258eec537a8e3d23dfb8491}{name}}\ =\ name}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00045}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_filter_a71f1ff5b95090719a674497b0c9a3041}{00045}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_filter_a71f1ff5b95090719a674497b0c9a3041}{contents}}\ =\ list(contents\ \textcolor{keywordflow}{or}\ [])}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00048}00048\ \textcolor{comment}{\#\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00051}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer}{00051}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer}{Writer}}:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00052}00052\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Visual\ Studio\ XML\ project\ writer."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00054}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a7a644355ebb4045e88ad7c3ba837e5ba}{00054}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a7a644355ebb4045e88ad7c3ba837e5ba}{\_\_init\_\_}}(self,\ project\_path,\ version,\ name,\ guid=None,\ platforms=None):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Initializes\ the\ project.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00056}00056\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00057}00057\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00058}00058\ \textcolor{stringliteral}{\ \ \ \ \ \ project\_path:\ Path\ to\ the\ project\ file.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00059}00059\ \textcolor{stringliteral}{\ \ \ \ \ \ version:\ Format\ version\ to\ emit.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00060}00060\ \textcolor{stringliteral}{\ \ \ \ \ \ name:\ Name\ of\ the\ project.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00061}00061\ \textcolor{stringliteral}{\ \ \ \ \ \ guid:\ GUID\ to\ use\ for\ project,\ if\ not\ None.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00062}00062\ \textcolor{stringliteral}{\ \ \ \ \ \ platforms:\ Array\ of\ string,\ the\ supported\ platforms.\ \ If\ null,\ ['Win32']}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00063}00063\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00064}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_acec018c6d49d879f84bebe363dcda6f6}{00064}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_acec018c6d49d879f84bebe363dcda6f6}{project\_path}}\ =\ project\_path}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00065}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_aa0a39e7bcc466e97f41f348cd5a03605}{00065}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_aa0a39e7bcc466e97f41f348cd5a03605}{version}}\ =\ version}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00066}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a2159ca10c784d0117cc70f4a9edef12b}{00066}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a2159ca10c784d0117cc70f4a9edef12b}{name}}\ =\ name}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00067}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a560d08eda2dd189bcd1885c163761f7b}{00067}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a560d08eda2dd189bcd1885c163761f7b}{guid}}\ =\ guid}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Default\ to\ Win32\ for\ platforms.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ platforms:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ platforms\ =\ [\textcolor{stringliteral}{"{}Win32"{}}]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Initialize\ the\ specifications\ of\ the\ various\ sections.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00074}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a75eefae167f9c98facbcb417f8e00e1c}{00074}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a75eefae167f9c98facbcb417f8e00e1c}{platform\_section}}\ =\ [\textcolor{stringliteral}{"{}Platforms"{}}]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ platform\ \textcolor{keywordflow}{in}\ platforms:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a75eefae167f9c98facbcb417f8e00e1c}{platform\_section}}.append([\textcolor{stringliteral}{"{}Platform"{}},\ \{\textcolor{stringliteral}{"{}Name"{}}:\ platform\}])}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00077}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a51633821b52d52f56a57582ad706e8e3}{00077}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a51633821b52d52f56a57582ad706e8e3}{tool\_files\_section}}\ =\ [\textcolor{stringliteral}{"{}ToolFiles"{}}]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00078}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a57d75f07111bc0b8c2be52f442530a01}{00078}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a57d75f07111bc0b8c2be52f442530a01}{configurations\_section}}\ =\ [\textcolor{stringliteral}{"{}Configurations"{}}]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00079}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a59b775961d31a3b812355093b2bad069}{00079}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a59b775961d31a3b812355093b2bad069}{files\_section}}\ =\ [\textcolor{stringliteral}{"{}Files"{}}]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00080}00080\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Keep\ a\ dict\ keyed\ on\ filename\ to\ speed\ up\ access.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00082}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_af893d63ed8f7fd77a64e76f62ed1f550}{00082}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_af893d63ed8f7fd77a64e76f62ed1f550}{files\_dict}}\ =\ dict()}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00084}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a035aa9ed5a793802f74084003441903b}{00084}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a035aa9ed5a793802f74084003441903b}{AddToolFile}}(self,\ path):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Adds\ a\ tool\ file\ to\ the\ project.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00086}00086\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00087}00087\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00088}00088\ \textcolor{stringliteral}{\ \ \ \ \ \ path:\ Relative\ path\ from\ project\ to\ tool\ file.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00089}00089\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a51633821b52d52f56a57582ad706e8e3}{tool\_files\_section}}.append([\textcolor{stringliteral}{"{}ToolFile"{}},\ \{\textcolor{stringliteral}{"{}RelativePath"{}}:\ path\}])}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00092}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a7940fbf51d144ed58e8c52bedab1fe94}{00092}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a7940fbf51d144ed58e8c52bedab1fe94}{\_GetSpecForConfiguration}}(self,\ config\_type,\ config\_name,\ attrs,\ tools):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Returns\ the\ specification\ for\ a\ configuration.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00094}00094\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00095}00095\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00096}00096\ \textcolor{stringliteral}{\ \ \ \ \ \ config\_type:\ Type\ of\ configuration\ node.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00097}00097\ \textcolor{stringliteral}{\ \ \ \ \ \ config\_name:\ Configuration\ name.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00098}00098\ \textcolor{stringliteral}{\ \ \ \ \ \ attrs:\ Dict\ of\ configuration\ attributes;\ may\ be\ None.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00099}00099\ \textcolor{stringliteral}{\ \ \ \ \ \ tools:\ List\ of\ tools\ (strings\ or\ Tool\ objects);\ may\ be\ None.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00100}00100\ \textcolor{stringliteral}{\ \ \ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00101}00101\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Handle\ defaults}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ attrs:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ attrs\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ tools:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ tools\ =\ []}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00107}00107\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Add\ configuration\ node\ and\ its\ attributes}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ node\_attrs\ =\ attrs.copy()}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ node\_attrs[\textcolor{stringliteral}{"{}Name"{}}]\ =\ config\_name}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ specification\ =\ [config\_type,\ node\_attrs]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00112}00112\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Add\ tool\ nodes\ and\ their\ attributes}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00114}00114\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ tools:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ t\ \textcolor{keywordflow}{in}\ tools:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(t,\ Tool):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ specification.append(t.\_GetSpecification())}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ specification.append(\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_tool}{Tool}}(t).\_GetSpecification())}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ specification}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00121}00121\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00122}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a497c7de48e32a31e3a266103814e6c31}{00122}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a497c7de48e32a31e3a266103814e6c31}{AddConfig}}(self,\ name,\ attrs=None,\ tools=None):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Adds\ a\ configuration\ to\ the\ project.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00124}00124\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00125}00125\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00126}00126\ \textcolor{stringliteral}{\ \ \ \ \ \ name:\ Configuration\ name.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00127}00127\ \textcolor{stringliteral}{\ \ \ \ \ \ attrs:\ Dict\ of\ configuration\ attributes;\ may\ be\ None.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00128}00128\ \textcolor{stringliteral}{\ \ \ \ \ \ tools:\ List\ of\ tools\ (strings\ or\ Tool\ objects);\ may\ be\ None.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00129}00129\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ spec\ =\ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a7940fbf51d144ed58e8c52bedab1fe94}{\_GetSpecForConfiguration}}(\textcolor{stringliteral}{"{}Configuration"{}},\ name,\ attrs,\ tools)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a57d75f07111bc0b8c2be52f442530a01}{configurations\_section}}.append(spec)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00132}00132\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00133}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a6a9e59dc622164386dbb0be1d94fbb30}{00133}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a6a9e59dc622164386dbb0be1d94fbb30}{\_AddFilesToNode}}(self,\ parent,\ files):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Adds\ files\ and/or\ filters\ to\ the\ parent\ node.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00135}00135\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00136}00136\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00137}00137\ \textcolor{stringliteral}{\ \ \ \ \ \ parent:\ Destination\ node}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00138}00138\ \textcolor{stringliteral}{\ \ \ \ \ \ files:\ A\ list\ of\ Filter\ objects\ and/or\ relative\ paths\ to\ files.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00139}00139\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00140}00140\ \textcolor{stringliteral}{\ \ \ \ Will\ call\ itself\ recursively,\ if\ the\ files\ list\ contains\ Filter\ objects.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00141}00141\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00142}00142\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ f\ \textcolor{keywordflow}{in}\ files:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(f,\ Filter):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ node\ =\ [\textcolor{stringliteral}{"{}Filter"{}},\ \{\textcolor{stringliteral}{"{}Name"{}}:\ f.name\}]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a6a9e59dc622164386dbb0be1d94fbb30}{\_AddFilesToNode}}(node,\ f.contents)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ node\ =\ [\textcolor{stringliteral}{"{}File"{}},\ \{\textcolor{stringliteral}{"{}RelativePath"{}}:\ f\}]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_af893d63ed8f7fd77a64e76f62ed1f550}{files\_dict}}[f]\ =\ node}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ parent.append(node)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00150}00150\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00151}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a6dac64c62a71e32e5a01fa46a675a339}{00151}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a6dac64c62a71e32e5a01fa46a675a339}{AddFiles}}(self,\ files):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00152}00152\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Adds\ files\ to\ the\ project.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00153}00153\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00154}00154\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00155}00155\ \textcolor{stringliteral}{\ \ \ \ \ \ files:\ A\ list\ of\ Filter\ objects\ and/or\ relative\ paths\ to\ files.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00156}00156\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00157}00157\ \textcolor{stringliteral}{\ \ \ \ This\ makes\ a\ copy\ of\ the\ file/filter\ tree\ at\ the\ time\ of\ this\ call.\ \ If\ you}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00158}00158\ \textcolor{stringliteral}{\ \ \ \ later\ add\ files\ to\ a\ Filter\ object\ which\ was\ passed\ into\ a\ previous\ call}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00159}00159\ \textcolor{stringliteral}{\ \ \ \ to\ AddFiles(),\ it\ will\ not\ be\ reflected\ in\ this\ project.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00160}00160\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00161}00161\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a6a9e59dc622164386dbb0be1d94fbb30}{\_AddFilesToNode}}(self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a59b775961d31a3b812355093b2bad069}{files\_section}},\ files)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ TODO(rspangler)\ This\ also\ doesn't\ handle\ adding\ files\ to\ an\ existing}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00163}00163\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ filter.\ \ That\ is,\ it\ doesn't\ merge\ the\ trees.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00164}00164\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00165}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_aed8a27eb9093d416f7f19b86b6d8286b}{00165}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_aed8a27eb9093d416f7f19b86b6d8286b}{AddFileConfig}}(self,\ path,\ config,\ attrs=None,\ tools=None):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00166}00166\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Adds\ a\ configuration\ to\ a\ file.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00167}00167\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00168}00168\ \textcolor{stringliteral}{\ \ \ \ Args:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00169}00169\ \textcolor{stringliteral}{\ \ \ \ \ \ path:\ Relative\ path\ to\ the\ file.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00170}00170\ \textcolor{stringliteral}{\ \ \ \ \ \ config:\ Name\ of\ configuration\ to\ add.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00171}00171\ \textcolor{stringliteral}{\ \ \ \ \ \ attrs:\ Dict\ of\ configuration\ attributes;\ may\ be\ None.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00172}00172\ \textcolor{stringliteral}{\ \ \ \ \ \ tools:\ List\ of\ tools\ (strings\ or\ Tool\ objects);\ may\ be\ None.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00173}00173\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00174}00174\ \textcolor{stringliteral}{\ \ \ \ Raises:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00175}00175\ \textcolor{stringliteral}{\ \ \ \ \ \ ValueError:\ Relative\ path\ does\ not\ match\ any\ file\ added\ via\ AddFiles().}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00176}00176\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00177}00177\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Find\ the\ file\ node\ with\ the\ right\ relative\ path}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00178}00178\ \ \ \ \ \ \ \ \ parent\ =\ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_af893d63ed8f7fd77a64e76f62ed1f550}{files\_dict}}.get(path)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00179}00179\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ parent:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00180}00180\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(\textcolor{stringliteral}{'AddFileConfig:\ file\ "{}\%s"{}\ not\ in\ project.'}\ \%\ path)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00181}00181\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00182}00182\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Add\ the\ config\ to\ the\ file\ node}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00183}00183\ \ \ \ \ \ \ \ \ spec\ =\ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a7940fbf51d144ed58e8c52bedab1fe94}{\_GetSpecForConfiguration}}(\textcolor{stringliteral}{"{}FileConfiguration"{}},\ config,\ attrs,\ tools)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00184}00184\ \ \ \ \ \ \ \ \ parent.append(spec)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00185}00185\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00186}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a79389a98c3d3d977bb92e2ccfd07ad9a}{00186}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a79389a98c3d3d977bb92e2ccfd07ad9a}{WriteIfChanged}}(self):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00187}00187\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Writes\ the\ project\ file."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00188}00188\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ First\ create\ XML\ content\ definition}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00189}00189\ \ \ \ \ \ \ \ \ content\ =\ [}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}VisualStudioProject"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}ProjectType"{}}:\ \textcolor{stringliteral}{"{}Visual\ C++"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Version"{}}:\ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_aa0a39e7bcc466e97f41f348cd5a03605}{version}}.ProjectVersion(),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00194}00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Name"{}}:\ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a2159ca10c784d0117cc70f4a9edef12b}{name}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}ProjectGUID"{}}:\ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a560d08eda2dd189bcd1885c163761f7b}{guid}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}RootNamespace"{}}:\ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a2159ca10c784d0117cc70f4a9edef12b}{name}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00197}00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Keyword"{}}:\ \textcolor{stringliteral}{"{}Win32Proj"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00198}00198\ \ \ \ \ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a75eefae167f9c98facbcb417f8e00e1c}{platform\_section}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00200}00200\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a51633821b52d52f56a57582ad706e8e3}{tool\_files\_section}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00201}00201\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a57d75f07111bc0b8c2be52f442530a01}{configurations\_section}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00202}00202\ \ \ \ \ \ \ \ \ \ \ \ \ [\textcolor{stringliteral}{"{}References"{}}],\ \ \textcolor{comment}{\#\ empty\ section}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_a59b775961d31a3b812355093b2bad069}{files\_section}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00204}00204\ \ \ \ \ \ \ \ \ \ \ \ \ [\textcolor{stringliteral}{"{}Globals"{}}],\ \ \textcolor{comment}{\#\ empty\ section}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00205}00205\ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_project_8py_source_l00206}00206\ \ \ \ \ \ \ \ \ easy\_xml.WriteXmlIfChanged(content,\ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_project_1_1_writer_acec018c6d49d879f84bebe363dcda6f6}{project\_path}},\ encoding=\textcolor{stringliteral}{"{}Windows-\/1252"{}})}
+
+\end{DoxyCode}

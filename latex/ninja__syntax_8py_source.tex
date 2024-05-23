@@ -1,0 +1,180 @@
+\doxysection{ninja\+\_\+syntax.\+py}
+\hypertarget{ninja__syntax_8py_source}{}\label{ninja__syntax_8py_source}\index{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/ninja\_syntax.py@{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/ninja\_syntax.py}}
+\mbox{\hyperlink{ninja__syntax_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00001}\mbox{\hyperlink{namespacegyp_1_1ninja__syntax}{00001}}\ \textcolor{comment}{\#\ This\ file\ comes\ from}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00002}00002\ \textcolor{comment}{\#\ \ \ https://github.com/martine/ninja/blob/master/misc/ninja\_syntax.py}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00003}00003\ \textcolor{comment}{\#\ Do\ not\ edit!\ \ Edit\ the\ upstream\ one\ instead.}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00005}00005\ \textcolor{stringliteral}{"{}"{}"{}Python\ module\ for\ generating\ .ninja\ files.}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00006}00006\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00007}00007\ \textcolor{stringliteral}{Note\ that\ this\ is\ emphatically\ not\ a\ required\ piece\ of\ Ninja;\ it's}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00008}00008\ \textcolor{stringliteral}{just\ a\ helpful\ utility\ for\ build-\/file-\/generation\ systems\ that\ already}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00009}00009\ \textcolor{stringliteral}{use\ Python.}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00010}00010\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00012}00012\ \textcolor{keyword}{import}\ textwrap}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00015}\mbox{\hyperlink{namespacegyp_1_1ninja__syntax_a72d3bd938feeee48c6962d902d0b8e16}{00015}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1ninja__syntax_a72d3bd938feeee48c6962d902d0b8e16}{escape\_path}}(word):}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00016}00016\ \ \ \ \ \textcolor{keywordflow}{return}\ word.replace(\textcolor{stringliteral}{"{}\$\ "{}},\ \textcolor{stringliteral}{"{}\$\$\ "{}}).replace(\textcolor{stringliteral}{"{}\ "{}},\ \textcolor{stringliteral}{"{}\$\ "{}}).replace(\textcolor{stringliteral}{"{}:"{}},\ \textcolor{stringliteral}{"{}\$:"{}})}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00019}\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer}{00019}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer}{Writer}}:}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00020}\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a44c6e88048ff3f26ada110e30b02a86a}{00020}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a44c6e88048ff3f26ada110e30b02a86a}{\_\_init\_\_}}(self,\ output,\ width=78):}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00021}\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a37ee1d18ac8bcdc7a42d4de1b0c872c5}{00021}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a37ee1d18ac8bcdc7a42d4de1b0c872c5}{output}}\ =\ output}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00022}\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a436056a1345671920d292dbcc156d5ef}{00022}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a436056a1345671920d292dbcc156d5ef}{width}}\ =\ width}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00024}\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a95fde7f0f9d9df08d7c2f789f259eabc}{00024}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a95fde7f0f9d9df08d7c2f789f259eabc}{newline}}(self):}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00025}00025\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a37ee1d18ac8bcdc7a42d4de1b0c872c5}{output}}.write(\textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00027}\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_aba4a7f548817b87e5add7629ba241206}{00027}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_aba4a7f548817b87e5add7629ba241206}{comment}}(self,\ text):}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00028}00028\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ line\ \textcolor{keywordflow}{in}\ textwrap.wrap(text,\ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a436056a1345671920d292dbcc156d5ef}{width}}\ -\/\ 2):}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00029}00029\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a37ee1d18ac8bcdc7a42d4de1b0c872c5}{output}}.write(\textcolor{stringliteral}{"{}\#\ "{}}\ +\ line\ +\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00031}\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a5697473d0ad1340ecc54e3a7d7fb5ad2}{00031}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a5697473d0ad1340ecc54e3a7d7fb5ad2}{variable}}(self,\ key,\ value,\ indent=0):}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00032}00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ value\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00034}00034\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(value,\ list):}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ \ \ value\ =\ \textcolor{stringliteral}{"{}\ "{}}.join(filter(\textcolor{keywordtype}{None},\ value))\ \ \textcolor{comment}{\#\ Filter\ out\ empty\ strings.}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00036}00036\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a9c0a7c5009a22df73059b9bb24dd8479}{\_line}}(f\textcolor{stringliteral}{"{}\{key\}\ =\ \{value\}"{}},\ indent)}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00038}\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a2f60514d1f29cc56e466abb93e8809c5}{00038}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a2f60514d1f29cc56e466abb93e8809c5}{pool}}(self,\ name,\ depth):}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a9c0a7c5009a22df73059b9bb24dd8479}{\_line}}(\textcolor{stringliteral}{"{}pool\ \%s"{}}\ \%\ name)}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00040}00040\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a5697473d0ad1340ecc54e3a7d7fb5ad2}{variable}}(\textcolor{stringliteral}{"{}depth"{}},\ depth,\ indent=1)}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00042}\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a6438d7e043e83b1f16c8190bf16efb3c}{00042}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a6438d7e043e83b1f16c8190bf16efb3c}{rule}}(}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ name,}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ command,}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ description=None,}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ depfile=None,}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ generator=False,}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ pool=None,}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ restat=False,}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ rspfile=None,}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ rspfile\_content=None,}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ deps=None,}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00054}00054\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a9c0a7c5009a22df73059b9bb24dd8479}{\_line}}(\textcolor{stringliteral}{"{}rule\ \%s"{}}\ \%\ name)}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a5697473d0ad1340ecc54e3a7d7fb5ad2}{variable}}(\textcolor{stringliteral}{"{}command"{}},\ command,\ indent=1)}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ description:}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a5697473d0ad1340ecc54e3a7d7fb5ad2}{variable}}(\textcolor{stringliteral}{"{}description"{}},\ description,\ indent=1)}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00059}00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ depfile:}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a5697473d0ad1340ecc54e3a7d7fb5ad2}{variable}}(\textcolor{stringliteral}{"{}depfile"{}},\ depfile,\ indent=1)}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ generator:}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a5697473d0ad1340ecc54e3a7d7fb5ad2}{variable}}(\textcolor{stringliteral}{"{}generator"{}},\ \textcolor{stringliteral}{"{}1"{}},\ indent=1)}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00063}00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ pool:}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a5697473d0ad1340ecc54e3a7d7fb5ad2}{variable}}(\textcolor{stringliteral}{"{}pool"{}},\ pool,\ indent=1)}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ restat:}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a5697473d0ad1340ecc54e3a7d7fb5ad2}{variable}}(\textcolor{stringliteral}{"{}restat"{}},\ \textcolor{stringliteral}{"{}1"{}},\ indent=1)}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ rspfile:}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a5697473d0ad1340ecc54e3a7d7fb5ad2}{variable}}(\textcolor{stringliteral}{"{}rspfile"{}},\ rspfile,\ indent=1)}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ rspfile\_content:}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a5697473d0ad1340ecc54e3a7d7fb5ad2}{variable}}(\textcolor{stringliteral}{"{}rspfile\_content"{}},\ rspfile\_content,\ indent=1)}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ deps:}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a5697473d0ad1340ecc54e3a7d7fb5ad2}{variable}}(\textcolor{stringliteral}{"{}deps"{}},\ deps,\ indent=1)}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00074}\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_ad6a3dd8f65f2dd380794fe375c53e67c}{00074}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_ad6a3dd8f65f2dd380794fe375c53e67c}{build}}(}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ self,\ outputs,\ rule,\ inputs=None,\ implicit=None,\ order\_only=None,\ variables=None}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00076}00076\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ outputs\ =\ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a2ccf252e90607cf4f8549ef291cd0f78}{\_as\_list}}(outputs)}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ all\_inputs\ =\ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a2ccf252e90607cf4f8549ef291cd0f78}{\_as\_list}}(inputs)[:]}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ out\_outputs\ =\ list(map(escape\_path,\ outputs))}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ all\_inputs\ =\ list(map(escape\_path,\ all\_inputs))}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ implicit:}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ implicit\ =\ map(escape\_path,\ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a2ccf252e90607cf4f8549ef291cd0f78}{\_as\_list}}(implicit))}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ all\_inputs.append(\textcolor{stringliteral}{"{}|"{}})}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ all\_inputs.extend(implicit)}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ order\_only:}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ order\_only\ =\ map(escape\_path,\ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a2ccf252e90607cf4f8549ef291cd0f78}{\_as\_list}}(order\_only))}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ all\_inputs.append(\textcolor{stringliteral}{"{}||"{}})}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ \ \ \ \ all\_inputs.extend(order\_only)}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a9c0a7c5009a22df73059b9bb24dd8479}{\_line}}(}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}build\ \{\}:\ \{\}"{}}.format(\textcolor{stringliteral}{"{}\ "{}}.join(out\_outputs),\ \textcolor{stringliteral}{"{}\ "{}}.join([rule]\ +\ all\_inputs))}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ variables:}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(variables,\ dict):}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ iterator\ =\ iter(variables.items())}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ iterator\ =\ iter(variables)}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ key,\ val\ \textcolor{keywordflow}{in}\ iterator:}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a5697473d0ad1340ecc54e3a7d7fb5ad2}{variable}}(key,\ val,\ indent=1)}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00103}00103\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ outputs}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00106}\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_af4f9f34cb736c812ea72d9119d73501c}{00106}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_af4f9f34cb736c812ea72d9119d73501c}{include}}(self,\ path):}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a9c0a7c5009a22df73059b9bb24dd8479}{\_line}}(\textcolor{stringliteral}{"{}include\ \%s"{}}\ \%\ path)}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00109}\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_ad30ec61ffcc3723418dc0a770302910c}{00109}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_ad30ec61ffcc3723418dc0a770302910c}{subninja}}(self,\ path):}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a9c0a7c5009a22df73059b9bb24dd8479}{\_line}}(\textcolor{stringliteral}{"{}subninja\ \%s"{}}\ \%\ path)}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00111}00111\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00112}\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a6d5bf4b7fb1584d1c2d311f2cc9eb068}{00112}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a6d5bf4b7fb1584d1c2d311f2cc9eb068}{default}}(self,\ paths):}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a9c0a7c5009a22df73059b9bb24dd8479}{\_line}}(\textcolor{stringliteral}{"{}default\ \%s"{}}\ \%\ \textcolor{stringliteral}{"{}\ "{}}.join(self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a2ccf252e90607cf4f8549ef291cd0f78}{\_as\_list}}(paths)))}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00115}\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a7e611fe9a3304cc50f2517119c79146d}{00115}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a7e611fe9a3304cc50f2517119c79146d}{\_count\_dollars\_before\_index}}(self,\ s,\ i):}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Returns\ the\ number\ of\ '\$'\ characters\ right\ in\ front\ of\ s[i]."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ dollar\_count\ =\ 0}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ dollar\_index\ =\ i\ -\/\ 1}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ dollar\_index\ >\ 0\ \textcolor{keywordflow}{and}\ s[dollar\_index]\ ==\ \textcolor{stringliteral}{"{}\$"{}}:}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ dollar\_count\ +=\ 1}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ dollar\_index\ -\/=\ 1}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ dollar\_count}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00124}\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a9c0a7c5009a22df73059b9bb24dd8479}{00124}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a9c0a7c5009a22df73059b9bb24dd8479}{\_line}}(self,\ text,\ indent=0):}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00125}00125\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Write\ 'text'\ word-\/wrapped\ at\ self.width\ characters."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00126}00126\ \ \ \ \ \ \ \ \ leading\_space\ =\ \textcolor{stringliteral}{"{}\ \ "{}}\ *\ indent}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00127}00127\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ len(leading\_space)\ +\ len(text)\ >\ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a436056a1345671920d292dbcc156d5ef}{width}}:}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ The\ text\ is\ too\ wide;\ wrap\ if\ possible.}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00129}00129\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Find\ the\ rightmost\ space\ that\ would\ obey\ our\ width\ constraint\ and}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ that's\ not\ an\ escaped\ space.}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ available\_space\ =\ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a436056a1345671920d292dbcc156d5ef}{width}}\ -\/\ len(leading\_space)\ -\/\ len(\textcolor{stringliteral}{"{}\ \$"{}})}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ space\ =\ available\_space}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ \textcolor{keyword}{True}:}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ space\ =\ text.rfind(\textcolor{stringliteral}{"{}\ "{}},\ 0,\ space)}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ space\ <\ 0\ \textcolor{keywordflow}{or}\ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a7e611fe9a3304cc50f2517119c79146d}{\_count\_dollars\_before\_index}}(text,\ space)\ \%\ 2\ ==\ 0:}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00138}00138\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ space\ <\ 0:}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ No\ such\ space;\ just\ use\ the\ first\ unescaped\ space\ we\ can\ find.}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ space\ =\ available\_space\ -\/\ 1}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ \textcolor{keyword}{True}:}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ space\ =\ text.find(\textcolor{stringliteral}{"{}\ "{}},\ space\ +\ 1)}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ space\ <\ 0}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{or}\ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a7e611fe9a3304cc50f2517119c79146d}{\_count\_dollars\_before\_index}}(text,\ space)\ \%\ 2\ ==\ 0}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ space\ <\ 0:}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Give\ up\ on\ breaking.}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00152}00152\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a37ee1d18ac8bcdc7a42d4de1b0c872c5}{output}}.write(leading\_space\ +\ text[0:space]\ +\ \textcolor{stringliteral}{"{}\ \$\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ text\ =\ text[space\ +\ 1\ :]}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00155}00155\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Subsequent\ lines\ are\ continuations,\ so\ indent\ them.}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00157}00157\ \ \ \ \ \ \ \ \ \ \ \ \ leading\_space\ =\ \textcolor{stringliteral}{"{}\ \ "{}}\ *\ (indent\ +\ 2)}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00158}00158\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00159}00159\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a37ee1d18ac8bcdc7a42d4de1b0c872c5}{output}}.write(leading\_space\ +\ text\ +\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}})}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00160}00160\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00161}\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a2ccf252e90607cf4f8549ef291cd0f78}{00161}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1ninja__syntax_1_1_writer_a2ccf252e90607cf4f8549ef291cd0f78}{\_as\_list}}(self,\ input):}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ input\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00163}00163\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ []}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00164}00164\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ isinstance(input,\ list):}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00165}00165\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ input}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00166}00166\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ [input]}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00168}00168\ }
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00169}\mbox{\hyperlink{namespacegyp_1_1ninja__syntax_aa092dfa2c5fe6362960b78ac7d8e2a4f}{00169}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1ninja__syntax_aa092dfa2c5fe6362960b78ac7d8e2a4f}{escape}}(string):}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00170}00170\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Escape\ a\ string\ such\ that\ it\ can\ be\ embedded\ into\ a\ Ninja\ file\ without}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00171}00171\ \textcolor{stringliteral}{\ \ \ \ further\ interpretation."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00172}00172\ \ \ \ \ \textcolor{keyword}{assert}\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ string,\ \textcolor{stringliteral}{"{}Ninja\ syntax\ does\ not\ allow\ newlines"{}}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00173}00173\ \ \ \ \ \textcolor{comment}{\#\ We\ only\ have\ one\ special\ metacharacter:\ '\$'.}}
+\DoxyCodeLine{\Hypertarget{ninja__syntax_8py_source_l00174}00174\ \ \ \ \ \textcolor{keywordflow}{return}\ string.replace(\textcolor{stringliteral}{"{}\$"{}},\ \textcolor{stringliteral}{"{}\$\$"{}})}
+
+\end{DoxyCode}

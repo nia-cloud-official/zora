@@ -1,0 +1,109 @@
+\chapter{Error-\/pre-\/versions-\/of-\/node-\/cannot-\/be-\/installed}
+\hypertarget{md_backend_2node__modules_2node-gyp_2docs_2_error-pre-versions-of-node-cannot-be-installed}{}\label{md_backend_2node__modules_2node-gyp_2docs_2_error-pre-versions-of-node-cannot-be-installed}\index{Error-\/pre-\/versions-\/of-\/node-\/cannot-\/be-\/installed@{Error-\/pre-\/versions-\/of-\/node-\/cannot-\/be-\/installed}}
+When using {\ttfamily node-\/gyp} you might see an error like this when attempting to compile/install a node.\+js native addon\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ bcrypt}
+\DoxyCodeLine{npm\ http\ GET\ https://registry.npmjs.org/bcrypt/0.7.5}
+\DoxyCodeLine{npm\ http\ 304\ https://registry.npmjs.org/bcrypt/0.7.5}
+\DoxyCodeLine{npm\ http\ GET\ https://registry.npmjs.org/bindings/1.0.0}
+\DoxyCodeLine{npm\ http\ 304\ https://registry.npmjs.org/bindings/1.0.0}
+\DoxyCodeLine{}
+\DoxyCodeLine{>\ bcrypt@0.7.5\ install\ /home/ubuntu/public/song-\/swap/node\_modules/bcrypt}
+\DoxyCodeLine{>\ node-\/gyp\ rebuild}
+\DoxyCodeLine{}
+\DoxyCodeLine{gyp\ ERR!\ configure\ error}
+\DoxyCodeLine{gyp\ ERR!\ stack\ Error:\ "{}pre"{}\ versions\ of\ node\ cannot\ be\ installed,\ use\ the\ -\/-\/nodedir\ flag\ instead}
+\DoxyCodeLine{gyp\ ERR!\ stack\ \ \ \ \ at\ install\ (/usr/local/lib/node\_modules/npm/node\_modules/node-\/gyp/lib/install.js:69:16)}
+\DoxyCodeLine{gyp\ ERR!\ stack\ \ \ \ \ at\ Object.self.commands.(anonymous\ function)\ [as\ install]\ (/usr/local/lib/node\_modules/npm/node\_modules/node-\/gyp/lib/node-\/gyp.js:56:37)}
+\DoxyCodeLine{gyp\ ERR!\ stack\ \ \ \ \ at\ getNodeDir\ (/usr/local/lib/node\_modules/npm/node\_modules/node-\/gyp/lib/configure.js:219:20)}
+\DoxyCodeLine{gyp\ ERR!\ stack\ \ \ \ \ at\ /usr/local/lib/node\_modules/npm/node\_modules/node-\/gyp/lib/configure.js:105:9}
+\DoxyCodeLine{gyp\ ERR!\ stack\ \ \ \ \ at\ ChildProcess.exithandler\ (child\_process.js:630:7)}
+\DoxyCodeLine{gyp\ ERR!\ stack\ \ \ \ \ at\ ChildProcess.EventEmitter.emit\ (events.js:99:17)}
+\DoxyCodeLine{gyp\ ERR!\ stack\ \ \ \ \ at\ maybeClose\ (child\_process.js:730:16)}
+\DoxyCodeLine{gyp\ ERR!\ stack\ \ \ \ \ at\ Process.ChildProcess.\_handle.onexit\ (child\_process.js:797:5)}
+\DoxyCodeLine{gyp\ ERR!\ System\ Linux\ 3.5.0-\/21-\/generic}
+\DoxyCodeLine{gyp\ ERR!\ command\ "{}node"{}\ "{}/usr/local/lib/node\_modules/npm/node\_modules/node-\/gyp/bin/node-\/gyp.js"{}\ "{}rebuild"{}}
+\DoxyCodeLine{gyp\ ERR!\ cwd\ /home/ubuntu/public/song-\/swap/node\_modules/bcrypt}
+\DoxyCodeLine{gyp\ ERR!\ node\ -\/v\ v0.11.2-\/pre}
+\DoxyCodeLine{gyp\ ERR!\ node-\/gyp\ -\/v\ v0.9.5}
+\DoxyCodeLine{gyp\ ERR!\ not\ ok}
+\DoxyCodeLine{npm\ ERR!\ bcrypt@0.7.5\ install:\ \`{}node-\/gyp\ rebuild`}
+\DoxyCodeLine{npm\ ERR!\ \`{}sh\ "{}-\/c"{}\ "{}node-\/gyp\ rebuild"{}`\ failed\ with\ 1}
+\DoxyCodeLine{npm\ ERR!}
+\DoxyCodeLine{npm\ ERR!\ Failed\ at\ the\ bcrypt@0.7.5\ install\ script.}
+\DoxyCodeLine{npm\ ERR!\ This\ is\ most\ likely\ a\ problem\ with\ the\ bcrypt\ package,}
+\DoxyCodeLine{npm\ ERR!\ not\ with\ npm\ itself.}
+\DoxyCodeLine{npm\ ERR!\ Tell\ the\ author\ that\ this\ fails\ on\ your\ system:}
+\DoxyCodeLine{npm\ ERR!\ \ \ \ \ node-\/gyp\ rebuild}
+\DoxyCodeLine{npm\ ERR!\ You\ can\ get\ their\ info\ via:}
+\DoxyCodeLine{npm\ ERR!\ \ \ \ \ npm\ owner\ ls\ bcrypt}
+\DoxyCodeLine{npm\ ERR!\ There\ is\ likely\ additional\ logging\ output\ above.}
+\DoxyCodeLine{}
+\DoxyCodeLine{npm\ ERR!\ System\ Linux\ 3.5.0-\/21-\/generic}
+\DoxyCodeLine{npm\ ERR!\ command\ "{}/usr/local/bin/node"{}\ "{}/usr/local/bin/npm"{}\ "{}install"{}\ "{}bcrypt"{}}
+\DoxyCodeLine{npm\ ERR!\ cwd\ /home/ubuntu/public/song-\/swap}
+\DoxyCodeLine{npm\ ERR!\ node\ -\/v\ v0.11.2-\/pre}
+\DoxyCodeLine{npm\ ERR!\ npm\ -\/v\ 1.2.18}
+\DoxyCodeLine{npm\ ERR!\ code\ ELIFECYCLE}
+\DoxyCodeLine{npm\ ERR!}
+\DoxyCodeLine{npm\ ERR!\ Additional\ logging\ details\ can\ be\ found\ in:}
+\DoxyCodeLine{npm\ ERR!\ \ \ \ \ /home/ubuntu/public/song-\/swap/npm-\/debug.log}
+\DoxyCodeLine{npm\ ERR!\ not\ ok\ code\ 0}
+
+\end{DoxyCode}
+
+
+The main error here is\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Error:\ "{}pre"{}\ versions\ of\ node\ cannot\ be\ installed,\ use\ the\ -\/-\/nodedir\ flag\ instead}
+
+\end{DoxyCode}
+
+
+This error is caused when you attempt to compile a native addon using a version of node.\+js with {\ttfamily -\/pre} at the end of the version number\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ bash}
+\DoxyCodeLine{\$\ node\ -\/v}
+\DoxyCodeLine{v0.10.4-\/pre}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2node-gyp_2docs_2_error-pre-versions-of-node-cannot-be-installed_autotoc_md2394}{}\doxysubsection{\texorpdfstring{How to avoid (the short answer)}{How to avoid (the short answer)}}\label{md_backend_2node__modules_2node-gyp_2docs_2_error-pre-versions-of-node-cannot-be-installed_autotoc_md2394}
+To avoid this error completely just use a stable release of node.\+js. i.\+e. {\ttfamily v0.\+10.\+4}, and {\bfseries{not}} {\ttfamily v0.\+10.\+4-\/pre}.\hypertarget{md_backend_2node__modules_2node-gyp_2docs_2_error-pre-versions-of-node-cannot-be-installed_autotoc_md2395}{}\doxysubsection{\texorpdfstring{How to fix (the long answer)}{How to fix (the long answer)}}\label{md_backend_2node__modules_2node-gyp_2docs_2_error-pre-versions-of-node-cannot-be-installed_autotoc_md2395}
+This error happens because {\ttfamily node-\/gyp} does not know what header files were used to compile your "{}pre"{} version of node, and therefore it needs you to specify the node source code directory path using the {\ttfamily -\/-\/nodedir} flag.
+
+For example, if I compiled my development ("{}pre"{}) version of node.\+js using the source code in {\ttfamily /\+Users/nrajlich/node}, then I could invoke {\ttfamily node-\/gyp} like\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ bash}
+\DoxyCodeLine{\$\ node-\/gyp\ rebuild\ -\/-\/nodedir=/Users/nrajlich/node}
+
+\end{DoxyCode}
+
+
+Or install an native addon through {\ttfamily npm} like\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ bash}
+\DoxyCodeLine{\$\ npm\ install\ bcrypt\ -\/-\/nodedir=/Users/nrajlich/node}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2node-gyp_2docs_2_error-pre-versions-of-node-cannot-be-installed_autotoc_md2396}{}\doxysubsubsection{\texorpdfstring{Always use {\ttfamily -\/-\/nodedir}}{Always use {\ttfamily -\/-\/nodedir}}}\label{md_backend_2node__modules_2node-gyp_2docs_2_error-pre-versions-of-node-cannot-be-installed_autotoc_md2396}
+{\bfseries{Note\+:}} This is for advanced users who use {\ttfamily -\/pre} versions of node more often than tagged releases.
+
+If you\textquotesingle{}re invoking {\ttfamily node-\/gyp} through {\ttfamily npm}, then you can leverage {\ttfamily npm}\textquotesingle{}s configuration system and not have to specify the {\ttfamily -\/-\/nodedir} flag all the time\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ bash}
+\DoxyCodeLine{\$\ npm\ config\ set\ nodedir\ /Users/nrajlich/node}
+
+\end{DoxyCode}
+ 

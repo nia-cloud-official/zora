@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2proxy-addr_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2proxy-addr_2_r_e_a_d_m_e</compoundname>
+    <title>proxy-addr</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2proxy-addr_2_r_e_a_d_m_e_1autotoc_md2769"/> <ulink url="https://npmjs.org/package/proxy-addr"><image type="html" name="https://badgen.net/npm/v/proxy-addr" alt="NPM Version" inline="yes"></image>
+</ulink> <ulink url="https://npmjs.org/package/proxy-addr"><image type="html" name="https://badgen.net/npm/dm/proxy-addr" alt="NPM Downloads" inline="yes"></image>
+</ulink> <ulink url="https://nodejs.org/en/download"><image type="html" name="https://badgen.net/npm/node/proxy-addr" alt="Node.js Version" inline="yes"></image>
+</ulink> <ulink url="https://github.com/jshttp/proxy-addr/actions?query=workflow%3Aci"><image type="html" name="https://badgen.net/github/checks/jshttp/proxy-addr/master?label=ci" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/r/jshttp/proxy-addr?branch=master"><image type="html" name="https://badgen.net/coveralls/c/github/jshttp/proxy-addr/master" alt="Test Coverage" inline="yes"></image>
+</ulink></para>
+<para>Determine address of proxied request</para>
+<sect1 id="md_backend_2node__modules_2proxy-addr_2_r_e_a_d_m_e_1autotoc_md2770">
+<title>Install</title><para>This is a <ulink url="https://nodejs.org/en/">Node.js</ulink> module available through the <ulink url="https://www.npmjs.com/">npm registry</ulink>. Installation is done using the <ulink url="https://docs.npmjs.com/getting-started/installing-npm-packages-locally"><computeroutput>npm install</computeroutput> command</ulink>:</para>
+<para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>proxy-addr</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2proxy-addr_2_r_e_a_d_m_e_1autotoc_md2771">
+<title>API</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>proxyaddr<sp/>=<sp/>require(&apos;proxy-addr&apos;)</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2proxy-addr_2_r_e_a_d_m_e_1autotoc_md2772">
+<title>proxyaddr(req, trust)</title><para>Return the address of the request, using the given <computeroutput>trust</computeroutput> parameter.</para>
+<para>The <computeroutput>trust</computeroutput> argument is a function that returns <computeroutput>true</computeroutput> if you trust the address, <computeroutput>false</computeroutput> if you don&apos;t. The closest untrusted address is returned.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">proxyaddr(req,<sp/>function<sp/>(addr)<sp/>{<sp/>return<sp/>addr<sp/>===<sp/>&apos;127.0.0.1&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">proxyaddr(req,<sp/>function<sp/>(addr,<sp/>i)<sp/>{<sp/>return<sp/>i<sp/>&lt;<sp/>1<sp/>})</highlight></codeline>
+</programlisting></para>
+<para>The <computeroutput>trust</computeroutput> arugment may also be a single IP address string or an array of trusted addresses, as plain IP addresses, CIDR-formatted strings, or IP/netmask strings.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">proxyaddr(req,<sp/>&apos;127.0.0.1&apos;)</highlight></codeline>
+<codeline><highlight class="normal">proxyaddr(req,<sp/>[&apos;127.0.0.0/8&apos;,<sp/>&apos;10.0.0.0/8&apos;])</highlight></codeline>
+<codeline><highlight class="normal">proxyaddr(req,<sp/>[&apos;127.0.0.0/255.0.0.0&apos;,<sp/>&apos;192.168.0.0/255.255.0.0&apos;])</highlight></codeline>
+</programlisting></para>
+<para>This module also supports IPv6. Your IPv6 addresses will be normalized automatically (i.e. <computeroutput>fe80::00ed:1</computeroutput> equals <computeroutput>fe80:0:0:0:0:0:ed:1</computeroutput>).</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">proxyaddr(req,<sp/>&apos;::1&apos;)</highlight></codeline>
+<codeline><highlight class="normal">proxyaddr(req,<sp/>[&apos;::1/128&apos;,<sp/>&apos;fe80::/10&apos;])</highlight></codeline>
+</programlisting></para>
+<para>This module will automatically work with IPv4-mapped IPv6 addresses as well to support node.js in IPv6-only mode. This means that you do not have to specify both <computeroutput>ffff:a00:1</computeroutput> and <computeroutput>10.0.0.1</computeroutput>.</para>
+<para>As a convenience, this module also takes certain pre-defined names in addition to IP addresses, which expand into IP addresses:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">proxyaddr(req,<sp/>&apos;loopback&apos;)</highlight></codeline>
+<codeline><highlight class="normal">proxyaddr(req,<sp/>[&apos;loopback&apos;,<sp/>&apos;fc00:ac:1ab5:fff::1/64&apos;])</highlight></codeline>
+</programlisting></para>
+<para><itemizedlist>
+<listitem><para><computeroutput>loopback</computeroutput>: IPv4 and IPv6 loopback addresses (like <computeroutput>::1</computeroutput> and <computeroutput>127.0.0.1</computeroutput>).</para>
+</listitem><listitem><para><computeroutput>linklocal</computeroutput>: IPv4 and IPv6 link-local addresses (like <computeroutput>fe80::1:1:1:1</computeroutput> and <computeroutput>169.254.0.1</computeroutput>).</para>
+</listitem><listitem><para><computeroutput>uniquelocal</computeroutput>: IPv4 private addresses and IPv6 unique-local addresses (like <computeroutput>fc00:ac:1ab5:fff::1</computeroutput> and <computeroutput>192.168.0.1</computeroutput>).</para>
+</listitem></itemizedlist>
+</para>
+<para>When <computeroutput>trust</computeroutput> is specified as a function, it will be called for each address to determine if it is a trusted address. The function is given two arguments: <computeroutput>addr</computeroutput> and <computeroutput>i</computeroutput>, where <computeroutput>addr</computeroutput> is a string of the address to check and <computeroutput>i</computeroutput> is a number that represents the distance from the socket address.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2proxy-addr_2_r_e_a_d_m_e_1autotoc_md2773">
+<title>proxyaddr.all(req, [trust])</title><para>Return all the addresses of the request, optionally stopping at the first untrusted. This array is ordered from closest to furthest (i.e. <computeroutput>arr[0] === req.connection.remoteAddress</computeroutput>).</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">proxyaddr.all(req)</highlight></codeline>
+</programlisting></para>
+<para>The optional <computeroutput>trust</computeroutput> argument takes the same arguments as <computeroutput>trust</computeroutput> does in <computeroutput>proxyaddr(req, trust)</computeroutput>.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">proxyaddr.all(req,<sp/>&apos;loopback&apos;)</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2proxy-addr_2_r_e_a_d_m_e_1autotoc_md2774">
+<title>proxyaddr.compile(val)</title><para>Compiles argument <computeroutput>val</computeroutput> into a <computeroutput>trust</computeroutput> function. This function takes the same arguments as <computeroutput>trust</computeroutput> does in <computeroutput>proxyaddr(req, trust)</computeroutput> and returns a function suitable for <computeroutput>proxyaddr(req, trust)</computeroutput>.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>trust<sp/>=<sp/>proxyaddr.compile(&apos;loopback&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>addr<sp/>=<sp/>proxyaddr(req,<sp/>trust)</highlight></codeline>
+</programlisting></para>
+<para>This function is meant to be optimized for use against every request. It is recommend to compile a trust function up-front for the trusted configuration and pass that to <computeroutput>proxyaddr(req, trust)</computeroutput> for each request.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2proxy-addr_2_r_e_a_d_m_e_1autotoc_md2775">
+<title>Testing</title><para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>npm<sp/>test</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2proxy-addr_2_r_e_a_d_m_e_1autotoc_md2776">
+<title>Benchmarks</title><para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>npm<sp/>run-script<sp/>bench</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2proxy-addr_2_r_e_a_d_m_e_1autotoc_md2777">
+<title>License</title><para>[MIT](LICENSE) </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/proxy-addr/README.md"/>
+  </compounddef>
+</doxygen>

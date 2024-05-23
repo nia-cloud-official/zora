@@ -1,0 +1,37 @@
+\chapter{signal-\/exit}
+\hypertarget{md_backend_2node__modules_2signal-exit_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2signal-exit_2_r_e_a_d_m_e}\index{signal-\/exit@{signal-\/exit}}
+\label{md_backend_2node__modules_2signal-exit_2_r_e_a_d_m_e_autotoc_md3296}%
+\Hypertarget{md_backend_2node__modules_2signal-exit_2_r_e_a_d_m_e_autotoc_md3296}%
+ \href{https://travis-ci.org/tapjs/signal-exit}{\texttt{ }} \href{https://coveralls.io/r/tapjs/signal-exit?branch=master}{\texttt{ }} \href{https://www.npmjs.com/package/signal-exit}{\texttt{ }} \href{https://github.com/conventional-changelog/standard-version}{\texttt{ }}
+
+When you want to fire an event no matter how a process exits\+:
+
+
+\begin{DoxyItemize}
+\item reaching the end of execution.
+\item explicitly having {\ttfamily process.\+exit(code)} called.
+\item having {\ttfamily process.\+kill(pid, sig)} called.
+\item receiving a fatal signal from outside the process
+\end{DoxyItemize}
+
+Use {\ttfamily signal-\/exit}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ onExit\ =\ require('signal-\/exit')}
+\DoxyCodeLine{}
+\DoxyCodeLine{onExit(function\ (code,\ signal)\ \{}
+\DoxyCodeLine{\ \ console.log('process\ exited!')}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2signal-exit_2_r_e_a_d_m_e_autotoc_md3297}{}\doxysection{\texorpdfstring{API}{API}}\label{md_backend_2node__modules_2signal-exit_2_r_e_a_d_m_e_autotoc_md3297}
+{\ttfamily var remove = on\+Exit(function (code, signal) \{\}, options)}
+
+The return value of the function is a function that will remove the handler.
+
+Note that the function {\itshape only} fires for signals if the signal would cause the process to exit. That is, there are no other listeners, and it is a fatal signal.\hypertarget{md_backend_2node__modules_2signal-exit_2_r_e_a_d_m_e_autotoc_md3298}{}\doxysection{\texorpdfstring{Options}{Options}}\label{md_backend_2node__modules_2signal-exit_2_r_e_a_d_m_e_autotoc_md3298}
+
+\begin{DoxyItemize}
+\item {\ttfamily always\+Last}\+: Run this handler after any other signal or exit handlers. This causes {\ttfamily process.\+emit} to be monkeypatched. 
+\end{DoxyItemize}

@@ -1,0 +1,243 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2minimatch_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>minimatch</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>minimal<sp/>matching<sp/>utility.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![Build<sp/>Status](https://travis-ci.org/isaacs/minimatch.svg?branch=master)](http://travis-ci.org/isaacs/minimatch)</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>the<sp/>matching<sp/>library<sp/>used<sp/>internally<sp/>by<sp/>npm.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It<sp/>works<sp/>by<sp/>converting<sp/>glob<sp/>expressions<sp/>into<sp/>JavaScript<sp/>`RegExp`</highlight></codeline>
+<codeline><highlight class="normal">objects.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Usage</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>minimatch<sp/>=<sp/>require(&quot;minimatch&quot;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">minimatch(&quot;bar.foo&quot;,<sp/>&quot;*.foo&quot;)<sp/>//<sp/>true!</highlight></codeline>
+<codeline><highlight class="normal">minimatch(&quot;bar.foo&quot;,<sp/>&quot;*.bar&quot;)<sp/>//<sp/>false!</highlight></codeline>
+<codeline><highlight class="normal">minimatch(&quot;bar.foo&quot;,<sp/>&quot;*.+(bar|foo)&quot;,<sp/>{<sp/>debug:<sp/>true<sp/>})<sp/>//<sp/>true,<sp/>and<sp/>noisy!</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Features</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Supports<sp/>these<sp/>glob<sp/>features:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>Brace<sp/>Expansion</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Extended<sp/>glob<sp/>matching</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>&quot;Globstar&quot;<sp/>`**`<sp/>matching</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">See:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`man<sp/>sh`</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`man<sp/>bash`</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`man<sp/>3<sp/>fnmatch`</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`man<sp/>5<sp/>gitignore`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Minimatch<sp/>Class</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Create<sp/>a<sp/>minimatch<sp/>object<sp/>by<sp/>instantiating<sp/>the<sp/>`minimatch.Minimatch`<sp/>class.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>Minimatch<sp/>=<sp/>require(&quot;minimatch&quot;).Minimatch</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>mm<sp/>=<sp/>new<sp/>Minimatch(pattern,<sp/>options)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Properties</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`pattern`<sp/>The<sp/>original<sp/>pattern<sp/>the<sp/>minimatch<sp/>object<sp/>represents.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`options`<sp/>The<sp/>options<sp/>supplied<sp/>to<sp/>the<sp/>constructor.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`set`<sp/>A<sp/>2-dimensional<sp/>array<sp/>of<sp/>regexp<sp/>or<sp/>string<sp/>expressions.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Each<sp/>row<sp/>in<sp/>the</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>array<sp/>corresponds<sp/>to<sp/>a<sp/>brace-expanded<sp/>pattern.<sp/><sp/>Each<sp/>item<sp/>in<sp/>the<sp/>row</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>corresponds<sp/>to<sp/>a<sp/>single<sp/>path-part.<sp/><sp/>For<sp/>example,<sp/>the<sp/>pattern</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`{a,b/c}/d`<sp/>would<sp/>expand<sp/>to<sp/>a<sp/>set<sp/>of<sp/>patterns<sp/>like:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[<sp/>[<sp/>a,<sp/>d<sp/>]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>[<sp/>b,<sp/>c,<sp/>d<sp/>]<sp/>]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>If<sp/>a<sp/>portion<sp/>of<sp/>the<sp/>pattern<sp/>doesn&apos;t<sp/>have<sp/>any<sp/>&quot;magic&quot;<sp/>in<sp/>it</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>(that<sp/>is,<sp/>it&apos;s<sp/>something<sp/>like<sp/>`&quot;foo&quot;`<sp/>rather<sp/>than<sp/>`fo*o?`),<sp/>then<sp/>it</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>will<sp/>be<sp/>left<sp/>as<sp/>a<sp/>string<sp/>rather<sp/>than<sp/>converted<sp/>to<sp/>a<sp/>regular</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>expression.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`regexp`<sp/>Created<sp/>by<sp/>the<sp/>`makeRe`<sp/>method.<sp/><sp/>A<sp/>single<sp/>regular<sp/>expression</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>expressing<sp/>the<sp/>entire<sp/>pattern.<sp/><sp/>This<sp/>is<sp/>useful<sp/>in<sp/>cases<sp/>where<sp/>you<sp/>wish</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>to<sp/>use<sp/>the<sp/>pattern<sp/>somewhat<sp/>like<sp/>`fnmatch(3)`<sp/>with<sp/>`FNM_PATH`<sp/>enabled.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`negate`<sp/>True<sp/>if<sp/>the<sp/>pattern<sp/>is<sp/>negated.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`comment`<sp/>True<sp/>if<sp/>the<sp/>pattern<sp/>is<sp/>a<sp/>comment.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`empty`<sp/>True<sp/>if<sp/>the<sp/>pattern<sp/>is<sp/>`&quot;&quot;`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Methods</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`makeRe`<sp/>Generate<sp/>the<sp/>`regexp`<sp/>member<sp/>if<sp/>necessary,<sp/>and<sp/>return<sp/>it.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Will<sp/>return<sp/>`false`<sp/>if<sp/>the<sp/>pattern<sp/>is<sp/>invalid.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`match(fname)`<sp/>Return<sp/>true<sp/>if<sp/>the<sp/>filename<sp/>matches<sp/>the<sp/>pattern,<sp/>or</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>false<sp/>otherwise.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`matchOne(fileArray,<sp/>patternArray,<sp/>partial)`<sp/>Take<sp/>a<sp/>`/`-split</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>filename,<sp/>and<sp/>match<sp/>it<sp/>against<sp/>a<sp/>single<sp/>row<sp/>in<sp/>the<sp/>`regExpSet`.<sp/><sp/>This</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>method<sp/>is<sp/>mainly<sp/>for<sp/>internal<sp/>use,<sp/>but<sp/>is<sp/>exposed<sp/>so<sp/>that<sp/>it<sp/>can<sp/>be</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>used<sp/>by<sp/>a<sp/>glob-walker<sp/>that<sp/>needs<sp/>to<sp/>avoid<sp/>excessive<sp/>filesystem<sp/>calls.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">All<sp/>other<sp/>methods<sp/>are<sp/>internal,<sp/>and<sp/>will<sp/>be<sp/>called<sp/>as<sp/>necessary.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>minimatch(path,<sp/>pattern,<sp/>options)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Main<sp/>export.<sp/><sp/>Tests<sp/>a<sp/>path<sp/>against<sp/>the<sp/>pattern<sp/>using<sp/>the<sp/>options.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>isJS<sp/>=<sp/>minimatch(file,<sp/>&quot;*.js&quot;,<sp/>{<sp/>matchBase:<sp/>true<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>minimatch.filter(pattern,<sp/>options)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>a<sp/>function<sp/>that<sp/>tests<sp/>its</highlight></codeline>
+<codeline><highlight class="normal">supplied<sp/>argument,<sp/>suitable<sp/>for<sp/>use<sp/>with<sp/>`Array.filter`.<sp/><sp/>Example:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>javascripts<sp/>=<sp/>fileList.filter(minimatch.filter(&quot;*.js&quot;,<sp/>{matchBase:<sp/>true}))</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>minimatch.match(list,<sp/>pattern,<sp/>options)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Match<sp/>against<sp/>the<sp/>list<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">files,<sp/>in<sp/>the<sp/>style<sp/>of<sp/>fnmatch<sp/>or<sp/>glob.<sp/><sp/>If<sp/>nothing<sp/>is<sp/>matched,<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">options.nonull<sp/>is<sp/>set,<sp/>then<sp/>return<sp/>a<sp/>list<sp/>containing<sp/>the<sp/>pattern<sp/>itself.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>javascripts<sp/>=<sp/>minimatch.match(fileList,<sp/>&quot;*.js&quot;,<sp/>{matchBase:<sp/>true}))</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>minimatch.makeRe(pattern,<sp/>options)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Make<sp/>a<sp/>regular<sp/>expression<sp/>object<sp/>from<sp/>the<sp/>pattern.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Options</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">All<sp/>options<sp/>are<sp/>`false`<sp/>by<sp/>default.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>debug</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Dump<sp/>a<sp/>ton<sp/>of<sp/>stuff<sp/>to<sp/>stderr.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>nobrace</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Do<sp/>not<sp/>expand<sp/>`{a,b}`<sp/>and<sp/>`{1..3}`<sp/>brace<sp/>sets.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>noglobstar</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Disable<sp/>`**`<sp/>matching<sp/>against<sp/>multiple<sp/>folder<sp/>names.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>dot</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Allow<sp/>patterns<sp/>to<sp/>match<sp/>filenames<sp/>starting<sp/>with<sp/>a<sp/>period,<sp/>even<sp/>if</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>pattern<sp/>does<sp/>not<sp/>explicitly<sp/>have<sp/>a<sp/>period<sp/>in<sp/>that<sp/>spot.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note<sp/>that<sp/>by<sp/>default,<sp/>`a/**/b`<sp/>will<sp/>**not**<sp/>match<sp/>`a/.d/b`,<sp/>unless<sp/>`dot`</highlight></codeline>
+<codeline><highlight class="normal">is<sp/>set.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>noext</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Disable<sp/>&quot;extglob&quot;<sp/>style<sp/>patterns<sp/>like<sp/>`+(a|b)`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>nocase</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Perform<sp/>a<sp/>case-insensitive<sp/>match.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>nonull</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>a<sp/>match<sp/>is<sp/>not<sp/>found<sp/>by<sp/>`minimatch.match`,<sp/>return<sp/>a<sp/>list<sp/>containing</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>pattern<sp/>itself<sp/>if<sp/>this<sp/>option<sp/>is<sp/>set.<sp/><sp/>When<sp/>not<sp/>set,<sp/>an<sp/>empty<sp/>list</highlight></codeline>
+<codeline><highlight class="normal">is<sp/>returned<sp/>if<sp/>there<sp/>are<sp/>no<sp/>matches.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>matchBase</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>set,<sp/>then<sp/>patterns<sp/>without<sp/>slashes<sp/>will<sp/>be<sp/>matched</highlight></codeline>
+<codeline><highlight class="normal">against<sp/>the<sp/>basename<sp/>of<sp/>the<sp/>path<sp/>if<sp/>it<sp/>contains<sp/>slashes.<sp/><sp/>For<sp/>example,</highlight></codeline>
+<codeline><highlight class="normal">`a?b`<sp/>would<sp/>match<sp/>the<sp/>path<sp/>`/xyz/123/acb`,<sp/>but<sp/>not<sp/>`/xyz/acb/123`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>nocomment</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Suppress<sp/>the<sp/>behavior<sp/>of<sp/>treating<sp/>`#`<sp/>at<sp/>the<sp/>start<sp/>of<sp/>a<sp/>pattern<sp/>as<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">comment.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>nonegate</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Suppress<sp/>the<sp/>behavior<sp/>of<sp/>treating<sp/>a<sp/>leading<sp/>`!`<sp/>character<sp/>as<sp/>negation.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>flipNegate</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>from<sp/>negate<sp/>expressions<sp/>the<sp/>same<sp/>as<sp/>if<sp/>they<sp/>were<sp/>not<sp/>negated.</highlight></codeline>
+<codeline><highlight class="normal">(Ie,<sp/>true<sp/>on<sp/>a<sp/>hit,<sp/>false<sp/>on<sp/>a<sp/>miss.)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>partial</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Compare<sp/>a<sp/>partial<sp/>path<sp/>to<sp/>a<sp/>pattern.<sp/><sp/>As<sp/>long<sp/>as<sp/>the<sp/>parts<sp/>of<sp/>the<sp/>path<sp/>that</highlight></codeline>
+<codeline><highlight class="normal">are<sp/>present<sp/>are<sp/>not<sp/>contradicted<sp/>by<sp/>the<sp/>pattern,<sp/>it<sp/>will<sp/>be<sp/>treated<sp/>as<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">match.<sp/><sp/>This<sp/>is<sp/>useful<sp/>in<sp/>applications<sp/>where<sp/>you&apos;re<sp/>walking<sp/>through<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">folder<sp/>structure,<sp/>and<sp/>don&apos;t<sp/>yet<sp/>have<sp/>the<sp/>full<sp/>path,<sp/>but<sp/>want<sp/>to<sp/>ensure<sp/>that</highlight></codeline>
+<codeline><highlight class="normal">you<sp/>do<sp/>not<sp/>walk<sp/>down<sp/>paths<sp/>that<sp/>can<sp/>never<sp/>be<sp/>a<sp/>match.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>example,</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">minimatch(&apos;/a/b&apos;,<sp/>&apos;/a/*/c/d&apos;,<sp/>{<sp/>partial:<sp/>true<sp/>})<sp/><sp/>//<sp/>true,<sp/>might<sp/>be<sp/>/a/b/c/d</highlight></codeline>
+<codeline><highlight class="normal">minimatch(&apos;/a/b&apos;,<sp/>&apos;/**/d&apos;,<sp/>{<sp/>partial:<sp/>true<sp/>})<sp/><sp/><sp/><sp/><sp/>//<sp/>true,<sp/>might<sp/>be<sp/>/a/b/.../d</highlight></codeline>
+<codeline><highlight class="normal">minimatch(&apos;/x/y/z&apos;,<sp/>&apos;/a/**/z&apos;,<sp/>{<sp/>partial:<sp/>true<sp/>})<sp/>//<sp/>false,<sp/>because<sp/>x<sp/>!==<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>allowWindowsEscape</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Windows<sp/>path<sp/>separator<sp/>`\`<sp/>is<sp/>by<sp/>default<sp/>converted<sp/>to<sp/>`/`,<sp/>which</highlight></codeline>
+<codeline><highlight class="normal">prohibits<sp/>the<sp/>usage<sp/>of<sp/>`\`<sp/>as<sp/>a<sp/>escape<sp/>character.<sp/>This<sp/>flag<sp/>skips<sp/>that</highlight></codeline>
+<codeline><highlight class="normal">behavior<sp/>and<sp/>allows<sp/>using<sp/>the<sp/>escape<sp/>character.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Comparisons<sp/>to<sp/>other<sp/>fnmatch/glob<sp/>implementations</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">While<sp/>strict<sp/>compliance<sp/>with<sp/>the<sp/>existing<sp/>standards<sp/>is<sp/>a<sp/>worthwhile</highlight></codeline>
+<codeline><highlight class="normal">goal,<sp/>some<sp/>discrepancies<sp/>exist<sp/>between<sp/>minimatch<sp/>and<sp/>other</highlight></codeline>
+<codeline><highlight class="normal">implementations,<sp/>and<sp/>are<sp/>intentional.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>the<sp/>pattern<sp/>starts<sp/>with<sp/>a<sp/>`!`<sp/>character,<sp/>then<sp/>it<sp/>is<sp/>negated.<sp/><sp/>Set<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">`nonegate`<sp/>flag<sp/>to<sp/>suppress<sp/>this<sp/>behavior,<sp/>and<sp/>treat<sp/>leading<sp/>`!`</highlight></codeline>
+<codeline><highlight class="normal">characters<sp/>normally.<sp/><sp/>This<sp/>is<sp/>perhaps<sp/>relevant<sp/>if<sp/>you<sp/>wish<sp/>to<sp/>start<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">pattern<sp/>with<sp/>a<sp/>negative<sp/>extglob<sp/>pattern<sp/>like<sp/>`!(a|B)`.<sp/><sp/>Multiple<sp/>`!`</highlight></codeline>
+<codeline><highlight class="normal">characters<sp/>at<sp/>the<sp/>start<sp/>of<sp/>a<sp/>pattern<sp/>will<sp/>negate<sp/>the<sp/>pattern<sp/>multiple</highlight></codeline>
+<codeline><highlight class="normal">times.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>a<sp/>pattern<sp/>starts<sp/>with<sp/>`#`,<sp/>then<sp/>it<sp/>is<sp/>treated<sp/>as<sp/>a<sp/>comment,<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">will<sp/>not<sp/>match<sp/>anything.<sp/><sp/>Use<sp/>`\#`<sp/>to<sp/>match<sp/>a<sp/>literal<sp/>`#`<sp/>at<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">start<sp/>of<sp/>a<sp/>line,<sp/>or<sp/>set<sp/>the<sp/>`nocomment`<sp/>flag<sp/>to<sp/>suppress<sp/>this<sp/>behavior.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>double-star<sp/>character<sp/>`**`<sp/>is<sp/>supported<sp/>by<sp/>default,<sp/>unless<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">`noglobstar`<sp/>flag<sp/>is<sp/>set.<sp/><sp/>This<sp/>is<sp/>supported<sp/>in<sp/>the<sp/>manner<sp/>of<sp/>bsdglob</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>bash<sp/>4.1,<sp/>where<sp/>`**`<sp/>only<sp/>has<sp/>special<sp/>significance<sp/>if<sp/>it<sp/>is<sp/>the<sp/>only</highlight></codeline>
+<codeline><highlight class="normal">thing<sp/>in<sp/>a<sp/>path<sp/>part.<sp/><sp/>That<sp/>is,<sp/>`a/**/b`<sp/>will<sp/>match<sp/>`a/x/y/b`,<sp/>but</highlight></codeline>
+<codeline><highlight class="normal">`a/**b`<sp/>will<sp/>not.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>an<sp/>escaped<sp/>pattern<sp/>has<sp/>no<sp/>matches,<sp/>and<sp/>the<sp/>`nonull`<sp/>flag<sp/>is<sp/>set,</highlight></codeline>
+<codeline><highlight class="normal">then<sp/>minimatch.match<sp/>returns<sp/>the<sp/>pattern<sp/>as-provided,<sp/>rather<sp/>than</highlight></codeline>
+<codeline><highlight class="normal">interpreting<sp/>the<sp/>character<sp/>escapes.<sp/><sp/>For<sp/>example,</highlight></codeline>
+<codeline><highlight class="normal">`minimatch.match([],<sp/>&quot;\\*a\\?&quot;)`<sp/>will<sp/>return<sp/>`&quot;\\*a\\?&quot;`<sp/>rather<sp/>than</highlight></codeline>
+<codeline><highlight class="normal">`&quot;*a?&quot;`.<sp/><sp/>This<sp/>is<sp/>akin<sp/>to<sp/>setting<sp/>the<sp/>`nullglob`<sp/>option<sp/>in<sp/>bash,<sp/>except</highlight></codeline>
+<codeline><highlight class="normal">that<sp/>it<sp/>does<sp/>not<sp/>resolve<sp/>escaped<sp/>pattern<sp/>characters.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>brace<sp/>expansion<sp/>is<sp/>not<sp/>disabled,<sp/>then<sp/>it<sp/>is<sp/>performed<sp/>before<sp/>any</highlight></codeline>
+<codeline><highlight class="normal">other<sp/>interpretation<sp/>of<sp/>the<sp/>glob<sp/>pattern.<sp/><sp/>Thus,<sp/>a<sp/>pattern<sp/>like</highlight></codeline>
+<codeline><highlight class="normal">`+(a|{b),c)}`,<sp/>which<sp/>would<sp/>not<sp/>be<sp/>valid<sp/>in<sp/>bash<sp/>or<sp/>zsh,<sp/>is<sp/>expanded</highlight></codeline>
+<codeline><highlight class="normal">**first**<sp/>into<sp/>the<sp/>set<sp/>of<sp/>`+(a|b)`<sp/>and<sp/>`+(a|c)`,<sp/>and<sp/>those<sp/>patterns<sp/>are</highlight></codeline>
+<codeline><highlight class="normal">checked<sp/>for<sp/>validity.<sp/><sp/>Since<sp/>those<sp/>two<sp/>are<sp/>valid,<sp/>matching<sp/>proceeds.</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/minimatch/README.md"/>
+  </compounddef>
+</doxygen>

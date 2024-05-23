@@ -1,0 +1,176 @@
+.TH "md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e \- tar-stream 
+.PP
+ tar-stream is a streaming tar parser and generator and nothing else\&. It is streams2 and operates purely using streams which means you can easily extract/parse tarballs without ever hitting the file system\&.
+.PP
+Note that you still need to gunzip your data if you have a \fR\&.tar\&.gz\fP\&. We recommend using \fRgunzip-maybe\fP in conjunction with this\&.
+.PP
+.PP
+.nf
+npm install tar\-stream
+.fi
+.PP
+.PP
+\fR\fP \fR\fP
+.SH "Usage"
+.PP
+tar-stream exposes two streams, \fRpack\fP which creates tarballs and \fRextract\fP which extracts tarballs\&. To \fRmodify an existing tarball\fP use both\&.
+.PP
+It implementes USTAR with additional support for pax extended headers\&. It should be compatible with all popular tar distributions out there (gnutar, bsdtar etc)
+.SH "Related"
+.PP
+If you want to pack/unpack directories on the file system check out \fRtar-fs\fP which provides file system bindings to this module\&.
+.SH "Packing"
+.PP
+To create a pack stream use \fRtar\&.pack()\fP and call \fRpack\&.entry(header, [callback])\fP to add tar entries\&.
+.PP
+.PP
+.nf
+ js
+var tar = require('tar\-stream')
+var pack = tar\&.pack() // pack is a streams2 stream
+
+// add a file called my\-test\&.txt with the content "Hello World!"
+pack\&.entry({ name: 'my\-test\&.txt' }, 'Hello World!')
+
+// add a file called my\-stream\-test\&.txt from a stream
+var entry = pack\&.entry({ name: 'my\-stream\-test\&.txt', size: 11 }, function(err) {
+  // the stream was added
+  // no more entries
+  pack\&.finalize()
+})
+
+entry\&.write('hello')
+entry\&.write(' ')
+entry\&.write('world')
+entry\&.end()
+
+// pipe the pack stream somewhere
+pack\&.pipe(process\&.stdout)
+.fi
+.PP
+.SH "Extracting"
+.PP
+To extract a stream use \fRtar\&.extract()\fP and listen for `extract\&.on('entry', (header, stream, next) )`
+.PP
+.PP
+.nf
+ js
+var extract = tar\&.extract()
+
+extract\&.on('entry', function(header, stream, next) {
+  // header is the tar header
+  // stream is the content body (might be an empty stream)
+  // call next when you are done with this entry
+
+  stream\&.on('end', function() {
+    next() // ready for next entry
+  })
+
+  stream\&.resume() // just auto drain the stream
+})
+
+extract\&.on('finish', function() {
+  // all entries read
+})
+
+pack\&.pipe(extract)
+.fi
+.PP
+.PP
+The tar archive is streamed sequentially, meaning you \fBmust\fP drain each entry's stream as you get them or else the main extract stream will receive backpressure and stop reading\&.
+.SH "Headers"
+.PP
+The header object using in \fRentry\fP should contain the following properties\&. Most of these values can be found by stat'ing a file\&.
+.PP
+.PP
+.nf
+ js
+{
+  name: 'path/to/this/entry\&.txt',
+  size: 1314,        // entry size\&. defaults to 0
+  mode: 0o644,       // entry mode\&. defaults to to 0o755 for dirs and 0o644 otherwise
+  mtime: new Date(), // last modified date for entry\&. defaults to now\&.
+  type: 'file',      // type of entry\&. defaults to file\&. can be:
+                     // file | link | symlink | directory | block\-device
+                     // character\-device | fifo | contiguous\-file
+  linkname: 'path',  // linked file name
+  uid: 0,            // uid of entry owner\&. defaults to 0
+  gid: 0,            // gid of entry owner\&. defaults to 0
+  uname: 'maf',      // uname of entry owner\&. defaults to null
+  gname: 'staff',    // gname of entry owner\&. defaults to null
+  devmajor: 0,       // device major version\&. defaults to 0
+  devminor: 0        // device minor version\&. defaults to 0
+}
+.fi
+.PP
+.SH "Modifying existing tarballs"
+.PP
+Using tar-stream it is easy to rewrite paths / change modes etc in an existing tarball\&.
+.PP
+.PP
+.nf
+ js
+var extract = tar\&.extract()
+var pack = tar\&.pack()
+var path = require('path')
+
+extract\&.on('entry', function(header, stream, callback) {
+  // let's prefix all names with 'tmp'
+  header\&.name = path\&.join('tmp', header\&.name)
+  // write the new entry to the pack stream
+  stream\&.pipe(pack\&.entry(header, callback))
+})
+
+extract\&.on('finish', function() {
+  // all entries done \- lets finalize it
+  pack\&.finalize()
+})
+
+// pipe the old tarball to the extractor
+oldTarballStream\&.pipe(extract)
+
+// pipe the new tarball the another stream
+pack\&.pipe(newTarballStream)
+.fi
+.PP
+.SH "Saving tarball to fs"
+.PP
+.PP
+.nf
+ js
+var fs = require('fs')
+var tar = require('tar\-stream')
+
+var pack = tar\&.pack() // pack is a streams2 stream
+var path = 'YourTarBall\&.tar'
+var yourTarball = fs\&.createWriteStream(path)
+
+// add a file called YourFile\&.txt with the content "Hello World!"
+pack\&.entry({name: 'YourFile\&.txt'}, 'Hello World!', function (err) {
+  if (err) throw err
+  pack\&.finalize()
+})
+
+// pipe the pack stream to your file
+pack\&.pipe(yourTarball)
+
+yourTarball\&.on('close', function () {
+  console\&.log(path + ' has been written')
+  fs\&.stat(path, function(err, stats) {
+    if (err) throw err
+    console\&.log(stats)
+    console\&.log('Got file info successfully!')
+  })
+})
+.fi
+.PP
+.SH "Performance"
+.PP
+\fRSee tar-fs for a performance comparison with node-tar\fP
+.SH "License"
+.PP
+MIT 

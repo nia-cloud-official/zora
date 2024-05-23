@@ -1,0 +1,281 @@
+.TH "md_backend_2node__modules_2bl_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2bl_2_r_e_a_d_m_e \- bl *(BufferList)* 
+.PP
+ \fR\fP
+.PP
+\fBA Node\&.js Buffer list collector, reader and streamer thingy\&.\fP
+.PP
+\fR\fP.PP
+\fBbl\fP is a storage object for collections of Node Buffers, exposing them with the main Buffer readable API\&. Also works as a duplex stream so you can collect buffers from a stream that emits them and emit buffers to a stream that consumes them!
+.PP
+The original buffers are kept intact and copies are only done as necessary\&. Any reads that require the use of a single original buffer will return a slice of that buffer only (which references the same memory as the original buffer)\&. Reads that span buffers perform concatenation as required and return the results transparently\&.
+.PP
+.PP
+.nf
+const { BufferList } = require('bl')
+
+const bl = new BufferList()
+bl\&.append(Buffer\&.from('abcd'))
+bl\&.append(Buffer\&.from('efg'))
+bl\&.append('hi')                     // bl will also accept & convert Strings
+bl\&.append(Buffer\&.from('j'))
+bl\&.append(Buffer\&.from([ 0x3, 0x4 ]))
+
+console\&.log(bl\&.length) // 12
+
+console\&.log(bl\&.slice(0, 10)\&.toString('ascii')) // 'abcdefghij'
+console\&.log(bl\&.slice(3, 10)\&.toString('ascii')) // 'defghij'
+console\&.log(bl\&.slice(3, 6)\&.toString('ascii'))  // 'def'
+console\&.log(bl\&.slice(3, 8)\&.toString('ascii'))  // 'defgh'
+console\&.log(bl\&.slice(5, 10)\&.toString('ascii')) // 'fghij'
+
+console\&.log(bl\&.indexOf('def')) // 3
+console\&.log(bl\&.indexOf('asdf')) // \-1
+
+// or just use toString!
+console\&.log(bl\&.toString())               // 'abcdefghij\\u0003\\u0004'
+console\&.log(bl\&.toString('ascii', 3, 8))  // 'defgh'
+console\&.log(bl\&.toString('ascii', 5, 10)) // 'fghij'
+
+// other standard Buffer readables
+console\&.log(bl\&.readUInt16BE(10)) // 0x0304
+console\&.log(bl\&.readUInt16LE(10)) // 0x0403
+.fi
+.PP
+.PP
+Give it a callback in the constructor and use it just like \fB\fRconcat-stream\fP\fP:
+.PP
+.PP
+.nf
+const { BufferListStream } = require('bl')
+const fs = require('fs')
+
+fs\&.createReadStream('README\&.md')
+  \&.pipe(BufferListStream((err, data) => { // note 'new' isn't strictly required
+    // `data` is a complete Buffer object containing the full data
+    console\&.log(data\&.toString())
+  }))
+.fi
+.PP
+.PP
+Note that when you use the \fIcallback\fP method like this, the resulting \fRdata\fP parameter is a concatenation of all \fRBuffer\fP objects in the list\&. If you want to avoid the overhead of this concatenation (in cases of extreme performance consciousness), then avoid the \fIcallback\fP method and just listen to `'end'` instead, like a standard Stream\&.
+.PP
+Or to fetch a URL using \fRhyperquest\fP (should work with \fRrequest\fP and even plain Node http too!):
+.PP
+.PP
+.nf
+const hyperquest = require('hyperquest')
+const { BufferListStream } = require('bl')
+
+const url = 'https://raw\&.github\&.com/rvagg/bl/master/README\&.md'
+
+hyperquest(url)\&.pipe(BufferListStream((err, data) => {
+  console\&.log(data\&.toString())
+}))
+.fi
+.PP
+.PP
+Or, use it as a readable stream to recompose a list of Buffers to an output source:
+.PP
+.PP
+.nf
+const { BufferListStream } = require('bl')
+const fs = require('fs')
+
+var bl = new BufferListStream()
+bl\&.append(Buffer\&.from('abcd'))
+bl\&.append(Buffer\&.from('efg'))
+bl\&.append(Buffer\&.from('hi'))
+bl\&.append(Buffer\&.from('j'))
+
+bl\&.pipe(fs\&.createWriteStream('gibberish\&.txt'))
+.fi
+.PP
+.SH "API"
+.PP
+.IP "\(bu" 2
+\fR\fR\fBnew BufferList([ buf ])\fP\fP\fP
+.IP "\(bu" 2
+\fR\fR\fBBufferList\&.isBufferList(obj)\fP\fP\fP
+.IP "\(bu" 2
+\fR\fRbl\&.\fBlength\fP\fP\fP
+.IP "\(bu" 2
+\fR\fRbl\&.\fBappend(buffer)\fP\fP\fP
+.IP "\(bu" 2
+\fR\fRbl\&.\fBget(index)\fP\fP\fP
+.IP "\(bu" 2
+\fR\fRbl\&.\fBindexOf(value[, byteOffset][, encoding])\fP\fP\fP
+.IP "\(bu" 2
+\fR\fRbl\&.\fBslice([ start[, end ] ])\fP\fP\fP
+.IP "\(bu" 2
+\fR\fRbl\&.\fBshallowSlice([ start[, end ] ])\fP\fP\fP
+.IP "\(bu" 2
+\fR\fRbl\&.\fBcopy(dest, [ destStart, [ srcStart [, srcEnd ] ] ])\fP\fP\fP
+.IP "\(bu" 2
+\fR\fRbl\&.\fBduplicate()\fP\fP\fP
+.IP "\(bu" 2
+\fR\fRbl\&.\fBconsume(bytes)\fP\fP\fP
+.IP "\(bu" 2
+\fR\fRbl\&.\fBtoString([encoding, [ start, [ end ]]])\fP\fP\fP
+.IP "\(bu" 2
+\fR\fRbl\&.\fBreadDoubleBE()\fP\fP, \fRbl\&.\fBreadDoubleLE()\fP\fP, \fRbl\&.\fBreadFloatBE()\fP\fP, \fRbl\&.\fBreadFloatLE()\fP\fP, \fRbl\&.\fBreadInt32BE()\fP\fP, \fRbl\&.\fBreadInt32LE()\fP\fP, \fRbl\&.\fBreadUInt32BE()\fP\fP, \fRbl\&.\fBreadUInt32LE()\fP\fP, \fRbl\&.\fBreadInt16BE()\fP\fP, \fRbl\&.\fBreadInt16LE()\fP\fP, \fRbl\&.\fBreadUInt16BE()\fP\fP, \fRbl\&.\fBreadUInt16LE()\fP\fP, \fRbl\&.\fBreadInt8()\fP\fP, \fRbl\&.\fBreadUInt8()\fP\fP\fP
+.IP "\(bu" 2
+\fR\fR\fBnew BufferListStream([ callback ])\fP\fP\fP
+.PP
+.PP
+.PP
+  
+.SS "new BufferList([ Buffer | Buffer array | BufferList | BufferList array | String ])"
+No arguments are \fIrequired\fP for the constructor, but you can initialise the list by passing in a single \fRBuffer\fP object or an array of \fRBuffer\fP objects\&.
+.PP
+\fRnew\fP is not strictly required, if you don't instantiate a new object, it will be done automatically for you so you can create a new instance simply with:
+.PP
+.PP
+.nf
+const { BufferList } = require('bl')
+const bl = BufferList()
+
+// equivalent to:
+
+const { BufferList } = require('bl')
+const bl = new BufferList()
+.fi
+.PP
+.PP
+.PP
+  
+.SS "BufferList\&.isBufferList(obj)"
+Determines if the passed object is a \fRBufferList\fP\&. It will return \fRtrue\fP if the passed object is an instance of \fRBufferList\fP \fBor\fP \fRBufferListStream\fP and \fRfalse\fP otherwise\&.
+.PP
+N\&.B\&. this won't return \fRtrue\fP for \fRBufferList\fP or \fRBufferListStream\fP instances created by versions of this library before this static method was added\&.
+.PP
+.PP
+  
+.SS "bl\&.length"
+Get the length of the list in bytes\&. This is the sum of the lengths of all of the buffers contained in the list, minus any initial offset for a semi-consumed buffer at the beginning\&. Should accurately represent the total number of bytes that can be read from the list\&.
+.PP
+.PP
+  
+.SS "bl\&.append(Buffer | Buffer array | BufferList | BufferList array | String)"
+\fRappend(buffer)\fP adds an additional buffer or BufferList to the internal list\&. \fRthis\fP is returned so it can be chained\&.
+.PP
+.PP
+  
+.SS "bl\&.get(index)"
+\fRget()\fP will return the byte at the specified index\&.
+.PP
+.PP
+  
+.SS "bl\&.indexOf(value[, byteOffset][, encoding])"
+\fRget()\fP will return the byte at the specified index\&. \fRindexOf()\fP method returns the first index at which a given element can be found in the BufferList, or -1 if it is not present\&.
+.PP
+.PP
+  
+.SS "bl\&.slice([ start, [ end ] ])"
+\fRslice()\fP returns a new \fRBuffer\fP object containing the bytes within the range specified\&. Both \fRstart\fP and \fRend\fP are optional and will default to the beginning and end of the list respectively\&.
+.PP
+If the requested range spans a single internal buffer then a slice of that buffer will be returned which shares the original memory range of that Buffer\&. If the range spans multiple buffers then copy operations will likely occur to give you a uniform Buffer\&.
+.PP
+.PP
+  
+.SS "bl\&.shallowSlice([ start, [ end ] ])"
+\fRshallowSlice()\fP returns a new \fRBufferList\fP object containing the bytes within the range specified\&. Both \fRstart\fP and \fRend\fP are optional and will default to the beginning and end of the list respectively\&.
+.PP
+No copies will be performed\&. All buffers in the result share memory with the original list\&.
+.PP
+.PP
+  
+.SS "bl\&.copy(dest, [ destStart, [ srcStart [, srcEnd ] ] ])"
+\fRcopy()\fP copies the content of the list in the \fRdest\fP buffer, starting from \fRdestStart\fP and containing the bytes within the range specified with \fRsrcStart\fP to \fRsrcEnd\fP\&. \fRdestStart\fP, \fRstart\fP and \fRend\fP are optional and will default to the beginning of the \fRdest\fP buffer, and the beginning and end of the list respectively\&.
+.PP
+.PP
+  
+.SS "bl\&.duplicate()"
+\fRduplicate()\fP performs a \fBshallow-copy\fP of the list\&. The internal Buffers remains the same, so if you change the underlying Buffers, the change will be reflected in both the original and the duplicate\&. This method is needed if you want to call \fRconsume()\fP or \fRpipe()\fP and still keep the original list\&.Example:
+.PP
+.PP
+.nf
+var bl = new BufferListStream()
+
+bl\&.append('hello')
+bl\&.append(' world')
+bl\&.append('\\n')
+
+bl\&.duplicate()\&.pipe(process\&.stdout, { end: false })
+
+console\&.log(bl\&.toString())
+.fi
+.PP
+.PP
+.PP
+  
+.SS "bl\&.consume(bytes)"
+\fRconsume()\fP will shift bytes \fIoff the start of the list\fP\&. The number of bytes consumed don't need to line up with the sizes of the internal Buffers---initial offsets will be calculated accordingly in order to give you a consistent view of the data\&.
+.PP
+.PP
+  
+.SS "bl\&.toString([encoding, [ start, [ end ]]])"
+\fRtoString()\fP will return a string representation of the buffer\&. The optional \fRstart\fP and \fRend\fP arguments are passed on to \fRslice()\fP, while the \fRencoding\fP is passed on to \fRtoString()\fP of the resulting Buffer\&. See the \fRBuffer::toString()\fP documentation for more information\&.
+.PP
+.PP
+  
+.SS "bl\&.readDoubleBE(), bl\&.readDoubleLE(), bl\&.readFloatBE(), bl\&.readFloatLE(), bl\&.readInt32BE(), bl\&.readInt32LE(), bl\&.readUInt32BE(), bl\&.readUInt32LE(), bl\&.readInt16BE(), bl\&.readInt16LE(), bl\&.readUInt16BE(), bl\&.readUInt16LE(), bl\&.readInt8(), bl\&.readUInt8()"
+All of the standard byte-reading methods of the \fRBuffer\fP interface are implemented and will operate across internal Buffer boundaries transparently\&.
+.PP
+See the \fB\fR\fRBuffer\fP\fP\fP documentation for how these work\&.
+.PP
+.PP
+  
+.SS "new BufferListStream([ callback | Buffer | Buffer array | BufferList | BufferList array | String ])"
+\fBBufferListStream\fP is a Node \fB\fRDuplex Stream\fP\fP, so it can be read from and written to like a standard Node stream\&. You can also \fRpipe()\fP to and from a \fBBufferListStream\fP instance\&.
+.PP
+The constructor takes an optional callback, if supplied, the callback will be called with an error argument followed by a reference to the \fBbl\fP instance, when \fRbl\&.end()\fP is called (i\&.e\&. from a piped stream)\&. This is a convenient method of collecting the entire contents of a stream, particularly when the stream is \fIchunky\fP, such as a network stream\&.
+.PP
+Normally, no arguments are required for the constructor, but you can initialise the list by passing in a single \fRBuffer\fP object or an array of \fRBuffer\fP object\&.
+.PP
+\fRnew\fP is not strictly required, if you don't instantiate a new object, it will be done automatically for you so you can create a new instance simply with:
+.PP
+.PP
+.nf
+const { BufferListStream } = require('bl')
+const bl = BufferListStream()
+
+// equivalent to:
+
+const { BufferListStream } = require('bl')
+const bl = new BufferListStream()
+.fi
+.PP
+.PP
+N\&.B\&. For backwards compatibility reasons, \fRBufferListStream\fP is the \fBdefault\fP export when you `require('bl')`:
+.PP
+.PP
+.nf
+const { BufferListStream } = require('bl')
+// equivalent to:
+const BufferListStream = require('bl')
+.fi
+.PP
+.PP
+.PP
+.SH "Contributors"
+.PP
+\fBbl\fP is brought to you by the following hackers:
+.PP
+.IP "\(bu" 2
+\fRRod Vagg\fP
+.IP "\(bu" 2
+\fRMatteo Collina\fP
+.IP "\(bu" 2
+\fRJarett Cruger\fP
+.PP
+.PP
+ 
+.SH "License & copyright"
+.PP
+Copyright (c) 2013-2019 bl contributors (listed above)\&.
+.PP
+bl is licensed under the MIT license\&. All rights not explicitly granted in the MIT license are reserved\&. See the included LICENSE\&.md file for more details\&. 

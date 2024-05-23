@@ -1,0 +1,53 @@
+\chapter{http-\/proxy-\/agent}
+\hypertarget{md_backend_2node__modules_2http-proxy-agent_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2http-proxy-agent_2_r_e_a_d_m_e}\index{http-\/proxy-\/agent@{http-\/proxy-\/agent}}
+\hypertarget{md_backend_2node__modules_2http-proxy-agent_2_r_e_a_d_m_e_autotoc_md1593}{}\doxysubsection{\texorpdfstring{An HTTP(s) proxy {\ttfamily http.\+Agent} implementation for HTTP}{An HTTP(s) proxy {\ttfamily http.\+Agent} implementation for HTTP}}\label{md_backend_2node__modules_2http-proxy-agent_2_r_e_a_d_m_e_autotoc_md1593}
+\href{https://github.com/TooTallNate/node-http-proxy-agent/actions?workflow=Node+CI}{\texttt{ }}
+
+This module provides an {\ttfamily http.\+Agent} implementation that connects to a specified HTTP or HTTPS proxy server, and can be used with the built-\/in {\ttfamily http} module.
+
+{\bfseries{Note\+:}} For HTTP proxy usage with the {\ttfamily https} module, check out \href{https://github.com/TooTallNate/node-https-proxy-agent}{\texttt{ {\ttfamily node-\/https-\/proxy-\/agent}}}.\hypertarget{md_backend_2node__modules_2http-proxy-agent_2_r_e_a_d_m_e_autotoc_md1594}{}\doxysection{\texorpdfstring{Installation}{Installation}}\label{md_backend_2node__modules_2http-proxy-agent_2_r_e_a_d_m_e_autotoc_md1594}
+Install with {\ttfamily npm}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ bash}
+\DoxyCodeLine{\$\ npm\ install\ http-\/proxy-\/agent}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2http-proxy-agent_2_r_e_a_d_m_e_autotoc_md1595}{}\doxysection{\texorpdfstring{Example}{Example}}\label{md_backend_2node__modules_2http-proxy-agent_2_r_e_a_d_m_e_autotoc_md1595}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ url\ =\ require('url');}
+\DoxyCodeLine{var\ http\ =\ require('http');}
+\DoxyCodeLine{var\ HttpProxyAgent\ =\ require('http-\/proxy-\/agent');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ HTTP/HTTPS\ proxy\ to\ connect\ to}
+\DoxyCodeLine{var\ proxy\ =\ process.env.http\_proxy\ ||\ 'http://168.63.76.32:3128';}
+\DoxyCodeLine{console.log('using\ proxy\ server\ \%j',\ proxy);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ HTTP\ endpoint\ for\ the\ proxy\ to\ connect\ to}
+\DoxyCodeLine{var\ endpoint\ =\ process.argv[2]\ ||\ 'http://nodejs.org/api/';}
+\DoxyCodeLine{console.log('attempting\ to\ GET\ \%j',\ endpoint);}
+\DoxyCodeLine{var\ opts\ =\ url.parse(endpoint);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ create\ an\ instance\ of\ the\ \`{}HttpProxyAgent`\ class\ with\ the\ proxy\ server\ information}
+\DoxyCodeLine{var\ agent\ =\ new\ HttpProxyAgent(proxy);}
+\DoxyCodeLine{opts.agent\ =\ agent;}
+\DoxyCodeLine{}
+\DoxyCodeLine{http.get(opts,\ function\ (res)\ \{}
+\DoxyCodeLine{\ \ console.log('"{}response"{}\ event!',\ res.headers);}
+\DoxyCodeLine{\ \ res.pipe(process.stdout);}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2http-proxy-agent_2_r_e_a_d_m_e_autotoc_md1596}{}\doxysection{\texorpdfstring{License}{License}}\label{md_backend_2node__modules_2http-proxy-agent_2_r_e_a_d_m_e_autotoc_md1596}
+(The MIT License)
+
+Copyright (c) 2013 Nathan Rajlich \texorpdfstring{$<$}{<}\href{mailto:nathan@tootallnate.net}{\texttt{ nathan@tootallnate.\+net}}\texorpdfstring{$>$}{>}
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \textquotesingle{}Software\textquotesingle{}), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions\+:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED \textquotesingle{}AS IS\textquotesingle{}, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 

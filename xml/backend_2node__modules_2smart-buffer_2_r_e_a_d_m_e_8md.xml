@@ -1,0 +1,646 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2smart-buffer_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">smart-buffer<sp/><sp/>[![Build<sp/>Status](https://travis-ci.org/JoshGlazebrook/smart-buffer.svg?branch=master)](https://travis-ci.org/JoshGlazebrook/smart-buffer)<sp/><sp/>[![Coverage<sp/>Status](https://coveralls.io/repos/github/JoshGlazebrook/smart-buffer/badge.svg?branch=master)](https://coveralls.io/github/JoshGlazebrook/smart-buffer?branch=master)</highlight></codeline>
+<codeline><highlight class="normal">=============</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">smart-buffer<sp/>is<sp/>a<sp/>Buffer<sp/>wrapper<sp/>that<sp/>adds<sp/>automatic<sp/>read<sp/>&amp;<sp/>write<sp/>offset<sp/>tracking,<sp/>string<sp/>operations,<sp/>data<sp/>insertions,<sp/>and<sp/>more.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">![stats](https://nodei.co/npm/smart-buffer.png?downloads=true&amp;downloadRank=true&amp;stars=true<sp/>&quot;stats&quot;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Key<sp/>Features**:</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Proxies<sp/>all<sp/>of<sp/>the<sp/>Buffer<sp/>write<sp/>and<sp/>read<sp/>functions</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Keeps<sp/>track<sp/>of<sp/>read<sp/>and<sp/>write<sp/>offsets<sp/>automatically</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Grows<sp/>the<sp/>internal<sp/>Buffer<sp/>as<sp/>needed</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Useful<sp/>string<sp/>operations.<sp/>(Null<sp/>terminating<sp/>strings)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Allows<sp/>for<sp/>inserting<sp/>values<sp/>at<sp/>specific<sp/>points<sp/>in<sp/>the<sp/>Buffer</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Built<sp/>in<sp/>TypeScript</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Type<sp/>Definitions<sp/>Provided</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Browser<sp/>Support<sp/>(using<sp/>Webpack/Browserify)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Full<sp/>test<sp/>coverage</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Requirements**:</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Node<sp/>v4.0+<sp/>is<sp/>supported<sp/>at<sp/>this<sp/>time.<sp/><sp/>(Versions<sp/>prior<sp/>to<sp/>2.0<sp/>will<sp/>work<sp/>on<sp/>node<sp/>0.10)</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Breaking<sp/>Changes<sp/>in<sp/>v4.0</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>Old<sp/>constructor<sp/>patterns<sp/>have<sp/>been<sp/>completely<sp/>removed.<sp/>It&apos;s<sp/>now<sp/>required<sp/>to<sp/>use<sp/>the<sp/>SmartBuffer.fromXXX()<sp/>factory<sp/>constructors.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>rewind(),<sp/>skip(),<sp/>moveTo()<sp/>have<sp/>been<sp/>removed.<sp/>(see<sp/>[offsets](#offsets))</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Internal<sp/>private<sp/>properties<sp/>are<sp/>now<sp/>prefixed<sp/>with<sp/>underscores<sp/>(_)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>**All**<sp/>writeXXX()<sp/>methods<sp/>that<sp/>are<sp/>given<sp/>an<sp/>offset<sp/>will<sp/>now<sp/>**overwrite<sp/>data**<sp/>instead<sp/>of<sp/>insert.<sp/>(see<sp/>[write<sp/>vs<sp/>insert](#write-vs-insert))</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>insertXXX()<sp/>methods<sp/>have<sp/>been<sp/>added<sp/>for<sp/>when<sp/>you<sp/>want<sp/>to<sp/>insert<sp/>data<sp/>at<sp/>a<sp/>specific<sp/>offset<sp/>(this<sp/>replaces<sp/>the<sp/>old<sp/>behavior<sp/>of<sp/>writeXXX()<sp/>when<sp/>an<sp/>offset<sp/>was<sp/>provided)</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Looking<sp/>for<sp/>v3<sp/>docs?</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Legacy<sp/>documentation<sp/>for<sp/>version<sp/>3<sp/>and<sp/>prior<sp/>can<sp/>be<sp/>found<sp/>[here](https://github.com/JoshGlazebrook/smart-buffer/blob/master/docs/README_v3.md).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Installing:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`yarn<sp/>add<sp/>smart-buffer`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">or</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`npm<sp/>install<sp/>smart-buffer`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note:<sp/>The<sp/>published<sp/>NPM<sp/>package<sp/>includes<sp/>the<sp/>built<sp/>javascript<sp/>library.</highlight></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>cloned<sp/>this<sp/>repo<sp/>and<sp/>wish<sp/>to<sp/>build<sp/>the<sp/>library<sp/>manually<sp/>use:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`npm<sp/>run<sp/>build`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Using<sp/>smart-buffer</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>SmartBuffer<sp/>=<sp/>require(&apos;smart-buffer&apos;).SmartBuffer;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Typescript</highlight></codeline>
+<codeline><highlight class="normal">import<sp/>{<sp/>SmartBuffer,<sp/>SmartBufferOptions}<sp/>from<sp/>&apos;smart-buffer&apos;;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Simple<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Building<sp/>a<sp/>packet<sp/>that<sp/>uses<sp/>the<sp/>following<sp/>protocol<sp/>specification:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`[PacketType:2][PacketLength:2][Data:XX]`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>build<sp/>this<sp/>packet<sp/>using<sp/>the<sp/>vanilla<sp/>Buffer<sp/>class,<sp/>you<sp/>would<sp/>have<sp/>to<sp/>count<sp/>up<sp/>the<sp/>length<sp/>of<sp/>the<sp/>data<sp/>payload<sp/>beforehand.<sp/>You<sp/>would<sp/>also<sp/>need<sp/>to<sp/>keep<sp/>track<sp/>of<sp/>the<sp/>current<sp/>&quot;cursor&quot;<sp/>position<sp/>in<sp/>your<sp/>Buffer<sp/>so<sp/>you<sp/>write<sp/>everything<sp/>in<sp/>the<sp/>right<sp/>places.<sp/>With<sp/>smart-buffer<sp/>you<sp/>don&apos;t<sp/>have<sp/>to<sp/>do<sp/>either<sp/>of<sp/>those<sp/>things.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">function<sp/>createLoginPacket(username,<sp/>password,<sp/>age,<sp/>country)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>const<sp/>packet<sp/>=<sp/>new<sp/>SmartBuffer();</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.writeUInt16LE(0x0060);<sp/>//<sp/>Some<sp/>packet<sp/>type</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.writeStringNT(username);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.writeStringNT(password);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.writeUInt8(age);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.writeStringNT(country);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packet.insertUInt16LE(packet.length<sp/>-<sp/>2,<sp/>2);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>packet.toBuffer();</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">With<sp/>the<sp/>above<sp/>function,<sp/>you<sp/>now<sp/>can<sp/>do<sp/>this:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>login<sp/>=<sp/>createLoginPacket(&quot;Josh&quot;,<sp/>&quot;secret123&quot;,<sp/>22,<sp/>&quot;United<sp/>States&quot;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>&lt;Buffer<sp/>60<sp/>00<sp/>1e<sp/>00<sp/>4a<sp/>6f<sp/>73<sp/>68<sp/>00<sp/>73<sp/>65<sp/>63<sp/>72<sp/>65<sp/>74<sp/>31<sp/>32<sp/>33<sp/>00<sp/>16<sp/>55<sp/>6e<sp/>69<sp/>74<sp/>65<sp/>64<sp/>20<sp/>53<sp/>74<sp/>61<sp/>74<sp/>65<sp/>73<sp/>00&gt;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">Notice<sp/>that<sp/>the<sp/>`[PacketLength:2]`<sp/>value<sp/>(1e<sp/>00)<sp/>was<sp/>inserted<sp/>at<sp/>position<sp/>2.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Reading<sp/>back<sp/>the<sp/>packet<sp/>we<sp/>created<sp/>above<sp/>is<sp/>just<sp/>as<sp/>easy:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>reader<sp/>=<sp/>SmartBuffer.fromBuffer(login);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>logininfo<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packetType:<sp/>reader.readUInt16LE(),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packetLength:<sp/>reader.readUInt16LE(),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>username:<sp/>reader.readStringNT(),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>password:<sp/>reader.readStringNT(),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>age:<sp/>reader.readUInt8(),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>country:<sp/>reader.readStringNT()</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">/*</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packetType:<sp/>96,<sp/>(0x0060)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>packetLength:<sp/>30,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>username:<sp/>&apos;Josh&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>password:<sp/>&apos;secret123&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>age:<sp/>22,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>country:<sp/>&apos;United<sp/>States&apos;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">*/</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Write<sp/>vs<sp/>Insert</highlight></codeline>
+<codeline><highlight class="normal">In<sp/>prior<sp/>versions<sp/>of<sp/>SmartBuffer,<sp/>.writeXXX(value,<sp/>offset)<sp/>calls<sp/>would<sp/>insert<sp/>data<sp/>when<sp/>an<sp/>offset<sp/>was<sp/>provided.<sp/>In<sp/>version<sp/>4,<sp/>this<sp/>will<sp/>now<sp/>overwrite<sp/>the<sp/>data<sp/>at<sp/>the<sp/>offset<sp/>position.<sp/>To<sp/>insert<sp/>data<sp/>there<sp/>are<sp/>now<sp/>corresponding<sp/>.insertXXX(value,<sp/>offset)<sp/>methods.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**SmartBuffer<sp/>v3**:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(new<sp/>Buffer([1,2,3,4,5,6]));</highlight></codeline>
+<codeline><highlight class="normal">buff.writeInt8(7,<sp/>2);</highlight></codeline>
+<codeline><highlight class="normal">console.log(buff.toBuffer())</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>&lt;Buffer<sp/>01<sp/>02<sp/>07<sp/>03<sp/>04<sp/>05<sp/>06&gt;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**SmartBuffer<sp/>v4**:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(new<sp/>Buffer([1,2,3,4,5,6]));</highlight></codeline>
+<codeline><highlight class="normal">buff.writeInt8(7,<sp/>2);</highlight></codeline>
+<codeline><highlight class="normal">console.log(buff.toBuffer());</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>&lt;Buffer<sp/>01<sp/>02<sp/>07<sp/>04<sp/>05<sp/>06&gt;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>insert<sp/>you<sp/>instead<sp/>should<sp/>use:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(new<sp/>Buffer([1,2,3,4,5,6]));</highlight></codeline>
+<codeline><highlight class="normal">buff.insertInt8(7,<sp/>2);</highlight></codeline>
+<codeline><highlight class="normal">console.log(buff.toBuffer());</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>&lt;Buffer<sp/>01<sp/>02<sp/>07<sp/>03<sp/>04<sp/>05<sp/>06&gt;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Note:**<sp/>Insert/Writing<sp/>to<sp/>a<sp/>position<sp/>beyond<sp/>the<sp/>currently<sp/>tracked<sp/>internal<sp/>Buffer<sp/>will<sp/>zero<sp/>pad<sp/>to<sp/>your<sp/>offset.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Constructing<sp/>a<sp/>smart-buffer</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">There<sp/>are<sp/>a<sp/>few<sp/>different<sp/>ways<sp/>to<sp/>construct<sp/>a<sp/>SmartBuffer<sp/>instance.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Creating<sp/>SmartBuffer<sp/>from<sp/>existing<sp/>Buffer</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(buffer);<sp/>//<sp/>Creates<sp/>instance<sp/>from<sp/>buffer.<sp/>(Uses<sp/>default<sp/>utf8<sp/>encoding)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(buffer,<sp/>&apos;ascii&apos;);<sp/>//<sp/>Creates<sp/>instance<sp/>from<sp/>buffer<sp/>with<sp/>ascii<sp/>encoding<sp/>for<sp/>strings.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Creating<sp/>SmartBuffer<sp/>with<sp/>specified<sp/>internal<sp/>Buffer<sp/>size.<sp/>(Note:<sp/>this<sp/>is<sp/>not<sp/>a<sp/>hard<sp/>cap,<sp/>the<sp/>internal<sp/>buffer<sp/>will<sp/>grow<sp/>as<sp/>needed).</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromSize(1024);<sp/>//<sp/>Creates<sp/>instance<sp/>with<sp/>internal<sp/>Buffer<sp/>size<sp/>of<sp/>1024.</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromSize(1024,<sp/>&apos;utf8&apos;);<sp/>//<sp/>Creates<sp/>instance<sp/>with<sp/>internal<sp/>Buffer<sp/>size<sp/>of<sp/>1024,<sp/>and<sp/>utf8<sp/>encoding<sp/>for<sp/>strings.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Creating<sp/>SmartBuffer<sp/>with<sp/>options<sp/>object.<sp/>This<sp/>one<sp/>specifies<sp/>size<sp/>and<sp/>encoding.</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromOptions({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>size:<sp/>1024,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>encoding:<sp/>&apos;ascii&apos;</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Creating<sp/>SmartBuffer<sp/>with<sp/>options<sp/>object.<sp/>This<sp/>one<sp/>specified<sp/>an<sp/>existing<sp/>Buffer.</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromOptions({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>buff:<sp/>buffer</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Creating<sp/>SmartBuffer<sp/>from<sp/>a<sp/>string.</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(Buffer.from(&apos;some<sp/>string&apos;,<sp/>&apos;utf8&apos;));</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Just<sp/>want<sp/>a<sp/>regular<sp/>SmartBuffer<sp/>with<sp/>all<sp/>default<sp/>options?</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>new<sp/>SmartBuffer();</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Api<sp/>Reference:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Note:**<sp/>SmartBuffer<sp/>is<sp/>fully<sp/>documented<sp/>with<sp/>Typescript<sp/>definitions<sp/>as<sp/>well<sp/>as<sp/>jsdocs<sp/>so<sp/>your<sp/>favorite<sp/>editor/IDE<sp/>will<sp/>have<sp/>intellisense.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Table<sp/>of<sp/>Contents**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">1.<sp/>[Constructing](#constructing)</highlight></codeline>
+<codeline><highlight class="normal">2.<sp/>**Numbers**</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>1.<sp/>[Integers](#integers)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>2.<sp/>[Floating<sp/>Points](#floating-point-numbers)</highlight></codeline>
+<codeline><highlight class="normal">3.<sp/>**Strings**</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>1.<sp/>[Strings](#strings)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>2.<sp/>[Null<sp/>Terminated<sp/>Strings](#null-terminated-strings)</highlight></codeline>
+<codeline><highlight class="normal">4.<sp/>[Buffers](#buffers)</highlight></codeline>
+<codeline><highlight class="normal">5.<sp/>[Offsets](#offsets)</highlight></codeline>
+<codeline><highlight class="normal">6.<sp/>[Other](#other)</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Constructing</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>constructor()</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>constructor([options])</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```options```<sp/>*{SmartBufferOptions}*<sp/>An<sp/>optional<sp/>options<sp/>object<sp/>to<sp/>construct<sp/>a<sp/>SmartBuffer<sp/>with.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Examples:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>new<sp/>SmartBuffer();</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>new<sp/>SmartBuffer({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>size:<sp/>1024,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>encoding:<sp/>&apos;ascii&apos;</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Class<sp/>Method:<sp/>fromBuffer(buffer[,<sp/>encoding])</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```buffer```<sp/>*{Buffer}*<sp/>The<sp/>Buffer<sp/>instance<sp/>to<sp/>wrap.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```encoding```<sp/>*{string}*<sp/>The<sp/>string<sp/>encoding<sp/>to<sp/>use.<sp/>```Default:<sp/>&apos;utf8&apos;```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Examples:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>someBuffer<sp/>=<sp/>Buffer.from(&apos;some<sp/>string&apos;);</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(someBuffer);<sp/>//<sp/>Defaults<sp/>to<sp/>utf8</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(someBuffer,<sp/>&apos;ascii&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Class<sp/>Method:<sp/>fromSize(size[,<sp/>encoding])</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```size```<sp/>*{number}*<sp/>The<sp/>size<sp/>to<sp/>initialize<sp/>the<sp/>internal<sp/>Buffer.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```encoding```<sp/>*{string}*<sp/>The<sp/>string<sp/>encoding<sp/>to<sp/>use.<sp/>```Default:<sp/>&apos;utf8&apos;```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Examples:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromSize(1024);<sp/>//<sp/>Defaults<sp/>to<sp/>utf8</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromSize(1024,<sp/>&apos;ascii&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Class<sp/>Method:<sp/>fromOptions(options)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```options```<sp/>*{SmartBufferOptions}*<sp/>The<sp/>Buffer<sp/>instance<sp/>to<sp/>wrap.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```typescript</highlight></codeline>
+<codeline><highlight class="normal">interface<sp/>SmartBufferOptions<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>encoding?:<sp/>BufferEncoding;<sp/>//<sp/>Defaults<sp/>to<sp/>utf8</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>size?:<sp/>number;<sp/>//<sp/>Defaults<sp/>to<sp/>4096</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>buff?:<sp/>Buffer;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Examples:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromOptions({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>size:<sp/>1024</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromOptions({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>size:<sp/>1024,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>encoding:<sp/>&apos;utf8&apos;</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromOptions({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>encoding:<sp/>&apos;utf8&apos;</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>someBuff<sp/>=<sp/>Buffer.from(&apos;some<sp/>string&apos;,<sp/>&apos;utf8&apos;);</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromOptions({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>buffer:<sp/>someBuff,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>encoding:<sp/>&apos;utf8&apos;</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Integers</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.readInt8([offset])</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.readUInt8([offset])</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>Optional<sp/>position<sp/>to<sp/>start<sp/>reading<sp/>data<sp/>from.<sp/>**Default**:<sp/>```Auto<sp/>managed<sp/>offset```</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Returns<sp/>*{number}*</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Read<sp/>a<sp/>Int8<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.readInt16BE([offset])</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.readInt16LE([offset])</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.readUInt16BE([offset])</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.readUInt16LE([offset])</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>Optional<sp/>position<sp/>to<sp/>start<sp/>reading<sp/>data<sp/>from.<sp/>**Default**:<sp/>```Auto<sp/>managed<sp/>offset```</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Returns<sp/>*{number}*</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Read<sp/>a<sp/>16<sp/>bit<sp/>integer<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.readInt32BE([offset])</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.readInt32LE([offset])</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.readUInt32BE([offset])</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.readUInt32LE([offset])</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>Optional<sp/>position<sp/>to<sp/>start<sp/>reading<sp/>data<sp/>from.<sp/>**Default**:<sp/>```Auto<sp/>managed<sp/>offset```</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Returns<sp/>*{number}*</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Read<sp/>a<sp/>32<sp/>bit<sp/>integer<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeInt8(value[,<sp/>offset])</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeUInt8(value[,<sp/>offset])</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```value```<sp/>*{number}*<sp/>The<sp/>value<sp/>to<sp/>write.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>An<sp/>optional<sp/>offset<sp/>to<sp/>write<sp/>this<sp/>value<sp/>to.<sp/>**Default:**<sp/>```Auto<sp/>managed<sp/>offset```</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Returns<sp/>*{this}*</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Write<sp/>a<sp/>Int8<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.insertInt8(value,<sp/>offset)</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.insertUInt8(value,<sp/>offset)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```value```<sp/>*{number}*<sp/>The<sp/>value<sp/>to<sp/>insert.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>The<sp/>offset<sp/>to<sp/>insert<sp/>this<sp/>data<sp/>at.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Returns<sp/>*{this}*</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Insert<sp/>a<sp/>Int8<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeInt16BE(value[,<sp/>offset])</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeInt16LE(value[,<sp/>offset])</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeUInt16BE(value[,<sp/>offset])</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeUInt16LE(value[,<sp/>offset])</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```value```<sp/>*{number}*<sp/>The<sp/>value<sp/>to<sp/>write.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>An<sp/>optional<sp/>offset<sp/>to<sp/>write<sp/>this<sp/>value<sp/>to.<sp/>**Default:**<sp/>```Auto<sp/>managed<sp/>offset```</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Returns<sp/>*{this}*</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Write<sp/>a<sp/>16<sp/>bit<sp/>integer<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.insertInt16BE(value,<sp/>offset)</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.insertInt16LE(value,<sp/>offset)</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.insertUInt16BE(value,<sp/>offset)</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.insertUInt16LE(value,<sp/>offset)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```value```<sp/>*{number}*<sp/>The<sp/>value<sp/>to<sp/>insert.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>The<sp/>offset<sp/>to<sp/>insert<sp/>this<sp/>data<sp/>at.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Returns<sp/>*{this}*</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Insert<sp/>a<sp/>16<sp/>bit<sp/>integer<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeInt32BE(value[,<sp/>offset])</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeInt32LE(value[,<sp/>offset])</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeUInt32BE(value[,<sp/>offset])</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeUInt32LE(value[,<sp/>offset])</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```value```<sp/>*{number}*<sp/>The<sp/>value<sp/>to<sp/>write.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>An<sp/>optional<sp/>offset<sp/>to<sp/>write<sp/>this<sp/>value<sp/>to.<sp/>**Default:**<sp/>```Auto<sp/>managed<sp/>offset```</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Returns<sp/>*{this}*</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Write<sp/>a<sp/>32<sp/>bit<sp/>integer<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.insertInt32BE(value,<sp/>offset)</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.insertInt32LE(value,<sp/>offset)</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.insertUInt32BE(value,<sp/>offset)</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.nsertUInt32LE(value,<sp/>offset)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```value```<sp/>*{number}*<sp/>The<sp/>value<sp/>to<sp/>insert.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>The<sp/>offset<sp/>to<sp/>insert<sp/>this<sp/>data<sp/>at.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Returns<sp/>*{this}*</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Insert<sp/>a<sp/>32<sp/>bit<sp/>integer<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Floating<sp/>Point<sp/>Numbers</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.readFloatBE([offset])</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.readFloatLE([offset])</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>Optional<sp/>position<sp/>to<sp/>start<sp/>reading<sp/>data<sp/>from.<sp/>**Default**:<sp/>```Auto<sp/>managed<sp/>offset```</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Returns<sp/>*{number}*</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Read<sp/>a<sp/>Float<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.readDoubleBE([offset])</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.readDoubleLE([offset])</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>Optional<sp/>position<sp/>to<sp/>start<sp/>reading<sp/>data<sp/>from.<sp/>**Default**:<sp/>```Auto<sp/>managed<sp/>offset```</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Returns<sp/>*{number}*</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Read<sp/>a<sp/>Double<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeFloatBE(value[,<sp/>offset])</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeFloatLE(value[,<sp/>offset])</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```value```<sp/>*{number}*<sp/>The<sp/>value<sp/>to<sp/>write.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>An<sp/>optional<sp/>offset<sp/>to<sp/>write<sp/>this<sp/>value<sp/>to.<sp/>**Default:**<sp/>```Auto<sp/>managed<sp/>offset```</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Returns<sp/>*{this}*</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Write<sp/>a<sp/>Float<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.insertFloatBE(value,<sp/>offset)</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.insertFloatLE(value,<sp/>offset)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```value```<sp/>*{number}*<sp/>The<sp/>value<sp/>to<sp/>insert.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>The<sp/>offset<sp/>to<sp/>insert<sp/>this<sp/>data<sp/>at.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Returns<sp/>*{this}*</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Insert<sp/>a<sp/>Float<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeDoubleBE(value[,<sp/>offset])</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeDoubleLE(value[,<sp/>offset])</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```value```<sp/>*{number}*<sp/>The<sp/>value<sp/>to<sp/>write.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>An<sp/>optional<sp/>offset<sp/>to<sp/>write<sp/>this<sp/>value<sp/>to.<sp/>**Default:**<sp/>```Auto<sp/>managed<sp/>offset```</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Returns<sp/>*{this}*</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Write<sp/>a<sp/>Double<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.insertDoubleBE(value,<sp/>offset)</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.insertDoubleLE(value,<sp/>offset)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```value```<sp/>*{number}*<sp/>The<sp/>value<sp/>to<sp/>insert.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>The<sp/>offset<sp/>to<sp/>insert<sp/>this<sp/>data<sp/>at.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Returns<sp/>*{this}*</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Insert<sp/>a<sp/>Double<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Strings</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.readString()</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.readString(size[,<sp/>encoding])</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.readString(encoding)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```size```<sp/>*{number}*<sp/>The<sp/>number<sp/>of<sp/>bytes<sp/>to<sp/>read.<sp/>**Default:**<sp/>```Reads<sp/>to<sp/>the<sp/>end<sp/>of<sp/>the<sp/>Buffer.```</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```encoding```<sp/>*{string}*<sp/>The<sp/>string<sp/>encoding<sp/>to<sp/>use.<sp/>**Default:**<sp/>```utf8```.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Read<sp/>a<sp/>string<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Examples:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(Buffer.from(&apos;hello<sp/>there&apos;,<sp/>&apos;utf8&apos;));</highlight></codeline>
+<codeline><highlight class="normal">buff.readString();<sp/>//<sp/>&apos;hello<sp/>there&apos;</highlight></codeline>
+<codeline><highlight class="normal">buff.readString(2);<sp/>//<sp/>&apos;he&apos;</highlight></codeline>
+<codeline><highlight class="normal">buff.readString(2,<sp/>&apos;utf8&apos;);<sp/>//<sp/>&apos;he&apos;</highlight></codeline>
+<codeline><highlight class="normal">buff.readString(&apos;utf8&apos;);<sp/>//<sp/>&apos;hello<sp/>there&apos;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeString(value)</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeString(value[,<sp/>offset])</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeString(value[,<sp/>encoding])</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeString(value[,<sp/>offset[,<sp/>encoding]])</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```value```<sp/>*{string}*<sp/>The<sp/>string<sp/>value<sp/>to<sp/>write.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>The<sp/>offset<sp/>to<sp/>write<sp/>this<sp/>value<sp/>to.<sp/>**Default:**<sp/>```Auto<sp/>managed<sp/>offset```</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```encoding```<sp/>*{string}*<sp/>An<sp/>optional<sp/>string<sp/>encoding<sp/>to<sp/>use.<sp/>**Default:**<sp/>```utf8```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Write<sp/>a<sp/>string<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Examples:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">buff.writeString(&apos;hello&apos;);<sp/>//<sp/>Auto<sp/>managed<sp/>offset</highlight></codeline>
+<codeline><highlight class="normal">buff.writeString(&apos;hello&apos;,<sp/>2);</highlight></codeline>
+<codeline><highlight class="normal">buff.writeString(&apos;hello&apos;,<sp/>&apos;utf8&apos;)<sp/>//<sp/>Auto<sp/>managed<sp/>offset</highlight></codeline>
+<codeline><highlight class="normal">buff.writeString(&apos;hello&apos;,<sp/>2,<sp/>&apos;utf8&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.insertString(value,<sp/>offset[,<sp/>encoding])</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```value```<sp/>*{string}*<sp/>The<sp/>string<sp/>value<sp/>to<sp/>write.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>The<sp/>offset<sp/>to<sp/>write<sp/>this<sp/>value<sp/>to.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```encoding```<sp/>*{string}*<sp/>An<sp/>optional<sp/>string<sp/>encoding<sp/>to<sp/>use.<sp/>**Default:**<sp/>```utf8```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Insert<sp/>a<sp/>string<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Examples:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">buff.insertString(&apos;hello&apos;,<sp/>2);</highlight></codeline>
+<codeline><highlight class="normal">buff.insertString(&apos;hello&apos;,<sp/>2,<sp/>&apos;utf8&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Null<sp/>Terminated<sp/>Strings</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.readStringNT()</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.readStringNT(encoding)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```encoding```<sp/>*{string}*<sp/>The<sp/>string<sp/>encoding<sp/>to<sp/>use.<sp/>**Default:**<sp/>```utf8```.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Read<sp/>a<sp/>null<sp/>terminated<sp/>string<sp/>value.<sp/>(If<sp/>a<sp/>null<sp/>is<sp/>not<sp/>found,<sp/>it<sp/>will<sp/>read<sp/>to<sp/>the<sp/>end<sp/>of<sp/>the<sp/>Buffer).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Examples:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromBuffer(Buffer.from(&apos;hello\0<sp/>there&apos;,<sp/>&apos;utf8&apos;));</highlight></codeline>
+<codeline><highlight class="normal">buff.readStringNT();<sp/>//<sp/>&apos;hello&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>If<sp/>we<sp/>called<sp/>this<sp/>again:</highlight></codeline>
+<codeline><highlight class="normal">buff.readStringNT();<sp/>//<sp/>&apos;<sp/>there&apos;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeStringNT(value)</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeStringNT(value[,<sp/>offset])</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeStringNT(value[,<sp/>encoding])</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeStringNT(value[,<sp/>offset[,<sp/>encoding]])</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```value```<sp/>*{string}*<sp/>The<sp/>string<sp/>value<sp/>to<sp/>write.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>The<sp/>offset<sp/>to<sp/>write<sp/>this<sp/>value<sp/>to.<sp/>**Default:**<sp/>```Auto<sp/>managed<sp/>offset```</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```encoding```<sp/>*{string}*<sp/>An<sp/>optional<sp/>string<sp/>encoding<sp/>to<sp/>use.<sp/>**Default:**<sp/>```utf8```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Write<sp/>a<sp/>null<sp/>terminated<sp/>string<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Examples:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">buff.writeStringNT(&apos;hello&apos;);<sp/>//<sp/>Auto<sp/>managed<sp/>offset<sp/><sp/><sp/>&lt;Buffer<sp/>68<sp/>65<sp/>6c<sp/>6c<sp/>6f<sp/>00&gt;</highlight></codeline>
+<codeline><highlight class="normal">buff.writeStringNT(&apos;hello&apos;,<sp/>2);<sp/>//<sp/>&lt;Buffer<sp/>00<sp/>00<sp/>68<sp/>65<sp/>6c<sp/>6c<sp/>6f<sp/>00&gt;</highlight></codeline>
+<codeline><highlight class="normal">buff.writeStringNT(&apos;hello&apos;,<sp/>&apos;utf8&apos;)<sp/>//<sp/>Auto<sp/>managed<sp/>offset</highlight></codeline>
+<codeline><highlight class="normal">buff.writeStringNT(&apos;hello&apos;,<sp/>2,<sp/>&apos;utf8&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.insertStringNT(value,<sp/>offset[,<sp/>encoding])</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```value```<sp/>*{string}*<sp/>The<sp/>string<sp/>value<sp/>to<sp/>write.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>The<sp/>offset<sp/>to<sp/>write<sp/>this<sp/>value<sp/>to.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```encoding```<sp/>*{string}*<sp/>An<sp/>optional<sp/>string<sp/>encoding<sp/>to<sp/>use.<sp/>**Default:**<sp/>```utf8```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Insert<sp/>a<sp/>null<sp/>terminated<sp/>string<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Examples:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">buff.insertStringNT(&apos;hello&apos;,<sp/>2);</highlight></codeline>
+<codeline><highlight class="normal">buff.insertStringNT(&apos;hello&apos;,<sp/>2,<sp/>&apos;utf8&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Buffers</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.readBuffer([length])</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```length```<sp/>*{number}*<sp/>The<sp/>number<sp/>of<sp/>bytes<sp/>to<sp/>read<sp/>into<sp/>a<sp/>Buffer.<sp/>**Default:**<sp/>```Reads<sp/>to<sp/>the<sp/>end<sp/>of<sp/>the<sp/>Buffer```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Read<sp/>a<sp/>Buffer<sp/>of<sp/>a<sp/>specified<sp/>size.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeBuffer(value[,<sp/>offset])</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```value```<sp/>*{Buffer}*<sp/>The<sp/>buffer<sp/>value<sp/>to<sp/>write.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>An<sp/>optional<sp/>offset<sp/>to<sp/>write<sp/>the<sp/>value<sp/>to.<sp/>**Default:**<sp/>```Auto<sp/>managed<sp/>offset```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.insertBuffer(value,<sp/>offset)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```value```<sp/>*{Buffer}*<sp/>The<sp/>buffer<sp/>value<sp/>to<sp/>write.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>The<sp/>offset<sp/>to<sp/>write<sp/>the<sp/>value<sp/>to.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.readBufferNT()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Read<sp/>a<sp/>null<sp/>terminated<sp/>Buffer.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeBufferNT(value[,<sp/>offset])</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```value```<sp/>*{Buffer}*<sp/>The<sp/>buffer<sp/>value<sp/>to<sp/>write.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>An<sp/>optional<sp/>offset<sp/>to<sp/>write<sp/>the<sp/>value<sp/>to.<sp/>**Default:**<sp/>```Auto<sp/>managed<sp/>offset```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Write<sp/>a<sp/>null<sp/>terminated<sp/>Buffer.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.insertBufferNT(value,<sp/>offset)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```value```<sp/>*{Buffer}*<sp/>The<sp/>buffer<sp/>value<sp/>to<sp/>write.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>The<sp/>offset<sp/>to<sp/>write<sp/>the<sp/>value<sp/>to.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Insert<sp/>a<sp/>null<sp/>terminated<sp/>Buffer.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Offsets</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.readOffset</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.readOffset(offset)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>The<sp/>new<sp/>read<sp/>offset<sp/>value<sp/>to<sp/>set.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Returns:<sp/>```The<sp/>current<sp/>read<sp/>offset```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Gets<sp/>or<sp/>sets<sp/>the<sp/>current<sp/>read<sp/>offset.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Examples:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>currentOffset<sp/>=<sp/>buff.readOffset;<sp/>//<sp/>5</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">buff.readOffset<sp/>=<sp/>10;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">console.log(buff.readOffset)<sp/>//<sp/>10</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeOffset</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.writeOffset(offset)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```offset```<sp/>*{number}*<sp/>The<sp/>new<sp/>write<sp/>offset<sp/>value<sp/>to<sp/>set.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Returns:<sp/>```The<sp/>current<sp/>write<sp/>offset```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Gets<sp/>or<sp/>sets<sp/>the<sp/>current<sp/>write<sp/>offset.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Examples:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>currentOffset<sp/>=<sp/>buff.writeOffset;<sp/>//<sp/>5</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">buff.writeOffset<sp/>=<sp/>10;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">console.log(buff.writeOffset)<sp/>//<sp/>10</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.encoding</highlight></codeline>
+<codeline><highlight class="normal">###<sp/>buff.encoding(encoding)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```encoding```<sp/>*{string}*<sp/>The<sp/>new<sp/>string<sp/>encoding<sp/>to<sp/>set.</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Returns:<sp/>```The<sp/>current<sp/>string<sp/>encoding```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Gets<sp/>or<sp/>sets<sp/>the<sp/>current<sp/>string<sp/>encoding.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Examples:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>currentEncoding<sp/>=<sp/>buff.encoding;<sp/>//<sp/>&apos;utf8&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">buff.encoding<sp/>=<sp/>&apos;ascii&apos;;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">console.log(buff.encoding)<sp/>//<sp/>&apos;ascii&apos;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Other</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.clear()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Clear<sp/>and<sp/>resets<sp/>the<sp/>SmartBuffer<sp/>instance.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.remaining()</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Returns<sp/>```Remaining<sp/>data<sp/>left<sp/>to<sp/>be<sp/>read```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Gets<sp/>the<sp/>number<sp/>of<sp/>remaining<sp/>bytes<sp/>to<sp/>be<sp/>read.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.internalBuffer</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Returns:<sp/>*{Buffer}*</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Gets<sp/>the<sp/>internally<sp/>managed<sp/>Buffer<sp/>(Includes<sp/>unmanaged<sp/>data).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Examples:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromSize(16);</highlight></codeline>
+<codeline><highlight class="normal">buff.writeString(&apos;hello&apos;);</highlight></codeline>
+<codeline><highlight class="normal">console.log(buff.InternalBuffer);<sp/>//<sp/>&lt;Buffer<sp/>68<sp/>65<sp/>6c<sp/>6c<sp/>6f<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00<sp/>00&gt;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.toBuffer()</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Returns:<sp/>*{Buffer}*</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Gets<sp/>a<sp/>sliced<sp/>Buffer<sp/>instance<sp/>of<sp/>the<sp/>internally<sp/>managed<sp/>Buffer.<sp/>(Only<sp/>includes<sp/>managed<sp/>data)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Examples:</highlight></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>buff<sp/>=<sp/>SmartBuffer.fromSize(16);</highlight></codeline>
+<codeline><highlight class="normal">buff.writeString(&apos;hello&apos;);</highlight></codeline>
+<codeline><highlight class="normal">console.log(buff.toBuffer());<sp/>//<sp/>&lt;Buffer<sp/>68<sp/>65<sp/>6c<sp/>6c<sp/>6f&gt;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.toString([encoding])</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>```encoding```<sp/>*{string}*<sp/>The<sp/>string<sp/>encoding<sp/>to<sp/>use<sp/>when<sp/>converting<sp/>to<sp/>a<sp/>string.<sp/>**Default:**<sp/>```utf8```</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Returns<sp/>*{string}*</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Gets<sp/>a<sp/>string<sp/>representation<sp/>of<sp/>all<sp/>data<sp/>in<sp/>the<sp/>SmartBuffer.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>buff.destroy()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Destroys<sp/>the<sp/>SmartBuffer<sp/>instance.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>License</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>work<sp/>is<sp/>licensed<sp/>under<sp/>the<sp/>[MIT<sp/>license](http://en.wikipedia.org/wiki/MIT_License).</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/smart-buffer/README.md"/>
+  </compounddef>
+</doxygen>

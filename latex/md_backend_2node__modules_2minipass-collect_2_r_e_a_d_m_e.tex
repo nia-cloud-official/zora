@@ -1,0 +1,47 @@
+\chapter{minipass-\/collect}
+\hypertarget{md_backend_2node__modules_2minipass-collect_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2minipass-collect_2_r_e_a_d_m_e}\index{minipass-\/collect@{minipass-\/collect}}
+\label{md_backend_2node__modules_2minipass-collect_2_r_e_a_d_m_e_autotoc_md2156}%
+\Hypertarget{md_backend_2node__modules_2minipass-collect_2_r_e_a_d_m_e_autotoc_md2156}%
+ A Minipass stream that collects all the data into a single chunk
+
+Note that this buffers ALL data written to it, so it\textquotesingle{}s only good for situations where you are sure the entire stream fits in memory.
+
+Note\+: this is primarily useful for the {\ttfamily Collect.\+Pass\+Through} class, since Minipass streams already have a {\ttfamily .collect()} method which returns a promise that resolves to the array of chunks, and a {\ttfamily .concat()} method that returns the data concatenated into a single Buffer or String.\hypertarget{md_backend_2node__modules_2minipass-collect_2_r_e_a_d_m_e_autotoc_md2157}{}\doxysection{\texorpdfstring{USAGE}{USAGE}}\label{md_backend_2node__modules_2minipass-collect_2_r_e_a_d_m_e_autotoc_md2157}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Collect\ =\ require('minipass-\/collect')}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ collector\ =\ new\ Collect()}
+\DoxyCodeLine{collector.on('data',\ allTheData\ =>\ \{}
+\DoxyCodeLine{\ \ console.log('all\ the\ data!',\ allTheData)}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{someSourceOfData.pipe(collector)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ note\ that\ you\ can\ also\ simply\ do:}
+\DoxyCodeLine{someSourceOfData.pipe(new\ Minipass()).concat().then(data\ =>\ ...)}
+\DoxyCodeLine{//\ or\ even,\ if\ someSourceOfData\ is\ a\ Minipass:}
+\DoxyCodeLine{someSourceOfData.concat().then(data\ =>\ ...)}
+\DoxyCodeLine{//\ but\ you\ might\ prefer\ to\ have\ it\ stream-\/shaped\ rather\ than}
+\DoxyCodeLine{//\ Promise-\/shaped\ in\ some\ scenarios.}
+
+\end{DoxyCode}
+
+
+If you want to collect the data, but {\itshape also} act as a passthrough stream, then use {\ttfamily Collect.\+Pass\+Through} instead (for example to memoize streaming responses), and listen on the {\ttfamily collect} event.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Collect\ =\ require('minipass-\/collect')}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ collector\ =\ new\ Collect.PassThrough()}
+\DoxyCodeLine{collector.on('collect',\ allTheData\ =>\ \{}
+\DoxyCodeLine{\ \ console.log('all\ the\ data!',\ allTheData)}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{someSourceOfData.pipe(collector).pipe(someOtherStream)}
+
+\end{DoxyCode}
+
+
+All \href{http://npm.im/minipass}{\texttt{ minipass options}} are supported. 

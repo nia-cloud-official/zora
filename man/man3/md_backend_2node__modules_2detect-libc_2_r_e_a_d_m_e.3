@@ -1,0 +1,181 @@
+.TH "md_backend_2node__modules_2detect-libc_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2detect-libc_2_r_e_a_d_m_e \- detect-libc 
+.PP
+ Node\&.js module to detect details of the C standard library (libc) implementation provided by a given Linux system\&.
+.PP
+Currently supports detection of GNU glibc and MUSL libc\&.
+.PP
+Provides asychronous and synchronous functions for the family (e\&.g\&. \fRglibc\fP, \fRmusl\fP) and version (e\&.g\&. \fR1\&.23\fP, \fR1\&.2\&.3\fP)\&.
+.PP
+The version numbers of libc implementations are not guaranteed to be semver-compliant\&.
+.PP
+For previous v1\&.x releases, please see the \fRv1\fP branch\&.
+.SH "Install"
+.PP
+.PP
+.nf
+npm install detect\-libc
+.fi
+.PP
+.SH "API"
+.PP
+.SS "GLIBC"
+.PP
+.nf
+const GLIBC: string = 'glibc';
+.fi
+.PP
+.PP
+A String constant containing the value \fRglibc\fP\&.
+.SS "MUSL"
+.PP
+.nf
+const MUSL: string = 'musl';
+.fi
+.PP
+.PP
+A String constant containing the value \fRmusl\fP\&.
+.SS "family"
+.PP
+.nf
+function family(): Promise<string | null>;
+.fi
+.PP
+.PP
+Resolves asychronously with:
+.PP
+.IP "\(bu" 2
+\fRglibc\fP or \fRmusl\fP when the libc family can be determined
+.IP "\(bu" 2
+\fRnull\fP when the libc family cannot be determined
+.IP "\(bu" 2
+\fRnull\fP when run on a non-Linux platform
+.PP
+.PP
+.PP
+.nf
+const { family, GLIBC, MUSL } = require('detect\-libc');
+
+switch (await family()) {
+  case GLIBC: \&.\&.\&.
+  case MUSL: \&.\&.\&.
+  case null: \&.\&.\&.
+}
+.fi
+.PP
+.SS "familySync"
+.PP
+.nf
+function familySync(): string | null;
+.fi
+.PP
+.PP
+Synchronous version of \fRfamily()\fP\&.
+.PP
+.PP
+.nf
+const { familySync, GLIBC, MUSL } = require('detect\-libc');
+
+switch (familySync()) {
+  case GLIBC: \&.\&.\&.
+  case MUSL: \&.\&.\&.
+  case null: \&.\&.\&.
+}
+.fi
+.PP
+.SS "version"
+.PP
+.nf
+function version(): Promise<string | null>;
+.fi
+.PP
+.PP
+Resolves asychronously with:
+.PP
+.IP "\(bu" 2
+The version when it can be determined
+.IP "\(bu" 2
+\fRnull\fP when the libc family cannot be determined
+.IP "\(bu" 2
+\fRnull\fP when run on a non-Linux platform
+.PP
+.PP
+.PP
+.nf
+const { version } = require('detect\-libc');
+
+const v = await version();
+if (v) {
+  const [major, minor, patch] = v\&.split('\&.');
+}
+.fi
+.PP
+.SS "versionSync"
+.PP
+.nf
+function versionSync(): string | null;
+.fi
+.PP
+.PP
+Synchronous version of \fRversion()\fP\&.
+.PP
+.PP
+.nf
+const { versionSync } = require('detect\-libc');
+
+const v = versionSync();
+if (v) {
+  const [major, minor, patch] = v\&.split('\&.');
+}
+.fi
+.PP
+.SS "isNonGlibcLinux"
+.PP
+.nf
+function isNonGlibcLinux(): Promise<boolean>;
+.fi
+.PP
+.PP
+Resolves asychronously with:
+.PP
+.IP "\(bu" 2
+\fRfalse\fP when the libc family is \fRglibc\fP
+.IP "\(bu" 2
+\fRtrue\fP when the libc family is not \fRglibc\fP
+.IP "\(bu" 2
+\fRfalse\fP when run on a non-Linux platform
+.PP
+.PP
+.PP
+.nf
+const { isNonGlibcLinux } = require('detect\-libc');
+
+if (await isNonGlibcLinux()) { \&.\&.\&. }
+.fi
+.PP
+.SS "isNonGlibcLinuxSync"
+.PP
+.nf
+function isNonGlibcLinuxSync(): boolean;
+.fi
+.PP
+.PP
+Synchronous version of \fRisNonGlibcLinux()\fP\&.
+.PP
+.PP
+.nf
+const { isNonGlibcLinuxSync } = require('detect\-libc');
+
+if (isNonGlibcLinuxSync()) { \&.\&.\&. }
+.fi
+.PP
+.SH "Licensing"
+.PP
+Copyright 2017 Lovell Fuller and others\&.
+.PP
+Licensed under the Apache License, Version 2\&.0 (the 'License'); you may not use this file except in compliance with the License\&. You may obtain a copy of the License at \fRhttp://www\&.apache\&.org/licenses/LICENSE-2\&.0\fP
+.PP
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied\&. See the License for the specific language governing permissions and limitations under the License\&. 

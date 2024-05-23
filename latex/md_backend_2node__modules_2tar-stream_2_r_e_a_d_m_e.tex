@@ -1,0 +1,162 @@
+\chapter{tar-\/stream}
+\hypertarget{md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e}\index{tar-\/stream@{tar-\/stream}}
+\label{md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e_autotoc_md3782}%
+\Hypertarget{md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e_autotoc_md3782}%
+ tar-\/stream is a streaming tar parser and generator and nothing else. It is streams2 and operates purely using streams which means you can easily extract/parse tarballs without ever hitting the file system.
+
+Note that you still need to gunzip your data if you have a {\ttfamily .tar.\+gz}. We recommend using \href{https://github.com/mafintosh/gunzip-maybe}{\texttt{ gunzip-\/maybe}} in conjunction with this.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ tar-\/stream}
+
+\end{DoxyCode}
+
+
+\href{http://travis-ci.org/mafintosh/tar-stream}{\texttt{ }} \href{http://opensource.org/licenses/MIT}{\texttt{ }}\hypertarget{md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e_autotoc_md3783}{}\doxysection{\texorpdfstring{Usage}{Usage}}\label{md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e_autotoc_md3783}
+tar-\/stream exposes two streams, \href{https://github.com/mafintosh/tar-stream\#packing}{\texttt{ pack}} which creates tarballs and \href{https://github.com/mafintosh/tar-stream\#extracting}{\texttt{ extract}} which extracts tarballs. To \href{https://github.com/mafintosh/tar-stream\#modifying-existing-tarballs}{\texttt{ modify an existing tarball}} use both.
+
+It implementes USTAR with additional support for pax extended headers. It should be compatible with all popular tar distributions out there (gnutar, bsdtar etc)\hypertarget{md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e_autotoc_md3784}{}\doxysection{\texorpdfstring{Related}{Related}}\label{md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e_autotoc_md3784}
+If you want to pack/unpack directories on the file system check out \href{https://github.com/mafintosh/tar-fs}{\texttt{ tar-\/fs}} which provides file system bindings to this module.\hypertarget{md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e_autotoc_md3785}{}\doxysection{\texorpdfstring{Packing}{Packing}}\label{md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e_autotoc_md3785}
+To create a pack stream use {\ttfamily tar.\+pack()} and call {\ttfamily pack.\+entry(header, \mbox{[}callback\mbox{]})} to add tar entries.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ tar\ =\ require('tar-\/stream')}
+\DoxyCodeLine{var\ pack\ =\ tar.pack()\ //\ pack\ is\ a\ streams2\ stream}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ add\ a\ file\ called\ my-\/test.txt\ with\ the\ content\ "{}Hello\ World!"{}}
+\DoxyCodeLine{pack.entry(\{\ name:\ 'my-\/test.txt'\ \},\ 'Hello\ World!')}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ add\ a\ file\ called\ my-\/stream-\/test.txt\ from\ a\ stream}
+\DoxyCodeLine{var\ entry\ =\ pack.entry(\{\ name:\ 'my-\/stream-\/test.txt',\ size:\ 11\ \},\ function(err)\ \{}
+\DoxyCodeLine{\ \ //\ the\ stream\ was\ added}
+\DoxyCodeLine{\ \ //\ no\ more\ entries}
+\DoxyCodeLine{\ \ pack.finalize()}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{entry.write('hello')}
+\DoxyCodeLine{entry.write('\ ')}
+\DoxyCodeLine{entry.write('world')}
+\DoxyCodeLine{entry.end()}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ pipe\ the\ pack\ stream\ somewhere}
+\DoxyCodeLine{pack.pipe(process.stdout)}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e_autotoc_md3786}{}\doxysection{\texorpdfstring{Extracting}{Extracting}}\label{md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e_autotoc_md3786}
+To extract a stream use {\ttfamily tar.\+extract()} and listen for `extract.\+on(\textquotesingle{}entry', (header, stream, next) )\`{}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ extract\ =\ tar.extract()}
+\DoxyCodeLine{}
+\DoxyCodeLine{extract.on('entry',\ function(header,\ stream,\ next)\ \{}
+\DoxyCodeLine{\ \ //\ header\ is\ the\ tar\ header}
+\DoxyCodeLine{\ \ //\ stream\ is\ the\ content\ body\ (might\ be\ an\ empty\ stream)}
+\DoxyCodeLine{\ \ //\ call\ next\ when\ you\ are\ done\ with\ this\ entry}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ stream.on('end',\ function()\ \{}
+\DoxyCodeLine{\ \ \ \ next()\ //\ ready\ for\ next\ entry}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ stream.resume()\ //\ just\ auto\ drain\ the\ stream}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{extract.on('finish',\ function()\ \{}
+\DoxyCodeLine{\ \ //\ all\ entries\ read}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{pack.pipe(extract)}
+
+\end{DoxyCode}
+
+
+The tar archive is streamed sequentially, meaning you {\bfseries{must}} drain each entry\textquotesingle{}s stream as you get them or else the main extract stream will receive backpressure and stop reading.\hypertarget{md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e_autotoc_md3787}{}\doxysection{\texorpdfstring{Headers}{Headers}}\label{md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e_autotoc_md3787}
+The header object using in {\ttfamily entry} should contain the following properties. Most of these values can be found by stat\textquotesingle{}ing a file.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ name:\ 'path/to/this/entry.txt',}
+\DoxyCodeLine{\ \ size:\ 1314,\ \ \ \ \ \ \ \ //\ entry\ size.\ defaults\ to\ 0}
+\DoxyCodeLine{\ \ mode:\ 0o644,\ \ \ \ \ \ \ //\ entry\ mode.\ defaults\ to\ to\ 0o755\ for\ dirs\ and\ 0o644\ otherwise}
+\DoxyCodeLine{\ \ mtime:\ new\ Date(),\ //\ last\ modified\ date\ for\ entry.\ defaults\ to\ now.}
+\DoxyCodeLine{\ \ type:\ 'file',\ \ \ \ \ \ //\ type\ of\ entry.\ defaults\ to\ file.\ can\ be:}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ file\ |\ link\ |\ symlink\ |\ directory\ |\ block-\/device}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ character-\/device\ |\ fifo\ |\ contiguous-\/file}
+\DoxyCodeLine{\ \ linkname:\ 'path',\ \ //\ linked\ file\ name}
+\DoxyCodeLine{\ \ uid:\ 0,\ \ \ \ \ \ \ \ \ \ \ \ //\ uid\ of\ entry\ owner.\ defaults\ to\ 0}
+\DoxyCodeLine{\ \ gid:\ 0,\ \ \ \ \ \ \ \ \ \ \ \ //\ gid\ of\ entry\ owner.\ defaults\ to\ 0}
+\DoxyCodeLine{\ \ uname:\ 'maf',\ \ \ \ \ \ //\ uname\ of\ entry\ owner.\ defaults\ to\ null}
+\DoxyCodeLine{\ \ gname:\ 'staff',\ \ \ \ //\ gname\ of\ entry\ owner.\ defaults\ to\ null}
+\DoxyCodeLine{\ \ devmajor:\ 0,\ \ \ \ \ \ \ //\ device\ major\ version.\ defaults\ to\ 0}
+\DoxyCodeLine{\ \ devminor:\ 0\ \ \ \ \ \ \ \ //\ device\ minor\ version.\ defaults\ to\ 0}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e_autotoc_md3788}{}\doxysection{\texorpdfstring{Modifying existing tarballs}{Modifying existing tarballs}}\label{md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e_autotoc_md3788}
+Using tar-\/stream it is easy to rewrite paths / change modes etc in an existing tarball.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ extract\ =\ tar.extract()}
+\DoxyCodeLine{var\ pack\ =\ tar.pack()}
+\DoxyCodeLine{var\ path\ =\ require('path')}
+\DoxyCodeLine{}
+\DoxyCodeLine{extract.on('entry',\ function(header,\ stream,\ callback)\ \{}
+\DoxyCodeLine{\ \ //\ let's\ prefix\ all\ names\ with\ 'tmp'}
+\DoxyCodeLine{\ \ header.name\ =\ path.join('tmp',\ header.name)}
+\DoxyCodeLine{\ \ //\ write\ the\ new\ entry\ to\ the\ pack\ stream}
+\DoxyCodeLine{\ \ stream.pipe(pack.entry(header,\ callback))}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{extract.on('finish',\ function()\ \{}
+\DoxyCodeLine{\ \ //\ all\ entries\ done\ -\/\ lets\ finalize\ it}
+\DoxyCodeLine{\ \ pack.finalize()}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ pipe\ the\ old\ tarball\ to\ the\ extractor}
+\DoxyCodeLine{oldTarballStream.pipe(extract)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ pipe\ the\ new\ tarball\ the\ another\ stream}
+\DoxyCodeLine{pack.pipe(newTarballStream)}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e_autotoc_md3789}{}\doxysection{\texorpdfstring{Saving tarball to fs}{Saving tarball to fs}}\label{md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e_autotoc_md3789}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ fs\ =\ require('fs')}
+\DoxyCodeLine{var\ tar\ =\ require('tar-\/stream')}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ pack\ =\ tar.pack()\ //\ pack\ is\ a\ streams2\ stream}
+\DoxyCodeLine{var\ path\ =\ 'YourTarBall.tar'}
+\DoxyCodeLine{var\ yourTarball\ =\ fs.createWriteStream(path)}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ add\ a\ file\ called\ YourFile.txt\ with\ the\ content\ "{}Hello\ World!"{}}
+\DoxyCodeLine{pack.entry(\{name:\ 'YourFile.txt'\},\ 'Hello\ World!',\ function\ (err)\ \{}
+\DoxyCodeLine{\ \ if\ (err)\ throw\ err}
+\DoxyCodeLine{\ \ pack.finalize()}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ pipe\ the\ pack\ stream\ to\ your\ file}
+\DoxyCodeLine{pack.pipe(yourTarball)}
+\DoxyCodeLine{}
+\DoxyCodeLine{yourTarball.on('close',\ function\ ()\ \{}
+\DoxyCodeLine{\ \ console.log(path\ +\ '\ has\ been\ written')}
+\DoxyCodeLine{\ \ fs.stat(path,\ function(err,\ stats)\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (err)\ throw\ err}
+\DoxyCodeLine{\ \ \ \ console.log(stats)}
+\DoxyCodeLine{\ \ \ \ console.log('Got\ file\ info\ successfully!')}
+\DoxyCodeLine{\ \ \})}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e_autotoc_md3790}{}\doxysection{\texorpdfstring{Performance}{Performance}}\label{md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e_autotoc_md3790}
+\href{https://github.com/mafintosh/tar-fs/blob/master/README.md\#performance}{\texttt{ See tar-\/fs for a performance comparison with node-\/tar}}\hypertarget{md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e_autotoc_md3791}{}\doxysection{\texorpdfstring{License}{License}}\label{md_backend_2node__modules_2tar-stream_2_r_e_a_d_m_e_autotoc_md3791}
+MIT 

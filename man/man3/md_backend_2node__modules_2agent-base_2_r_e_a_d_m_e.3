@@ -1,0 +1,115 @@
+.TH "md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e \- agent-base 
+.PP
+
+.SS "Turn a function into an \fR\fRhttp\&.Agent\fP\fP instance"
+\fR\fP.PP
+This module provides an \fRhttp\&.Agent\fP generator\&. That is, you pass it an async callback function, and it returns a new \fRhttp\&.Agent\fP instance that will invoke the given callback function when sending outbound HTTP requests\&.
+.SS "Some subclasses:"
+Here's some more interesting uses of \fRagent-base\fP\&. Send a pull request to list yours!
+.PP
+.IP "\(bu" 2
+\fR\fRhttp-proxy-agent\fP\fP: An HTTP(s) proxy \fRhttp\&.Agent\fP implementation for HTTP endpoints
+.IP "\(bu" 2
+\fR\fRhttps-proxy-agent\fP\fP: An HTTP(s) proxy \fRhttp\&.Agent\fP implementation for HTTPS endpoints
+.IP "\(bu" 2
+\fR\fRpac-proxy-agent\fP\fP: A PAC file proxy \fRhttp\&.Agent\fP implementation for HTTP and HTTPS
+.IP "\(bu" 2
+\fR\fRsocks-proxy-agent\fP\fP: A SOCKS proxy \fRhttp\&.Agent\fP implementation for HTTP and HTTPS
+.PP
+.SH "Installation"
+.PP
+Install with \fRnpm\fP:
+.PP
+.PP
+.nf
+ bash
+$ npm install agent\-base
+.fi
+.PP
+.SH "Example"
+.PP
+Here's a minimal example that creates a new \fRnet\&.Socket\fP connection to the server for every HTTP request (i\&.e\&. the equivalent of \fRagent: false\fP option):
+.PP
+.PP
+.nf
+var net = require('net');
+var tls = require('tls');
+var url = require('url');
+var http = require('http');
+var agent = require('agent\-base');
+
+var endpoint = 'http://nodejs\&.org/api/';
+var parsed = url\&.parse(endpoint);
+
+// This is the important part!
+parsed\&.agent = agent(function (req, opts) {
+  var socket;
+  // `secureEndpoint` is true when using the https module
+  if (opts\&.secureEndpoint) {
+    socket = tls\&.connect(opts);
+  } else {
+    socket = net\&.connect(opts);
+  }
+  return socket;
+});
+
+// Everything else works just like normal\&.\&.\&.
+http\&.get(parsed, function (res) {
+  console\&.log('"response" event!', res\&.headers);
+  res\&.pipe(process\&.stdout);
+});
+.fi
+.PP
+.PP
+Returning a Promise or using an \fRasync\fP function is also supported:
+.PP
+.PP
+.nf
+agent(async function (req, opts) {
+  await sleep(1000);
+  // etc…
+});
+.fi
+.PP
+.PP
+Return another \fRhttp\&.Agent\fP instance to 'pass through' the responsibility for that HTTP request to that agent:
+.PP
+.PP
+.nf
+agent(function (req, opts) {
+  return opts\&.secureEndpoint ? https\&.globalAgent : http\&.globalAgent;
+});
+.fi
+.PP
+.SH "API"
+.PP
+.SH "Agent(Function callback[, Object options]) → \fRhttp\&.Agent\fP"
+.PP
+Creates a base \fRhttp\&.Agent\fP that will execute the callback function \fRcallback\fP for every HTTP request that it is used as the \fRagent\fP for\&. The callback function is responsible for creating a \fRstream\&.Duplex\fP instance of some kind that will be used as the underlying socket in the HTTP request\&.
+.PP
+The \fRoptions\fP object accepts the following properties:
+.PP
+.IP "\(bu" 2
+\fRtimeout\fP - Number - Timeout for the \fRcallback()\fP function in milliseconds\&. Defaults to Infinity (optional)\&.
+.PP
+.PP
+The callback function should have the following signature:
+.SS "callback(http\&.ClientRequest req, Object options, Function cb) → undefined"
+The ClientRequest \fRreq\fP can be accessed to read request headers and and the path, etc\&. The \fRoptions\fP object contains the options passed to the \fRhttp\&.request()\fP/\fRhttps\&.request()\fP function call, and is formatted to be directly passed to \fRnet\&.connect()\fP/\fRtls\&.connect()\fP, or however else you want a Socket to be created\&. Pass the created socket to the callback function \fRcb\fP once created, and the HTTP request will continue to proceed\&.
+.PP
+If the \fRhttps\fP module is used to invoke the HTTP request, then the \fRsecureEndpoint\fP property on \fRoptions\fP \fIwill be set to \fRtrue\fP\fP\&.
+.SH "License"
+.PP
+(The MIT License)
+.PP
+Copyright (c) 2013 Nathan Rajlich <nathan@tootallnate.net>
+.PP
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+.PP
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software\&.
+.PP
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT\&. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE\&. 

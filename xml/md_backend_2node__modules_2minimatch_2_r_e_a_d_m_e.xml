@@ -1,0 +1,145 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e</compoundname>
+    <title>minimatch</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2061"/> A minimal matching utility.</para>
+<para><ulink url="http://travis-ci.org/isaacs/minimatch"><image type="html" name="https://travis-ci.org/isaacs/minimatch.svg?branch=master" alt="Build Status" inline="yes"></image>
+</ulink></para>
+<para>This is the matching library used internally by npm.</para>
+<para>It works by converting glob expressions into JavaScript <computeroutput>RegExp</computeroutput> objects.</para>
+<sect1 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2062">
+<title>Usage</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>minimatch<sp/>=<sp/>require(&quot;minimatch&quot;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">minimatch(&quot;bar.foo&quot;,<sp/>&quot;*.foo&quot;)<sp/>//<sp/>true!</highlight></codeline>
+<codeline><highlight class="normal">minimatch(&quot;bar.foo&quot;,<sp/>&quot;*.bar&quot;)<sp/>//<sp/>false!</highlight></codeline>
+<codeline><highlight class="normal">minimatch(&quot;bar.foo&quot;,<sp/>&quot;*.+(bar|foo)&quot;,<sp/>{<sp/>debug:<sp/>true<sp/>})<sp/>//<sp/>true,<sp/>and<sp/>noisy!</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2063">
+<title>Features</title><para>Supports these glob features:</para>
+<para><itemizedlist>
+<listitem><para>Brace Expansion</para>
+</listitem><listitem><para>Extended glob matching</para>
+</listitem><listitem><para>&quot;Globstar&quot; <computeroutput>**</computeroutput> matching</para>
+</listitem></itemizedlist>
+</para>
+<para>See:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>man sh</computeroutput></para>
+</listitem><listitem><para><computeroutput>man bash</computeroutput></para>
+</listitem><listitem><para><computeroutput>man 3 fnmatch</computeroutput></para>
+</listitem><listitem><para><computeroutput>man 5 gitignore</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2064">
+<title>Minimatch Class</title><para>Create a minimatch object by instantiating the <computeroutput>minimatch.Minimatch</computeroutput> class.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>Minimatch<sp/>=<sp/>require(&quot;minimatch&quot;).Minimatch</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>mm<sp/>=<sp/>new<sp/>Minimatch(pattern,<sp/>options)</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2065">
+<title>Properties</title><para><itemizedlist>
+<listitem><para><computeroutput>pattern</computeroutput> The original pattern the minimatch object represents.</para>
+</listitem><listitem><para><computeroutput>options</computeroutput> The options supplied to the constructor.</para>
+</listitem><listitem><para><computeroutput>set</computeroutput> A 2-dimensional array of regexp or string expressions. Each row in the array corresponds to a brace-expanded pattern. Each item in the row corresponds to a single path-part. For example, the pattern <computeroutput>{a,b/c}/d</computeroutput> would expand to a set of patterns like: <verbatim>  [ [ a, d ]
+  , [ b, c, d ] ]
+</verbatim> If a portion of the pattern doesn&apos;t have any &quot;magic&quot; in it (that is, it&apos;s something like <computeroutput>&quot;foo&quot;</computeroutput> rather than <computeroutput>fo*o?</computeroutput>), then it will be left as a string rather than converted to a regular expression.</para>
+</listitem><listitem><para><computeroutput>regexp</computeroutput> Created by the <computeroutput>makeRe</computeroutput> method. A single regular expression expressing the entire pattern. This is useful in cases where you wish to use the pattern somewhat like <computeroutput>fnmatch(3)</computeroutput> with <computeroutput>FNM_PATH</computeroutput> enabled.</para>
+</listitem><listitem><para><computeroutput>negate</computeroutput> True if the pattern is negated.</para>
+</listitem><listitem><para><computeroutput>comment</computeroutput> True if the pattern is a comment.</para>
+</listitem><listitem><para><computeroutput>empty</computeroutput> True if the pattern is <computeroutput>&quot;&quot;</computeroutput>.</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2066">
+<title>Methods</title><para><itemizedlist>
+<listitem><para><computeroutput>makeRe</computeroutput> Generate the <computeroutput>regexp</computeroutput> member if necessary, and return it. Will return <computeroutput>false</computeroutput> if the pattern is invalid.</para>
+</listitem><listitem><para><computeroutput>match(fname)</computeroutput> Return true if the filename matches the pattern, or false otherwise.</para>
+</listitem><listitem><para><computeroutput>matchOne(fileArray, patternArray, partial)</computeroutput> Take a <computeroutput>/</computeroutput>-split filename, and match it against a single row in the <computeroutput>regExpSet</computeroutput>. This method is mainly for internal use, but is exposed so that it can be used by a glob-walker that needs to avoid excessive filesystem calls.</para>
+</listitem></itemizedlist>
+</para>
+<para>All other methods are internal, and will be called as necessary.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2067">
+<title>minimatch(path, pattern, options)</title><para>Main export. Tests a path against the pattern using the options.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>isJS<sp/>=<sp/>minimatch(file,<sp/>&quot;*.js&quot;,<sp/>{<sp/>matchBase:<sp/>true<sp/>})</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2068">
+<title>minimatch.filter(pattern, options)</title><para>Returns a function that tests its supplied argument, suitable for use with <computeroutput>Array.filter</computeroutput>. Example:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>javascripts<sp/>=<sp/>fileList.filter(minimatch.filter(&quot;*.js&quot;,<sp/>{matchBase:<sp/>true}))</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2069">
+<title>minimatch.match(list, pattern, options)</title><para>Match against the list of files, in the style of fnmatch or glob. If nothing is matched, and options.nonull is set, then return a list containing the pattern itself.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>javascripts<sp/>=<sp/>minimatch.match(fileList,<sp/>&quot;*.js&quot;,<sp/>{matchBase:<sp/>true}))</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2070">
+<title>minimatch.makeRe(pattern, options)</title><para>Make a regular expression object from the pattern.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2071">
+<title>Options</title><para>All options are <computeroutput>false</computeroutput> by default.</para>
+<sect2 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2072">
+<title>debug</title><para>Dump a ton of stuff to stderr.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2073">
+<title>nobrace</title><para>Do not expand <computeroutput>{a,b}</computeroutput> and <computeroutput>{1..3}</computeroutput> brace sets.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2074">
+<title>noglobstar</title><para>Disable <computeroutput>**</computeroutput> matching against multiple folder names.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2075">
+<title>dot</title><para>Allow patterns to match filenames starting with a period, even if the pattern does not explicitly have a period in that spot.</para>
+<para>Note that by default, <computeroutput>a/**/b</computeroutput> will <bold>not</bold> match <computeroutput>a/.d/b</computeroutput>, unless <computeroutput>dot</computeroutput> is set.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2076">
+<title>noext</title><para>Disable &quot;extglob&quot; style patterns like <computeroutput>+(a|b)</computeroutput>.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2077">
+<title>nocase</title><para>Perform a case-insensitive match.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2078">
+<title>nonull</title><para>When a match is not found by <computeroutput>minimatch.match</computeroutput>, return a list containing the pattern itself if this option is set. When not set, an empty list is returned if there are no matches.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2079">
+<title>matchBase</title><para>If set, then patterns without slashes will be matched against the basename of the path if it contains slashes. For example, <computeroutput>a?b</computeroutput> would match the path <computeroutput>/xyz/123/acb</computeroutput>, but not <computeroutput>/xyz/acb/123</computeroutput>.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2080">
+<title>nocomment</title><para>Suppress the behavior of treating <computeroutput>#</computeroutput> at the start of a pattern as a comment.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2081">
+<title>nonegate</title><para>Suppress the behavior of treating a leading <computeroutput>!</computeroutput> character as negation.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2082">
+<title>flipNegate</title><para>Returns from negate expressions the same as if they were not negated. (Ie, true on a hit, false on a miss.)</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2083">
+<title>partial</title><para>Compare a partial path to a pattern. As long as the parts of the path that are present are not contradicted by the pattern, it will be treated as a match. This is useful in applications where you&apos;re walking through a folder structure, and don&apos;t yet have the full path, but want to ensure that you do not walk down paths that can never be a match.</para>
+<para>For example,</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">minimatch(&apos;/a/b&apos;,<sp/>&apos;/a/*/c/d&apos;,<sp/>{<sp/>partial:<sp/>true<sp/>})<sp/><sp/>//<sp/>true,<sp/>might<sp/>be<sp/>/a/b/c/d</highlight></codeline>
+<codeline><highlight class="normal">minimatch(&apos;/a/b&apos;,<sp/>&apos;/**/d&apos;,<sp/>{<sp/>partial:<sp/>true<sp/>})<sp/><sp/><sp/><sp/><sp/>//<sp/>true,<sp/>might<sp/>be<sp/>/a/b/.../d</highlight></codeline>
+<codeline><highlight class="normal">minimatch(&apos;/x/y/z&apos;,<sp/>&apos;/a/**/z&apos;,<sp/>{<sp/>partial:<sp/>true<sp/>})<sp/>//<sp/>false,<sp/>because<sp/>x<sp/>!==<sp/>a</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2084">
+<title>allowWindowsEscape</title><para>Windows path separator <computeroutput>\</computeroutput> is by default converted to <computeroutput>/</computeroutput>, which prohibits the usage of <computeroutput>\</computeroutput> as a escape character. This flag skips that behavior and allows using the escape character.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2minimatch_2_r_e_a_d_m_e_1autotoc_md2085">
+<title>Comparisons to other fnmatch/glob implementations</title><para>While strict compliance with the existing standards is a worthwhile goal, some discrepancies exist between minimatch and other implementations, and are intentional.</para>
+<para>If the pattern starts with a <computeroutput>!</computeroutput> character, then it is negated. Set the <computeroutput>nonegate</computeroutput> flag to suppress this behavior, and treat leading <computeroutput>!</computeroutput> characters normally. This is perhaps relevant if you wish to start the pattern with a negative extglob pattern like <computeroutput>!(a|B)</computeroutput>. Multiple <computeroutput>!</computeroutput> characters at the start of a pattern will negate the pattern multiple times.</para>
+<para>If a pattern starts with <computeroutput>#</computeroutput>, then it is treated as a comment, and will not match anything. Use <computeroutput>\#</computeroutput> to match a literal <computeroutput>#</computeroutput> at the start of a line, or set the <computeroutput>nocomment</computeroutput> flag to suppress this behavior.</para>
+<para>The double-star character <computeroutput>**</computeroutput> is supported by default, unless the <computeroutput>noglobstar</computeroutput> flag is set. This is supported in the manner of bsdglob and bash 4.1, where <computeroutput>**</computeroutput> only has special significance if it is the only thing in a path part. That is, <computeroutput>a/**/b</computeroutput> will match <computeroutput>a/x/y/b</computeroutput>, but <computeroutput>a/**b</computeroutput> will not.</para>
+<para>If an escaped pattern has no matches, and the <computeroutput>nonull</computeroutput> flag is set, then minimatch.match returns the pattern as-provided, rather than interpreting the character escapes. For example, <computeroutput>minimatch.match([], &quot;\\*a\\?&quot;)</computeroutput> will return <computeroutput>&quot;\\*a\\?&quot;</computeroutput> rather than <computeroutput>&quot;*a?&quot;</computeroutput>. This is akin to setting the <computeroutput>nullglob</computeroutput> option in bash, except that it does not resolve escaped pattern characters.</para>
+<para>If brace expansion is not disabled, then it is performed before any other interpretation of the glob pattern. Thus, a pattern like <computeroutput>+(a|{b),c)}</computeroutput>, which would not be valid in bash or zsh, is expanded <bold>first</bold> into the set of <computeroutput>+(a|b)</computeroutput> and <computeroutput>+(a|c)</computeroutput>, and those patterns are checked for validity. Since those two are valid, matching proceeds. </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/minimatch/README.md"/>
+  </compounddef>
+</doxygen>

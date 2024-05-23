@@ -1,0 +1,580 @@
+\doxysection{MSVSVersion.\+py}
+\hypertarget{_m_s_v_s_version_8py_source}{}\label{_m_s_v_s_version_8py_source}\index{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/MSVSVersion.py@{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/MSVSVersion.py}}
+\mbox{\hyperlink{_m_s_v_s_version_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00001}\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version}{00001}}\ \textcolor{comment}{\#\ Copyright\ (c)\ 2013\ Google\ Inc.\ All\ rights\ reserved.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00002}00002\ \textcolor{comment}{\#\ Use\ of\ this\ source\ code\ is\ governed\ by\ a\ BSD-\/style\ license\ that\ can\ be}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00003}00003\ \textcolor{comment}{\#\ found\ in\ the\ LICENSE\ file.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00005}00005\ \textcolor{stringliteral}{"{}"{}"{}Handle\ version\ information\ related\ to\ Visual\ Stuio."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00007}00007\ \textcolor{keyword}{import}\ errno}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00008}00008\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00009}00009\ \textcolor{keyword}{import}\ re}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00010}00010\ \textcolor{keyword}{import}\ subprocess}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00011}00011\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00012}00012\ \textcolor{keyword}{import}\ glob}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00015}\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_ae26635557e5d3eb02b1914a2d783a065}{00015}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_ae26635557e5d3eb02b1914a2d783a065}{JoinPath}}(*args):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00016}00016\ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.normpath(os.path.join(*args))}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00019}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version}{00019}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version}{VisualStudioVersion}}:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00020}00020\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Information\ regarding\ a\ version\ of\ Visual\ Studio."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00022}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a95d7e48373571f6fc7dace30c080af40}{00022}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a95d7e48373571f6fc7dace30c080af40}{\_\_init\_\_}}(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00023}00023\ \ \ \ \ \ \ \ \ self,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00024}00024\ \ \ \ \ \ \ \ \ short\_name,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00025}00025\ \ \ \ \ \ \ \ \ description,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00026}00026\ \ \ \ \ \ \ \ \ solution\_version,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00027}00027\ \ \ \ \ \ \ \ \ project\_version,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00028}00028\ \ \ \ \ \ \ \ \ flat\_sln,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00029}00029\ \ \ \ \ \ \ \ \ uses\_vcxproj,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00030}00030\ \ \ \ \ \ \ \ \ path,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00031}00031\ \ \ \ \ \ \ \ \ sdk\_based,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00032}00032\ \ \ \ \ \ \ \ \ default\_toolset=None,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00033}00033\ \ \ \ \ \ \ \ \ compatible\_sdks=None,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00034}00034\ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00035}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a44be51c1898dd9be29c3b22cde8af9a3}{00035}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a44be51c1898dd9be29c3b22cde8af9a3}{short\_name}}\ =\ short\_name}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00036}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a27f8c991faab755bcc88864a8055da1e}{00036}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a27f8c991faab755bcc88864a8055da1e}{description}}\ =\ description}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00037}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_af674a25a9e804fda4ed5637986dcf487}{00037}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_af674a25a9e804fda4ed5637986dcf487}{solution\_version}}\ =\ solution\_version}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00038}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_ab57bba8b805203f7ff0d8961e259413e}{00038}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_ab57bba8b805203f7ff0d8961e259413e}{project\_version}}\ =\ project\_version}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00039}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a0e703c41e6f40bb7226bec700966164e}{00039}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a0e703c41e6f40bb7226bec700966164e}{flat\_sln}}\ =\ flat\_sln}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00040}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a2af004f9f41111b4db3599ac1558457b}{00040}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a2af004f9f41111b4db3599ac1558457b}{uses\_vcxproj}}\ =\ uses\_vcxproj}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00041}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_afccb923eeabae7ed0a374ba06eedc7d5}{00041}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_afccb923eeabae7ed0a374ba06eedc7d5}{path}}\ =\ path}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00042}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a1286f2cb359092f86caa5621637bf6dc}{00042}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a1286f2cb359092f86caa5621637bf6dc}{sdk\_based}}\ =\ sdk\_based}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00043}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a08eb91e2b881a6886847d921bb85fd6a}{00043}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a08eb91e2b881a6886847d921bb85fd6a}{default\_toolset}}\ =\ default\_toolset}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ compatible\_sdks\ =\ compatible\_sdks\ \textcolor{keywordflow}{or}\ []}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ compatible\_sdks.sort(key=\textcolor{keyword}{lambda}\ v:\ float(v.replace(\textcolor{stringliteral}{"{}v"{}},\ \textcolor{stringliteral}{"{}"{}})),\ reverse=\textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00046}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_ae6fecada5c07f6a9698335a16865b369}{00046}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_ae6fecada5c07f6a9698335a16865b369}{compatible\_sdks}}\ =\ compatible\_sdks}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00048}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a03667dc7705dbbccb49f1faba7524586}{00048}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a03667dc7705dbbccb49f1faba7524586}{ShortName}}(self):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a44be51c1898dd9be29c3b22cde8af9a3}{short\_name}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00051}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_ad43c0d9352b5ce4a25e206bd3f958a90}{00051}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_ad43c0d9352b5ce4a25e206bd3f958a90}{Description}}(self):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ the\ full\ description\ of\ the\ version."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a27f8c991faab755bcc88864a8055da1e}{description}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00055}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_ab2480d8af23785d6b504875f3c688e7c}{00055}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_ab2480d8af23785d6b504875f3c688e7c}{SolutionVersion}}(self):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00056}00056\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ the\ version\ number\ of\ the\ sln\ files."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_af674a25a9e804fda4ed5637986dcf487}{solution\_version}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00059}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_aba73d9b0454648bd89ee7ace5966669c}{00059}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_aba73d9b0454648bd89ee7ace5966669c}{ProjectVersion}}(self):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Get\ the\ version\ number\ of\ the\ vcproj\ or\ vcxproj\ files."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_ab57bba8b805203f7ff0d8961e259413e}{project\_version}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00063}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_adebaedde9799636e73e37287c7b7835e}{00063}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_adebaedde9799636e73e37287c7b7835e}{FlatSolution}}(self):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a0e703c41e6f40bb7226bec700966164e}{flat\_sln}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00066}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_ad14b9fe20ba174f352fa31509cf20c5a}{00066}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_ad14b9fe20ba174f352fa31509cf20c5a}{UsesVcxproj}}(self):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Returns\ true\ if\ this\ version\ uses\ a\ vcxproj\ file."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a2af004f9f41111b4db3599ac1558457b}{uses\_vcxproj}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00070}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a0a3a961239f23ba6ff0f1d7b75c9856b}{00070}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a0a3a961239f23ba6ff0f1d7b75c9856b}{ProjectExtension}}(self):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Returns\ the\ file\ extension\ for\ the\ project."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a2af004f9f41111b4db3599ac1558457b}{uses\_vcxproj}}\ \textcolor{keywordflow}{and}\ \textcolor{stringliteral}{"{}.vcxproj"{}}\ \textcolor{keywordflow}{or}\ \textcolor{stringliteral}{"{}.vcproj"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00074}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a9100a81e95aee55e638f53e2de62741c}{00074}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a9100a81e95aee55e638f53e2de62741c}{Path}}(self):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Returns\ the\ path\ to\ Visual\ Studio\ installation."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_afccb923eeabae7ed0a374ba06eedc7d5}{path}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00078}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a363e369cdf1c4cd4eeb3b8df5bda1d51}{00078}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a363e369cdf1c4cd4eeb3b8df5bda1d51}{ToolPath}}(self,\ tool):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Returns\ the\ path\ to\ a\ given\ compiler\ tool.\ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os.path.normpath(os.path.join(self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_afccb923eeabae7ed0a374ba06eedc7d5}{path}},\ \textcolor{stringliteral}{"{}VC/bin"{}},\ tool))}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00082}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a0708d7b7544d503c4d83dcda06010467}{00082}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a0708d7b7544d503c4d83dcda06010467}{DefaultToolset}}(self):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Returns\ the\ msbuild\ toolset\ version\ that\ will\ be\ used\ in\ the\ absence}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00084}00084\ \textcolor{stringliteral}{\ \ \ \ of\ a\ user\ override."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a08eb91e2b881a6886847d921bb85fd6a}{default\_toolset}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00087}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a8b462ab6297478369b4231df44df7b02}{00087}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a8b462ab6297478369b4231df44df7b02}{\_SetupScriptInternal}}(self,\ target\_arch):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Returns\ a\ command\ (with\ arguments)\ to\ be\ used\ to\ set\ up\ the}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00089}00089\ \textcolor{stringliteral}{\ \ \ \ environment."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ target\_arch\ \textcolor{keywordflow}{in}\ (\textcolor{stringliteral}{"{}x86"{}},\ \textcolor{stringliteral}{"{}x64"{}}),\ \textcolor{stringliteral}{"{}target\_arch\ not\ supported"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ WindowsSDKDir\ is\ set\ and\ SetEnv.Cmd\ exists\ then\ we\ are\ using\ the}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ depot\_tools\ build\ tools\ and\ should\ run\ SetEnv.Cmd\ to\ set\ up\ the}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ environment.\ The\ check\ for\ WindowsSDKDir\ alone\ is\ not\ sufficient\ because}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ this\ is\ set\ by\ running\ vcvarsall.bat.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ sdk\_dir\ =\ os.environ.get(\textcolor{stringliteral}{"{}WindowsSDKDir"{}},\ \textcolor{stringliteral}{"{}"{}})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ setup\_path\ =\ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_ae26635557e5d3eb02b1914a2d783a065}{JoinPath}}(sdk\_dir,\ \textcolor{stringliteral}{"{}Bin"{}},\ \textcolor{stringliteral}{"{}SetEnv.Cmd"{}})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00097}00097\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a1286f2cb359092f86caa5621637bf6dc}{sdk\_based}}\ \textcolor{keywordflow}{and}\ sdk\_dir\ \textcolor{keywordflow}{and}\ os.path.exists(setup\_path):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ [setup\_path,\ \textcolor{stringliteral}{"{}/"{}}\ +\ target\_arch]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ is\_host\_arch\_x64\ =\ (}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ os.environ.get(\textcolor{stringliteral}{"{}PROCESSOR\_ARCHITECTURE"{}})\ ==\ \textcolor{stringliteral}{"{}AMD64"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{or}\ os.environ.get(\textcolor{stringliteral}{"{}PROCESSOR\_ARCHITEW6432"{}})\ ==\ \textcolor{stringliteral}{"{}AMD64"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00104}00104\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ For\ VS2017\ (and\ newer)\ it's\ fairly\ easy}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a44be51c1898dd9be29c3b22cde8af9a3}{short\_name}}\ >=\ \textcolor{stringliteral}{"{}2017"{}}:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ script\_path\ =\ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_ae26635557e5d3eb02b1914a2d783a065}{JoinPath}}(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_afccb923eeabae7ed0a374ba06eedc7d5}{path}},\ \textcolor{stringliteral}{"{}VC"{}},\ \textcolor{stringliteral}{"{}Auxiliary"{}},\ \textcolor{stringliteral}{"{}Build"{}},\ \textcolor{stringliteral}{"{}vcvarsall.bat"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Always\ use\ a\ native\ executable,\ cross-\/compiling\ if\ necessary.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ host\_arch\ =\ \textcolor{stringliteral}{"{}amd64"{}}\ \textcolor{keywordflow}{if}\ is\_host\_arch\_x64\ \textcolor{keywordflow}{else}\ \textcolor{stringliteral}{"{}x86"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ msvc\_target\_arch\ =\ \textcolor{stringliteral}{"{}amd64"{}}\ \textcolor{keywordflow}{if}\ target\_arch\ ==\ \textcolor{stringliteral}{"{}x64"{}}\ \textcolor{keywordflow}{else}\ \textcolor{stringliteral}{"{}x86"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ arg\ =\ host\_arch}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ host\_arch\ !=\ msvc\_target\_arch:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ arg\ +=\ \textcolor{stringliteral}{"{}\_"{}}\ +\ msvc\_target\_arch}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ [script\_path,\ arg]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00119}00119\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ try\ to\ find\ the\ best\ version\ of\ the\ env\ setup\ batch.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ vcvarsall\ =\ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_ae26635557e5d3eb02b1914a2d783a065}{JoinPath}}(self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_afccb923eeabae7ed0a374ba06eedc7d5}{path}},\ \textcolor{stringliteral}{"{}VC"{}},\ \textcolor{stringliteral}{"{}vcvarsall.bat"{}})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ target\_arch\ ==\ \textcolor{stringliteral}{"{}x86"{}}:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a44be51c1898dd9be29c3b22cde8af9a3}{short\_name}}\ >=\ \textcolor{stringliteral}{"{}2013"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a44be51c1898dd9be29c3b22cde8af9a3}{short\_name}}[-\/1]\ !=\ \textcolor{stringliteral}{"{}e"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{and}\ is\_host\_arch\_x64}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ VS2013\ and\ later,\ non-\/Express\ have\ a\ x64-\/x86\ cross\ that\ we\ want}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ to\ prefer.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ [vcvarsall,\ \textcolor{stringliteral}{"{}amd64\_x86"{}}]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Otherwise,\ the\ standard\ x86\ compiler.\ We\ don't\ use\ VC/vcvarsall.bat}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ for\ x86\ because\ vcvarsall\ calls\ vcvars32,\ which\ it\ can\ only\ find\ if}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ VS??COMNTOOLS\ is\ set,\ which\ isn't\ guaranteed.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ [\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_ae26635557e5d3eb02b1914a2d783a065}{JoinPath}}(self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_afccb923eeabae7ed0a374ba06eedc7d5}{path}},\ \textcolor{stringliteral}{"{}Common7"{}},\ \textcolor{stringliteral}{"{}Tools"{}},\ \textcolor{stringliteral}{"{}vsvars32.bat"{}})]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00136}00136\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ target\_arch\ ==\ \textcolor{stringliteral}{"{}x64"{}}:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ arg\ =\ \textcolor{stringliteral}{"{}x86\_amd64"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Use\ the\ 64-\/on-\/64\ compiler\ if\ we're\ not\ using\ an\ express\ edition\ and}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ we're\ running\ on\ a\ 64bit\ OS.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a44be51c1898dd9be29c3b22cde8af9a3}{short\_name}}[-\/1]\ !=\ \textcolor{stringliteral}{"{}e"{}}\ \textcolor{keywordflow}{and}\ is\_host\_arch\_x64:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ arg\ =\ \textcolor{stringliteral}{"{}amd64"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ [vcvarsall,\ arg]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00143}00143\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00144}\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a9d0007bb6b8067e61b9a84d3d0c98993}{00144}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a9d0007bb6b8067e61b9a84d3d0c98993}{SetupScript}}(self,\ target\_arch):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00145}00145\ \ \ \ \ \ \ \ \ script\_data\ =\ self.\mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version_a8b462ab6297478369b4231df44df7b02}{\_SetupScriptInternal}}(target\_arch)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00146}00146\ \ \ \ \ \ \ \ \ script\_path\ =\ script\_data[0]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00147}00147\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ os.path.exists(script\_path):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ Exception(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\%s\ is\ missing\ -\/\ make\ sure\ VC++\ tools\ are\ installed."{}}\ \%\ script\_path}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00151}00151\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ script\_data}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00152}00152\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00153}00153\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00154}\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_ac3f33838ffca948ac40debc554a8caa5}{00154}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_ac3f33838ffca948ac40debc554a8caa5}{\_RegistryQueryBase}}(sysdir,\ key,\ value):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00155}00155\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Use\ reg.exe\ to\ read\ a\ particular\ key.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00156}00156\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00157}00157\ \textcolor{stringliteral}{\ \ While\ ideally\ we\ might\ use\ the\ win32\ module,\ we\ would\ like\ gyp\ to\ be}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00158}00158\ \textcolor{stringliteral}{\ \ python\ neutral,\ so\ for\ instance\ cygwin\ python\ lacks\ this\ module.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00159}00159\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00160}00160\ \textcolor{stringliteral}{\ \ Arguments:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00161}00161\ \textcolor{stringliteral}{\ \ \ \ sysdir:\ The\ system\ subdirectory\ to\ attempt\ to\ launch\ reg.exe\ from.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00162}00162\ \textcolor{stringliteral}{\ \ \ \ key:\ The\ registry\ key\ to\ read\ from.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00163}00163\ \textcolor{stringliteral}{\ \ \ \ value:\ The\ particular\ value\ to\ read.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00164}00164\ \textcolor{stringliteral}{\ \ Return:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00165}00165\ \textcolor{stringliteral}{\ \ \ \ stdout\ from\ reg.exe,\ or\ None\ for\ failure.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00166}00166\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00167}00167\ \ \ \ \ \textcolor{comment}{\#\ Skip\ if\ not\ on\ Windows\ or\ Python\ Win32\ setup\ issue}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00168}00168\ \ \ \ \ \textcolor{keywordflow}{if}\ sys.platform\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ (\textcolor{stringliteral}{"{}win32"{}},\ \textcolor{stringliteral}{"{}cygwin"{}}):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00169}00169\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00170}00170\ \ \ \ \ \textcolor{comment}{\#\ Setup\ params\ to\ pass\ to\ and\ attempt\ to\ launch\ reg.exe}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00171}00171\ \ \ \ \ cmd\ =\ [os.path.join(os.environ.get(\textcolor{stringliteral}{"{}WINDIR"{}},\ \textcolor{stringliteral}{"{}"{}}),\ sysdir,\ \textcolor{stringliteral}{"{}reg.exe"{}}),\ \textcolor{stringliteral}{"{}query"{}},\ key]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00172}00172\ \ \ \ \ \textcolor{keywordflow}{if}\ value:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00173}00173\ \ \ \ \ \ \ \ \ cmd.extend([\textcolor{stringliteral}{"{}/v"{}},\ value])}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00174}00174\ \ \ \ \ p\ =\ subprocess.Popen(cmd,\ stdout=subprocess.PIPE,\ stderr=subprocess.PIPE)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00175}00175\ \ \ \ \ \textcolor{comment}{\#\ Obtain\ the\ stdout\ from\ reg.exe,\ reading\ to\ the\ end\ so\ p.returncode\ is\ valid}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00176}00176\ \ \ \ \ \textcolor{comment}{\#\ Note\ that\ the\ error\ text\ may\ be\ in\ [1]\ in\ some\ cases}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00177}00177\ \ \ \ \ text\ =\ p.communicate()[0].decode(\textcolor{stringliteral}{"{}utf-\/8"{}})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00178}00178\ \ \ \ \ \textcolor{comment}{\#\ Check\ return\ code\ from\ reg.exe;\ officially\ 0==success\ and\ 1==error}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00179}00179\ \ \ \ \ \textcolor{keywordflow}{if}\ p.returncode:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00180}00180\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00181}00181\ \ \ \ \ \textcolor{keywordflow}{return}\ text}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00182}00182\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00183}00183\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00184}\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_aca1b498db5a5123fcfa0937a1639d21a}{00184}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_aca1b498db5a5123fcfa0937a1639d21a}{\_RegistryQuery}}(key,\ value=None):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00185}00185\ \ \ \ \ \textcolor{stringliteral}{r"{}"{}"{}Use\ reg.exe\ to\ read\ a\ particular\ key\ through\ \_RegistryQueryBase.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00186}00186\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00187}00187\ \textcolor{stringliteral}{\ \ First\ tries\ to\ launch\ from\ \%WinDir\%\(\backslash\)Sysnative\ to\ avoid\ WoW64\ redirection.\ If}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00188}00188\ \textcolor{stringliteral}{\ \ that\ fails,\ it\ falls\ back\ to\ System32.\ \ Sysnative\ is\ available\ on\ Vista\ and}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00189}00189\ \textcolor{stringliteral}{\ \ up\ and\ available\ on\ Windows\ Server\ 2003\ and\ XP\ through\ KB\ patch\ 942589.\ Note}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00190}00190\ \textcolor{stringliteral}{\ \ that\ Sysnative\ will\ always\ fail\ if\ using\ 64-\/bit\ python\ due\ to\ it\ being\ a}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00191}00191\ \textcolor{stringliteral}{\ \ virtual\ directory\ and\ System32\ will\ work\ correctly\ in\ the\ first\ place.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00192}00192\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00193}00193\ \textcolor{stringliteral}{\ \ KB\ 942589\ -\/\ http://support.microsoft.com/kb/942589/en-\/us.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00194}00194\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00195}00195\ \textcolor{stringliteral}{\ \ Arguments:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00196}00196\ \textcolor{stringliteral}{\ \ \ \ key:\ The\ registry\ key.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00197}00197\ \textcolor{stringliteral}{\ \ \ \ value:\ The\ particular\ registry\ value\ to\ read\ (optional).}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00198}00198\ \textcolor{stringliteral}{\ \ Return:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00199}00199\ \textcolor{stringliteral}{\ \ \ \ stdout\ from\ reg.exe,\ or\ None\ for\ failure.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00200}00200\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00201}00201\ \ \ \ \ text\ =\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00202}00202\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00203}00203\ \ \ \ \ \ \ \ \ text\ =\ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_ac3f33838ffca948ac40debc554a8caa5}{\_RegistryQueryBase}}(\textcolor{stringliteral}{"{}Sysnative"{}},\ key,\ value)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00204}00204\ \ \ \ \ \textcolor{keywordflow}{except}\ OSError\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00205}00205\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ e.errno\ ==\ errno.ENOENT:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ text\ =\ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_ac3f33838ffca948ac40debc554a8caa5}{\_RegistryQueryBase}}(\textcolor{stringliteral}{"{}System32"{}},\ key,\ value)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00207}00207\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00209}00209\ \ \ \ \ \textcolor{keywordflow}{return}\ text}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00210}00210\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00211}00211\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00212}\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_ad58082d412a5bdd191e04ce3ebddfa36}{00212}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_ad58082d412a5bdd191e04ce3ebddfa36}{\_RegistryGetValueUsingWinReg}}(key,\ value):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00213}00213\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Use\ the\ \_winreg\ module\ to\ obtain\ the\ value\ of\ a\ registry\ key.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00214}00214\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00215}00215\ \textcolor{stringliteral}{\ \ Args:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00216}00216\ \textcolor{stringliteral}{\ \ \ \ key:\ The\ registry\ key.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00217}00217\ \textcolor{stringliteral}{\ \ \ \ value:\ The\ particular\ registry\ value\ to\ read.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00218}00218\ \textcolor{stringliteral}{\ \ Return:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00219}00219\ \textcolor{stringliteral}{\ \ \ \ contents\ of\ the\ registry\ key's\ value,\ or\ None\ on\ failure.\ \ Throws}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00220}00220\ \textcolor{stringliteral}{\ \ \ \ ImportError\ if\ winreg\ is\ unavailable.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00221}00221\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00222}00222\ \ \ \ \ \textcolor{keyword}{from}\ winreg\ \textcolor{keyword}{import}\ HKEY\_LOCAL\_MACHINE,\ OpenKey,\ QueryValueEx}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00223}00223\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00224}00224\ \ \ \ \ \ \ \ \ root,\ subkey\ =\ key.split(\textcolor{stringliteral}{"{}\(\backslash\)\(\backslash\)"{}},\ 1)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00225}00225\ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ root\ ==\ \textcolor{stringliteral}{"{}HKLM"{}}\ \ \textcolor{comment}{\#\ Only\ need\ HKLM\ for\ now.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00226}00226\ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ OpenKey(HKEY\_LOCAL\_MACHINE,\ subkey)\ \textcolor{keyword}{as}\ hkey:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ QueryValueEx(hkey,\ value)[0]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00228}00228\ \ \ \ \ \textcolor{keywordflow}{except}\ OSError:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00229}00229\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00230}00230\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00231}00231\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00232}\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_a44ffb963a5ef391a6fed6c1094df9bda}{00232}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_a44ffb963a5ef391a6fed6c1094df9bda}{\_RegistryGetValue}}(key,\ value):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00233}00233\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Use\ \_winreg\ or\ reg.exe\ to\ obtain\ the\ value\ of\ a\ registry\ key.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00234}00234\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00235}00235\ \textcolor{stringliteral}{\ \ Using\ \_winreg\ is\ preferable\ because\ it\ solves\ an\ issue\ on\ some\ corporate}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00236}00236\ \textcolor{stringliteral}{\ \ environments\ where\ access\ to\ reg.exe\ is\ locked\ down.\ However,\ we\ still\ need}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00237}00237\ \textcolor{stringliteral}{\ \ to\ fallback\ to\ reg.exe\ for\ the\ case\ where\ the\ \_winreg\ module\ is\ not\ available}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00238}00238\ \textcolor{stringliteral}{\ \ (for\ example\ in\ cygwin\ python).}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00239}00239\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00240}00240\ \textcolor{stringliteral}{\ \ Args:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00241}00241\ \textcolor{stringliteral}{\ \ \ \ key:\ The\ registry\ key.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00242}00242\ \textcolor{stringliteral}{\ \ \ \ value:\ The\ particular\ registry\ value\ to\ read.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00243}00243\ \textcolor{stringliteral}{\ \ Return:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00244}00244\ \textcolor{stringliteral}{\ \ \ \ contents\ of\ the\ registry\ key's\ value,\ or\ None\ on\ failure.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00245}00245\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00246}00246\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00247}00247\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_ad58082d412a5bdd191e04ce3ebddfa36}{\_RegistryGetValueUsingWinReg}}(key,\ value)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00248}00248\ \ \ \ \ \textcolor{keywordflow}{except}\ ImportError:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00249}00249\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00250}00250\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00251}00251\ \ \ \ \ \textcolor{comment}{\#\ Fallback\ to\ reg.exe\ if\ we\ fail\ to\ import\ \_winreg.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00252}00252\ \ \ \ \ text\ =\ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_aca1b498db5a5123fcfa0937a1639d21a}{\_RegistryQuery}}(key,\ value)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00253}00253\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ text:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00254}00254\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00255}00255\ \ \ \ \ \textcolor{comment}{\#\ Extract\ value.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00256}00256\ \ \ \ \ match\ =\ re.search(\textcolor{stringliteral}{r"{}REG\_\(\backslash\)w+\(\backslash\)s+([\string^\(\backslash\)r]+)\(\backslash\)r\(\backslash\)n"{}},\ text)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00257}00257\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ match:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00258}00258\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00259}00259\ \ \ \ \ \textcolor{keywordflow}{return}\ match.group(1)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00260}00260\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00261}00261\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00262}\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_a4544149f3ecb3e480c5461146e7df933}{00262}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_a4544149f3ecb3e480c5461146e7df933}{\_CreateVersion}}(name,\ path,\ sdk\_based=False):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00263}00263\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Sets\ up\ MSVS\ project\ generation.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00264}00264\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00265}00265\ \textcolor{stringliteral}{\ \ Setup\ is\ based\ off\ the\ GYP\_MSVS\_VERSION\ environment\ variable\ or\ whatever\ is}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00266}00266\ \textcolor{stringliteral}{\ \ autodetected\ if\ GYP\_MSVS\_VERSION\ is\ not\ explicitly\ specified.\ If\ a\ version\ is}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00267}00267\ \textcolor{stringliteral}{\ \ passed\ in\ that\ doesn't\ match\ a\ value\ in\ versions\ python\ will\ throw\ a\ error.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00268}00268\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00269}00269\ \ \ \ \ \textcolor{keywordflow}{if}\ path:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00270}00270\ \ \ \ \ \ \ \ \ path\ =\ os.path.normpath(path)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00271}00271\ \ \ \ \ versions\ =\ \{}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00272}00272\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2022"{}}:\ \mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version}{VisualStudioVersion}}(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2022"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00274}00274\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Visual\ Studio\ 2022"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00275}00275\ \ \ \ \ \ \ \ \ \ \ \ \ solution\_version=\textcolor{stringliteral}{"{}12.00"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ project\_version=\textcolor{stringliteral}{"{}17.0"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00277}00277\ \ \ \ \ \ \ \ \ \ \ \ \ flat\_sln=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00278}00278\ \ \ \ \ \ \ \ \ \ \ \ \ uses\_vcxproj=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00279}00279\ \ \ \ \ \ \ \ \ \ \ \ \ path=path,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00280}00280\ \ \ \ \ \ \ \ \ \ \ \ \ sdk\_based=sdk\_based,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00281}00281\ \ \ \ \ \ \ \ \ \ \ \ \ default\_toolset=\textcolor{stringliteral}{"{}v143"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00282}00282\ \ \ \ \ \ \ \ \ \ \ \ \ compatible\_sdks=[\textcolor{stringliteral}{"{}v8.1"{}},\ \textcolor{stringliteral}{"{}v10.0"{}}],}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00283}00283\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00284}00284\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2019"{}}:\ \mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version}{VisualStudioVersion}}(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00285}00285\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2019"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00286}00286\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Visual\ Studio\ 2019"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00287}00287\ \ \ \ \ \ \ \ \ \ \ \ \ solution\_version=\textcolor{stringliteral}{"{}12.00"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00288}00288\ \ \ \ \ \ \ \ \ \ \ \ \ project\_version=\textcolor{stringliteral}{"{}16.0"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00289}00289\ \ \ \ \ \ \ \ \ \ \ \ \ flat\_sln=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00290}00290\ \ \ \ \ \ \ \ \ \ \ \ \ uses\_vcxproj=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00291}00291\ \ \ \ \ \ \ \ \ \ \ \ \ path=path,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00292}00292\ \ \ \ \ \ \ \ \ \ \ \ \ sdk\_based=sdk\_based,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00293}00293\ \ \ \ \ \ \ \ \ \ \ \ \ default\_toolset=\textcolor{stringliteral}{"{}v142"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00294}00294\ \ \ \ \ \ \ \ \ \ \ \ \ compatible\_sdks=[\textcolor{stringliteral}{"{}v8.1"{}},\ \textcolor{stringliteral}{"{}v10.0"{}}],}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00295}00295\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00296}00296\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2017"{}}:\ \mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version}{VisualStudioVersion}}(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00297}00297\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2017"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00298}00298\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Visual\ Studio\ 2017"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00299}00299\ \ \ \ \ \ \ \ \ \ \ \ \ solution\_version=\textcolor{stringliteral}{"{}12.00"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00300}00300\ \ \ \ \ \ \ \ \ \ \ \ \ project\_version=\textcolor{stringliteral}{"{}15.0"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00301}00301\ \ \ \ \ \ \ \ \ \ \ \ \ flat\_sln=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ uses\_vcxproj=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ \ \ path=path,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00304}00304\ \ \ \ \ \ \ \ \ \ \ \ \ sdk\_based=sdk\_based,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00305}00305\ \ \ \ \ \ \ \ \ \ \ \ \ default\_toolset=\textcolor{stringliteral}{"{}v141"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00306}00306\ \ \ \ \ \ \ \ \ \ \ \ \ compatible\_sdks=[\textcolor{stringliteral}{"{}v8.1"{}},\ \textcolor{stringliteral}{"{}v10.0"{}}],}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00307}00307\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00308}00308\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2015"{}}:\ \mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version}{VisualStudioVersion}}(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00309}00309\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2015"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Visual\ Studio\ 2015"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ solution\_version=\textcolor{stringliteral}{"{}12.00"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00312}00312\ \ \ \ \ \ \ \ \ \ \ \ \ project\_version=\textcolor{stringliteral}{"{}14.0"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \ flat\_sln=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00314}00314\ \ \ \ \ \ \ \ \ \ \ \ \ uses\_vcxproj=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00315}00315\ \ \ \ \ \ \ \ \ \ \ \ \ path=path,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \ sdk\_based=sdk\_based,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ default\_toolset=\textcolor{stringliteral}{"{}v140"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00318}00318\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00319}00319\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2013"{}}:\ \mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version}{VisualStudioVersion}}(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00320}00320\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2013"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00321}00321\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Visual\ Studio\ 2013"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00322}00322\ \ \ \ \ \ \ \ \ \ \ \ \ solution\_version=\textcolor{stringliteral}{"{}13.00"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00323}00323\ \ \ \ \ \ \ \ \ \ \ \ \ project\_version=\textcolor{stringliteral}{"{}12.0"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00324}00324\ \ \ \ \ \ \ \ \ \ \ \ \ flat\_sln=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00325}00325\ \ \ \ \ \ \ \ \ \ \ \ \ uses\_vcxproj=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00326}00326\ \ \ \ \ \ \ \ \ \ \ \ \ path=path,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00327}00327\ \ \ \ \ \ \ \ \ \ \ \ \ sdk\_based=sdk\_based,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00328}00328\ \ \ \ \ \ \ \ \ \ \ \ \ default\_toolset=\textcolor{stringliteral}{"{}v120"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00329}00329\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00330}00330\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2013e"{}}:\ \mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version}{VisualStudioVersion}}(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00331}00331\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2013e"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00332}00332\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Visual\ Studio\ 2013"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00333}00333\ \ \ \ \ \ \ \ \ \ \ \ \ solution\_version=\textcolor{stringliteral}{"{}13.00"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00334}00334\ \ \ \ \ \ \ \ \ \ \ \ \ project\_version=\textcolor{stringliteral}{"{}12.0"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00335}00335\ \ \ \ \ \ \ \ \ \ \ \ \ flat\_sln=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00336}00336\ \ \ \ \ \ \ \ \ \ \ \ \ uses\_vcxproj=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00337}00337\ \ \ \ \ \ \ \ \ \ \ \ \ path=path,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00338}00338\ \ \ \ \ \ \ \ \ \ \ \ \ sdk\_based=sdk\_based,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00339}00339\ \ \ \ \ \ \ \ \ \ \ \ \ default\_toolset=\textcolor{stringliteral}{"{}v120"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00340}00340\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00341}00341\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2012"{}}:\ \mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version}{VisualStudioVersion}}(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00342}00342\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2012"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00343}00343\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Visual\ Studio\ 2012"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00344}00344\ \ \ \ \ \ \ \ \ \ \ \ \ solution\_version=\textcolor{stringliteral}{"{}12.00"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00345}00345\ \ \ \ \ \ \ \ \ \ \ \ \ project\_version=\textcolor{stringliteral}{"{}4.0"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00346}00346\ \ \ \ \ \ \ \ \ \ \ \ \ flat\_sln=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00347}00347\ \ \ \ \ \ \ \ \ \ \ \ \ uses\_vcxproj=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00348}00348\ \ \ \ \ \ \ \ \ \ \ \ \ path=path,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00349}00349\ \ \ \ \ \ \ \ \ \ \ \ \ sdk\_based=sdk\_based,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00350}00350\ \ \ \ \ \ \ \ \ \ \ \ \ default\_toolset=\textcolor{stringliteral}{"{}v110"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00351}00351\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00352}00352\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2012e"{}}:\ \mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version}{VisualStudioVersion}}(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2012e"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Visual\ Studio\ 2012"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ solution\_version=\textcolor{stringliteral}{"{}12.00"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00356}00356\ \ \ \ \ \ \ \ \ \ \ \ \ project\_version=\textcolor{stringliteral}{"{}4.0"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00357}00357\ \ \ \ \ \ \ \ \ \ \ \ \ flat\_sln=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00358}00358\ \ \ \ \ \ \ \ \ \ \ \ \ uses\_vcxproj=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00359}00359\ \ \ \ \ \ \ \ \ \ \ \ \ path=path,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00360}00360\ \ \ \ \ \ \ \ \ \ \ \ \ sdk\_based=sdk\_based,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00361}00361\ \ \ \ \ \ \ \ \ \ \ \ \ default\_toolset=\textcolor{stringliteral}{"{}v110"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00362}00362\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00363}00363\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2010"{}}:\ \mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version}{VisualStudioVersion}}(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00364}00364\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2010"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00365}00365\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Visual\ Studio\ 2010"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00366}00366\ \ \ \ \ \ \ \ \ \ \ \ \ solution\_version=\textcolor{stringliteral}{"{}11.00"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00367}00367\ \ \ \ \ \ \ \ \ \ \ \ \ project\_version=\textcolor{stringliteral}{"{}4.0"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00368}00368\ \ \ \ \ \ \ \ \ \ \ \ \ flat\_sln=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00369}00369\ \ \ \ \ \ \ \ \ \ \ \ \ uses\_vcxproj=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00370}00370\ \ \ \ \ \ \ \ \ \ \ \ \ path=path,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00371}00371\ \ \ \ \ \ \ \ \ \ \ \ \ sdk\_based=sdk\_based,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00372}00372\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00373}00373\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2010e"{}}:\ \mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version}{VisualStudioVersion}}(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00374}00374\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2010e"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00375}00375\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Visual\ C++\ Express\ 2010"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00376}00376\ \ \ \ \ \ \ \ \ \ \ \ \ solution\_version=\textcolor{stringliteral}{"{}11.00"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00377}00377\ \ \ \ \ \ \ \ \ \ \ \ \ project\_version=\textcolor{stringliteral}{"{}4.0"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00378}00378\ \ \ \ \ \ \ \ \ \ \ \ \ flat\_sln=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00379}00379\ \ \ \ \ \ \ \ \ \ \ \ \ uses\_vcxproj=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00380}00380\ \ \ \ \ \ \ \ \ \ \ \ \ path=path,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00381}00381\ \ \ \ \ \ \ \ \ \ \ \ \ sdk\_based=sdk\_based,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00382}00382\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00383}00383\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2008"{}}:\ \mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version}{VisualStudioVersion}}(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00384}00384\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2008"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00385}00385\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Visual\ Studio\ 2008"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00386}00386\ \ \ \ \ \ \ \ \ \ \ \ \ solution\_version=\textcolor{stringliteral}{"{}10.00"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00387}00387\ \ \ \ \ \ \ \ \ \ \ \ \ project\_version=\textcolor{stringliteral}{"{}9.00"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00388}00388\ \ \ \ \ \ \ \ \ \ \ \ \ flat\_sln=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00389}00389\ \ \ \ \ \ \ \ \ \ \ \ \ uses\_vcxproj=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00390}00390\ \ \ \ \ \ \ \ \ \ \ \ \ path=path,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00391}00391\ \ \ \ \ \ \ \ \ \ \ \ \ sdk\_based=sdk\_based,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00392}00392\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00393}00393\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2008e"{}}:\ \mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version}{VisualStudioVersion}}(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00394}00394\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2008e"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00395}00395\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Visual\ Studio\ 2008"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00396}00396\ \ \ \ \ \ \ \ \ \ \ \ \ solution\_version=\textcolor{stringliteral}{"{}10.00"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00397}00397\ \ \ \ \ \ \ \ \ \ \ \ \ project\_version=\textcolor{stringliteral}{"{}9.00"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00398}00398\ \ \ \ \ \ \ \ \ \ \ \ \ flat\_sln=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00399}00399\ \ \ \ \ \ \ \ \ \ \ \ \ uses\_vcxproj=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00400}00400\ \ \ \ \ \ \ \ \ \ \ \ \ path=path,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00401}00401\ \ \ \ \ \ \ \ \ \ \ \ \ sdk\_based=sdk\_based,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00402}00402\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00403}00403\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2005"{}}:\ \mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version}{VisualStudioVersion}}(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00404}00404\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2005"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00405}00405\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Visual\ Studio\ 2005"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00406}00406\ \ \ \ \ \ \ \ \ \ \ \ \ solution\_version=\textcolor{stringliteral}{"{}9.00"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00407}00407\ \ \ \ \ \ \ \ \ \ \ \ \ project\_version=\textcolor{stringliteral}{"{}8.00"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00408}00408\ \ \ \ \ \ \ \ \ \ \ \ \ flat\_sln=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00409}00409\ \ \ \ \ \ \ \ \ \ \ \ \ uses\_vcxproj=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00410}00410\ \ \ \ \ \ \ \ \ \ \ \ \ path=path,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00411}00411\ \ \ \ \ \ \ \ \ \ \ \ \ sdk\_based=sdk\_based,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00412}00412\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00413}00413\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2005e"{}}:\ \mbox{\hyperlink{classgyp_1_1_m_s_v_s_version_1_1_visual_studio_version}{VisualStudioVersion}}(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00414}00414\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2005e"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00415}00415\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Visual\ Studio\ 2005"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00416}00416\ \ \ \ \ \ \ \ \ \ \ \ \ solution\_version=\textcolor{stringliteral}{"{}9.00"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00417}00417\ \ \ \ \ \ \ \ \ \ \ \ \ project\_version=\textcolor{stringliteral}{"{}8.00"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00418}00418\ \ \ \ \ \ \ \ \ \ \ \ \ flat\_sln=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00419}00419\ \ \ \ \ \ \ \ \ \ \ \ \ uses\_vcxproj=\textcolor{keyword}{False},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00420}00420\ \ \ \ \ \ \ \ \ \ \ \ \ path=path,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00421}00421\ \ \ \ \ \ \ \ \ \ \ \ \ sdk\_based=sdk\_based,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00422}00422\ \ \ \ \ \ \ \ \ ),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00423}00423\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00424}00424\ \ \ \ \ \textcolor{keywordflow}{return}\ versions[str(name)]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00425}00425\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00426}00426\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00427}\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_a66d8b94088491f668c13cf25ffd3ba8e}{00427}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_a66d8b94088491f668c13cf25ffd3ba8e}{\_ConvertToCygpath}}(path):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00428}00428\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Convert\ to\ cygwin\ path\ if\ we\ are\ using\ cygwin."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00429}00429\ \ \ \ \ \textcolor{keywordflow}{if}\ sys.platform\ ==\ \textcolor{stringliteral}{"{}cygwin"{}}:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00430}00430\ \ \ \ \ \ \ \ \ p\ =\ subprocess.Popen([\textcolor{stringliteral}{"{}cygpath"{}},\ path],\ stdout=subprocess.PIPE)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00431}00431\ \ \ \ \ \ \ \ \ path\ =\ p.communicate()[0].decode(\textcolor{stringliteral}{"{}utf-\/8"{}}).strip()}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00432}00432\ \ \ \ \ \textcolor{keywordflow}{return}\ path}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00433}00433\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00434}00434\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00435}\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_ae02498e5108c16af8e7bce6fdcf2a304}{00435}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_ae02498e5108c16af8e7bce6fdcf2a304}{\_DetectVisualStudioVersions}}(versions\_to\_check,\ force\_express):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00436}00436\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Collect\ the\ list\ of\ installed\ visual\ studio\ versions.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00437}00437\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00438}00438\ \textcolor{stringliteral}{\ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00439}00439\ \textcolor{stringliteral}{\ \ \ \ A\ list\ of\ visual\ studio\ versions\ installed\ in\ descending\ order\ of}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00440}00440\ \textcolor{stringliteral}{\ \ \ \ usage\ preference.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00441}00441\ \textcolor{stringliteral}{\ \ \ \ Base\ this\ on\ the\ registry\ and\ a\ quick\ check\ if\ devenv.exe\ exists.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00442}00442\ \textcolor{stringliteral}{\ \ \ \ Possibilities\ are:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00443}00443\ \textcolor{stringliteral}{\ \ \ \ \ \ 2005(e)\ -\/\ Visual\ Studio\ 2005\ (8)}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00444}00444\ \textcolor{stringliteral}{\ \ \ \ \ \ 2008(e)\ -\/\ Visual\ Studio\ 2008\ (9)}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00445}00445\ \textcolor{stringliteral}{\ \ \ \ \ \ 2010(e)\ -\/\ Visual\ Studio\ 2010\ (10)}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00446}00446\ \textcolor{stringliteral}{\ \ \ \ \ \ 2012(e)\ -\/\ Visual\ Studio\ 2012\ (11)}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00447}00447\ \textcolor{stringliteral}{\ \ \ \ \ \ 2013(e)\ -\/\ Visual\ Studio\ 2013\ (12)}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00448}00448\ \textcolor{stringliteral}{\ \ \ \ \ \ 2015\ \ \ \ -\/\ Visual\ Studio\ 2015\ (14)}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00449}00449\ \textcolor{stringliteral}{\ \ \ \ \ \ 2017\ \ \ \ -\/\ Visual\ Studio\ 2017\ (15)}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00450}00450\ \textcolor{stringliteral}{\ \ \ \ \ \ 2019\ \ \ \ -\/\ Visual\ Studio\ 2019\ (16)}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00451}00451\ \textcolor{stringliteral}{\ \ \ \ \ \ 2022\ \ \ \ -\/\ Visual\ Studio\ 2022\ (17)}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00452}00452\ \textcolor{stringliteral}{\ \ \ \ Where\ (e)\ is\ e\ for\ express\ editions\ of\ MSVS\ and\ blank\ otherwise.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00453}00453\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00454}00454\ \ \ \ \ version\_to\_year\ =\ \{}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00455}00455\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}8.0"{}}:\ \textcolor{stringliteral}{"{}2005"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00456}00456\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}9.0"{}}:\ \textcolor{stringliteral}{"{}2008"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00457}00457\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}10.0"{}}:\ \textcolor{stringliteral}{"{}2010"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00458}00458\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}11.0"{}}:\ \textcolor{stringliteral}{"{}2012"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00459}00459\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}12.0"{}}:\ \textcolor{stringliteral}{"{}2013"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00460}00460\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}14.0"{}}:\ \textcolor{stringliteral}{"{}2015"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00461}00461\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}15.0"{}}:\ \textcolor{stringliteral}{"{}2017"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00462}00462\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}16.0"{}}:\ \textcolor{stringliteral}{"{}2019"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00463}00463\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}17.0"{}}:\ \textcolor{stringliteral}{"{}2022"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00464}00464\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00465}00465\ \ \ \ \ versions\ =\ []}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00466}00466\ \ \ \ \ \textcolor{keywordflow}{for}\ version\ \textcolor{keywordflow}{in}\ versions\_to\_check:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00467}00467\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Old\ method\ of\ searching\ for\ which\ VS\ version\ is\ installed}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00468}00468\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ don't\ use\ the\ 2010-\/encouraged-\/way\ because\ we\ also\ want\ to\ get\ the}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00469}00469\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ path\ to\ the\ binaries,\ which\ it\ doesn't\ offer.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00470}00470\ \ \ \ \ \ \ \ \ keys\ =\ [}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00471}00471\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{r"{}HKLM\(\backslash\)Software\(\backslash\)Microsoft\(\backslash\)VisualStudio\(\backslash\)\%s"{}}\ \%\ version,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00472}00472\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{r"{}HKLM\(\backslash\)Software\(\backslash\)Wow6432Node\(\backslash\)Microsoft\(\backslash\)VisualStudio\(\backslash\)\%s"{}}\ \%\ version,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00473}00473\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{r"{}HKLM\(\backslash\)Software\(\backslash\)Microsoft\(\backslash\)VCExpress\(\backslash\)\%s"{}}\ \%\ version,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00474}00474\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{r"{}HKLM\(\backslash\)Software\(\backslash\)Wow6432Node\(\backslash\)Microsoft\(\backslash\)VCExpress\(\backslash\)\%s"{}}\ \%\ version,}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00475}00475\ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00476}00476\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ index\ \textcolor{keywordflow}{in}\ range(len(keys)):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00477}00477\ \ \ \ \ \ \ \ \ \ \ \ \ path\ =\ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_a44ffb963a5ef391a6fed6c1094df9bda}{\_RegistryGetValue}}(keys[index],\ \textcolor{stringliteral}{"{}InstallDir"{}})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00478}00478\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ path:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00479}00479\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00480}00480\ \ \ \ \ \ \ \ \ \ \ \ \ path\ =\ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_a66d8b94088491f668c13cf25ffd3ba8e}{\_ConvertToCygpath}}(path)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00481}00481\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Check\ for\ full.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00482}00482\ \ \ \ \ \ \ \ \ \ \ \ \ full\_path\ =\ os.path.join(path,\ \textcolor{stringliteral}{"{}devenv.exe"{}})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00483}00483\ \ \ \ \ \ \ \ \ \ \ \ \ express\_path\ =\ os.path.join(path,\ \textcolor{stringliteral}{"{}*express.exe"{}})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00484}00484\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ force\_express\ \textcolor{keywordflow}{and}\ os.path.exists(full\_path):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00485}00485\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Add\ this\ one.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00486}00486\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ versions.append(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00487}00487\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_a4544149f3ecb3e480c5461146e7df933}{\_CreateVersion}}(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00488}00488\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ version\_to\_year[version],\ os.path.join(path,\ \textcolor{stringliteral}{"{}.."{}},\ \textcolor{stringliteral}{"{}.."{}})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00489}00489\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00490}00490\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00491}00491\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Check\ for\ express.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00492}00492\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ glob.glob(express\_path):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00493}00493\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Add\ this\ one.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00494}00494\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ versions.append(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00495}00495\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_a4544149f3ecb3e480c5461146e7df933}{\_CreateVersion}}(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00496}00496\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ version\_to\_year[version]\ +\ \textcolor{stringliteral}{"{}e"{}},\ os.path.join(path,\ \textcolor{stringliteral}{"{}.."{}},\ \textcolor{stringliteral}{"{}.."{}})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00497}00497\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00498}00498\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00499}00499\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00500}00500\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ The\ old\ method\ above\ does\ not\ work\ when\ only\ SDK\ is\ installed.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00501}00501\ \ \ \ \ \ \ \ \ keys\ =\ [}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00502}00502\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{r"{}HKLM\(\backslash\)Software\(\backslash\)Microsoft\(\backslash\)VisualStudio\(\backslash\)SxS\(\backslash\)VC7"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00503}00503\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{r"{}HKLM\(\backslash\)Software\(\backslash\)Wow6432Node\(\backslash\)Microsoft\(\backslash\)VisualStudio\(\backslash\)SxS\(\backslash\)VC7"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00504}00504\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{r"{}HKLM\(\backslash\)Software\(\backslash\)Microsoft\(\backslash\)VisualStudio\(\backslash\)SxS\(\backslash\)VS7"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00505}00505\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{r"{}HKLM\(\backslash\)Software\(\backslash\)Wow6432Node\(\backslash\)Microsoft\(\backslash\)VisualStudio\(\backslash\)SxS\(\backslash\)VS7"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00506}00506\ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00507}00507\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ index\ \textcolor{keywordflow}{in}\ range(len(keys)):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00508}00508\ \ \ \ \ \ \ \ \ \ \ \ \ path\ =\ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_a44ffb963a5ef391a6fed6c1094df9bda}{\_RegistryGetValue}}(keys[index],\ version)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00509}00509\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ path:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00510}00510\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00511}00511\ \ \ \ \ \ \ \ \ \ \ \ \ path\ =\ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_a66d8b94088491f668c13cf25ffd3ba8e}{\_ConvertToCygpath}}(path)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00512}00512\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ version\ ==\ \textcolor{stringliteral}{"{}15.0"{}}:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00513}00513\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ os.path.exists(path):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00514}00514\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ versions.append(\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_a4544149f3ecb3e480c5461146e7df933}{\_CreateVersion}}(\textcolor{stringliteral}{"{}2017"{}},\ path))}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00515}00515\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ version\ !=\ \textcolor{stringliteral}{"{}14.0"{}}:\ \ \textcolor{comment}{\#\ There\ is\ no\ Express\ edition\ for\ 2015.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00516}00516\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ versions.append(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00517}00517\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_a4544149f3ecb3e480c5461146e7df933}{\_CreateVersion}}(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00518}00518\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ version\_to\_year[version]\ +\ \textcolor{stringliteral}{"{}e"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00519}00519\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os.path.join(path,\ \textcolor{stringliteral}{"{}.."{}}),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00520}00520\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sdk\_based=\textcolor{keyword}{True},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00521}00521\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00522}00522\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00523}00523\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00524}00524\ \ \ \ \ \textcolor{keywordflow}{return}\ versions}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00525}00525\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00526}00526\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00527}\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_a95c14e6e7acdaec0cbc73f5e701dad5d}{00527}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_a95c14e6e7acdaec0cbc73f5e701dad5d}{SelectVisualStudioVersion}}(version="{}auto"{},\ allow\_fallback=True):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00528}00528\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Select\ which\ version\ of\ Visual\ Studio\ projects\ to\ generate.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00529}00529\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00530}00530\ \textcolor{stringliteral}{\ \ Arguments:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00531}00531\ \textcolor{stringliteral}{\ \ \ \ version:\ Hook\ to\ allow\ caller\ to\ force\ a\ particular\ version\ (vs\ auto).}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00532}00532\ \textcolor{stringliteral}{\ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00533}00533\ \textcolor{stringliteral}{\ \ \ \ An\ object\ representing\ a\ visual\ studio\ project\ format\ version.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00534}00534\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00535}00535\ \ \ \ \ \textcolor{comment}{\#\ In\ auto\ mode,\ check\ environment\ variable\ for\ override.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00536}00536\ \ \ \ \ \textcolor{keywordflow}{if}\ version\ ==\ \textcolor{stringliteral}{"{}auto"{}}:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00537}00537\ \ \ \ \ \ \ \ \ version\ =\ os.environ.get(\textcolor{stringliteral}{"{}GYP\_MSVS\_VERSION"{}},\ \textcolor{stringliteral}{"{}auto"{}})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00538}00538\ \ \ \ \ version\_map\ =\ \{}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00539}00539\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}auto"{}}:\ (\textcolor{stringliteral}{"{}17.0"{}},\ \textcolor{stringliteral}{"{}16.0"{}},\ \textcolor{stringliteral}{"{}15.0"{}},\ \textcolor{stringliteral}{"{}14.0"{}},\ \textcolor{stringliteral}{"{}12.0"{}},\ \textcolor{stringliteral}{"{}10.0"{}},\ \textcolor{stringliteral}{"{}9.0"{}},\ \textcolor{stringliteral}{"{}8.0"{}},\ \textcolor{stringliteral}{"{}11.0"{}}),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00540}00540\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2005"{}}:\ (\textcolor{stringliteral}{"{}8.0"{}},),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00541}00541\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2005e"{}}:\ (\textcolor{stringliteral}{"{}8.0"{}},),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00542}00542\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2008"{}}:\ (\textcolor{stringliteral}{"{}9.0"{}},),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00543}00543\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2008e"{}}:\ (\textcolor{stringliteral}{"{}9.0"{}},),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00544}00544\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2010"{}}:\ (\textcolor{stringliteral}{"{}10.0"{}},),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00545}00545\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2010e"{}}:\ (\textcolor{stringliteral}{"{}10.0"{}},),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00546}00546\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2012"{}}:\ (\textcolor{stringliteral}{"{}11.0"{}},),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00547}00547\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2012e"{}}:\ (\textcolor{stringliteral}{"{}11.0"{}},),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00548}00548\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2013"{}}:\ (\textcolor{stringliteral}{"{}12.0"{}},),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00549}00549\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2013e"{}}:\ (\textcolor{stringliteral}{"{}12.0"{}},),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00550}00550\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2015"{}}:\ (\textcolor{stringliteral}{"{}14.0"{}},),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00551}00551\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2017"{}}:\ (\textcolor{stringliteral}{"{}15.0"{}},),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00552}00552\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2019"{}}:\ (\textcolor{stringliteral}{"{}16.0"{}},),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00553}00553\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}2022"{}}:\ (\textcolor{stringliteral}{"{}17.0"{}},),}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00554}00554\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00555}00555\ \ \ \ \ override\_path\ =\ os.environ.get(\textcolor{stringliteral}{"{}GYP\_MSVS\_OVERRIDE\_PATH"{}})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00556}00556\ \ \ \ \ \textcolor{keywordflow}{if}\ override\_path:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00557}00557\ \ \ \ \ \ \ \ \ msvs\_version\ =\ os.environ.get(\textcolor{stringliteral}{"{}GYP\_MSVS\_VERSION"{}})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00558}00558\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ msvs\_version:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00559}00559\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00560}00560\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}GYP\_MSVS\_OVERRIDE\_PATH\ requires\ GYP\_MSVS\_VERSION\ to\ be\ "{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00561}00561\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}set\ to\ a\ particular\ version\ (e.g.\ 2010e)."{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00562}00562\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00563}00563\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_a4544149f3ecb3e480c5461146e7df933}{\_CreateVersion}}(msvs\_version,\ override\_path,\ sdk\_based=\textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00564}00564\ \ \ \ \ version\ =\ str(version)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00565}00565\ \ \ \ \ versions\ =\ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_ae02498e5108c16af8e7bce6fdcf2a304}{\_DetectVisualStudioVersions}}(version\_map[version],\ \textcolor{stringliteral}{"{}e"{}}\ \textcolor{keywordflow}{in}\ version)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00566}00566\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ versions:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00567}00567\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ allow\_fallback:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00568}00568\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(\textcolor{stringliteral}{"{}Could\ not\ locate\ Visual\ Studio\ installation."{}})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00569}00569\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ version\ ==\ \textcolor{stringliteral}{"{}auto"{}}:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00570}00570\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Default\ to\ 2005\ if\ we\ couldn't\ find\ anything}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00571}00571\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_a4544149f3ecb3e480c5461146e7df933}{\_CreateVersion}}(\textcolor{stringliteral}{"{}2005"{}},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00572}00572\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00573}00573\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_version_a4544149f3ecb3e480c5461146e7df933}{\_CreateVersion}}(version,\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_version_8py_source_l00574}00574\ \ \ \ \ \textcolor{keywordflow}{return}\ versions[0]}
+
+\end{DoxyCode}

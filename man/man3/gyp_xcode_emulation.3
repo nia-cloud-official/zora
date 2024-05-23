@@ -1,0 +1,383 @@
+.TH "gyp.xcode_emulation" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gyp.xcode_emulation
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBMacPrefixHeader\fP"
+.br
+.ti -1c
+.RI "class \fBXcodeArchsDefault\fP"
+.br
+.ti -1c
+.RI "class \fBXcodeSettings\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBXcodeArchsVariableMapping\fP (archs, archs_including_64_bit=None)"
+.br
+.ti -1c
+.RI "\fBGetXcodeArchsDefault\fP ()"
+.br
+.ti -1c
+.RI "\fBXcodeVersion\fP ()"
+.br
+.ti -1c
+.RI "\fBCLTVersion\fP ()"
+.br
+.ti -1c
+.RI "\fBGetStdoutQuiet\fP (cmdlist)"
+.br
+.ti -1c
+.RI "\fBGetStdout\fP (cmdlist)"
+.br
+.ti -1c
+.RI "\fBMergeGlobalXcodeSettingsToSpec\fP (global_dict, spec)"
+.br
+.ti -1c
+.RI "\fBIsMacBundle\fP (flavor, spec)"
+.br
+.ti -1c
+.RI "\fBGetMacBundleResources\fP (product_dir, xcode_settings, resources)"
+.br
+.ti -1c
+.RI "\fBGetMacInfoPlist\fP (product_dir, xcode_settings, gyp_path_to_build_path)"
+.br
+.ti -1c
+.RI "\fB_GetXcodeEnv\fP (xcode_settings, built_products_dir, srcroot, configuration, additional_settings=None)"
+.br
+.ti -1c
+.RI "\fB_NormalizeEnvVarReferences\fP (str)"
+.br
+.ti -1c
+.RI "\fBExpandEnvVars\fP (string, expansions)"
+.br
+.ti -1c
+.RI "\fB_TopologicallySortedEnvVarKeys\fP (env)"
+.br
+.ti -1c
+.RI "\fBGetSortedXcodeEnv\fP (xcode_settings, built_products_dir, srcroot, configuration, additional_settings=None)"
+.br
+.ti -1c
+.RI "\fBGetSpecPostbuildCommands\fP (spec, quiet=False)"
+.br
+.ti -1c
+.RI "\fB_HasIOSTarget\fP (targets)"
+.br
+.ti -1c
+.RI "\fB_AddIOSDeviceConfigurations\fP (targets)"
+.br
+.ti -1c
+.RI "\fBCloneConfigurationForDeviceAndEmulator\fP (target_dicts)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBXCODE_VERSION_CACHE\fP = None"
+.br
+.ti -1c
+.RI "\fBXCODE_ARCHS_DEFAULT_CACHE\fP = None"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.PP
+.nf
+This module contains classes that help to emulate xcodebuild behavior on top of
+other build systems, such as make and ninja\&.
+
+.fi
+.PP
+ 
+.SH "Function Documentation"
+.PP 
+.SS "gyp\&.xcode_emulation\&._AddIOSDeviceConfigurations ( targets)\fR [protected]\fP"
+
+.PP
+.nf
+Clone all targets and append -iphoneos to the name\&. Configure these targets
+to build for iOS devices and use correct architectures for those builds\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1918\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&._GetXcodeEnv ( xcode_settings,  built_products_dir,  srcroot,  configuration,  additional_settings = \fRNone\fP)\fR [protected]\fP"
+
+.PP
+.nf
+Return the environment variables that Xcode would set\&. See
+http://developer\&.apple\&.com/library/mac/#documentation/DeveloperTools/Reference/XcodeBuildSettingRef/1-Build_Setting_Reference/build_setting_ref\&.html#//apple_ref/doc/uid/TP40003931-CH3-SW153
+for a full list\&.
+
+Args:
+  xcode_settings: An XcodeSettings object\&. If this is None, this function
+      returns an empty dict\&.
+  built_products_dir: Absolute path to the built products dir\&.
+  srcroot: Absolute path to the source root\&.
+  configuration: The build configuration name\&.
+  additional_settings: An optional dict with more values to add to the
+      result\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1705\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&._HasIOSTarget ( targets)\fR [protected]\fP"
+
+.PP
+.nf
+Returns true if any target contains the iOS specific key
+IPHONEOS_DEPLOYMENT_TARGET\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1908\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&._NormalizeEnvVarReferences ( str)\fR [protected]\fP"
+
+.PP
+.nf
+Takes a string containing variable references in the form ${FOO}, $(FOO),
+or $FOO, and returns a string with all variable references in the form ${FOO}\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1820\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&._TopologicallySortedEnvVarKeys ( env)\fR [protected]\fP"
+
+.PP
+.nf
+Takes a dict |env| whose values are strings that can refer to other keys,
+for example env['foo'] = '$(bar) and $(baz)'\&. Returns a list L of all keys of
+env such that key2 is after key1 in L if env[key2] refers to env[key1]\&.
+
+Throws an Exception in case of dependency cycles\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1849\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&.CloneConfigurationForDeviceAndEmulator ( target_dicts)"
+
+.PP
+.nf
+If |target_dicts| contains any iOS targets, automatically create -iphoneos
+targets for iOS device builds\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1934\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&.CLTVersion ()"
+
+.PP
+.nf
+Returns the version of command-line tools from pkgutil\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1525\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&.ExpandEnvVars ( string,  expansions)"
+
+.PP
+.nf
+Expands ${VARIABLES}, $(VARIABLES), and $VARIABLES in string per the
+expansions list\&. If the variable expands to something that references
+another variable, this variable is expanded as well if it's in env --
+until no variables present in env are left\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1837\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&.GetMacBundleResources ( product_dir,  xcode_settings,  resources)"
+
+.PP
+.nf
+Yields (output, resource) pairs for every resource in |resources|\&.
+Only call this for mac bundle targets\&.
+
+Args:
+  product_dir: Path to the directory containing the output bundle,
+      relative to the build directory\&.
+  xcode_settings: The XcodeSettings of the current target\&.
+  resources: A list of bundle resources, relative to the build directory\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1614\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&.GetMacInfoPlist ( product_dir,  xcode_settings,  gyp_path_to_build_path)"
+
+.PP
+.nf
+Returns (info_plist, dest_plist, defines, extra_env), where:
+* |info_plist| is the source plist path, relative to the
+build directory,
+* |dest_plist| is the destination plist path, relative to the
+build directory,
+* |defines| is a list of preprocessor defines (empty if the plist
+shouldn't be preprocessed,
+* |extra_env| is a dict of env variables that should be exported when
+invoking |mac_tool copy-info-plist|\&.
+
+Only call this for mac bundle targets\&.
+
+Args:
+  product_dir: Path to the directory containing the output bundle,
+      relative to the build directory\&.
+  xcode_settings: The XcodeSettings of the current target\&.
+  gyp_to_build_path: A function that converts paths relative to the
+      current gyp file to paths relative to the build directory\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1652\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&.GetSortedXcodeEnv ( xcode_settings,  built_products_dir,  srcroot,  configuration,  additional_settings = \fRNone\fP)"
+
+.PP
+Definition at line \fB1885\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&.GetSpecPostbuildCommands ( spec,  quiet = \fRFalse\fP)"
+
+.PP
+.nf
+Returns the list of postbuilds explicitly defined on |spec|, in a form
+executable by a shell\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1894\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&.GetStdout ( cmdlist)"
+
+.PP
+.nf
+Returns the content of standard output returned by invoking |cmdlist|\&.
+Raises |GypError| if the command return with a non-zero return code\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1567\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&.GetStdoutQuiet ( cmdlist)"
+
+.PP
+.nf
+Returns the content of standard output returned by invoking |cmdlist|\&.
+Ignores the stderr\&.
+Raises |GypError| if the command return with a non-zero return code\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1556\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&.GetXcodeArchsDefault ()"
+
+.PP
+.nf
+Returns the |XcodeArchsDefault| object to use to expand ARCHS for the
+installed version of Xcode\&. The default values used by Xcode for ARCHS
+and the expansion of the variables depends on the version of Xcode used\&.
+
+For all version anterior to Xcode 5\&.0 or posterior to Xcode 5\&.1 included
+uses $(ARCHS_STANDARD) if ARCHS is unset, while Xcode 5\&.0 to 5\&.0\&.2 uses
+$(ARCHS_STANDARD_INCLUDING_64_BIT)\&. This variable was added to Xcode 5\&.0
+and deprecated with Xcode 5\&.1\&.
+
+For 'macosx' SDKROOT, all version starting with Xcode 5\&.0 includes 64-bit
+architecture as part of $(ARCHS_STANDARD) and default to only building it\&.
+
+For 'iphoneos' and 'iphonesimulator' SDKROOT, 64-bit architectures are part
+of $(ARCHS_STANDARD_INCLUDING_64_BIT) from Xcode 5\&.0\&. From Xcode 5\&.1, they
+are also part of $(ARCHS_STANDARD)\&.
+
+All these rules are coded in the construction of the |XcodeArchsDefault|
+object to use depending on the version of Xcode detected\&. The object is
+for performance reason\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB96\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&.IsMacBundle ( flavor,  spec)"
+
+.PP
+.nf
+Returns if |spec| should be treated as a bundle\&.
+
+Bundles are directories with a certain subdirectory structure, instead of
+just a single file\&. Bundle rules do not produce a binary but also package
+resources into that directory\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1594\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&.MergeGlobalXcodeSettingsToSpec ( global_dict,  spec)"
+
+.PP
+.nf
+Merges the global xcode_settings dictionary into each configuration of the
+target represented by spec\&. For keys that are both in the global and the local
+xcode_settings dict, the local key gets precedence\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1578\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&.XcodeArchsVariableMapping ( archs,  archs_including_64_bit = \fRNone\fP)"
+
+.PP
+.nf
+Constructs a dictionary with expansion for $(ARCHS_STANDARD) variable,
+and optionally for $(ARCHS_STANDARD_INCLUDING_64_BIT)\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB31\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&.XcodeVersion ()"
+
+.PP
+.nf
+Returns a tuple of version and build version of installed Xcode\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB1486\fP of file \fBxcode_emulation\&.py\fP\&.
+.SH "Variable Documentation"
+.PP 
+.SS "gyp\&.xcode_emulation\&.XCODE_ARCHS_DEFAULT_CACHE = None"
+
+.PP
+Definition at line \fB28\fP of file \fBxcode_emulation\&.py\fP\&.
+.SS "gyp\&.xcode_emulation\&.XCODE_VERSION_CACHE = None"
+
+.PP
+Definition at line \fB24\fP of file \fBxcode_emulation\&.py\fP\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

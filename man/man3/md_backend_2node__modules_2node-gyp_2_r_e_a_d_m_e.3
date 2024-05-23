@@ -1,0 +1,226 @@
+.TH "md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e \- \fRnode-gyp\fP - Node\&.js native addon build tool 
+.PP
+ \fR\fP 
+.PP
+\fRnode-gyp\fP is a cross-platform command-line tool written in Node\&.js for compiling native addon modules for Node\&.js\&. It contains a vendored copy of the \fRgyp-next\fP project that was previously used by the Chromium team, extended to support the development of Node\&.js native addons\&.
+.PP
+Note that \fRnode-gyp\fP is \fInot\fP used to build Node\&.js itself\&.
+.PP
+Multiple target versions of Node\&.js are supported (i\&.e\&. \fR0\&.8\fP, \&.\&.\&., \fR4\fP, \fR5\fP, \fR6\fP, etc\&.), regardless of what version of Node\&.js is actually installed on your system (\fRnode-gyp\fP downloads the necessary development files or headers for the target version)\&.
+.SH "Features"
+.PP
+.IP "\(bu" 2
+The same build commands work on any of the supported platforms
+.IP "\(bu" 2
+Supports the targeting of different versions of Node\&.js
+.PP
+.SH "Installation"
+.PP
+You can install \fRnode-gyp\fP using \fRnpm\fP:
+.PP
+.PP
+.nf
+ bash
+npm install \-g node\-gyp
+.fi
+.PP
+.PP
+Depending on your operating system, you will need to install:
+.SS "On Unix"
+.IP "\(bu" 2
+Python v3\&.6, v3\&.7, v3\&.8, or v3\&.9
+.IP "\(bu" 2
+\fRmake\fP
+.IP "\(bu" 2
+A proper C/C++ compiler toolchain, like \fRGCC\fP
+.PP
+.SS "On macOS"
+\fBATTENTION\fP: If your Mac has been \fIupgraded\fP to macOS Catalina (10\&.15), please read \fBmacOS_Catalina\&.md\fP\&.
+.PP
+.IP "\(bu" 2
+Python v3\&.6, v3\&.7, v3\&.8, or v3\&.9
+.IP "\(bu" 2
+\fRXcode\fP
+.IP "  \(bu" 4
+You also need to install the \fRXCode Command Line Tools\fP by running \fRxcode-select --install\fP\&. Alternatively, if you already have the full Xcode installed, you can find them under the menu \fRXcode -> Open Developer Tool -> More Developer Tools\&.\&.\&.\fP\&. This step will install \fRclang\fP, \fRclang++\fP, and \fRmake\fP\&.
+.PP
+
+.PP
+.SS "On Windows"
+Install the current version of Python from the \fRMicrosoft Store package\fP\&.
+.PP
+Install tools and configuration manually:
+.IP "\(bu" 2
+Install Visual C++ Build Environment: \fRVisual Studio Build Tools\fP (using 'Visual C++ build tools' workload) or \fRVisual Studio Community\fP (using the 'Desktop development with C++' workload)
+.IP "\(bu" 2
+Launch cmd, \fRnpm config set msvs_version 2017\fP
+.PP
+.PP
+If the above steps didn't work for you, please visit \fRMicrosoft's Node\&.js Guidelines for Windows\fP for additional tips\&.
+.PP
+To target native ARM64 Node\&.js on Windows 10 on ARM, add the components 'Visual C++ compilers and libraries for ARM64' and 'Visual C++ ATL for ARM64'\&.
+.SS "Configuring Python Dependency"
+\fRnode-gyp\fP requires that you have installed a compatible version of Python, one of: v3\&.6, v3\&.7, v3\&.8, or v3\&.9\&. If you have multiple Python versions installed, you can identify which Python version \fRnode-gyp\fP should use in one of the following ways:
+.PP
+.IP "1." 4
+by setting the \fR--python\fP command-line option, e\&.g\&.:
+.PP
+.PP
+.PP
+.nf
+ bash
+node\-gyp <command> \-\-python /path/to/executable/python
+.fi
+.PP
+.PP
+.IP "2." 4
+If \fRnode-gyp\fP is called by way of \fRnpm\fP, \fIand\fP you have multiple versions of Python installed, then you can set \fRnpm\fP's 'python' config key to the appropriate value:
+.PP
+.PP
+.PP
+.nf
+ bash
+npm config set python /path/to/executable/python
+.fi
+.PP
+.PP
+.IP "3." 4
+If the \fRPYTHON\fP environment variable is set to the path of a Python executable, then that version will be used, if it is a compatible version\&.
+.IP "4." 4
+If the \fRNODE_GYP_FORCE_PYTHON\fP environment variable is set to the path of a Python executable, it will be used instead of any of the other configured or builtin Python search paths\&. If it's not a compatible version, no further searching will be done\&.
+.PP
+.SS "Build for Third Party Node\&.js Runtimes"
+When building modules for thid party Node\&.js runtimes like Electron, which have different build configurations from the official Node\&.js distribution, you should use \fR--dist-url\fP or \fR--nodedir\fP flags to specify the headers of the runtime to build for\&.
+.PP
+Also when \fR--dist-url\fP or \fR--nodedir\fP flags are passed, node-gyp will use the \fRconfig\&.gypi\fP shipped in the headers distribution to generate build configurations, which is different from the default mode that would use the \fRprocess\&.config\fP object of the running Node\&.js instance\&.
+.PP
+Some old versions of Electron shipped malformed \fRconfig\&.gypi\fP in their headers distributions, and you might need to pass \fR--force-process-config\fP to node-gyp to work around configuration errors\&.
+.SH "How to Use"
+.PP
+To compile your native addon, first go to its root directory:
+.PP
+.PP
+.nf
+ bash
+cd my_node_addon
+.fi
+.PP
+.PP
+The next step is to generate the appropriate project build files for the current platform\&. Use \fRconfigure\fP for that:
+.PP
+.PP
+.nf
+ bash
+node\-gyp configure
+.fi
+.PP
+.PP
+Auto-detection fails for Visual C++ Build Tools 2015, so \fR--msvs_version=2015\fP needs to be added (not needed when run by npm as configured above): 
+.PP
+.nf
+ bash
+node\-gyp configure \-\-msvs_version=2015
+
+.fi
+.PP
+.PP
+\fBNote\fP: The \fRconfigure\fP step looks for a \fRbinding\&.gyp\fP file in the current directory to process\&. See below for instructions on creating a \fRbinding\&.gyp\fP file\&.
+.PP
+Now you will have either a \fRMakefile\fP (on Unix platforms) or a \fRvcxproj\fP file (on Windows) in the \fRbuild/\fP directory\&. Next, invoke the \fRbuild\fP command:
+.PP
+.PP
+.nf
+ bash
+node\-gyp build
+.fi
+.PP
+.PP
+Now you have your compiled \fR\&.node\fP bindings file! The compiled bindings end up in \fRbuild/Debug/\fP or \fRbuild/Release/\fP, depending on the build mode\&. At this point, you can require the \fR\&.node\fP file with Node\&.js and run your tests!
+.PP
+\fBNote:\fP To create a \fIDebug\fP build of the bindings file, pass the \fR--debug\fP (or \fR-d\fP) switch when running either the \fRconfigure\fP, \fRbuild\fP or \fRrebuild\fP commands\&.
+.SH "The \fRbinding\&.gyp\fP file"
+.PP
+A \fRbinding\&.gyp\fP file describes the configuration to build your module, in a JSON-like format\&. This file gets placed in the root of your package, alongside \fRpackage\&.json\fP\&.
+.PP
+A barebones \fRgyp\fP file appropriate for building a Node\&.js addon could look like:
+.PP
+.PP
+.nf
+{
+  "targets": [
+    {
+      "target_name": "binding",
+      "sources": [ "src/binding\&.cc" ]
+    }
+  ]
+}
+.fi
+.PP
+.SH "Further reading"
+.PP
+The \fB\fRdocs\fP\fP directory contains additional documentation on specific node-gyp topics that may be useful if you are experiencing problems installing or building addons using node-gyp\&.
+.PP
+Some additional resources for Node\&.js native addons and writing \fRgyp\fP configuration files:
+.PP
+.IP "\(bu" 2
+\fR'Going Native' a nodeschool\&.io tutorial\fP
+.IP "\(bu" 2
+\fR'Hello World' node addon example\fP
+.IP "\(bu" 2
+\fRgyp user documentation\fP
+.IP "\(bu" 2
+\fRgyp input format reference\fP
+.IP "\(bu" 2
+\fB\fI"binding\&.gyp" files out in the wild\fP wiki page\fP
+.PP
+.SH "Commands"
+.PP
+\fRnode-gyp\fP responds to the following commands:
+.PP
+\fBCommand\fP   \fBDescription\fP    \fRhelp\fP   Shows the help dialog    \fRbuild\fP   Invokes \fRmake\fP/\fRmsbuild\&.exe\fP and builds the native addon    \fRclean\fP   Removes the \fRbuild\fP directory if it exists    \fRconfigure\fP   Generates project build files for the current platform    \fRrebuild\fP   Runs \fRclean\fP, \fRconfigure\fP and \fRbuild\fP all in a row    \fRinstall\fP   Installs Node\&.js header files for the given version    \fRlist\fP   Lists the currently installed Node\&.js header versions    \fRremove\fP   Removes the Node\&.js header files for the given version   
+.SH "Command Options"
+.PP
+\fRnode-gyp\fP accepts the following command options:
+.PP
+\fBCommand\fP   \fBDescription\fP    \fR-j n\fP, \fR--jobs n\fP   Run \fRmake\fP in parallel\&. The value \fRmax\fP will use all available CPU cores    \fR--target=v6\&.2\&.1\fP   Node\&.js version to build for (default is \fRprocess\&.version\fP)    \fR--silly\fP, \fR--loglevel=silly\fP   Log all progress to console    \fR--verbose\fP, \fR--loglevel=verbose\fP   Log most progress to console    \fR--silent\fP, \fR--loglevel=silent\fP   Don't log anything to console    \fRdebug\fP, \fR--debug\fP   Make Debug build (default is \fRRelease\fP)    \fR--release\fP, \fR--no-debug\fP   Make Release build    \fR-C $dir\fP, \fR--directory=$dir\fP   Run command in different directory    \fR--make=$make\fP   Override \fRmake\fP command (e\&.g\&. \fRgmake\fP)    \fR--thin=yes\fP   Enable thin static libraries    \fR--arch=$arch\fP   Set target architecture (e\&.g\&. ia32)    \fR--tarball=$path\fP   Get headers from a local tarball    \fR--devdir=$path\fP   SDK download directory (default is OS cache directory)    \fR--ensure\fP   Don't reinstall headers if already present    \fR--dist-url=$url\fP   Download header tarball from custom URL    \fR--proxy=$url\fP   Set HTTP(S) proxy for downloading header tarball    \fR--noproxy=$urls\fP   Set urls to ignore proxies when downloading header tarball    \fR--cafile=$cafile\fP   Override default CA chain (to download tarball)    \fR--nodedir=$path\fP   Set the path to the node source code    \fR--python=$path\fP   Set path to the Python binary    \fR--msvs_version=$version\fP   Set Visual Studio version (Windows only)    \fR--solution=$solution\fP   Set Visual Studio Solution version (Windows only)    \fR--force-process-config\fP   Force using runtime's \fRprocess\&.config\fP object to generate \fRconfig\&.gypi\fP file   
+.SH "Configuration"
+.PP
+.SS "Environment variables"
+Use the form \fRnpm_config_OPTION_NAME\fP for any of the command options listed above (dashes in option names should be replaced by underscores)\&.
+.PP
+For example, to set \fRdevdir\fP equal to \fR/tmp/\&.gyp\fP, you would:
+.PP
+Run this on Unix:
+.PP
+.PP
+.nf
+export npm_config_devdir=/tmp/\&.gyp
+.fi
+.PP
+.PP
+Or this on Windows:
+.PP
+.PP
+.nf
+set npm_config_devdir=c:\\temp\\\&.gyp
+.fi
+.PP
+.SS "\fRnpm\fP configuration"
+Use the form \fROPTION_NAME\fP for any of the command options listed above\&.
+.PP
+For example, to set \fRdevdir\fP equal to \fR/tmp/\&.gyp\fP, you would run:
+.PP
+.PP
+.nf
+npm config set [\-\-global] devdir /tmp/\&.gyp
+.fi
+.PP
+.PP
+\fBNote:\fP Configuration set via \fRnpm\fP will only be used when \fRnode-gyp\fP is run via \fRnpm\fP, not when \fRnode-gyp\fP is run directly\&.
+.SH "License"
+.PP
+\fRnode-gyp\fP is available under the MIT license\&. See the [LICENSE file](LICENSE) for details\&. 

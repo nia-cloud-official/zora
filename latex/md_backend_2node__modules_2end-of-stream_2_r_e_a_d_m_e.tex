@@ -1,0 +1,48 @@
+\chapter{end-\/of-\/stream}
+\hypertarget{md_backend_2node__modules_2end-of-stream_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2end-of-stream_2_r_e_a_d_m_e}\index{end-\/of-\/stream@{end-\/of-\/stream}}
+\label{md_backend_2node__modules_2end-of-stream_2_r_e_a_d_m_e_autotoc_md869}%
+\Hypertarget{md_backend_2node__modules_2end-of-stream_2_r_e_a_d_m_e_autotoc_md869}%
+ A node module that calls a callback when a readable/writable/duplex stream has completed or failed. \begin{DoxyVerb}npm install end-of-stream
+\end{DoxyVerb}
+ \href{https://travis-ci.org/mafintosh/end-of-stream}{\texttt{ }}\hypertarget{md_backend_2node__modules_2end-of-stream_2_r_e_a_d_m_e_autotoc_md870}{}\doxysection{\texorpdfstring{Usage}{Usage}}\label{md_backend_2node__modules_2end-of-stream_2_r_e_a_d_m_e_autotoc_md870}
+Simply pass a stream and a callback to the {\ttfamily eos}. Both legacy streams, streams2 and stream3 are supported.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ eos\ =\ require('end-\/of-\/stream');}
+\DoxyCodeLine{}
+\DoxyCodeLine{eos(readableStream,\ function(err)\ \{}
+\DoxyCodeLine{\ \ //\ this\ will\ be\ set\ to\ the\ stream\ instance}
+\DoxyCodeLine{\ \ \ \ if\ (err)\ return\ console.log('stream\ had\ an\ error\ or\ closed\ early');}
+\DoxyCodeLine{\ \ \ \ console.log('stream\ has\ ended',\ this\ ===\ readableStream);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{eos(writableStream,\ function(err)\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (err)\ return\ console.log('stream\ had\ an\ error\ or\ closed\ early');}
+\DoxyCodeLine{\ \ \ \ console.log('stream\ has\ finished',\ this\ ===\ writableStream);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{eos(duplexStream,\ function(err)\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (err)\ return\ console.log('stream\ had\ an\ error\ or\ closed\ early');}
+\DoxyCodeLine{\ \ \ \ console.log('stream\ has\ ended\ and\ finished',\ this\ ===\ duplexStream);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{eos(duplexStream,\ \{readable:false\},\ function(err)\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (err)\ return\ console.log('stream\ had\ an\ error\ or\ closed\ early');}
+\DoxyCodeLine{\ \ \ \ console.log('stream\ has\ finished\ but\ might\ still\ be\ readable');}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{eos(duplexStream,\ \{writable:false\},\ function(err)\ \{}
+\DoxyCodeLine{\ \ \ \ if\ (err)\ return\ console.log('stream\ had\ an\ error\ or\ closed\ early');}
+\DoxyCodeLine{\ \ \ \ console.log('stream\ has\ ended\ but\ might\ still\ be\ writable');}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{eos(readableStream,\ \{error:false\},\ function(err)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ do\ not\ treat\ emit('error',\ err)\ as\ a\ end-\/of-\/stream}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2end-of-stream_2_r_e_a_d_m_e_autotoc_md871}{}\doxysection{\texorpdfstring{License}{License}}\label{md_backend_2node__modules_2end-of-stream_2_r_e_a_d_m_e_autotoc_md871}
+MIT\hypertarget{md_backend_2node__modules_2end-of-stream_2_r_e_a_d_m_e_autotoc_md872}{}\doxysection{\texorpdfstring{Related}{Related}}\label{md_backend_2node__modules_2end-of-stream_2_r_e_a_d_m_e_autotoc_md872}
+{\ttfamily end-\/of-\/stream} is part of the \href{https://github.com/maxogden/mississippi}{\texttt{ mississippi stream utility collection}} which includes more useful stream modules similar to this one. 

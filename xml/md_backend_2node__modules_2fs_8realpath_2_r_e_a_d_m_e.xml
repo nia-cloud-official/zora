@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2fs_8realpath_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2fs_8realpath_2_r_e_a_d_m_e</compoundname>
+    <title>fs.realpath</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2fs_8realpath_2_r_e_a_d_m_e_1autotoc_md1322"/> A backwards-compatible fs.realpath for Node v6 and above</para>
+<para>In Node v6, the JavaScript implementation of fs.realpath was replaced with a faster (but less resilient) native implementation. That raises new and platform-specific errors and cannot handle long or excessively symlink-looping paths.</para>
+<para>This module handles those cases by detecting the new errors and falling back to the JavaScript implementation. On versions of Node prior to v6, it has no effect.</para>
+<sect1 id="md_backend_2node__modules_2fs_8realpath_2_r_e_a_d_m_e_1autotoc_md1323">
+<title>USAGE</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>rp<sp/>=<sp/>require(&apos;fs.realpath&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>async<sp/>version</highlight></codeline>
+<codeline><highlight class="normal">rp.realpath(someLongAndLoopingPath,<sp/>function<sp/>(er,<sp/>real)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>the<sp/>ELOOP<sp/>was<sp/>handled,<sp/>but<sp/>it<sp/>was<sp/>a<sp/>bit<sp/>slower</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>sync<sp/>version</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>real<sp/>=<sp/>rp.realpathSync(someLongAndLoopingPath)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>monkeypatch<sp/>at<sp/>your<sp/>own<sp/>risk!</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>This<sp/>replaces<sp/>the<sp/>fs.realpath/fs.realpathSync<sp/>builtins</highlight></codeline>
+<codeline><highlight class="normal">rp.monkeypatch()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>un-do<sp/>the<sp/>monkeypatching</highlight></codeline>
+<codeline><highlight class="normal">rp.unmonkeypatch()</highlight></codeline>
+</programlisting> </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/fs.realpath/README.md"/>
+  </compounddef>
+</doxygen>

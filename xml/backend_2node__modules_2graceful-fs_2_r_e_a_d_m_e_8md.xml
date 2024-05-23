@@ -1,0 +1,156 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2graceful-fs_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>graceful-fs</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">graceful-fs<sp/>functions<sp/>as<sp/>a<sp/>drop-in<sp/>replacement<sp/>for<sp/>the<sp/>fs<sp/>module,</highlight></codeline>
+<codeline><highlight class="normal">making<sp/>various<sp/>improvements.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>improvements<sp/>are<sp/>meant<sp/>to<sp/>normalize<sp/>behavior<sp/>across<sp/>different</highlight></codeline>
+<codeline><highlight class="normal">platforms<sp/>and<sp/>environments,<sp/>and<sp/>to<sp/>make<sp/>filesystem<sp/>access<sp/>more</highlight></codeline>
+<codeline><highlight class="normal">resilient<sp/>to<sp/>errors.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Improvements<sp/>over<sp/>[fs<sp/>module](https://nodejs.org/api/fs.html)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>Queues<sp/>up<sp/>`open`<sp/>and<sp/>`readdir`<sp/>calls,<sp/>and<sp/>retries<sp/>them<sp/>once</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>something<sp/>closes<sp/>if<sp/>there<sp/>is<sp/>an<sp/>EMFILE<sp/>error<sp/>from<sp/>too<sp/>many<sp/>file</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>descriptors.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>fixes<sp/>`lchmod`<sp/>for<sp/>Node<sp/>versions<sp/>prior<sp/>to<sp/>0.6.2.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>implements<sp/>`fs.lutimes`<sp/>if<sp/>possible.<sp/>Otherwise<sp/>it<sp/>becomes<sp/>a<sp/>noop.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>ignores<sp/>`EINVAL`<sp/>and<sp/>`EPERM`<sp/>errors<sp/>in<sp/>`chown`,<sp/>`fchown`<sp/>or</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`lchown`<sp/>if<sp/>the<sp/>user<sp/>isn&apos;t<sp/>root.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>makes<sp/>`lchmod`<sp/>and<sp/>`lchown`<sp/>become<sp/>noops,<sp/>if<sp/>not<sp/>available.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>retries<sp/>reading<sp/>a<sp/>file<sp/>if<sp/>`read`<sp/>results<sp/>in<sp/>EAGAIN<sp/>error.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">On<sp/>Windows,<sp/>it<sp/>retries<sp/>renaming<sp/>a<sp/>file<sp/>for<sp/>up<sp/>to<sp/>one<sp/>second<sp/>if<sp/>`EACCESS`</highlight></codeline>
+<codeline><highlight class="normal">or<sp/>`EPERM`<sp/>error<sp/>occurs,<sp/>likely<sp/>because<sp/>antivirus<sp/>software<sp/>has<sp/>locked</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>directory.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>USAGE</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>use<sp/>just<sp/>like<sp/>fs</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>fs<sp/>=<sp/>require(&apos;graceful-fs&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>now<sp/>go<sp/>and<sp/>do<sp/>stuff<sp/>with<sp/>it...</highlight></codeline>
+<codeline><highlight class="normal">fs.readFile(&apos;some-file-or-whatever&apos;,<sp/>(err,<sp/>data)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Do<sp/>stuff<sp/>here.</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Sync<sp/>methods</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>module<sp/>cannot<sp/>intercept<sp/>or<sp/>handle<sp/>`EMFILE`<sp/>or<sp/>`ENFILE`<sp/>errors<sp/>from<sp/>sync</highlight></codeline>
+<codeline><highlight class="normal">methods.<sp/><sp/>If<sp/>you<sp/>use<sp/>sync<sp/>methods<sp/>which<sp/>open<sp/>file<sp/>descriptors<sp/>then<sp/>you<sp/>are</highlight></codeline>
+<codeline><highlight class="normal">responsible<sp/>for<sp/>dealing<sp/>with<sp/>any<sp/>errors.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>a<sp/>known<sp/>limitation,<sp/>not<sp/>a<sp/>bug.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Global<sp/>Patching</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>want<sp/>to<sp/>patch<sp/>the<sp/>global<sp/>fs<sp/>module<sp/>(or<sp/>any<sp/>other<sp/>fs-like</highlight></codeline>
+<codeline><highlight class="normal">module)<sp/>you<sp/>can<sp/>do<sp/>this:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Make<sp/>sure<sp/>to<sp/>read<sp/>the<sp/>caveat<sp/>below.</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>realFs<sp/>=<sp/>require(&apos;fs&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>gracefulFs<sp/>=<sp/>require(&apos;graceful-fs&apos;)</highlight></codeline>
+<codeline><highlight class="normal">gracefulFs.gracefulify(realFs)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>should<sp/>only<sp/>ever<sp/>be<sp/>done<sp/>at<sp/>the<sp/>top-level<sp/>application<sp/>layer,<sp/>in</highlight></codeline>
+<codeline><highlight class="normal">order<sp/>to<sp/>delay<sp/>on<sp/>EMFILE<sp/>errors<sp/>from<sp/>any<sp/>fs-using<sp/>dependencies.<sp/><sp/>You</highlight></codeline>
+<codeline><highlight class="normal">should<sp/>**not**<sp/>do<sp/>this<sp/>in<sp/>a<sp/>library,<sp/>because<sp/>it<sp/>can<sp/>cause<sp/>unexpected</highlight></codeline>
+<codeline><highlight class="normal">delays<sp/>in<sp/>other<sp/>parts<sp/>of<sp/>the<sp/>program.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Changes</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>module<sp/>is<sp/>fairly<sp/>stable<sp/>at<sp/>this<sp/>point,<sp/>and<sp/>used<sp/>by<sp/>a<sp/>lot<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">things.<sp/><sp/>That<sp/>being<sp/>said,<sp/>because<sp/>it<sp/>implements<sp/>a<sp/>subtle<sp/>behavior</highlight></codeline>
+<codeline><highlight class="normal">change<sp/>in<sp/>a<sp/>core<sp/>part<sp/>of<sp/>the<sp/>node<sp/>API,<sp/>even<sp/>modest<sp/>changes<sp/>can<sp/>be</highlight></codeline>
+<codeline><highlight class="normal">extremely<sp/>breaking,<sp/>and<sp/>the<sp/>versioning<sp/>is<sp/>thus<sp/>biased<sp/>towards</highlight></codeline>
+<codeline><highlight class="normal">bumping<sp/>the<sp/>major<sp/>when<sp/>in<sp/>doubt.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>main<sp/>change<sp/>between<sp/>major<sp/>versions<sp/>has<sp/>been<sp/>switching<sp/>between</highlight></codeline>
+<codeline><highlight class="normal">providing<sp/>a<sp/>fully-patched<sp/>`fs`<sp/>module<sp/>vs<sp/>monkey-patching<sp/>the<sp/>node<sp/>core</highlight></codeline>
+<codeline><highlight class="normal">builtin,<sp/>and<sp/>the<sp/>approach<sp/>by<sp/>which<sp/>a<sp/>non-monkey-patched<sp/>`fs`<sp/>was</highlight></codeline>
+<codeline><highlight class="normal">created.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>goal<sp/>is<sp/>to<sp/>trade<sp/>`EMFILE`<sp/>errors<sp/>for<sp/>slower<sp/>fs<sp/>operations.<sp/><sp/>So,<sp/>if</highlight></codeline>
+<codeline><highlight class="normal">you<sp/>try<sp/>to<sp/>open<sp/>a<sp/>zillion<sp/>files,<sp/>rather<sp/>than<sp/>crashing,<sp/>`open`</highlight></codeline>
+<codeline><highlight class="normal">operations<sp/>will<sp/>be<sp/>queued<sp/>up<sp/>and<sp/>wait<sp/>for<sp/>something<sp/>else<sp/>to<sp/>`close`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">There<sp/>are<sp/>advantages<sp/>to<sp/>each<sp/>approach.<sp/><sp/>Monkey-patching<sp/>the<sp/>fs<sp/>means</highlight></codeline>
+<codeline><highlight class="normal">that<sp/>no<sp/>`EMFILE`<sp/>errors<sp/>can<sp/>possibly<sp/>occur<sp/>anywhere<sp/>in<sp/>your</highlight></codeline>
+<codeline><highlight class="normal">application,<sp/>because<sp/>everything<sp/>is<sp/>using<sp/>the<sp/>same<sp/>core<sp/>`fs`<sp/>module,</highlight></codeline>
+<codeline><highlight class="normal">which<sp/>is<sp/>patched.<sp/><sp/>However,<sp/>it<sp/>can<sp/>also<sp/>obviously<sp/>cause<sp/>undesirable</highlight></codeline>
+<codeline><highlight class="normal">side-effects,<sp/>especially<sp/>if<sp/>the<sp/>module<sp/>is<sp/>loaded<sp/>multiple<sp/>times.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Implementing<sp/>a<sp/>separate-but-identical<sp/>patched<sp/>`fs`<sp/>module<sp/>is<sp/>more</highlight></codeline>
+<codeline><highlight class="normal">surgical<sp/>(and<sp/>doesn&apos;t<sp/>run<sp/>the<sp/>risk<sp/>of<sp/>patching<sp/>multiple<sp/>times),<sp/>but</highlight></codeline>
+<codeline><highlight class="normal">also<sp/>imposes<sp/>the<sp/>challenge<sp/>of<sp/>keeping<sp/>in<sp/>sync<sp/>with<sp/>the<sp/>core<sp/>module.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>current<sp/>approach<sp/>loads<sp/>the<sp/>`fs`<sp/>module,<sp/>and<sp/>then<sp/>creates<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">lookalike<sp/>object<sp/>that<sp/>has<sp/>all<sp/>the<sp/>same<sp/>methods,<sp/>except<sp/>a<sp/>few<sp/>that<sp/>are</highlight></codeline>
+<codeline><highlight class="normal">patched.<sp/><sp/>It<sp/>is<sp/>safe<sp/>to<sp/>use<sp/>in<sp/>all<sp/>versions<sp/>of<sp/>Node<sp/>from<sp/>0.8<sp/>through</highlight></codeline>
+<codeline><highlight class="normal">7.0.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>v4</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>Do<sp/>not<sp/>monkey-patch<sp/>the<sp/>fs<sp/>module.<sp/><sp/>This<sp/>module<sp/>may<sp/>now<sp/>be<sp/>used<sp/>as<sp/>a</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>drop-in<sp/>dep,<sp/>and<sp/>users<sp/>can<sp/>opt<sp/>into<sp/>monkey-patching<sp/>the<sp/>fs<sp/>builtin</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>their<sp/>app<sp/>requires<sp/>it.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>v3</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>Monkey-patch<sp/>fs,<sp/>because<sp/>the<sp/>eval<sp/>approach<sp/>no<sp/>longer<sp/>works<sp/>on<sp/>recent</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>node.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>fixed<sp/>possible<sp/>type-error<sp/>throw<sp/>if<sp/>rename<sp/>fails<sp/>on<sp/>windows</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>verify<sp/>that<sp/>we<sp/>*never*<sp/>get<sp/>EMFILE<sp/>errors</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Ignore<sp/>ENOSYS<sp/>from<sp/>chmod/chown</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>clarify<sp/>that<sp/>graceful-fs<sp/>must<sp/>be<sp/>used<sp/>as<sp/>a<sp/>drop-in</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>v2.1.0</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>Use<sp/>eval<sp/>rather<sp/>than<sp/>monkey-patching<sp/>fs.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>readdir:<sp/>Always<sp/>sort<sp/>the<sp/>results</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>win32:<sp/>requeue<sp/>a<sp/>file<sp/>if<sp/>error<sp/>has<sp/>an<sp/>OK<sp/>status</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>v2.0</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>A<sp/>return<sp/>to<sp/>monkey<sp/>patching</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>wrap<sp/>process.cwd</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>v1.1</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>wrap<sp/>readFile</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Wrap<sp/>fs.writeFile.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>readdir<sp/>protection</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Don&apos;t<sp/>clobber<sp/>the<sp/>fs<sp/>builtin</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Handle<sp/>fs.read<sp/>EAGAIN<sp/>errors<sp/>by<sp/>trying<sp/>again</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Expose<sp/>the<sp/>curOpen<sp/>counter</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>No-op<sp/>lchown/lchmod<sp/>if<sp/>not<sp/>implemented</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>fs.rename<sp/>patch<sp/>only<sp/>for<sp/>win32</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Patch<sp/>fs.rename<sp/>to<sp/>handle<sp/>AV<sp/>software<sp/>on<sp/>Windows</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Close<sp/>#4<sp/>Chown<sp/>should<sp/>not<sp/>fail<sp/>on<sp/>einval<sp/>or<sp/>eperm<sp/>if<sp/>non-root</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Fix<sp/>isaacs/fstream#1<sp/>Only<sp/>wrap<sp/>fs<sp/>one<sp/>time</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Fix<sp/>#3<sp/>Start<sp/>at<sp/>1024<sp/>max<sp/>files,<sp/>then<sp/>back<sp/>off<sp/>on<sp/>EMFILE</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>lutimes<sp/>that<sp/>doens&apos;t<sp/>blow<sp/>up<sp/>on<sp/>Linux</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>A<sp/>full<sp/>on-rewrite<sp/>using<sp/>a<sp/>queue<sp/>instead<sp/>of<sp/>just<sp/>swallowing<sp/>the<sp/>EMFILE<sp/>error</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Wrap<sp/>Read/Write<sp/>streams<sp/>as<sp/>well</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>1.0</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>Update<sp/>engines<sp/>for<sp/>node<sp/>0.6</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Be<sp/>lstat-graceful<sp/>on<sp/>Windows</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>first</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/graceful-fs/README.md"/>
+  </compounddef>
+</doxygen>

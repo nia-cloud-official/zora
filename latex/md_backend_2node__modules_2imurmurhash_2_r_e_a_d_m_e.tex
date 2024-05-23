@@ -1,0 +1,112 @@
+\chapter{i\+Murmur\+Hash.\+js}
+\hypertarget{md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e}\index{iMurmurHash.js@{iMurmurHash.js}}
+An incremental implementation of the Murmur\+Hash3 (32-\/bit) hashing algorithm for Java\+Script based on \href{https://github.com/garycourt/murmurhash-js}{\texttt{ Gary Court\textquotesingle{}s implementation}} with \href{https://github.com/kazuyukitanimura/murmurhash-js}{\texttt{ kazuyukitanimura\textquotesingle{}s modifications}}.
+
+This version works significantly faster than the non-\/incremental version if you need to hash many small strings into a single hash, since string concatenation (to build the single string to pass the non-\/incremental version) is fairly costly. In one case tested, using the incremental version was about 50\% faster than concatenating 5-\/10 strings and then hashing.\hypertarget{md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_autotoc_md1686}{}\doxysection{\texorpdfstring{Installation}{Installation}}\label{md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_autotoc_md1686}
+To use i\+Murmur\+Hash in the browser, \href{https://raw.github.com/jensyt/imurmurhash-js/master/imurmurhash.min.js}{\texttt{ download the latest version}} and include it as a script on your site.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<script\ type="{}text/javascript"{}\ src="{}/scripts/imurmurhash.min.js"{}></script>}
+\DoxyCodeLine{<script>}
+\DoxyCodeLine{//\ Your\ code\ here,\ access\ iMurmurHash\ using\ the\ global\ object\ MurmurHash3}
+\DoxyCodeLine{</script>}
+
+\end{DoxyCode}
+
+
+\DoxyHorRuler{0}
+
+
+To use i\+Murmur\+Hash in Node.\+js, install the module using NPM\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ imurmurhash}
+
+\end{DoxyCode}
+
+
+Then simply include it in your scripts\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{MurmurHash3\ =\ require('imurmurhash');}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_autotoc_md1688}{}\doxysection{\texorpdfstring{Quick Example}{Quick Example}}\label{md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_autotoc_md1688}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Create\ the\ initial\ hash}
+\DoxyCodeLine{var\ hashState\ =\ MurmurHash3('string');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Incrementally\ add\ text}
+\DoxyCodeLine{hashState.hash('more\ strings');}
+\DoxyCodeLine{hashState.hash('even\ more\ strings');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ All\ calls\ can\ be\ chained\ if\ desired}
+\DoxyCodeLine{hashState.hash('and').hash('some').hash('more');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Get\ a\ result}
+\DoxyCodeLine{hashState.result();}
+\DoxyCodeLine{//\ returns\ 0xe4ccfe6b}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_autotoc_md1689}{}\doxysection{\texorpdfstring{Functions}{Functions}}\label{md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_autotoc_md1689}
+\hypertarget{md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_autotoc_md1690}{}\doxysubsection{\texorpdfstring{Murmur\+Hash3 (\mbox{[}string\mbox{]}, \mbox{[}seed\mbox{]})}{Murmur\+Hash3 (\mbox{[}string\mbox{]}, \mbox{[}seed\mbox{]})}}\label{md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_autotoc_md1690}
+Get a hash state object, optionally initialized with the given {\itshape string} and {\itshape seed}. {\itshape Seed} must be a positive integer if provided. Calling this function without the {\ttfamily new} keyword will return a cached state object that has been reset. This is safe to use as long as the object is only used from a single thread and no other hashes are created while operating on this one. If this constraint cannot be met, you can use {\ttfamily new} to create a new state object. For example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Use\ the\ cached\ object,\ calling\ the\ function\ again\ will\ return\ the\ same}
+\DoxyCodeLine{//\ object\ (but\ reset,\ so\ the\ current\ state\ would\ be\ lost)}
+\DoxyCodeLine{hashState\ =\ MurmurHash3();}
+\DoxyCodeLine{...}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Create\ a\ new\ object\ that\ can\ be\ safely\ used\ however\ you\ wish.\ Calling\ the}
+\DoxyCodeLine{//\ function\ again\ will\ simply\ return\ a\ new\ state\ object,\ and\ no\ state\ loss}
+\DoxyCodeLine{//\ will\ occur,\ at\ the\ cost\ of\ creating\ more\ objects.}
+\DoxyCodeLine{hashState\ =\ new\ MurmurHash3();}
+
+\end{DoxyCode}
+
+
+Both methods can be mixed however you like if you have different use cases.
+
+\DoxyHorRuler{0}
+\hypertarget{md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_autotoc_md1692}{}\doxysubsection{\texorpdfstring{Murmur\+Hash3.\+prototype.\+hash (string)}{Murmur\+Hash3.\+prototype.\+hash (string)}}\label{md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_autotoc_md1692}
+Incrementally add {\itshape string} to the hash. This can be called as many times as you want for the hash state object, including after a call to {\ttfamily result()}. Returns {\ttfamily this} so calls can be chained.
+
+\DoxyHorRuler{0}
+\hypertarget{md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_autotoc_md1694}{}\doxysubsection{\texorpdfstring{Murmur\+Hash3.\+prototype.\+result ()}{Murmur\+Hash3.\+prototype.\+result ()}}\label{md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_autotoc_md1694}
+Get the result of the hash as a 32-\/bit positive integer. This performs the tail and finalizer portions of the algorithm, but does not store the result in the state object. This means that it is perfectly safe to get results and then continue adding strings via {\ttfamily hash}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{//\ Do\ the\ whole\ string\ at\ once}
+\DoxyCodeLine{MurmurHash3('this\ is\ a\ test\ string').result();}
+\DoxyCodeLine{//\ 0x70529328}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Do\ part\ of\ the\ string,\ get\ a\ result,\ then\ the\ other\ part}
+\DoxyCodeLine{var\ m\ =\ MurmurHash3('this\ is\ a');}
+\DoxyCodeLine{m.result();}
+\DoxyCodeLine{//\ 0xbfc4f834}
+\DoxyCodeLine{m.hash('\ test\ string').result();}
+\DoxyCodeLine{//\ 0x70529328\ (same\ as\ above)}
+
+\end{DoxyCode}
+
+
+\DoxyHorRuler{0}
+\hypertarget{md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_autotoc_md1696}{}\doxysubsection{\texorpdfstring{Murmur\+Hash3.\+prototype.\+reset (\mbox{[}seed\mbox{]})}{Murmur\+Hash3.\+prototype.\+reset (\mbox{[}seed\mbox{]})}}\label{md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_autotoc_md1696}
+Reset the state object for reuse, optionally using the given {\itshape seed} (defaults to 0 like the constructor). Returns {\ttfamily this} so calls can be chained.
+
+\DoxyHorRuler{0}
+\hypertarget{md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_autotoc_md1698}{}\doxysection{\texorpdfstring{License (MIT)}{License (MIT)}}\label{md_backend_2node__modules_2imurmurhash_2_r_e_a_d_m_e_autotoc_md1698}
+Copyright (c) 2013 Gary Court, Jens Taylor
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "{}\+Software"{}), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions\+:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "{}\+AS IS"{}, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 

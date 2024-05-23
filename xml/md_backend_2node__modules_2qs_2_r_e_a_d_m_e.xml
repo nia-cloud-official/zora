@@ -1,0 +1,390 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2qs_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2qs_2_r_e_a_d_m_e</compoundname>
+    <title>qs &lt;sup&gt;&lt;a href=&quot;https://npmjs.org/package/qs&quot; &gt;&lt;img src=&quot;https://versionbadg.es/ljharb/qs.svg&quot; alt=&quot;Version Badge&quot;/&gt;&lt;/a&gt;&lt;/sup&gt;</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2qs_2_r_e_a_d_m_e_1autotoc_md2857"/> <ulink url="https://github.com/ljharb/qs/actions"><image type="html" name="https://img.shields.io/endpoint?url=https://github-actions-badge-u3jn4tfpocch.runkit.sh/ljharb/qs" alt="github actions" inline="yes"></image>
+</ulink> <ulink url="https://app.codecov.io/gh/ljharb/qs/"><image type="html" name="https://codecov.io/gh/ljharb/qs/branch/main/graphs/badge.svg" alt="coverage" inline="yes"></image>
+</ulink> <ulink url="https://david-dm.org/ljharb/qs"><image type="html" name="https://david-dm.org/ljharb/qs.svg" alt="dependency status" inline="yes"></image>
+</ulink> <ulink url="https://david-dm.org/ljharb/qs#info=devDependencies"><image type="html" name="https://david-dm.org/ljharb/qs/dev-status.svg" alt="dev dependency status" inline="yes"></image>
+</ulink> [<image type="html" name="https://img.shields.io/npm/l/qs.svg" alt="License" inline="yes"></image>
+][license-url] <ulink url="https://npm-stat.com/charts.html?package=qs"><image type="html" name="https://img.shields.io/npm/dm/qs.svg" alt="Downloads" inline="yes"></image>
+</ulink></para>
+<para><ulink url="https://npmjs.org/package/qs"><image type="html" name="https://nodei.co/npm/qs.png?downloads=true&amp;stars=true" alt="npm badge" inline="yes"></image>
+</ulink></para>
+<para>A querystring parsing and stringifying library with some added security.</para>
+<para>Lead Maintainer: <ulink url="https://github.com/ljharb">Jordan Harband</ulink></para>
+<para>The <bold>qs</bold> module was originally created and maintained by <ulink url="https://github.com/visionmedia/node-querystring">TJ Holowaychuk</ulink>.</para>
+<sect1 id="md_backend_2node__modules_2qs_2_r_e_a_d_m_e_1autotoc_md2858">
+<title>Usage</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>qs<sp/>=<sp/>require(&apos;qs&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>assert<sp/>=<sp/>require(&apos;assert&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>obj<sp/>=<sp/>qs.parse(&apos;a=c&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(obj,<sp/>{<sp/>a:<sp/>&apos;c&apos;<sp/>});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>str<sp/>=<sp/>qs.stringify(obj);</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(str,<sp/>&apos;a=c&apos;);</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2qs_2_r_e_a_d_m_e_1autotoc_md2859">
+<title>Parsing Objects</title><para>[](#preventEval) <programlisting filename=".js"><codeline><highlight class="normal">qs.parse(string,<sp/>[options]);</highlight></codeline>
+</programlisting></para>
+<para><bold>qs</bold> allows you to create nested objects within your query strings, by surrounding the name of sub-keys with square brackets <computeroutput>[]</computeroutput>. For example, the string <lsquo/>&apos;foo[bar]=baz<rsquo/>` converts to:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">assert.deepEqual(qs.parse(&apos;foo[bar]=baz&apos;),<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>foo:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>bar:<sp/>&apos;baz&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+</programlisting></para>
+<para>When using the <computeroutput>plainObjects</computeroutput> option the parsed value is returned as a null object, created via <computeroutput>Object.create(null)</computeroutput> and as such you should be aware that prototype methods will not exist on it and a user may set those names to whatever value they like:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>nullObject<sp/>=<sp/>qs.parse(&apos;a[hasOwnProperty]=b&apos;,<sp/>{<sp/>plainObjects:<sp/>true<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(nullObject,<sp/>{<sp/>a:<sp/>{<sp/>hasOwnProperty:<sp/>&apos;b&apos;<sp/>}<sp/>});</highlight></codeline>
+</programlisting></para>
+<para>By default parameters that would overwrite properties on the object prototype are ignored, if you wish to keep the data from those fields either use <computeroutput>plainObjects</computeroutput> as mentioned above, or set <computeroutput>allowPrototypes</computeroutput> to <computeroutput>true</computeroutput> which will allow user input to overwrite those properties. <emphasis>WARNING</emphasis> It is generally a bad idea to enable this option as it can cause problems when attempting to use the properties that have been overwritten. Always be careful with this option.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>protoObject<sp/>=<sp/>qs.parse(&apos;a[hasOwnProperty]=b&apos;,<sp/>{<sp/>allowPrototypes:<sp/>true<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(protoObject,<sp/>{<sp/>a:<sp/>{<sp/>hasOwnProperty:<sp/>&apos;b&apos;<sp/>}<sp/>});</highlight></codeline>
+</programlisting></para>
+<para>URI encoded strings work too:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">assert.deepEqual(qs.parse(&apos;a%5Bb%5D=c&apos;),<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>a:<sp/>{<sp/>b:<sp/>&apos;c&apos;<sp/>}</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+</programlisting></para>
+<para>You can also nest your objects, like <lsquo/>&apos;foo[bar][baz]=foobarbaz<rsquo/>`:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">assert.deepEqual(qs.parse(&apos;foo[bar][baz]=foobarbaz&apos;),<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>foo:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>bar:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>baz:<sp/>&apos;foobarbaz&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+</programlisting></para>
+<para>By default, when nesting objects <bold>qs</bold> will only parse up to 5 children deep. This means if you attempt to parse a string like <lsquo/>&apos;a[b][c][d][e][f][g][h][i]=j<rsquo/>` your resulting object will be:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>expected<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>a:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>b:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>c:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>d:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>e:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>f:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;[g][h][i]&apos;:<sp/>&apos;j&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>string<sp/>=<sp/>&apos;a[b][c][d][e][f][g][h][i]=j&apos;;</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(qs.parse(string),<sp/>expected);</highlight></codeline>
+</programlisting></para>
+<para>This depth can be overridden by passing a <computeroutput>depth</computeroutput> option to <computeroutput>qs.parse(string, [options])</computeroutput>:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>deep<sp/>=<sp/>qs.parse(&apos;a[b][c][d][e][f][g][h][i]=j&apos;,<sp/>{<sp/>depth:<sp/>1<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(deep,<sp/>{<sp/>a:<sp/>{<sp/>b:<sp/>{<sp/>&apos;[c][d][e][f][g][h][i]&apos;:<sp/>&apos;j&apos;<sp/>}<sp/>}<sp/>});</highlight></codeline>
+</programlisting></para>
+<para>The depth limit helps mitigate abuse when <bold>qs</bold> is used to parse user input, and it is recommended to keep it a reasonably small number.</para>
+<para>For similar reasons, by default <bold>qs</bold> will only parse up to 1000 parameters. This can be overridden by passing a <computeroutput>parameterLimit</computeroutput> option:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>limited<sp/>=<sp/>qs.parse(&apos;a=b&amp;c=d&apos;,<sp/>{<sp/>parameterLimit:<sp/>1<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(limited,<sp/>{<sp/>a:<sp/>&apos;b&apos;<sp/>});</highlight></codeline>
+</programlisting></para>
+<para>To bypass the leading question mark, use <computeroutput>ignoreQueryPrefix</computeroutput>:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>prefixed<sp/>=<sp/>qs.parse(&apos;?a=b&amp;c=d&apos;,<sp/>{<sp/>ignoreQueryPrefix:<sp/>true<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(prefixed,<sp/>{<sp/>a:<sp/>&apos;b&apos;,<sp/>c:<sp/>&apos;d&apos;<sp/>});</highlight></codeline>
+</programlisting></para>
+<para>An optional delimiter can also be passed:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>delimited<sp/>=<sp/>qs.parse(&apos;a=b;c=d&apos;,<sp/>{<sp/>delimiter:<sp/>&apos;;&apos;<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(delimited,<sp/>{<sp/>a:<sp/>&apos;b&apos;,<sp/>c:<sp/>&apos;d&apos;<sp/>});</highlight></codeline>
+</programlisting></para>
+<para>Delimiters can be a regular expression too:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>regexed<sp/>=<sp/>qs.parse(&apos;a=b;c=d,e=f&apos;,<sp/>{<sp/>delimiter:<sp/>/[;,]/<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(regexed,<sp/>{<sp/>a:<sp/>&apos;b&apos;,<sp/>c:<sp/>&apos;d&apos;,<sp/>e:<sp/>&apos;f&apos;<sp/>});</highlight></codeline>
+</programlisting></para>
+<para>Option <computeroutput>allowDots</computeroutput> can be used to enable dot notation:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>withDots<sp/>=<sp/>qs.parse(&apos;a.b=c&apos;,<sp/>{<sp/>allowDots:<sp/>true<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(withDots,<sp/>{<sp/>a:<sp/>{<sp/>b:<sp/>&apos;c&apos;<sp/>}<sp/>});</highlight></codeline>
+</programlisting></para>
+<para>If you have to deal with legacy browsers or services, there&apos;s also support for decoding percent-encoded octets as iso-8859-1:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>oldCharset<sp/>=<sp/>qs.parse(&apos;a=%A7&apos;,<sp/>{<sp/>charset:<sp/>&apos;iso-8859-1&apos;<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(oldCharset,<sp/>{<sp/>a:<sp/>&apos;§&apos;<sp/>});</highlight></codeline>
+</programlisting></para>
+<para>Some services add an initial <computeroutput>utf8=✓</computeroutput> value to forms so that old Internet Explorer versions are more likely to submit the form as utf-8. Additionally, the server can check the value against wrong encodings of the checkmark character and detect that a query string or <computeroutput>application/x-www-form-urlencoded</computeroutput> body was <emphasis>not</emphasis> sent as utf-8, eg. if the form had an <computeroutput>accept-charset</computeroutput> parameter or the containing page had a different character set.</para>
+<para><bold>qs</bold> supports this mechanism via the <computeroutput>charsetSentinel</computeroutput> option. If specified, the <computeroutput>utf8</computeroutput> parameter will be omitted from the returned object. It will be used to switch to <computeroutput>iso-8859-1</computeroutput>/<computeroutput>utf-8</computeroutput> mode depending on how the checkmark is encoded.</para>
+<para><bold>Important</bold>: When you specify both the <computeroutput>charset</computeroutput> option and the <computeroutput>charsetSentinel</computeroutput> option, the <computeroutput>charset</computeroutput> will be overridden when the request contains a <computeroutput>utf8</computeroutput> parameter from which the actual charset can be deduced. In that sense the <computeroutput>charset</computeroutput> will behave as the default charset rather than the authoritative charset.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>detectedAsUtf8<sp/>=<sp/>qs.parse(&apos;utf8=%E2%9C%93&amp;a=%C3%B8&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>charset:<sp/>&apos;iso-8859-1&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>charsetSentinel:<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(detectedAsUtf8,<sp/>{<sp/>a:<sp/>&apos;ø&apos;<sp/>});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Browsers<sp/>encode<sp/>the<sp/>checkmark<sp/>as<sp/>&amp;#10003;<sp/>when<sp/>submitting<sp/>as<sp/>iso-8859-1:</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>detectedAsIso8859_1<sp/>=<sp/>qs.parse(&apos;utf8=%26%2310003%3B&amp;a=%F8&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>charset:<sp/>&apos;utf-8&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>charsetSentinel:<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(detectedAsIso8859_1,<sp/>{<sp/>a:<sp/>&apos;ø&apos;<sp/>});</highlight></codeline>
+</programlisting></para>
+<para>If you want to decode the <computeroutput>&amp;#...;</computeroutput> syntax to the actual character, you can specify the <computeroutput>interpretNumericEntities</computeroutput> option as well:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>detectedAsIso8859_1<sp/>=<sp/>qs.parse(&apos;a=%26%239786%3B&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>charset:<sp/>&apos;iso-8859-1&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>interpretNumericEntities:<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(detectedAsIso8859_1,<sp/>{<sp/>a:<sp/>&apos;☺&apos;<sp/>});</highlight></codeline>
+</programlisting></para>
+<para>It also works when the charset has been detected in <computeroutput>charsetSentinel</computeroutput> mode.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2qs_2_r_e_a_d_m_e_1autotoc_md2860">
+<title>Parsing Arrays</title><para><bold>qs</bold> can also parse arrays using a similar <computeroutput>[]</computeroutput> notation:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>withArray<sp/>=<sp/>qs.parse(&apos;a[]=b&amp;a[]=c&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(withArray,<sp/>{<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;c&apos;]<sp/>});</highlight></codeline>
+</programlisting></para>
+<para>You may specify an index as well:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>withIndexes<sp/>=<sp/>qs.parse(&apos;a[1]=c&amp;a[0]=b&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(withIndexes,<sp/>{<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;c&apos;]<sp/>});</highlight></codeline>
+</programlisting></para>
+<para>Note that the only difference between an index in an array and a key in an object is that the value between the brackets must be a number to create an array. When creating arrays with specific indices, <bold>qs</bold> will compact a sparse array to only the existing values preserving their order:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>noSparse<sp/>=<sp/>qs.parse(&apos;a[1]=b&amp;a[15]=c&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(noSparse,<sp/>{<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;c&apos;]<sp/>});</highlight></codeline>
+</programlisting></para>
+<para>You may also use <computeroutput>allowSparse</computeroutput> option to parse sparse arrays:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>sparseArray<sp/>=<sp/>qs.parse(&apos;a[1]=2&amp;a[3]=5&apos;,<sp/>{<sp/>allowSparse:<sp/>true<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(sparseArray,<sp/>{<sp/>a:<sp/>[,<sp/>&apos;2&apos;,<sp/>,<sp/>&apos;5&apos;]<sp/>});</highlight></codeline>
+</programlisting></para>
+<para>Note that an empty string is also a value, and will be preserved:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>withEmptyString<sp/>=<sp/>qs.parse(&apos;a[]=&amp;a[]=b&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(withEmptyString,<sp/>{<sp/>a:<sp/>[&apos;&apos;,<sp/>&apos;b&apos;]<sp/>});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>withIndexedEmptyString<sp/>=<sp/>qs.parse(&apos;a[0]=b&amp;a[1]=&amp;a[2]=c&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(withIndexedEmptyString,<sp/>{<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;&apos;,<sp/>&apos;c&apos;]<sp/>});</highlight></codeline>
+</programlisting></para>
+<para><bold>qs</bold> will also limit specifying indices in an array to a maximum index of <computeroutput>20</computeroutput>. Any array members with an index of greater than <computeroutput>20</computeroutput> will instead be converted to an object with the index as the key. This is needed to handle cases when someone sent, for example, <computeroutput>a[999999999]</computeroutput> and it will take significant time to iterate over this huge array.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>withMaxIndex<sp/>=<sp/>qs.parse(&apos;a[100]=b&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(withMaxIndex,<sp/>{<sp/>a:<sp/>{<sp/>&apos;100&apos;:<sp/>&apos;b&apos;<sp/>}<sp/>});</highlight></codeline>
+</programlisting></para>
+<para>This limit can be overridden by passing an <computeroutput>arrayLimit</computeroutput> option:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>withArrayLimit<sp/>=<sp/>qs.parse(&apos;a[1]=b&apos;,<sp/>{<sp/>arrayLimit:<sp/>0<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(withArrayLimit,<sp/>{<sp/>a:<sp/>{<sp/>&apos;1&apos;:<sp/>&apos;b&apos;<sp/>}<sp/>});</highlight></codeline>
+</programlisting></para>
+<para>To disable array parsing entirely, set <computeroutput>parseArrays</computeroutput> to <computeroutput>false</computeroutput>.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>noParsingArrays<sp/>=<sp/>qs.parse(&apos;a[]=b&apos;,<sp/>{<sp/>parseArrays:<sp/>false<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(noParsingArrays,<sp/>{<sp/>a:<sp/>{<sp/>&apos;0&apos;:<sp/>&apos;b&apos;<sp/>}<sp/>});</highlight></codeline>
+</programlisting></para>
+<para>If you mix notations, <bold>qs</bold> will merge the two items into an object:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>mixedNotation<sp/>=<sp/>qs.parse(&apos;a[0]=b&amp;a[b]=c&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(mixedNotation,<sp/>{<sp/>a:<sp/>{<sp/>&apos;0&apos;:<sp/>&apos;b&apos;,<sp/>b:<sp/>&apos;c&apos;<sp/>}<sp/>});</highlight></codeline>
+</programlisting></para>
+<para>You can also create arrays of objects:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>arraysOfObjects<sp/>=<sp/>qs.parse(&apos;a[][b]=c&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(arraysOfObjects,<sp/>{<sp/>a:<sp/>[{<sp/>b:<sp/>&apos;c&apos;<sp/>}]<sp/>});</highlight></codeline>
+</programlisting></para>
+<para>Some people use comma to join array, <bold>qs</bold> can parse it: <programlisting filename=".js"><codeline><highlight class="normal">var<sp/>arraysOfObjects<sp/>=<sp/>qs.parse(&apos;a=b,c&apos;,<sp/>{<sp/>comma:<sp/>true<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(arraysOfObjects,<sp/>{<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;c&apos;]<sp/>})</highlight></codeline>
+</programlisting> (<emphasis>this cannot convert nested objects, such as <computeroutput>a={b:1},{c:d}</computeroutput></emphasis>)</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2qs_2_r_e_a_d_m_e_1autotoc_md2861">
+<title>Parsing primitive/scalar values (numbers, booleans, null, etc)</title><para>By default, all values are parsed as strings. This behavior will not change and is explained in <ulink url="https://github.com/ljharb/qs/issues/91">issue #91</ulink>.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>primitiveValues<sp/>=<sp/>qs.parse(&apos;a=15&amp;b=true&amp;c=null&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(primitiveValues,<sp/>{<sp/>a:<sp/>&apos;15&apos;,<sp/>b:<sp/>&apos;true&apos;,<sp/>c:<sp/>&apos;null&apos;<sp/>});</highlight></codeline>
+</programlisting></para>
+<para>If you wish to auto-convert values which look like numbers, booleans, and other values into their primitive counterparts, you can use the <ulink url="https://github.com/xpepermint/query-types">query-types Express JS middleware</ulink> which will auto-convert all request query parameters.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2qs_2_r_e_a_d_m_e_1autotoc_md2862">
+<title>Stringifying</title><para>[](#preventEval) <programlisting filename=".js"><codeline><highlight class="normal">qs.stringify(object,<sp/>[options]);</highlight></codeline>
+</programlisting></para>
+<para>When stringifying, <bold>qs</bold> by default URI encodes output. Objects are stringified as you would expect:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>&apos;b&apos;<sp/>}),<sp/>&apos;a=b&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>{<sp/>b:<sp/>&apos;c&apos;<sp/>}<sp/>}),<sp/>&apos;a%5Bb%5D=c&apos;);</highlight></codeline>
+</programlisting></para>
+<para>This encoding can be disabled by setting the <computeroutput>encode</computeroutput> option to <computeroutput>false</computeroutput>:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>unencoded<sp/>=<sp/>qs.stringify({<sp/>a:<sp/>{<sp/>b:<sp/>&apos;c&apos;<sp/>}<sp/>},<sp/>{<sp/>encode:<sp/>false<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(unencoded,<sp/>&apos;a[b]=c&apos;);</highlight></codeline>
+</programlisting></para>
+<para>Encoding can be disabled for keys by setting the <computeroutput>encodeValuesOnly</computeroutput> option to <computeroutput>true</computeroutput>: <programlisting filename=".js"><codeline><highlight class="normal">var<sp/>encodedValues<sp/>=<sp/>qs.stringify(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>a:<sp/>&apos;b&apos;,<sp/>c:<sp/>[&apos;d&apos;,<sp/>&apos;e=f&apos;],<sp/>f:<sp/>[[&apos;g&apos;],<sp/>[&apos;h&apos;]]<sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{<sp/>encodeValuesOnly:<sp/>true<sp/>}</highlight></codeline>
+<codeline><highlight class="normal">);</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(encodedValues,&apos;a=b&amp;c[0]=d&amp;c[1]=e%3Df&amp;f[0][0]=g&amp;f[1][0]=h&apos;);</highlight></codeline>
+</programlisting></para>
+<para>This encoding can also be replaced by a custom encoding method set as <computeroutput>encoder</computeroutput> option:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>encoded<sp/>=<sp/>qs.stringify({<sp/>a:<sp/>{<sp/>b:<sp/>&apos;c&apos;<sp/>}<sp/>},<sp/>{<sp/>encoder:<sp/>function<sp/>(str)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Passed<sp/>in<sp/>values<sp/>`a`,<sp/>`b`,<sp/>`c`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>//<sp/>Return<sp/>encoded<sp/>string</highlight></codeline>
+<codeline><highlight class="normal">}})</highlight></codeline>
+</programlisting></para>
+<para>_(Note: the <computeroutput>encoder</computeroutput> option does not apply if <computeroutput>encode</computeroutput> is <computeroutput>false</computeroutput>)_</para>
+<para>Analogue to the <computeroutput>encoder</computeroutput> there is a <computeroutput>decoder</computeroutput> option for <computeroutput>parse</computeroutput> to override decoding of properties and values:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>decoded<sp/>=<sp/>qs.parse(&apos;x=z&apos;,<sp/>{<sp/>decoder:<sp/>function<sp/>(str)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Passed<sp/>in<sp/>values<sp/>`x`,<sp/>`z`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>//<sp/>Return<sp/>decoded<sp/>string</highlight></codeline>
+<codeline><highlight class="normal">}})</highlight></codeline>
+</programlisting></para>
+<para>You can encode keys and values using different logic by using the type argument provided to the encoder:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>encoded<sp/>=<sp/>qs.stringify({<sp/>a:<sp/>{<sp/>b:<sp/>&apos;c&apos;<sp/>}<sp/>},<sp/>{<sp/>encoder:<sp/>function<sp/>(str,<sp/>defaultEncoder,<sp/>charset,<sp/>type)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(type<sp/>===<sp/>&apos;key&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>//<sp/>Encoded<sp/>key</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/>else<sp/>if<sp/>(type<sp/>===<sp/>&apos;value&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>//<sp/>Encoded<sp/>value</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}})</highlight></codeline>
+</programlisting></para>
+<para>The type argument is also provided to the decoder:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>decoded<sp/>=<sp/>qs.parse(&apos;x=z&apos;,<sp/>{<sp/>decoder:<sp/>function<sp/>(str,<sp/>defaultDecoder,<sp/>charset,<sp/>type)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(type<sp/>===<sp/>&apos;key&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>//<sp/>Decoded<sp/>key</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/>else<sp/>if<sp/>(type<sp/>===<sp/>&apos;value&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>//<sp/>Decoded<sp/>value</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}})</highlight></codeline>
+</programlisting></para>
+<para>Examples beyond this point will be shown as though the output is not URI encoded for clarity. Please note that the return values in these cases <emphasis>will</emphasis> be URI encoded during real usage.</para>
+<para>When arrays are stringified, by default they are given explicit indices:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">qs.stringify({<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;c&apos;,<sp/>&apos;d&apos;]<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;a[0]=b&amp;a[1]=c&amp;a[2]=d&apos;</highlight></codeline>
+</programlisting></para>
+<para>You may override this by setting the <computeroutput>indices</computeroutput> option to <computeroutput>false</computeroutput>:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">qs.stringify({<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;c&apos;,<sp/>&apos;d&apos;]<sp/>},<sp/>{<sp/>indices:<sp/>false<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;a=b&amp;a=c&amp;a=d&apos;</highlight></codeline>
+</programlisting></para>
+<para>You may use the <computeroutput>arrayFormat</computeroutput> option to specify the format of the output array:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">qs.stringify({<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;c&apos;]<sp/>},<sp/>{<sp/>arrayFormat:<sp/>&apos;indices&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;a[0]=b&amp;a[1]=c&apos;</highlight></codeline>
+<codeline><highlight class="normal">qs.stringify({<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;c&apos;]<sp/>},<sp/>{<sp/>arrayFormat:<sp/>&apos;brackets&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;a[]=b&amp;a[]=c&apos;</highlight></codeline>
+<codeline><highlight class="normal">qs.stringify({<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;c&apos;]<sp/>},<sp/>{<sp/>arrayFormat:<sp/>&apos;repeat&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;a=b&amp;a=c&apos;</highlight></codeline>
+<codeline><highlight class="normal">qs.stringify({<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;c&apos;]<sp/>},<sp/>{<sp/>arrayFormat:<sp/>&apos;comma&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;a=b,c&apos;</highlight></codeline>
+</programlisting></para>
+<para>Note: when using <computeroutput>arrayFormat</computeroutput> set to <lsquo/>&apos;comma<rsquo/><computeroutput>, you can also pass the</computeroutput>commaRoundTrip<computeroutput>option set to</computeroutput>true<computeroutput>or</computeroutput>false<computeroutput>, to append</computeroutput>[]` on single-item arrays, so that they can round trip through a parse.</para>
+<para>When objects are stringified, by default they use bracket notation:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">qs.stringify({<sp/>a:<sp/>{<sp/>b:<sp/>{<sp/>c:<sp/>&apos;d&apos;,<sp/>e:<sp/>&apos;f&apos;<sp/>}<sp/>}<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;a[b][c]=d&amp;a[b][e]=f&apos;</highlight></codeline>
+</programlisting></para>
+<para>You may override this to use dot notation by setting the <computeroutput>allowDots</computeroutput> option to <computeroutput>true</computeroutput>:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">qs.stringify({<sp/>a:<sp/>{<sp/>b:<sp/>{<sp/>c:<sp/>&apos;d&apos;,<sp/>e:<sp/>&apos;f&apos;<sp/>}<sp/>}<sp/>},<sp/>{<sp/>allowDots:<sp/>true<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;a.b.c=d&amp;a.b.e=f&apos;</highlight></codeline>
+</programlisting></para>
+<para>Empty strings and null values will omit the value, but the equals sign (=) remains in place:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>&apos;&apos;<sp/>}),<sp/>&apos;a=&apos;);</highlight></codeline>
+</programlisting></para>
+<para>Key with no values (such as an empty object or array) will return nothing:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>[]<sp/>}),<sp/>&apos;&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>{}<sp/>}),<sp/>&apos;&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>[{}]<sp/>}),<sp/>&apos;&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>{<sp/>b:<sp/>[]}<sp/>}),<sp/>&apos;&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>{<sp/>b:<sp/>{}}<sp/>}),<sp/>&apos;&apos;);</highlight></codeline>
+</programlisting></para>
+<para>Properties that are set to <computeroutput>undefined</computeroutput> will be omitted entirely:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>null,<sp/>b:<sp/>undefined<sp/>}),<sp/>&apos;a=&apos;);</highlight></codeline>
+</programlisting></para>
+<para>The query string may optionally be prepended with a question mark:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>&apos;b&apos;,<sp/>c:<sp/>&apos;d&apos;<sp/>},<sp/>{<sp/>addQueryPrefix:<sp/>true<sp/>}),<sp/>&apos;?a=b&amp;c=d&apos;);</highlight></codeline>
+</programlisting></para>
+<para>The delimiter may be overridden with stringify as well:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>&apos;b&apos;,<sp/>c:<sp/>&apos;d&apos;<sp/>},<sp/>{<sp/>delimiter:<sp/>&apos;;&apos;<sp/>}),<sp/>&apos;a=b;c=d&apos;);</highlight></codeline>
+</programlisting></para>
+<para>If you only want to override the serialization of <computeroutput>Date</computeroutput> objects, you can provide a <computeroutput>serializeDate</computeroutput> option:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>date<sp/>=<sp/>new<sp/>Date(7);</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>date<sp/>}),<sp/>&apos;a=1970-01-01T00:00:00.007Z&apos;.replace(/:/g,<sp/>&apos;%3A&apos;));</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>qs.stringify({<sp/>a:<sp/>date<sp/>},<sp/>{<sp/>serializeDate:<sp/>function<sp/>(d)<sp/>{<sp/>return<sp/>d.getTime();<sp/>}<sp/>}),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&apos;a=7&apos;</highlight></codeline>
+<codeline><highlight class="normal">);</highlight></codeline>
+</programlisting></para>
+<para>You may use the <computeroutput>sort</computeroutput> option to affect the order of parameter keys:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">function<sp/>alphabeticalSort(a,<sp/>b)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>a.localeCompare(b);</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>&apos;c&apos;,<sp/>z:<sp/>&apos;y&apos;,<sp/>b<sp/>:<sp/>&apos;f&apos;<sp/>},<sp/>{<sp/>sort:<sp/>alphabeticalSort<sp/>}),<sp/>&apos;a=c&amp;b=f&amp;z=y&apos;);</highlight></codeline>
+</programlisting></para>
+<para>Finally, you can use the <computeroutput>filter</computeroutput> option to restrict which keys will be included in the stringified output. If you pass a function, it will be called for each key to obtain the replacement value. Otherwise, if you pass an array, it will be used to select properties and array indices for stringification:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">function<sp/>filterFunc(prefix,<sp/>value)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(prefix<sp/>==<sp/>&apos;b&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>Return<sp/>an<sp/>`undefined`<sp/>value<sp/>to<sp/>omit<sp/>a<sp/>property.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(prefix<sp/>==<sp/>&apos;e[f]&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>value.getTime();</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(prefix<sp/>==<sp/>&apos;e[g][0]&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>value<sp/>*<sp/>2;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>value;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">qs.stringify({<sp/>a:<sp/>&apos;b&apos;,<sp/>c:<sp/>&apos;d&apos;,<sp/>e:<sp/>{<sp/>f:<sp/>new<sp/>Date(123),<sp/>g:<sp/>[2]<sp/>}<sp/>},<sp/>{<sp/>filter:<sp/>filterFunc<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;a=b&amp;c=d&amp;e[f]=123&amp;e[g][0]=4&apos;</highlight></codeline>
+<codeline><highlight class="normal">qs.stringify({<sp/>a:<sp/>&apos;b&apos;,<sp/>c:<sp/>&apos;d&apos;,<sp/>e:<sp/>&apos;f&apos;<sp/>},<sp/>{<sp/>filter:<sp/>[&apos;a&apos;,<sp/>&apos;e&apos;]<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;a=b&amp;e=f&apos;</highlight></codeline>
+<codeline><highlight class="normal">qs.stringify({<sp/>a:<sp/>[&apos;b&apos;,<sp/>&apos;c&apos;,<sp/>&apos;d&apos;],<sp/>e:<sp/>&apos;f&apos;<sp/>},<sp/>{<sp/>filter:<sp/>[&apos;a&apos;,<sp/>0,<sp/>2]<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>&apos;a[0]=b&amp;a[2]=d&apos;</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2qs_2_r_e_a_d_m_e_1autotoc_md2863">
+<title>Handling of <computeroutput>null</computeroutput> values</title><para>By default, <computeroutput>null</computeroutput> values are treated like empty strings:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>withNull<sp/>=<sp/>qs.stringify({<sp/>a:<sp/>null,<sp/>b:<sp/>&apos;&apos;<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(withNull,<sp/>&apos;a=&amp;b=&apos;);</highlight></codeline>
+</programlisting></para>
+<para>Parsing does not distinguish between parameters with and without equal signs. Both are converted to empty strings.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>equalsInsensitive<sp/>=<sp/>qs.parse(&apos;a&amp;b=&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(equalsInsensitive,<sp/>{<sp/>a:<sp/>&apos;&apos;,<sp/>b:<sp/>&apos;&apos;<sp/>});</highlight></codeline>
+</programlisting></para>
+<para>To distinguish between <computeroutput>null</computeroutput> values and empty strings use the <computeroutput>strictNullHandling</computeroutput> flag. In the result string the <computeroutput>null</computeroutput> values have no <computeroutput>=</computeroutput> sign:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>strictNull<sp/>=<sp/>qs.stringify({<sp/>a:<sp/>null,<sp/>b:<sp/>&apos;&apos;<sp/>},<sp/>{<sp/>strictNullHandling:<sp/>true<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(strictNull,<sp/>&apos;a&amp;b=&apos;);</highlight></codeline>
+</programlisting></para>
+<para>To parse values without <computeroutput>=</computeroutput> back to <computeroutput>null</computeroutput> use the <computeroutput>strictNullHandling</computeroutput> flag:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>parsedStrictNull<sp/>=<sp/>qs.parse(&apos;a&amp;b=&apos;,<sp/>{<sp/>strictNullHandling:<sp/>true<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(parsedStrictNull,<sp/>{<sp/>a:<sp/>null,<sp/>b:<sp/>&apos;&apos;<sp/>});</highlight></codeline>
+</programlisting></para>
+<para>To completely skip rendering keys with <computeroutput>null</computeroutput> values, use the <computeroutput>skipNulls</computeroutput> flag:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>nullsSkipped<sp/>=<sp/>qs.stringify({<sp/>a:<sp/>&apos;b&apos;,<sp/>c:<sp/>null},<sp/>{<sp/>skipNulls:<sp/>true<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(nullsSkipped,<sp/>&apos;a=b&apos;);</highlight></codeline>
+</programlisting></para>
+<para>If you&apos;re communicating with legacy systems, you can switch to <computeroutput>iso-8859-1</computeroutput> using the <computeroutput>charset</computeroutput> option:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>iso<sp/>=<sp/>qs.stringify({<sp/>æ:<sp/>&apos;æ&apos;<sp/>},<sp/>{<sp/>charset:<sp/>&apos;iso-8859-1&apos;<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(iso,<sp/>&apos;%E6=%E6&apos;);</highlight></codeline>
+</programlisting></para>
+<para>Characters that don&apos;t exist in <computeroutput>iso-8859-1</computeroutput> will be converted to numeric entities, similar to what browsers do:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>numeric<sp/>=<sp/>qs.stringify({<sp/>a:<sp/>&apos;☺&apos;<sp/>},<sp/>{<sp/>charset:<sp/>&apos;iso-8859-1&apos;<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(numeric,<sp/>&apos;a=%26%239786%3B&apos;);</highlight></codeline>
+</programlisting></para>
+<para>You can use the <computeroutput>charsetSentinel</computeroutput> option to announce the character by including an <computeroutput>utf8=✓</computeroutput> parameter with the proper encoding if the checkmark, similar to what Ruby on Rails and others do when submitting forms.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>sentinel<sp/>=<sp/>qs.stringify({<sp/>a:<sp/>&apos;☺&apos;<sp/>},<sp/>{<sp/>charsetSentinel:<sp/>true<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(sentinel,<sp/>&apos;utf8=%E2%9C%93&amp;a=%E2%98%BA&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>isoSentinel<sp/>=<sp/>qs.stringify({<sp/>a:<sp/>&apos;æ&apos;<sp/>},<sp/>{<sp/>charsetSentinel:<sp/>true,<sp/>charset:<sp/>&apos;iso-8859-1&apos;<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(isoSentinel,<sp/>&apos;utf8=%26%2310003%3B&amp;a=%E6&apos;);</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2qs_2_r_e_a_d_m_e_1autotoc_md2864">
+<title>Dealing with special character sets</title><para>By default the encoding and decoding of characters is done in <computeroutput>utf-8</computeroutput>, and <computeroutput>iso-8859-1</computeroutput> support is also built in via the <computeroutput>charset</computeroutput> parameter.</para>
+<para>If you wish to encode querystrings to a different character set (i.e. <ulink url="https://en.wikipedia.org/wiki/Shift_JIS">Shift JIS</ulink>) you can use the <ulink url="https://github.com/martinheidegger/qs-iconv"><computeroutput>qs-iconv</computeroutput></ulink> library:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>encoder<sp/>=<sp/>require(&apos;qs-iconv/encoder&apos;)(&apos;shift_jis&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>shiftJISEncoded<sp/>=<sp/>qs.stringify({<sp/>a:<sp/>&apos;こんにちは！&apos;<sp/>},<sp/>{<sp/>encoder:<sp/>encoder<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(shiftJISEncoded,<sp/>&apos;a=%82%B1%82%F1%82%C9%82%BF%82%CD%81I&apos;);</highlight></codeline>
+</programlisting></para>
+<para>This also works for decoding of query strings:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>decoder<sp/>=<sp/>require(&apos;qs-iconv/decoder&apos;)(&apos;shift_jis&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>obj<sp/>=<sp/>qs.parse(&apos;a=%82%B1%82%F1%82%C9%82%BF%82%CD%81I&apos;,<sp/>{<sp/>decoder:<sp/>decoder<sp/>});</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(obj,<sp/>{<sp/>a:<sp/>&apos;こんにちは！&apos;<sp/>});</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2qs_2_r_e_a_d_m_e_1autotoc_md2865">
+<title>RFC 3986 and RFC 1738 space encoding</title><para>RFC3986 used as default option and encodes &apos; &apos; to <emphasis>%20</emphasis> which is backward compatible. In the same time, output can be stringified as per RFC1738 with &apos; &apos; equal to &apos;+&apos;.</para>
+<para><programlisting><codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>&apos;b<sp/>c&apos;<sp/>}),<sp/>&apos;a=b%20c&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>&apos;b<sp/>c&apos;<sp/>},<sp/>{<sp/>format<sp/>:<sp/>&apos;RFC3986&apos;<sp/>}),<sp/>&apos;a=b%20c&apos;);</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(qs.stringify({<sp/>a:<sp/>&apos;b<sp/>c&apos;<sp/>},<sp/>{<sp/>format<sp/>:<sp/>&apos;RFC1738&apos;<sp/>}),<sp/>&apos;a=b+c&apos;);</highlight></codeline>
+</programlisting></para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2qs_2_r_e_a_d_m_e_1autotoc_md2866">
+<title>Security</title><para>Please email <ulink url="https://github.com/ljharb">@ljharb</ulink> or see <ulink url="https://tidelift.com/security">https://tidelift.com/security</ulink> if you have a potential security vulnerability to report.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2qs_2_r_e_a_d_m_e_1autotoc_md2867">
+<title>qs for enterprise</title><para>Available as part of the Tidelift Subscription</para>
+<para>The maintainers of qs and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use. <ulink url="https://tidelift.com/subscription/pkg/npm-qs?utm_source=npm-qs&amp;utm_medium=referral&amp;utm_campaign=enterprise&amp;utm_term=repo">Learn more.</ulink> </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/qs/README.md"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2minipass-pipeline_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2minipass-pipeline_2_r_e_a_d_m_e</compoundname>
+    <title>minipass-pipeline</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2minipass-pipeline_2_r_e_a_d_m_e_1autotoc_md2163"/> Create a pipeline of streams using Minipass.</para>
+<para>Calls <computeroutput>.pipe()</computeroutput> on all the streams in the list. Returns a stream where writes got to the first pipe in the chain, and reads are from the last.</para>
+<para>Errors are proxied along the chain and emitted on the Pipeline stream.</para>
+<sect1 id="md_backend_2node__modules_2minipass-pipeline_2_r_e_a_d_m_e_1autotoc_md2164">
+<title>USAGE</title><para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>Pipeline<sp/>=<sp/>require(&apos;minipass-pipeline&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>the<sp/>list<sp/>of<sp/>streams<sp/>to<sp/>pipeline<sp/>together,</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>a<sp/>bit<sp/>like<sp/>`input<sp/>|<sp/>transform<sp/>|<sp/>output`<sp/>in<sp/>bash</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>p<sp/>=<sp/>new<sp/>Pipeline(input,<sp/>transform,<sp/>output)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">p.write(&apos;foo&apos;)<sp/>//<sp/>writes<sp/>to<sp/>input</highlight></codeline>
+<codeline><highlight class="normal">p.on(&apos;data&apos;,<sp/>chunk<sp/>=&gt;<sp/>doSomething())<sp/>//<sp/>reads<sp/>from<sp/>output<sp/>stream</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>less<sp/>contrived<sp/>example<sp/>(but<sp/>still<sp/>pretty<sp/>contrived)...</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>decode<sp/>=<sp/>new<sp/>bunzipDecoder()</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>unpack<sp/>=<sp/>tar.extract({<sp/>cwd:<sp/>&apos;target-dir&apos;<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>tbz<sp/>=<sp/>new<sp/>Pipeline(decode,<sp/>unpack)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">fs.createReadStream(&apos;archive.tbz&apos;).pipe(tbz)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>specify<sp/>any<sp/>minipass<sp/>options<sp/>if<sp/>you<sp/>like,<sp/>as<sp/>the<sp/>first<sp/>argument</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>it&apos;ll<sp/>only<sp/>try<sp/>to<sp/>pipeline<sp/>event<sp/>emitters<sp/>with<sp/>a<sp/>.pipe()<sp/>method</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>p<sp/>=<sp/>new<sp/>Pipeline({<sp/>objectMode:<sp/>true<sp/>},<sp/>input,<sp/>transform,<sp/>output)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>If<sp/>you<sp/>don&apos;t<sp/>know<sp/>the<sp/>things<sp/>to<sp/>pipe<sp/>in<sp/>right<sp/>away,<sp/>that&apos;s<sp/>fine.</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>use<sp/>p.push(stream)<sp/>to<sp/>add<sp/>to<sp/>the<sp/>end,<sp/>or<sp/>p.unshift(stream)<sp/>to<sp/>the<sp/>front</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>databaseDecoderStreamDoohickey<sp/>=<sp/>(connectionInfo)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>const<sp/>p<sp/>=<sp/>new<sp/>Pipeline()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>logIntoDatabase(connectionInfo).then(connection<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>initializeDecoderRing(connectionInfo).then(decoderRing<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>p.push(connection,<sp/>decoderRing)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>getUpstreamSource(upstream<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>p.unshift(upstream)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>return<sp/>to<sp/>caller<sp/>right<sp/>away</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>emitted<sp/>data<sp/>will<sp/>be<sp/>upstream<sp/>-&gt;<sp/>connection<sp/>-&gt;<sp/>decoderRing<sp/>pipeline</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>p</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+<para>Pipeline is a <ulink url="http://npm.im/minipass">minipass</ulink> stream, so it&apos;s as synchronous as the streams it wraps. It will buffer data until there is a reader, but no longer, so make sure to attach your listeners before you pipe it somewhere else.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2minipass-pipeline_2_r_e_a_d_m_e_1autotoc_md2165">
+<title><computeroutput>new Pipeline(opts = {}, ...streams)</computeroutput></title><para>Create a new Pipeline with the specified Minipass options and any streams provided.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2minipass-pipeline_2_r_e_a_d_m_e_1autotoc_md2166">
+<title><computeroutput>pipeline.push(stream, ...)</computeroutput></title><para>Attach one or more streams to the pipeline at the end (read) side of the pipe chain.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2minipass-pipeline_2_r_e_a_d_m_e_1autotoc_md2167">
+<title><computeroutput>pipeline.unshift(stream, ...)</computeroutput></title><para>Attach one or more streams to the pipeline at the start (write) side of the pipe chain. </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/minipass-pipeline/README.md"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e</compoundname>
+    <title>https-proxy-agent</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<sect2 id="md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_1autotoc_md1629">
+<title>An HTTP(s) proxy <computeroutput>http.Agent</computeroutput> implementation for HTTPS</title><para><ulink url="https://github.com/TooTallNate/node-https-proxy-agent/actions?workflow=Node+CI"><image type="html" name="https://github.com/TooTallNate/node-https-proxy-agent/workflows/Node%20CI/badge.svg" alt="Build Status" inline="yes"></image>
+</ulink></para>
+<para>This module provides an <computeroutput>http.Agent</computeroutput> implementation that connects to a specified HTTP or HTTPS proxy server, and can be used with the built-in <computeroutput>https</computeroutput> module.</para>
+<para>Specifically, this <computeroutput>Agent</computeroutput> implementation connects to an intermediary &quot;proxy&quot; server and issues the <ulink url="http://en.wikipedia.org/wiki/HTTP_tunnel#HTTP_CONNECT_Tunneling">CONNECT HTTP method</ulink>, which tells the proxy to open a direct TCP connection to the destination server.</para>
+<para>Since this agent implements the CONNECT HTTP method, it also works with other protocols that use this method when connecting over proxies (i.e. WebSockets). See the &quot;Examples&quot; section below for more.</para>
+</sect2>
+<sect1 id="md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_1autotoc_md1630">
+<title>Installation</title><para>Install with <computeroutput>npm</computeroutput>:</para>
+<para><programlisting><codeline><highlight class="normal"><sp/>bash</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>https-proxy-agent</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_1autotoc_md1631">
+<title>Examples</title><sect3 id="md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_1autotoc_md1632">
+<title><computeroutput>https</computeroutput> module example</title><para><programlisting><codeline><highlight class="normal"><sp/>js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>url<sp/>=<sp/>require(&apos;url&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>https<sp/>=<sp/>require(&apos;https&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>HttpsProxyAgent<sp/>=<sp/>require(&apos;https-proxy-agent&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>HTTP/HTTPS<sp/>proxy<sp/>to<sp/>connect<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>proxy<sp/>=<sp/>process.env.http_proxy<sp/>||<sp/>&apos;http://168.63.76.32:3128&apos;;</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;using<sp/>proxy<sp/>server<sp/>%j&apos;,<sp/>proxy);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>HTTPS<sp/>endpoint<sp/>for<sp/>the<sp/>proxy<sp/>to<sp/>connect<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>endpoint<sp/>=<sp/>process.argv[2]<sp/>||<sp/>&apos;https://graph.facebook.com/tootallnate&apos;;</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;attempting<sp/>to<sp/>GET<sp/>%j&apos;,<sp/>endpoint);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>options<sp/>=<sp/>url.parse(endpoint);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>create<sp/>an<sp/>instance<sp/>of<sp/>the<sp/>`HttpsProxyAgent`<sp/>class<sp/>with<sp/>the<sp/>proxy<sp/>server<sp/>information</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>agent<sp/>=<sp/>new<sp/>HttpsProxyAgent(proxy);</highlight></codeline>
+<codeline><highlight class="normal">options.agent<sp/>=<sp/>agent;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">https.get(options,<sp/>function<sp/>(res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;&quot;response&quot;<sp/>event!&apos;,<sp/>res.headers);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.pipe(process.stdout);</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_1autotoc_md1633">
+<title><computeroutput>ws</computeroutput> WebSocket connection example</title><para><programlisting><codeline><highlight class="normal"><sp/>js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>url<sp/>=<sp/>require(&apos;url&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>WebSocket<sp/>=<sp/>require(&apos;ws&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>HttpsProxyAgent<sp/>=<sp/>require(&apos;https-proxy-agent&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>HTTP/HTTPS<sp/>proxy<sp/>to<sp/>connect<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>proxy<sp/>=<sp/>process.env.http_proxy<sp/>||<sp/>&apos;http://168.63.76.32:3128&apos;;</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;using<sp/>proxy<sp/>server<sp/>%j&apos;,<sp/>proxy);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>WebSocket<sp/>endpoint<sp/>for<sp/>the<sp/>proxy<sp/>to<sp/>connect<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>endpoint<sp/>=<sp/>process.argv[2]<sp/>||<sp/>&apos;ws://echo.websocket.org&apos;;</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>parsed<sp/>=<sp/>url.parse(endpoint);</highlight></codeline>
+<codeline><highlight class="normal">console.log(&apos;attempting<sp/>to<sp/>connect<sp/>to<sp/>WebSocket<sp/>%j&apos;,<sp/>endpoint);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>create<sp/>an<sp/>instance<sp/>of<sp/>the<sp/>`HttpsProxyAgent`<sp/>class<sp/>with<sp/>the<sp/>proxy<sp/>server<sp/>information</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>options<sp/>=<sp/>url.parse(proxy);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>agent<sp/>=<sp/>new<sp/>HttpsProxyAgent(options);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>finally,<sp/>initiate<sp/>the<sp/>WebSocket<sp/>connection</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>socket<sp/>=<sp/>new<sp/>WebSocket(endpoint,<sp/>{<sp/>agent:<sp/>agent<sp/>});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">socket.on(&apos;open&apos;,<sp/>function<sp/>()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;&quot;open&quot;<sp/>event!&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>socket.send(&apos;hello<sp/>world&apos;);</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">socket.on(&apos;message&apos;,<sp/>function<sp/>(data,<sp/>flags)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;&quot;message&quot;<sp/>event!<sp/>%j<sp/>%j&apos;,<sp/>data,<sp/>flags);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>socket.close();</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+</programlisting></para>
+</sect3>
+</sect1>
+<sect1 id="md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_1autotoc_md1634">
+<title>API</title><sect2 id="md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_1autotoc_md1635">
+<title>new HttpsProxyAgent(Object options)</title><para>The <computeroutput>HttpsProxyAgent</computeroutput> class implements an <computeroutput>http.Agent</computeroutput> subclass that connects to the specified &quot;HTTP(s) proxy server&quot; in order to proxy HTTPS and/or WebSocket requests. This is achieved by using the <ulink url="http://en.wikipedia.org/wiki/HTTP_tunnel#HTTP_CONNECT_Tunneling">HTTP <computeroutput>CONNECT</computeroutput> method</ulink>.</para>
+<para>The <computeroutput>options</computeroutput> argument may either be a string URI of the proxy server to use, or an &quot;options&quot; object with more specific properties:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>host</computeroutput> - String - Proxy host to connect to (may use <computeroutput>hostname</computeroutput> as well). Required.</para>
+</listitem><listitem><para><computeroutput>port</computeroutput> - Number - Proxy port to connect to. Required.</para>
+</listitem><listitem><para><computeroutput>protocol</computeroutput> - String - If <computeroutput>https:</computeroutput>, then use TLS to connect to the proxy.</para>
+</listitem><listitem><para><computeroutput>headers</computeroutput> - Object - Additional HTTP headers to be sent on the HTTP CONNECT method.</para>
+</listitem><listitem><para>Any other options given are passed to the <computeroutput>net.connect()</computeroutput>/<computeroutput>tls.connect()</computeroutput> functions.</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e_1autotoc_md1636">
+<title>License</title><para>(The MIT License)</para>
+<para>Copyright (c) 2013 Nathan Rajlich &lt;<ulink url="mailto:nathan@tootallnate.net">nathan@tootallnate.net</ulink>&gt;</para>
+<para>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &apos;Software&apos;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</para>
+<para>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</para>
+<para>THE SOFTWARE IS PROVIDED &apos;AS IS&apos;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/https-proxy-agent/README.md"/>
+  </compounddef>
+</doxygen>

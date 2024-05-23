@@ -1,0 +1,178 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2tar-fs_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>tar-fs</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">filesystem<sp/>bindings<sp/>for<sp/>[tar-stream](https://github.com/mafintosh/tar-stream).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>install<sp/>tar-fs</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![build<sp/>status](https://secure.travis-ci.org/mafintosh/tar-fs.png)](http://travis-ci.org/mafintosh/tar-fs)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Usage</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">tar-fs<sp/>allows<sp/>you<sp/>to<sp/>pack<sp/>directories<sp/>into<sp/>tarballs<sp/>and<sp/>extract<sp/>tarballs<sp/>into<sp/>directories.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It<sp/>doesn&apos;t<sp/>gunzip<sp/>for<sp/>you,<sp/>so<sp/>if<sp/>you<sp/>want<sp/>to<sp/>extract<sp/>a<sp/>`.tar.gz`<sp/>with<sp/>this<sp/>you&apos;ll<sp/>need<sp/>to<sp/>use<sp/>something<sp/>like<sp/>[gunzip-maybe](https://github.com/mafintosh/gunzip-maybe)<sp/>in<sp/>addition<sp/>to<sp/>this.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>tar<sp/>=<sp/>require(&apos;tar-fs&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>fs<sp/>=<sp/>require(&apos;fs&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>packing<sp/>a<sp/>directory</highlight></codeline>
+<codeline><highlight class="normal">tar.pack(&apos;./my-directory&apos;).pipe(fs.createWriteStream(&apos;my-tarball.tar&apos;))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>extracting<sp/>a<sp/>directory</highlight></codeline>
+<codeline><highlight class="normal">fs.createReadStream(&apos;my-other-tarball.tar&apos;).pipe(tar.extract(&apos;./my-other-directory&apos;))</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>ignore<sp/>various<sp/>files<sp/>when<sp/>packing<sp/>or<sp/>extracting<sp/>add<sp/>a<sp/>ignore<sp/>function<sp/>to<sp/>the<sp/>options.<sp/>`ignore`</highlight></codeline>
+<codeline><highlight class="normal">is<sp/>also<sp/>an<sp/>alias<sp/>for<sp/>`filter`.<sp/>Additionally<sp/>you<sp/>get<sp/>`header`<sp/>if<sp/>you<sp/>use<sp/>ignore<sp/>while<sp/>extracting.</highlight></codeline>
+<codeline><highlight class="normal">That<sp/>way<sp/>you<sp/>could<sp/>also<sp/>filter<sp/>by<sp/>metadata.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>pack<sp/>=<sp/>tar.pack(&apos;./my-directory&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>ignore:<sp/>function(name)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>path.extname(name)<sp/>===<sp/>&apos;.bin&apos;<sp/>//<sp/>ignore<sp/>.bin<sp/>files<sp/>when<sp/>packing</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>extract<sp/>=<sp/>tar.extract(&apos;./my-other-directory&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>ignore:<sp/>function(name)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>path.extname(name)<sp/>===<sp/>&apos;.bin&apos;<sp/>//<sp/>ignore<sp/>.bin<sp/>files<sp/>inside<sp/>the<sp/>tarball<sp/>when<sp/>extracing</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>extractFilesDirs<sp/>=<sp/>tar.extract(&apos;./my-other-other-directory&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>ignore:<sp/>function(_,<sp/>header)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>pass<sp/>files<sp/>&amp;<sp/>directories,<sp/>ignore<sp/>e.g.<sp/>symlinks</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>header.type<sp/>!==<sp/>&apos;file&apos;<sp/>&amp;&amp;<sp/>header.type<sp/>!==<sp/>&apos;directory&apos;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>also<sp/>specify<sp/>which<sp/>entries<sp/>to<sp/>pack<sp/>using<sp/>the<sp/>`entries`<sp/>option</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>pack<sp/>=<sp/>tar.pack(&apos;./my-directory&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>entries:<sp/>[&apos;file1&apos;,<sp/>&apos;subdir/file2&apos;]<sp/>//<sp/>only<sp/>the<sp/>specific<sp/>entries<sp/>will<sp/>be<sp/>packed</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>want<sp/>to<sp/>modify<sp/>the<sp/>headers<sp/>when<sp/>packing/extracting<sp/>add<sp/>a<sp/>map<sp/>function<sp/>to<sp/>the<sp/>options</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>pack<sp/>=<sp/>tar.pack(&apos;./my-directory&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>map:<sp/>function(header)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>header.name<sp/>=<sp/>&apos;prefixed/&apos;+header.name</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>header</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>extract<sp/>=<sp/>tar.extract(&apos;./my-directory&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>map:<sp/>function(header)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>header.name<sp/>=<sp/>&apos;another-prefix/&apos;+header.name</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>header</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Similarly<sp/>you<sp/>can<sp/>use<sp/>`mapStream`<sp/>incase<sp/>you<sp/>wanna<sp/>modify<sp/>the<sp/>input/output<sp/>file<sp/>streams</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>pack<sp/>=<sp/>tar.pack(&apos;./my-directory&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>mapStream:<sp/>function(fileStream,<sp/>header)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>NOTE:<sp/>the<sp/>returned<sp/>stream<sp/>HAS<sp/>to<sp/>have<sp/>the<sp/>same<sp/>length<sp/>as<sp/>the<sp/>input<sp/>stream.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>If<sp/>not<sp/>make<sp/>sure<sp/>to<sp/>update<sp/>the<sp/>size<sp/>in<sp/>the<sp/>header<sp/>passed<sp/>in<sp/>here.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(path.extname(header.name)<sp/>===<sp/>&apos;.js&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>fileStream.pipe(someTransform)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>fileStream;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>extract<sp/>=<sp/>tar.extract(&apos;./my-directory&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>mapStream:<sp/>function(fileStream,<sp/>header)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(path.extname(header.name)<sp/>===<sp/>&apos;.js&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>fileStream.pipe(someTransform)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>fileStream;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Set<sp/>`options.fmode`<sp/>and<sp/>`options.dmode`<sp/>to<sp/>ensure<sp/>that<sp/>files/directories<sp/>extracted<sp/>have<sp/>the<sp/>corresponding<sp/>modes</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>extract<sp/>=<sp/>tar.extract(&apos;./my-directory&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>dmode:<sp/>parseInt(555,<sp/>8),<sp/>//<sp/>all<sp/>dirs<sp/>should<sp/>be<sp/>readable</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fmode:<sp/>parseInt(444,<sp/>8)<sp/>//<sp/>all<sp/>files<sp/>should<sp/>be<sp/>readable</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It<sp/>can<sp/>be<sp/>useful<sp/>to<sp/>use<sp/>`dmode`<sp/>and<sp/>`fmode`<sp/>if<sp/>you<sp/>are<sp/>packing/unpacking<sp/>tarballs<sp/>between<sp/>*nix/windows<sp/>to<sp/>ensure<sp/>that<sp/>all<sp/>files/directories<sp/>unpacked<sp/>are<sp/>readable.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Alternatively<sp/>you<sp/>can<sp/>set<sp/>`options.readable`<sp/>and/or<sp/>`options.writable`<sp/>to<sp/>set<sp/>the<sp/>dmode<sp/>and<sp/>fmode<sp/>to<sp/>readable/writable.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>extract<sp/>=<sp/>tar.extract(&apos;./my-directory&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>readable:<sp/>true,<sp/>//<sp/>all<sp/>dirs<sp/>and<sp/>files<sp/>should<sp/>be<sp/>readable</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>writable:<sp/>true,<sp/>//<sp/>all<sp/>dirs<sp/>and<sp/>files<sp/>should<sp/>be<sp/>writable</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Set<sp/>`options.strict`<sp/>to<sp/>`false`<sp/>if<sp/>you<sp/>want<sp/>to<sp/>ignore<sp/>errors<sp/>due<sp/>to<sp/>unsupported<sp/>entry<sp/>types<sp/>(like<sp/>device<sp/>files)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>dereference<sp/>symlinks<sp/>(pack<sp/>the<sp/>contents<sp/>of<sp/>the<sp/>symlink<sp/>instead<sp/>of<sp/>the<sp/>link<sp/>itself)<sp/>set<sp/>`options.dereference`<sp/>to<sp/>`true`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Copy<sp/>a<sp/>directory</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Copying<sp/>a<sp/>directory<sp/>with<sp/>permissions<sp/>and<sp/>mtime<sp/>intact<sp/>is<sp/>as<sp/>simple<sp/>as</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>js</highlight></codeline>
+<codeline><highlight class="normal">tar.pack(&apos;source-directory&apos;).pipe(tar.extract(&apos;dest-directory&apos;))</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Interaction<sp/>with<sp/>[`tar-stream`](https://github.com/mafintosh/tar-stream)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Use<sp/>`finalize:<sp/>false`<sp/>and<sp/>the<sp/>`finish`<sp/>hook<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">leave<sp/>the<sp/>pack<sp/>stream<sp/>open<sp/>for<sp/>further<sp/>entries<sp/>(see</highlight></codeline>
+<codeline><highlight class="normal">[`tar-stream#pack`](https://github.com/mafintosh/tar-stream#packing)),</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>use<sp/>`pack`<sp/>to<sp/>pass<sp/>an<sp/>existing<sp/>pack<sp/>stream.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```<sp/>js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>mypack<sp/>=<sp/>tar.pack(&apos;./my-directory&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>finalize:<sp/>false,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>finish:<sp/>function(sameAsMypack)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>mypack.entry({name:<sp/>&apos;generated-file.txt&apos;},<sp/>&quot;hello&quot;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>tar.pack(&apos;./other-directory&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>pack:<sp/>sameAsMypack</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Performance</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Packing<sp/>and<sp/>extracting<sp/>a<sp/>6.1<sp/>GB<sp/>with<sp/>2496<sp/>directories<sp/>and<sp/>2398<sp/>files<sp/>yields<sp/>the<sp/>following<sp/>results<sp/>on<sp/>my<sp/>Macbook<sp/>Air.</highlight></codeline>
+<codeline><highlight class="normal">[See<sp/>the<sp/>benchmark<sp/>here](https://gist.github.com/mafintosh/8102201)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>tar-fs:<sp/>34.261<sp/>seconds</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>[node-tar](https://github.com/isaacs/node-tar):<sp/>366.123<sp/>seconds<sp/>(or<sp/>10x<sp/>slower)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>License</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">MIT</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/tar-fs/README.md"/>
+  </compounddef>
+</doxygen>

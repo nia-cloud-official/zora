@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2ee-first_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2ee-first_2_r_e_a_d_m_e</compoundname>
+    <title>EE First</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2ee-first_2_r_e_a_d_m_e_1autotoc_md801"/> <ulink url="https://npmjs.org/package/ee-first"><image type="html" name="https://img.shields.io/npm/v/ee-first.svg?style=flat-square" alt="NPM version" inline="yes"></image>
+</ulink> <ulink url="https://travis-ci.org/jonathanong/ee-first"><image type="html" name="https://img.shields.io/travis/jonathanong/ee-first.svg?style=flat-square" alt="Build status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/r/jonathanong/ee-first?branch=master"><image type="html" name="https://img.shields.io/coveralls/jonathanong/ee-first.svg?style=flat-square" alt="Test coverage" inline="yes"></image>
+</ulink> <ref refid="ssri_2_l_i_c_e_n_s_e_8md" kindref="compound"><image type="html" name="http://img.shields.io/npm/l/ee-first.svg?style=flat-square" alt="License" inline="yes"></image>
+</ref> <ulink url="https://npmjs.org/package/ee-first"><image type="html" name="http://img.shields.io/npm/dm/ee-first.svg?style=flat-square" alt="Downloads" inline="yes"></image>
+</ulink> <ulink url="https://www.gittip.com/jonathanong/"><image type="html" name="https://img.shields.io/gittip/jonathanong.svg?style=flat-square" alt="Gittip" inline="yes"></image>
+</ulink></para>
+<para>Get the first event in a set of event emitters and event pairs, then clean up after itself.</para>
+<sect1 id="md_backend_2node__modules_2ee-first_2_r_e_a_d_m_e_1autotoc_md802">
+<title>Install</title><para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>ee-first</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2ee-first_2_r_e_a_d_m_e_1autotoc_md803">
+<title>API</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>first<sp/>=<sp/>require(&apos;ee-first&apos;)</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2ee-first_2_r_e_a_d_m_e_1autotoc_md804">
+<title>first(arr, listener)</title><para>Invoke <computeroutput>listener</computeroutput> on the first event from the list specified in <computeroutput>arr</computeroutput>. <computeroutput>arr</computeroutput> is an array of arrays, with each array in the format <computeroutput>[ee, ...event]</computeroutput>. <computeroutput>listener</computeroutput> will be called only once, the first time any of the given events are emitted. If <computeroutput>error</computeroutput> is one of the listened events, then if that fires first, the <computeroutput>listener</computeroutput> will be given the <computeroutput>err</computeroutput> argument.</para>
+<para>The <computeroutput>listener</computeroutput> is invoked as <computeroutput>listener(err, ee, event, args)</computeroutput>, where <computeroutput>err</computeroutput> is the first argument emitted from an <computeroutput>error</computeroutput> event, if applicable; <computeroutput>ee</computeroutput> is the event emitter that fired; <computeroutput>event</computeroutput> is the string event name that fired; and <computeroutput>args</computeroutput> is an array of the arguments that were emitted on the event.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>ee1<sp/>=<sp/>new<sp/>EventEmitter()</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>ee2<sp/>=<sp/>new<sp/>EventEmitter()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">first([</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>[ee1,<sp/>&apos;close&apos;,<sp/>&apos;end&apos;,<sp/>&apos;error&apos;],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>[ee2,<sp/>&apos;error&apos;]</highlight></codeline>
+<codeline><highlight class="normal">],<sp/>function<sp/>(err,<sp/>ee,<sp/>event,<sp/>args)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>listener<sp/>invoked</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+<sect3 id="md_backend_2node__modules_2ee-first_2_r_e_a_d_m_e_1autotoc_md805">
+<title>.cancel()</title><para>The group of listeners can be cancelled before being invoked and have all the event listeners removed from the underlying event emitters.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>thunk<sp/>=<sp/>first([</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>[ee1,<sp/>&apos;close&apos;,<sp/>&apos;end&apos;,<sp/>&apos;error&apos;],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>[ee2,<sp/>&apos;error&apos;]</highlight></codeline>
+<codeline><highlight class="normal">],<sp/>function<sp/>(err,<sp/>ee,<sp/>event,<sp/>args)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>listener<sp/>invoked</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>cancel<sp/>and<sp/>clean<sp/>up</highlight></codeline>
+<codeline><highlight class="normal">thunk.cancel()</highlight></codeline>
+</programlisting> </para>
+</sect3>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/ee-first/README.md"/>
+  </compounddef>
+</doxygen>

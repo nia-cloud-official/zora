@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e</compoundname>
+    <title>@npmcli/fs</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e_1autotoc_md3"/> polyfills, and extensions, of the core <computeroutput>fs</computeroutput> module.</para>
+<sect1 id="md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e_1autotoc_md4">
+<title>Features</title><para><itemizedlist>
+<listitem><para>all exposed functions return promises</para>
+</listitem><listitem><para><computeroutput>fs.rm</computeroutput> polyfill for node versions &lt; 14.14.0</para>
+</listitem><listitem><para><computeroutput>fs.mkdir</computeroutput> polyfill adding support for the <computeroutput>recursive</computeroutput> and <computeroutput>force</computeroutput> options in node versions &lt; 10.12.0</para>
+</listitem><listitem><para><computeroutput>fs.copyFile</computeroutput> extended to accept an <computeroutput>owner</computeroutput> option</para>
+</listitem><listitem><para><computeroutput>fs.mkdir</computeroutput> extended to accept an <computeroutput>owner</computeroutput> option</para>
+</listitem><listitem><para><computeroutput>fs.mkdtemp</computeroutput> extended to accept an <computeroutput>owner</computeroutput> option</para>
+</listitem><listitem><para><computeroutput>fs.writeFile</computeroutput> extended to accept an <computeroutput>owner</computeroutput> option</para>
+</listitem><listitem><para><computeroutput>fs.withTempDir</computeroutput> added</para>
+</listitem><listitem><para><computeroutput>fs.cp</computeroutput> polyfill for node &lt; 16.7.0</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e_1autotoc_md5">
+<title>The <computeroutput>owner</computeroutput> option</title><para>The <computeroutput>copyFile</computeroutput>, <computeroutput>mkdir</computeroutput>, <computeroutput>mkdtemp</computeroutput>, <computeroutput>writeFile</computeroutput>, and <computeroutput>withTempDir</computeroutput> functions all accept a new <computeroutput>owner</computeroutput> property in their options. It can be used in two ways:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>{ owner: { uid: 100, gid: 100 } }</computeroutput> - set the <computeroutput>uid</computeroutput> and <computeroutput>gid</computeroutput> explicitly</para>
+</listitem><listitem><para><computeroutput>{ owner: 100 }</computeroutput> - use one value, will set both <computeroutput>uid</computeroutput> and <computeroutput>gid</computeroutput> the same</para>
+</listitem></itemizedlist>
+</para>
+<para>The special string <lsquo/>&apos;inherit<rsquo/><computeroutput>may be passed instead of a number, which will cause this module to automatically determine the correct</computeroutput>uid<computeroutput>and/or</computeroutput>gid` from the nearest existing parent directory of the target.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e_1autotoc_md6">
+<title><computeroutput>fs.withTempDir(root, fn, options) -&gt; Promise</computeroutput></title><sect2 id="md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e_1autotoc_md7">
+<title>Parameters</title><para><itemizedlist>
+<listitem><para><computeroutput>root</computeroutput>: the directory in which to create the temporary directory</para>
+</listitem><listitem><para><computeroutput>fn</computeroutput>: a function that will be called with the path to the temporary directory</para>
+</listitem><listitem><para><computeroutput>options</computeroutput><itemizedlist>
+<listitem><para><computeroutput>tmpPrefix</computeroutput>: a prefix to be used in the generated directory name</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e_1autotoc_md8">
+<title>Usage</title><para>The <computeroutput>withTempDir</computeroutput> function creates a temporary directory, runs the provided function (<computeroutput>fn</computeroutput>), then removes the temporary directory and resolves or rejects based on the result of <computeroutput>fn</computeroutput>.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>fs<sp/>=<sp/>require(&apos;@npmcli/fs&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>os<sp/>=<sp/>require(&apos;os&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>this<sp/>function<sp/>will<sp/>be<sp/>called<sp/>with<sp/>the<sp/>full<sp/>path<sp/>to<sp/>the<sp/>temporary<sp/>directory</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>it<sp/>is<sp/>called<sp/>with<sp/>`await`<sp/>behind<sp/>the<sp/>scenes,<sp/>so<sp/>can<sp/>be<sp/>async<sp/>if<sp/>desired.</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>myFunction<sp/>=<sp/>async<sp/>(tempPath)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>&apos;done!&apos;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>main<sp/>=<sp/>async<sp/>()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>const<sp/>result<sp/>=<sp/>await<sp/>fs.withTempDir(os.tmpdir(),<sp/>myFunction)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>result<sp/>===<sp/>&apos;done!&apos;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">main()</highlight></codeline>
+</programlisting> </para>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/@npmcli/fs/README.md"/>
+  </compounddef>
+</doxygen>

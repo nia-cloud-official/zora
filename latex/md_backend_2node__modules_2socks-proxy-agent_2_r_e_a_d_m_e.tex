@@ -1,0 +1,130 @@
+\chapter{socks-\/proxy-\/agent}
+\hypertarget{md_backend_2node__modules_2socks-proxy-agent_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2socks-proxy-agent_2_r_e_a_d_m_e}\index{socks-\/proxy-\/agent@{socks-\/proxy-\/agent}}
+\hypertarget{md_backend_2node__modules_2socks-proxy-agent_2_r_e_a_d_m_e_autotoc_md3514}{}\doxysubsection{\texorpdfstring{A SOCKS proxy {\ttfamily http.\+Agent} implementation for HTTP and HTTPS}{A SOCKS proxy {\ttfamily http.\+Agent} implementation for HTTP and HTTPS}}\label{md_backend_2node__modules_2socks-proxy-agent_2_r_e_a_d_m_e_autotoc_md3514}
+\href{https://github.com/TooTallNate/node-socks-proxy-agent/actions?workflow=Node+CI}{\texttt{ }}
+
+This module provides an {\ttfamily http.\+Agent} implementation that connects to a specified SOCKS proxy server, and can be used with the built-\/in {\ttfamily http} and {\ttfamily https} modules.
+
+It can also be used in conjunction with the {\ttfamily ws} module to establish a Web\+Socket connection over a SOCKS proxy. See the "{}\+Examples"{} section below.\hypertarget{md_backend_2node__modules_2socks-proxy-agent_2_r_e_a_d_m_e_autotoc_md3515}{}\doxysection{\texorpdfstring{Installation}{Installation}}\label{md_backend_2node__modules_2socks-proxy-agent_2_r_e_a_d_m_e_autotoc_md3515}
+Install with {\ttfamily npm}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ bash}
+\DoxyCodeLine{npm\ install\ socks-\/proxy-\/agent}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2socks-proxy-agent_2_r_e_a_d_m_e_autotoc_md3516}{}\doxysection{\texorpdfstring{Examples}{Examples}}\label{md_backend_2node__modules_2socks-proxy-agent_2_r_e_a_d_m_e_autotoc_md3516}
+\hypertarget{md_backend_2node__modules_2socks-proxy-agent_2_r_e_a_d_m_e_autotoc_md3517}{}\doxysubsubsection{\texorpdfstring{Type\+Script example}{Type\+Script example}}\label{md_backend_2node__modules_2socks-proxy-agent_2_r_e_a_d_m_e_autotoc_md3517}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import\ https\ from\ 'https';}
+\DoxyCodeLine{import\ \{\ SocksProxyAgent\ \}\ from\ 'socks-\/proxy-\/agent';}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ info\ =\ \{}
+\DoxyCodeLine{\ \ \ \ hostname:\ 'br41.nordvpn.com',}
+\DoxyCodeLine{\ \ \ \ userId:\ 'your-\/name@gmail.com',}
+\DoxyCodeLine{\ \ \ \ password:\ 'abcdef12345124'}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{const\ agent\ =\ new\ SocksProxyAgent(info);}
+\DoxyCodeLine{}
+\DoxyCodeLine{https.get('https://ipinfo.io',\ \{\ agent\ \},\ (res)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(res.headers);}
+\DoxyCodeLine{\ \ \ \ res.pipe(process.stdout);}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2socks-proxy-agent_2_r_e_a_d_m_e_autotoc_md3518}{}\doxysubsubsection{\texorpdfstring{{\ttfamily http} module example}{{\ttfamily http} module example}}\label{md_backend_2node__modules_2socks-proxy-agent_2_r_e_a_d_m_e_autotoc_md3518}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ url\ =\ require('url');}
+\DoxyCodeLine{var\ http\ =\ require('http');}
+\DoxyCodeLine{var\ \{\ SocksProxyAgent\ \}\ =\ require('socks-\/proxy-\/agent');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ SOCKS\ proxy\ to\ connect\ to}
+\DoxyCodeLine{var\ proxy\ =\ process.env.socks\_proxy\ ||\ 'socks://127.0.0.1:1080';}
+\DoxyCodeLine{console.log('using\ proxy\ server\ \%j',\ proxy);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ HTTP\ endpoint\ for\ the\ proxy\ to\ connect\ to}
+\DoxyCodeLine{var\ endpoint\ =\ process.argv[2]\ ||\ 'http://nodejs.org/api/';}
+\DoxyCodeLine{console.log('attempting\ to\ GET\ \%j',\ endpoint);}
+\DoxyCodeLine{var\ opts\ =\ url.parse(endpoint);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ create\ an\ instance\ of\ the\ \`{}SocksProxyAgent`\ class\ with\ the\ proxy\ server\ information}
+\DoxyCodeLine{var\ agent\ =\ new\ SocksProxyAgent(proxy);}
+\DoxyCodeLine{opts.agent\ =\ agent;}
+\DoxyCodeLine{}
+\DoxyCodeLine{http.get(opts,\ function\ (res)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log('"{}response"{}\ event!',\ res.headers);}
+\DoxyCodeLine{\ \ \ \ res.pipe(process.stdout);}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2socks-proxy-agent_2_r_e_a_d_m_e_autotoc_md3519}{}\doxysubsubsection{\texorpdfstring{{\ttfamily https} module example}{{\ttfamily https} module example}}\label{md_backend_2node__modules_2socks-proxy-agent_2_r_e_a_d_m_e_autotoc_md3519}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ url\ =\ require('url');}
+\DoxyCodeLine{var\ https\ =\ require('https');}
+\DoxyCodeLine{var\ \{\ SocksProxyAgent\ \}\ =\ require('socks-\/proxy-\/agent');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ SOCKS\ proxy\ to\ connect\ to}
+\DoxyCodeLine{var\ proxy\ =\ process.env.socks\_proxy\ ||\ 'socks://127.0.0.1:1080';}
+\DoxyCodeLine{console.log('using\ proxy\ server\ \%j',\ proxy);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ HTTP\ endpoint\ for\ the\ proxy\ to\ connect\ to}
+\DoxyCodeLine{var\ endpoint\ =\ process.argv[2]\ ||\ 'https://encrypted.google.com/';}
+\DoxyCodeLine{console.log('attempting\ to\ GET\ \%j',\ endpoint);}
+\DoxyCodeLine{var\ opts\ =\ url.parse(endpoint);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ create\ an\ instance\ of\ the\ \`{}SocksProxyAgent`\ class\ with\ the\ proxy\ server\ information}
+\DoxyCodeLine{var\ agent\ =\ new\ SocksProxyAgent(proxy);}
+\DoxyCodeLine{opts.agent\ =\ agent;}
+\DoxyCodeLine{}
+\DoxyCodeLine{https.get(opts,\ function\ (res)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log('"{}response"{}\ event!',\ res.headers);}
+\DoxyCodeLine{\ \ \ \ res.pipe(process.stdout);}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2socks-proxy-agent_2_r_e_a_d_m_e_autotoc_md3520}{}\doxysubsubsection{\texorpdfstring{{\ttfamily ws} Web\+Socket connection example}{{\ttfamily ws} Web\+Socket connection example}}\label{md_backend_2node__modules_2socks-proxy-agent_2_r_e_a_d_m_e_autotoc_md3520}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ WebSocket\ =\ require('ws');}
+\DoxyCodeLine{var\ \{\ SocksProxyAgent\ \}\ =\ require('socks-\/proxy-\/agent');}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ SOCKS\ proxy\ to\ connect\ to}
+\DoxyCodeLine{var\ proxy\ =\ process.env.socks\_proxy\ ||\ 'socks://127.0.0.1:1080';}
+\DoxyCodeLine{console.log('using\ proxy\ server\ \%j',\ proxy);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ WebSocket\ endpoint\ for\ the\ proxy\ to\ connect\ to}
+\DoxyCodeLine{var\ endpoint\ =\ process.argv[2]\ ||\ 'ws://echo.websocket.org';}
+\DoxyCodeLine{console.log('attempting\ to\ connect\ to\ WebSocket\ \%j',\ endpoint);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ create\ an\ instance\ of\ the\ \`{}SocksProxyAgent`\ class\ with\ the\ proxy\ server\ information}
+\DoxyCodeLine{var\ agent\ =\ new\ SocksProxyAgent(proxy);}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ initiate\ the\ WebSocket\ connection}
+\DoxyCodeLine{var\ socket\ =\ new\ WebSocket(endpoint,\ \{\ agent:\ agent\ \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{socket.on('open',\ function\ ()\ \{}
+\DoxyCodeLine{\ \ \ \ console.log('"{}open"{}\ event!');}
+\DoxyCodeLine{\ \ \ \ socket.send('hello\ world');}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{socket.on('message',\ function\ (data,\ flags)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log('"{}message"{}\ event!\ \%j\ \%j',\ data,\ flags);}
+\DoxyCodeLine{\ \ \ \ socket.close();}
+\DoxyCodeLine{\});}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2socks-proxy-agent_2_r_e_a_d_m_e_autotoc_md3521}{}\doxysection{\texorpdfstring{License}{License}}\label{md_backend_2node__modules_2socks-proxy-agent_2_r_e_a_d_m_e_autotoc_md3521}
+(The MIT License)
+
+Copyright (c) 2013 Nathan Rajlich \texorpdfstring{$<$}{<}\href{mailto:nathan@tootallnate.net}{\texttt{ nathan@tootallnate.\+net}}\texorpdfstring{$>$}{>}
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \textquotesingle{}Software\textquotesingle{}), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions\+:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED \textquotesingle{}AS IS\textquotesingle{}, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 

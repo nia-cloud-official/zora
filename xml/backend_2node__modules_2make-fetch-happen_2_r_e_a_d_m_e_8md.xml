@@ -1,0 +1,408 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2make-fetch-happen_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>make-fetch-happen</highlight></codeline>
+<codeline><highlight class="normal">[![npm<sp/>version](https://img.shields.io/npm/v/make-fetch-happen.svg)](https://npm.im/make-fetch-happen)<sp/>[![license](https://img.shields.io/npm/l/make-fetch-happen.svg)](https://npm.im/make-fetch-happen)<sp/>[![Travis](https://img.shields.io/travis/npm/make-fetch-happen.svg)](https://travis-ci.org/npm/make-fetch-happen)<sp/>[![Coverage<sp/>Status](https://coveralls.io/repos/github/npm/make-fetch-happen/badge.svg?branch=latest)](https://coveralls.io/github/npm/make-fetch-happen?branch=latest)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[`make-fetch-happen`](https://github.com/npm/make-fetch-happen)<sp/>is<sp/>a<sp/>Node.js</highlight></codeline>
+<codeline><highlight class="normal">library<sp/>that<sp/>wraps<sp/>[`minipass-fetch`](https://github.com/npm/minipass-fetch)<sp/>with<sp/>additional</highlight></codeline>
+<codeline><highlight class="normal">features<sp/>[`minipass-fetch`](https://github.com/npm/minipass-fetch)<sp/>doesn&apos;t<sp/>intend<sp/>to<sp/>include,<sp/>including<sp/>HTTP<sp/>Cache<sp/>support,<sp/>request</highlight></codeline>
+<codeline><highlight class="normal">pooling,<sp/>proxies,<sp/>retries,<sp/>[and<sp/>more](#features)!</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Install</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`$<sp/>npm<sp/>install<sp/>--save<sp/>make-fetch-happen`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Table<sp/>of<sp/>Contents</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>[Example](#example)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>[Features](#features)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>[Contributing](#contributing)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>[API](#api)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>[`fetch`](#fetch)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>[`fetch.defaults`](#fetch-defaults)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>[`minipass-fetch`<sp/>options](#minipass-fetch-options)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>[`make-fetch-happen`<sp/>options](#extra-options)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`opts.cachePath`](#opts-cache-path)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`opts.cache`](#opts-cache)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`opts.proxy`](#opts-proxy)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`opts.noProxy`](#opts-no-proxy)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`opts.ca,<sp/>opts.cert,<sp/>opts.key`](#https-opts)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`opts.maxSockets`](#opts-max-sockets)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`opts.retry`](#opts-retry)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`opts.onRetry`](#opts-onretry)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>[`opts.integrity`](#opts-integrity)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>[Message<sp/>From<sp/>Our<sp/>Sponsors](#wow)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>fetch<sp/>=<sp/>require(&apos;make-fetch-happen&apos;).defaults({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cachePath:<sp/>&apos;./my-cache&apos;<sp/>//<sp/>path<sp/>where<sp/>cache<sp/>will<sp/>be<sp/>written<sp/>(and<sp/>read)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">fetch(&apos;https://registry.npmjs.org/make-fetch-happen&apos;).then(res<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>res.json()<sp/>//<sp/>download<sp/>the<sp/>body<sp/>as<sp/>JSON</highlight></codeline>
+<codeline><highlight class="normal">}).then(body<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(`got<sp/>${body.name}<sp/>from<sp/>web`)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>fetch(&apos;https://registry.npmjs.org/make-fetch-happen&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>cache:<sp/>&apos;no-cache&apos;<sp/>//<sp/>forces<sp/>a<sp/>conditional<sp/>request</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">}).then(res<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(res.status)<sp/>//<sp/>304!<sp/>cache<sp/>validated!</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>res.json().then(body<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(`got<sp/>${body.name}<sp/>from<sp/>cache`)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Features</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>Builds<sp/>around<sp/>[`minipass-fetch`](https://npm.im/minipass-fetch)<sp/>for<sp/>the<sp/>core<sp/>[`fetch`<sp/>API](https://fetch.spec.whatwg.org)<sp/>implementation</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Request<sp/>pooling<sp/>out<sp/>of<sp/>the<sp/>box</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Quite<sp/>fast,<sp/>really</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Automatic<sp/>HTTP-semantics-aware<sp/>request<sp/>retries</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Cache-fallback<sp/>automatic<sp/>&quot;offline<sp/>mode&quot;</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Proxy<sp/>support<sp/>(http,<sp/>https,<sp/>socks,<sp/>socks4,<sp/>socks5)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Built-in<sp/>request<sp/>caching<sp/>following<sp/>full<sp/>HTTP<sp/>caching<sp/>rules<sp/>(`Cache-Control`,<sp/>`ETag`,<sp/>`304`s,<sp/>cache<sp/>fallback<sp/>on<sp/>error,<sp/>etc).</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Customize<sp/>cache<sp/>storage<sp/>with<sp/>any<sp/>[Cache<sp/>API](https://developer.mozilla.org/en-US/docs/Web/API/Cache)-compliant<sp/>`Cache`<sp/>instance.<sp/>Cache<sp/>to<sp/>Redis!</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Node.js<sp/>Stream<sp/>support</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Transparent<sp/>gzip<sp/>and<sp/>deflate<sp/>support</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>[Subresource<sp/>Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity)<sp/>support</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Literally<sp/>punches<sp/>nazis</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>(PENDING)<sp/>Range<sp/>request<sp/>caching<sp/>and<sp/>resuming</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Contributing</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>make-fetch-happen<sp/>team<sp/>enthusiastically<sp/>welcomes<sp/>contributions<sp/>and<sp/>project<sp/>participation!<sp/>There&apos;s<sp/>a<sp/>bunch<sp/>of<sp/>things<sp/>you<sp/>can<sp/>do<sp/>if<sp/>you<sp/>want<sp/>to<sp/>contribute!<sp/>The<sp/>[Contributor<sp/>Guide](https://github.com/npm/cli/blob/latest/CONTRIBUTING.md)<sp/>outlines<sp/>the<sp/>process<sp/>for<sp/>community<sp/>interaction<sp/>and<sp/>contribution.<sp/>Please<sp/>don&apos;t<sp/>hesitate<sp/>to<sp/>jump<sp/>in<sp/>if<sp/>you&apos;d<sp/>like<sp/>to,<sp/>or<sp/>even<sp/>ask<sp/>us<sp/>questions<sp/>if<sp/>something<sp/>isn&apos;t<sp/>clear.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">All<sp/>participants<sp/>and<sp/>maintainers<sp/>in<sp/>this<sp/>project<sp/>are<sp/>expected<sp/>to<sp/>follow<sp/>the<sp/>[npm<sp/>Code<sp/>of<sp/>Conduct](https://www.npmjs.com/policies/conduct),<sp/>and<sp/>just<sp/>generally<sp/>be<sp/>excellent<sp/>to<sp/>each<sp/>other.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Please<sp/>refer<sp/>to<sp/>the<sp/>[Changelog](CHANGELOG.md)<sp/>for<sp/>project<sp/>history<sp/>details,<sp/>too.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Happy<sp/>hacking!</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>API</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;fetch&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>fetch(uriOrRequest,<sp/>[opts])<sp/>-&gt;<sp/>Promise&lt;Response&gt;`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>function<sp/>implements<sp/>most<sp/>of<sp/>the<sp/>[`fetch`<sp/>API](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch):<sp/>given<sp/>a<sp/>`uri`<sp/>string<sp/>or<sp/>a<sp/>`Request`<sp/>instance,<sp/>it<sp/>will<sp/>fire<sp/>off<sp/>an<sp/>http<sp/>request<sp/>and<sp/>return<sp/>a<sp/>Promise<sp/>containing<sp/>the<sp/>relevant<sp/>response.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts`<sp/>is<sp/>provided,<sp/>the<sp/>[`minipass-fetch`-specific<sp/>options](#minipass-fetch-options)<sp/>will<sp/>be<sp/>passed<sp/>to<sp/>that<sp/>library.<sp/>There<sp/>are<sp/>also<sp/>[additional<sp/>options](#extra-options)<sp/>specific<sp/>to<sp/>make-fetch-happen<sp/>that<sp/>add<sp/>various<sp/>features,<sp/>such<sp/>as<sp/>HTTP<sp/>caching,<sp/>integrity<sp/>verification,<sp/>proxy<sp/>support,<sp/>and<sp/>more.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">fetch(&apos;https://google.com&apos;).then(res<sp/>=&gt;<sp/>res.buffer())</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;fetch-defaults&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>fetch.defaults([defaultUrl],<sp/>[defaultOpts])`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>a<sp/>new<sp/>`fetch`<sp/>function<sp/>that<sp/>will<sp/>call<sp/>`make-fetch-happen`<sp/>using<sp/>`defaultUrl`<sp/>and<sp/>`defaultOpts`<sp/>as<sp/>default<sp/>values<sp/>to<sp/>any<sp/>calls.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>defaulted<sp/>`fetch`<sp/>will<sp/>also<sp/>have<sp/>a<sp/>`.defaults()`<sp/>method,<sp/>so<sp/>they<sp/>can<sp/>be<sp/>chained.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>fetch<sp/>=<sp/>require(&apos;make-fetch-happen&apos;).defaults({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cachePath:<sp/>&apos;./my-local-cache&apos;</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">fetch(&apos;https://registry.npmjs.org/make-fetch-happen&apos;)<sp/>//<sp/>will<sp/>always<sp/>use<sp/>the<sp/>cache</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;minipass-fetch-options&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>minipass-fetch<sp/>options`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>following<sp/>options<sp/>for<sp/>`minipass-fetch`<sp/>are<sp/>used<sp/>as-is:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>method</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>body</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>redirect</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>follow</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>timeout</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>compress</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>size</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">These<sp/>other<sp/>options<sp/>are<sp/>modified<sp/>or<sp/>augmented<sp/>by<sp/>make-fetch-happen:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>headers<sp/>-<sp/>Default<sp/>`User-Agent`<sp/>set<sp/>to<sp/>make-fetch<sp/>happen.<sp/>`Connection`<sp/>is<sp/>set<sp/>to<sp/>`keep-alive`<sp/>or<sp/>`close`<sp/>automatically<sp/>depending<sp/>on<sp/>`opts.agent`.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>agent</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>If<sp/>agent<sp/>is<sp/>null,<sp/>an<sp/>http<sp/>or<sp/>https<sp/>Agent<sp/>will<sp/>be<sp/>automatically<sp/>used.<sp/>By<sp/>default,<sp/>these<sp/>will<sp/>be<sp/>`http.globalAgent`<sp/>and<sp/>`https.globalAgent`.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>If<sp/>[`opts.proxy`](#opts-proxy)<sp/>is<sp/>provided<sp/>and<sp/>`opts.agent`<sp/>is<sp/>null,<sp/>the<sp/>agent<sp/>will<sp/>be<sp/>set<sp/>to<sp/>an<sp/>appropriate<sp/>proxy-handling<sp/>agent.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>If<sp/>`opts.agent`<sp/>is<sp/>an<sp/>object,<sp/>it<sp/>will<sp/>be<sp/>used<sp/>as<sp/>the<sp/>request-pooling<sp/>agent<sp/>argument<sp/>for<sp/>this<sp/>request.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>If<sp/>`opts.agent`<sp/>is<sp/>`false`,<sp/>it<sp/>will<sp/>be<sp/>passed<sp/>as-is<sp/>to<sp/>the<sp/>underlying<sp/>request<sp/>library.<sp/>This<sp/>causes<sp/>a<sp/>new<sp/>Agent<sp/>to<sp/>be<sp/>spawned<sp/>for<sp/>every<sp/>request.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>more<sp/>details,<sp/>see<sp/>[the<sp/>documentation<sp/>for<sp/>`minipass-fetch`<sp/>itself](https://github.com/npm/minipass-fetch#options).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;extra-options&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>make-fetch-happen<sp/>options`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">make-fetch-happen<sp/>augments<sp/>the<sp/>`minipass-fetch`<sp/>API<sp/>with<sp/>additional<sp/>features<sp/>available<sp/>through<sp/>extra<sp/>options.<sp/>The<sp/>following<sp/>extra<sp/>options<sp/>are<sp/>available:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>[`opts.cachePath`](#opts-cache-path)<sp/>-<sp/>Cache<sp/>target<sp/>to<sp/>read/write</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>[`opts.cache`](#opts-cache)<sp/>-<sp/>`fetch`<sp/>cache<sp/>mode.<sp/>Controls<sp/>cache<sp/>*behavior*.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>[`opts.proxy`](#opts-proxy)<sp/>-<sp/>Proxy<sp/>agent</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>[`opts.noProxy`](#opts-no-proxy)<sp/>-<sp/>Domain<sp/>segments<sp/>to<sp/>disable<sp/>proxying<sp/>for.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>[`opts.ca,<sp/>opts.cert,<sp/>opts.key,<sp/>opts.strictSSL`](#https-opts)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>[`opts.localAddress`](#opts-local-address)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>[`opts.maxSockets`](#opts-max-sockets)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>[`opts.retry`](#opts-retry)<sp/>-<sp/>Request<sp/>retry<sp/>settings</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>[`opts.onRetry`](#opts-onretry)<sp/>-<sp/>a<sp/>function<sp/>called<sp/>whenever<sp/>a<sp/>retry<sp/>is<sp/>attempted</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>[`opts.integrity`](#opts-integrity)<sp/>-<sp/>[Subresource<sp/>Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity)<sp/>metadata.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;opts-cache-path&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>opts.cachePath`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>string<sp/>`Path`<sp/>to<sp/>be<sp/>used<sp/>as<sp/>the<sp/>cache<sp/>root<sp/>for<sp/>[`cacache`](https://npm.im/cacache).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**NOTE**:<sp/>Requests<sp/>will<sp/>not<sp/>be<sp/>cached<sp/>unless<sp/>their<sp/>response<sp/>bodies<sp/>are<sp/>consumed.<sp/>You<sp/>will<sp/>need<sp/>to<sp/>use<sp/>one<sp/>of<sp/>the<sp/>`res.json()`,<sp/>`res.buffer()`,<sp/>etc<sp/>methods<sp/>on<sp/>the<sp/>response,<sp/>or<sp/>drain<sp/>the<sp/>`res.body`<sp/>stream,<sp/>in<sp/>order<sp/>for<sp/>it<sp/>to<sp/>be<sp/>written.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>default<sp/>cache<sp/>manager<sp/>also<sp/>adds<sp/>the<sp/>following<sp/>headers<sp/>to<sp/>cached<sp/>responses:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`X-Local-Cache`:<sp/>Path<sp/>to<sp/>the<sp/>cache<sp/>the<sp/>content<sp/>was<sp/>found<sp/>in</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`X-Local-Cache-Key`:<sp/>Unique<sp/>cache<sp/>entry<sp/>key<sp/>for<sp/>this<sp/>response</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`X-Local-Cache-Mode`:<sp/>Either<sp/>`stream`<sp/>or<sp/>`buffer`<sp/>to<sp/>indicate<sp/>how<sp/>the<sp/>response<sp/>was<sp/>read<sp/>from<sp/>cacache</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`X-Local-Cache-Hash`:<sp/>Specific<sp/>integrity<sp/>hash<sp/>for<sp/>the<sp/>cached<sp/>entry</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`X-Local-Cache-Status`:<sp/>One<sp/>of<sp/>`miss`,<sp/>`hit`,<sp/>`stale`,<sp/>`revalidated`,<sp/>`updated`,<sp/>or<sp/>`skip`<sp/>to<sp/>signal<sp/>how<sp/>the<sp/>response<sp/>was<sp/>created</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`X-Local-Cache-Time`:<sp/>UTCString<sp/>of<sp/>the<sp/>cache<sp/>insertion<sp/>time<sp/>for<sp/>the<sp/>entry</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Using<sp/>[`cacache`](https://npm.im/cacache),<sp/>a<sp/>call<sp/>like<sp/>this<sp/>may<sp/>be<sp/>used<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">manually<sp/>fetch<sp/>the<sp/>cached<sp/>entry:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>h<sp/>=<sp/>response.headers</highlight></codeline>
+<codeline><highlight class="normal">cacache.get(h.get(&apos;x-local-cache&apos;),<sp/>h.get(&apos;x-local-cache-key&apos;))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>grab<sp/>content<sp/>only,<sp/>directly:</highlight></codeline>
+<codeline><highlight class="normal">cacache.get.byDigest(h.get(&apos;x-local-cache&apos;),<sp/>h.get(&apos;x-local-cache-hash&apos;))</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">fetch(&apos;https://registry.npmjs.org/make-fetch-happen&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cachePath:<sp/>&apos;./my-local-cache&apos;</highlight></codeline>
+<codeline><highlight class="normal">})<sp/>//<sp/>-&gt;<sp/>200-level<sp/>response<sp/>will<sp/>be<sp/>written<sp/>to<sp/>disk</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>possible<sp/>(minimal)<sp/>implementation<sp/>for<sp/>`MyCustomRedisCache`:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>bluebird<sp/>=<sp/>require(&apos;bluebird&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>redis<sp/>=<sp/>require(&quot;redis&quot;)</highlight></codeline>
+<codeline><highlight class="normal">bluebird.promisifyAll(redis.RedisClient.prototype)</highlight></codeline>
+<codeline><highlight class="normal">class<sp/>MyCustomRedisCache<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>constructor<sp/>(opts)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>this.redis<sp/>=<sp/>redis.createClient(opts)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>match<sp/>(req)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>this.redis.getAsync(req.url).then(res<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>if<sp/>(res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>const<sp/>parsed<sp/>=<sp/>JSON.parse(res)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>new<sp/>fetch.Response(parsed.body,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>url:<sp/>req.url,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>headers:<sp/>parsed.headers,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>status:<sp/>200</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>put<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>res.buffer().then(body<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>this.redis.setAsync(req.url,<sp/>JSON.stringify({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>body:<sp/>body,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>headers:<sp/>res.headers.raw()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}))</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}).then(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>return<sp/>the<sp/>response<sp/>itself</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>res</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&apos;delete&apos;<sp/>(req)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>this.redis.unlinkAsync(req.url)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;opts-cache&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>opts.cache`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>option<sp/>follows<sp/>the<sp/>standard<sp/>`fetch`<sp/>API<sp/>cache<sp/>option.<sp/>This<sp/>option<sp/>will<sp/>do<sp/>nothing<sp/>if<sp/>[`opts.cachePath`](#opts-cache-path)<sp/>is<sp/>null.<sp/>The<sp/>following<sp/>values<sp/>are<sp/>accepted<sp/>(as<sp/>strings):</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`default`<sp/>-<sp/>Fetch<sp/>will<sp/>inspect<sp/>the<sp/>HTTP<sp/>cache<sp/>on<sp/>the<sp/>way<sp/>to<sp/>the<sp/>network.<sp/>If<sp/>there<sp/>is<sp/>a<sp/>fresh<sp/>response<sp/>it<sp/>will<sp/>be<sp/>used.<sp/>If<sp/>there<sp/>is<sp/>a<sp/>stale<sp/>response<sp/>a<sp/>conditional<sp/>request<sp/>will<sp/>be<sp/>created,<sp/>and<sp/>a<sp/>normal<sp/>request<sp/>otherwise.<sp/>It<sp/>then<sp/>updates<sp/>the<sp/>HTTP<sp/>cache<sp/>with<sp/>the<sp/>response.<sp/>If<sp/>the<sp/>revalidation<sp/>request<sp/>fails<sp/>(for<sp/>example,<sp/>on<sp/>a<sp/>500<sp/>or<sp/>if<sp/>you&apos;re<sp/>offline),<sp/>the<sp/>stale<sp/>response<sp/>will<sp/>be<sp/>returned.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`no-store`<sp/>-<sp/>Fetch<sp/>behaves<sp/>as<sp/>if<sp/>there<sp/>is<sp/>no<sp/>HTTP<sp/>cache<sp/>at<sp/>all.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`reload`<sp/>-<sp/>Fetch<sp/>behaves<sp/>as<sp/>if<sp/>there<sp/>is<sp/>no<sp/>HTTP<sp/>cache<sp/>on<sp/>the<sp/>way<sp/>to<sp/>the<sp/>network.<sp/>Ergo,<sp/>it<sp/>creates<sp/>a<sp/>normal<sp/>request<sp/>and<sp/>updates<sp/>the<sp/>HTTP<sp/>cache<sp/>with<sp/>the<sp/>response.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`no-cache`<sp/>-<sp/>Fetch<sp/>creates<sp/>a<sp/>conditional<sp/>request<sp/>if<sp/>there<sp/>is<sp/>a<sp/>response<sp/>in<sp/>the<sp/>HTTP<sp/>cache<sp/>and<sp/>a<sp/>normal<sp/>request<sp/>otherwise.<sp/>It<sp/>then<sp/>updates<sp/>the<sp/>HTTP<sp/>cache<sp/>with<sp/>the<sp/>response.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`force-cache`<sp/>-<sp/>Fetch<sp/>uses<sp/>any<sp/>response<sp/>in<sp/>the<sp/>HTTP<sp/>cache<sp/>matching<sp/>the<sp/>request,<sp/>not<sp/>paying<sp/>attention<sp/>to<sp/>staleness.<sp/>If<sp/>there<sp/>was<sp/>no<sp/>response,<sp/>it<sp/>creates<sp/>a<sp/>normal<sp/>request<sp/>and<sp/>updates<sp/>the<sp/>HTTP<sp/>cache<sp/>with<sp/>the<sp/>response.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`only-if-cached`<sp/>-<sp/>Fetch<sp/>uses<sp/>any<sp/>response<sp/>in<sp/>the<sp/>HTTP<sp/>cache<sp/>matching<sp/>the<sp/>request,<sp/>not<sp/>paying<sp/>attention<sp/>to<sp/>staleness.<sp/>If<sp/>there<sp/>was<sp/>no<sp/>response,<sp/>it<sp/>returns<sp/>a<sp/>network<sp/>error.<sp/>(Can<sp/>only<sp/>be<sp/>used<sp/>when<sp/>request’s<sp/>mode<sp/>is<sp/>&quot;same-origin&quot;.<sp/>Any<sp/>cached<sp/>redirects<sp/>will<sp/>be<sp/>followed<sp/>assuming<sp/>request’s<sp/>redirect<sp/>mode<sp/>is<sp/>&quot;follow&quot;<sp/>and<sp/>the<sp/>redirects<sp/>do<sp/>not<sp/>violate<sp/>request’s<sp/>mode.)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">(Note:<sp/>option<sp/>descriptions<sp/>are<sp/>taken<sp/>from<sp/>https://fetch.spec.whatwg.org/#http-network-or-cache-fetch)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>fetch<sp/>=<sp/>require(&apos;make-fetch-happen&apos;).defaults({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cachePath:<sp/>&apos;./my-cache&apos;</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Will<sp/>error<sp/>with<sp/>ENOTCACHED<sp/>if<sp/>we<sp/>haven&apos;t<sp/>already<sp/>cached<sp/>this<sp/>url</highlight></codeline>
+<codeline><highlight class="normal">fetch(&apos;https://registry.npmjs.org/make-fetch-happen&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cache:<sp/>&apos;only-if-cached&apos;</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Will<sp/>refresh<sp/>any<sp/>local<sp/>content<sp/>and<sp/>cache<sp/>the<sp/>new<sp/>response</highlight></codeline>
+<codeline><highlight class="normal">fetch(&apos;https://registry.npmjs.org/make-fetch-happen&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cache:<sp/>&apos;reload&apos;</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Will<sp/>use<sp/>any<sp/>local<sp/>data,<sp/>even<sp/>if<sp/>stale.<sp/>Otherwise,<sp/>will<sp/>hit<sp/>network.</highlight></codeline>
+<codeline><highlight class="normal">fetch(&apos;https://registry.npmjs.org/make-fetch-happen&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cache:<sp/>&apos;force-cache&apos;</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;opts-proxy&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>opts.proxy`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>string<sp/>or<sp/>`new<sp/>url.URL()`-d<sp/>URI<sp/>to<sp/>proxy<sp/>through.<sp/>Different<sp/>Proxy<sp/>handlers<sp/>will<sp/>be</highlight></codeline>
+<codeline><highlight class="normal">used<sp/>depending<sp/>on<sp/>the<sp/>proxy&apos;s<sp/>protocol.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Additionally,<sp/>`process.env.HTTP_PROXY`,<sp/>`process.env.HTTPS_PROXY`,<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">`process.env.PROXY`<sp/>are<sp/>used<sp/>if<sp/>present<sp/>and<sp/>no<sp/>`opts.proxy`<sp/>value<sp/>is<sp/>provided.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">(Pending)<sp/>`process.env.NO_PROXY`<sp/>may<sp/>also<sp/>be<sp/>configured<sp/>to<sp/>skip<sp/>proxying<sp/>requests<sp/>for<sp/>all,<sp/>or<sp/>specific<sp/>domains.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">fetch(&apos;https://registry.npmjs.org/make-fetch-happen&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>proxy:<sp/>&apos;https://corporate.yourcompany.proxy:4445&apos;</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">fetch(&apos;https://registry.npmjs.org/make-fetch-happen&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>proxy:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>protocol:<sp/>&apos;https:&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>hostname:<sp/>&apos;corporate.yourcompany.proxy&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>4445</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;opts-no-proxy&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>opts.noProxy`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>present,<sp/>should<sp/>be<sp/>a<sp/>comma-separated<sp/>string<sp/>or<sp/>an<sp/>array<sp/>of<sp/>domain<sp/>extensions</highlight></codeline>
+<codeline><highlight class="normal">that<sp/>a<sp/>proxy<sp/>should<sp/>_not_<sp/>be<sp/>used<sp/>for.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>option<sp/>may<sp/>also<sp/>be<sp/>provided<sp/>through<sp/>`process.env.NO_PROXY`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;https-opts&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>opts.ca,<sp/>opts.cert,<sp/>opts.key,<sp/>opts.strictSSL`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">These<sp/>values<sp/>are<sp/>passed<sp/>in<sp/>directly<sp/>to<sp/>the<sp/>HTTPS<sp/>agent<sp/>and<sp/>will<sp/>be<sp/>used<sp/>for<sp/>both</highlight></codeline>
+<codeline><highlight class="normal">proxied<sp/>and<sp/>unproxied<sp/>outgoing<sp/>HTTPS<sp/>requests.<sp/>They<sp/>mostly<sp/>correspond<sp/>to<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">same<sp/>options<sp/>the<sp/>`https`<sp/>module<sp/>accepts,<sp/>which<sp/>will<sp/>be<sp/>themselves<sp/>passed<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">`tls.connect()`.<sp/>`opts.strictSSL`<sp/>corresponds<sp/>to<sp/>`rejectUnauthorized`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;opts-local-address&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>opts.localAddress`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Passed<sp/>directly<sp/>to<sp/>`http`<sp/>and<sp/>`https`<sp/>request<sp/>calls.<sp/>Determines<sp/>the<sp/>local</highlight></codeline>
+<codeline><highlight class="normal">address<sp/>to<sp/>bind<sp/>to.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;opts-max-sockets&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>opts.maxSockets`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Default:<sp/>15</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Maximum<sp/>number<sp/>of<sp/>active<sp/>concurrent<sp/>sockets<sp/>to<sp/>use<sp/>for<sp/>the<sp/>underlying</highlight></codeline>
+<codeline><highlight class="normal">Http/Https/Proxy<sp/>agents.<sp/>This<sp/>setting<sp/>applies<sp/>once<sp/>per<sp/>spawned<sp/>agent.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">15<sp/>is<sp/>probably<sp/>a<sp/>_pretty<sp/>good<sp/>value_<sp/>for<sp/>most<sp/>use-cases,<sp/>and<sp/>balances<sp/>speed</highlight></codeline>
+<codeline><highlight class="normal">with,<sp/>uh,<sp/>not<sp/>knocking<sp/>out<sp/>people&apos;s<sp/>routers.<sp/>🤓</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;opts-retry&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>opts.retry`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">An<sp/>object<sp/>that<sp/>can<sp/>be<sp/>used<sp/>to<sp/>tune<sp/>request<sp/>retry<sp/>settings.<sp/>Retries<sp/>will<sp/>only<sp/>be<sp/>attempted<sp/>on<sp/>the<sp/>following<sp/>conditions:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>Request<sp/>method<sp/>is<sp/>NOT<sp/>`POST`<sp/>AND</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Request<sp/>status<sp/>is<sp/>one<sp/>of:<sp/>`408`,<sp/>`420`,<sp/>`429`,<sp/>or<sp/>any<sp/>status<sp/>in<sp/>the<sp/>500-range.<sp/>OR</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Request<sp/>errored<sp/>with<sp/>`ECONNRESET`,<sp/>`ECONNREFUSED`,<sp/>`EADDRINUSE`,<sp/>`ETIMEDOUT`,<sp/>or<sp/>the<sp/>`fetch`<sp/>error<sp/>`request-timeout`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>following<sp/>are<sp/>worth<sp/>noting<sp/>as<sp/>explicitly<sp/>not<sp/>retried:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`getaddrinfo<sp/>ENOTFOUND`<sp/>and<sp/>will<sp/>be<sp/>assumed<sp/>to<sp/>be<sp/>either<sp/>an<sp/>unreachable<sp/>domain<sp/>or<sp/>the<sp/>user<sp/>will<sp/>be<sp/>assumed<sp/>offline.<sp/>If<sp/>a<sp/>response<sp/>is<sp/>cached,<sp/>it<sp/>will<sp/>be<sp/>returned<sp/>immediately.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.retry`<sp/>is<sp/>`false`,<sp/>it<sp/>is<sp/>equivalent<sp/>to<sp/>`{retries:<sp/>0}`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`opts.retry`<sp/>is<sp/>a<sp/>number,<sp/>it<sp/>is<sp/>equivalent<sp/>to<sp/>`{retries:<sp/>num}`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>following<sp/>retry<sp/>options<sp/>are<sp/>available<sp/>if<sp/>you<sp/>want<sp/>more<sp/>control<sp/>over<sp/>it:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>retries</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>factor</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>minTimeout</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>maxTimeout</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>randomize</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>details<sp/>on<sp/>what<sp/>each<sp/>of<sp/>these<sp/>do,<sp/>refer<sp/>to<sp/>the<sp/>[`retry`](https://npm.im/retry)<sp/>documentation.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">fetch(&apos;https://flaky.site.com&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>retry:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>retries:<sp/>10,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>randomize:<sp/>true</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">fetch(&apos;http://reliable.site.com&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>retry:<sp/>false</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">fetch(&apos;http://one-more.site.com&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>retry:<sp/>3</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;opts-onretry&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>opts.onRetry`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>function<sp/>called<sp/>whenever<sp/>a<sp/>retry<sp/>is<sp/>attempted.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">fetch(&apos;https://flaky.site.com&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>onRetry()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(&apos;we<sp/>will<sp/>retry!&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>&lt;a<sp/>name=&quot;opts-integrity&quot;&gt;&lt;/a&gt;<sp/>`&gt;<sp/>opts.integrity`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Matches<sp/>the<sp/>response<sp/>body<sp/>against<sp/>the<sp/>given<sp/>[Subresource<sp/>Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity)<sp/>metadata.<sp/>If<sp/>verification<sp/>fails,<sp/>the<sp/>request<sp/>will<sp/>fail<sp/>with<sp/>an<sp/>`EINTEGRITY`<sp/>error.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`integrity`<sp/>may<sp/>either<sp/>be<sp/>a<sp/>string<sp/>or<sp/>an<sp/>[`ssri`](https://npm.im/ssri)<sp/>`Integrity`-like.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">fetch(&apos;https://registry.npmjs.org/make-fetch-happen/-/make-fetch-happen-1.0.0.tgz&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>integrity:<sp/>&apos;sha1-o47j7zAYnedYFn1dF/fR9OV3z8Q=&apos;</highlight></codeline>
+<codeline><highlight class="normal">})<sp/>//<sp/>-&gt;<sp/>ok</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">fetch(&apos;https://malicious-registry.org/make-fetch-happen/-/make-fetch-happen-1.0.0.tgz&apos;,<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>integrity:<sp/>&apos;sha1-o47j7zAYnedYFn1dF/fR9OV3z8Q=&apos;</highlight></codeline>
+<codeline><highlight class="normal">})<sp/>//<sp/>Error:<sp/>EINTEGRITY</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>&lt;a<sp/>name=&quot;wow&quot;&gt;&lt;/a&gt;<sp/>Message<sp/>From<sp/>Our<sp/>Sponsors</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">![](stop.gif)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">![](happening.gif)</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/make-fetch-happen/README.md"/>
+  </compounddef>
+</doxygen>

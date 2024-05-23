@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2p-map_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>readme.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>p-map<sp/>[![Build<sp/>Status](https://travis-ci.org/sindresorhus/p-map.svg?branch=master)](https://travis-ci.org/sindresorhus/p-map)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>Map<sp/>over<sp/>promises<sp/>concurrently</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Useful<sp/>when<sp/>you<sp/>need<sp/>to<sp/>run<sp/>promise-returning<sp/>&amp;<sp/>async<sp/>functions<sp/>multiple<sp/>times<sp/>with<sp/>different<sp/>inputs<sp/>concurrently.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Install</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>p-map</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Usage</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>pMap<sp/>=<sp/>require(&apos;p-map&apos;);</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>got<sp/>=<sp/>require(&apos;got&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>sites<sp/>=<sp/>[</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>getWebsiteFromUsername(&apos;https://sindresorhus&apos;),<sp/>//=&gt;<sp/>Promise</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&apos;https://ava.li&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&apos;https://github.com&apos;</highlight></codeline>
+<codeline><highlight class="normal">];</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">(async<sp/>()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>const<sp/>mapper<sp/>=<sp/>async<sp/>site<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>const<sp/>{requestUrl}<sp/>=<sp/>await<sp/>got.head(site);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>requestUrl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>const<sp/>result<sp/>=<sp/>await<sp/>pMap(sites,<sp/>mapper,<sp/>{concurrency:<sp/>2});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(result);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//=&gt;<sp/>[&apos;https://sindresorhus.com/&apos;,<sp/>&apos;https://ava.li/&apos;,<sp/>&apos;https://github.com/&apos;]</highlight></codeline>
+<codeline><highlight class="normal">})();</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>API</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>pMap(input,<sp/>mapper,<sp/>options?)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>a<sp/>`Promise`<sp/>that<sp/>is<sp/>fulfilled<sp/>when<sp/>all<sp/>promises<sp/>in<sp/>`input`<sp/>and<sp/>ones<sp/>returned<sp/>from<sp/>`mapper`<sp/>are<sp/>fulfilled,<sp/>or<sp/>rejects<sp/>if<sp/>any<sp/>of<sp/>the<sp/>promises<sp/>reject.<sp/>The<sp/>fulfilled<sp/>value<sp/>is<sp/>an<sp/>`Array`<sp/>of<sp/>the<sp/>fulfilled<sp/>values<sp/>returned<sp/>from<sp/>`mapper`<sp/>in<sp/>`input`<sp/>order.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>input</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Type:<sp/>`Iterable&lt;Promise<sp/>|<sp/>unknown&gt;`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Iterated<sp/>over<sp/>concurrently<sp/>in<sp/>the<sp/>`mapper`<sp/>function.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>mapper(element,<sp/>index)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Type:<sp/>`Function`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Expected<sp/>to<sp/>return<sp/>a<sp/>`Promise`<sp/>or<sp/>value.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>options</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Type:<sp/>`object`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>concurrency</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Type:<sp/>`number`<sp/>(Integer)\</highlight></codeline>
+<codeline><highlight class="normal">Default:<sp/>`Infinity`\</highlight></codeline>
+<codeline><highlight class="normal">Minimum:<sp/>`1`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Number<sp/>of<sp/>concurrently<sp/>pending<sp/>promises<sp/>returned<sp/>by<sp/>`mapper`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>stopOnError</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Type:<sp/>`boolean`\</highlight></codeline>
+<codeline><highlight class="normal">Default:<sp/>`true`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>set<sp/>to<sp/>`false`,<sp/>instead<sp/>of<sp/>stopping<sp/>when<sp/>a<sp/>promise<sp/>rejects,<sp/>it<sp/>will<sp/>wait<sp/>for<sp/>all<sp/>the<sp/>promises<sp/>to<sp/>settle<sp/>and<sp/>then<sp/>reject<sp/>with<sp/>an<sp/>[aggregated<sp/>error](https://github.com/sindresorhus/aggregate-error)<sp/>containing<sp/>all<sp/>the<sp/>errors<sp/>from<sp/>the<sp/>rejected<sp/>promises.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>p-map<sp/>for<sp/>enterprise</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Available<sp/>as<sp/>part<sp/>of<sp/>the<sp/>Tidelift<sp/>Subscription.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>maintainers<sp/>of<sp/>p-map<sp/>and<sp/>thousands<sp/>of<sp/>other<sp/>packages<sp/>are<sp/>working<sp/>with<sp/>Tidelift<sp/>to<sp/>deliver<sp/>commercial<sp/>support<sp/>and<sp/>maintenance<sp/>for<sp/>the<sp/>open<sp/>source<sp/>dependencies<sp/>you<sp/>use<sp/>to<sp/>build<sp/>your<sp/>applications.<sp/>Save<sp/>time,<sp/>reduce<sp/>risk,<sp/>and<sp/>improve<sp/>code<sp/>health,<sp/>while<sp/>paying<sp/>the<sp/>maintainers<sp/>of<sp/>the<sp/>exact<sp/>dependencies<sp/>you<sp/>use.<sp/>[Learn<sp/>more.](https://tidelift.com/subscription/pkg/npm-p-map?utm_source=npm-p-map&amp;utm_medium=referral&amp;utm_campaign=enterprise&amp;utm_term=repo)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Related</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>[p-all](https://github.com/sindresorhus/p-all)<sp/>-<sp/>Run<sp/>promise-returning<sp/>&amp;<sp/>async<sp/>functions<sp/>concurrently<sp/>with<sp/>optional<sp/>limited<sp/>concurrency</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[p-filter](https://github.com/sindresorhus/p-filter)<sp/>-<sp/>Filter<sp/>promises<sp/>concurrently</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[p-times](https://github.com/sindresorhus/p-times)<sp/>-<sp/>Run<sp/>promise-returning<sp/>&amp;<sp/>async<sp/>functions<sp/>a<sp/>specific<sp/>number<sp/>of<sp/>times<sp/>concurrently</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[p-props](https://github.com/sindresorhus/p-props)<sp/>-<sp/>Like<sp/>`Promise.all()`<sp/>but<sp/>for<sp/>`Map`<sp/>and<sp/>`Object`</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[p-map-series](https://github.com/sindresorhus/p-map-series)<sp/>-<sp/>Map<sp/>over<sp/>promises<sp/>serially</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[p-queue](https://github.com/sindresorhus/p-queue)<sp/>-<sp/>Promise<sp/>queue<sp/>with<sp/>concurrency<sp/>control</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[More…](https://github.com/sindresorhus/promise-fun)</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/p-map/readme.md"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2isexe_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2isexe_2_r_e_a_d_m_e</compoundname>
+    <title>isexe</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2isexe_2_r_e_a_d_m_e_1autotoc_md1752"/> Minimal module to check if a file is executable, and a normal file.</para>
+<para>Uses <computeroutput>fs.stat</computeroutput> and tests against the <computeroutput>PATHEXT</computeroutput> environment variable on Windows.</para>
+<sect1 id="md_backend_2node__modules_2isexe_2_r_e_a_d_m_e_1autotoc_md1753">
+<title>USAGE</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>isexe<sp/>=<sp/>require(&apos;isexe&apos;)</highlight></codeline>
+<codeline><highlight class="normal">isexe(&apos;some-file-name&apos;,<sp/>function<sp/>(err,<sp/>isExe)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.error(&apos;probably<sp/>file<sp/>does<sp/>not<sp/>exist<sp/>or<sp/>something&apos;,<sp/>err)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}<sp/>else<sp/>if<sp/>(isExe)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.error(&apos;this<sp/>thing<sp/>can<sp/>be<sp/>run&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}<sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.error(&apos;cannot<sp/>be<sp/>run&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>same<sp/>thing<sp/>but<sp/>synchronous,<sp/>throws<sp/>errors</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>isExe<sp/>=<sp/>isexe.sync(&apos;some-file-name&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>treat<sp/>errors<sp/>as<sp/>just<sp/>&quot;not<sp/>executable&quot;</highlight></codeline>
+<codeline><highlight class="normal">isexe(&apos;maybe-missing-file&apos;,<sp/>{<sp/>ignoreErrors:<sp/>true<sp/>},<sp/>callback)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>isExe<sp/>=<sp/>isexe.sync(&apos;maybe-missing-file&apos;,<sp/>{<sp/>ignoreErrors:<sp/>true<sp/>})</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2isexe_2_r_e_a_d_m_e_1autotoc_md1754">
+<title>API</title><sect2 id="md_backend_2node__modules_2isexe_2_r_e_a_d_m_e_1autotoc_md1755">
+<title><computeroutput>isexe(path, [options], [callback])</computeroutput></title><para>Check if the path is executable. If no callback provided, and a global <computeroutput>Promise</computeroutput> object is available, then a Promise will be returned.</para>
+<para>Will raise whatever errors may be raised by <computeroutput>fs.stat</computeroutput>, unless <computeroutput>options.ignoreErrors</computeroutput> is set to true.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2isexe_2_r_e_a_d_m_e_1autotoc_md1756">
+<title><computeroutput>isexe.sync(path, [options])</computeroutput></title><para>Same as <computeroutput>isexe</computeroutput> but returns the value and throws any errors raised.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2isexe_2_r_e_a_d_m_e_1autotoc_md1757">
+<title>Options</title><para><itemizedlist>
+<listitem><para><computeroutput>ignoreErrors</computeroutput> Treat all errors as &quot;no, this is not executable&quot;, but don&apos;t raise them.</para>
+</listitem><listitem><para><computeroutput>uid</computeroutput> Number to use as the user id</para>
+</listitem><listitem><para><computeroutput>gid</computeroutput> Number to use as the group id</para>
+</listitem><listitem><para><computeroutput>pathExt</computeroutput> List of path extensions to use instead of <computeroutput>PATHEXT</computeroutput> environment variable on Windows. </para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/isexe/README.md"/>
+  </compounddef>
+</doxygen>

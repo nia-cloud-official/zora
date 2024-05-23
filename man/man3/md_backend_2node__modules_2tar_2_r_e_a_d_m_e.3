@@ -1,0 +1,822 @@
+.TH "md_backend_2node__modules_2tar_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2tar_2_r_e_a_d_m_e \- node-tar 
+.PP
+ Fast and full-featured Tar for Node\&.js
+.PP
+The API is designed to mimic the behavior of \fRtar(1)\fP on unix systems\&. If you are familiar with how tar works, most of this will hopefully be straightforward for you\&. If not, then hopefully this module can teach you useful unix skills that may come in handy someday :)
+.SH "Background"
+.PP
+A 'tar file' or 'tarball' is an archive of file system entries (directories, files, links, etc\&.) The name comes from 'tape archive'\&. If you run \fRman tar\fP on almost any Unix command line, you'll learn quite a bit about what it can do, and its history\&.
+.PP
+Tar has 5 main top-level commands:
+.PP
+.IP "\(bu" 2
+\fRc\fP Create an archive
+.IP "\(bu" 2
+\fRr\fP Replace entries within an archive
+.IP "\(bu" 2
+\fRu\fP Update entries within an archive (ie, replace if they're newer)
+.IP "\(bu" 2
+\fRt\fP List out the contents of an archive
+.IP "\(bu" 2
+\fRx\fP Extract an archive to disk
+.PP
+.PP
+The other flags and options modify how this top level function works\&.
+.SH "High-Level API"
+.PP
+These 5 functions are the high-level API\&. All of them have a single-character name (for unix nerds familiar with \fRtar(1)\fP) as well as a long name (for everyone else)\&.
+.PP
+All the high-level functions take the following arguments, all three of which are optional and may be omitted\&.
+.PP
+.IP "1." 4
+\fRoptions\fP - An optional object specifying various options
+.IP "2." 4
+\fRpaths\fP - An array of paths to add or extract
+.IP "3." 4
+\fRcallback\fP - Called when the command is completed, if async\&. (If sync or no file specified, providing a callback throws a \fRTypeError\fP\&.)
+.PP
+.PP
+If the command is sync (ie, if \fRoptions\&.sync=true\fP), then the callback is not allowed, since the action will be completed immediately\&.
+.PP
+If a \fRfile\fP argument is specified, and the command is async, then a \fRPromise\fP is returned\&. In this case, if async, a callback may be provided which is called when the command is completed\&.
+.PP
+If a \fRfile\fP option is not specified, then a stream is returned\&. For \fRcreate\fP, this is a readable stream of the generated archive\&. For \fRlist\fP and \fRextract\fP this is a writable stream that an archive should be written into\&. If a file is not specified, then a callback is not allowed, because you're already getting a stream to work with\&.
+.PP
+\fRreplace\fP and \fRupdate\fP only work on existing archives, and so require a \fRfile\fP argument\&.
+.PP
+Sync commands without a file argument return a stream that acts on its input immediately in the same tick\&. For readable streams, this means that all of the data is immediately available by calling \fRstream\&.read()\fP\&. For writable streams, it will be acted upon as soon as it is provided, but this can be at any time\&.
+.SS "Warnings and Errors"
+Tar emits warnings and errors for recoverable and unrecoverable situations, respectively\&. In many cases, a warning only affects a single entry in an archive, or is simply informing you that it's modifying an entry to comply with the settings provided\&.
+.PP
+Unrecoverable warnings will always raise an error (ie, emit `'error'\fRon streaming actions, throw for non-streaming sync actions, reject the returned Promise for non-streaming async operations, or call a provided callback with an\fPError\fRas the first argument)\&. Recoverable errors will raise an error only if\fPstrict: true` is set in the options\&.
+.PP
+Respond to (recoverable) warnings by listening to the \fRwarn\fP event\&. Handlers receive 3 arguments:
+.PP
+.IP "\(bu" 2
+\fRcode\fP String\&. One of the error codes below\&. This may not match \fRdata\&.code\fP, which preserves the original error code from fs and zlib\&.
+.IP "\(bu" 2
+\fRmessage\fP String\&. More details about the error\&.
+.IP "\(bu" 2
+\fRdata\fP Metadata about the error\&. An \fRError\fP object for errors raised by fs and zlib\&. All fields are attached to errors raisd by tar\&. Typically contains the following fields, as relevant:
+.IP "  \(bu" 4
+\fRtarCode\fP The tar error code\&.
+.IP "  \(bu" 4
+\fRcode\fP Either the tar error code, or the error code set by the underlying system\&.
+.IP "  \(bu" 4
+\fRfile\fP The archive file being read or written\&.
+.IP "  \(bu" 4
+\fRcwd\fP Working directory for creation and extraction operations\&.
+.IP "  \(bu" 4
+\fRentry\fP The entry object (if it could be created) for \fRTAR_ENTRY_INFO\fP, \fRTAR_ENTRY_INVALID\fP, and \fRTAR_ENTRY_ERROR\fP warnings\&.
+.IP "  \(bu" 4
+\fRheader\fP The header object (if it could be created, and the entry could not be created) for \fRTAR_ENTRY_INFO\fP and \fRTAR_ENTRY_INVALID\fP warnings\&.
+.IP "  \(bu" 4
+\fRrecoverable\fP Boolean\&. If \fRfalse\fP, then the warning will emit an \fRerror\fP, even in non-strict mode\&.
+.PP
+
+.PP
+.SS "Error Codes"
+.IP "\(bu" 2
+\fRTAR_ENTRY_INFO\fP An informative error indicating that an entry is being modified, but otherwise processed normally\&. For example, removing \fR/\fP or \fRC:\\\fP from absolute paths if \fRpreservePaths\fP is not set\&.
+.IP "\(bu" 2
+\fRTAR_ENTRY_INVALID\fP An indication that a given entry is not a valid tar archive entry, and will be skipped\&. This occurs when:
+.IP "  \(bu" 4
+a checksum fails,
+.IP "  \(bu" 4
+a \fRlinkpath\fP is missing for a link type, or
+.IP "  \(bu" 4
+a \fRlinkpath\fP is provided for a non-link type\&.
+.PP
+.PP
+If every entry in a parsed archive raises an \fRTAR_ENTRY_INVALID\fP error, then the archive is presumed to be unrecoverably broken, and \fRTAR_BAD_ARCHIVE\fP will be raised\&.
+.IP "\(bu" 2
+\fRTAR_ENTRY_ERROR\fP The entry appears to be a valid tar archive entry, but encountered an error which prevented it from being unpacked\&. This occurs when:
+.IP "  \(bu" 4
+an unrecoverable fs error happens during unpacking,
+.IP "  \(bu" 4
+an entry is trying to extract into an excessively deep location (by default, limited to 1024 subfolders),
+.IP "  \(bu" 4
+an entry has \fR\&.\&.\fP in the path and \fRpreservePaths\fP is not set, or
+.IP "  \(bu" 4
+an entry is extracting through a symbolic link, when \fRpreservePaths\fP is not set\&.
+.PP
+
+.IP "\(bu" 2
+\fRTAR_ENTRY_UNSUPPORTED\fP An indication that a given entry is a valid archive entry, but of a type that is unsupported, and so will be skipped in archive creation or extracting\&.
+.IP "\(bu" 2
+\fRTAR_ABORT\fP When parsing gzipped-encoded archives, the parser will abort the parse process raise a warning for any zlib errors encountered\&. Aborts are considered unrecoverable for both parsing and unpacking\&.
+.IP "\(bu" 2
+\fRTAR_BAD_ARCHIVE\fP The archive file is totally hosed\&. This can happen for a number of reasons, and always occurs at the end of a parse or extract:
+.IP "  \(bu" 4
+An entry body was truncated before seeing the full number of bytes\&.
+.IP "  \(bu" 4
+The archive contained only invalid entries, indicating that it is likely not an archive, or at least, not an archive this library can parse\&.
+.PP
+.PP
+\fRTAR_BAD_ARCHIVE\fP is considered informative for parse operations, but unrecoverable for extraction\&. Note that, if encountered at the end of an extraction, tar WILL still have extracted as much it could from the archive, so there may be some garbage files to clean up\&.
+.PP
+.PP
+Errors that occur deeper in the system (ie, either the filesystem or zlib) will have their error codes left intact, and a \fRtarCode\fP matching one of the above will be added to the warning metadata or the raised error object\&.
+.PP
+Errors generated by tar will have one of the above codes set as the \fRerror\&.code\fP field as well, but since errors originating in zlib or fs will have their original codes, it's better to read \fRerror\&.tarCode\fP if you wish to see how tar is handling the issue\&.
+.SS "Examples"
+The API mimics the \fRtar(1)\fP command line functionality, with aliases for more human-readable option and function names\&. The goal is that if you know how to use \fRtar(1)\fP in Unix, then you know how to use `require('tar')` in JavaScript\&.
+.PP
+To replicate \fRtar czf my-tarball\&.tgz files and folders\fP, you'd do:
+.PP
+.PP
+.nf
+tar\&.c(
+  {
+    gzip: <true|gzip options>,
+    file: 'my\-tarball\&.tgz'
+  },
+  ['some', 'files', 'and', 'folders']
+)\&.then(_ => { \&.\&. tarball has been created \&.\&. })
+.fi
+.PP
+.PP
+To replicate \fRtar cz files and folders > my-tarball\&.tgz\fP, you'd do:
+.PP
+.PP
+.nf
+tar\&.c( // or tar\&.create
+  {
+    gzip: <true|gzip options>
+  },
+  ['some', 'files', 'and', 'folders']
+)\&.pipe(fs\&.createWriteStream('my\-tarball\&.tgz'))
+.fi
+.PP
+.PP
+To replicate \fRtar xf my-tarball\&.tgz\fP you'd do:
+.PP
+.PP
+.nf
+tar\&.x(  // or tar\&.extract(
+  {
+    file: 'my\-tarball\&.tgz'
+  }
+)\&.then(_=> { \&.\&. tarball has been dumped in cwd \&.\&. })
+.fi
+.PP
+.PP
+To replicate \fRcat my-tarball\&.tgz | tar x -C some-dir --strip=1\fP:
+.PP
+.PP
+.nf
+fs\&.createReadStream('my\-tarball\&.tgz')\&.pipe(
+  tar\&.x({
+    strip: 1,
+    C: 'some\-dir' // alias for cwd:'some\-dir', also ok
+  })
+)
+.fi
+.PP
+.PP
+To replicate \fRtar tf my-tarball\&.tgz\fP, do this:
+.PP
+.PP
+.nf
+tar\&.t({
+  file: 'my\-tarball\&.tgz',
+  onentry: entry => { \&.\&. do whatever with it \&.\&. }
+})
+.fi
+.PP
+.PP
+For example, to just get the list of filenames from an archive:
+.PP
+.PP
+.nf
+const getEntryFilenames = async tarballFilename => {
+  const filenames = []
+  await tar\&.t({
+    file: tarballFilename,
+    onentry: entry => filenames\&.push(entry\&.path),
+  })
+  return filenames
+}
+.fi
+.PP
+.PP
+To replicate \fRcat my-tarball\&.tgz | tar t\fP do:
+.PP
+.PP
+.nf
+fs\&.createReadStream('my\-tarball\&.tgz')
+  \&.pipe(tar\&.t())
+  \&.on('entry', entry => { \&.\&. do whatever with it \&.\&. })
+.fi
+.PP
+.PP
+To do anything synchronous, add \fRsync: true\fP to the options\&. Note that sync functions don't take a callback and don't return a promise\&. When the function returns, it's already done\&. Sync methods without a file argument return a sync stream, which flushes immediately\&. But, of course, it still won't be done until you \fR\&.end()\fP it\&.
+.PP
+.PP
+.nf
+const getEntryFilenamesSync = tarballFilename => {
+  const filenames = []
+  tar\&.t({
+    file: tarballFilename,
+    onentry: entry => filenames\&.push(entry\&.path),
+    sync: true,
+  })
+  return filenames
+}
+.fi
+.PP
+.PP
+To filter entries, add \fRfilter: <function>\fP to the options\&. Tar-creating methods call the filter with \fRfilter(path, stat)\fP\&. Tar-reading methods (including extraction) call the filter with \fRfilter(path, entry)\fP\&. The filter is called in the \fRthis\fP-context of the \fRPack\fP or \fRUnpack\fP stream object\&.
+.PP
+The arguments list to \fRtar t\fP and \fRtar x\fP specify a list of filenames to extract or list, so they're equivalent to a filter that tests if the file is in the list\&.
+.PP
+For those who \fIaren't\fP fans of tar's single-character command names:
+.PP
+.PP
+.nf
+tar\&.c === tar\&.create
+tar\&.r === tar\&.replace (appends to archive, file is required)
+tar\&.u === tar\&.update (appends if newer, file is required)
+tar\&.x === tar\&.extract
+tar\&.t === tar\&.list
+.fi
+.PP
+.PP
+Keep reading for all the command descriptions and options, as well as the low-level API that they are built on\&.
+.SS "tar\&.c(options, fileList, callback) [alias: tar\&.create]"
+Create a tarball archive\&.
+.PP
+The \fRfileList\fP is an array of paths to add to the tarball\&. Adding a directory also adds its children recursively\&.
+.PP
+An entry in \fRfileList\fP that starts with an \fR@\fP symbol is a tar archive whose entries will be added\&. To add a file that starts with \fR@\fP, prepend it with \fR\&./\fP\&.
+.PP
+The following options are supported:
+.PP
+.IP "\(bu" 2
+\fRfile\fP Write the tarball archive to the specified filename\&. If this is specified, then the callback will be fired when the file has been written, and a promise will be returned that resolves when the file is written\&. If a filename is not specified, then a Readable Stream will be returned which will emit the file data\&. [Alias: \fRf\fP]
+.IP "\(bu" 2
+\fRsync\fP Act synchronously\&. If this is set, then any provided file will be fully written after the call to \fRtar\&.c\fP\&. If this is set, and a file is not provided, then the resulting stream will already have the data ready to \fRread\fP or `emit('data')\fRas soon as you request it\&. -\fPonwarn\fRA function that will get called with\fP(code, message, data)\fRfor any warnings encountered\&. (See 'Warnings and Errors') -\fPstrict\fRTreat warnings as crash-worthy errors\&. Default false\&. -\fPcwd\fRThe current working directory for creating the archive\&. Defaults to\fPprocess\&.cwd()\fR\&. [Alias:\fPC\fR] -\fPprefix\fRA path portion to prefix onto the entries in the archive\&. -\fPgzip\fRSet to any truthy value to create a gzipped archive, or an object with settings for\fPzlib\&.Gzip()\fR[Alias:\fPz\fR] -\fPfilter\fRA function that gets called with\fP(path, stat)\fRfor each entry being added\&. Return\fPtrue\fRto add the entry to the archive, or\fPfalse\fRto omit it\&. -\fPportable\fROmit metadata that is system-specific:\fPctime\fR,\fPatime\fR, \fPuid\fR,\fPgid\fR,\fPuname\fR,\fPgname\fR,\fPdev\fR,\fPino\fR, and\fPnlink\fR\&. Note that\fPmtime\fRis still included, because this is necessary for other time-based operations\&. Additionally,\fPmode\fRis set to a 'reasonable
+  default' for most unix systems, based on a\fPumask\fRvalue of\fP0o22\fR\&. -\fPpreservePaths\fRAllow absolute paths\&. By default,\fP/\fRis stripped from absolute paths\&. [Alias:\fPP\fR] -\fPmode\fRThe mode to set on the created file archive -\fPnoDirRecurse\fRDo not recursively archive the contents of directories\&. [Alias:\fPn\fR] -\fPfollow\fRSet to true to pack the targets of symbolic links\&. Without this option, symbolic links are archived as such\&. [Alias:\fPL\fR,\fPh\fR] -\fPnoPax\fRSuppress pax extended headers\&. Note that this means that long paths and linkpaths will be truncated, and large or negative numeric values may be interpreted incorrectly\&. -\fPnoMtime\fRSet to true to omit writing\fPmtime\fRvalues for entries\&. Note that this prevents using other mtime-based features like \fPtar\&.update\fRor the\fPkeepNewer\fRoption with the resulting tar archive\&. [Alias:\fPm\fR,\fPno-mtime\fR] -\fPmtime\fRSet to a\fPDate\fRobject to force a specific\fPmtime\fRfor everything added to the archive\&. Overridden by\fPnoMtime`\&.
+.PP
+.PP
+The following options are mostly internal, but can be modified in some advanced use cases, such as re-using caches between runs\&.
+.PP
+.IP "\(bu" 2
+\fRlinkCache\fP A Map object containing the device and inode value for any file whose nlink is > 1, to identify hard links\&.
+.IP "\(bu" 2
+\fRstatCache\fP A Map object that caches calls \fRlstat\fP\&.
+.IP "\(bu" 2
+\fRreaddirCache\fP A Map object that caches calls to \fRreaddir\fP\&.
+.IP "\(bu" 2
+\fRjobs\fP A number specifying how many concurrent jobs to run\&. Defaults to 4\&.
+.IP "\(bu" 2
+\fRmaxReadSize\fP The maximum buffer size for \fRfs\&.read()\fP operations\&. Defaults to 16 MB\&.
+.PP
+.SS "tar\&.x(options, fileList, callback) [alias: tar\&.extract]"
+Extract a tarball archive\&.
+.PP
+The \fRfileList\fP is an array of paths to extract from the tarball\&. If no paths are provided, then all the entries are extracted\&.
+.PP
+If the archive is gzipped, then tar will detect this and unzip it\&.
+.PP
+Note that all directories that are created will be forced to be writable, readable, and listable by their owner, to avoid cases where a directory prevents extraction of child entries by virtue of its mode\&.
+.PP
+Most extraction errors will cause a \fRwarn\fP event to be emitted\&. If the \fRcwd\fP is missing, or not a directory, then the extraction will fail completely\&.
+.PP
+The following options are supported:
+.PP
+.IP "\(bu" 2
+\fRcwd\fP Extract files relative to the specified directory\&. Defaults to \fRprocess\&.cwd()\fP\&. If provided, this must exist and must be a directory\&. [Alias: \fRC\fP]
+.IP "\(bu" 2
+\fRfile\fP The archive file to extract\&. If not specified, then a Writable stream is returned where the archive data should be written\&. [Alias: \fRf\fP]
+.IP "\(bu" 2
+\fRsync\fP Create files and directories synchronously\&.
+.IP "\(bu" 2
+\fRstrict\fP Treat warnings as crash-worthy errors\&. Default false\&.
+.IP "\(bu" 2
+\fRfilter\fP A function that gets called with \fR(path, entry)\fP for each entry being unpacked\&. Return \fRtrue\fP to unpack the entry from the archive, or \fRfalse\fP to skip it\&.
+.IP "\(bu" 2
+\fRnewer\fP Set to true to keep the existing file on disk if it's newer than the file in the archive\&. [Alias: \fRkeep-newer\fP, \fRkeep-newer-files\fP]
+.IP "\(bu" 2
+\fRkeep\fP Do not overwrite existing files\&. In particular, if a file appears more than once in an archive, later copies will not overwrite earlier copies\&. [Alias: \fRk\fP, \fRkeep-existing\fP]
+.IP "\(bu" 2
+\fRpreservePaths\fP Allow absolute paths, paths containing \fR\&.\&.\fP, and extracting through symbolic links\&. By default, \fR/\fP is stripped from absolute paths, \fR\&.\&.\fP paths are not extracted, and any file whose location would be modified by a symbolic link is not extracted\&. [Alias: \fRP\fP]
+.IP "\(bu" 2
+\fRunlink\fP Unlink files before creating them\&. Without this option, tar overwrites existing files, which preserves existing hardlinks\&. With this option, existing hardlinks will be broken, as will any symlink that would affect the location of an extracted file\&. [Alias: \fRU\fP]
+.IP "\(bu" 2
+\fRstrip\fP Remove the specified number of leading path elements\&. Pathnames with fewer elements will be silently skipped\&. Note that the pathname is edited after applying the filter, but before security checks\&. [Alias: \fRstrip-components\fP, \fRstripComponents\fP]
+.IP "\(bu" 2
+\fRonwarn\fP A function that will get called with \fR(code, message, data)\fP for any warnings encountered\&. (See 'Warnings and Errors')
+.IP "\(bu" 2
+\fRpreserveOwner\fP If true, tar will set the \fRuid\fP and \fRgid\fP of extracted entries to the \fRuid\fP and \fRgid\fP fields in the archive\&. This defaults to true when run as root, and false otherwise\&. If false, then files and directories will be set with the owner and group of the user running the process\&. This is similar to \fR-p\fP in \fRtar(1)\fP, but ACLs and other system-specific data is never unpacked in this implementation, and modes are set by default already\&. [Alias: \fRp\fP]
+.IP "\(bu" 2
+\fRuid\fP Set to a number to force ownership of all extracted files and folders, and all implicitly created directories, to be owned by the specified user id, regardless of the \fRuid\fP field in the archive\&. Cannot be used along with \fRpreserveOwner\fP\&. Requires also setting a \fRgid\fP option\&.
+.IP "\(bu" 2
+\fRgid\fP Set to a number to force ownership of all extracted files and folders, and all implicitly created directories, to be owned by the specified group id, regardless of the \fRgid\fP field in the archive\&. Cannot be used along with \fRpreserveOwner\fP\&. Requires also setting a \fRuid\fP option\&.
+.IP "\(bu" 2
+\fRnoMtime\fP Set to true to omit writing \fRmtime\fP value for extracted entries\&. [Alias: \fRm\fP, \fRno-mtime\fP]
+.IP "\(bu" 2
+\fRtransform\fP Provide a function that takes an \fRentry\fP object, and returns a stream, or any falsey value\&. If a stream is provided, then that stream's data will be written instead of the contents of the archive entry\&. If a falsey value is provided, then the entry is written to disk as normal\&. (To exclude items from extraction, use the \fRfilter\fP option described above\&.)
+.IP "\(bu" 2
+\fRonentry\fP A function that gets called with \fR(entry)\fP for each entry that passes the filter\&.
+.IP "\(bu" 2
+\fRonwarn\fP A function that will get called with \fR(code, message, data)\fP for any warnings encountered\&. (See 'Warnings and Errors')
+.IP "\(bu" 2
+\fRnoChmod\fP Set to true to omit calling \fRfs\&.chmod()\fP to ensure that the extracted file matches the entry mode\&. This also suppresses the call to \fRprocess\&.umask()\fP to determine the default umask value, since tar will extract with whatever mode is provided, and let the process \fRumask\fP apply normally\&.
+.IP "\(bu" 2
+\fRmaxDepth\fP The maximum depth of subfolders to extract into\&. This defaults to 1024\&. Anything deeper than the limit will raise a warning and skip the entry\&. Set to \fRInfinity\fP to remove the limitation\&.
+.PP
+.PP
+The following options are mostly internal, but can be modified in some advanced use cases, such as re-using caches between runs\&.
+.PP
+.IP "\(bu" 2
+\fRmaxReadSize\fP The maximum buffer size for \fRfs\&.read()\fP operations\&. Defaults to 16 MB\&.
+.IP "\(bu" 2
+\fRumask\fP Filter the modes of entries like \fRprocess\&.umask()\fP\&.
+.IP "\(bu" 2
+\fRdmode\fP Default mode for directories
+.IP "\(bu" 2
+\fRfmode\fP Default mode for files
+.IP "\(bu" 2
+\fRdirCache\fP A Map object of which directories exist\&.
+.IP "\(bu" 2
+\fRmaxMetaEntrySize\fP The maximum size of meta entries that is supported\&. Defaults to 1 MB\&.
+.PP
+.PP
+Note that using an asynchronous stream type with the \fRtransform\fP option will cause undefined behavior in sync extractions\&. \fRMiniPass\fP-based streams are designed for this use case\&.
+.SS "tar\&.t(options, fileList, callback) [alias: tar\&.list]"
+List the contents of a tarball archive\&.
+.PP
+The \fRfileList\fP is an array of paths to list from the tarball\&. If no paths are provided, then all the entries are listed\&.
+.PP
+If the archive is gzipped, then tar will detect this and unzip it\&.
+.PP
+If the \fRfile\fP option is \fInot\fP provided, then returns an event emitter that emits \fRentry\fP events with \fRtar\&.ReadEntry\fP objects\&. However, they don't emit `'data'\fRor\fP'end'\fRevents\&. (If you want to get actual readable entries, use the\fPtar\&.Parse` class instead\&.)
+.PP
+If a \fRfile\fP option \fIis\fP provided, then the return value will be a promise that resolves when the file has been fully traversed in async mode, or \fRundefined\fP if \fRsync: true\fP is set\&. Thus, you \fImust\fP specify an \fRonentry\fP method in order to do anything useful with the data it parses\&.
+.PP
+The following options are supported:
+.PP
+.IP "\(bu" 2
+\fRfile\fP The archive file to list\&. If not specified, then a Writable stream is returned where the archive data should be written\&. [Alias: \fRf\fP]
+.IP "\(bu" 2
+\fRsync\fP Read the specified file synchronously\&. (This has no effect when a file option isn't specified, because entries are emitted as fast as they are parsed from the stream anyway\&.)
+.IP "\(bu" 2
+\fRstrict\fP Treat warnings as crash-worthy errors\&. Default false\&.
+.IP "\(bu" 2
+\fRfilter\fP A function that gets called with \fR(path, entry)\fP for each entry being listed\&. Return \fRtrue\fP to emit the entry from the archive, or \fRfalse\fP to skip it\&.
+.IP "\(bu" 2
+\fRonentry\fP A function that gets called with \fR(entry)\fP for each entry that passes the filter\&. This is important for when \fRfile\fP is set, because there is no other way to do anything useful with this method\&.
+.IP "\(bu" 2
+\fRmaxReadSize\fP The maximum buffer size for \fRfs\&.read()\fP operations\&. Defaults to 16 MB\&.
+.IP "\(bu" 2
+\fRnoResume\fP By default, \fRentry\fP streams are resumed immediately after the call to \fRonentry\fP\&. Set \fRnoResume: true\fP to suppress this behavior\&. Note that by opting into this, the stream will never complete until the entry data is consumed\&.
+.IP "\(bu" 2
+\fRonwarn\fP A function that will get called with \fR(code, message, data)\fP for any warnings encountered\&. (See 'Warnings and Errors')
+.PP
+.SS "tar\&.u(options, fileList, callback) [alias: tar\&.update]"
+Add files to an archive if they are newer than the entry already in the tarball archive\&.
+.PP
+The \fRfileList\fP is an array of paths to add to the tarball\&. Adding a directory also adds its children recursively\&.
+.PP
+An entry in \fRfileList\fP that starts with an \fR@\fP symbol is a tar archive whose entries will be added\&. To add a file that starts with \fR@\fP, prepend it with \fR\&./\fP\&.
+.PP
+The following options are supported:
+.PP
+.IP "\(bu" 2
+\fRfile\fP Required\&. Write the tarball archive to the specified filename\&. [Alias: \fRf\fP]
+.IP "\(bu" 2
+\fRsync\fP Act synchronously\&. If this is set, then any provided file will be fully written after the call to \fRtar\&.c\fP\&.
+.IP "\(bu" 2
+\fRonwarn\fP A function that will get called with \fR(code, message, data)\fP for any warnings encountered\&. (See 'Warnings and Errors')
+.IP "\(bu" 2
+\fRstrict\fP Treat warnings as crash-worthy errors\&. Default false\&.
+.IP "\(bu" 2
+\fRcwd\fP The current working directory for adding entries to the archive\&. Defaults to \fRprocess\&.cwd()\fP\&. [Alias: \fRC\fP]
+.IP "\(bu" 2
+\fRprefix\fP A path portion to prefix onto the entries in the archive\&.
+.IP "\(bu" 2
+\fRgzip\fP Set to any truthy value to create a gzipped archive, or an object with settings for \fRzlib\&.Gzip()\fP [Alias: \fRz\fP]
+.IP "\(bu" 2
+\fRfilter\fP A function that gets called with \fR(path, stat)\fP for each entry being added\&. Return \fRtrue\fP to add the entry to the archive, or \fRfalse\fP to omit it\&.
+.IP "\(bu" 2
+\fRportable\fP Omit metadata that is system-specific: \fRctime\fP, \fRatime\fP, \fRuid\fP, \fRgid\fP, \fRuname\fP, \fRgname\fP, \fRdev\fP, \fRino\fP, and \fRnlink\fP\&. Note that \fRmtime\fP is still included, because this is necessary for other time-based operations\&. Additionally, \fRmode\fP is set to a 'reasonable
+  default' for most unix systems, based on a \fRumask\fP value of \fR0o22\fP\&.
+.IP "\(bu" 2
+\fRpreservePaths\fP Allow absolute paths\&. By default, \fR/\fP is stripped from absolute paths\&. [Alias: \fRP\fP]
+.IP "\(bu" 2
+\fRmaxReadSize\fP The maximum buffer size for \fRfs\&.read()\fP operations\&. Defaults to 16 MB\&.
+.IP "\(bu" 2
+\fRnoDirRecurse\fP Do not recursively archive the contents of directories\&. [Alias: \fRn\fP]
+.IP "\(bu" 2
+\fRfollow\fP Set to true to pack the targets of symbolic links\&. Without this option, symbolic links are archived as such\&. [Alias: \fRL\fP, \fRh\fP]
+.IP "\(bu" 2
+\fRnoPax\fP Suppress pax extended headers\&. Note that this means that long paths and linkpaths will be truncated, and large or negative numeric values may be interpreted incorrectly\&.
+.IP "\(bu" 2
+\fRnoMtime\fP Set to true to omit writing \fRmtime\fP values for entries\&. Note that this prevents using other mtime-based features like \fRtar\&.update\fP or the \fRkeepNewer\fP option with the resulting tar archive\&. [Alias: \fRm\fP, \fRno-mtime\fP]
+.IP "\(bu" 2
+\fRmtime\fP Set to a \fRDate\fP object to force a specific \fRmtime\fP for everything added to the archive\&. Overridden by \fRnoMtime\fP\&.
+.PP
+.SS "tar\&.r(options, fileList, callback) [alias: tar\&.replace]"
+Add files to an existing archive\&. Because later entries override earlier entries, this effectively replaces any existing entries\&.
+.PP
+The \fRfileList\fP is an array of paths to add to the tarball\&. Adding a directory also adds its children recursively\&.
+.PP
+An entry in \fRfileList\fP that starts with an \fR@\fP symbol is a tar archive whose entries will be added\&. To add a file that starts with \fR@\fP, prepend it with \fR\&./\fP\&.
+.PP
+The following options are supported:
+.PP
+.IP "\(bu" 2
+\fRfile\fP Required\&. Write the tarball archive to the specified filename\&. [Alias: \fRf\fP]
+.IP "\(bu" 2
+\fRsync\fP Act synchronously\&. If this is set, then any provided file will be fully written after the call to \fRtar\&.c\fP\&.
+.IP "\(bu" 2
+\fRonwarn\fP A function that will get called with \fR(code, message, data)\fP for any warnings encountered\&. (See 'Warnings and Errors')
+.IP "\(bu" 2
+\fRstrict\fP Treat warnings as crash-worthy errors\&. Default false\&.
+.IP "\(bu" 2
+\fRcwd\fP The current working directory for adding entries to the archive\&. Defaults to \fRprocess\&.cwd()\fP\&. [Alias: \fRC\fP]
+.IP "\(bu" 2
+\fRprefix\fP A path portion to prefix onto the entries in the archive\&.
+.IP "\(bu" 2
+\fRgzip\fP Set to any truthy value to create a gzipped archive, or an object with settings for \fRzlib\&.Gzip()\fP [Alias: \fRz\fP]
+.IP "\(bu" 2
+\fRfilter\fP A function that gets called with \fR(path, stat)\fP for each entry being added\&. Return \fRtrue\fP to add the entry to the archive, or \fRfalse\fP to omit it\&.
+.IP "\(bu" 2
+\fRportable\fP Omit metadata that is system-specific: \fRctime\fP, \fRatime\fP, \fRuid\fP, \fRgid\fP, \fRuname\fP, \fRgname\fP, \fRdev\fP, \fRino\fP, and \fRnlink\fP\&. Note that \fRmtime\fP is still included, because this is necessary for other time-based operations\&. Additionally, \fRmode\fP is set to a 'reasonable
+  default' for most unix systems, based on a \fRumask\fP value of \fR0o22\fP\&.
+.IP "\(bu" 2
+\fRpreservePaths\fP Allow absolute paths\&. By default, \fR/\fP is stripped from absolute paths\&. [Alias: \fRP\fP]
+.IP "\(bu" 2
+\fRmaxReadSize\fP The maximum buffer size for \fRfs\&.read()\fP operations\&. Defaults to 16 MB\&.
+.IP "\(bu" 2
+\fRnoDirRecurse\fP Do not recursively archive the contents of directories\&. [Alias: \fRn\fP]
+.IP "\(bu" 2
+\fRfollow\fP Set to true to pack the targets of symbolic links\&. Without this option, symbolic links are archived as such\&. [Alias: \fRL\fP, \fRh\fP]
+.IP "\(bu" 2
+\fRnoPax\fP Suppress pax extended headers\&. Note that this means that long paths and linkpaths will be truncated, and large or negative numeric values may be interpreted incorrectly\&.
+.IP "\(bu" 2
+\fRnoMtime\fP Set to true to omit writing \fRmtime\fP values for entries\&. Note that this prevents using other mtime-based features like \fRtar\&.update\fP or the \fRkeepNewer\fP option with the resulting tar archive\&. [Alias: \fRm\fP, \fRno-mtime\fP]
+.IP "\(bu" 2
+\fRmtime\fP Set to a \fRDate\fP object to force a specific \fRmtime\fP for everything added to the archive\&. Overridden by \fRnoMtime\fP\&.
+.PP
+.SH "Low-Level API"
+.PP
+.SS "class tar\&.Pack"
+A readable tar stream\&.
+.PP
+Has all the standard readable stream interface stuff\&. `'data'\fRand \fP'end'\fRevents,\fPread()\fRmethod,\fPpause()\fRand\fPresume()`, etc\&.
+.SS "constructor(options)"
+The following options are supported:
+.PP
+.IP "\(bu" 2
+\fRonwarn\fP A function that will get called with \fR(code, message, data)\fP for any warnings encountered\&. (See 'Warnings and Errors')
+.IP "\(bu" 2
+\fRstrict\fP Treat warnings as crash-worthy errors\&. Default false\&.
+.IP "\(bu" 2
+\fRcwd\fP The current working directory for creating the archive\&. Defaults to \fRprocess\&.cwd()\fP\&.
+.IP "\(bu" 2
+\fRprefix\fP A path portion to prefix onto the entries in the archive\&.
+.IP "\(bu" 2
+\fRgzip\fP Set to any truthy value to create a gzipped archive, or an object with settings for \fRzlib\&.Gzip()\fP
+.IP "\(bu" 2
+\fRfilter\fP A function that gets called with \fR(path, stat)\fP for each entry being added\&. Return \fRtrue\fP to add the entry to the archive, or \fRfalse\fP to omit it\&.
+.IP "\(bu" 2
+\fRportable\fP Omit metadata that is system-specific: \fRctime\fP, \fRatime\fP, \fRuid\fP, \fRgid\fP, \fRuname\fP, \fRgname\fP, \fRdev\fP, \fRino\fP, and \fRnlink\fP\&. Note that \fRmtime\fP is still included, because this is necessary for other time-based operations\&. Additionally, \fRmode\fP is set to a 'reasonable
+  default' for most unix systems, based on a \fRumask\fP value of \fR0o22\fP\&.
+.IP "\(bu" 2
+\fRpreservePaths\fP Allow absolute paths\&. By default, \fR/\fP is stripped from absolute paths\&.
+.IP "\(bu" 2
+\fRlinkCache\fP A Map object containing the device and inode value for any file whose nlink is > 1, to identify hard links\&.
+.IP "\(bu" 2
+\fRstatCache\fP A Map object that caches calls \fRlstat\fP\&.
+.IP "\(bu" 2
+\fRreaddirCache\fP A Map object that caches calls to \fRreaddir\fP\&.
+.IP "\(bu" 2
+\fRjobs\fP A number specifying how many concurrent jobs to run\&. Defaults to 4\&.
+.IP "\(bu" 2
+\fRmaxReadSize\fP The maximum buffer size for \fRfs\&.read()\fP operations\&. Defaults to 16 MB\&.
+.IP "\(bu" 2
+\fRnoDirRecurse\fP Do not recursively archive the contents of directories\&.
+.IP "\(bu" 2
+\fRfollow\fP Set to true to pack the targets of symbolic links\&. Without this option, symbolic links are archived as such\&.
+.IP "\(bu" 2
+\fRnoPax\fP Suppress pax extended headers\&. Note that this means that long paths and linkpaths will be truncated, and large or negative numeric values may be interpreted incorrectly\&.
+.IP "\(bu" 2
+\fRnoMtime\fP Set to true to omit writing \fRmtime\fP values for entries\&. Note that this prevents using other mtime-based features like \fRtar\&.update\fP or the \fRkeepNewer\fP option with the resulting tar archive\&.
+.IP "\(bu" 2
+\fRmtime\fP Set to a \fRDate\fP object to force a specific \fRmtime\fP for everything added to the archive\&. Overridden by \fRnoMtime\fP\&.
+.PP
+.SS "add(path)"
+Adds an entry to the archive\&. Returns the Pack stream\&.
+.SS "write(path)"
+Adds an entry to the archive\&. Returns true if flushed\&.
+.SS "end()"
+Finishes the archive\&.
+.SS "class tar\&.Pack\&.Sync"
+Synchronous version of \fRtar\&.Pack\fP\&.
+.SS "class tar\&.Unpack"
+A writable stream that unpacks a tar archive onto the file system\&.
+.PP
+All the normal writable stream stuff is supported\&. \fRwrite()\fP and \fRend()\fP methods, `'drain'` events, etc\&.
+.PP
+Note that all directories that are created will be forced to be writable, readable, and listable by their owner, to avoid cases where a directory prevents extraction of child entries by virtue of its mode\&.
+.PP
+`'close'` is emitted when it's done writing stuff to the file system\&.
+.PP
+Most unpack errors will cause a \fRwarn\fP event to be emitted\&. If the \fRcwd\fP is missing, or not a directory, then an error will be emitted\&.
+.SS "constructor(options)"
+.IP "\(bu" 2
+\fRcwd\fP Extract files relative to the specified directory\&. Defaults to \fRprocess\&.cwd()\fP\&. If provided, this must exist and must be a directory\&.
+.IP "\(bu" 2
+\fRfilter\fP A function that gets called with \fR(path, entry)\fP for each entry being unpacked\&. Return \fRtrue\fP to unpack the entry from the archive, or \fRfalse\fP to skip it\&.
+.IP "\(bu" 2
+\fRnewer\fP Set to true to keep the existing file on disk if it's newer than the file in the archive\&.
+.IP "\(bu" 2
+\fRkeep\fP Do not overwrite existing files\&. In particular, if a file appears more than once in an archive, later copies will not overwrite earlier copies\&.
+.IP "\(bu" 2
+\fRpreservePaths\fP Allow absolute paths, paths containing \fR\&.\&.\fP, and extracting through symbolic links\&. By default, \fR/\fP is stripped from absolute paths, \fR\&.\&.\fP paths are not extracted, and any file whose location would be modified by a symbolic link is not extracted\&.
+.IP "\(bu" 2
+\fRunlink\fP Unlink files before creating them\&. Without this option, tar overwrites existing files, which preserves existing hardlinks\&. With this option, existing hardlinks will be broken, as will any symlink that would affect the location of an extracted file\&.
+.IP "\(bu" 2
+\fRstrip\fP Remove the specified number of leading path elements\&. Pathnames with fewer elements will be silently skipped\&. Note that the pathname is edited after applying the filter, but before security checks\&.
+.IP "\(bu" 2
+\fRonwarn\fP A function that will get called with \fR(code, message, data)\fP for any warnings encountered\&. (See 'Warnings and Errors')
+.IP "\(bu" 2
+\fRumask\fP Filter the modes of entries like \fRprocess\&.umask()\fP\&.
+.IP "\(bu" 2
+\fRdmode\fP Default mode for directories
+.IP "\(bu" 2
+\fRfmode\fP Default mode for files
+.IP "\(bu" 2
+\fRdirCache\fP A Map object of which directories exist\&.
+.IP "\(bu" 2
+\fRmaxMetaEntrySize\fP The maximum size of meta entries that is supported\&. Defaults to 1 MB\&.
+.IP "\(bu" 2
+\fRpreserveOwner\fP If true, tar will set the \fRuid\fP and \fRgid\fP of extracted entries to the \fRuid\fP and \fRgid\fP fields in the archive\&. This defaults to true when run as root, and false otherwise\&. If false, then files and directories will be set with the owner and group of the user running the process\&. This is similar to \fR-p\fP in \fRtar(1)\fP, but ACLs and other system-specific data is never unpacked in this implementation, and modes are set by default already\&.
+.IP "\(bu" 2
+\fRwin32\fP True if on a windows platform\&. Causes behavior where filenames containing \fR<|>?\fP chars are converted to windows-compatible values while being unpacked\&.
+.IP "\(bu" 2
+\fRuid\fP Set to a number to force ownership of all extracted files and folders, and all implicitly created directories, to be owned by the specified user id, regardless of the \fRuid\fP field in the archive\&. Cannot be used along with \fRpreserveOwner\fP\&. Requires also setting a \fRgid\fP option\&.
+.IP "\(bu" 2
+\fRgid\fP Set to a number to force ownership of all extracted files and folders, and all implicitly created directories, to be owned by the specified group id, regardless of the \fRgid\fP field in the archive\&. Cannot be used along with \fRpreserveOwner\fP\&. Requires also setting a \fRuid\fP option\&.
+.IP "\(bu" 2
+\fRnoMtime\fP Set to true to omit writing \fRmtime\fP value for extracted entries\&.
+.IP "\(bu" 2
+\fRtransform\fP Provide a function that takes an \fRentry\fP object, and returns a stream, or any falsey value\&. If a stream is provided, then that stream's data will be written instead of the contents of the archive entry\&. If a falsey value is provided, then the entry is written to disk as normal\&. (To exclude items from extraction, use the \fRfilter\fP option described above\&.)
+.IP "\(bu" 2
+\fRstrict\fP Treat warnings as crash-worthy errors\&. Default false\&.
+.IP "\(bu" 2
+\fRonentry\fP A function that gets called with \fR(entry)\fP for each entry that passes the filter\&.
+.IP "\(bu" 2
+\fRonwarn\fP A function that will get called with \fR(code, message, data)\fP for any warnings encountered\&. (See 'Warnings and Errors')
+.IP "\(bu" 2
+\fRnoChmod\fP Set to true to omit calling \fRfs\&.chmod()\fP to ensure that the extracted file matches the entry mode\&. This also suppresses the call to \fRprocess\&.umask()\fP to determine the default umask value, since tar will extract with whatever mode is provided, and let the process \fRumask\fP apply normally\&.
+.IP "\(bu" 2
+\fRmaxDepth\fP The maximum depth of subfolders to extract into\&. This defaults to 1024\&. Anything deeper than the limit will raise a warning and skip the entry\&. Set to \fRInfinity\fP to remove the limitation\&.
+.PP
+.SS "class tar\&.Unpack\&.Sync"
+Synchronous version of \fRtar\&.Unpack\fP\&.
+.PP
+Note that using an asynchronous stream type with the \fRtransform\fP option will cause undefined behavior in sync unpack streams\&. \fRMiniPass\fP-based streams are designed for this use case\&.
+.SS "class tar\&.Parse"
+A writable stream that parses a tar archive stream\&. All the standard writable stream stuff is supported\&.
+.PP
+If the archive is gzipped, then tar will detect this and unzip it\&.
+.PP
+Emits `'entry'\fRevents with\fPtar\&.ReadEntry` objects, which are themselves readable streams that you can pipe wherever\&.
+.PP
+Each \fRentry\fP will not emit until the one before it is flushed through, so make sure to either consume the data (with `on('data', \&.\&.\&.)\fRor \fP\&.pipe(\&.\&.\&.)\fR) or throw it away with\fP\&.resume()` to keep the stream flowing\&.
+.SS "constructor(options)"
+Returns an event emitter that emits \fRentry\fP events with \fRtar\&.ReadEntry\fP objects\&.
+.PP
+The following options are supported:
+.PP
+.IP "\(bu" 2
+\fRstrict\fP Treat warnings as crash-worthy errors\&. Default false\&.
+.IP "\(bu" 2
+\fRfilter\fP A function that gets called with \fR(path, entry)\fP for each entry being listed\&. Return \fRtrue\fP to emit the entry from the archive, or \fRfalse\fP to skip it\&.
+.IP "\(bu" 2
+\fRonentry\fP A function that gets called with \fR(entry)\fP for each entry that passes the filter\&.
+.IP "\(bu" 2
+\fRonwarn\fP A function that will get called with \fR(code, message, data)\fP for any warnings encountered\&. (See 'Warnings and Errors')
+.PP
+.SS "abort(error)"
+Stop all parsing activities\&. This is called when there are zlib errors\&. It also emits an unrecoverable warning with the error provided\&.
+.SS "class tar\&.ReadEntry extends \fRMiniPass\fP"
+A representation of an entry that is being read out of a tar archive\&.
+.PP
+It has the following fields:
+.PP
+.IP "\(bu" 2
+\fRextended\fP The extended metadata object provided to the constructor\&.
+.IP "\(bu" 2
+\fRglobalExtended\fP The global extended metadata object provided to the constructor\&.
+.IP "\(bu" 2
+\fRremain\fP The number of bytes remaining to be written into the stream\&.
+.IP "\(bu" 2
+\fRblockRemain\fP The number of 512-byte blocks remaining to be written into the stream\&.
+.IP "\(bu" 2
+\fRignore\fP Whether this entry should be ignored\&.
+.IP "\(bu" 2
+\fRmeta\fP True if this represents metadata about the next entry, false if it represents a filesystem object\&.
+.IP "\(bu" 2
+All the fields from the header, extended header, and global extended header are added to the ReadEntry object\&. So it has \fRpath\fP, \fRtype\fP, \fRsize\fP, \fRmode\fP, and so on\&.
+.PP
+.SS "constructor(header, extended, globalExtended)"
+Create a new ReadEntry object with the specified header, extended header, and global extended header values\&.
+.SS "class tar\&.WriteEntry extends \fRMiniPass\fP"
+A representation of an entry that is being written from the file system into a tar archive\&.
+.PP
+Emits data for the Header, and for the Pax Extended Header if one is required, as well as any body data\&.
+.PP
+Creating a WriteEntry for a directory does not also create WriteEntry objects for all of the directory contents\&.
+.PP
+It has the following fields:
+.PP
+.IP "\(bu" 2
+\fRpath\fP The path field that will be written to the archive\&. By default, this is also the path from the cwd to the file system object\&.
+.IP "\(bu" 2
+\fRportable\fP Omit metadata that is system-specific: \fRctime\fP, \fRatime\fP, \fRuid\fP, \fRgid\fP, \fRuname\fP, \fRgname\fP, \fRdev\fP, \fRino\fP, and \fRnlink\fP\&. Note that \fRmtime\fP is still included, because this is necessary for other time-based operations\&. Additionally, \fRmode\fP is set to a 'reasonable
+  default' for most unix systems, based on a \fRumask\fP value of \fR0o22\fP\&.
+.IP "\(bu" 2
+\fRmyuid\fP If supported, the uid of the user running the current process\&.
+.IP "\(bu" 2
+\fRmyuser\fP The \fRenv\&.USER\fP string if set, or `''\fR\&. Set as the entry \fPuname\fRfield if the file's\fPuid\fRmatches\fPthis\&.myuid\fR\&. -\fPmaxReadSize\fRThe maximum buffer size for\fPfs\&.read()\fRoperations\&. Defaults to 1 MB\&. -\fPlinkCache\fRA Map object containing the device and inode value for any file whose nlink is > 1, to identify hard links\&. -\fPstatCache\fRA Map object that caches calls\fPlstat\fR\&. -\fPpreservePaths\fRAllow absolute paths\&. By default,\fP/\fRis stripped from absolute paths\&. -\fPcwd\fRThe current working directory for creating the archive\&. Defaults to\fPprocess\&.cwd()\fR\&. -\fPabsolute\fRThe absolute path to the entry on the filesystem\&. By default, this is\fPpath\&.resolve(this\&.cwd, this\&.path)\fR, but it can be overridden explicitly\&. -\fPstrict\fRTreat warnings as crash-worthy errors\&. Default false\&. -\fPwin32\fRTrue if on a windows platform\&. Causes behavior where paths replace\fP` with \fR/\fP and filenames containing the windows-compatible forms of \fR<|>?:\fP characters are converted to actual \fR<|>?:\fP characters in the archive\&.
+.IP "\(bu" 2
+\fRnoPax\fP Suppress pax extended headers\&. Note that this means that long paths and linkpaths will be truncated, and large or negative numeric values may be interpreted incorrectly\&.
+.IP "\(bu" 2
+\fRnoMtime\fP Set to true to omit writing \fRmtime\fP values for entries\&. Note that this prevents using other mtime-based features like \fRtar\&.update\fP or the \fRkeepNewer\fP option with the resulting tar archive\&.
+.PP
+.SS "constructor(path, options)"
+\fRpath\fP is the path of the entry as it is written in the archive\&.
+.PP
+The following options are supported:
+.PP
+.IP "\(bu" 2
+\fRportable\fP Omit metadata that is system-specific: \fRctime\fP, \fRatime\fP, \fRuid\fP, \fRgid\fP, \fRuname\fP, \fRgname\fP, \fRdev\fP, \fRino\fP, and \fRnlink\fP\&. Note that \fRmtime\fP is still included, because this is necessary for other time-based operations\&. Additionally, \fRmode\fP is set to a 'reasonable
+  default' for most unix systems, based on a \fRumask\fP value of \fR0o22\fP\&.
+.IP "\(bu" 2
+\fRmaxReadSize\fP The maximum buffer size for \fRfs\&.read()\fP operations\&. Defaults to 1 MB\&.
+.IP "\(bu" 2
+\fRlinkCache\fP A Map object containing the device and inode value for any file whose nlink is > 1, to identify hard links\&.
+.IP "\(bu" 2
+\fRstatCache\fP A Map object that caches calls \fRlstat\fP\&.
+.IP "\(bu" 2
+\fRpreservePaths\fP Allow absolute paths\&. By default, \fR/\fP is stripped from absolute paths\&.
+.IP "\(bu" 2
+\fRcwd\fP The current working directory for creating the archive\&. Defaults to \fRprocess\&.cwd()\fP\&.
+.IP "\(bu" 2
+\fRabsolute\fP The absolute path to the entry on the filesystem\&. By default, this is \fRpath\&.resolve(this\&.cwd, this\&.path)\fP, but it can be overridden explicitly\&.
+.IP "\(bu" 2
+\fRstrict\fP Treat warnings as crash-worthy errors\&. Default false\&.
+.IP "\(bu" 2
+\fRwin32\fP True if on a windows platform\&. Causes behavior where paths replace \fR\\\fP with \fR/\fP\&.
+.IP "\(bu" 2
+\fRonwarn\fP A function that will get called with \fR(code, message, data)\fP for any warnings encountered\&. (See 'Warnings and Errors')
+.IP "\(bu" 2
+\fRnoMtime\fP Set to true to omit writing \fRmtime\fP values for entries\&. Note that this prevents using other mtime-based features like \fRtar\&.update\fP or the \fRkeepNewer\fP option with the resulting tar archive\&.
+.IP "\(bu" 2
+\fRumask\fP Set to restrict the modes on the entries in the archive, somewhat like how umask works on file creation\&. Defaults to \fRprocess\&.umask()\fP on unix systems, or \fR0o22\fP on Windows\&.
+.PP
+.SS "warn(message, data)"
+If strict, emit an error with the provided message\&.
+.PP
+Othewise, emit a `'warn'` event with the provided message and data\&.
+.SS "class tar\&.WriteEntry\&.Sync"
+Synchronous version of tar\&.WriteEntry
+.SS "class tar\&.WriteEntry\&.Tar"
+A version of tar\&.WriteEntry that gets its data from a tar\&.ReadEntry instead of from the filesystem\&.
+.SS "constructor(readEntry, options)"
+\fRreadEntry\fP is the entry being read out of another archive\&.
+.PP
+The following options are supported:
+.PP
+.IP "\(bu" 2
+\fRportable\fP Omit metadata that is system-specific: \fRctime\fP, \fRatime\fP, \fRuid\fP, \fRgid\fP, \fRuname\fP, \fRgname\fP, \fRdev\fP, \fRino\fP, and \fRnlink\fP\&. Note that \fRmtime\fP is still included, because this is necessary for other time-based operations\&. Additionally, \fRmode\fP is set to a 'reasonable
+  default' for most unix systems, based on a \fRumask\fP value of \fR0o22\fP\&.
+.IP "\(bu" 2
+\fRpreservePaths\fP Allow absolute paths\&. By default, \fR/\fP is stripped from absolute paths\&.
+.IP "\(bu" 2
+\fRstrict\fP Treat warnings as crash-worthy errors\&. Default false\&.
+.IP "\(bu" 2
+\fRonwarn\fP A function that will get called with \fR(code, message, data)\fP for any warnings encountered\&. (See 'Warnings and Errors')
+.IP "\(bu" 2
+\fRnoMtime\fP Set to true to omit writing \fRmtime\fP values for entries\&. Note that this prevents using other mtime-based features like \fRtar\&.update\fP or the \fRkeepNewer\fP option with the resulting tar archive\&.
+.PP
+.SS "class tar\&.Header"
+A class for reading and writing header blocks\&.
+.PP
+It has the following fields:
+.PP
+.IP "\(bu" 2
+\fRnullBlock\fP True if decoding a block which is entirely composed of \fR0x00\fP null bytes\&. (Useful because tar files are terminated by at least 2 null blocks\&.)
+.IP "\(bu" 2
+\fRcksumValid\fP True if the checksum in the header is valid, false otherwise\&.
+.IP "\(bu" 2
+\fRneedPax\fP True if the values, as encoded, will require a Pax extended header\&.
+.IP "\(bu" 2
+\fRpath\fP The path of the entry\&.
+.IP "\(bu" 2
+\fRmode\fP The 4 lowest-order octal digits of the file mode\&. That is, read/write/execute permissions for world, group, and owner, and the setuid, setgid, and sticky bits\&.
+.IP "\(bu" 2
+\fRuid\fP Numeric user id of the file owner
+.IP "\(bu" 2
+\fRgid\fP Numeric group id of the file owner
+.IP "\(bu" 2
+\fRsize\fP Size of the file in bytes
+.IP "\(bu" 2
+\fRmtime\fP Modified time of the file
+.IP "\(bu" 2
+\fRcksum\fP The checksum of the header\&. This is generated by adding all the bytes of the header block, treating the checksum field itself as all ascii space characters (that is, \fR0x20\fP)\&.
+.IP "\(bu" 2
+\fRtype\fP The human-readable name of the type of entry this represents, or the alphanumeric key if unknown\&.
+.IP "\(bu" 2
+\fRtypeKey\fP The alphanumeric key for the type of entry this header represents\&.
+.IP "\(bu" 2
+\fRlinkpath\fP The target of Link and SymbolicLink entries\&.
+.IP "\(bu" 2
+\fRuname\fP Human-readable user name of the file owner
+.IP "\(bu" 2
+\fRgname\fP Human-readable group name of the file owner
+.IP "\(bu" 2
+\fRdevmaj\fP The major portion of the device number\&. Always \fR0\fP for files, directories, and links\&.
+.IP "\(bu" 2
+\fRdevmin\fP The minor portion of the device number\&. Always \fR0\fP for files, directories, and links\&.
+.IP "\(bu" 2
+\fRatime\fP File access time\&.
+.IP "\(bu" 2
+\fRctime\fP File change time\&.
+.PP
+.SS "constructor(data, [offset=0])"
+\fRdata\fP is optional\&. It is either a Buffer that should be interpreted as a tar Header starting at the specified offset and continuing for 512 bytes, or a data object of keys and values to set on the header object, and eventually encode as a tar Header\&.
+.SS "decode(block, offset)"
+Decode the provided buffer starting at the specified offset\&.
+.PP
+Buffer length must be greater than 512 bytes\&.
+.SS "set(data)"
+Set the fields in the data object\&.
+.SS "encode(buffer, offset)"
+Encode the header fields into the buffer at the specified offset\&.
+.PP
+Returns \fRthis\&.needPax\fP to indicate whether a Pax Extended Header is required to properly encode the specified data\&.
+.SS "class tar\&.Pax"
+An object representing a set of key-value pairs in an Pax extended header entry\&.
+.PP
+It has the following fields\&. Where the same name is used, they have the same semantics as the tar\&.Header field of the same name\&.
+.PP
+.IP "\(bu" 2
+\fRglobal\fP True if this represents a global extended header, or false if it is for a single entry\&.
+.IP "\(bu" 2
+\fRatime\fP
+.IP "\(bu" 2
+\fRcharset\fP
+.IP "\(bu" 2
+\fRcomment\fP
+.IP "\(bu" 2
+\fRctime\fP
+.IP "\(bu" 2
+\fRgid\fP
+.IP "\(bu" 2
+\fRgname\fP
+.IP "\(bu" 2
+\fRlinkpath\fP
+.IP "\(bu" 2
+\fRmtime\fP
+.IP "\(bu" 2
+\fRpath\fP
+.IP "\(bu" 2
+\fRsize\fP
+.IP "\(bu" 2
+\fRuid\fP
+.IP "\(bu" 2
+\fRuname\fP
+.IP "\(bu" 2
+\fRdev\fP
+.IP "\(bu" 2
+\fRino\fP
+.IP "\(bu" 2
+\fRnlink\fP
+.PP
+.SS "constructor(object, global)"
+Set the fields set in the object\&. \fRglobal\fP is a boolean that defaults to false\&.
+.SS "encode()"
+Return a Buffer containing the header and body for the Pax extended header entry, or \fRnull\fP if there is nothing to encode\&.
+.SS "encodeBody()"
+Return a string representing the body of the pax extended header entry\&.
+.SS "encodeField(fieldName)"
+Return a string representing the key/value encoding for the specified fieldName, or `''` if the field is unset\&.
+.SS "tar\&.Pax\&.parse(string, extended, global)"
+Return a new Pax object created by parsing the contents of the string provided\&.
+.PP
+If the \fRextended\fP object is set, then also add the fields from that object\&. (This is necessary because multiple metadata entries can occur in sequence\&.)
+.SS "tar\&.types"
+A translation table for the \fRtype\fP field in tar headers\&.
+.SS "tar\&.types\&.name\&.get(code)"
+Get the human-readable name for a given alphanumeric code\&.
+.SS "tar\&.types\&.code\&.get(name)"
+Get the alphanumeric code for a given human-readable name\&. 

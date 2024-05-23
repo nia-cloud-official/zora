@@ -1,0 +1,225 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2bl_2_r_e_a_d_m_e</compoundname>
+    <title>bl *(BufferList)*</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1autotoc_md209"/> <ulink url="https://travis-ci.com/rvagg/bl/"><image type="html" name="https://api.travis-ci.com/rvagg/bl.svg?branch=master" alt="Build Status" inline="yes"></image>
+</ulink></para>
+<para><bold>A Node.js Buffer list collector, reader and streamer thingy.</bold></para>
+<para><ulink url="https://nodei.co/npm/bl/"><image type="html" name="https://nodei.co/npm/bl.svg" alt="NPM" inline="yes"></image>
+</ulink></para>
+<para><bold>bl</bold> is a storage object for collections of Node Buffers, exposing them with the main Buffer readable API. Also works as a duplex stream so you can collect buffers from a stream that emits them and emit buffers to a stream that consumes them!</para>
+<para>The original buffers are kept intact and copies are only done as necessary. Any reads that require the use of a single original buffer will return a slice of that buffer only (which references the same memory as the original buffer). Reads that span buffers perform concatenation as required and return the results transparently.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>{<sp/>BufferList<sp/>}<sp/>=<sp/>require(&apos;bl&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>bl<sp/>=<sp/>new<sp/>BufferList()</highlight></codeline>
+<codeline><highlight class="normal">bl.append(Buffer.from(&apos;abcd&apos;))</highlight></codeline>
+<codeline><highlight class="normal">bl.append(Buffer.from(&apos;efg&apos;))</highlight></codeline>
+<codeline><highlight class="normal">bl.append(&apos;hi&apos;)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>bl<sp/>will<sp/>also<sp/>accept<sp/>&amp;<sp/>convert<sp/>Strings</highlight></codeline>
+<codeline><highlight class="normal">bl.append(Buffer.from(&apos;j&apos;))</highlight></codeline>
+<codeline><highlight class="normal">bl.append(Buffer.from([<sp/>0x3,<sp/>0x4<sp/>]))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">console.log(bl.length)<sp/>//<sp/>12</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">console.log(bl.slice(0,<sp/>10).toString(&apos;ascii&apos;))<sp/>//<sp/>&apos;abcdefghij&apos;</highlight></codeline>
+<codeline><highlight class="normal">console.log(bl.slice(3,<sp/>10).toString(&apos;ascii&apos;))<sp/>//<sp/>&apos;defghij&apos;</highlight></codeline>
+<codeline><highlight class="normal">console.log(bl.slice(3,<sp/>6).toString(&apos;ascii&apos;))<sp/><sp/>//<sp/>&apos;def&apos;</highlight></codeline>
+<codeline><highlight class="normal">console.log(bl.slice(3,<sp/>8).toString(&apos;ascii&apos;))<sp/><sp/>//<sp/>&apos;defgh&apos;</highlight></codeline>
+<codeline><highlight class="normal">console.log(bl.slice(5,<sp/>10).toString(&apos;ascii&apos;))<sp/>//<sp/>&apos;fghij&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">console.log(bl.indexOf(&apos;def&apos;))<sp/>//<sp/>3</highlight></codeline>
+<codeline><highlight class="normal">console.log(bl.indexOf(&apos;asdf&apos;))<sp/>//<sp/>-1</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>or<sp/>just<sp/>use<sp/>toString!</highlight></codeline>
+<codeline><highlight class="normal">console.log(bl.toString())<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>&apos;abcdefghij\u0003\u0004&apos;</highlight></codeline>
+<codeline><highlight class="normal">console.log(bl.toString(&apos;ascii&apos;,<sp/>3,<sp/>8))<sp/><sp/>//<sp/>&apos;defgh&apos;</highlight></codeline>
+<codeline><highlight class="normal">console.log(bl.toString(&apos;ascii&apos;,<sp/>5,<sp/>10))<sp/>//<sp/>&apos;fghij&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>other<sp/>standard<sp/>Buffer<sp/>readables</highlight></codeline>
+<codeline><highlight class="normal">console.log(bl.readUInt16BE(10))<sp/>//<sp/>0x0304</highlight></codeline>
+<codeline><highlight class="normal">console.log(bl.readUInt16LE(10))<sp/>//<sp/>0x0403</highlight></codeline>
+</programlisting></para>
+<para>Give it a callback in the constructor and use it just like <bold><ulink url="https://github.com/maxogden/node-concat-stream">concat-stream</ulink></bold>:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>{<sp/>BufferListStream<sp/>}<sp/>=<sp/>require(&apos;bl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>fs<sp/>=<sp/>require(&apos;fs&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">fs.createReadStream(&apos;README.md&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>.pipe(BufferListStream((err,<sp/>data)<sp/>=&gt;<sp/>{<sp/>//<sp/>note<sp/>&apos;new&apos;<sp/>isn&apos;t<sp/>strictly<sp/>required</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>`data`<sp/>is<sp/>a<sp/>complete<sp/>Buffer<sp/>object<sp/>containing<sp/>the<sp/>full<sp/>data</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(data.toString())</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}))</highlight></codeline>
+</programlisting></para>
+<para>Note that when you use the <emphasis>callback</emphasis> method like this, the resulting <computeroutput>data</computeroutput> parameter is a concatenation of all <computeroutput>Buffer</computeroutput> objects in the list. If you want to avoid the overhead of this concatenation (in cases of extreme performance consciousness), then avoid the <emphasis>callback</emphasis> method and just listen to <lsquo/>&apos;end<rsquo/>` instead, like a standard Stream.</para>
+<para>Or to fetch a URL using <ulink url="https://github.com/substack/hyperquest">hyperquest</ulink> (should work with <ulink url="http://github.com/mikeal/request">request</ulink> and even plain Node http too!):</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>hyperquest<sp/>=<sp/>require(&apos;hyperquest&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>BufferListStream<sp/>}<sp/>=<sp/>require(&apos;bl&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>url<sp/>=<sp/>&apos;https://raw.github.com/rvagg/bl/master/README.md&apos;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">hyperquest(url).pipe(BufferListStream((err,<sp/>data)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(data.toString())</highlight></codeline>
+<codeline><highlight class="normal">}))</highlight></codeline>
+</programlisting></para>
+<para>Or, use it as a readable stream to recompose a list of Buffers to an output source:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>{<sp/>BufferListStream<sp/>}<sp/>=<sp/>require(&apos;bl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>fs<sp/>=<sp/>require(&apos;fs&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>bl<sp/>=<sp/>new<sp/>BufferListStream()</highlight></codeline>
+<codeline><highlight class="normal">bl.append(Buffer.from(&apos;abcd&apos;))</highlight></codeline>
+<codeline><highlight class="normal">bl.append(Buffer.from(&apos;efg&apos;))</highlight></codeline>
+<codeline><highlight class="normal">bl.append(Buffer.from(&apos;hi&apos;))</highlight></codeline>
+<codeline><highlight class="normal">bl.append(Buffer.from(&apos;j&apos;))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">bl.pipe(fs.createWriteStream(&apos;gibberish.txt&apos;))</highlight></codeline>
+</programlisting></para>
+<sect1 id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1autotoc_md210">
+<title>API</title><para><itemizedlist>
+<listitem><para><ulink url="#ctor"><computeroutput><bold>new BufferList([ buf ])</bold></computeroutput></ulink></para>
+</listitem><listitem><para><ulink url="#isBufferList"><computeroutput><bold>BufferList.isBufferList(obj)</bold></computeroutput></ulink></para>
+</listitem><listitem><para><ulink url="#length"><computeroutput>bl.<bold>length</bold></computeroutput></ulink></para>
+</listitem><listitem><para><ulink url="#append"><computeroutput>bl.<bold>append(buffer)</bold></computeroutput></ulink></para>
+</listitem><listitem><para><ulink url="#get"><computeroutput>bl.<bold>get(index)</bold></computeroutput></ulink></para>
+</listitem><listitem><para><ulink url="#indexOf"><computeroutput>bl.<bold>indexOf(value[, byteOffset][, encoding])</bold></computeroutput></ulink></para>
+</listitem><listitem><para><ulink url="#slice"><computeroutput>bl.<bold>slice([ start[, end ] ])</bold></computeroutput></ulink></para>
+</listitem><listitem><para><ulink url="#shallowSlice"><computeroutput>bl.<bold>shallowSlice([ start[, end ] ])</bold></computeroutput></ulink></para>
+</listitem><listitem><para><ulink url="#copy"><computeroutput>bl.<bold>copy(dest, [ destStart, [ srcStart [, srcEnd ] ] ])</bold></computeroutput></ulink></para>
+</listitem><listitem><para><ulink url="#duplicate"><computeroutput>bl.<bold>duplicate()</bold></computeroutput></ulink></para>
+</listitem><listitem><para><ulink url="#consume"><computeroutput>bl.<bold>consume(bytes)</bold></computeroutput></ulink></para>
+</listitem><listitem><para><ulink url="#toString"><computeroutput>bl.<bold>toString([encoding, [ start, [ end ]]])</bold></computeroutput></ulink></para>
+</listitem><listitem><para><ulink url="#readXX"><computeroutput>bl.<bold>readDoubleBE()</bold></computeroutput>, <computeroutput>bl.<bold>readDoubleLE()</bold></computeroutput>, <computeroutput>bl.<bold>readFloatBE()</bold></computeroutput>, <computeroutput>bl.<bold>readFloatLE()</bold></computeroutput>, <computeroutput>bl.<bold>readInt32BE()</bold></computeroutput>, <computeroutput>bl.<bold>readInt32LE()</bold></computeroutput>, <computeroutput>bl.<bold>readUInt32BE()</bold></computeroutput>, <computeroutput>bl.<bold>readUInt32LE()</bold></computeroutput>, <computeroutput>bl.<bold>readInt16BE()</bold></computeroutput>, <computeroutput>bl.<bold>readInt16LE()</bold></computeroutput>, <computeroutput>bl.<bold>readUInt16BE()</bold></computeroutput>, <computeroutput>bl.<bold>readUInt16LE()</bold></computeroutput>, <computeroutput>bl.<bold>readInt8()</bold></computeroutput>, <computeroutput>bl.<bold>readUInt8()</bold></computeroutput></ulink></para>
+</listitem><listitem><para><ulink url="#ctorStream"><computeroutput><bold>new BufferListStream([ callback ])</bold></computeroutput></ulink></para>
+</listitem></itemizedlist>
+</para>
+<para><hruler/>
+ <anchor id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1ctor"/> </para>
+<sect2 id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1autotoc_md212">
+<title>new BufferList([ Buffer | Buffer array | BufferList | BufferList array | String ])</title><para>No arguments are <emphasis>required</emphasis> for the constructor, but you can initialise the list by passing in a single <computeroutput>Buffer</computeroutput> object or an array of <computeroutput>Buffer</computeroutput> objects.</para>
+<para><computeroutput>new</computeroutput> is not strictly required, if you don&apos;t instantiate a new object, it will be done automatically for you so you can create a new instance simply with:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>{<sp/>BufferList<sp/>}<sp/>=<sp/>require(&apos;bl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>bl<sp/>=<sp/>BufferList()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>equivalent<sp/>to:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>BufferList<sp/>}<sp/>=<sp/>require(&apos;bl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>bl<sp/>=<sp/>new<sp/>BufferList()</highlight></codeline>
+</programlisting></para>
+<para><hruler/>
+ <anchor id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1isBufferList"/> </para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1autotoc_md214">
+<title>BufferList.isBufferList(obj)</title><para>Determines if the passed object is a <computeroutput>BufferList</computeroutput>. It will return <computeroutput>true</computeroutput> if the passed object is an instance of <computeroutput>BufferList</computeroutput> <bold>or</bold> <computeroutput>BufferListStream</computeroutput> and <computeroutput>false</computeroutput> otherwise.</para>
+<para>N.B. this won&apos;t return <computeroutput>true</computeroutput> for <computeroutput>BufferList</computeroutput> or <computeroutput>BufferListStream</computeroutput> instances created by versions of this library before this static method was added.</para>
+<para><hruler/>
+ <anchor id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1length"/> </para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1autotoc_md216">
+<title>bl.length</title><para>Get the length of the list in bytes. This is the sum of the lengths of all of the buffers contained in the list, minus any initial offset for a semi-consumed buffer at the beginning. Should accurately represent the total number of bytes that can be read from the list.</para>
+<para><hruler/>
+ <anchor id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1append"/> </para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1autotoc_md218">
+<title>bl.append(Buffer | Buffer array | BufferList | BufferList array | String)</title><para><computeroutput>append(buffer)</computeroutput> adds an additional buffer or BufferList to the internal list. <computeroutput>this</computeroutput> is returned so it can be chained.</para>
+<para><hruler/>
+ <anchor id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1get"/> </para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1autotoc_md220">
+<title>bl.get(index)</title><para><computeroutput>get()</computeroutput> will return the byte at the specified index.</para>
+<para><hruler/>
+ <anchor id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1indexOf"/> </para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1autotoc_md222">
+<title>bl.indexOf(value[, byteOffset][, encoding])</title><para><computeroutput>get()</computeroutput> will return the byte at the specified index. <computeroutput>indexOf()</computeroutput> method returns the first index at which a given element can be found in the BufferList, or -1 if it is not present.</para>
+<para><hruler/>
+ <anchor id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1slice"/> </para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1autotoc_md224">
+<title>bl.slice([ start, [ end ] ])</title><para><computeroutput>slice()</computeroutput> returns a new <computeroutput>Buffer</computeroutput> object containing the bytes within the range specified. Both <computeroutput>start</computeroutput> and <computeroutput>end</computeroutput> are optional and will default to the beginning and end of the list respectively.</para>
+<para>If the requested range spans a single internal buffer then a slice of that buffer will be returned which shares the original memory range of that Buffer. If the range spans multiple buffers then copy operations will likely occur to give you a uniform Buffer.</para>
+<para><hruler/>
+ <anchor id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1shallowSlice"/> </para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1autotoc_md226">
+<title>bl.shallowSlice([ start, [ end ] ])</title><para><computeroutput>shallowSlice()</computeroutput> returns a new <computeroutput>BufferList</computeroutput> object containing the bytes within the range specified. Both <computeroutput>start</computeroutput> and <computeroutput>end</computeroutput> are optional and will default to the beginning and end of the list respectively.</para>
+<para>No copies will be performed. All buffers in the result share memory with the original list.</para>
+<para><hruler/>
+ <anchor id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1copy"/> </para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1autotoc_md228">
+<title>bl.copy(dest, [ destStart, [ srcStart [, srcEnd ] ] ])</title><para><computeroutput>copy()</computeroutput> copies the content of the list in the <computeroutput>dest</computeroutput> buffer, starting from <computeroutput>destStart</computeroutput> and containing the bytes within the range specified with <computeroutput>srcStart</computeroutput> to <computeroutput>srcEnd</computeroutput>. <computeroutput>destStart</computeroutput>, <computeroutput>start</computeroutput> and <computeroutput>end</computeroutput> are optional and will default to the beginning of the <computeroutput>dest</computeroutput> buffer, and the beginning and end of the list respectively.</para>
+<para><hruler/>
+ <anchor id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1duplicate"/> </para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1autotoc_md230">
+<title>bl.duplicate()</title><para><computeroutput>duplicate()</computeroutput> performs a <bold>shallow-copy</bold> of the list. The internal Buffers remains the same, so if you change the underlying Buffers, the change will be reflected in both the original and the duplicate. This method is needed if you want to call <computeroutput>consume()</computeroutput> or <computeroutput>pipe()</computeroutput> and still keep the original list.Example:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>bl<sp/>=<sp/>new<sp/>BufferListStream()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">bl.append(&apos;hello&apos;)</highlight></codeline>
+<codeline><highlight class="normal">bl.append(&apos;<sp/>world&apos;)</highlight></codeline>
+<codeline><highlight class="normal">bl.append(&apos;\n&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">bl.duplicate().pipe(process.stdout,<sp/>{<sp/>end:<sp/>false<sp/>})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">console.log(bl.toString())</highlight></codeline>
+</programlisting></para>
+<para><hruler/>
+ <anchor id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1consume"/> </para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1autotoc_md232">
+<title>bl.consume(bytes)</title><para><computeroutput>consume()</computeroutput> will shift bytes <emphasis>off the start of the list</emphasis>. The number of bytes consumed don&apos;t need to line up with the sizes of the internal Buffers<mdash/>initial offsets will be calculated accordingly in order to give you a consistent view of the data.</para>
+<para><hruler/>
+ <anchor id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1toString"/> </para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1autotoc_md234">
+<title>bl.toString([encoding, [ start, [ end ]]])</title><para><computeroutput>toString()</computeroutput> will return a string representation of the buffer. The optional <computeroutput>start</computeroutput> and <computeroutput>end</computeroutput> arguments are passed on to <computeroutput>slice()</computeroutput>, while the <computeroutput>encoding</computeroutput> is passed on to <computeroutput>toString()</computeroutput> of the resulting Buffer. See the <ulink url="http://nodejs.org/docs/latest/api/buffer.html#buffer_buf_tostring_encoding_start_end">Buffer::toString()</ulink> documentation for more information.</para>
+<para><hruler/>
+ <anchor id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1readXX"/> </para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1autotoc_md236">
+<title>bl.readDoubleBE(), bl.readDoubleLE(), bl.readFloatBE(), bl.readFloatLE(), bl.readInt32BE(), bl.readInt32LE(), bl.readUInt32BE(), bl.readUInt32LE(), bl.readInt16BE(), bl.readInt16LE(), bl.readUInt16BE(), bl.readUInt16LE(), bl.readInt8(), bl.readUInt8()</title><para>All of the standard byte-reading methods of the <computeroutput>Buffer</computeroutput> interface are implemented and will operate across internal Buffer boundaries transparently.</para>
+<para>See the <bold><computeroutput><ulink url="http://nodejs.org/docs/latest/api/buffer.html">Buffer</ulink></computeroutput></bold> documentation for how these work.</para>
+<para><hruler/>
+ <anchor id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1ctorStream"/> </para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1autotoc_md238">
+<title>new BufferListStream([ callback | Buffer | Buffer array | BufferList | BufferList array | String ])</title><para><bold>BufferListStream</bold> is a Node <bold><ulink url="http://nodejs.org/docs/latest/api/stream.html#stream_class_stream_duplex">Duplex Stream</ulink></bold>, so it can be read from and written to like a standard Node stream. You can also <computeroutput>pipe()</computeroutput> to and from a <bold>BufferListStream</bold> instance.</para>
+<para>The constructor takes an optional callback, if supplied, the callback will be called with an error argument followed by a reference to the <bold>bl</bold> instance, when <computeroutput>bl.end()</computeroutput> is called (i.e. from a piped stream). This is a convenient method of collecting the entire contents of a stream, particularly when the stream is <emphasis>chunky</emphasis>, such as a network stream.</para>
+<para>Normally, no arguments are required for the constructor, but you can initialise the list by passing in a single <computeroutput>Buffer</computeroutput> object or an array of <computeroutput>Buffer</computeroutput> object.</para>
+<para><computeroutput>new</computeroutput> is not strictly required, if you don&apos;t instantiate a new object, it will be done automatically for you so you can create a new instance simply with:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>{<sp/>BufferListStream<sp/>}<sp/>=<sp/>require(&apos;bl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>bl<sp/>=<sp/>BufferListStream()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>equivalent<sp/>to:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">const<sp/>{<sp/>BufferListStream<sp/>}<sp/>=<sp/>require(&apos;bl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>bl<sp/>=<sp/>new<sp/>BufferListStream()</highlight></codeline>
+</programlisting></para>
+<para>N.B. For backwards compatibility reasons, <computeroutput>BufferListStream</computeroutput> is the <bold>default</bold> export when you <lsquo/>require(&apos;bl<rsquo/>)`:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">const<sp/>{<sp/>BufferListStream<sp/>}<sp/>=<sp/>require(&apos;bl&apos;)</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>equivalent<sp/>to:</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>BufferListStream<sp/>=<sp/>require(&apos;bl&apos;)</highlight></codeline>
+</programlisting></para>
+<para><hruler/>
+</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1autotoc_md240">
+<title>Contributors</title><para><bold>bl</bold> is brought to you by the following hackers:</para>
+<para><itemizedlist>
+<listitem><para><ulink url="https://github.com/rvagg">Rod Vagg</ulink></para>
+</listitem><listitem><para><ulink url="https://github.com/mcollina">Matteo Collina</ulink></para>
+</listitem><listitem><para><ulink url="https://github.com/jcrugzz">Jarett Cruger</ulink></para>
+</listitem></itemizedlist>
+</para>
+<para><anchor id="md_backend_2node__modules_2node-addon-api_2_r_e_a_d_m_e_1license"/> </para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2bl_2_r_e_a_d_m_e_1autotoc_md241">
+<title>License &amp; copyright</title><para>Copyright (c) 2013-2019 bl contributors (listed above).</para>
+<para>bl is licensed under the MIT license. All rights not explicitly granted in the MIT license are reserved. See the included LICENSE.md file for more details. </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/bl/README.md"/>
+  </compounddef>
+</doxygen>

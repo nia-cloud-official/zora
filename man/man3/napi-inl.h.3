@@ -1,0 +1,189 @@
+.TH "backend/node_modules/node-addon-api/napi-inl.h" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+backend/node_modules/node-addon-api/napi-inl.h
+.SH SYNOPSIS
+.br
+.PP
+\fR#include <algorithm>\fP
+.br
+\fR#include <cstring>\fP
+.br
+\fR#include <type_traits>\fP
+.br
+\fR#include <utility>\fP
+.br
+\fR#include 'napi\-inl\&.deprecated\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBNapi::details::CallbackData< Callable, Return >\fP"
+.br
+.ti -1c
+.RI "struct \fBNapi::details::CallbackData< Callable, void >\fP"
+.br
+.ti -1c
+.RI "struct \fBNapi::details::FinalizeData< T, Finalizer, Hint >\fP"
+.br
+.ti -1c
+.RI "struct \fBNapi::details::AccessorCallbackData< Getter, Setter >\fP"
+.br
+.ti -1c
+.RI "struct \fBNapi::details::vf_number< T >\fP"
+.br
+.ti -1c
+.RI "struct \fBNapi::details::vf_number< bool >\fP"
+.br
+.ti -1c
+.RI "struct \fBNapi::details::vf_utf8_charp\fP"
+.br
+.ti -1c
+.RI "struct \fBNapi::details::vf_utf16_charp\fP"
+.br
+.ti -1c
+.RI "struct \fBNapi::details::vf_utf8_string\fP"
+.br
+.ti -1c
+.RI "struct \fBNapi::details::vf_utf16_string\fP"
+.br
+.ti -1c
+.RI "struct \fBNapi::details::vf_fallback< T >\fP"
+.br
+.ti -1c
+.RI "struct \fBNapi::details::disjunction<\&.\&.\&. >\fP"
+.br
+.ti -1c
+.RI "struct \fBNapi::details::disjunction< B >\fP"
+.br
+.ti -1c
+.RI "struct \fBNapi::details::disjunction< B, Bs\&.\&.\&. >\fP"
+.br
+.ti -1c
+.RI "struct \fBNapi::details::can_make_string< T >\fP"
+.br
+.in -1c
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI "namespace \fBNapi\fP"
+.br
+.ti -1c
+.RI "namespace \fBNapi::details\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBNODE_API_MODULE\fP(modname,  regfunc)"
+.br
+.ti -1c
+.RI "#define \fBNODE_API_NAMED_ADDON\fP(modname,  classname)"
+.br
+.ti -1c
+.RI "#define \fBNODE_API_ADDON\fP(classname)     \fBNODE_API_NAMED_ADDON\fP(NODE_GYP_MODULE_NAME, classname)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "template<typename FreeType > void \fBNapi::details::default_finalizer\fP (napi_env, void *data, void *)"
+.br
+.ti -1c
+.RI "template<typename FreeType , napi_finalize finalizer = default_finalizer<FreeType>> napi_status \fBNapi::details::AttachData\fP (napi_env env, napi_value obj, FreeType *data, void *hint=nullptr)"
+.br
+.ti -1c
+.RI "template<typename Callable > napi_value \fBNapi::details::WrapCallback\fP (Callable callback)"
+.br
+.ti -1c
+.RI "template<typename Callable > void \fBNapi::details::WrapVoidCallback\fP (Callable callback)"
+.br
+.ti -1c
+.RI "template<void(*)(const \fBCallbackInfo\fP &info) Callback> napi_value \fBNapi::details::TemplatedVoidCallback\fP (napi_env env, napi_callback_info info) \fBNAPI_NOEXCEPT\fP"
+.br
+.ti -1c
+.RI "template<\fBNapi::Value\fP(*)(const \fBCallbackInfo\fP &info) Callback> napi_value \fBNapi::details::TemplatedCallback\fP (napi_env env, napi_callback_info info) \fBNAPI_NOEXCEPT\fP"
+.br
+.ti -1c
+.RI "template<typename T , \fBNapi::Value\fP(T::*)(const \fBCallbackInfo\fP &info) UnwrapCallback> napi_value \fBNapi::details::TemplatedInstanceCallback\fP (napi_env env, napi_callback_info info) \fBNAPI_NOEXCEPT\fP"
+.br
+.ti -1c
+.RI "template<typename T , void(T::*)(const \fBCallbackInfo\fP &info) UnwrapCallback> napi_value \fBNapi::details::TemplatedInstanceVoidCallback\fP (napi_env env, napi_callback_info info) \fBNAPI_NOEXCEPT\fP"
+.br
+.ti -1c
+.RI "napi_value \fBNapi::RegisterModule\fP (napi_env env, napi_value exports, \fBModuleRegisterCallback\fP registerCallback)"
+.br
+.ti -1c
+.RI "template<class T > \fBMaybe\fP< T > \fBNapi::Nothing\fP ()"
+.br
+.ti -1c
+.RI "template<class T > \fBMaybe\fP< T > \fBNapi::Just\fP (const T &t)"
+.br
+.ti -1c
+.RI "template<typename CbData > napi_status \fBNapi::CreateFunction\fP (napi_env env, const char *utf8name, napi_callback cb, CbData *data, napi_value *result)"
+.br
+.ti -1c
+.RI "template<typename T > \fBReference\fP< T > \fBNapi::Weak\fP (T value)"
+.br
+.ti -1c
+.RI "\fBObjectReference\fP \fBNapi::Weak\fP (\fBObject\fP value)"
+.br
+.ti -1c
+.RI "\fBFunctionReference\fP \fBNapi::Weak\fP (\fBFunction\fP value)"
+.br
+.ti -1c
+.RI "template<typename T > \fBReference\fP< T > \fBNapi::Persistent\fP (T value)"
+.br
+.ti -1c
+.RI "\fBObjectReference\fP \fBNapi::Persistent\fP (\fBObject\fP value)"
+.br
+.ti -1c
+.RI "\fBFunctionReference\fP \fBNapi::Persistent\fP (\fBFunction\fP value)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "constexpr int \fBNapi::details::napi_no_external_buffers_allowed\fP = 22"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define NODE_API_ADDON( classname)     \fBNODE_API_NAMED_ADDON\fP(NODE_GYP_MODULE_NAME, classname)"
+
+.PP
+Definition at line \fB367\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "#define NODE_API_MODULE( modname,  regfunc)"
+\fBValue:\fP
+.nf
+  static napi_value __napi_##regfunc(napi_env env, napi_value exports) {       \\
+    return Napi::RegisterModule(env, exports, regfunc);                        \\
+  }                                                                            \\
+  NAPI_MODULE(modname, __napi_##regfunc)
+.PP
+.fi
+
+.PP
+Definition at line \fB351\fP of file \fBnapi\-inl\&.h\fP\&.
+.SS "#define NODE_API_NAMED_ADDON( modname,  classname)"
+\fBValue:\fP
+.nf
+  static napi_value __napi_##classname(napi_env env, napi_value exports) {     \\
+    return Napi::RegisterModule(env, exports, &classname::Init);               \\
+  }                                                                            \\
+  NAPI_MODULE(modname, __napi_##classname)
+.PP
+.fi
+
+.PP
+Definition at line \fB359\fP of file \fBnapi\-inl\&.h\fP\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

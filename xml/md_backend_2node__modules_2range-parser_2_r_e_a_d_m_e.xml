@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2range-parser_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2range-parser_2_r_e_a_d_m_e</compoundname>
+    <title>range-parser</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2range-parser_2_r_e_a_d_m_e_1autotoc_md2878"/> <ulink url="https://npmjs.org/package/range-parser"><image type="html" name="https://badgen.net/npm/v/range-parser" alt="NPM Version" inline="yes"></image>
+</ulink> <ulink url="https://npmjs.org/package/range-parser"><image type="html" name="https://badgen.net/npm/dm/range-parser" alt="NPM Downloads" inline="yes"></image>
+</ulink> <ulink url="https://nodejs.org/en/download"><image type="html" name="https://badgen.net/npm/node/range-parser" alt="Node.js Version" inline="yes"></image>
+</ulink> <ulink url="https://travis-ci.org/jshttp/range-parser"><image type="html" name="https://badgen.net/travis/jshttp/range-parser/master" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/r/jshttp/range-parser?branch=master"><image type="html" name="https://badgen.net/coveralls/c/github/jshttp/range-parser/master" alt="Test Coverage" inline="yes"></image>
+</ulink></para>
+<para>Range header field parser.</para>
+<sect1 id="md_backend_2node__modules_2range-parser_2_r_e_a_d_m_e_1autotoc_md2879">
+<title>Installation</title><para>This is a <ulink url="https://nodejs.org/en/">Node.js</ulink> module available through the <ulink url="https://www.npmjs.com/">npm registry</ulink>. Installation is done using the <ulink url="https://docs.npmjs.com/getting-started/installing-npm-packages-locally"><computeroutput>npm install</computeroutput> command</ulink>:</para>
+<para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>range-parser</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2range-parser_2_r_e_a_d_m_e_1autotoc_md2880">
+<title>API</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>parseRange<sp/>=<sp/>require(&apos;range-parser&apos;)</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2range-parser_2_r_e_a_d_m_e_1autotoc_md2881">
+<title>parseRange(size, header, options)</title><para>Parse the given <computeroutput>header</computeroutput> string where <computeroutput>size</computeroutput> is the maximum size of the resource. An array of ranges will be returned or negative numbers indicating an error parsing.</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>-2</computeroutput> signals a malformed header string</para>
+</listitem><listitem><para><computeroutput>-1</computeroutput> signals an unsatisfiable range</para>
+</listitem></itemizedlist>
+</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>parse<sp/>header<sp/>from<sp/>request</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>range<sp/>=<sp/>parseRange(size,<sp/>req.headers.range)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>the<sp/>type<sp/>of<sp/>the<sp/>range</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>(range.type<sp/>===<sp/>&apos;bytes&apos;)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>the<sp/>ranges</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>range.forEach(function<sp/>(r)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>do<sp/>something<sp/>with<sp/>r.start<sp/>and<sp/>r.end</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+<sect3 id="md_backend_2node__modules_2range-parser_2_r_e_a_d_m_e_1autotoc_md2882">
+<title>Options</title><para>These properties are accepted in the options object.</para>
+<sect4 id="md_backend_2node__modules_2range-parser_2_r_e_a_d_m_e_1autotoc_md2883">
+<title>combine</title><para>Specifies if overlapping &amp; adjacent ranges should be combined, defaults to <computeroutput>false</computeroutput>. When <computeroutput>true</computeroutput>, ranges will be combined and returned as if they were specified that way in the header.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">parseRange(100,<sp/>&apos;bytes=50-55,0-10,5-10,56-60&apos;,<sp/>{<sp/>combine:<sp/>true<sp/>})</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>=&gt;<sp/>[</highlight></codeline>
+<codeline><highlight class="normal">//<sp/><sp/><sp/><sp/><sp/><sp/>{<sp/>start:<sp/>0,<sp/><sp/>end:<sp/>10<sp/>},</highlight></codeline>
+<codeline><highlight class="normal">//<sp/><sp/><sp/><sp/><sp/><sp/>{<sp/>start:<sp/>50,<sp/>end:<sp/>60<sp/>}</highlight></codeline>
+<codeline><highlight class="normal">//<sp/><sp/><sp/><sp/>]</highlight></codeline>
+</programlisting></para>
+</sect4>
+</sect3>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2range-parser_2_r_e_a_d_m_e_1autotoc_md2884">
+<title>License</title><para>[MIT](LICENSE) </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/range-parser/README.md"/>
+  </compounddef>
+</doxygen>

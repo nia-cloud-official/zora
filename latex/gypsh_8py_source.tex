@@ -1,0 +1,64 @@
+\doxysection{gypsh.\+py}
+\hypertarget{gypsh_8py_source}{}\label{gypsh_8py_source}\index{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/generator/gypsh.py@{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/generator/gypsh.py}}
+\mbox{\hyperlink{gypsh_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00001}\mbox{\hyperlink{namespacegyp_1_1generator_1_1gypsh}{00001}}\ \textcolor{comment}{\#\ Copyright\ (c)\ 2011\ Google\ Inc.\ All\ rights\ reserved.}}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00002}00002\ \textcolor{comment}{\#\ Use\ of\ this\ source\ code\ is\ governed\ by\ a\ BSD-\/style\ license\ that\ can\ be}}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00003}00003\ \textcolor{comment}{\#\ found\ in\ the\ LICENSE\ file.}}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00005}00005\ \textcolor{stringliteral}{"{}"{}"{}gypsh\ output\ module}}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00006}00006\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00007}00007\ \textcolor{stringliteral}{gypsh\ is\ a\ GYP\ shell.\ \ It's\ not\ really\ a\ generator\ per\ se.\ \ All\ it\ does\ is}}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00008}00008\ \textcolor{stringliteral}{fire\ up\ an\ interactive\ Python\ session\ with\ a\ few\ local\ variables\ set\ to\ the}}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00009}00009\ \textcolor{stringliteral}{variables\ passed\ to\ the\ generator.\ \ Like\ gypd,\ it's\ intended\ as\ a\ debugging}}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00010}00010\ \textcolor{stringliteral}{aid,\ to\ facilitate\ the\ exploration\ of\ .gyp\ structures\ after\ being\ processed}}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00011}00011\ \textcolor{stringliteral}{by\ the\ input\ module.}}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00012}00012\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00013}00013\ \textcolor{stringliteral}{The\ expected\ usage\ is\ "{}gyp\ -\/f\ gypsh\ -\/D\ OS=desired\_os"{}.}}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00014}00014\ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00017}00017\ \textcolor{keyword}{import}\ code}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00018}00018\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00021}00021\ \textcolor{comment}{\#\ All\ of\ this\ stuff\ about\ generator\ variables\ was\ lovingly\ ripped\ from\ gypd.py.}}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00022}00022\ \textcolor{comment}{\#\ That\ module\ has\ a\ much\ better\ description\ of\ what's\ going\ on\ and\ why.}}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00023}\mbox{\hyperlink{namespacegyp_1_1generator_1_1gypsh_a9488b95b778e766c0d71c67bbc66c284}{00023}}\ \_generator\_identity\_variables\ =\ [}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00024}00024\ \ \ \ \ \textcolor{stringliteral}{"{}EXECUTABLE\_PREFIX"{}},}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00025}00025\ \ \ \ \ \textcolor{stringliteral}{"{}EXECUTABLE\_SUFFIX"{}},}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00026}00026\ \ \ \ \ \textcolor{stringliteral}{"{}INTERMEDIATE\_DIR"{}},}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00027}00027\ \ \ \ \ \textcolor{stringliteral}{"{}PRODUCT\_DIR"{}},}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00028}00028\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_ROOT"{}},}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00029}00029\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_DIRNAME"{}},}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00030}00030\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_EXT"{}},}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00031}00031\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_NAME"{}},}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00032}00032\ \ \ \ \ \textcolor{stringliteral}{"{}RULE\_INPUT\_PATH"{}},}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00033}00033\ \ \ \ \ \textcolor{stringliteral}{"{}SHARED\_INTERMEDIATE\_DIR"{}},}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00034}00034\ ]}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00036}\mbox{\hyperlink{namespacegyp_1_1generator_1_1gypsh_a7465397af9ea9f9f63bb148690824e0f}{00036}}\ generator\_default\_variables\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00038}00038\ \textcolor{keywordflow}{for}\ v\ \textcolor{keywordflow}{in}\ \_generator\_identity\_variables:}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00039}00039\ \ \ \ \ generator\_default\_variables[v]\ =\ \textcolor{stringliteral}{"{}<(\%s)"{}}\ \%\ v}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00042}\mbox{\hyperlink{namespacegyp_1_1generator_1_1gypsh_ae8ca7501fb99efb65276b37c4f415bf6}{00042}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1generator_1_1gypsh_ae8ca7501fb99efb65276b37c4f415bf6}{GenerateOutput}}(target\_list,\ target\_dicts,\ data,\ params):}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00043}00043\ \ \ \ \ locals\ =\ \{}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}target\_list"{}}:\ target\_list,}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}target\_dicts"{}}:\ target\_dicts,}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}data"{}}:\ data,}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00047}00047\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00049}00049\ \ \ \ \ \textcolor{comment}{\#\ Use\ a\ banner\ that\ looks\ like\ the\ stock\ Python\ one\ and\ like\ what}}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00050}00050\ \ \ \ \ \textcolor{comment}{\#\ code.interact\ uses\ by\ default,\ but\ tack\ on\ something\ to\ indicate\ what}}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00051}00051\ \ \ \ \ \textcolor{comment}{\#\ locals\ are\ available,\ and\ identify\ gypsh.}}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00052}00052\ \ \ \ \ banner\ =\ \textcolor{stringliteral}{"{}Python\ \{\}\ on\ \{\}\(\backslash\)nlocals.keys()\ =\ \{\}\(\backslash\)ngypsh"{}}.format(}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ sys.version,}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ sys.platform,}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ repr(sorted(locals.keys())),}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00056}00056\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{gypsh_8py_source_l00058}00058\ \ \ \ \ code.interact(banner,\ local=locals)}
+
+\end{DoxyCode}

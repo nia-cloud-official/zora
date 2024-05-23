@@ -1,0 +1,31 @@
+.TH "md_backend_2node__modules_2set-blocking_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2set-blocking_2_r_e_a_d_m_e \- set-blocking 
+.PP
+ \fR\fP \fR\fP \fR\fP \fR\fP
+.PP
+set blocking \fRstdio\fP and \fRstderr\fP ensuring that terminal output does not truncate\&.
+.PP
+.PP
+.nf
+const setBlocking = require('set\-blocking')
+setBlocking(true)
+console\&.log(someLargeStringToOutput)
+.fi
+.PP
+.SH "Historical Context/Word of Warning"
+.PP
+This was created as a shim to address the bug discussed in \fRnode #6456\fP\&. This bug crops up on newer versions of Node\&.js (\fR0\&.12+\fP), truncating terminal output\&.
+.PP
+You should be mindful of the side-effects caused by using \fRset-blocking\fP:
+.PP
+.IP "\(bu" 2
+if your module sets blocking to \fRtrue\fP, it will effect other modules consuming your library\&. In \fRyargs\fP we only call \fRsetBlocking(true)\fP once we already know we are about to call \fRprocess\&.exit(code)\fP\&.
+.IP "\(bu" 2
+this patch will not apply to subprocesses spawned with \fRisTTY = true\fP, this is the \fRdefault \fRspawn()\fP behavior\fP\&.
+.PP
+.SH "License"
+.PP
+ISC 

@@ -1,0 +1,605 @@
+.TH "gyp.MSVSSettings" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gyp.MSVSSettings
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fB_Boolean\fP"
+.br
+.ti -1c
+.RI "class \fB_Enumeration\fP"
+.br
+.ti -1c
+.RI "class \fB_Integer\fP"
+.br
+.ti -1c
+.RI "class \fB_String\fP"
+.br
+.ti -1c
+.RI "class \fB_StringList\fP"
+.br
+.ti -1c
+.RI "class \fB_Tool\fP"
+.br
+.ti -1c
+.RI "class \fB_Type\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fB_AddTool\fP (tool)"
+.br
+.ti -1c
+.RI "\fB_GetMSBuildToolSettings\fP (msbuild_settings, tool)"
+.br
+.ti -1c
+.RI "\fB_Same\fP (tool, name, setting_type)"
+.br
+.ti -1c
+.RI "\fB_Renamed\fP (tool, msvs_name, msbuild_name, setting_type)"
+.br
+.ti -1c
+.RI "\fB_Moved\fP (tool, settings_name, msbuild_tool_name, setting_type)"
+.br
+.ti -1c
+.RI "\fB_MovedAndRenamed\fP (tool, msvs_settings_name, msbuild_tool_name, msbuild_settings_name, setting_type)"
+.br
+.ti -1c
+.RI "\fB_MSVSOnly\fP (tool, name, setting_type)"
+.br
+.ti -1c
+.RI "\fB_MSBuildOnly\fP (tool, name, setting_type)"
+.br
+.ti -1c
+.RI "\fB_ConvertedToAdditionalOption\fP (tool, msvs_name, flag)"
+.br
+.ti -1c
+.RI "\fB_CustomGeneratePreprocessedFile\fP (tool, msvs_name)"
+.br
+.ti -1c
+.RI "\fB_ValidateExclusionSetting\fP (setting, settings, error_msg, stderr=sys\&.stderr)"
+.br
+.ti -1c
+.RI "\fBFixVCMacroSlashes\fP (s)"
+.br
+.ti -1c
+.RI "\fBConvertVCMacrosToMSBuild\fP (s)"
+.br
+.ti -1c
+.RI "\fBConvertToMSBuildSettings\fP (msvs_settings, stderr=sys\&.stderr)"
+.br
+.ti -1c
+.RI "\fBValidateMSVSSettings\fP (settings, stderr=sys\&.stderr)"
+.br
+.ti -1c
+.RI "\fBValidateMSBuildSettings\fP (settings, stderr=sys\&.stderr)"
+.br
+.ti -1c
+.RI "\fB_ValidateSettings\fP (validators, settings, stderr)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "dict \fB_msvs_validators\fP = {}"
+.br
+.ti -1c
+.RI "dict \fB_msbuild_validators\fP = {}"
+.br
+.ti -1c
+.RI "dict \fB_msvs_to_msbuild_converters\fP = {}"
+.br
+.ti -1c
+.RI "dict \fB_msbuild_name_of_tool\fP = {}"
+.br
+.ti -1c
+.RI "\fB_boolean\fP = \fB_Boolean\fP()"
+.br
+.ti -1c
+.RI "\fB_integer\fP = \fB_Integer\fP()"
+.br
+.ti -1c
+.RI "\fB_string\fP = \fB_String\fP()"
+.br
+.ti -1c
+.RI "\fB_file_name\fP = \fB_String\fP()"
+.br
+.ti -1c
+.RI "\fB_folder_name\fP = \fB_String\fP()"
+.br
+.ti -1c
+.RI "\fB_file_list\fP = \fB_StringList\fP()"
+.br
+.ti -1c
+.RI "\fB_folder_list\fP = \fB_StringList\fP()"
+.br
+.ti -1c
+.RI "\fB_string_list\fP = \fB_StringList\fP()"
+.br
+.ti -1c
+.RI "\fB_newly_boolean\fP = \fB_Enumeration\fP(['', 'false', 'true'])"
+.br
+.ti -1c
+.RI "tuple \fBfix_vc_macro_slashes_regex_list\fP = ('IntDir', 'OutDir')"
+.br
+.ti -1c
+.RI "\fBfix_vc_macro_slashes_regex\fP"
+.br
+.ti -1c
+.RI "\fB_EXCLUDED_SUFFIX_RE\fP = re\&.compile('^(\&.*)_excluded$')"
+.br
+.ti -1c
+.RI "\fB_compile\fP = \fB_Tool\fP('VCCLCompilerTool', 'ClCompile')"
+.br
+.ti -1c
+.RI "\fB_link\fP = \fB_Tool\fP('VCLinkerTool', 'Link')"
+.br
+.ti -1c
+.RI "\fB_midl\fP = \fB_Tool\fP('VCMIDLTool', 'Midl')"
+.br
+.ti -1c
+.RI "\fB_rc\fP = \fB_Tool\fP('VCResourceCompilerTool', 'ResourceCompile')"
+.br
+.ti -1c
+.RI "\fB_lib\fP = \fB_Tool\fP('VCLibrarianTool', 'Lib')"
+.br
+.ti -1c
+.RI "\fB_manifest\fP = \fB_Tool\fP('VCManifestTool', 'Manifest')"
+.br
+.ti -1c
+.RI "\fB_masm\fP = \fB_Tool\fP('MASM', 'MASM')"
+.br
+.ti -1c
+.RI "\fB_armasm\fP = \fB_Tool\fP('ARMASM', 'ARMASM')"
+.br
+.ti -1c
+.RI "\fB_subsystem_enumeration\fP"
+.br
+.ti -1c
+.RI "\fB_target_machine_enumeration\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.PP
+.nf
+Code to validate and convert settings of the Microsoft build tools\&.
+
+This file contains code to validate and convert settings of the Microsoft
+build tools\&.  The function ConvertToMSBuildSettings(), ValidateMSVSSettings(),
+and ValidateMSBuildSettings() are the entry points\&.
+
+This file was created by comparing the projects created by Visual Studio 2008
+and Visual Studio 2010 for all available settings through the user interface\&.
+The MSBuild schemas were also considered\&.  They are typically found in the
+MSBuild install directory, e\&.g\&. c:\\Program Files (x86)\\MSBuild
+
+.fi
+.PP
+ 
+.SH "Function Documentation"
+.PP 
+.SS "gyp\&.MSVSSettings\&._AddTool ( tool)\fR [protected]\fP"
+
+.PP
+.nf
+Adds a tool to the four dictionaries used to process settings\&.
+
+This only defines the tool\&.  Each setting also needs to be added\&.
+
+Args:
+tool: The _Tool object to be added\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB48\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._ConvertedToAdditionalOption ( tool,  msvs_name,  flag)\fR [protected]\fP"
+
+.PP
+.nf
+Defines a setting that's handled via a command line option in MSBuild\&.
+
+Args:
+tool: a dictionary that gives the names of the tool for MSVS and MSBuild\&.
+msvs_name: the name of the MSVS setting that if 'true' becomes a flag
+flag: the flag to insert at the end of the AdditionalOptions
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB328\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._CustomGeneratePreprocessedFile ( tool,  msvs_name)\fR [protected]\fP"
+
+.PP
+Definition at line \fB350\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._GetMSBuildToolSettings ( msbuild_settings,  tool)\fR [protected]\fP"
+
+.PP
+.nf
+Returns an MSBuild tool dictionary\&.  Creates it if needed\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB62\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._Moved ( tool,  settings_name,  msbuild_tool_name,  setting_type)\fR [protected]\fP"
+
+.PP
+Definition at line \fB264\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._MovedAndRenamed ( tool,  msvs_settings_name,  msbuild_tool_name,  msbuild_settings_name,  setting_type)\fR [protected]\fP"
+
+.PP
+.nf
+Defines a setting that may have moved to a new section\&.
+
+Args:
+tool: a dictionary that gives the names of the tool for MSVS and MSBuild\&.
+msvs_settings_name: the MSVS name of the setting\&.
+msbuild_tool_name: the name of the MSBuild tool to place the setting under\&.
+msbuild_settings_name: the MSBuild name of the setting\&.
+setting_type: the type of this setting\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB270\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._MSBuildOnly ( tool,  name,  setting_type)\fR [protected]\fP"
+
+.PP
+.nf
+Defines a setting that is only found in MSBuild\&.
+
+Args:
+tool: a dictionary that gives the names of the tool for MSVS and MSBuild\&.
+name: the name of the setting\&.
+setting_type: the type of this setting\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB310\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._MSVSOnly ( tool,  name,  setting_type)\fR [protected]\fP"
+
+.PP
+.nf
+Defines a setting that is only found in MSVS\&.
+
+Args:
+tool: a dictionary that gives the names of the tool for MSVS and MSBuild\&.
+name: the name of the setting\&.
+setting_type: the type of this setting\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB293\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._Renamed ( tool,  msvs_name,  msbuild_name,  setting_type)\fR [protected]\fP"
+
+.PP
+.nf
+Defines a setting for which the name has changed\&.
+
+Args:
+tool: a dictionary that gives the names of the tool for MSVS and MSBuild\&.
+msvs_name: the name of the MSVS setting\&.
+msbuild_name: the name of the MSBuild setting\&.
+setting_type: the type of this setting\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB245\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._Same ( tool,  name,  setting_type)\fR [protected]\fP"
+
+.PP
+.nf
+Defines a setting that has the same name in MSVS and MSBuild\&.
+
+Args:
+tool: a dictionary that gives the names of the tool for MSVS and MSBuild\&.
+name: the name of the setting\&.
+setting_type: the type of this setting\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB234\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._ValidateExclusionSetting ( setting,  settings,  error_msg,  stderr = \fRsys\&.stderr\fP)\fR [protected]\fP"
+
+.PP
+.nf
+Verify that 'setting' is valid if it is generated from an exclusion list\&.
+
+If the setting appears to be generated from an exclusion list, the root name
+is checked\&.
+
+Args:
+  setting:   A string that is the setting name to validate
+  settings:  A dictionary where the keys are valid settings
+  error_msg: The message to emit in the event of error
+  stderr:    The stream receiving the error messages\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB384\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._ValidateSettings ( validators,  settings,  stderr)\fR [protected]\fP"
+
+.PP
+.nf
+Validates that the settings are valid for MSBuild or MSVS\&.
+
+We currently only validate the names of the settings, not their values\&.
+
+Args:
+  validators: A dictionary of tools and their validators\&.
+  settings: A dictionary\&.  The key is the tool name\&.  The values are
+      themselves dictionaries of settings and their values\&.
+  stderr: The stream receiving the error messages\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB515\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&.ConvertToMSBuildSettings ( msvs_settings,  stderr = \fRsys\&.stderr\fP)"
+
+.PP
+.nf
+Converts MSVS settings (VS2008 and earlier) to MSBuild settings (VS2010+)\&.
+
+Args:
+  msvs_settings: A dictionary\&.  The key is the tool name\&.  The values are
+      themselves dictionaries of settings and their values\&.
+  stderr: The stream receiving the error messages\&.
+
+Returns:
+  A dictionary of MSBuild settings\&.  The key is either the MSBuild tool name
+  or the empty string (for the global settings)\&.  The values are themselves
+  dictionaries of settings and their values\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB445\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&.ConvertVCMacrosToMSBuild ( s)"
+
+.PP
+.nf
+Convert the MSVS macros found in the string to the MSBuild equivalent\&.
+
+This list is probably not exhaustive\&.  Add as needed\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB422\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&.FixVCMacroSlashes ( s)"
+
+.PP
+.nf
+Replace macros which have excessive following slashes\&.
+
+These macros are known to have a built-in trailing slash\&. Furthermore, many
+scripts hiccup on processing paths with extra slashes in the middle\&.
+
+This list is probably not exhaustive\&.  Add as needed\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB409\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&.ValidateMSBuildSettings ( settings,  stderr = \fRsys\&.stderr\fP)"
+
+.PP
+.nf
+Validates that the names of the settings are valid for MSBuild\&.
+
+Args:
+  settings: A dictionary\&.  The key is the tool name\&.  The values are
+      themselves dictionaries of settings and their values\&.
+  stderr: The stream receiving the error messages\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB504\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&.ValidateMSVSSettings ( settings,  stderr = \fRsys\&.stderr\fP)"
+
+.PP
+.nf
+Validates that the names of the settings are valid for MSVS\&.
+
+Args:
+  settings: A dictionary\&.  The key is the tool name\&.  The values are
+      themselves dictionaries of settings and their values\&.
+  stderr: The stream receiving the error messages\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB493\fP of file \fBMSVSSettings\&.py\fP\&.
+.SH "Variable Documentation"
+.PP 
+.SS "gyp\&.MSVSSettings\&._armasm = \fB_Tool\fP('ARMASM', 'ARMASM')\fR [protected]\fP"
+
+.PP
+Definition at line \fB558\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._boolean = \fB_Boolean\fP()\fR [protected]\fP"
+
+.PP
+Definition at line \fB220\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._compile = \fB_Tool\fP('VCCLCompilerTool', 'ClCompile')\fR [protected]\fP"
+
+.PP
+Definition at line \fB551\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._EXCLUDED_SUFFIX_RE = re\&.compile('^(\&.*)_excluded$')\fR [protected]\fP"
+
+.PP
+Definition at line \fB381\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._file_list = \fB_StringList\fP()\fR [protected]\fP"
+
+.PP
+Definition at line \fB226\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._file_name = \fB_String\fP()\fR [protected]\fP"
+
+.PP
+Definition at line \fB224\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._folder_list = \fB_StringList\fP()\fR [protected]\fP"
+
+.PP
+Definition at line \fB227\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._folder_name = \fB_String\fP()\fR [protected]\fP"
+
+.PP
+Definition at line \fB225\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._integer = \fB_Integer\fP()\fR [protected]\fP"
+
+.PP
+Definition at line \fB221\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._lib = \fB_Tool\fP('VCLibrarianTool', 'Lib')\fR [protected]\fP"
+
+.PP
+Definition at line \fB555\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._link = \fB_Tool\fP('VCLinkerTool', 'Link')\fR [protected]\fP"
+
+.PP
+Definition at line \fB552\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._manifest = \fB_Tool\fP('VCManifestTool', 'Manifest')\fR [protected]\fP"
+
+.PP
+Definition at line \fB556\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._masm = \fB_Tool\fP('MASM', 'MASM')\fR [protected]\fP"
+
+.PP
+Definition at line \fB557\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._midl = \fB_Tool\fP('VCMIDLTool', 'Midl')\fR [protected]\fP"
+
+.PP
+Definition at line \fB553\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "dict gyp\&.MSVSSettings\&._msbuild_name_of_tool = {}\fR [protected]\fP"
+
+.PP
+Definition at line \fB32\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "dict gyp\&.MSVSSettings\&._msbuild_validators = {}\fR [protected]\fP"
+
+.PP
+Definition at line \fB23\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "dict gyp\&.MSVSSettings\&._msvs_to_msbuild_converters = {}\fR [protected]\fP"
+
+.PP
+Definition at line \fB28\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "dict gyp\&.MSVSSettings\&._msvs_validators = {}\fR [protected]\fP"
+
+.PP
+Definition at line \fB22\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._newly_boolean = \fB_Enumeration\fP(['', 'false', 'true'])\fR [protected]\fP"
+
+.PP
+Definition at line \fB231\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._rc = \fB_Tool\fP('VCResourceCompilerTool', 'ResourceCompile')\fR [protected]\fP"
+
+.PP
+Definition at line \fB554\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._string = \fB_String\fP()\fR [protected]\fP"
+
+.PP
+Definition at line \fB223\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._string_list = \fB_StringList\fP()\fR [protected]\fP"
+
+.PP
+Definition at line \fB228\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._subsystem_enumeration\fR [protected]\fP"
+\fBInitial value:\fP
+.nf
+1 =  _Enumeration(
+2     [
+3         "NotSet",
+4         "Console",  # /SUBSYSTEM:CONSOLE
+5         "Windows",  # /SUBSYSTEM:WINDOWS
+6         "Native",  # /SUBSYSTEM:NATIVE
+7         "EFI Application",  # /SUBSYSTEM:EFI_APPLICATION
+8         "EFI Boot Service Driver",  # /SUBSYSTEM:EFI_BOOT_SERVICE_DRIVER
+9         "EFI ROM",  # /SUBSYSTEM:EFI_ROM
+10         "EFI Runtime",  # /SUBSYSTEM:EFI_RUNTIME_DRIVER
+11         "WindowsCE",
+12     ],  # /SUBSYSTEM:WINDOWSCE
+13     new=["POSIX"],
+14 )
+.PP
+.fi
+
+.PP
+Definition at line \fB871\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&._target_machine_enumeration\fR [protected]\fP"
+\fBInitial value:\fP
+.nf
+1 =  _Enumeration(
+2     [
+3         "NotSet",
+4         "MachineX86",  # /MACHINE:X86
+5         None,
+6         "MachineARM",  # /MACHINE:ARM
+7         "MachineEBC",  # /MACHINE:EBC
+8         "MachineIA64",  # /MACHINE:IA64
+9         None,
+10         "MachineMIPS",  # /MACHINE:MIPS
+11         "MachineMIPS16",  # /MACHINE:MIPS16
+12         "MachineMIPSFPU",  # /MACHINE:MIPSFPU
+13         "MachineMIPSFPU16",  # /MACHINE:MIPSFPU16
+14         None,
+15         None,
+16         None,
+17         "MachineSH4",  # /MACHINE:SH4
+18         None,
+19         "MachineTHUMB",  # /MACHINE:THUMB
+20         "MachineX64",
+21     ]
+22 )
+.PP
+.fi
+
+.PP
+Definition at line \fB886\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "gyp\&.MSVSSettings\&.fix_vc_macro_slashes_regex"
+\fBInitial value:\fP
+.nf
+1 =  re\&.compile(
+2     r"(\\$\\((?:%s)\\))(?:[\\\\/]+)" % "|"\&.join(fix_vc_macro_slashes_regex_list)
+3 )
+.PP
+.fi
+
+.PP
+Definition at line \fB376\fP of file \fBMSVSSettings\&.py\fP\&.
+.SS "tuple gyp\&.MSVSSettings\&.fix_vc_macro_slashes_regex_list = ('IntDir', 'OutDir')"
+
+.PP
+Definition at line \fB375\fP of file \fBMSVSSettings\&.py\fP\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

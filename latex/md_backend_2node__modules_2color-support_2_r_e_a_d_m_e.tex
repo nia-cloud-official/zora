@@ -1,0 +1,101 @@
+\chapter{color-\/support}
+\hypertarget{md_backend_2node__modules_2color-support_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2color-support_2_r_e_a_d_m_e}\index{color-\/support@{color-\/support}}
+\label{md_backend_2node__modules_2color-support_2_r_e_a_d_m_e_autotoc_md514}%
+\Hypertarget{md_backend_2node__modules_2color-support_2_r_e_a_d_m_e_autotoc_md514}%
+ A module which will endeavor to guess your terminal\textquotesingle{}s level of color support.
+
+\href{https://travis-ci.org/isaacs/color-support}{\texttt{ }} \href{https://coveralls.io/github/isaacs/color-support?branch=master}{\texttt{ }}
+
+This is similar to {\ttfamily supports-\/color}, but it does not read {\ttfamily process.\+argv}.
+
+
+\begin{DoxyEnumerate}
+\item If not in a node environment, not supported.
+\item If stdout is not a TTY, not supported, unless the {\ttfamily ignore\+TTY} option is set.
+\item If the {\ttfamily TERM} environ is {\ttfamily dumb}, not supported, unless the {\ttfamily ignore\+Dumb} option is set.
+\item If on Windows, then support 16 colors.
+\item If using Tmux, then support 256 colors.
+\item Handle continuous-\/integration servers. If {\ttfamily CI} or {\ttfamily TEAMCITY\+\_\+\+VERSION} are set in the environment, and {\ttfamily TRAVIS} is not set, then color is not supported, unless {\ttfamily ignore\+CI} option is set.
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item Guess based on the {\ttfamily TERM\+\_\+\+PROGRAM} environ. These terminals support 16m colors\+:
+\begin{DoxyItemize}
+\item {\ttfamily i\+Term.\+app} version 3.\+x supports 16m colors, below support 256
+\item {\ttfamily Mac\+Term} supports 16m colors
+\item {\ttfamily Apple\+\_\+\+Terminal} supports 256 colors
+\item Have more things that belong on this list? Send a PR!
+\end{DoxyItemize}
+\item Make a guess based on the {\ttfamily TERM} environment variable. Any {\ttfamily xterm-\/256color} will get 256 colors. Any screen, xterm, vt100, color, ansi, cygwin, or linux {\ttfamily TERM} will get 16 colors.
+\item If {\ttfamily COLORTERM} environment variable is set, then support 16 colors.
+\item At this point, we assume that color is not supported.
+\end{DoxyEnumerate}\hypertarget{md_backend_2node__modules_2color-support_2_r_e_a_d_m_e_autotoc_md515}{}\doxysection{\texorpdfstring{USAGE}{USAGE}}\label{md_backend_2node__modules_2color-support_2_r_e_a_d_m_e_autotoc_md515}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ testColorSupport\ =\ require('color-\/support')}
+\DoxyCodeLine{var\ colorSupport\ =\ testColorSupport(/*\ options\ object\ */)}
+\DoxyCodeLine{}
+\DoxyCodeLine{if\ (!colorSupport)\ \{}
+\DoxyCodeLine{\ \ console.log('color\ is\ not\ supported')}
+\DoxyCodeLine{\}\ else\ if\ (colorSupport.has16m)\ \{}
+\DoxyCodeLine{\ \ console.log('\(\backslash\)x1b[38;2;102;194;255m16m\ colors\(\backslash\)x1b[0m')}
+\DoxyCodeLine{\}\ else\ if\ (colorSupport.has256)\ \{}
+\DoxyCodeLine{\ \ console.log('\(\backslash\)x1b[38;5;119m256\ colors\(\backslash\)x1b[0m')}
+\DoxyCodeLine{\}\ else\ if\ (colorSupport.hasBasic)\ \{}
+\DoxyCodeLine{\ \ console.log('\(\backslash\)x1b[31mbasic\ colors\(\backslash\)x1b[0m')}
+\DoxyCodeLine{\}\ else\ \{}
+\DoxyCodeLine{\ \ console.log('this\ is\ impossible,\ but\ colors\ are\ not\ supported')}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+If you don\textquotesingle{}t have any options to set, you can also just look at the flags which will all be set on the test function itself. (Of course, this doesn\textquotesingle{}t return a falsey value when colors aren\textquotesingle{}t supported, and doesn\textquotesingle{}t allow you to set options.)
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ colorSupport\ =\ require('color-\/support')}
+\DoxyCodeLine{}
+\DoxyCodeLine{if\ (colorSupport.has16m)\ \{}
+\DoxyCodeLine{\ \ console.log('\(\backslash\)x1b[38;2;102;194;255m16m\ colors\(\backslash\)x1b[0m')}
+\DoxyCodeLine{\}\ else\ if\ (colorSupport.has256)\ \{}
+\DoxyCodeLine{\ \ console.log('\(\backslash\)x1b[38;5;119m256\ colors\(\backslash\)x1b[0m')}
+\DoxyCodeLine{\}\ else\ if\ (colorSupport.hasBasic)\ \{}
+\DoxyCodeLine{\ \ console.log('\(\backslash\)x1b[31mbasic\ colors\(\backslash\)x1b[0m')}
+\DoxyCodeLine{\}\ else\ \{}
+\DoxyCodeLine{\ \ console.log('colors\ are\ not\ supported')}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2color-support_2_r_e_a_d_m_e_autotoc_md516}{}\doxysection{\texorpdfstring{Options}{Options}}\label{md_backend_2node__modules_2color-support_2_r_e_a_d_m_e_autotoc_md516}
+You can pass in the following options.
+
+
+\begin{DoxyItemize}
+\item ignore\+TTY -\/ default false. Ignore the {\ttfamily is\+TTY} check.
+\item ignore\+Dumb -\/ default false. Ignore {\ttfamily TERM=dumb} environ check.
+\item ignore\+CI -\/ default false. Ignore {\ttfamily CI} environ check.
+\item env -\/ Object for environment vars. Defaults to {\ttfamily process.\+env}.
+\item stream -\/ Stream for {\ttfamily is\+TTY} check. Defaults to {\ttfamily process.\+stdout}.
+\item term -\/ String for {\ttfamily TERM} checking. Defaults to {\ttfamily env.\+TERM}.
+\item always\+Return -\/ default false. Return an object when colors aren\textquotesingle{}t supported (instead of returning {\ttfamily false}).
+\item level -\/ A number from 0 to 3. This will return a result for the specified level. This is useful if you want to be able to set the color support level explicitly as a number in an environment variable or config, but then use the object flags in your program. Except for {\ttfamily always\+Return} to return an object for level 0, all other options are ignored, since no checking is done if a level is explicitly set.
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2color-support_2_r_e_a_d_m_e_autotoc_md517}{}\doxysection{\texorpdfstring{Return Value}{Return Value}}\label{md_backend_2node__modules_2color-support_2_r_e_a_d_m_e_autotoc_md517}
+If no color support is available, then {\ttfamily false} is returned by default, unless the {\ttfamily always\+Return} flag is set to {\ttfamily true}. This is so that the simple question of "{}can I use colors or not"{} can treat any truthy return as "{}yes"{}.
+
+Otherwise, the return object has the following fields\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily level} -\/ A number from 0 to 3
+\begin{DoxyItemize}
+\item {\ttfamily 0} -\/ No color support
+\item {\ttfamily 1} -\/ Basic (16) color support
+\item {\ttfamily 2} -\/ 256 color support
+\item {\ttfamily 3} -\/ 16 million (true) color support
+\end{DoxyItemize}
+\item {\ttfamily has\+Basic} -\/ Boolean
+\item {\ttfamily has256} -\/ Boolean
+\item {\ttfamily has16m} -\/ Boolean
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2color-support_2_r_e_a_d_m_e_autotoc_md518}{}\doxysection{\texorpdfstring{CLI}{CLI}}\label{md_backend_2node__modules_2color-support_2_r_e_a_d_m_e_autotoc_md518}
+You can run the {\ttfamily color-\/support} bin from the command line which will just dump the values as this module calculates them in whatever env it\textquotesingle{}s run. It takes no command line arguments.\hypertarget{md_backend_2node__modules_2color-support_2_r_e_a_d_m_e_autotoc_md519}{}\doxysection{\texorpdfstring{Credits}{Credits}}\label{md_backend_2node__modules_2color-support_2_r_e_a_d_m_e_autotoc_md519}
+This is a spiritual, if not actual, fork of \href{http://npm.im/supports-color}{\texttt{ supports-\/color}} by the ever prolific \href{http://npm.im/~sindresorhus}{\texttt{ Sindre Sorhus}}. 

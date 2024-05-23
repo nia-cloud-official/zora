@@ -1,0 +1,297 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e</compoundname>
+    <title>&lt;tt&gt;node-gyp&lt;/tt&gt; - Node.js native addon build tool</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_1autotoc_md2464"/> <ulink url="https://github.com/nodejs/node-gyp/actions?query=workflow%3ATests+branch%3Amaster"><image type="html" name="https://github.com/nodejs/node-gyp/workflows/Tests/badge.svg?branch=master" alt="Build Status" inline="yes"></image>
+</ulink> <image type="html" name="https://img.shields.io/npm/dm/node-gyp" alt="npm" inline="yes"></image>
+</para>
+<para><computeroutput>node-gyp</computeroutput> is a cross-platform command-line tool written in Node.js for compiling native addon modules for Node.js. It contains a vendored copy of the <ulink url="https://github.com/nodejs/gyp-next">gyp-next</ulink> project that was previously used by the Chromium team, extended to support the development of Node.js native addons.</para>
+<para>Note that <computeroutput>node-gyp</computeroutput> is <emphasis>not</emphasis> used to build Node.js itself.</para>
+<para>Multiple target versions of Node.js are supported (i.e. <computeroutput>0.8</computeroutput>, ..., <computeroutput>4</computeroutput>, <computeroutput>5</computeroutput>, <computeroutput>6</computeroutput>, etc.), regardless of what version of Node.js is actually installed on your system (<computeroutput>node-gyp</computeroutput> downloads the necessary development files or headers for the target version).</para>
+<sect1 id="md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_1autotoc_md2465">
+<title>Features</title><para><itemizedlist>
+<listitem><para>The same build commands work on any of the supported platforms</para>
+</listitem><listitem><para>Supports the targeting of different versions of Node.js</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_1autotoc_md2466">
+<title>Installation</title><para>You can install <computeroutput>node-gyp</computeroutput> using <computeroutput>npm</computeroutput>:</para>
+<para><programlisting><codeline><highlight class="normal"><sp/>bash</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>install<sp/>-g<sp/>node-gyp</highlight></codeline>
+</programlisting></para>
+<para>Depending on your operating system, you will need to install:</para>
+<sect2 id="md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_1autotoc_md2467">
+<title>On Unix</title><para><itemizedlist>
+<listitem><para>Python v3.6, v3.7, v3.8, or v3.9</para>
+</listitem><listitem><para><computeroutput>make</computeroutput></para>
+</listitem><listitem><para>A proper C/C++ compiler toolchain, like <ulink url="https://gcc.gnu.org">GCC</ulink></para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_1autotoc_md2468">
+<title>On macOS</title><para><bold>ATTENTION</bold>: If your Mac has been <emphasis>upgraded</emphasis> to macOS Catalina (10.15), please read <ref refid="md_backend_2node__modules_2node-gyp_2mac_o_s___catalina" kindref="compound">macOS_Catalina.md</ref>.</para>
+<para><itemizedlist>
+<listitem><para>Python v3.6, v3.7, v3.8, or v3.9</para>
+</listitem><listitem><para><ulink url="https://developer.apple.com/xcode/download/">Xcode</ulink><itemizedlist>
+<listitem><para>You also need to install the <computeroutput>XCode Command Line Tools</computeroutput> by running <computeroutput>xcode-select --install</computeroutput>. Alternatively, if you already have the full Xcode installed, you can find them under the menu <computeroutput>Xcode -&gt; Open Developer Tool -&gt; More Developer Tools...</computeroutput>. This step will install <computeroutput>clang</computeroutput>, <computeroutput>clang++</computeroutput>, and <computeroutput>make</computeroutput>.</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_1autotoc_md2469">
+<title>On Windows</title><para>Install the current version of Python from the <ulink url="https://docs.python.org/3/using/windows.html#the-microsoft-store-package">Microsoft Store package</ulink>.</para>
+<para>Install tools and configuration manually:<itemizedlist>
+<listitem><para>Install Visual C++ Build Environment: <ulink url="https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools">Visual Studio Build Tools</ulink> (using &quot;Visual C++ build tools&quot; workload) or <ulink url="https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community">Visual Studio Community</ulink> (using the &quot;Desktop development with C++&quot; workload)</para>
+</listitem><listitem><para>Launch cmd, <computeroutput>npm config set msvs_version 2017</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+<para>If the above steps didn&apos;t work for you, please visit <ulink url="https://github.com/Microsoft/nodejs-guidelines/blob/master/windows-environment.md#compiling-native-addon-modules">Microsoft&apos;s Node.js Guidelines for Windows</ulink> for additional tips.</para>
+<para>To target native ARM64 Node.js on Windows 10 on ARM, add the components &quot;Visual C++ compilers and libraries for ARM64&quot; and &quot;Visual C++ ATL for ARM64&quot;.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_1autotoc_md2470">
+<title>Configuring Python Dependency</title><para><computeroutput>node-gyp</computeroutput> requires that you have installed a compatible version of Python, one of: v3.6, v3.7, v3.8, or v3.9. If you have multiple Python versions installed, you can identify which Python version <computeroutput>node-gyp</computeroutput> should use in one of the following ways:</para>
+<para><orderedlist>
+<listitem><para>by setting the <computeroutput>--python</computeroutput> command-line option, e.g.:</para>
+</listitem></orderedlist>
+</para>
+<para><programlisting><codeline><highlight class="normal"><sp/>bash</highlight></codeline>
+<codeline><highlight class="normal">node-gyp<sp/>&lt;command&gt;<sp/>--python<sp/>/path/to/executable/python</highlight></codeline>
+</programlisting></para>
+<para><orderedlist>
+<listitem><para>If <computeroutput>node-gyp</computeroutput> is called by way of <computeroutput>npm</computeroutput>, <emphasis>and</emphasis> you have multiple versions of Python installed, then you can set <computeroutput>npm</computeroutput>&apos;s &apos;python&apos; config key to the appropriate value:</para>
+</listitem></orderedlist>
+</para>
+<para><programlisting><codeline><highlight class="normal"><sp/>bash</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>config<sp/>set<sp/>python<sp/>/path/to/executable/python</highlight></codeline>
+</programlisting></para>
+<para><orderedlist>
+<listitem><para>If the <computeroutput>PYTHON</computeroutput> environment variable is set to the path of a Python executable, then that version will be used, if it is a compatible version.</para>
+</listitem><listitem><para>If the <computeroutput>NODE_GYP_FORCE_PYTHON</computeroutput> environment variable is set to the path of a Python executable, it will be used instead of any of the other configured or builtin Python search paths. If it&apos;s not a compatible version, no further searching will be done.</para>
+</listitem></orderedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_1autotoc_md2471">
+<title>Build for Third Party Node.js Runtimes</title><para>When building modules for thid party Node.js runtimes like Electron, which have different build configurations from the official Node.js distribution, you should use <computeroutput>--dist-url</computeroutput> or <computeroutput>--nodedir</computeroutput> flags to specify the headers of the runtime to build for.</para>
+<para>Also when <computeroutput>--dist-url</computeroutput> or <computeroutput>--nodedir</computeroutput> flags are passed, node-gyp will use the <computeroutput>config.gypi</computeroutput> shipped in the headers distribution to generate build configurations, which is different from the default mode that would use the <computeroutput>process.config</computeroutput> object of the running Node.js instance.</para>
+<para>Some old versions of Electron shipped malformed <computeroutput>config.gypi</computeroutput> in their headers distributions, and you might need to pass <computeroutput>--force-process-config</computeroutput> to node-gyp to work around configuration errors.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_1autotoc_md2472">
+<title>How to Use</title><para>To compile your native addon, first go to its root directory:</para>
+<para><programlisting><codeline><highlight class="normal"><sp/>bash</highlight></codeline>
+<codeline><highlight class="normal">cd<sp/>my_node_addon</highlight></codeline>
+</programlisting></para>
+<para>The next step is to generate the appropriate project build files for the current platform. Use <computeroutput>configure</computeroutput> for that:</para>
+<para><programlisting><codeline><highlight class="normal"><sp/>bash</highlight></codeline>
+<codeline><highlight class="normal">node-gyp<sp/>configure</highlight></codeline>
+</programlisting></para>
+<para>Auto-detection fails for Visual C++ Build Tools 2015, so <computeroutput>--msvs_version=2015</computeroutput> needs to be added (not needed when run by npm as configured above): <programlisting><codeline><highlight class="normal"><sp/>bash</highlight></codeline>
+<codeline><highlight class="normal">node-gyp<sp/>configure<sp/>--msvs_version=2015</highlight></codeline>
+</programlisting></para>
+<para><bold>Note</bold>: The <computeroutput>configure</computeroutput> step looks for a <computeroutput>binding.gyp</computeroutput> file in the current directory to process. See below for instructions on creating a <computeroutput>binding.gyp</computeroutput> file.</para>
+<para>Now you will have either a <computeroutput>Makefile</computeroutput> (on Unix platforms) or a <computeroutput>vcxproj</computeroutput> file (on Windows) in the <computeroutput>build/</computeroutput> directory. Next, invoke the <computeroutput>build</computeroutput> command:</para>
+<para><programlisting><codeline><highlight class="normal"><sp/>bash</highlight></codeline>
+<codeline><highlight class="normal">node-gyp<sp/>build</highlight></codeline>
+</programlisting></para>
+<para>Now you have your compiled <computeroutput>.node</computeroutput> bindings file! The compiled bindings end up in <computeroutput>build/Debug/</computeroutput> or <computeroutput>build/Release/</computeroutput>, depending on the build mode. At this point, you can require the <computeroutput>.node</computeroutput> file with Node.js and run your tests!</para>
+<para><bold>Note:</bold> To create a <emphasis>Debug</emphasis> build of the bindings file, pass the <computeroutput>--debug</computeroutput> (or <computeroutput>-d</computeroutput>) switch when running either the <computeroutput>configure</computeroutput>, <computeroutput>build</computeroutput> or <computeroutput>rebuild</computeroutput> commands.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_1autotoc_md2473">
+<title>The <computeroutput>binding.gyp</computeroutput> file</title><para>A <computeroutput>binding.gyp</computeroutput> file describes the configuration to build your module, in a JSON-like format. This file gets placed in the root of your package, alongside <computeroutput>package.json</computeroutput>.</para>
+<para>A barebones <computeroutput>gyp</computeroutput> file appropriate for building a Node.js addon could look like:</para>
+<para><programlisting filename=".py"><codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="stringliteral">&quot;targets&quot;</highlight><highlight class="normal">:<sp/>[</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;target_name&quot;</highlight><highlight class="normal">:<sp/></highlight><highlight class="stringliteral">&quot;binding&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;sources&quot;</highlight><highlight class="normal">:<sp/>[<sp/></highlight><highlight class="stringliteral">&quot;src/binding.cc&quot;</highlight><highlight class="normal"><sp/>]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>]</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_1autotoc_md2474">
+<title>Further reading</title><para>The <bold><ulink url="./docs/">docs</ulink></bold> directory contains additional documentation on specific node-gyp topics that may be useful if you are experiencing problems installing or building addons using node-gyp.</para>
+<para>Some additional resources for Node.js native addons and writing <computeroutput>gyp</computeroutput> configuration files:</para>
+<para><itemizedlist>
+<listitem><para><ulink url="http://nodeschool.io/#goingnative">&quot;Going Native&quot; a nodeschool.io tutorial</ulink></para>
+</listitem><listitem><para><ulink url="https://github.com/nodejs/node/tree/master/test/addons/hello-world">&quot;Hello World&quot; node addon example</ulink></para>
+</listitem><listitem><para><ulink url="https://gyp.gsrc.io/docs/UserDocumentation.md">gyp user documentation</ulink></para>
+</listitem><listitem><para><ulink url="https://gyp.gsrc.io/docs/InputFormatReference.md">gyp input format reference</ulink></para>
+</listitem><listitem><para><ref refid="md_backend_2node__modules_2node-gyp_2docs_2binding_8gyp-files-in-the-wild" kindref="compound"><emphasis>"binding.gyp" files out in the wild</emphasis> wiki page</ref></para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_1autotoc_md2475">
+<title>Commands</title><para><computeroutput>node-gyp</computeroutput> responds to the following commands:</para>
+<para><table rows="9" cols="2"><row>
+<entry thead="yes" align='left'><para><bold>Command</bold>   </para>
+</entry><entry thead="yes" align='left'><para><bold>Description</bold>    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>help</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Shows the help dialog    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>build</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Invokes <computeroutput>make</computeroutput>/<computeroutput>msbuild.exe</computeroutput> and builds the native addon    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>clean</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Removes the <computeroutput>build</computeroutput> directory if it exists    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>configure</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Generates project build files for the current platform    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>rebuild</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Runs <computeroutput>clean</computeroutput>, <computeroutput>configure</computeroutput> and <computeroutput>build</computeroutput> all in a row    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>install</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Installs Node.js header files for the given version    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>list</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Lists the currently installed Node.js header versions    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>remove</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Removes the Node.js header files for the given version   </para>
+</entry></row>
+</table>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_1autotoc_md2476">
+<title>Command Options</title><para><computeroutput>node-gyp</computeroutput> accepts the following command options:</para>
+<para><table rows="24" cols="2"><row>
+<entry thead="yes" align='left'><para><bold>Command</bold>   </para>
+</entry><entry thead="yes" align='left'><para><bold>Description</bold>    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>-j n</computeroutput>, <computeroutput>--jobs n</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Run <computeroutput>make</computeroutput> in parallel. The value <computeroutput>max</computeroutput> will use all available CPU cores    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>--target=v6.2.1</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Node.js version to build for (default is <computeroutput>process.version</computeroutput>)    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>--silly</computeroutput>, <computeroutput>--loglevel=silly</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Log all progress to console    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>--verbose</computeroutput>, <computeroutput>--loglevel=verbose</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Log most progress to console    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>--silent</computeroutput>, <computeroutput>--loglevel=silent</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Don&apos;t log anything to console    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>debug</computeroutput>, <computeroutput>--debug</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Make Debug build (default is <computeroutput>Release</computeroutput>)    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>--release</computeroutput>, <computeroutput>--no-debug</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Make Release build    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>-C $dir</computeroutput>, <computeroutput>--directory=$dir</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Run command in different directory    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>--make=$make</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Override <computeroutput>make</computeroutput> command (e.g. <computeroutput>gmake</computeroutput>)    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>--thin=yes</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Enable thin static libraries    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>--arch=$arch</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Set target architecture (e.g. ia32)    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>--tarball=$path</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Get headers from a local tarball    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>--devdir=$path</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>SDK download directory (default is OS cache directory)    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>--ensure</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Don&apos;t reinstall headers if already present    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>--dist-url=$url</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Download header tarball from custom URL    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>--proxy=$url</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Set HTTP(S) proxy for downloading header tarball    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>--noproxy=$urls</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Set urls to ignore proxies when downloading header tarball    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>--cafile=$cafile</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Override default CA chain (to download tarball)    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>--nodedir=$path</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Set the path to the node source code    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>--python=$path</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Set path to the Python binary    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>--msvs_version=$version</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Set Visual Studio version (Windows only)    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>--solution=$solution</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Set Visual Studio Solution version (Windows only)    </para>
+</entry></row>
+<row>
+<entry thead="no" align='left'><para><computeroutput>--force-process-config</computeroutput>   </para>
+</entry><entry thead="no" align='left'><para>Force using runtime&apos;s <computeroutput>process.config</computeroutput> object to generate <computeroutput>config.gypi</computeroutput> file   </para>
+</entry></row>
+</table>
+</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_1autotoc_md2477">
+<title>Configuration</title><sect2 id="md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_1autotoc_md2478">
+<title>Environment variables</title><para>Use the form <computeroutput>npm_config_OPTION_NAME</computeroutput> for any of the command options listed above (dashes in option names should be replaced by underscores).</para>
+<para>For example, to set <computeroutput>devdir</computeroutput> equal to <computeroutput>/tmp/.gyp</computeroutput>, you would:</para>
+<para>Run this on Unix:</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">export<sp/>npm_config_devdir=/tmp/.gyp</highlight></codeline>
+</programlisting></para>
+<para>Or this on Windows:</para>
+<para><programlisting filename=".console"><codeline><highlight class="normal">set<sp/>npm_config_devdir=c:\temp\.gyp</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_1autotoc_md2479">
+<title><computeroutput>npm</computeroutput> configuration</title><para>Use the form <computeroutput>OPTION_NAME</computeroutput> for any of the command options listed above.</para>
+<para>For example, to set <computeroutput>devdir</computeroutput> equal to <computeroutput>/tmp/.gyp</computeroutput>, you would run:</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">npm<sp/>config<sp/>set<sp/>[--global]<sp/>devdir<sp/>/tmp/.gyp</highlight></codeline>
+</programlisting></para>
+<para><bold>Note:</bold> Configuration set via <computeroutput>npm</computeroutput> will only be used when <computeroutput>node-gyp</computeroutput> is run via <computeroutput>npm</computeroutput>, not when <computeroutput>node-gyp</computeroutput> is run directly.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2node-gyp_2_r_e_a_d_m_e_1autotoc_md2480">
+<title>License</title><para><computeroutput>node-gyp</computeroutput> is available under the MIT license. See the [LICENSE file](LICENSE) for details. </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/node-gyp/README.md"/>
+  </compounddef>
+</doxygen>

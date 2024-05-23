@@ -1,0 +1,559 @@
+.TH "gyp.xcodeproj_file.XCObject" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gyp.xcodeproj_file.XCObject
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherited by \fBgyp\&.xcodeproj_file\&.PBXBuildFile\fP, \fBgyp\&.xcodeproj_file\&.PBXBuildRule\fP, \fBgyp\&.xcodeproj_file\&.PBXContainerItemProxy\fP, \fBgyp\&.xcodeproj_file\&.PBXTargetDependency\fP, \fBgyp\&.xcodeproj_file\&.XCBuildConfiguration\fP, \fBgyp\&.xcodeproj_file\&.XCBuildPhase\fP, \fBgyp\&.xcodeproj_file\&.XCConfigurationList\fP, \fBgyp\&.xcodeproj_file\&.XCContainerPortal\fP, \fBgyp\&.xcodeproj_file\&.XCHierarchicalElement\fP, \fBgyp\&.xcodeproj_file\&.XCProjectFile\fP, and \fBgyp\&.xcodeproj_file\&.XCRemoteObject\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fB__init__\fP (self, properties=None, \fBid\fP=None, \fBparent\fP=None)"
+.br
+.ti -1c
+.RI "\fB__repr__\fP (self)"
+.br
+.ti -1c
+.RI "\fBCopy\fP (self)"
+.br
+.ti -1c
+.RI "\fBName\fP (self)"
+.br
+.ti -1c
+.RI "\fBComment\fP (self)"
+.br
+.ti -1c
+.RI "\fBHashables\fP (self)"
+.br
+.ti -1c
+.RI "\fBHashablesForChild\fP (self)"
+.br
+.ti -1c
+.RI "\fBComputeIDs\fP (self, recursive=True, overwrite=True, seed_hash=None)"
+.br
+.ti -1c
+.RI "\fBEnsureNoIDCollisions\fP (self)"
+.br
+.ti -1c
+.RI "\fBChildren\fP (self)"
+.br
+.ti -1c
+.RI "\fBDescendants\fP (self)"
+.br
+.ti -1c
+.RI "\fBPBXProjectAncestor\fP (self)"
+.br
+.ti -1c
+.RI "\fBPrint\fP (self, file=sys\&.stdout)"
+.br
+.ti -1c
+.RI "\fBUpdateProperties\fP (self, properties, do_copy=False)"
+.br
+.ti -1c
+.RI "\fBHasProperty\fP (self, key)"
+.br
+.ti -1c
+.RI "\fBGetProperty\fP (self, key)"
+.br
+.ti -1c
+.RI "\fBSetProperty\fP (self, key, value)"
+.br
+.ti -1c
+.RI "\fBDelProperty\fP (self, key)"
+.br
+.ti -1c
+.RI "\fBAppendProperty\fP (self, key, value)"
+.br
+.ti -1c
+.RI "\fBVerifyHasRequiredProperties\fP (self)"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBid\fP"
+.br
+.ti -1c
+.RI "\fBparent\fP"
+.br
+.in -1c
+.SS "Static Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "int \fBi\fP = 0"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fB_EncodeComment\fP (self, comment)"
+.br
+.ti -1c
+.RI "\fB_EncodeTransform\fP (self, match)"
+.br
+.ti -1c
+.RI "\fB_EncodeString\fP (self, value)"
+.br
+.ti -1c
+.RI "\fB_XCPrint\fP (self, file, tabs, line)"
+.br
+.ti -1c
+.RI "\fB_XCPrintableValue\fP (self, tabs, value, flatten_list=False)"
+.br
+.ti -1c
+.RI "\fB_XCKVPrint\fP (self, file, tabs, key, value)"
+.br
+.ti -1c
+.RI "\fB_SetDefaultsFromSchema\fP (self)"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fB_properties\fP"
+.br
+.ti -1c
+.RI "\fB_hashables\fP"
+.br
+.ti -1c
+.RI "\fB_EncodeTransform\fP"
+.br
+.in -1c
+.SS "Static Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "dict \fB_schema\fP = {}"
+.br
+.ti -1c
+.RI "bool \fB_should_print_single_line\fP = False"
+.br
+.ti -1c
+.RI "list \fB_encode_transforms\fP = []"
+.br
+.ti -1c
+.RI "\fB_alternate_encode_transforms\fP = list(\fB_encode_transforms\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.PP
+.nf
+The abstract base of all class types used in Xcode project files\&.
+
+Class variables:
+_schema: A dictionary defining the properties of this class\&.  The keys to
+         _schema are string property keys as used in project files\&.  Values
+         are a list of four or five elements:
+         [ is_list, property_type, is_strong, is_required, default ]
+         is_list: True if the property described is a list, as opposed
+                  to a single element\&.
+         property_type: The type to use as the value of the property,
+                        or if is_list is True, the type to use for each
+                        element of the value's list\&.  property_type must
+                        be an XCObject subclass, or one of the built-in
+                        types str, int, or dict\&.
+         is_strong: If property_type is an XCObject subclass, is_strong
+                    is True to assert that this class 'owns,' or serves
+                    as parent, to the property value (or, if is_list is
+                    True, values)\&.  is_strong must be False if
+                    property_type is not an XCObject subclass\&.
+         is_required: True if the property is required for the class\&.
+                      Note that is_required being True does not preclude
+                      an empty string ('', in the case of property_type
+                      str) or list ([], in the case of is_list True) from
+                      being set for the property\&.
+         default: Optional\&.  If is_required is True, default may be set
+                  to provide a default value for objects that do not supply
+                  their own value\&.  If is_required is True and default
+                  is not provided, users of the class must supply their own
+                  value for the property\&.
+         Note that although the values of the array are expressed in
+         boolean terms, subclasses provide values as integers to conserve
+         horizontal space\&.
+_should_print_single_line: False in XCObject\&.  Subclasses whose objects
+                           should be written to the project file in the
+                           alternate single-line format, such as
+                           PBXFileReference and PBXBuildFile, should
+                           set this to True\&.
+_encode_transforms: Used by _EncodeString to encode unprintable characters\&.
+                    The index into this list is the ordinal of the
+                    character to transform; each value is a string
+                    used to represent the character in the output\&.  XCObject
+                    provides an _encode_transforms list suitable for most
+                    XCObject subclasses\&.
+_alternate_encode_transforms: Provided for subclasses that wish to use
+                              the alternate encoding rules\&.  Xcode seems
+                              to use these rules when printing objects in
+                              single-line format\&.  Subclasses that desire
+                              this behavior should set _encode_transforms
+                              to _alternate_encode_transforms\&.
+_hashables: A list of XCObject subclasses that can be hashed by ComputeIDs
+            to construct this object's ID\&.  Most classes that need custom
+            hashing behavior should do it by overriding Hashables,
+            but in some cases an object's parent may wish to push a
+            hashable value into its child, and it can do so by appending
+            to _hashables\&.
+Attributes:
+id: The object's identifier, a 24-character uppercase hexadecimal string\&.
+    Usually, objects being created should not set id until the entire
+    project file structure is built\&.  At that point, UpdateIDs() should
+    be called on the root object to assign deterministic values for id to
+    each object in the tree\&.
+parent: The object's parent\&.  This is set by a parent XCObject when a child
+        object is added to it\&.
+_properties: The object's property dictionary\&.  An object's properties are
+             described by its class' _schema variable\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB200\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "gyp\&.xcodeproj_file\&.XCObject\&.__init__ ( self,  properties = \fRNone\fP,  id = \fRNone\fP,  parent = \fRNone\fP)"
+
+.PP
+Reimplemented in \fBgyp\&.xcodeproj_file\&.PBXFileReference\fP, \fBgyp\&.xcodeproj_file\&.PBXGroup\fP, \fBgyp\&.xcodeproj_file\&.PBXNativeTarget\fP, \fBgyp\&.xcodeproj_file\&.PBXProject\fP, \fBgyp\&.xcodeproj_file\&.XCBuildPhase\fP, \fBgyp\&.xcodeproj_file\&.XCHierarchicalElement\fP, and \fBgyp\&.xcodeproj_file\&.XCTarget\fP\&.
+.PP
+Definition at line \fB290\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "gyp\&.xcodeproj_file\&.XCObject\&.__repr__ ( self)"
+
+.PP
+Reimplemented in \fBgyp\&.xcodeproj_file\&.PBXContainerItemProxy\fP, and \fBgyp\&.xcodeproj_file\&.PBXTargetDependency\fP\&.
+.PP
+Definition at line \fB298\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&._EncodeComment ( self,  comment)\fR [protected]\fP"
+
+.PP
+.nf
+Encodes a comment to be placed in the project file output, mimicking
+Xcode behavior\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB517\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&._EncodeString ( self,  value)\fR [protected]\fP"
+
+.PP
+.nf
+Encodes a string to be placed in the project file output, mimicking
+Xcode behavior\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB545\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&._EncodeTransform ( self,  match)\fR [protected]\fP"
+
+.PP
+Definition at line \fB530\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&._SetDefaultsFromSchema ( self)\fR [protected]\fP"
+
+.PP
+.nf
+Assign object default values according to the schema\&.  This will not
+overwrite properties that have already been set\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB922\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&._XCKVPrint ( self,  file,  tabs,  key,  value)\fR [protected]\fP"
+
+.PP
+.nf
+Prints a key and value, members of an XCObject's _properties dictionary,
+to file\&.
+
+tabs is an int identifying the indentation level\&.  If the class'
+_should_print_single_line variable is True, tabs is ignored and the
+key-value pair will be followed by a space insead of a newline\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB659\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&._XCPrint ( self,  file,  tabs,  line)\fR [protected]\fP"
+
+.PP
+Definition at line \fB584\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&._XCPrintableValue ( self,  tabs,  value,  flatten_list = \fRFalse\fP)\fR [protected]\fP"
+
+.PP
+.nf
+Returns a representation of value that may be printed in a project file,
+mimicking Xcode's behavior\&.
+
+_XCPrintableValue can handle str and int values, XCObjects (which are
+made printable by returning their id property), and list and dict objects
+composed of any of the above types\&.  When printing a list or dict, and
+_should_print_single_line is False, the tabs parameter is used to determine
+how much to indent the lines corresponding to the items in the list or
+dict\&.
+
+If flatten_list is True, single-element lists will be transformed into
+strings\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB587\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&.AppendProperty ( self,  key,  value)"
+
+.PP
+Definition at line \fB877\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&.Children ( self)"
+
+.PP
+.nf
+Returns a list of all of this object's owned (strong) children\&.
+.fi
+.PP
+ 
+.PP
+Reimplemented in \fBgyp\&.xcodeproj_file\&.PBXProject\fP\&.
+.PP
+Definition at line \fB487\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&.Comment ( self)"
+
+.PP
+.nf
+Return a comment string for the object\&.
+
+Most objects just use their name as the comment, but PBXProject uses
+different values\&.
+
+The returned comment is not escaped and does not have any comment marker
+strings applied to it\&.
+
+.fi
+.PP
+ 
+.PP
+Reimplemented in \fBgyp\&.xcodeproj_file\&.PBXProject\fP\&.
+.PP
+Definition at line \fB377\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&.ComputeIDs ( self,  recursive = \fRTrue\fP,  overwrite = \fRTrue\fP,  seed_hash = \fRNone\fP)"
+
+.PP
+.nf
+Set 'id' properties deterministically\&.
+
+An object's 'id' property is set based on a hash of its class type and
+name, as well as the class type and name of all ancestor objects\&.  As
+such, it is only advisable to call ComputeIDs once an entire project file
+tree is built\&.
+
+If recursive is True, recurse into all descendant objects and update their
+hashes\&.
+
+If overwrite is True, any existing value set in the 'id' property will be
+replaced\&.
+
+.fi
+.PP
+ 
+.PP
+Reimplemented in \fBgyp\&.xcodeproj_file\&.XCProjectFile\fP\&.
+.PP
+Definition at line \fB403\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&.Copy ( self)"
+
+.PP
+.nf
+Make a copy of this object\&.
+
+The new object will have its own copy of lists and dicts\&.  Any XCObject
+objects owned by this object (marked 'strong') will be copied in the
+new object, even those found in lists\&.  If this object has any weak
+references to other XCObjects, the same references are added to the new
+object without making a copy\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB305\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&.DelProperty ( self,  key)"
+
+.PP
+Definition at line \fB873\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&.Descendants ( self)"
+
+.PP
+.nf
+Returns a list of all of this object's descendants, including this
+object\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB500\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&.EnsureNoIDCollisions ( self)"
+
+.PP
+.nf
+Verifies that no two objects have the same ID\&.  Checks all descendants\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB467\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&.GetProperty ( self,  key)"
+
+.PP
+Definition at line \fB867\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&.Hashables ( self)"
+
+.PP
+Reimplemented in \fBgyp\&.xcodeproj_file\&.PBXBuildFile\fP, \fBgyp\&.xcodeproj_file\&.PBXBuildRule\fP, \fBgyp\&.xcodeproj_file\&.PBXContainerItemProxy\fP, \fBgyp\&.xcodeproj_file\&.PBXGroup\fP, \fBgyp\&.xcodeproj_file\&.PBXTargetDependency\fP, and \fBgyp\&.xcodeproj_file\&.XCHierarchicalElement\fP\&.
+.PP
+Definition at line \fB389\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&.HashablesForChild ( self)"
+
+.PP
+Reimplemented in \fBgyp\&.xcodeproj_file\&.PBXGroup\fP\&.
+.PP
+Definition at line \fB400\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&.HasProperty ( self,  key)"
+
+.PP
+Definition at line \fB864\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&.Name ( self)"
+
+.PP
+.nf
+Return the name corresponding to an object\&.
+
+Not all objects necessarily need to be nameable, and not all that do have
+a 'name' property\&.  Override as needed\&.
+
+.fi
+.PP
+ 
+.PP
+Reimplemented in \fBgyp\&.xcodeproj_file\&.PBXBuildFile\fP, \fBgyp\&.xcodeproj_file\&.PBXBuildRule\fP, \fBgyp\&.xcodeproj_file\&.PBXContainerItemProxy\fP, \fBgyp\&.xcodeproj_file\&.PBXFrameworksBuildPhase\fP, \fBgyp\&.xcodeproj_file\&.PBXHeadersBuildPhase\fP, \fBgyp\&.xcodeproj_file\&.PBXProject\fP, \fBgyp\&.xcodeproj_file\&.PBXResourcesBuildPhase\fP, \fBgyp\&.xcodeproj_file\&.PBXShellScriptBuildPhase\fP, \fBgyp\&.xcodeproj_file\&.PBXSourcesBuildPhase\fP, \fBgyp\&.xcodeproj_file\&.PBXTargetDependency\fP, \fBgyp\&.xcodeproj_file\&.XCConfigurationList\fP, and \fBgyp\&.xcodeproj_file\&.XCHierarchicalElement\fP\&.
+.PP
+Definition at line \fB359\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&.PBXProjectAncestor ( self)"
+
+.PP
+Reimplemented in \fBgyp\&.xcodeproj_file\&.PBXProject\fP\&.
+.PP
+Definition at line \fB511\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&.Print ( self,  file = \fRsys\&.stdout\fP)"
+
+.PP
+.nf
+Prints a reprentation of this object to file, adhering to Xcode output
+formatting\&.
+
+.fi
+.PP
+ 
+.PP
+Reimplemented in \fBgyp\&.xcodeproj_file\&.XCProjectFile\fP\&.
+.PP
+Definition at line \fB722\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&.SetProperty ( self,  key,  value)"
+
+.PP
+Definition at line \fB870\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&.UpdateProperties ( self,  properties,  do_copy = \fRFalse\fP)"
+
+.PP
+.nf
+Merge the supplied properties into the _properties dictionary\&.
+
+The input properties must adhere to the class schema or a KeyError or
+TypeError exception will be raised\&.  If adding an object of an XCObject
+subclass and the schema indicates a strong relationship, the object's
+parent will be set to this object\&.
+
+If do_copy is True, then lists, dicts, strong-owned XCObjects, and
+strong-owned XCObjects in lists will be copied instead of having their
+references added\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB760\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&.VerifyHasRequiredProperties ( self)"
+
+.PP
+.nf
+Ensure that all properties identified as required by the schema are
+set\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB910\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "gyp\&.xcodeproj_file\&.XCObject\&._alternate_encode_transforms = list(\fB_encode_transforms\fP)\fR [static]\fP, \fR [protected]\fP"
+
+.PP
+Definition at line \fB285\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "list gyp\&.xcodeproj_file\&.XCObject\&._encode_transforms = []\fR [static]\fP, \fR [protected]\fP"
+
+.PP
+Definition at line \fB272\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&._EncodeTransform\fR [protected]\fP"
+
+.PP
+Definition at line \fB582\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&._hashables\fR [protected]\fP"
+
+.PP
+Definition at line \fB294\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&._properties\fR [protected]\fP"
+
+.PP
+Definition at line \fB293\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "dict gyp\&.xcodeproj_file\&.XCObject\&._schema = {}\fR [static]\fP, \fR [protected]\fP"
+
+.PP
+Definition at line \fB268\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "bool gyp\&.xcodeproj_file\&.XCObject\&._should_print_single_line = False\fR [static]\fP, \fR [protected]\fP"
+
+.PP
+Definition at line \fB269\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "int gyp\&.xcodeproj_file\&.XCObject\&.i = 0\fR [static]\fP"
+
+.PP
+Definition at line \fB273\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&.id"
+
+.PP
+Definition at line \fB291\fP of file \fBxcodeproj_file\&.py\fP\&.
+.SS "gyp\&.xcodeproj_file\&.XCObject\&.parent"
+
+.PP
+Definition at line \fB292\fP of file \fBxcodeproj_file\&.py\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

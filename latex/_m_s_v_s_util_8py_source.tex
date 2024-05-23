@@ -1,0 +1,277 @@
+\doxysection{MSVSUtil.\+py}
+\hypertarget{_m_s_v_s_util_8py_source}{}\label{_m_s_v_s_util_8py_source}\index{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/MSVSUtil.py@{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/MSVSUtil.py}}
+\mbox{\hyperlink{_m_s_v_s_util_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00001}\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util}{00001}}\ \textcolor{comment}{\#\ Copyright\ (c)\ 2013\ Google\ Inc.\ All\ rights\ reserved.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00002}00002\ \textcolor{comment}{\#\ Use\ of\ this\ source\ code\ is\ governed\ by\ a\ BSD-\/style\ license\ that\ can\ be}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00003}00003\ \textcolor{comment}{\#\ found\ in\ the\ LICENSE\ file.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00005}00005\ \textcolor{stringliteral}{"{}"{}"{}Utility\ functions\ shared\ amongst\ the\ Windows\ generators."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00007}00007\ \textcolor{keyword}{import}\ copy}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00008}00008\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00011}00011\ \textcolor{comment}{\#\ A\ dictionary\ mapping\ supported\ target\ types\ to\ extensions.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00012}\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_a9108321beb6a3cfb332776732c8f3a4b}{00012}}\ TARGET\_TYPE\_EXT\ =\ \{}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00013}00013\ \ \ \ \ \textcolor{stringliteral}{"{}executable"{}}:\ \textcolor{stringliteral}{"{}exe"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00014}00014\ \ \ \ \ \textcolor{stringliteral}{"{}loadable\_module"{}}:\ \textcolor{stringliteral}{"{}dll"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00015}00015\ \ \ \ \ \textcolor{stringliteral}{"{}shared\_library"{}}:\ \textcolor{stringliteral}{"{}dll"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00016}00016\ \ \ \ \ \textcolor{stringliteral}{"{}static\_library"{}}:\ \textcolor{stringliteral}{"{}lib"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00017}00017\ \ \ \ \ \textcolor{stringliteral}{"{}windows\_driver"{}}:\ \textcolor{stringliteral}{"{}sys"{}},}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00018}00018\ \}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00021}\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_a4a4cb2bf8ce33246d1277c90c6fbb094}{00021}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_a4a4cb2bf8ce33246d1277c90c6fbb094}{\_GetLargePdbShimCcPath}}():}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00022}00022\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Returns\ the\ path\ of\ the\ large\_pdb\_shim.cc\ file."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00023}00023\ \ \ \ \ this\_dir\ =\ os.path.abspath(os.path.dirname(\_\_file\_\_))}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00024}00024\ \ \ \ \ src\_dir\ =\ os.path.abspath(os.path.join(this\_dir,\ \textcolor{stringliteral}{"{}.."{}},\ \textcolor{stringliteral}{"{}.."{}}))}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00025}00025\ \ \ \ \ win\_data\_dir\ =\ os.path.join(src\_dir,\ \textcolor{stringliteral}{"{}data"{}},\ \textcolor{stringliteral}{"{}win"{}})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00026}00026\ \ \ \ \ large\_pdb\_shim\_cc\ =\ os.path.join(win\_data\_dir,\ \textcolor{stringliteral}{"{}large-\/pdb-\/shim.cc"{}})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00027}00027\ \ \ \ \ \textcolor{keywordflow}{return}\ large\_pdb\_shim\_cc}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00030}\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_acba4a54e38709d19bbde83024cff6da8}{00030}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_acba4a54e38709d19bbde83024cff6da8}{\_DeepCopySomeKeys}}(in\_dict,\ keys):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00031}00031\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Performs\ a\ partial\ deep-\/copy\ on\ |in\_dict|,\ only\ copying\ the\ keys\ in\ |keys|.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00032}00032\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00033}00033\ \textcolor{stringliteral}{\ \ Arguments:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00034}00034\ \textcolor{stringliteral}{\ \ \ \ in\_dict:\ The\ dictionary\ to\ copy.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00035}00035\ \textcolor{stringliteral}{\ \ \ \ keys:\ The\ keys\ to\ be\ copied.\ If\ a\ key\ is\ in\ this\ list\ and\ doesn't\ exist\ in}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00036}00036\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ |in\_dict|\ this\ is\ not\ an\ error.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00037}00037\ \textcolor{stringliteral}{\ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00038}00038\ \textcolor{stringliteral}{\ \ \ \ The\ partially\ deep-\/copied\ dictionary.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00039}00039\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00040}00040\ \ \ \ \ d\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00041}00041\ \ \ \ \ \textcolor{keywordflow}{for}\ key\ \textcolor{keywordflow}{in}\ keys:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ key\ \textcolor{keywordflow}{not}\ \textcolor{keywordflow}{in}\ in\_dict:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ d[key]\ =\ copy.deepcopy(in\_dict[key])}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00045}00045\ \ \ \ \ \textcolor{keywordflow}{return}\ d}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00048}\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_acf497f03234f455f52f09625a6c9ce50}{00048}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_acf497f03234f455f52f09625a6c9ce50}{\_SuffixName}}(name,\ suffix):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00049}00049\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Add\ a\ suffix\ to\ the\ end\ of\ a\ target.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00050}00050\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00051}00051\ \textcolor{stringliteral}{\ \ Arguments:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00052}00052\ \textcolor{stringliteral}{\ \ \ \ name:\ name\ of\ the\ target\ (foo\#target)}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00053}00053\ \textcolor{stringliteral}{\ \ \ \ suffix:\ the\ suffix\ to\ be\ added}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00054}00054\ \textcolor{stringliteral}{\ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00055}00055\ \textcolor{stringliteral}{\ \ \ \ Target\ name\ with\ suffix\ added\ (foo\_suffix\#target)}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00056}00056\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00057}00057\ \ \ \ \ parts\ =\ name.rsplit(\textcolor{stringliteral}{"{}\#"{}},\ 1)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00058}00058\ \ \ \ \ parts[0]\ =\ f\textcolor{stringliteral}{"{}\{parts[0]\}\_\{suffix\}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00059}00059\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}\#"{}}.join(parts)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00062}\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_a4cdefb42e91d7747789db935c5310046}{00062}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_a4cdefb42e91d7747789db935c5310046}{\_ShardName}}(name,\ number):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00063}00063\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Add\ a\ shard\ number\ to\ the\ end\ of\ a\ target.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00064}00064\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00065}00065\ \textcolor{stringliteral}{\ \ Arguments:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00066}00066\ \textcolor{stringliteral}{\ \ \ \ name:\ name\ of\ the\ target\ (foo\#target)}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00067}00067\ \textcolor{stringliteral}{\ \ \ \ number:\ shard\ number}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00068}00068\ \textcolor{stringliteral}{\ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00069}00069\ \textcolor{stringliteral}{\ \ \ \ Target\ name\ with\ shard\ added\ (foo\_1\#target)}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00070}00070\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00071}00071\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_acf497f03234f455f52f09625a6c9ce50}{\_SuffixName}}(name,\ str(number))}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00074}\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_aaff9bd36c35afd64173c231f3f536cc5}{00074}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_aaff9bd36c35afd64173c231f3f536cc5}{ShardTargets}}(target\_list,\ target\_dicts):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00075}00075\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Shard\ some\ targets\ apart\ to\ work\ around\ the\ linkers\ limits.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00076}00076\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00077}00077\ \textcolor{stringliteral}{\ \ Arguments:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00078}00078\ \textcolor{stringliteral}{\ \ \ \ target\_list:\ List\ of\ target\ pairs:\ 'base/base.gyp:base'.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00079}00079\ \textcolor{stringliteral}{\ \ \ \ target\_dicts:\ Dict\ of\ target\ properties\ keyed\ on\ target\ pair.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00080}00080\ \textcolor{stringliteral}{\ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00081}00081\ \textcolor{stringliteral}{\ \ \ \ Tuple\ of\ the\ new\ sharded\ versions\ of\ the\ inputs.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00082}00082\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00083}00083\ \ \ \ \ \textcolor{comment}{\#\ Gather\ the\ targets\ to\ shard,\ and\ how\ many\ pieces.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00084}00084\ \ \ \ \ targets\_to\_shard\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00085}00085\ \ \ \ \ \textcolor{keywordflow}{for}\ t\ \textcolor{keywordflow}{in}\ target\_dicts:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ shards\ =\ int(target\_dicts[t].get(\textcolor{stringliteral}{"{}msvs\_shard"{}},\ 0))}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ shards:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ targets\_to\_shard[t]\ =\ shards}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00089}00089\ \ \ \ \ \textcolor{comment}{\#\ Shard\ target\_list.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00090}00090\ \ \ \ \ new\_target\_list\ =\ []}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00091}00091\ \ \ \ \ \textcolor{keywordflow}{for}\ t\ \textcolor{keywordflow}{in}\ target\_list:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ t\ \textcolor{keywordflow}{in}\ targets\_to\_shard:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ i\ \textcolor{keywordflow}{in}\ range(targets\_to\_shard[t]):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_target\_list.append(\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_a4cdefb42e91d7747789db935c5310046}{\_ShardName}}(t,\ i))}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ new\_target\_list.append(t)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00097}00097\ \ \ \ \ \textcolor{comment}{\#\ Shard\ target\_dict.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00098}00098\ \ \ \ \ new\_target\_dicts\ =\ \{\}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00099}00099\ \ \ \ \ \textcolor{keywordflow}{for}\ t\ \textcolor{keywordflow}{in}\ target\_dicts:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ t\ \textcolor{keywordflow}{in}\ targets\_to\_shard:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ i\ \textcolor{keywordflow}{in}\ range(targets\_to\_shard[t]):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ name\ =\ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_a4cdefb42e91d7747789db935c5310046}{\_ShardName}}(t,\ i)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_target\_dicts[name]\ =\ copy.copy(target\_dicts[t])}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_target\_dicts[name][\textcolor{stringliteral}{"{}target\_name"{}}]\ =\ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_a4cdefb42e91d7747789db935c5310046}{\_ShardName}}(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_target\_dicts[name][\textcolor{stringliteral}{"{}target\_name"{}}],\ i}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sources\ =\ new\_target\_dicts[name].get(\textcolor{stringliteral}{"{}sources"{}},\ [])}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_sources\ =\ []}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ pos\ \textcolor{keywordflow}{in}\ range(i,\ len(sources),\ targets\_to\_shard[t]):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_sources.append(sources[pos])}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_target\_dicts[name][\textcolor{stringliteral}{"{}sources"{}}]\ =\ new\_sources}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00112}00112\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ new\_target\_dicts[t]\ =\ target\_dicts[t]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00114}00114\ \ \ \ \ \textcolor{comment}{\#\ Shard\ dependencies.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00115}00115\ \ \ \ \ \textcolor{keywordflow}{for}\ t\ \textcolor{keywordflow}{in}\ sorted(new\_target\_dicts):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ deptype\ \textcolor{keywordflow}{in}\ (\textcolor{stringliteral}{"{}dependencies"{}},\ \textcolor{stringliteral}{"{}dependencies\_original"{}}):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ dependencies\ =\ copy.copy(new\_target\_dicts[t].get(deptype,\ []))}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ new\_dependencies\ =\ []}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ d\ \textcolor{keywordflow}{in}\ dependencies:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ d\ \textcolor{keywordflow}{in}\ targets\_to\_shard:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ i\ \textcolor{keywordflow}{in}\ range(targets\_to\_shard[d]):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_dependencies.append(\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_a4cdefb42e91d7747789db935c5310046}{\_ShardName}}(d,\ i))}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_dependencies.append(d)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ new\_target\_dicts[t][deptype]\ =\ new\_dependencies}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00126}00126\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00127}00127\ \ \ \ \ \textcolor{keywordflow}{return}\ (new\_target\_list,\ new\_target\_dicts)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00128}00128\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00129}00129\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00130}\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_ad16d6f5e7cb9d8d62ec659f1ca019910}{00130}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_ad16d6f5e7cb9d8d62ec659f1ca019910}{\_GetPdbPath}}(target\_dict,\ config\_name,\ vars):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00131}00131\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Returns\ the\ path\ to\ the\ PDB\ file\ that\ will\ be\ generated\ by\ a\ given}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00132}00132\ \textcolor{stringliteral}{\ \ configuration.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00133}00133\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00134}00134\ \textcolor{stringliteral}{\ \ The\ lookup\ proceeds\ as\ follows:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00135}00135\ \textcolor{stringliteral}{\ \ \ \ -\/\ Look\ for\ an\ explicit\ path\ in\ the\ VCLinkerTool\ configuration\ block.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00136}00136\ \textcolor{stringliteral}{\ \ \ \ -\/\ Look\ for\ an\ 'msvs\_large\_pdb\_path'\ variable.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00137}00137\ \textcolor{stringliteral}{\ \ \ \ -\/\ Use\ '<(PRODUCT\_DIR)/<(product\_name).(exe|dll).pdb'\ if\ 'product\_name'\ is}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00138}00138\ \textcolor{stringliteral}{\ \ \ \ \ \ specified.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00139}00139\ \textcolor{stringliteral}{\ \ \ \ -\/\ Use\ '<(PRODUCT\_DIR)/<(target\_name).(exe|dll).pdb'.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00140}00140\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00141}00141\ \textcolor{stringliteral}{\ \ Arguments:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00142}00142\ \textcolor{stringliteral}{\ \ \ \ target\_dict:\ The\ target\ dictionary\ to\ be\ searched.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00143}00143\ \textcolor{stringliteral}{\ \ \ \ config\_name:\ The\ name\ of\ the\ configuration\ of\ interest.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00144}00144\ \textcolor{stringliteral}{\ \ \ \ vars:\ A\ dictionary\ of\ common\ GYP\ variables\ with\ generator-\/specific\ values.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00145}00145\ \textcolor{stringliteral}{\ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00146}00146\ \textcolor{stringliteral}{\ \ \ \ The\ path\ of\ the\ corresponding\ PDB\ file.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00147}00147\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00148}00148\ \ \ \ \ config\ =\ target\_dict[\textcolor{stringliteral}{"{}configurations"{}}][config\_name]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00149}00149\ \ \ \ \ msvs\ =\ config.setdefault(\textcolor{stringliteral}{"{}msvs\_settings"{}},\ \{\})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00150}00150\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00151}00151\ \ \ \ \ linker\ =\ msvs.get(\textcolor{stringliteral}{"{}VCLinkerTool"{}},\ \{\})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00152}00152\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00153}00153\ \ \ \ \ pdb\_path\ =\ linker.get(\textcolor{stringliteral}{"{}ProgramDatabaseFile"{}})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00154}00154\ \ \ \ \ \textcolor{keywordflow}{if}\ pdb\_path:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00155}00155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ pdb\_path}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00156}00156\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00157}00157\ \ \ \ \ variables\ =\ target\_dict.get(\textcolor{stringliteral}{"{}variables"{}},\ \{\})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00158}00158\ \ \ \ \ pdb\_path\ =\ variables.get(\textcolor{stringliteral}{"{}msvs\_large\_pdb\_path"{}},\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00159}00159\ \ \ \ \ \textcolor{keywordflow}{if}\ pdb\_path:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00160}00160\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ pdb\_path}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00161}00161\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00162}00162\ \ \ \ \ pdb\_base\ =\ target\_dict.get(\textcolor{stringliteral}{"{}product\_name"{}},\ target\_dict[\textcolor{stringliteral}{"{}target\_name"{}}])}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00163}00163\ \ \ \ \ pdb\_base\ =\ \textcolor{stringliteral}{"{}\{\}.\{\}.pdb"{}}.format(pdb\_base,\ TARGET\_TYPE\_EXT[target\_dict[\textcolor{stringliteral}{"{}type"{}}]])}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00164}00164\ \ \ \ \ pdb\_path\ =\ vars[\textcolor{stringliteral}{"{}PRODUCT\_DIR"{}}]\ +\ \textcolor{stringliteral}{"{}/"{}}\ +\ pdb\_base}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00165}00165\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00166}00166\ \ \ \ \ \textcolor{keywordflow}{return}\ pdb\_path}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00168}00168\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00169}\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_ae17c81ec653d2e6fbc85242db5fd30bd}{00169}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_ae17c81ec653d2e6fbc85242db5fd30bd}{InsertLargePdbShims}}(target\_list,\ target\_dicts,\ vars):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00170}00170\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Insert\ a\ shim\ target\ that\ forces\ the\ linker\ to\ use\ 4KB\ pagesize\ PDBs.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00171}00171\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00172}00172\ \textcolor{stringliteral}{\ \ This\ is\ a\ workaround\ for\ targets\ with\ PDBs\ greater\ than\ 1GB\ in\ size,\ the}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00173}00173\ \textcolor{stringliteral}{\ \ limit\ for\ the\ 1KB\ pagesize\ PDBs\ created\ by\ the\ linker\ by\ default.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00174}00174\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00175}00175\ \textcolor{stringliteral}{\ \ Arguments:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00176}00176\ \textcolor{stringliteral}{\ \ \ \ target\_list:\ List\ of\ target\ pairs:\ 'base/base.gyp:base'.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00177}00177\ \textcolor{stringliteral}{\ \ \ \ target\_dicts:\ Dict\ of\ target\ properties\ keyed\ on\ target\ pair.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00178}00178\ \textcolor{stringliteral}{\ \ \ \ vars:\ A\ dictionary\ of\ common\ GYP\ variables\ with\ generator-\/specific\ values.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00179}00179\ \textcolor{stringliteral}{\ \ Returns:}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00180}00180\ \textcolor{stringliteral}{\ \ \ \ Tuple\ of\ the\ shimmed\ version\ of\ the\ inputs.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00181}00181\ \textcolor{stringliteral}{\ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00182}00182\ \ \ \ \ \textcolor{comment}{\#\ Determine\ which\ targets\ need\ shimming.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00183}00183\ \ \ \ \ targets\_to\_shim\ =\ []}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00184}00184\ \ \ \ \ \textcolor{keywordflow}{for}\ t\ \textcolor{keywordflow}{in}\ target\_dicts:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00185}00185\ \ \ \ \ \ \ \ \ target\_dict\ =\ target\_dicts[t]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00186}00186\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00187}00187\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ We\ only\ want\ to\ shim\ targets\ that\ have\ msvs\_large\_pdb\ enabled.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00188}00188\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keywordflow}{not}\ int(target\_dict.get(\textcolor{stringliteral}{"{}msvs\_large\_pdb"{}},\ 0)):}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00189}00189\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00190}00190\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ is\ intended\ for\ executable,\ shared\_library\ and\ loadable\_module}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00191}00191\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ targets\ where\ every\ configuration\ is\ set\ up\ to\ produce\ a\ PDB\ output.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00192}00192\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ If\ any\ of\ these\ conditions\ is\ not\ true\ then\ the\ shim\ logic\ will\ fail}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00193}00193\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ below.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00194}00194\ \ \ \ \ \ \ \ \ targets\_to\_shim.append(t)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00195}00195\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00196}00196\ \ \ \ \ large\_pdb\_shim\_cc\ =\ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_a4a4cb2bf8ce33246d1277c90c6fbb094}{\_GetLargePdbShimCcPath}}()}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00197}00197\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00198}00198\ \ \ \ \ \textcolor{keywordflow}{for}\ t\ \textcolor{keywordflow}{in}\ targets\_to\_shim:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00199}00199\ \ \ \ \ \ \ \ \ target\_dict\ =\ target\_dicts[t]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00200}00200\ \ \ \ \ \ \ \ \ target\_name\ =\ target\_dict.get(\textcolor{stringliteral}{"{}target\_name"{}})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00201}00201\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00202}00202\ \ \ \ \ \ \ \ \ base\_dict\ =\ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_acba4a54e38709d19bbde83024cff6da8}{\_DeepCopySomeKeys}}(}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ target\_dict,\ [\textcolor{stringliteral}{"{}configurations"{}},\ \textcolor{stringliteral}{"{}default\_configuration"{}},\ \textcolor{stringliteral}{"{}toolset"{}}]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00204}00204\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00205}00205\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00206}00206\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ is\ the\ dict\ for\ copying\ the\ source\ file\ (part\ of\ the\ GYP\ tree)}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00207}00207\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ to\ the\ intermediate\ directory\ of\ the\ project.\ This\ is\ necessary\ because}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00208}00208\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ we\ can't\ always\ build\ a\ relative\ path\ to\ the\ shim\ source\ file\ (on\ Windows}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00209}00209\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ GYP\ and\ the\ project\ may\ be\ on\ different\ drives),\ and\ Ninja\ hates\ absolute}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00210}00210\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ paths\ (it\ ends\ up\ generating\ the\ .obj\ and\ .obj.d\ alongside\ the\ source}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00211}00211\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ file,\ polluting\ GYPs\ tree).}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00212}00212\ \ \ \ \ \ \ \ \ copy\_suffix\ =\ \textcolor{stringliteral}{"{}large\_pdb\_copy"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00213}00213\ \ \ \ \ \ \ \ \ copy\_target\_name\ =\ target\_name\ +\ \textcolor{stringliteral}{"{}\_"{}}\ +\ copy\_suffix}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00214}00214\ \ \ \ \ \ \ \ \ full\_copy\_target\_name\ =\ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_acf497f03234f455f52f09625a6c9ce50}{\_SuffixName}}(t,\ copy\_suffix)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00215}00215\ \ \ \ \ \ \ \ \ shim\_cc\_basename\ =\ os.path.basename(large\_pdb\_shim\_cc)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00216}00216\ \ \ \ \ \ \ \ \ shim\_cc\_dir\ =\ vars[\textcolor{stringliteral}{"{}SHARED\_INTERMEDIATE\_DIR"{}}]\ +\ \textcolor{stringliteral}{"{}/"{}}\ +\ copy\_target\_name}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00217}00217\ \ \ \ \ \ \ \ \ shim\_cc\_path\ =\ shim\_cc\_dir\ +\ \textcolor{stringliteral}{"{}/"{}}\ +\ shim\_cc\_basename}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00218}00218\ \ \ \ \ \ \ \ \ copy\_dict\ =\ copy.deepcopy(base\_dict)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00219}00219\ \ \ \ \ \ \ \ \ copy\_dict[\textcolor{stringliteral}{"{}target\_name"{}}]\ =\ copy\_target\_name}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00220}00220\ \ \ \ \ \ \ \ \ copy\_dict[\textcolor{stringliteral}{"{}type"{}}]\ =\ \textcolor{stringliteral}{"{}none"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00221}00221\ \ \ \ \ \ \ \ \ copy\_dict[\textcolor{stringliteral}{"{}sources"{}}]\ =\ [large\_pdb\_shim\_cc]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00222}00222\ \ \ \ \ \ \ \ \ copy\_dict[\textcolor{stringliteral}{"{}copies"{}}]\ =\ [}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}destination"{}}:\ shim\_cc\_dir,\ \textcolor{stringliteral}{"{}files"{}}:\ [large\_pdb\_shim\_cc]\}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00224}00224\ \ \ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00225}00225\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00226}00226\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ This\ is\ the\ dict\ for\ the\ PDB\ generating\ shim\ target.\ It\ depends\ on\ the}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00227}00227\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ copy\ target.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00228}00228\ \ \ \ \ \ \ \ \ shim\_suffix\ =\ \textcolor{stringliteral}{"{}large\_pdb\_shim"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00229}00229\ \ \ \ \ \ \ \ \ shim\_target\_name\ =\ target\_name\ +\ \textcolor{stringliteral}{"{}\_"{}}\ +\ shim\_suffix}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00230}00230\ \ \ \ \ \ \ \ \ full\_shim\_target\_name\ =\ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_acf497f03234f455f52f09625a6c9ce50}{\_SuffixName}}(t,\ shim\_suffix)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00231}00231\ \ \ \ \ \ \ \ \ shim\_dict\ =\ copy.deepcopy(base\_dict)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00232}00232\ \ \ \ \ \ \ \ \ shim\_dict[\textcolor{stringliteral}{"{}target\_name"{}}]\ =\ shim\_target\_name}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00233}00233\ \ \ \ \ \ \ \ \ shim\_dict[\textcolor{stringliteral}{"{}type"{}}]\ =\ \textcolor{stringliteral}{"{}static\_library"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00234}00234\ \ \ \ \ \ \ \ \ shim\_dict[\textcolor{stringliteral}{"{}sources"{}}]\ =\ [shim\_cc\_path]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00235}00235\ \ \ \ \ \ \ \ \ shim\_dict[\textcolor{stringliteral}{"{}dependencies"{}}]\ =\ [full\_copy\_target\_name]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00236}00236\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00237}00237\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Set\ up\ the\ shim\ to\ output\ its\ PDB\ to\ the\ same\ location\ as\ the\ final\ linker}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00238}00238\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ target.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00239}00239\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ config\_name,\ config\ \textcolor{keywordflow}{in}\ shim\_dict.get(\textcolor{stringliteral}{"{}configurations"{}}).items():}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00240}00240\ \ \ \ \ \ \ \ \ \ \ \ \ pdb\_path\ =\ \mbox{\hyperlink{namespacegyp_1_1_m_s_v_s_util_ad16d6f5e7cb9d8d62ec659f1ca019910}{\_GetPdbPath}}(target\_dict,\ config\_name,\ vars)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00241}00241\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00242}00242\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ A\ few\ keys\ that\ we\ don't\ want\ to\ propagate.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00243}00243\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ key\ \textcolor{keywordflow}{in}\ [\textcolor{stringliteral}{"{}msvs\_precompiled\_header"{}},\ \textcolor{stringliteral}{"{}msvs\_precompiled\_source"{}},\ \textcolor{stringliteral}{"{}test"{}}]:}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00244}00244\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ config.pop(key,\ \textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00245}00245\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00246}00246\ \ \ \ \ \ \ \ \ \ \ \ \ msvs\ =\ config.setdefault(\textcolor{stringliteral}{"{}msvs\_settings"{}},\ \{\})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00247}00247\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00248}00248\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Update\ the\ compiler\ directives\ in\ the\ shim\ target.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00249}00249\ \ \ \ \ \ \ \ \ \ \ \ \ compiler\ =\ msvs.setdefault(\textcolor{stringliteral}{"{}VCCLCompilerTool"{}},\ \{\})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00250}00250\ \ \ \ \ \ \ \ \ \ \ \ \ compiler[\textcolor{stringliteral}{"{}DebugInformationFormat"{}}]\ =\ \textcolor{stringliteral}{"{}3"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00251}00251\ \ \ \ \ \ \ \ \ \ \ \ \ compiler[\textcolor{stringliteral}{"{}ProgramDataBaseFileName"{}}]\ =\ pdb\_path}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00252}00252\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00253}00253\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Set\ the\ explicit\ PDB\ path\ in\ the\ appropriate\ configuration\ of\ the}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00254}00254\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ original\ target.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00255}00255\ \ \ \ \ \ \ \ \ \ \ \ \ config\ =\ target\_dict[\textcolor{stringliteral}{"{}configurations"{}}][config\_name]}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00256}00256\ \ \ \ \ \ \ \ \ \ \ \ \ msvs\ =\ config.setdefault(\textcolor{stringliteral}{"{}msvs\_settings"{}},\ \{\})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00257}00257\ \ \ \ \ \ \ \ \ \ \ \ \ linker\ =\ msvs.setdefault(\textcolor{stringliteral}{"{}VCLinkerTool"{}},\ \{\})}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00258}00258\ \ \ \ \ \ \ \ \ \ \ \ \ linker[\textcolor{stringliteral}{"{}GenerateDebugInformation"{}}]\ =\ \textcolor{stringliteral}{"{}true"{}}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00259}00259\ \ \ \ \ \ \ \ \ \ \ \ \ linker[\textcolor{stringliteral}{"{}ProgramDatabaseFile"{}}]\ =\ pdb\_path}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00260}00260\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00261}00261\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Add\ the\ new\ targets.\ They\ must\ go\ to\ the\ beginning\ of\ the\ list\ so\ that}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00262}00262\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ the\ dependency\ generation\ works\ as\ expected\ in\ ninja.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00263}00263\ \ \ \ \ \ \ \ \ target\_list.insert(0,\ full\_copy\_target\_name)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00264}00264\ \ \ \ \ \ \ \ \ target\_list.insert(0,\ full\_shim\_target\_name)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00265}00265\ \ \ \ \ \ \ \ \ target\_dicts[full\_copy\_target\_name]\ =\ copy\_dict}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00266}00266\ \ \ \ \ \ \ \ \ target\_dicts[full\_shim\_target\_name]\ =\ shim\_dict}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00267}00267\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00268}00268\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Update\ the\ original\ target\ to\ depend\ on\ the\ shim\ target.}}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00269}00269\ \ \ \ \ \ \ \ \ target\_dict.setdefault(\textcolor{stringliteral}{"{}dependencies"{}},\ []).append(full\_shim\_target\_name)}
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00270}00270\ }
+\DoxyCodeLine{\Hypertarget{_m_s_v_s_util_8py_source_l00271}00271\ \ \ \ \ \textcolor{keywordflow}{return}\ (target\_list,\ target\_dicts)}
+
+\end{DoxyCode}

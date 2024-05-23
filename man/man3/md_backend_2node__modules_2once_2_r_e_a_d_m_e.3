@@ -1,0 +1,85 @@
+.TH "md_backend_2node__modules_2once_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2once_2_r_e_a_d_m_e \- once 
+.PP
+ Only call a function once\&.
+.SH "usage"
+.PP
+.PP
+.nf
+var once = require('once')
+
+function load (file, cb) {
+  cb = once(cb)
+  loader\&.load('file')
+  loader\&.once('load', cb)
+  loader\&.once('error', cb)
+}
+.fi
+.PP
+.PP
+Or add to the Function\&.prototype in a responsible way:
+.PP
+.PP
+.nf
+// only has to be done once
+require('once')\&.proto()
+
+function load (file, cb) {
+  cb = cb\&.once()
+  loader\&.load('file')
+  loader\&.once('load', cb)
+  loader\&.once('error', cb)
+}
+.fi
+.PP
+.PP
+Ironically, the prototype feature makes this module twice as complicated as necessary\&.
+.PP
+To check whether you function has been called, use \fRfn\&.called\fP\&. Once the function is called for the first time the return value of the original function is saved in \fRfn\&.value\fP and subsequent calls will continue to return this value\&.
+.PP
+.PP
+.nf
+var once = require('once')
+
+function load (cb) {
+  cb = once(cb)
+  var stream = createStream()
+  stream\&.once('data', cb)
+  stream\&.once('end', function () {
+    if (!cb\&.called) cb(new Error('not found'))
+  })
+}
+.fi
+.PP
+.SH "\fRonce\&.strict(func)\fP"
+.PP
+Throw an error if the function is called twice\&.
+.PP
+Some functions are expected to be called only once\&. Using \fRonce\fP for them would potentially hide logical errors\&.
+.PP
+In the example below, the \fRgreet\fP function has to call the callback only once:
+.PP
+.PP
+.nf
+function greet (name, cb) {
+  // return is missing from the if statement
+  // when no name is passed, the callback is called twice
+  if (!name) cb('Hello anonymous')
+  cb('Hello ' + name)
+}
+
+function log (msg) {
+  console\&.log(msg)
+}
+
+// this will print 'Hello anonymous' but the logical error will be missed
+greet(null, once(msg))
+
+// once\&.strict will print 'Hello anonymous' and throw an error when the callback will be called the second time
+greet(null, once\&.strict(msg))
+.fi
+.PP
+ 

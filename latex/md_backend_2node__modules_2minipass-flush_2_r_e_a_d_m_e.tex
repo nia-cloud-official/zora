@@ -1,0 +1,46 @@
+\chapter{minipass-\/flush}
+\hypertarget{md_backend_2node__modules_2minipass-flush_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2minipass-flush_2_r_e_a_d_m_e}\index{minipass-\/flush@{minipass-\/flush}}
+\label{md_backend_2node__modules_2minipass-flush_2_r_e_a_d_m_e_autotoc_md2161}%
+\Hypertarget{md_backend_2node__modules_2minipass-flush_2_r_e_a_d_m_e_autotoc_md2161}%
+ A Minipass stream that calls a flush function before emitting \textquotesingle{}end\textquotesingle{}\hypertarget{md_backend_2node__modules_2minipass-flush_2_r_e_a_d_m_e_autotoc_md2162}{}\doxysection{\texorpdfstring{USAGE}{USAGE}}\label{md_backend_2node__modules_2minipass-flush_2_r_e_a_d_m_e_autotoc_md2162}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ Flush\ =\ require('minipass-\/flush')}
+\DoxyCodeLine{cons\ f\ =\ new\ Flush(\{}
+\DoxyCodeLine{\ \ flush\ (cb)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ call\ the\ cb\ when\ done,\ or\ return\ a\ promise}
+\DoxyCodeLine{\ \ \ \ //\ the\ 'end'\ event\ will\ wait\ for\ it,\ along\ with}
+\DoxyCodeLine{\ \ \ \ //\ close,\ finish,\ and\ prefinish.}
+\DoxyCodeLine{\ \ \ \ //\ call\ the\ cb\ with\ an\ error,\ or\ return\ a\ rejecting}
+\DoxyCodeLine{\ \ \ \ //\ promise\ to\ emit\ 'error'\ instead\ of\ doing\ the\ 'end'}
+\DoxyCodeLine{\ \ \ \ return\ rerouteAllEncryptions().then(()\ =>\ clearAllChannels())}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ //\ all\ other\ minipass\ options\ accepted\ as\ well}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{someDataSource.pipe(f).on('end',\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ //\ proper\ flushing\ has\ been\ accomplished}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ Or\ as\ a\ subclass\ implementing\ a\ 'flush'\ method:}
+\DoxyCodeLine{class\ MyFlush\ extends\ Flush\ \{}
+\DoxyCodeLine{\ \ flush\ (cb)\ \{}
+\DoxyCodeLine{\ \ \ \ //\ old\ fashioned\ callback\ style!}
+\DoxyCodeLine{\ \ \ \ rerouteAllEncryptions(er\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ if\ (er)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ return\ cb(er)}
+\DoxyCodeLine{\ \ \ \ \ \ clearAllChannels(er\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ if\ (er)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ cb(er)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ cb()}
+\DoxyCodeLine{\ \ \ \ \ \ \})}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+That\textquotesingle{}s about it.
+
+If your {\ttfamily flush} method doesn\textquotesingle{}t have to do anything asynchronous, then it\textquotesingle{}s better to call the callback right away in this tick, rather than returning {\ttfamily Promise.\+resolve()}, so that the {\ttfamily end} event can happen as soon as possible. 

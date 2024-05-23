@@ -1,0 +1,187 @@
+.TH "md_backend_2node__modules_2tar-fs_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2tar-fs_2_r_e_a_d_m_e \- tar-fs 
+.PP
+ filesystem bindings for \fRtar-stream\fP\&.
+.PP
+.PP
+.nf
+npm install tar\-fs
+.fi
+.PP
+.PP
+\fR\fP.SH "Usage"
+.PP
+tar-fs allows you to pack directories into tarballs and extract tarballs into directories\&.
+.PP
+It doesn't gunzip for you, so if you want to extract a \fR\&.tar\&.gz\fP with this you'll need to use something like \fRgunzip-maybe\fP in addition to this\&.
+.PP
+.PP
+.nf
+ js
+var tar = require('tar\-fs')
+var fs = require('fs')
+
+// packing a directory
+tar\&.pack('\&./my\-directory')\&.pipe(fs\&.createWriteStream('my\-tarball\&.tar'))
+
+// extracting a directory
+fs\&.createReadStream('my\-other\-tarball\&.tar')\&.pipe(tar\&.extract('\&./my\-other\-directory'))
+.fi
+.PP
+.PP
+To ignore various files when packing or extracting add a ignore function to the options\&. \fRignore\fP is also an alias for \fRfilter\fP\&. Additionally you get \fRheader\fP if you use ignore while extracting\&. That way you could also filter by metadata\&.
+.PP
+.PP
+.nf
+ js
+var pack = tar\&.pack('\&./my\-directory', {
+  ignore: function(name) {
+    return path\&.extname(name) === '\&.bin' // ignore \&.bin files when packing
+  }
+})
+
+var extract = tar\&.extract('\&./my\-other\-directory', {
+  ignore: function(name) {
+    return path\&.extname(name) === '\&.bin' // ignore \&.bin files inside the tarball when extracing
+  }
+})
+
+var extractFilesDirs = tar\&.extract('\&./my\-other\-other\-directory', {
+  ignore: function(_, header) {
+    // pass files & directories, ignore e\&.g\&. symlinks
+    return header\&.type !== 'file' && header\&.type !== 'directory'
+  }
+})
+.fi
+.PP
+.PP
+You can also specify which entries to pack using the \fRentries\fP option
+.PP
+.PP
+.nf
+var pack = tar\&.pack('\&./my\-directory', {
+  entries: ['file1', 'subdir/file2'] // only the specific entries will be packed
+})
+.fi
+.PP
+.PP
+If you want to modify the headers when packing/extracting add a map function to the options
+.PP
+.PP
+.nf
+ js
+var pack = tar\&.pack('\&./my\-directory', {
+  map: function(header) {
+    header\&.name = 'prefixed/'+header\&.name
+    return header
+  }
+})
+
+var extract = tar\&.extract('\&./my\-directory', {
+  map: function(header) {
+    header\&.name = 'another\-prefix/'+header\&.name
+    return header
+  }
+})
+.fi
+.PP
+.PP
+Similarly you can use \fRmapStream\fP incase you wanna modify the input/output file streams
+.PP
+.PP
+.nf
+ js
+var pack = tar\&.pack('\&./my\-directory', {
+  mapStream: function(fileStream, header) {
+    // NOTE: the returned stream HAS to have the same length as the input stream\&.
+    // If not make sure to update the size in the header passed in here\&.
+    if (path\&.extname(header\&.name) === '\&.js') {
+      return fileStream\&.pipe(someTransform)
+    }
+    return fileStream;
+  }
+})
+
+var extract = tar\&.extract('\&./my\-directory', {
+  mapStream: function(fileStream, header) {
+    if (path\&.extname(header\&.name) === '\&.js') {
+      return fileStream\&.pipe(someTransform)
+    }
+    return fileStream;
+  }
+})
+.fi
+.PP
+.PP
+Set \fRoptions\&.fmode\fP and \fRoptions\&.dmode\fP to ensure that files/directories extracted have the corresponding modes
+.PP
+.PP
+.nf
+ js
+var extract = tar\&.extract('\&./my\-directory', {
+  dmode: parseInt(555, 8), // all dirs should be readable
+  fmode: parseInt(444, 8) // all files should be readable
+})
+.fi
+.PP
+.PP
+It can be useful to use \fRdmode\fP and \fRfmode\fP if you are packing/unpacking tarballs between *nix/windows to ensure that all files/directories unpacked are readable\&.
+.PP
+Alternatively you can set \fRoptions\&.readable\fP and/or \fRoptions\&.writable\fP to set the dmode and fmode to readable/writable\&.
+.PP
+.PP
+.nf
+ js
+var extract = tar\&.extract('\&./my\-directory', {
+  readable: true, // all dirs and files should be readable
+  writable: true, // all dirs and files should be writable
+})
+.fi
+.PP
+.PP
+Set \fRoptions\&.strict\fP to \fRfalse\fP if you want to ignore errors due to unsupported entry types (like device files)
+.PP
+To dereference symlinks (pack the contents of the symlink instead of the link itself) set \fRoptions\&.dereference\fP to \fRtrue\fP\&.
+.SH "Copy a directory"
+.PP
+Copying a directory with permissions and mtime intact is as simple as
+.PP
+.PP
+.nf
+ js
+tar\&.pack('source\-directory')\&.pipe(tar\&.extract('dest\-directory'))
+.fi
+.PP
+.SH "Interaction with \fR\fRtar-stream\fP\fP"
+.PP
+Use \fRfinalize: false\fP and the \fRfinish\fP hook to leave the pack stream open for further entries (see \fR\fRtar-stream#pack\fP\fP), and use \fRpack\fP to pass an existing pack stream\&.
+.PP
+.PP
+.nf
+ js
+var mypack = tar\&.pack('\&./my\-directory', {
+  finalize: false,
+  finish: function(sameAsMypack) {
+    mypack\&.entry({name: 'generated\-file\&.txt'}, "hello")
+    tar\&.pack('\&./other\-directory', {
+      pack: sameAsMypack
+    })
+  }
+})
+.fi
+.PP
+.SH "Performance"
+.PP
+Packing and extracting a 6\&.1 GB with 2496 directories and 2398 files yields the following results on my Macbook Air\&. \fRSee the benchmark here\fP
+.PP
+.IP "\(bu" 2
+tar-fs: 34\&.261 seconds
+.IP "\(bu" 2
+\fRnode-tar\fP: 366\&.123 seconds (or 10x slower)
+.PP
+.SH "License"
+.PP
+MIT 

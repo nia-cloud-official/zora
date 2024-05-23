@@ -1,0 +1,478 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2body-parser_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>body-parser</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![NPM<sp/>Version][npm-version-image]][npm-url]</highlight></codeline>
+<codeline><highlight class="normal">[![NPM<sp/>Downloads][npm-downloads-image]][npm-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Build<sp/>Status][ci-image]][ci-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Test<sp/>Coverage][coveralls-image]][coveralls-url]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Node.js<sp/>body<sp/>parsing<sp/>middleware.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Parse<sp/>incoming<sp/>request<sp/>bodies<sp/>in<sp/>a<sp/>middleware<sp/>before<sp/>your<sp/>handlers,<sp/>available</highlight></codeline>
+<codeline><highlight class="normal">under<sp/>the<sp/>`req.body`<sp/>property.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Note**<sp/>As<sp/>`req.body`&apos;s<sp/>shape<sp/>is<sp/>based<sp/>on<sp/>user-controlled<sp/>input,<sp/>all</highlight></codeline>
+<codeline><highlight class="normal">properties<sp/>and<sp/>values<sp/>in<sp/>this<sp/>object<sp/>are<sp/>untrusted<sp/>and<sp/>should<sp/>be<sp/>validated</highlight></codeline>
+<codeline><highlight class="normal">before<sp/>trusting.<sp/>For<sp/>example,<sp/>`req.body.foo.toString()`<sp/>may<sp/>fail<sp/>in<sp/>multiple</highlight></codeline>
+<codeline><highlight class="normal">ways,<sp/>for<sp/>example<sp/>the<sp/>`foo`<sp/>property<sp/>may<sp/>not<sp/>be<sp/>there<sp/>or<sp/>may<sp/>not<sp/>be<sp/>a<sp/>string,</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>`toString`<sp/>may<sp/>not<sp/>be<sp/>a<sp/>function<sp/>and<sp/>instead<sp/>a<sp/>string<sp/>or<sp/>other<sp/>user<sp/>input.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[Learn<sp/>about<sp/>the<sp/>anatomy<sp/>of<sp/>an<sp/>HTTP<sp/>transaction<sp/>in<sp/>Node.js](https://nodejs.org/en/docs/guides/anatomy-of-an-http-transaction/).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">_This<sp/>does<sp/>not<sp/>handle<sp/>multipart<sp/>bodies_,<sp/>due<sp/>to<sp/>their<sp/>complex<sp/>and<sp/>typically</highlight></codeline>
+<codeline><highlight class="normal">large<sp/>nature.<sp/>For<sp/>multipart<sp/>bodies,<sp/>you<sp/>may<sp/>be<sp/>interested<sp/>in<sp/>the<sp/>following</highlight></codeline>
+<codeline><highlight class="normal">modules:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>[busboy](https://www.npmjs.org/package/busboy#readme)<sp/>and</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>[connect-busboy](https://www.npmjs.org/package/connect-busboy#readme)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>[multiparty](https://www.npmjs.org/package/multiparty#readme)<sp/>and</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>[connect-multiparty](https://www.npmjs.org/package/connect-multiparty#readme)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>[formidable](https://www.npmjs.org/package/formidable#readme)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>[multer](https://www.npmjs.org/package/multer#readme)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>module<sp/>provides<sp/>the<sp/>following<sp/>parsers:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>[JSON<sp/>body<sp/>parser](#bodyparserjsonoptions)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>[Raw<sp/>body<sp/>parser](#bodyparserrawoptions)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>[Text<sp/>body<sp/>parser](#bodyparsertextoptions)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>[URL-encoded<sp/>form<sp/>body<sp/>parser](#bodyparserurlencodedoptions)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Other<sp/>body<sp/>parsers<sp/>you<sp/>might<sp/>be<sp/>interested<sp/>in:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>[body](https://www.npmjs.org/package/body#readme)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[co-body](https://www.npmjs.org/package/co-body#readme)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Installation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```sh</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>body-parser</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>API</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>bodyParser<sp/>=<sp/>require(&apos;body-parser&apos;)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`bodyParser`<sp/>object<sp/>exposes<sp/>various<sp/>factories<sp/>to<sp/>create<sp/>middlewares.<sp/>All</highlight></codeline>
+<codeline><highlight class="normal">middlewares<sp/>will<sp/>populate<sp/>the<sp/>`req.body`<sp/>property<sp/>with<sp/>the<sp/>parsed<sp/>body<sp/>when</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>`Content-Type`<sp/>request<sp/>header<sp/>matches<sp/>the<sp/>`type`<sp/>option,<sp/>or<sp/>an<sp/>empty</highlight></codeline>
+<codeline><highlight class="normal">object<sp/>(`{}`)<sp/>if<sp/>there<sp/>was<sp/>no<sp/>body<sp/>to<sp/>parse,<sp/>the<sp/>`Content-Type`<sp/>was<sp/>not<sp/>matched,</highlight></codeline>
+<codeline><highlight class="normal">or<sp/>an<sp/>error<sp/>occurred.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>various<sp/>errors<sp/>returned<sp/>by<sp/>this<sp/>module<sp/>are<sp/>described<sp/>in<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[errors<sp/>section](#errors).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>bodyParser.json([options])</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>middleware<sp/>that<sp/>only<sp/>parses<sp/>`json`<sp/>and<sp/>only<sp/>looks<sp/>at<sp/>requests<sp/>where</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>`Content-Type`<sp/>header<sp/>matches<sp/>the<sp/>`type`<sp/>option.<sp/>This<sp/>parser<sp/>accepts<sp/>any</highlight></codeline>
+<codeline><highlight class="normal">Unicode<sp/>encoding<sp/>of<sp/>the<sp/>body<sp/>and<sp/>supports<sp/>automatic<sp/>inflation<sp/>of<sp/>`gzip`<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">`deflate`<sp/>encodings.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>new<sp/>`body`<sp/>object<sp/>containing<sp/>the<sp/>parsed<sp/>data<sp/>is<sp/>populated<sp/>on<sp/>the<sp/>`request`</highlight></codeline>
+<codeline><highlight class="normal">object<sp/>after<sp/>the<sp/>middleware<sp/>(i.e.<sp/>`req.body`).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Options</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`json`<sp/>function<sp/>takes<sp/>an<sp/>optional<sp/>`options`<sp/>object<sp/>that<sp/>may<sp/>contain<sp/>any<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>following<sp/>keys:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>inflate</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>set<sp/>to<sp/>`true`,<sp/>then<sp/>deflated<sp/>(compressed)<sp/>bodies<sp/>will<sp/>be<sp/>inflated;<sp/>when</highlight></codeline>
+<codeline><highlight class="normal">`false`,<sp/>deflated<sp/>bodies<sp/>are<sp/>rejected.<sp/>Defaults<sp/>to<sp/>`true`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>limit</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Controls<sp/>the<sp/>maximum<sp/>request<sp/>body<sp/>size.<sp/>If<sp/>this<sp/>is<sp/>a<sp/>number,<sp/>then<sp/>the<sp/>value</highlight></codeline>
+<codeline><highlight class="normal">specifies<sp/>the<sp/>number<sp/>of<sp/>bytes;<sp/>if<sp/>it<sp/>is<sp/>a<sp/>string,<sp/>the<sp/>value<sp/>is<sp/>passed<sp/>to<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[bytes](https://www.npmjs.com/package/bytes)<sp/>library<sp/>for<sp/>parsing.<sp/>Defaults</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>`&apos;100kb&apos;`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>reviver</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`reviver`<sp/>option<sp/>is<sp/>passed<sp/>directly<sp/>to<sp/>`JSON.parse`<sp/>as<sp/>the<sp/>second</highlight></codeline>
+<codeline><highlight class="normal">argument.<sp/>You<sp/>can<sp/>find<sp/>more<sp/>information<sp/>on<sp/>this<sp/>argument</highlight></codeline>
+<codeline><highlight class="normal">[in<sp/>the<sp/>MDN<sp/>documentation<sp/>about<sp/>JSON.parse](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse#Example.3A_Using_the_reviver_parameter).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>strict</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>set<sp/>to<sp/>`true`,<sp/>will<sp/>only<sp/>accept<sp/>arrays<sp/>and<sp/>objects;<sp/>when<sp/>`false`<sp/>will</highlight></codeline>
+<codeline><highlight class="normal">accept<sp/>anything<sp/>`JSON.parse`<sp/>accepts.<sp/>Defaults<sp/>to<sp/>`true`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>type</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`type`<sp/>option<sp/>is<sp/>used<sp/>to<sp/>determine<sp/>what<sp/>media<sp/>type<sp/>the<sp/>middleware<sp/>will</highlight></codeline>
+<codeline><highlight class="normal">parse.<sp/>This<sp/>option<sp/>can<sp/>be<sp/>a<sp/>string,<sp/>array<sp/>of<sp/>strings,<sp/>or<sp/>a<sp/>function.<sp/>If<sp/>not<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">function,<sp/>`type`<sp/>option<sp/>is<sp/>passed<sp/>directly<sp/>to<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[type-is](https://www.npmjs.org/package/type-is#readme)<sp/>library<sp/>and<sp/>this<sp/>can</highlight></codeline>
+<codeline><highlight class="normal">be<sp/>an<sp/>extension<sp/>name<sp/>(like<sp/>`json`),<sp/>a<sp/>mime<sp/>type<sp/>(like<sp/>`application/json`),<sp/>or</highlight></codeline>
+<codeline><highlight class="normal">a<sp/>mime<sp/>type<sp/>with<sp/>a<sp/>wildcard<sp/>(like<sp/>`*/*`<sp/>or<sp/>`*/json`).<sp/>If<sp/>a<sp/>function,<sp/>the<sp/>`type`</highlight></codeline>
+<codeline><highlight class="normal">option<sp/>is<sp/>called<sp/>as<sp/>`fn(req)`<sp/>and<sp/>the<sp/>request<sp/>is<sp/>parsed<sp/>if<sp/>it<sp/>returns<sp/>a<sp/>truthy</highlight></codeline>
+<codeline><highlight class="normal">value.<sp/>Defaults<sp/>to<sp/>`application/json`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>verify</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`verify`<sp/>option,<sp/>if<sp/>supplied,<sp/>is<sp/>called<sp/>as<sp/>`verify(req,<sp/>res,<sp/>buf,<sp/>encoding)`,</highlight></codeline>
+<codeline><highlight class="normal">where<sp/>`buf`<sp/>is<sp/>a<sp/>`Buffer`<sp/>of<sp/>the<sp/>raw<sp/>request<sp/>body<sp/>and<sp/>`encoding`<sp/>is<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">encoding<sp/>of<sp/>the<sp/>request.<sp/>The<sp/>parsing<sp/>can<sp/>be<sp/>aborted<sp/>by<sp/>throwing<sp/>an<sp/>error.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>bodyParser.raw([options])</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>middleware<sp/>that<sp/>parses<sp/>all<sp/>bodies<sp/>as<sp/>a<sp/>`Buffer`<sp/>and<sp/>only<sp/>looks<sp/>at</highlight></codeline>
+<codeline><highlight class="normal">requests<sp/>where<sp/>the<sp/>`Content-Type`<sp/>header<sp/>matches<sp/>the<sp/>`type`<sp/>option.<sp/>This</highlight></codeline>
+<codeline><highlight class="normal">parser<sp/>supports<sp/>automatic<sp/>inflation<sp/>of<sp/>`gzip`<sp/>and<sp/>`deflate`<sp/>encodings.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>new<sp/>`body`<sp/>object<sp/>containing<sp/>the<sp/>parsed<sp/>data<sp/>is<sp/>populated<sp/>on<sp/>the<sp/>`request`</highlight></codeline>
+<codeline><highlight class="normal">object<sp/>after<sp/>the<sp/>middleware<sp/>(i.e.<sp/>`req.body`).<sp/>This<sp/>will<sp/>be<sp/>a<sp/>`Buffer`<sp/>object</highlight></codeline>
+<codeline><highlight class="normal">of<sp/>the<sp/>body.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Options</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`raw`<sp/>function<sp/>takes<sp/>an<sp/>optional<sp/>`options`<sp/>object<sp/>that<sp/>may<sp/>contain<sp/>any<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>following<sp/>keys:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>inflate</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>set<sp/>to<sp/>`true`,<sp/>then<sp/>deflated<sp/>(compressed)<sp/>bodies<sp/>will<sp/>be<sp/>inflated;<sp/>when</highlight></codeline>
+<codeline><highlight class="normal">`false`,<sp/>deflated<sp/>bodies<sp/>are<sp/>rejected.<sp/>Defaults<sp/>to<sp/>`true`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>limit</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Controls<sp/>the<sp/>maximum<sp/>request<sp/>body<sp/>size.<sp/>If<sp/>this<sp/>is<sp/>a<sp/>number,<sp/>then<sp/>the<sp/>value</highlight></codeline>
+<codeline><highlight class="normal">specifies<sp/>the<sp/>number<sp/>of<sp/>bytes;<sp/>if<sp/>it<sp/>is<sp/>a<sp/>string,<sp/>the<sp/>value<sp/>is<sp/>passed<sp/>to<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[bytes](https://www.npmjs.com/package/bytes)<sp/>library<sp/>for<sp/>parsing.<sp/>Defaults</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>`&apos;100kb&apos;`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>type</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`type`<sp/>option<sp/>is<sp/>used<sp/>to<sp/>determine<sp/>what<sp/>media<sp/>type<sp/>the<sp/>middleware<sp/>will</highlight></codeline>
+<codeline><highlight class="normal">parse.<sp/>This<sp/>option<sp/>can<sp/>be<sp/>a<sp/>string,<sp/>array<sp/>of<sp/>strings,<sp/>or<sp/>a<sp/>function.</highlight></codeline>
+<codeline><highlight class="normal">If<sp/>not<sp/>a<sp/>function,<sp/>`type`<sp/>option<sp/>is<sp/>passed<sp/>directly<sp/>to<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[type-is](https://www.npmjs.org/package/type-is#readme)<sp/>library<sp/>and<sp/>this</highlight></codeline>
+<codeline><highlight class="normal">can<sp/>be<sp/>an<sp/>extension<sp/>name<sp/>(like<sp/>`bin`),<sp/>a<sp/>mime<sp/>type<sp/>(like</highlight></codeline>
+<codeline><highlight class="normal">`application/octet-stream`),<sp/>or<sp/>a<sp/>mime<sp/>type<sp/>with<sp/>a<sp/>wildcard<sp/>(like<sp/>`*/*`<sp/>or</highlight></codeline>
+<codeline><highlight class="normal">`application/*`).<sp/>If<sp/>a<sp/>function,<sp/>the<sp/>`type`<sp/>option<sp/>is<sp/>called<sp/>as<sp/>`fn(req)`</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>the<sp/>request<sp/>is<sp/>parsed<sp/>if<sp/>it<sp/>returns<sp/>a<sp/>truthy<sp/>value.<sp/>Defaults<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">`application/octet-stream`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>verify</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`verify`<sp/>option,<sp/>if<sp/>supplied,<sp/>is<sp/>called<sp/>as<sp/>`verify(req,<sp/>res,<sp/>buf,<sp/>encoding)`,</highlight></codeline>
+<codeline><highlight class="normal">where<sp/>`buf`<sp/>is<sp/>a<sp/>`Buffer`<sp/>of<sp/>the<sp/>raw<sp/>request<sp/>body<sp/>and<sp/>`encoding`<sp/>is<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">encoding<sp/>of<sp/>the<sp/>request.<sp/>The<sp/>parsing<sp/>can<sp/>be<sp/>aborted<sp/>by<sp/>throwing<sp/>an<sp/>error.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>bodyParser.text([options])</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>middleware<sp/>that<sp/>parses<sp/>all<sp/>bodies<sp/>as<sp/>a<sp/>string<sp/>and<sp/>only<sp/>looks<sp/>at</highlight></codeline>
+<codeline><highlight class="normal">requests<sp/>where<sp/>the<sp/>`Content-Type`<sp/>header<sp/>matches<sp/>the<sp/>`type`<sp/>option.<sp/>This</highlight></codeline>
+<codeline><highlight class="normal">parser<sp/>supports<sp/>automatic<sp/>inflation<sp/>of<sp/>`gzip`<sp/>and<sp/>`deflate`<sp/>encodings.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>new<sp/>`body`<sp/>string<sp/>containing<sp/>the<sp/>parsed<sp/>data<sp/>is<sp/>populated<sp/>on<sp/>the<sp/>`request`</highlight></codeline>
+<codeline><highlight class="normal">object<sp/>after<sp/>the<sp/>middleware<sp/>(i.e.<sp/>`req.body`).<sp/>This<sp/>will<sp/>be<sp/>a<sp/>string<sp/>of<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">body.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Options</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`text`<sp/>function<sp/>takes<sp/>an<sp/>optional<sp/>`options`<sp/>object<sp/>that<sp/>may<sp/>contain<sp/>any<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>following<sp/>keys:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>defaultCharset</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Specify<sp/>the<sp/>default<sp/>character<sp/>set<sp/>for<sp/>the<sp/>text<sp/>content<sp/>if<sp/>the<sp/>charset<sp/>is<sp/>not</highlight></codeline>
+<codeline><highlight class="normal">specified<sp/>in<sp/>the<sp/>`Content-Type`<sp/>header<sp/>of<sp/>the<sp/>request.<sp/>Defaults<sp/>to<sp/>`utf-8`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>inflate</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>set<sp/>to<sp/>`true`,<sp/>then<sp/>deflated<sp/>(compressed)<sp/>bodies<sp/>will<sp/>be<sp/>inflated;<sp/>when</highlight></codeline>
+<codeline><highlight class="normal">`false`,<sp/>deflated<sp/>bodies<sp/>are<sp/>rejected.<sp/>Defaults<sp/>to<sp/>`true`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>limit</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Controls<sp/>the<sp/>maximum<sp/>request<sp/>body<sp/>size.<sp/>If<sp/>this<sp/>is<sp/>a<sp/>number,<sp/>then<sp/>the<sp/>value</highlight></codeline>
+<codeline><highlight class="normal">specifies<sp/>the<sp/>number<sp/>of<sp/>bytes;<sp/>if<sp/>it<sp/>is<sp/>a<sp/>string,<sp/>the<sp/>value<sp/>is<sp/>passed<sp/>to<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[bytes](https://www.npmjs.com/package/bytes)<sp/>library<sp/>for<sp/>parsing.<sp/>Defaults</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>`&apos;100kb&apos;`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>type</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`type`<sp/>option<sp/>is<sp/>used<sp/>to<sp/>determine<sp/>what<sp/>media<sp/>type<sp/>the<sp/>middleware<sp/>will</highlight></codeline>
+<codeline><highlight class="normal">parse.<sp/>This<sp/>option<sp/>can<sp/>be<sp/>a<sp/>string,<sp/>array<sp/>of<sp/>strings,<sp/>or<sp/>a<sp/>function.<sp/>If<sp/>not</highlight></codeline>
+<codeline><highlight class="normal">a<sp/>function,<sp/>`type`<sp/>option<sp/>is<sp/>passed<sp/>directly<sp/>to<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[type-is](https://www.npmjs.org/package/type-is#readme)<sp/>library<sp/>and<sp/>this<sp/>can</highlight></codeline>
+<codeline><highlight class="normal">be<sp/>an<sp/>extension<sp/>name<sp/>(like<sp/>`txt`),<sp/>a<sp/>mime<sp/>type<sp/>(like<sp/>`text/plain`),<sp/>or<sp/>a<sp/>mime</highlight></codeline>
+<codeline><highlight class="normal">type<sp/>with<sp/>a<sp/>wildcard<sp/>(like<sp/>`*/*`<sp/>or<sp/>`text/*`).<sp/>If<sp/>a<sp/>function,<sp/>the<sp/>`type`</highlight></codeline>
+<codeline><highlight class="normal">option<sp/>is<sp/>called<sp/>as<sp/>`fn(req)`<sp/>and<sp/>the<sp/>request<sp/>is<sp/>parsed<sp/>if<sp/>it<sp/>returns<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">truthy<sp/>value.<sp/>Defaults<sp/>to<sp/>`text/plain`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>verify</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`verify`<sp/>option,<sp/>if<sp/>supplied,<sp/>is<sp/>called<sp/>as<sp/>`verify(req,<sp/>res,<sp/>buf,<sp/>encoding)`,</highlight></codeline>
+<codeline><highlight class="normal">where<sp/>`buf`<sp/>is<sp/>a<sp/>`Buffer`<sp/>of<sp/>the<sp/>raw<sp/>request<sp/>body<sp/>and<sp/>`encoding`<sp/>is<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">encoding<sp/>of<sp/>the<sp/>request.<sp/>The<sp/>parsing<sp/>can<sp/>be<sp/>aborted<sp/>by<sp/>throwing<sp/>an<sp/>error.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>bodyParser.urlencoded([options])</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>middleware<sp/>that<sp/>only<sp/>parses<sp/>`urlencoded`<sp/>bodies<sp/>and<sp/>only<sp/>looks<sp/>at</highlight></codeline>
+<codeline><highlight class="normal">requests<sp/>where<sp/>the<sp/>`Content-Type`<sp/>header<sp/>matches<sp/>the<sp/>`type`<sp/>option.<sp/>This</highlight></codeline>
+<codeline><highlight class="normal">parser<sp/>accepts<sp/>only<sp/>UTF-8<sp/>encoding<sp/>of<sp/>the<sp/>body<sp/>and<sp/>supports<sp/>automatic</highlight></codeline>
+<codeline><highlight class="normal">inflation<sp/>of<sp/>`gzip`<sp/>and<sp/>`deflate`<sp/>encodings.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>new<sp/>`body`<sp/>object<sp/>containing<sp/>the<sp/>parsed<sp/>data<sp/>is<sp/>populated<sp/>on<sp/>the<sp/>`request`</highlight></codeline>
+<codeline><highlight class="normal">object<sp/>after<sp/>the<sp/>middleware<sp/>(i.e.<sp/>`req.body`).<sp/>This<sp/>object<sp/>will<sp/>contain</highlight></codeline>
+<codeline><highlight class="normal">key-value<sp/>pairs,<sp/>where<sp/>the<sp/>value<sp/>can<sp/>be<sp/>a<sp/>string<sp/>or<sp/>array<sp/>(when<sp/>`extended`<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">`false`),<sp/>or<sp/>any<sp/>type<sp/>(when<sp/>`extended`<sp/>is<sp/>`true`).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Options</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`urlencoded`<sp/>function<sp/>takes<sp/>an<sp/>optional<sp/>`options`<sp/>object<sp/>that<sp/>may<sp/>contain</highlight></codeline>
+<codeline><highlight class="normal">any<sp/>of<sp/>the<sp/>following<sp/>keys:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>extended</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`extended`<sp/>option<sp/>allows<sp/>to<sp/>choose<sp/>between<sp/>parsing<sp/>the<sp/>URL-encoded<sp/>data</highlight></codeline>
+<codeline><highlight class="normal">with<sp/>the<sp/>`querystring`<sp/>library<sp/>(when<sp/>`false`)<sp/>or<sp/>the<sp/>`qs`<sp/>library<sp/>(when</highlight></codeline>
+<codeline><highlight class="normal">`true`).<sp/>The<sp/>&quot;extended&quot;<sp/>syntax<sp/>allows<sp/>for<sp/>rich<sp/>objects<sp/>and<sp/>arrays<sp/>to<sp/>be</highlight></codeline>
+<codeline><highlight class="normal">encoded<sp/>into<sp/>the<sp/>URL-encoded<sp/>format,<sp/>allowing<sp/>for<sp/>a<sp/>JSON-like<sp/>experience</highlight></codeline>
+<codeline><highlight class="normal">with<sp/>URL-encoded.<sp/>For<sp/>more<sp/>information,<sp/>please</highlight></codeline>
+<codeline><highlight class="normal">[see<sp/>the<sp/>qs<sp/>library](https://www.npmjs.org/package/qs#readme).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Defaults<sp/>to<sp/>`true`,<sp/>but<sp/>using<sp/>the<sp/>default<sp/>has<sp/>been<sp/>deprecated.<sp/>Please</highlight></codeline>
+<codeline><highlight class="normal">research<sp/>into<sp/>the<sp/>difference<sp/>between<sp/>`qs`<sp/>and<sp/>`querystring`<sp/>and<sp/>choose<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">appropriate<sp/>setting.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>inflate</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>set<sp/>to<sp/>`true`,<sp/>then<sp/>deflated<sp/>(compressed)<sp/>bodies<sp/>will<sp/>be<sp/>inflated;<sp/>when</highlight></codeline>
+<codeline><highlight class="normal">`false`,<sp/>deflated<sp/>bodies<sp/>are<sp/>rejected.<sp/>Defaults<sp/>to<sp/>`true`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>limit</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Controls<sp/>the<sp/>maximum<sp/>request<sp/>body<sp/>size.<sp/>If<sp/>this<sp/>is<sp/>a<sp/>number,<sp/>then<sp/>the<sp/>value</highlight></codeline>
+<codeline><highlight class="normal">specifies<sp/>the<sp/>number<sp/>of<sp/>bytes;<sp/>if<sp/>it<sp/>is<sp/>a<sp/>string,<sp/>the<sp/>value<sp/>is<sp/>passed<sp/>to<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[bytes](https://www.npmjs.com/package/bytes)<sp/>library<sp/>for<sp/>parsing.<sp/>Defaults</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>`&apos;100kb&apos;`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>parameterLimit</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`parameterLimit`<sp/>option<sp/>controls<sp/>the<sp/>maximum<sp/>number<sp/>of<sp/>parameters<sp/>that</highlight></codeline>
+<codeline><highlight class="normal">are<sp/>allowed<sp/>in<sp/>the<sp/>URL-encoded<sp/>data.<sp/>If<sp/>a<sp/>request<sp/>contains<sp/>more<sp/>parameters</highlight></codeline>
+<codeline><highlight class="normal">than<sp/>this<sp/>value,<sp/>a<sp/>413<sp/>will<sp/>be<sp/>returned<sp/>to<sp/>the<sp/>client.<sp/>Defaults<sp/>to<sp/>`1000`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>type</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`type`<sp/>option<sp/>is<sp/>used<sp/>to<sp/>determine<sp/>what<sp/>media<sp/>type<sp/>the<sp/>middleware<sp/>will</highlight></codeline>
+<codeline><highlight class="normal">parse.<sp/>This<sp/>option<sp/>can<sp/>be<sp/>a<sp/>string,<sp/>array<sp/>of<sp/>strings,<sp/>or<sp/>a<sp/>function.<sp/>If<sp/>not</highlight></codeline>
+<codeline><highlight class="normal">a<sp/>function,<sp/>`type`<sp/>option<sp/>is<sp/>passed<sp/>directly<sp/>to<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[type-is](https://www.npmjs.org/package/type-is#readme)<sp/>library<sp/>and<sp/>this<sp/>can</highlight></codeline>
+<codeline><highlight class="normal">be<sp/>an<sp/>extension<sp/>name<sp/>(like<sp/>`urlencoded`),<sp/>a<sp/>mime<sp/>type<sp/>(like</highlight></codeline>
+<codeline><highlight class="normal">`application/x-www-form-urlencoded`),<sp/>or<sp/>a<sp/>mime<sp/>type<sp/>with<sp/>a<sp/>wildcard<sp/>(like</highlight></codeline>
+<codeline><highlight class="normal">`*/x-www-form-urlencoded`).<sp/>If<sp/>a<sp/>function,<sp/>the<sp/>`type`<sp/>option<sp/>is<sp/>called<sp/>as</highlight></codeline>
+<codeline><highlight class="normal">`fn(req)`<sp/>and<sp/>the<sp/>request<sp/>is<sp/>parsed<sp/>if<sp/>it<sp/>returns<sp/>a<sp/>truthy<sp/>value.<sp/>Defaults</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>`application/x-www-form-urlencoded`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#####<sp/>verify</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`verify`<sp/>option,<sp/>if<sp/>supplied,<sp/>is<sp/>called<sp/>as<sp/>`verify(req,<sp/>res,<sp/>buf,<sp/>encoding)`,</highlight></codeline>
+<codeline><highlight class="normal">where<sp/>`buf`<sp/>is<sp/>a<sp/>`Buffer`<sp/>of<sp/>the<sp/>raw<sp/>request<sp/>body<sp/>and<sp/>`encoding`<sp/>is<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">encoding<sp/>of<sp/>the<sp/>request.<sp/>The<sp/>parsing<sp/>can<sp/>be<sp/>aborted<sp/>by<sp/>throwing<sp/>an<sp/>error.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Errors</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>middlewares<sp/>provided<sp/>by<sp/>this<sp/>module<sp/>create<sp/>errors<sp/>using<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">[`http-errors`<sp/>module](https://www.npmjs.com/package/http-errors).<sp/>The<sp/>errors</highlight></codeline>
+<codeline><highlight class="normal">will<sp/>typically<sp/>have<sp/>a<sp/>`status`/`statusCode`<sp/>property<sp/>that<sp/>contains<sp/>the<sp/>suggested</highlight></codeline>
+<codeline><highlight class="normal">HTTP<sp/>response<sp/>code,<sp/>an<sp/>`expose`<sp/>property<sp/>to<sp/>determine<sp/>if<sp/>the<sp/>`message`<sp/>property</highlight></codeline>
+<codeline><highlight class="normal">should<sp/>be<sp/>displayed<sp/>to<sp/>the<sp/>client,<sp/>a<sp/>`type`<sp/>property<sp/>to<sp/>determine<sp/>the<sp/>type<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">error<sp/>without<sp/>matching<sp/>against<sp/>the<sp/>`message`,<sp/>and<sp/>a<sp/>`body`<sp/>property<sp/>containing</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>read<sp/>body,<sp/>if<sp/>available.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>following<sp/>are<sp/>the<sp/>common<sp/>errors<sp/>created,<sp/>though<sp/>any<sp/>error<sp/>can<sp/>come<sp/>through</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>various<sp/>reasons.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>content<sp/>encoding<sp/>unsupported</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>error<sp/>will<sp/>occur<sp/>when<sp/>the<sp/>request<sp/>had<sp/>a<sp/>`Content-Encoding`<sp/>header<sp/>that</highlight></codeline>
+<codeline><highlight class="normal">contained<sp/>an<sp/>encoding<sp/>but<sp/>the<sp/>&quot;inflation&quot;<sp/>option<sp/>was<sp/>set<sp/>to<sp/>`false`.<sp/>The</highlight></codeline>
+<codeline><highlight class="normal">`status`<sp/>property<sp/>is<sp/>set<sp/>to<sp/>`415`,<sp/>the<sp/>`type`<sp/>property<sp/>is<sp/>set<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">`&apos;encoding.unsupported&apos;`,<sp/>and<sp/>the<sp/>`charset`<sp/>property<sp/>will<sp/>be<sp/>set<sp/>to<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">encoding<sp/>that<sp/>is<sp/>unsupported.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>entity<sp/>parse<sp/>failed</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>error<sp/>will<sp/>occur<sp/>when<sp/>the<sp/>request<sp/>contained<sp/>an<sp/>entity<sp/>that<sp/>could<sp/>not<sp/>be</highlight></codeline>
+<codeline><highlight class="normal">parsed<sp/>by<sp/>the<sp/>middleware.<sp/>The<sp/>`status`<sp/>property<sp/>is<sp/>set<sp/>to<sp/>`400`,<sp/>the<sp/>`type`</highlight></codeline>
+<codeline><highlight class="normal">property<sp/>is<sp/>set<sp/>to<sp/>`&apos;entity.parse.failed&apos;`,<sp/>and<sp/>the<sp/>`body`<sp/>property<sp/>is<sp/>set<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>entity<sp/>value<sp/>that<sp/>failed<sp/>parsing.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>entity<sp/>verify<sp/>failed</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>error<sp/>will<sp/>occur<sp/>when<sp/>the<sp/>request<sp/>contained<sp/>an<sp/>entity<sp/>that<sp/>could<sp/>not<sp/>be</highlight></codeline>
+<codeline><highlight class="normal">failed<sp/>verification<sp/>by<sp/>the<sp/>defined<sp/>`verify`<sp/>option.<sp/>The<sp/>`status`<sp/>property<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">set<sp/>to<sp/>`403`,<sp/>the<sp/>`type`<sp/>property<sp/>is<sp/>set<sp/>to<sp/>`&apos;entity.verify.failed&apos;`,<sp/>and<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">`body`<sp/>property<sp/>is<sp/>set<sp/>to<sp/>the<sp/>entity<sp/>value<sp/>that<sp/>failed<sp/>verification.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>request<sp/>aborted</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>error<sp/>will<sp/>occur<sp/>when<sp/>the<sp/>request<sp/>is<sp/>aborted<sp/>by<sp/>the<sp/>client<sp/>before<sp/>reading</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>body<sp/>has<sp/>finished.<sp/>The<sp/>`received`<sp/>property<sp/>will<sp/>be<sp/>set<sp/>to<sp/>the<sp/>number<sp/>of</highlight></codeline>
+<codeline><highlight class="normal">bytes<sp/>received<sp/>before<sp/>the<sp/>request<sp/>was<sp/>aborted<sp/>and<sp/>the<sp/>`expected`<sp/>property<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">set<sp/>to<sp/>the<sp/>number<sp/>of<sp/>expected<sp/>bytes.<sp/>The<sp/>`status`<sp/>property<sp/>is<sp/>set<sp/>to<sp/>`400`</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>`type`<sp/>property<sp/>is<sp/>set<sp/>to<sp/>`&apos;request.aborted&apos;`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>request<sp/>entity<sp/>too<sp/>large</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>error<sp/>will<sp/>occur<sp/>when<sp/>the<sp/>request<sp/>body&apos;s<sp/>size<sp/>is<sp/>larger<sp/>than<sp/>the<sp/>&quot;limit&quot;</highlight></codeline>
+<codeline><highlight class="normal">option.<sp/>The<sp/>`limit`<sp/>property<sp/>will<sp/>be<sp/>set<sp/>to<sp/>the<sp/>byte<sp/>limit<sp/>and<sp/>the<sp/>`length`</highlight></codeline>
+<codeline><highlight class="normal">property<sp/>will<sp/>be<sp/>set<sp/>to<sp/>the<sp/>request<sp/>body&apos;s<sp/>length.<sp/>The<sp/>`status`<sp/>property<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">set<sp/>to<sp/>`413`<sp/>and<sp/>the<sp/>`type`<sp/>property<sp/>is<sp/>set<sp/>to<sp/>`&apos;entity.too.large&apos;`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>request<sp/>size<sp/>did<sp/>not<sp/>match<sp/>content<sp/>length</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>error<sp/>will<sp/>occur<sp/>when<sp/>the<sp/>request&apos;s<sp/>length<sp/>did<sp/>not<sp/>match<sp/>the<sp/>length<sp/>from</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>`Content-Length`<sp/>header.<sp/>This<sp/>typically<sp/>occurs<sp/>when<sp/>the<sp/>request<sp/>is<sp/>malformed,</highlight></codeline>
+<codeline><highlight class="normal">typically<sp/>when<sp/>the<sp/>`Content-Length`<sp/>header<sp/>was<sp/>calculated<sp/>based<sp/>on<sp/>characters</highlight></codeline>
+<codeline><highlight class="normal">instead<sp/>of<sp/>bytes.<sp/>The<sp/>`status`<sp/>property<sp/>is<sp/>set<sp/>to<sp/>`400`<sp/>and<sp/>the<sp/>`type`<sp/>property</highlight></codeline>
+<codeline><highlight class="normal">is<sp/>set<sp/>to<sp/>`&apos;request.size.invalid&apos;`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>stream<sp/>encoding<sp/>should<sp/>not<sp/>be<sp/>set</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>error<sp/>will<sp/>occur<sp/>when<sp/>something<sp/>called<sp/>the<sp/>`req.setEncoding`<sp/>method<sp/>prior</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>this<sp/>middleware.<sp/>This<sp/>module<sp/>operates<sp/>directly<sp/>on<sp/>bytes<sp/>only<sp/>and<sp/>you<sp/>cannot</highlight></codeline>
+<codeline><highlight class="normal">call<sp/>`req.setEncoding`<sp/>when<sp/>using<sp/>this<sp/>module.<sp/>The<sp/>`status`<sp/>property<sp/>is<sp/>set<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">`500`<sp/>and<sp/>the<sp/>`type`<sp/>property<sp/>is<sp/>set<sp/>to<sp/>`&apos;stream.encoding.set&apos;`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>stream<sp/>is<sp/>not<sp/>readable</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>error<sp/>will<sp/>occur<sp/>when<sp/>the<sp/>request<sp/>is<sp/>no<sp/>longer<sp/>readable<sp/>when<sp/>this<sp/>middleware</highlight></codeline>
+<codeline><highlight class="normal">attempts<sp/>to<sp/>read<sp/>it.<sp/>This<sp/>typically<sp/>means<sp/>something<sp/>other<sp/>than<sp/>a<sp/>middleware<sp/>from</highlight></codeline>
+<codeline><highlight class="normal">this<sp/>module<sp/>read<sp/>the<sp/>request<sp/>body<sp/>already<sp/>and<sp/>the<sp/>middleware<sp/>was<sp/>also<sp/>configured<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">read<sp/>the<sp/>same<sp/>request.<sp/>The<sp/>`status`<sp/>property<sp/>is<sp/>set<sp/>to<sp/>`500`<sp/>and<sp/>the<sp/>`type`</highlight></codeline>
+<codeline><highlight class="normal">property<sp/>is<sp/>set<sp/>to<sp/>`&apos;stream.not.readable&apos;`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>too<sp/>many<sp/>parameters</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>error<sp/>will<sp/>occur<sp/>when<sp/>the<sp/>content<sp/>of<sp/>the<sp/>request<sp/>exceeds<sp/>the<sp/>configured</highlight></codeline>
+<codeline><highlight class="normal">`parameterLimit`<sp/>for<sp/>the<sp/>`urlencoded`<sp/>parser.<sp/>The<sp/>`status`<sp/>property<sp/>is<sp/>set<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">`413`<sp/>and<sp/>the<sp/>`type`<sp/>property<sp/>is<sp/>set<sp/>to<sp/>`&apos;parameters.too.many&apos;`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>unsupported<sp/>charset<sp/>&quot;BOGUS&quot;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>error<sp/>will<sp/>occur<sp/>when<sp/>the<sp/>request<sp/>had<sp/>a<sp/>charset<sp/>parameter<sp/>in<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">`Content-Type`<sp/>header,<sp/>but<sp/>the<sp/>`iconv-lite`<sp/>module<sp/>does<sp/>not<sp/>support<sp/>it<sp/>OR<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">parser<sp/>does<sp/>not<sp/>support<sp/>it.<sp/>The<sp/>charset<sp/>is<sp/>contained<sp/>in<sp/>the<sp/>message<sp/>as<sp/>well</highlight></codeline>
+<codeline><highlight class="normal">as<sp/>in<sp/>the<sp/>`charset`<sp/>property.<sp/>The<sp/>`status`<sp/>property<sp/>is<sp/>set<sp/>to<sp/>`415`,<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">`type`<sp/>property<sp/>is<sp/>set<sp/>to<sp/>`&apos;charset.unsupported&apos;`,<sp/>and<sp/>the<sp/>`charset`<sp/>property</highlight></codeline>
+<codeline><highlight class="normal">is<sp/>set<sp/>to<sp/>the<sp/>charset<sp/>that<sp/>is<sp/>unsupported.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>unsupported<sp/>content<sp/>encoding<sp/>&quot;bogus&quot;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>error<sp/>will<sp/>occur<sp/>when<sp/>the<sp/>request<sp/>had<sp/>a<sp/>`Content-Encoding`<sp/>header<sp/>that</highlight></codeline>
+<codeline><highlight class="normal">contained<sp/>an<sp/>unsupported<sp/>encoding.<sp/>The<sp/>encoding<sp/>is<sp/>contained<sp/>in<sp/>the<sp/>message</highlight></codeline>
+<codeline><highlight class="normal">as<sp/>well<sp/>as<sp/>in<sp/>the<sp/>`encoding`<sp/>property.<sp/>The<sp/>`status`<sp/>property<sp/>is<sp/>set<sp/>to<sp/>`415`,</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>`type`<sp/>property<sp/>is<sp/>set<sp/>to<sp/>`&apos;encoding.unsupported&apos;`,<sp/>and<sp/>the<sp/>`encoding`</highlight></codeline>
+<codeline><highlight class="normal">property<sp/>is<sp/>set<sp/>to<sp/>the<sp/>encoding<sp/>that<sp/>is<sp/>unsupported.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Examples</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Express/Connect<sp/>top-level<sp/>generic</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>example<sp/>demonstrates<sp/>adding<sp/>a<sp/>generic<sp/>JSON<sp/>and<sp/>URL-encoded<sp/>parser<sp/>as<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">top-level<sp/>middleware,<sp/>which<sp/>will<sp/>parse<sp/>the<sp/>bodies<sp/>of<sp/>all<sp/>incoming<sp/>requests.</highlight></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>the<sp/>simplest<sp/>setup.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>express<sp/>=<sp/>require(&apos;express&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>bodyParser<sp/>=<sp/>require(&apos;body-parser&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>app<sp/>=<sp/>express()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>parse<sp/>application/x-www-form-urlencoded</highlight></codeline>
+<codeline><highlight class="normal">app.use(bodyParser.urlencoded({<sp/>extended:<sp/>false<sp/>}))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>parse<sp/>application/json</highlight></codeline>
+<codeline><highlight class="normal">app.use(bodyParser.json())</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">app.use(function<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.setHeader(&apos;Content-Type&apos;,<sp/>&apos;text/plain&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.write(&apos;you<sp/>posted:\n&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.end(JSON.stringify(req.body,<sp/>null,<sp/>2))</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Express<sp/>route-specific</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>example<sp/>demonstrates<sp/>adding<sp/>body<sp/>parsers<sp/>specifically<sp/>to<sp/>the<sp/>routes<sp/>that</highlight></codeline>
+<codeline><highlight class="normal">need<sp/>them.<sp/>In<sp/>general,<sp/>this<sp/>is<sp/>the<sp/>most<sp/>recommended<sp/>way<sp/>to<sp/>use<sp/>body-parser<sp/>with</highlight></codeline>
+<codeline><highlight class="normal">Express.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>express<sp/>=<sp/>require(&apos;express&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>bodyParser<sp/>=<sp/>require(&apos;body-parser&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>app<sp/>=<sp/>express()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>create<sp/>application/json<sp/>parser</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>jsonParser<sp/>=<sp/>bodyParser.json()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>create<sp/>application/x-www-form-urlencoded<sp/>parser</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>urlencodedParser<sp/>=<sp/>bodyParser.urlencoded({<sp/>extended:<sp/>false<sp/>})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>POST<sp/>/login<sp/>gets<sp/>urlencoded<sp/>bodies</highlight></codeline>
+<codeline><highlight class="normal">app.post(&apos;/login&apos;,<sp/>urlencodedParser,<sp/>function<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.send(&apos;welcome,<sp/>&apos;<sp/>+<sp/>req.body.username)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>POST<sp/>/api/users<sp/>gets<sp/>JSON<sp/>bodies</highlight></codeline>
+<codeline><highlight class="normal">app.post(&apos;/api/users&apos;,<sp/>jsonParser,<sp/>function<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>create<sp/>user<sp/>in<sp/>req.body</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Change<sp/>accepted<sp/>type<sp/>for<sp/>parsers</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">All<sp/>the<sp/>parsers<sp/>accept<sp/>a<sp/>`type`<sp/>option<sp/>which<sp/>allows<sp/>you<sp/>to<sp/>change<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">`Content-Type`<sp/>that<sp/>the<sp/>middleware<sp/>will<sp/>parse.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>express<sp/>=<sp/>require(&apos;express&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>bodyParser<sp/>=<sp/>require(&apos;body-parser&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>app<sp/>=<sp/>express()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>parse<sp/>various<sp/>different<sp/>custom<sp/>JSON<sp/>types<sp/>as<sp/>JSON</highlight></codeline>
+<codeline><highlight class="normal">app.use(bodyParser.json({<sp/>type:<sp/>&apos;application/*+json&apos;<sp/>}))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>parse<sp/>some<sp/>custom<sp/>thing<sp/>into<sp/>a<sp/>Buffer</highlight></codeline>
+<codeline><highlight class="normal">app.use(bodyParser.raw({<sp/>type:<sp/>&apos;application/vnd.custom-type&apos;<sp/>}))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>parse<sp/>an<sp/>HTML<sp/>body<sp/>into<sp/>a<sp/>string</highlight></codeline>
+<codeline><highlight class="normal">app.use(bodyParser.text({<sp/>type:<sp/>&apos;text/html&apos;<sp/>}))</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>License</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[MIT](LICENSE)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[ci-image]:<sp/>https://badgen.net/github/checks/expressjs/body-parser/master?label=ci</highlight></codeline>
+<codeline><highlight class="normal">[ci-url]:<sp/>https://github.com/expressjs/body-parser/actions/workflows/ci.yml</highlight></codeline>
+<codeline><highlight class="normal">[coveralls-image]:<sp/>https://badgen.net/coveralls/c/github/expressjs/body-parser/master</highlight></codeline>
+<codeline><highlight class="normal">[coveralls-url]:<sp/>https://coveralls.io/r/expressjs/body-parser?branch=master</highlight></codeline>
+<codeline><highlight class="normal">[node-version-image]:<sp/>https://badgen.net/npm/node/body-parser</highlight></codeline>
+<codeline><highlight class="normal">[node-version-url]:<sp/>https://nodejs.org/en/download</highlight></codeline>
+<codeline><highlight class="normal">[npm-downloads-image]:<sp/>https://badgen.net/npm/dm/body-parser</highlight></codeline>
+<codeline><highlight class="normal">[npm-url]:<sp/>https://npmjs.org/package/body-parser</highlight></codeline>
+<codeline><highlight class="normal">[npm-version-image]:<sp/>https://badgen.net/npm/v/body-parser</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/body-parser/README.md"/>
+  </compounddef>
+</doxygen>

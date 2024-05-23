@@ -1,0 +1,60 @@
+.TH "md_backend_2node__modules_2end-of-stream_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2end-of-stream_2_r_e_a_d_m_e \- end-of-stream 
+.PP
+ A node module that calls a callback when a readable/writable/duplex stream has completed or failed\&. 
+.PP
+.nf
+npm install end-of-stream
+
+.fi
+.PP
+ \fR\fP
+.SH "Usage"
+.PP
+Simply pass a stream and a callback to the \fReos\fP\&. Both legacy streams, streams2 and stream3 are supported\&.
+.PP
+.PP
+.nf
+ js
+var eos = require('end\-of\-stream');
+
+eos(readableStream, function(err) {
+  // this will be set to the stream instance
+    if (err) return console\&.log('stream had an error or closed early');
+    console\&.log('stream has ended', this === readableStream);
+});
+
+eos(writableStream, function(err) {
+    if (err) return console\&.log('stream had an error or closed early');
+    console\&.log('stream has finished', this === writableStream);
+});
+
+eos(duplexStream, function(err) {
+    if (err) return console\&.log('stream had an error or closed early');
+    console\&.log('stream has ended and finished', this === duplexStream);
+});
+
+eos(duplexStream, {readable:false}, function(err) {
+    if (err) return console\&.log('stream had an error or closed early');
+    console\&.log('stream has finished but might still be readable');
+});
+
+eos(duplexStream, {writable:false}, function(err) {
+    if (err) return console\&.log('stream had an error or closed early');
+    console\&.log('stream has ended but might still be writable');
+});
+
+eos(readableStream, {error:false}, function(err) {
+    // do not treat emit('error', err) as a end\-of\-stream
+});
+.fi
+.PP
+.SH "License"
+.PP
+MIT
+.SH "Related"
+.PP
+\fRend-of-stream\fP is part of the \fRmississippi stream utility collection\fP which includes more useful stream modules similar to this one\&. 

@@ -1,0 +1,67 @@
+\chapter{pump}
+\hypertarget{md_backend_2node__modules_2pump_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2pump_2_r_e_a_d_m_e}\index{pump@{pump}}
+\label{md_backend_2node__modules_2pump_2_r_e_a_d_m_e_autotoc_md2778}%
+\Hypertarget{md_backend_2node__modules_2pump_2_r_e_a_d_m_e_autotoc_md2778}%
+ pump is a small node module that pipes streams together and destroys all of them if one of them closes.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{npm\ install\ pump}
+
+\end{DoxyCode}
+
+
+\href{http://travis-ci.org/mafintosh/pump}{\texttt{ }}\hypertarget{md_backend_2node__modules_2pump_2_r_e_a_d_m_e_autotoc_md2779}{}\doxysection{\texorpdfstring{What problem does it solve?}{What problem does it solve?}}\label{md_backend_2node__modules_2pump_2_r_e_a_d_m_e_autotoc_md2779}
+When using standard {\ttfamily source.\+pipe(dest)} source will {\itshape not} be destroyed if dest emits close or an error. You are also not able to provide a callback to tell when then pipe has finished.
+
+pump does these two things for you\hypertarget{md_backend_2node__modules_2pump_2_r_e_a_d_m_e_autotoc_md2780}{}\doxysection{\texorpdfstring{Usage}{Usage}}\label{md_backend_2node__modules_2pump_2_r_e_a_d_m_e_autotoc_md2780}
+Simply pass the streams you want to pipe together to pump and add an optional callback
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ pump\ =\ require('pump')}
+\DoxyCodeLine{var\ fs\ =\ require('fs')}
+\DoxyCodeLine{}
+\DoxyCodeLine{var\ source\ =\ fs.createReadStream('/dev/random')}
+\DoxyCodeLine{var\ dest\ =\ fs.createWriteStream('/dev/null')}
+\DoxyCodeLine{}
+\DoxyCodeLine{pump(source,\ dest,\ function(err)\ \{}
+\DoxyCodeLine{\ \ console.log('pipe\ finished',\ err)}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{setTimeout(function()\ \{}
+\DoxyCodeLine{\ \ dest.destroy()\ //\ when\ dest\ is\ closed\ pump\ will\ destroy\ source}
+\DoxyCodeLine{\},\ 1000)}
+
+\end{DoxyCode}
+
+
+You can use pump to pipe more than two streams together as well
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ js}
+\DoxyCodeLine{var\ transform\ =\ someTransformStream()}
+\DoxyCodeLine{}
+\DoxyCodeLine{pump(source,\ transform,\ anotherTransform,\ dest,\ function(err)\ \{}
+\DoxyCodeLine{\ \ console.log('pipe\ finished',\ err)}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+
+
+If {\ttfamily source}, {\ttfamily transform}, {\ttfamily another\+Transform} or {\ttfamily dest} closes all of them will be destroyed.
+
+Similarly to {\ttfamily stream.\+pipe()}, {\ttfamily pump()} returns the last stream passed in, so you can do\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{return\ pump(s1,\ s2)\ //\ returns\ s2}
+
+\end{DoxyCode}
+
+
+If you want to return a stream that combines {\itshape both} s1 and s2 to a single stream use \href{https://github.com/mafintosh/pumpify}{\texttt{ pumpify}} instead.\hypertarget{md_backend_2node__modules_2pump_2_r_e_a_d_m_e_autotoc_md2781}{}\doxysection{\texorpdfstring{License}{License}}\label{md_backend_2node__modules_2pump_2_r_e_a_d_m_e_autotoc_md2781}
+MIT\hypertarget{md_backend_2node__modules_2pump_2_r_e_a_d_m_e_autotoc_md2782}{}\doxysection{\texorpdfstring{Related}{Related}}\label{md_backend_2node__modules_2pump_2_r_e_a_d_m_e_autotoc_md2782}
+{\ttfamily pump} is part of the \href{https://github.com/maxogden/mississippi}{\texttt{ mississippi stream utility collection}} which includes more useful stream modules similar to this one. 

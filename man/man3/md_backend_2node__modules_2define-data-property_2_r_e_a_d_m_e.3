@@ -1,0 +1,53 @@
+.TH "md_backend_2node__modules_2define-data-property_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2define-data-property_2_r_e_a_d_m_e \- define-data-property \*{\fR\fP\*}  
+.PP
+ \fR\fP \fR\fP [][license-url] \fR\fP
+.PP
+\fR\fP.PP
+Define a data property on an object\&. Will fall back to assignment in an engine without descriptors\&.
+.PP
+The three \fRnon*\fP argument can also be passed \fRnull\fP, which will use the existing state if available\&.
+.PP
+The \fRloose\fP argument will mean that if you attempt to set a non-normal data property, in an environment without descriptor support, it will fall back to normal assignment\&.
+.SH "Usage"
+.PP
+.PP
+.nf
+var defineDataProperty = require('define\-data\-property');
+var assert = require('assert');
+
+var obj = {};
+defineDataProperty(obj, 'key', 'value');
+defineDataProperty(
+    obj,
+    'key2',
+    'value',
+    true, // nonEnumerable, optional
+    false, // nonWritable, optional
+    true, // nonConfigurable, optional
+    false // loose, optional
+);
+
+assert\&.deepEqual(
+    Object\&.getOwnPropertyDescriptors(obj),
+    {
+        key: {
+            configurable: true,
+            enumerable: true,
+            value: 'value',
+            writable: true,
+        },
+        key2: {
+            configurable: false,
+            enumerable: false,
+            value: 'value',
+            writable: true,
+        },
+    }
+);
+.fi
+.PP
+ 

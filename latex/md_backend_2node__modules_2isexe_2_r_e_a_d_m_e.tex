@@ -1,0 +1,41 @@
+\chapter{isexe}
+\hypertarget{md_backend_2node__modules_2isexe_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2isexe_2_r_e_a_d_m_e}\index{isexe@{isexe}}
+\label{md_backend_2node__modules_2isexe_2_r_e_a_d_m_e_autotoc_md1752}%
+\Hypertarget{md_backend_2node__modules_2isexe_2_r_e_a_d_m_e_autotoc_md1752}%
+ Minimal module to check if a file is executable, and a normal file.
+
+Uses {\ttfamily fs.\+stat} and tests against the {\ttfamily PATHEXT} environment variable on Windows.\hypertarget{md_backend_2node__modules_2isexe_2_r_e_a_d_m_e_autotoc_md1753}{}\doxysection{\texorpdfstring{USAGE}{USAGE}}\label{md_backend_2node__modules_2isexe_2_r_e_a_d_m_e_autotoc_md1753}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ isexe\ =\ require('isexe')}
+\DoxyCodeLine{isexe('some-\/file-\/name',\ function\ (err,\ isExe)\ \{}
+\DoxyCodeLine{\ \ if\ (err)\ \{}
+\DoxyCodeLine{\ \ \ \ console.error('probably\ file\ does\ not\ exist\ or\ something',\ err)}
+\DoxyCodeLine{\ \ \}\ else\ if\ (isExe)\ \{}
+\DoxyCodeLine{\ \ \ \ console.error('this\ thing\ can\ be\ run')}
+\DoxyCodeLine{\ \ \}\ else\ \{}
+\DoxyCodeLine{\ \ \ \ console.error('cannot\ be\ run')}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ same\ thing\ but\ synchronous,\ throws\ errors}
+\DoxyCodeLine{var\ isExe\ =\ isexe.sync('some-\/file-\/name')}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ treat\ errors\ as\ just\ "{}not\ executable"{}}
+\DoxyCodeLine{isexe('maybe-\/missing-\/file',\ \{\ ignoreErrors:\ true\ \},\ callback)}
+\DoxyCodeLine{var\ isExe\ =\ isexe.sync('maybe-\/missing-\/file',\ \{\ ignoreErrors:\ true\ \})}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2isexe_2_r_e_a_d_m_e_autotoc_md1754}{}\doxysection{\texorpdfstring{API}{API}}\label{md_backend_2node__modules_2isexe_2_r_e_a_d_m_e_autotoc_md1754}
+\hypertarget{md_backend_2node__modules_2isexe_2_r_e_a_d_m_e_autotoc_md1755}{}\doxysubsection{\texorpdfstring{{\ttfamily isexe(path, \mbox{[}options\mbox{]}, \mbox{[}callback\mbox{]})}}{{\ttfamily isexe(path, \mbox{[}options\mbox{]}, \mbox{[}callback\mbox{]})}}}\label{md_backend_2node__modules_2isexe_2_r_e_a_d_m_e_autotoc_md1755}
+Check if the path is executable. If no callback provided, and a global {\ttfamily Promise} object is available, then a Promise will be returned.
+
+Will raise whatever errors may be raised by {\ttfamily fs.\+stat}, unless {\ttfamily options.\+ignore\+Errors} is set to true.\hypertarget{md_backend_2node__modules_2isexe_2_r_e_a_d_m_e_autotoc_md1756}{}\doxysubsection{\texorpdfstring{{\ttfamily isexe.\+sync(path, \mbox{[}options\mbox{]})}}{{\ttfamily isexe.\+sync(path, \mbox{[}options\mbox{]})}}}\label{md_backend_2node__modules_2isexe_2_r_e_a_d_m_e_autotoc_md1756}
+Same as {\ttfamily isexe} but returns the value and throws any errors raised.\hypertarget{md_backend_2node__modules_2isexe_2_r_e_a_d_m_e_autotoc_md1757}{}\doxysubsection{\texorpdfstring{Options}{Options}}\label{md_backend_2node__modules_2isexe_2_r_e_a_d_m_e_autotoc_md1757}
+
+\begin{DoxyItemize}
+\item {\ttfamily ignore\+Errors} Treat all errors as "{}no, this is not executable"{}, but don\textquotesingle{}t raise them.
+\item {\ttfamily uid} Number to use as the user id
+\item {\ttfamily gid} Number to use as the group id
+\item {\ttfamily path\+Ext} List of path extensions to use instead of {\ttfamily PATHEXT} environment variable on Windows. 
+\end{DoxyItemize}

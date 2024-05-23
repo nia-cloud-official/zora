@@ -1,0 +1,246 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2ipaddr_8js_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>ipaddr.js<sp/>—<sp/>an<sp/>IPv6<sp/>and<sp/>IPv4<sp/>address<sp/>manipulation<sp/>library<sp/>[![Build<sp/>Status](https://travis-ci.org/whitequark/ipaddr.js.svg)](https://travis-ci.org/whitequark/ipaddr.js)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">ipaddr.js<sp/>is<sp/>a<sp/>small<sp/>(1.9K<sp/>minified<sp/>and<sp/>gzipped)<sp/>library<sp/>for<sp/>manipulating</highlight></codeline>
+<codeline><highlight class="normal">IP<sp/>addresses<sp/>in<sp/>JavaScript<sp/>environments.<sp/>It<sp/>runs<sp/>on<sp/>both<sp/>CommonJS<sp/>runtimes</highlight></codeline>
+<codeline><highlight class="normal">(e.g.<sp/>[nodejs])<sp/>and<sp/>in<sp/>a<sp/>web<sp/>browser.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">ipaddr.js<sp/>allows<sp/>you<sp/>to<sp/>verify<sp/>and<sp/>parse<sp/>string<sp/>representation<sp/>of<sp/>an<sp/>IP</highlight></codeline>
+<codeline><highlight class="normal">address,<sp/>match<sp/>it<sp/>against<sp/>a<sp/>CIDR<sp/>range<sp/>or<sp/>range<sp/>list,<sp/>determine<sp/>if<sp/>it<sp/>falls</highlight></codeline>
+<codeline><highlight class="normal">into<sp/>some<sp/>reserved<sp/>ranges<sp/>(examples<sp/>include<sp/>loopback<sp/>and<sp/>private<sp/>ranges),</highlight></codeline>
+<codeline><highlight class="normal">and<sp/>convert<sp/>between<sp/>IPv4<sp/>and<sp/>IPv4-mapped<sp/>IPv6<sp/>addresses.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[nodejs]:<sp/>http://nodejs.org</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Installation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`npm<sp/>install<sp/>ipaddr.js`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">or</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`bower<sp/>install<sp/>ipaddr.js`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>API</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">ipaddr.js<sp/>defines<sp/>one<sp/>object<sp/>in<sp/>the<sp/>global<sp/>scope:<sp/>`ipaddr`.<sp/>In<sp/>CommonJS,</highlight></codeline>
+<codeline><highlight class="normal">it<sp/>is<sp/>exported<sp/>from<sp/>the<sp/>module:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>ipaddr<sp/>=<sp/>require(&apos;ipaddr.js&apos;);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>API<sp/>consists<sp/>of<sp/>several<sp/>global<sp/>methods<sp/>and<sp/>two<sp/>classes:<sp/>ipaddr.IPv6<sp/>and<sp/>ipaddr.IPv4.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Global<sp/>methods</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">There<sp/>are<sp/>three<sp/>global<sp/>methods<sp/>defined:<sp/>`ipaddr.isValid`,<sp/>`ipaddr.parse`<sp/>and</highlight></codeline>
+<codeline><highlight class="normal">`ipaddr.process`.<sp/>All<sp/>of<sp/>them<sp/>receive<sp/>a<sp/>string<sp/>as<sp/>a<sp/>single<sp/>parameter.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`ipaddr.isValid`<sp/>method<sp/>returns<sp/>`true`<sp/>if<sp/>the<sp/>address<sp/>is<sp/>a<sp/>valid<sp/>IPv4<sp/>or</highlight></codeline>
+<codeline><highlight class="normal">IPv6<sp/>address,<sp/>and<sp/>`false`<sp/>otherwise.<sp/>It<sp/>does<sp/>not<sp/>throw<sp/>any<sp/>exceptions.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`ipaddr.parse`<sp/>method<sp/>returns<sp/>an<sp/>object<sp/>representing<sp/>the<sp/>IP<sp/>address,</highlight></codeline>
+<codeline><highlight class="normal">or<sp/>throws<sp/>an<sp/>`Error`<sp/>if<sp/>the<sp/>passed<sp/>string<sp/>is<sp/>not<sp/>a<sp/>valid<sp/>representation<sp/>of<sp/>an</highlight></codeline>
+<codeline><highlight class="normal">IP<sp/>address.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`ipaddr.process`<sp/>method<sp/>works<sp/>just<sp/>like<sp/>the<sp/>`ipaddr.parse`<sp/>one,<sp/>but<sp/>it</highlight></codeline>
+<codeline><highlight class="normal">automatically<sp/>converts<sp/>IPv4-mapped<sp/>IPv6<sp/>addresses<sp/>to<sp/>their<sp/>IPv4<sp/>counterparts</highlight></codeline>
+<codeline><highlight class="normal">before<sp/>returning.<sp/>It<sp/>is<sp/>useful<sp/>when<sp/>you<sp/>have<sp/>a<sp/>Node.js<sp/>instance<sp/>listening</highlight></codeline>
+<codeline><highlight class="normal">on<sp/>an<sp/>IPv6<sp/>socket,<sp/>and<sp/>the<sp/>`net.ivp6.bindv6only`<sp/>sysctl<sp/>parameter<sp/>(or<sp/>its</highlight></codeline>
+<codeline><highlight class="normal">equivalent<sp/>on<sp/>non-Linux<sp/>OS)<sp/>is<sp/>set<sp/>to<sp/>0.<sp/>In<sp/>this<sp/>case,<sp/>you<sp/>can<sp/>accept<sp/>IPv4</highlight></codeline>
+<codeline><highlight class="normal">connections<sp/>on<sp/>your<sp/>IPv6-only<sp/>socket,<sp/>but<sp/>the<sp/>remote<sp/>address<sp/>will<sp/>be<sp/>mangled.</highlight></codeline>
+<codeline><highlight class="normal">Use<sp/>`ipaddr.process`<sp/>method<sp/>to<sp/>automatically<sp/>demangle<sp/>it.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Object<sp/>representation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Parsing<sp/>methods<sp/>return<sp/>an<sp/>object<sp/>which<sp/>descends<sp/>from<sp/>`ipaddr.IPv6`<sp/>or</highlight></codeline>
+<codeline><highlight class="normal">`ipaddr.IPv4`.<sp/>These<sp/>objects<sp/>share<sp/>some<sp/>properties,<sp/>but<sp/>most<sp/>of<sp/>them<sp/>differ.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Shared<sp/>properties</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">One<sp/>can<sp/>determine<sp/>the<sp/>type<sp/>of<sp/>address<sp/>by<sp/>calling<sp/>`addr.kind()`.<sp/>It<sp/>will<sp/>return</highlight></codeline>
+<codeline><highlight class="normal">either<sp/>`&quot;ipv6&quot;`<sp/>or<sp/>`&quot;ipv4&quot;`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">An<sp/>address<sp/>can<sp/>be<sp/>converted<sp/>back<sp/>to<sp/>its<sp/>string<sp/>representation<sp/>with<sp/>`addr.toString()`.</highlight></codeline>
+<codeline><highlight class="normal">Note<sp/>that<sp/>this<sp/>method:</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>does<sp/>not<sp/>return<sp/>the<sp/>original<sp/>string<sp/>used<sp/>to<sp/>create<sp/>the<sp/>object<sp/>(in<sp/>fact,<sp/>there<sp/>is</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>no<sp/>way<sp/>of<sp/>getting<sp/>that<sp/>string)</highlight></codeline>
+<codeline><highlight class="normal"><sp/>*<sp/>returns<sp/>a<sp/>compact<sp/>representation<sp/>(when<sp/>it<sp/>is<sp/>applicable)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>`match(range,<sp/>bits)`<sp/>method<sp/>can<sp/>be<sp/>used<sp/>to<sp/>check<sp/>if<sp/>the<sp/>address<sp/>falls<sp/>into<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">certain<sp/>CIDR<sp/>range.</highlight></codeline>
+<codeline><highlight class="normal">Note<sp/>that<sp/>an<sp/>address<sp/>can<sp/>be<sp/>(obviously)<sp/>matched<sp/>only<sp/>against<sp/>an<sp/>address<sp/>of<sp/>the<sp/>same<sp/>type.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>example:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>addr<sp/>=<sp/>ipaddr.parse(&quot;2001:db8:1234::1&quot;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>range<sp/>=<sp/>ipaddr.parse(&quot;2001:db8::&quot;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">addr.match(range,<sp/>32);<sp/>//<sp/>=&gt;<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Alternatively,<sp/>`match`<sp/>can<sp/>also<sp/>be<sp/>called<sp/>as<sp/>`match([range,<sp/>bits])`.<sp/>In<sp/>this<sp/>way,</highlight></codeline>
+<codeline><highlight class="normal">it<sp/>can<sp/>be<sp/>used<sp/>together<sp/>with<sp/>the<sp/>`parseCIDR(string)`<sp/>method,<sp/>which<sp/>parses<sp/>an<sp/>IP</highlight></codeline>
+<codeline><highlight class="normal">address<sp/>together<sp/>with<sp/>a<sp/>CIDR<sp/>range.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>example:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>addr<sp/>=<sp/>ipaddr.parse(&quot;2001:db8:1234::1&quot;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">addr.match(ipaddr.parseCIDR(&quot;2001:db8::/32&quot;));<sp/>//<sp/>=&gt;<sp/>true</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>`range()`<sp/>method<sp/>returns<sp/>one<sp/>of<sp/>predefined<sp/>names<sp/>for<sp/>several<sp/>special<sp/>ranges<sp/>defined</highlight></codeline>
+<codeline><highlight class="normal">by<sp/>IP<sp/>protocols.<sp/>The<sp/>exact<sp/>names<sp/>(and<sp/>their<sp/>respective<sp/>CIDR<sp/>ranges)<sp/>can<sp/>be<sp/>looked<sp/>up</highlight></codeline>
+<codeline><highlight class="normal">in<sp/>the<sp/>source:<sp/>[IPv6<sp/>ranges]<sp/>and<sp/>[IPv4<sp/>ranges].<sp/>Some<sp/>common<sp/>ones<sp/>include<sp/>`&quot;unicast&quot;`</highlight></codeline>
+<codeline><highlight class="normal">(the<sp/>default<sp/>one)<sp/>and<sp/>`&quot;reserved&quot;`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>match<sp/>against<sp/>your<sp/>own<sp/>range<sp/>list<sp/>by<sp/>using</highlight></codeline>
+<codeline><highlight class="normal">`ipaddr.subnetMatch(address,<sp/>rangeList,<sp/>defaultName)`<sp/>method.<sp/>It<sp/>can<sp/>work<sp/>with<sp/>a<sp/>mix<sp/>of<sp/>IPv6<sp/>or<sp/>IPv4<sp/>addresses,<sp/>and<sp/>accepts<sp/>a<sp/>name-to-subnet<sp/>map<sp/>as<sp/>the<sp/>range<sp/>list.<sp/>For<sp/>example:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>rangeList<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>documentationOnly:<sp/>[<sp/>ipaddr.parse(&apos;2001:db8::&apos;),<sp/>32<sp/>],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>tunnelProviders:<sp/>[</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>[<sp/>ipaddr.parse(&apos;2001:470::&apos;),<sp/>32<sp/>],<sp/>//<sp/>he.net</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>[<sp/>ipaddr.parse(&apos;2001:5c0::&apos;),<sp/>32<sp/>]<sp/><sp/>//<sp/>freenet6</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>]</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline><highlight class="normal">ipaddr.subnetMatch(ipaddr.parse(&apos;2001:470:8:66::1&apos;),<sp/>rangeList,<sp/>&apos;unknown&apos;);<sp/>//<sp/>=&gt;<sp/>&quot;tunnelProviders&quot;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>addresses<sp/>can<sp/>be<sp/>converted<sp/>to<sp/>their<sp/>byte<sp/>representation<sp/>with<sp/>`toByteArray()`.</highlight></codeline>
+<codeline><highlight class="normal">(Actually,<sp/>JavaScript<sp/>mostly<sp/>does<sp/>not<sp/>know<sp/>about<sp/>byte<sp/>buffers.<sp/>They<sp/>are<sp/>emulated<sp/>with</highlight></codeline>
+<codeline><highlight class="normal">arrays<sp/>of<sp/>numbers,<sp/>each<sp/>in<sp/>range<sp/>of<sp/>0..255.)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>bytes<sp/>=<sp/>ipaddr.parse(&apos;2a00:1450:8007::68&apos;).toByteArray();<sp/>//<sp/>ipv6.google.com</highlight></codeline>
+<codeline><highlight class="normal">bytes<sp/>//<sp/>=&gt;<sp/>[42,<sp/>0x00,<sp/>0x14,<sp/>0x50,<sp/>0x80,<sp/>0x07,<sp/>0x00,<sp/>&lt;zeroes...&gt;,<sp/>0x00,<sp/>0x68<sp/>]</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`ipaddr.IPv4`<sp/>and<sp/>`ipaddr.IPv6`<sp/>objects<sp/>have<sp/>some<sp/>methods<sp/>defined,<sp/>too.<sp/>All<sp/>of<sp/>them</highlight></codeline>
+<codeline><highlight class="normal">have<sp/>the<sp/>same<sp/>interface<sp/>for<sp/>both<sp/>protocols,<sp/>and<sp/>are<sp/>similar<sp/>to<sp/>global<sp/>methods.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`ipaddr.IPvX.isValid(string)`<sp/>can<sp/>be<sp/>used<sp/>to<sp/>check<sp/>if<sp/>the<sp/>string<sp/>is<sp/>a<sp/>valid<sp/>address</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>particular<sp/>protocol,<sp/>and<sp/>`ipaddr.IPvX.parse(string)`<sp/>is<sp/>the<sp/>error-throwing<sp/>parser.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`ipaddr.IPvX.isValid(string)`<sp/>uses<sp/>the<sp/>same<sp/>format<sp/>for<sp/>parsing<sp/>as<sp/>the<sp/>POSIX<sp/>`inet_ntoa`<sp/>function,<sp/>which<sp/>accepts<sp/>unusual<sp/>formats<sp/>like<sp/>`0xc0.168.1.1`<sp/>or<sp/>`0x10000000`.<sp/>The<sp/>function<sp/>`ipaddr.IPv4.isValidFourPartDecimal(string)`<sp/>validates<sp/>the<sp/>IPv4<sp/>address<sp/>and<sp/>also<sp/>ensures<sp/>that<sp/>it<sp/>is<sp/>written<sp/>in<sp/>four-part<sp/>decimal<sp/>format.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[IPv6<sp/>ranges]:<sp/>https://github.com/whitequark/ipaddr.js/blob/master/src/ipaddr.coffee#L186</highlight></codeline>
+<codeline><highlight class="normal">[IPv4<sp/>ranges]:<sp/>https://github.com/whitequark/ipaddr.js/blob/master/src/ipaddr.coffee#L71</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>IPv6<sp/>properties</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Sometimes<sp/>you<sp/>will<sp/>want<sp/>to<sp/>convert<sp/>IPv6<sp/>not<sp/>to<sp/>a<sp/>compact<sp/>string<sp/>representation<sp/>(with</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>`::`<sp/>substitution);<sp/>the<sp/>`toNormalizedString()`<sp/>method<sp/>will<sp/>return<sp/>an<sp/>address<sp/>where</highlight></codeline>
+<codeline><highlight class="normal">all<sp/>zeroes<sp/>are<sp/>explicit.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>example:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>addr<sp/>=<sp/>ipaddr.parse(&quot;2001:0db8::0001&quot;);</highlight></codeline>
+<codeline><highlight class="normal">addr.toString();<sp/>//<sp/>=&gt;<sp/>&quot;2001:db8::1&quot;</highlight></codeline>
+<codeline><highlight class="normal">addr.toNormalizedString();<sp/>//<sp/>=&gt;<sp/>&quot;2001:db8:0:0:0:0:0:1&quot;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`isIPv4MappedAddress()`<sp/>method<sp/>will<sp/>return<sp/>`true`<sp/>if<sp/>this<sp/>address<sp/>is<sp/>an<sp/>IPv4-mapped</highlight></codeline>
+<codeline><highlight class="normal">one,<sp/>and<sp/>`toIPv4Address()`<sp/>will<sp/>return<sp/>an<sp/>IPv4<sp/>object<sp/>address.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>access<sp/>the<sp/>underlying<sp/>binary<sp/>representation<sp/>of<sp/>the<sp/>address,<sp/>use<sp/>`addr.parts`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>addr<sp/>=<sp/>ipaddr.parse(&quot;2001:db8:10::1234:DEAD&quot;);</highlight></codeline>
+<codeline><highlight class="normal">addr.parts<sp/>//<sp/>=&gt;<sp/>[0x2001,<sp/>0xdb8,<sp/>0x10,<sp/>0,<sp/>0,<sp/>0,<sp/>0x1234,<sp/>0xdead]</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>IPv6<sp/>zone<sp/>index<sp/>can<sp/>be<sp/>accessed<sp/>via<sp/>`addr.zoneId`:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>addr<sp/>=<sp/>ipaddr.parse(&quot;2001:db8::%eth0&quot;);</highlight></codeline>
+<codeline><highlight class="normal">addr.zoneId<sp/>//<sp/>=&gt;<sp/>&apos;eth0&apos;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>IPv4<sp/>properties</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`toIPv4MappedAddress()`<sp/>will<sp/>return<sp/>a<sp/>corresponding<sp/>IPv4-mapped<sp/>IPv6<sp/>address.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>access<sp/>the<sp/>underlying<sp/>representation<sp/>of<sp/>the<sp/>address,<sp/>use<sp/>`addr.octets`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>addr<sp/>=<sp/>ipaddr.parse(&quot;192.168.1.1&quot;);</highlight></codeline>
+<codeline><highlight class="normal">addr.octets<sp/>//<sp/>=&gt;<sp/>[192,<sp/>168,<sp/>1,<sp/>1]</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`prefixLengthFromSubnetMask()`<sp/>will<sp/>return<sp/>a<sp/>CIDR<sp/>prefix<sp/>length<sp/>for<sp/>a<sp/>valid<sp/>IPv4<sp/>netmask<sp/>or</highlight></codeline>
+<codeline><highlight class="normal">null<sp/>if<sp/>the<sp/>netmask<sp/>is<sp/>not<sp/>valid.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">ipaddr.IPv4.parse(&apos;255.255.255.240&apos;).prefixLengthFromSubnetMask()<sp/>==<sp/>28</highlight></codeline>
+<codeline><highlight class="normal">ipaddr.IPv4.parse(&apos;255.192.164.0&apos;).prefixLengthFromSubnetMask()<sp/><sp/>==<sp/>null</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`subnetMaskFromPrefixLength()`<sp/>will<sp/>return<sp/>an<sp/>IPv4<sp/>netmask<sp/>for<sp/>a<sp/>valid<sp/>CIDR<sp/>prefix<sp/>length.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">ipaddr.IPv4.subnetMaskFromPrefixLength(24)<sp/>==<sp/>&quot;255.255.255.0&quot;</highlight></codeline>
+<codeline><highlight class="normal">ipaddr.IPv4.subnetMaskFromPrefixLength(29)<sp/>==<sp/>&quot;255.255.255.248&quot;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`broadcastAddressFromCIDR()`<sp/>will<sp/>return<sp/>the<sp/>broadcast<sp/>address<sp/>for<sp/>a<sp/>given<sp/>IPv4<sp/>interface<sp/>and<sp/>netmask<sp/>in<sp/>CIDR<sp/>notation.</highlight></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">ipaddr.IPv4.broadcastAddressFromCIDR(&quot;172.0.0.1/24&quot;)<sp/>==<sp/>&quot;172.0.0.255&quot;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">`networkAddressFromCIDR()`<sp/>will<sp/>return<sp/>the<sp/>network<sp/>address<sp/>for<sp/>a<sp/>given<sp/>IPv4<sp/>interface<sp/>and<sp/>netmask<sp/>in<sp/>CIDR<sp/>notation.</highlight></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">ipaddr.IPv4.networkAddressFromCIDR(&quot;172.0.0.1/24&quot;)<sp/>==<sp/>&quot;172.0.0.0&quot;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Conversion</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">IPv4<sp/>and<sp/>IPv6<sp/>can<sp/>be<sp/>converted<sp/>bidirectionally<sp/>to<sp/>and<sp/>from<sp/>network<sp/>byte<sp/>order<sp/>(MSB)<sp/>byte<sp/>arrays.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`fromByteArray()`<sp/>method<sp/>will<sp/>take<sp/>an<sp/>array<sp/>and<sp/>create<sp/>an<sp/>appropriate<sp/>IPv4<sp/>or<sp/>IPv6<sp/>object</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>the<sp/>input<sp/>satisfies<sp/>the<sp/>requirements.<sp/>For<sp/>IPv4<sp/>it<sp/>has<sp/>to<sp/>be<sp/>an<sp/>array<sp/>of<sp/>four<sp/>8-bit<sp/>values,</highlight></codeline>
+<codeline><highlight class="normal">while<sp/>for<sp/>IPv6<sp/>it<sp/>has<sp/>to<sp/>be<sp/>an<sp/>array<sp/>of<sp/>sixteen<sp/>8-bit<sp/>values.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>example:</highlight></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>addr<sp/>=<sp/>ipaddr.fromByteArray([0x7f,<sp/>0,<sp/>0,<sp/>1]);</highlight></codeline>
+<codeline><highlight class="normal">addr.toString();<sp/>//<sp/>=&gt;<sp/>&quot;127.0.0.1&quot;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">or</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>addr<sp/>=<sp/>ipaddr.fromByteArray([0x20,<sp/>1,<sp/>0xd,<sp/>0xb8,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>1])</highlight></codeline>
+<codeline><highlight class="normal">addr.toString();<sp/>//<sp/>=&gt;<sp/>&quot;2001:db8::1&quot;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Both<sp/>objects<sp/>also<sp/>offer<sp/>a<sp/>`toByteArray()`<sp/>method,<sp/>which<sp/>returns<sp/>an<sp/>array<sp/>in<sp/>network<sp/>byte<sp/>order<sp/>(MSB).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>example:</highlight></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>addr<sp/>=<sp/>ipaddr.parse(&quot;127.0.0.1&quot;);</highlight></codeline>
+<codeline><highlight class="normal">addr.toByteArray();<sp/>//<sp/>=&gt;<sp/>[0x7f,<sp/>0,<sp/>0,<sp/>1]</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">or</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>addr<sp/>=<sp/>ipaddr.parse(&quot;2001:db8::1&quot;);</highlight></codeline>
+<codeline><highlight class="normal">addr.toByteArray();<sp/>//<sp/>=&gt;<sp/>[0x20,<sp/>1,<sp/>0xd,<sp/>0xb8,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>1]</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/ipaddr.js/README.md"/>
+  </compounddef>
+</doxygen>

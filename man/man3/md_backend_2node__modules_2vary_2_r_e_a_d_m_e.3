@@ -1,0 +1,78 @@
+.TH "md_backend_2node__modules_2vary_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2vary_2_r_e_a_d_m_e \- vary 
+.PP
+ \fR\fP \fR\fP \fR\fP \fR\fP \fR\fP
+.PP
+Manipulate the HTTP Vary header
+.SH "Installation"
+.PP
+This is a \fRNode\&.js\fP module available through the \fRnpm registry\fP\&. Installation is done using the \fR\fRnpm install\fP command\fP:
+.PP
+.PP
+.nf
+$ npm install vary
+.fi
+.PP
+.SH "API"
+.PP
+.PP
+.nf
+var vary = require('vary')
+.fi
+.PP
+.SS "vary(res, field)"
+Adds the given header \fRfield\fP to the \fRVary\fP response header of \fRres\fP\&. This can be a string of a single field, a string of a valid \fRVary\fP header, or an array of multiple fields\&.
+.PP
+This will append the header if not already listed, otherwise leaves it listed in the current location\&.
+.PP
+.PP
+.nf
+// Append "Origin" to the Vary header of the response
+vary(res, 'Origin')
+.fi
+.PP
+.SS "vary\&.append(header, field)"
+Adds the given header \fRfield\fP to the \fRVary\fP response header string \fRheader\fP\&. This can be a string of a single field, a string of a valid \fRVary\fP header, or an array of multiple fields\&.
+.PP
+This will append the header if not already listed, otherwise leaves it listed in the current location\&. The new header string is returned\&.
+.PP
+.PP
+.nf
+// Get header string appending "Origin" to "Accept, User\-Agent"
+vary\&.append('Accept, User\-Agent', 'Origin')
+.fi
+.PP
+.SH "Examples"
+.PP
+.SS "Updating the Vary header when content is based on it"
+.PP
+.nf
+var http = require('http')
+var vary = require('vary')
+
+http\&.createServer(function onRequest (req, res) {
+  // about to user\-agent sniff
+  vary(res, 'User\-Agent')
+
+  var ua = req\&.headers['user\-agent'] || ''
+  var isMobile = /mobi|android|touch|mini/i\&.test(ua)
+
+  // serve site, depending on isMobile
+  res\&.setHeader('Content\-Type', 'text/html')
+  res\&.end('You are (probably) ' + (isMobile ? '' : 'not ') + 'a mobile user')
+})
+.fi
+.PP
+.SH "Testing"
+.PP
+.PP
+.nf
+$ npm test
+.fi
+.PP
+.SH "License"
+.PP
+[MIT](LICENSE) 

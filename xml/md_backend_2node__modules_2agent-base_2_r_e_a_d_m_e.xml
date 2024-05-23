@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e</compoundname>
+    <title>agent-base</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<sect2 id="md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_1autotoc_md103">
+<title>Turn a function into an <ulink url="https://nodejs.org/api/http.html#http_class_http_agent"><computeroutput>http.Agent</computeroutput></ulink> instance</title><para><ulink url="https://github.com/TooTallNate/node-agent-base/actions?workflow=Node+CI"><image type="html" name="https://github.com/TooTallNate/node-agent-base/workflows/Node%20CI/badge.svg" alt="Build Status" inline="yes"></image>
+</ulink></para>
+<para>This module provides an <computeroutput>http.Agent</computeroutput> generator. That is, you pass it an async callback function, and it returns a new <computeroutput>http.Agent</computeroutput> instance that will invoke the given callback function when sending outbound HTTP requests.</para>
+<sect3 id="md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_1autotoc_md104">
+<title>Some subclasses:</title><para>Here&apos;s some more interesting uses of <computeroutput>agent-base</computeroutput>. Send a pull request to list yours!</para>
+<para><itemizedlist>
+<listitem><para><ulink url="https://github.com/TooTallNate/node-http-proxy-agent"><computeroutput>http-proxy-agent</computeroutput></ulink>: An HTTP(s) proxy <computeroutput>http.Agent</computeroutput> implementation for HTTP endpoints</para>
+</listitem><listitem><para><ulink url="https://github.com/TooTallNate/node-https-proxy-agent"><computeroutput>https-proxy-agent</computeroutput></ulink>: An HTTP(s) proxy <computeroutput>http.Agent</computeroutput> implementation for HTTPS endpoints</para>
+</listitem><listitem><para><ulink url="https://github.com/TooTallNate/node-pac-proxy-agent"><computeroutput>pac-proxy-agent</computeroutput></ulink>: A PAC file proxy <computeroutput>http.Agent</computeroutput> implementation for HTTP and HTTPS</para>
+</listitem><listitem><para><ulink url="https://github.com/TooTallNate/node-socks-proxy-agent"><computeroutput>socks-proxy-agent</computeroutput></ulink>: A SOCKS proxy <computeroutput>http.Agent</computeroutput> implementation for HTTP and HTTPS</para>
+</listitem></itemizedlist>
+</para>
+</sect3>
+</sect2>
+<sect1 id="md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_1autotoc_md105">
+<title>Installation</title><para>Install with <computeroutput>npm</computeroutput>:</para>
+<para><programlisting><codeline><highlight class="normal"><sp/>bash</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>agent-base</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_1autotoc_md106">
+<title>Example</title><para>Here&apos;s a minimal example that creates a new <computeroutput>net.Socket</computeroutput> connection to the server for every HTTP request (i.e. the equivalent of <computeroutput>agent: false</computeroutput> option):</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>net<sp/>=<sp/>require(&apos;net&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>tls<sp/>=<sp/>require(&apos;tls&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>url<sp/>=<sp/>require(&apos;url&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>agent<sp/>=<sp/>require(&apos;agent-base&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>endpoint<sp/>=<sp/>&apos;http://nodejs.org/api/&apos;;</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>parsed<sp/>=<sp/>url.parse(endpoint);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>This<sp/>is<sp/>the<sp/>important<sp/>part!</highlight></codeline>
+<codeline><highlight class="normal">parsed.agent<sp/>=<sp/>agent(function<sp/>(req,<sp/>opts)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>socket;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>`secureEndpoint`<sp/>is<sp/>true<sp/>when<sp/>using<sp/>the<sp/>https<sp/>module</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(opts.secureEndpoint)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>socket<sp/>=<sp/>tls.connect(opts);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}<sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>socket<sp/>=<sp/>net.connect(opts);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>socket;</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Everything<sp/>else<sp/>works<sp/>just<sp/>like<sp/>normal...</highlight></codeline>
+<codeline><highlight class="normal">http.get(parsed,<sp/>function<sp/>(res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(&apos;&quot;response&quot;<sp/>event!&apos;,<sp/>res.headers);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>res.pipe(process.stdout);</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+</programlisting></para>
+<para>Returning a Promise or using an <computeroutput>async</computeroutput> function is also supported:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">agent(async<sp/>function<sp/>(req,<sp/>opts)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>await<sp/>sleep(1000);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>etc…</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+</programlisting></para>
+<para>Return another <computeroutput>http.Agent</computeroutput> instance to &quot;pass through&quot; the responsibility for that HTTP request to that agent:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">agent(function<sp/>(req,<sp/>opts)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>return<sp/>opts.secureEndpoint<sp/>?<sp/>https.globalAgent<sp/>:<sp/>http.globalAgent;</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_1autotoc_md107">
+<title>API</title></sect1>
+<sect1 id="md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_1autotoc_md108">
+<title>Agent(Function callback[, Object options]) → <ulink url="https://nodejs.org/api/http.html#http_class_http_agent">http.Agent</ulink></title><para>Creates a base <computeroutput>http.Agent</computeroutput> that will execute the callback function <computeroutput>callback</computeroutput> for every HTTP request that it is used as the <computeroutput>agent</computeroutput> for. The callback function is responsible for creating a <computeroutput>stream.Duplex</computeroutput> instance of some kind that will be used as the underlying socket in the HTTP request.</para>
+<para>The <computeroutput>options</computeroutput> object accepts the following properties:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>timeout</computeroutput> - Number - Timeout for the <computeroutput>callback()</computeroutput> function in milliseconds. Defaults to Infinity (optional).</para>
+</listitem></itemizedlist>
+</para>
+<para>The callback function should have the following signature:</para>
+<sect2 id="md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_1autotoc_md109">
+<title>callback(http.ClientRequest req, Object options, Function cb) → undefined</title><para>The ClientRequest <computeroutput>req</computeroutput> can be accessed to read request headers and and the path, etc. The <computeroutput>options</computeroutput> object contains the options passed to the <computeroutput>http.request()</computeroutput>/<computeroutput>https.request()</computeroutput> function call, and is formatted to be directly passed to <computeroutput>net.connect()</computeroutput>/<computeroutput>tls.connect()</computeroutput>, or however else you want a Socket to be created. Pass the created socket to the callback function <computeroutput>cb</computeroutput> once created, and the HTTP request will continue to proceed.</para>
+<para>If the <computeroutput>https</computeroutput> module is used to invoke the HTTP request, then the <computeroutput>secureEndpoint</computeroutput> property on <computeroutput>options</computeroutput> <emphasis>will be set to <computeroutput>true</computeroutput></emphasis>.</para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2agent-base_2_r_e_a_d_m_e_1autotoc_md110">
+<title>License</title><para>(The MIT License)</para>
+<para>Copyright (c) 2013 Nathan Rajlich &lt;<ulink url="mailto:nathan@tootallnate.net">nathan@tootallnate.net</ulink>&gt;</para>
+<para>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &apos;Software&apos;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</para>
+<para>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</para>
+<para>THE SOFTWARE IS PROVIDED &apos;AS IS&apos;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/agent-base/README.md"/>
+  </compounddef>
+</doxygen>

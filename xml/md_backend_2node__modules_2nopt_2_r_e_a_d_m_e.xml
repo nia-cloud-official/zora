@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2nopt_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2nopt_2_r_e_a_d_m_e</compoundname>
+    <title>README</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>If you want to write an option parser, and have it be good, there are two ways to do it. The Right Way, and the Wrong Way.</para>
+<para>The Wrong Way is to sit down and write an option parser. We&apos;ve all done that.</para>
+<para>The Right Way is to write some complex configurable program with so many options that you hit the limit of your frustration just trying to manage them all, and defer it with duct-tape solutions until you see exactly to the core of the problem, and finally snap and write an awesome option parser.</para>
+<para>If you want to write an option parser, don&apos;t write an option parser. Write a package manager, or a source control system, or a service restarter, or an operating system. You probably won&apos;t end up with a good one of those, but if you don&apos;t give up, and you are relentless and diligent enough in your procrastination, you may just end up with a very nice option parser.</para>
+<sect2 id="md_backend_2node__modules_2nopt_2_r_e_a_d_m_e_1autotoc_md2488">
+<title>USAGE</title><para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>my-program.js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>nopt<sp/>=<sp/>require(&quot;nopt&quot;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>,<sp/>Stream<sp/>=<sp/>require(&quot;stream&quot;).Stream</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>,<sp/>path<sp/>=<sp/>require(&quot;path&quot;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>,<sp/>knownOpts<sp/>=<sp/>{<sp/>&quot;foo&quot;<sp/>:<sp/>[String,<sp/>null]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>&quot;bar&quot;<sp/>:<sp/>[Stream,<sp/>Number]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>&quot;baz&quot;<sp/>:<sp/>path</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>&quot;bloo&quot;<sp/>:<sp/>[<sp/>&quot;big&quot;,<sp/>&quot;medium&quot;,<sp/>&quot;small&quot;<sp/>]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>&quot;flag&quot;<sp/>:<sp/>Boolean</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>&quot;pick&quot;<sp/>:<sp/>Boolean</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>&quot;many1&quot;<sp/>:<sp/>[String,<sp/>Array]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>&quot;many2&quot;<sp/>:<sp/>[path,<sp/>Array]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>,<sp/>shortHands<sp/>=<sp/>{<sp/>&quot;foofoo&quot;<sp/>:<sp/>[&quot;--foo&quot;,<sp/>&quot;Mr.<sp/>Foo&quot;]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>&quot;b7&quot;<sp/>:<sp/>[&quot;--bar&quot;,<sp/>&quot;7&quot;]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>&quot;m&quot;<sp/>:<sp/>[&quot;--bloo&quot;,<sp/>&quot;medium&quot;]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>&quot;p&quot;<sp/>:<sp/>[&quot;--pick&quot;]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>&quot;f&quot;<sp/>:<sp/>[&quot;--flag&quot;]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>everything<sp/>is<sp/>optional.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>knownOpts<sp/>and<sp/>shorthands<sp/>default<sp/>to<sp/>{}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>arg<sp/>list<sp/>defaults<sp/>to<sp/>process.argv</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>slice<sp/>defaults<sp/>to<sp/>2</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>,<sp/>parsed<sp/>=<sp/>nopt(knownOpts,<sp/>shortHands,<sp/>process.argv,<sp/>2)</highlight></codeline>
+<codeline><highlight class="normal">console.log(parsed)</highlight></codeline>
+</programlisting></para>
+<para>This would give you support for any of the following:</para>
+<para><programlisting filename=".console"><codeline><highlight class="normal">$<sp/>node<sp/>my-program.js<sp/>--foo<sp/>&quot;blerp&quot;<sp/>--no-flag</highlight></codeline>
+<codeline><highlight class="normal">{<sp/>&quot;foo&quot;<sp/>:<sp/>&quot;blerp&quot;,<sp/>&quot;flag&quot;<sp/>:<sp/>false<sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>node<sp/>my-program.js<sp/>---bar<sp/>7<sp/>--foo<sp/>&quot;Mr.<sp/>Hand&quot;<sp/>--flag</highlight></codeline>
+<codeline><highlight class="normal">{<sp/>bar:<sp/>7,<sp/>foo:<sp/>&quot;Mr.<sp/>Hand&quot;,<sp/>flag:<sp/>true<sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>node<sp/>my-program.js<sp/>--foo<sp/>&quot;blerp&quot;<sp/>-f<sp/>-----p</highlight></codeline>
+<codeline><highlight class="normal">{<sp/>foo:<sp/>&quot;blerp&quot;,<sp/>flag:<sp/>true,<sp/>pick:<sp/>true<sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>node<sp/>my-program.js<sp/>-fp<sp/>--foofoo</highlight></codeline>
+<codeline><highlight class="normal">{<sp/>foo:<sp/>&quot;Mr.<sp/>Foo&quot;,<sp/>flag:<sp/>true,<sp/>pick:<sp/>true<sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>node<sp/>my-program.js<sp/>--foofoo<sp/>--<sp/>-fp<sp/><sp/>#<sp/>--<sp/>stops<sp/>the<sp/>flag<sp/>parsing.</highlight></codeline>
+<codeline><highlight class="normal">{<sp/>foo:<sp/>&quot;Mr.<sp/>Foo&quot;,<sp/>argv:<sp/>{<sp/>remain:<sp/>[&quot;-fp&quot;]<sp/>}<sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>node<sp/>my-program.js<sp/>--blatzk<sp/>-fp<sp/>#<sp/>unknown<sp/>opts<sp/>are<sp/>ok.</highlight></codeline>
+<codeline><highlight class="normal">{<sp/>blatzk:<sp/>true,<sp/>flag:<sp/>true,<sp/>pick:<sp/>true<sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>node<sp/>my-program.js<sp/>--blatzk=1000<sp/>-fp<sp/>#<sp/>but<sp/>you<sp/>need<sp/>to<sp/>use<sp/>=<sp/>if<sp/>they<sp/>have<sp/>a<sp/>value</highlight></codeline>
+<codeline><highlight class="normal">{<sp/>blatzk:<sp/>1000,<sp/>flag:<sp/>true,<sp/>pick:<sp/>true<sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>node<sp/>my-program.js<sp/>--no-blatzk<sp/>-fp<sp/>#<sp/>unless<sp/>they<sp/>start<sp/>with<sp/>&quot;no-&quot;</highlight></codeline>
+<codeline><highlight class="normal">{<sp/>blatzk:<sp/>false,<sp/>flag:<sp/>true,<sp/>pick:<sp/>true<sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>node<sp/>my-program.js<sp/>--baz<sp/>b/a/z<sp/>#<sp/>known<sp/>paths<sp/>are<sp/>resolved.</highlight></codeline>
+<codeline><highlight class="normal">{<sp/>baz:<sp/>&quot;/Users/isaacs/b/a/z&quot;<sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>if<sp/>Array<sp/>is<sp/>one<sp/>of<sp/>the<sp/>types,<sp/>then<sp/>it<sp/>can<sp/>take<sp/>many</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>values,<sp/>and<sp/>will<sp/>always<sp/>be<sp/>an<sp/>array.<sp/><sp/>The<sp/>other<sp/>types<sp/>provided</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>specify<sp/>what<sp/>types<sp/>are<sp/>allowed<sp/>in<sp/>the<sp/>list.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>node<sp/>my-program.js<sp/>--many1<sp/>5<sp/>--many1<sp/>null<sp/>--many1<sp/>foo</highlight></codeline>
+<codeline><highlight class="normal">{<sp/>many1:<sp/>[&quot;5&quot;,<sp/>&quot;null&quot;,<sp/>&quot;foo&quot;]<sp/>}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>node<sp/>my-program.js<sp/>--many2<sp/>foo<sp/>--many2<sp/>bar</highlight></codeline>
+<codeline><highlight class="normal">{<sp/>many2:<sp/>[&quot;/path/to/foo&quot;,<sp/>&quot;path/to/bar&quot;]<sp/>}</highlight></codeline>
+</programlisting></para>
+<para>Read the tests at the bottom of <computeroutput>lib/nopt.js</computeroutput> for more examples of what this puppy can do.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2nopt_2_r_e_a_d_m_e_1autotoc_md2489">
+<title>Types</title><para>The following types are supported, and defined on <computeroutput>nopt.typeDefs</computeroutput></para>
+<para><itemizedlist>
+<listitem><para>String: A normal string. No parsing is done.</para>
+</listitem><listitem><para>path: A file system path. Gets resolved against cwd if not absolute.</para>
+</listitem><listitem><para>url: A url. If it doesn&apos;t parse, it isn&apos;t accepted.</para>
+</listitem><listitem><para>Number: Must be numeric.</para>
+</listitem><listitem><para>Date: Must parse as a date. If it does, and <computeroutput>Date</computeroutput> is one of the options, then it will return a Date object, not a string.</para>
+</listitem><listitem><para>Boolean: Must be either <computeroutput>true</computeroutput> or <computeroutput>false</computeroutput>. If an option is a boolean, then it does not need a value, and its presence will imply <computeroutput>true</computeroutput> as the value. To negate boolean flags, do <computeroutput>--no-whatever</computeroutput> or <computeroutput>--whatever false</computeroutput></para>
+</listitem><listitem><para>NaN: Means that the option is strictly not allowed. Any value will fail.</para>
+</listitem><listitem><para>Stream: An object matching the &quot;Stream&quot; class in node. Valuable for use when validating programmatically. (npm uses this to let you supply any WriteStream on the <computeroutput>outfd</computeroutput> and <computeroutput>logfd</computeroutput> config options.)</para>
+</listitem><listitem><para>Array: If <computeroutput>Array</computeroutput> is specified as one of the types, then the value will be parsed as a list of options. This means that multiple values can be specified, and that the value will always be an array.</para>
+</listitem></itemizedlist>
+</para>
+<para>If a type is an array of values not on this list, then those are considered valid values. For instance, in the example above, the <computeroutput>--bloo</computeroutput> option can only be one of <computeroutput>&quot;big&quot;</computeroutput>, <computeroutput>&quot;medium&quot;</computeroutput>, or <computeroutput>&quot;small&quot;</computeroutput>, and any other value will be rejected.</para>
+<para>When parsing unknown fields, <computeroutput>&quot;true&quot;</computeroutput>, <computeroutput>&quot;false&quot;</computeroutput>, and <computeroutput>&quot;null&quot;</computeroutput> will be interpreted as their JavaScript equivalents.</para>
+<para>You can also mix types and values, or multiple types, in a list. For instance <computeroutput>{ blah: [Number, null] }</computeroutput> would allow a value to be set to either a Number or null. When types are ordered, this implies a preference, and the first type that can be used to properly interpret the value will be used.</para>
+<para>To define a new type, add it to <computeroutput>nopt.typeDefs</computeroutput>. Each item in that hash is an object with a <computeroutput>type</computeroutput> member and a <computeroutput>validate</computeroutput> method. The <computeroutput>type</computeroutput> member is an object that matches what goes in the type list. The <computeroutput>validate</computeroutput> method is a function that gets called with <computeroutput>validate(data,
+key, val)</computeroutput>. Validate methods should assign <computeroutput>data[key]</computeroutput> to the valid value of <computeroutput>val</computeroutput> if it can be handled properly, or return boolean <computeroutput>false</computeroutput> if it cannot.</para>
+<para>You can also call <computeroutput>nopt.clean(data, types, typeDefs)</computeroutput> to clean up a config object and remove its invalid properties.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2nopt_2_r_e_a_d_m_e_1autotoc_md2490">
+<title>Error Handling</title><para>By default, nopt outputs a warning to standard error when invalid values for known options are found. You can change this behavior by assigning a method to <computeroutput>nopt.invalidHandler</computeroutput>. This method will be called with the offending <computeroutput>nopt.invalidHandler(key, val, types)</computeroutput>.</para>
+<para>If no <computeroutput>nopt.invalidHandler</computeroutput> is assigned, then it will console.error its whining. If it is assigned to boolean <computeroutput>false</computeroutput> then the warning is suppressed.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2nopt_2_r_e_a_d_m_e_1autotoc_md2491">
+<title>Abbreviations</title><para>Yes, they are supported. If you define options like this:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">{<sp/>&quot;foolhardyelephants&quot;<sp/>:<sp/>Boolean</highlight></codeline>
+<codeline><highlight class="normal">,<sp/>&quot;pileofmonkeys&quot;<sp/>:<sp/>Boolean<sp/>}</highlight></codeline>
+</programlisting></para>
+<para>Then this will work:</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">node<sp/>program.js<sp/>--foolhar<sp/>--pil</highlight></codeline>
+<codeline><highlight class="normal">node<sp/>program.js<sp/>--no-f<sp/>--pileofmon</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>etc.</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2nopt_2_r_e_a_d_m_e_1autotoc_md2492">
+<title>Shorthands</title><para>Shorthands are a hash of shorter option names to a snippet of args that they expand to.</para>
+<para>If multiple one-character shorthands are all combined, and the combination does not unambiguously match any other option or shorthand, then they will be broken up into their constituent parts. For example:</para>
+<para><programlisting filename=".json"><codeline><highlight class="normal">{<sp/>&quot;s&quot;<sp/>:<sp/>[&quot;--loglevel&quot;,<sp/>&quot;silent&quot;]</highlight></codeline>
+<codeline><highlight class="normal">,<sp/>&quot;g&quot;<sp/>:<sp/>&quot;--global&quot;</highlight></codeline>
+<codeline><highlight class="normal">,<sp/>&quot;f&quot;<sp/>:<sp/>&quot;--force&quot;</highlight></codeline>
+<codeline><highlight class="normal">,<sp/>&quot;p&quot;<sp/>:<sp/>&quot;--parseable&quot;</highlight></codeline>
+<codeline><highlight class="normal">,<sp/>&quot;l&quot;<sp/>:<sp/>&quot;--long&quot;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">npm<sp/>ls<sp/>-sgflp</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>just<sp/>like<sp/>doing<sp/>this:</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>ls<sp/>--loglevel<sp/>silent<sp/>--global<sp/>--force<sp/>--long<sp/>--parseable</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2nopt_2_r_e_a_d_m_e_1autotoc_md2493">
+<title>The Rest of the args</title><para>The config object returned by nopt is given a special member called <computeroutput>argv</computeroutput>, which is an object with the following fields:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>remain</computeroutput>: The remaining args after all the parsing has occurred.</para>
+</listitem><listitem><para><computeroutput>original</computeroutput>: The args as they originally appeared.</para>
+</listitem><listitem><para><computeroutput>cooked</computeroutput>: The args after flags and shorthands are expanded.</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2nopt_2_r_e_a_d_m_e_1autotoc_md2494">
+<title>Slicing</title><para>Node programs are called with more or less the exact argv as it appears in C land, after the v8 and node-specific options have been plucked off. As such, <computeroutput>argv[0]</computeroutput> is always <computeroutput>node</computeroutput> and <computeroutput>argv[1]</computeroutput> is always the JavaScript program being run.</para>
+<para>That&apos;s usually not very useful to you. So they&apos;re sliced off by default. If you want them, then you can pass in <computeroutput>0</computeroutput> as the last argument, or any other number that you&apos;d like to slice off the start of the list. </para>
+</sect2>
+    </detaileddescription>
+    <location file="backend/node_modules/nopt/README.md"/>
+  </compounddef>
+</doxygen>

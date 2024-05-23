@@ -1,0 +1,53 @@
+\chapter{EE First}
+\hypertarget{md_backend_2node__modules_2ee-first_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2ee-first_2_r_e_a_d_m_e}\index{EE First@{EE First}}
+\label{md_backend_2node__modules_2ee-first_2_r_e_a_d_m_e_autotoc_md801}%
+\Hypertarget{md_backend_2node__modules_2ee-first_2_r_e_a_d_m_e_autotoc_md801}%
+ \href{https://npmjs.org/package/ee-first}{\texttt{ }} \href{https://travis-ci.org/jonathanong/ee-first}{\texttt{ }} \href{https://coveralls.io/r/jonathanong/ee-first?branch=master}{\texttt{ }} \doxylink{ssri_2_l_i_c_e_n_s_e_8md}{} \href{https://npmjs.org/package/ee-first}{\texttt{ }} \href{https://www.gittip.com/jonathanong/}{\texttt{ }}
+
+Get the first event in a set of event emitters and event pairs, then clean up after itself.\hypertarget{md_backend_2node__modules_2ee-first_2_r_e_a_d_m_e_autotoc_md802}{}\doxysection{\texorpdfstring{Install}{Install}}\label{md_backend_2node__modules_2ee-first_2_r_e_a_d_m_e_autotoc_md802}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ npm\ install\ ee-\/first}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2ee-first_2_r_e_a_d_m_e_autotoc_md803}{}\doxysection{\texorpdfstring{API}{API}}\label{md_backend_2node__modules_2ee-first_2_r_e_a_d_m_e_autotoc_md803}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ first\ =\ require('ee-\/first')}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2ee-first_2_r_e_a_d_m_e_autotoc_md804}{}\doxysubsection{\texorpdfstring{first(arr, listener)}{first(arr, listener)}}\label{md_backend_2node__modules_2ee-first_2_r_e_a_d_m_e_autotoc_md804}
+Invoke {\ttfamily listener} on the first event from the list specified in {\ttfamily arr}. {\ttfamily arr} is an array of arrays, with each array in the format {\ttfamily \mbox{[}ee, ...event\mbox{]}}. {\ttfamily listener} will be called only once, the first time any of the given events are emitted. If {\ttfamily error} is one of the listened events, then if that fires first, the {\ttfamily listener} will be given the {\ttfamily err} argument.
+
+The {\ttfamily listener} is invoked as {\ttfamily listener(err, ee, event, args)}, where {\ttfamily err} is the first argument emitted from an {\ttfamily error} event, if applicable; {\ttfamily ee} is the event emitter that fired; {\ttfamily event} is the string event name that fired; and {\ttfamily args} is an array of the arguments that were emitted on the event.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ ee1\ =\ new\ EventEmitter()}
+\DoxyCodeLine{var\ ee2\ =\ new\ EventEmitter()}
+\DoxyCodeLine{}
+\DoxyCodeLine{first([}
+\DoxyCodeLine{\ \ [ee1,\ 'close',\ 'end',\ 'error'],}
+\DoxyCodeLine{\ \ [ee2,\ 'error']}
+\DoxyCodeLine{],\ function\ (err,\ ee,\ event,\ args)\ \{}
+\DoxyCodeLine{\ \ //\ listener\ invoked}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\hypertarget{md_backend_2node__modules_2ee-first_2_r_e_a_d_m_e_autotoc_md805}{}\doxysubsubsection{\texorpdfstring{.cancel()}{.cancel()}}\label{md_backend_2node__modules_2ee-first_2_r_e_a_d_m_e_autotoc_md805}
+The group of listeners can be cancelled before being invoked and have all the event listeners removed from the underlying event emitters.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var\ thunk\ =\ first([}
+\DoxyCodeLine{\ \ [ee1,\ 'close',\ 'end',\ 'error'],}
+\DoxyCodeLine{\ \ [ee2,\ 'error']}
+\DoxyCodeLine{],\ function\ (err,\ ee,\ event,\ args)\ \{}
+\DoxyCodeLine{\ \ //\ listener\ invoked}
+\DoxyCodeLine{\})}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ cancel\ and\ clean\ up}
+\DoxyCodeLine{thunk.cancel()}
+
+\end{DoxyCode}
+ 

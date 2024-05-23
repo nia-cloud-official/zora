@@ -1,0 +1,176 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2prebuild-install_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>prebuild-install</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>**A<sp/>command<sp/>line<sp/>tool<sp/>to<sp/>easily<sp/>install<sp/>prebuilt<sp/>binaries<sp/>for<sp/>multiple<sp/>versions<sp/>of<sp/>Node.js<sp/>&amp;<sp/>Electron<sp/>on<sp/>a<sp/>specific<sp/>platform.**</highlight></codeline>
+<codeline><highlight class="normal">&gt;<sp/>By<sp/>default<sp/>it<sp/>downloads<sp/>prebuilt<sp/>binaries<sp/>from<sp/>a<sp/>GitHub<sp/>release.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![npm](https://img.shields.io/npm/v/prebuild-install.svg)](https://www.npmjs.com/package/prebuild-install)</highlight></codeline>
+<codeline><highlight class="normal">![Node<sp/>version](https://img.shields.io/node/v/prebuild-install.svg)</highlight></codeline>
+<codeline><highlight class="normal">[![Test](https://img.shields.io/github/workflow/status/prebuild/prebuild-install/Test?label=test)](https://github.com/prebuild/prebuild-install/actions/workflows/test.yml)</highlight></codeline>
+<codeline><highlight class="normal">[![Standard](https://img.shields.io/badge/standard-informational?logo=javascript\&amp;logoColor=fff)](https://standardjs.com)</highlight></codeline>
+<codeline><highlight class="normal">[![Common<sp/>Changelog](https://common-changelog.org/badge.svg)](https://common-changelog.org)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Note</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Instead<sp/>of<sp/>[`prebuild`](https://github.com/prebuild/prebuild)<sp/>paired<sp/>with<sp/>[`prebuild-install`](https://github.com/prebuild/prebuild-install),<sp/>we<sp/>recommend<sp/>[`prebuildify`](https://github.com/prebuild/prebuildify)<sp/>paired<sp/>with<sp/>[`node-gyp-build`](https://github.com/prebuild/node-gyp-build).**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">With<sp/>`prebuildify`,<sp/>all<sp/>prebuilt<sp/>binaries<sp/>are<sp/>shipped<sp/>inside<sp/>the<sp/>package<sp/>that<sp/>is<sp/>published<sp/>to<sp/>npm,<sp/>which<sp/>means<sp/>there&apos;s<sp/>no<sp/>need<sp/>for<sp/>a<sp/>separate<sp/>download<sp/>step<sp/>like<sp/>you<sp/>find<sp/>in<sp/>`prebuild`.<sp/>The<sp/>irony<sp/>of<sp/>this<sp/>approach<sp/>is<sp/>that<sp/>it<sp/>is<sp/>faster<sp/>to<sp/>download<sp/>all<sp/>prebuilt<sp/>binaries<sp/>for<sp/>every<sp/>platform<sp/>when<sp/>they<sp/>are<sp/>bundled<sp/>than<sp/>it<sp/>is<sp/>to<sp/>download<sp/>a<sp/>single<sp/>prebuilt<sp/>binary<sp/>as<sp/>an<sp/>install<sp/>script.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Upsides:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">1.<sp/>No<sp/>extra<sp/>download<sp/>step,<sp/>making<sp/>it<sp/>more<sp/>reliable<sp/>and<sp/>faster<sp/>to<sp/>install.</highlight></codeline>
+<codeline><highlight class="normal">2.<sp/>Supports<sp/>changing<sp/>runtime<sp/>versions<sp/>locally<sp/>and<sp/>using<sp/>the<sp/>same<sp/>install<sp/>between<sp/>Node.js<sp/>and<sp/>Electron.<sp/>Reinstalling<sp/>or<sp/>rebuilding<sp/>is<sp/>not<sp/>necessary,<sp/>as<sp/>all<sp/>prebuilt<sp/>binaries<sp/>are<sp/>in<sp/>the<sp/>npm<sp/>tarball<sp/>and<sp/>the<sp/>correct<sp/>one<sp/>is<sp/>simply<sp/>picked<sp/>on<sp/>runtime.</highlight></codeline>
+<codeline><highlight class="normal">3.<sp/>The<sp/>`node-gyp-build`<sp/>runtime<sp/>dependency<sp/>is<sp/>dependency-free<sp/>and<sp/>will<sp/>remain<sp/>so<sp/>out<sp/>of<sp/>principle,<sp/>because<sp/>introducing<sp/>dependencies<sp/>would<sp/>negate<sp/>the<sp/>shorter<sp/>install<sp/>time.</highlight></codeline>
+<codeline><highlight class="normal">4.<sp/>Prebuilt<sp/>binaries<sp/>work<sp/>even<sp/>if<sp/>npm<sp/>install<sp/>scripts<sp/>are<sp/>disabled.</highlight></codeline>
+<codeline><highlight class="normal">5.<sp/>The<sp/>npm<sp/>package<sp/>checksum<sp/>covers<sp/>prebuilt<sp/>binaries<sp/>too.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Downsides:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">1.<sp/>The<sp/>installed<sp/>npm<sp/>package<sp/>is<sp/>larger<sp/>on<sp/>disk.<sp/>Using<sp/>[Node-API](https://nodejs.org/api/n-api.html)<sp/>alleviates<sp/>this<sp/>because<sp/>Node-API<sp/>binaries<sp/>are<sp/>runtime-agnostic<sp/>and<sp/>forward-compatible.</highlight></codeline>
+<codeline><highlight class="normal">2.<sp/>Publishing<sp/>is<sp/>mildly<sp/>more<sp/>complicated,<sp/>because<sp/>`npm<sp/>publish`<sp/>must<sp/>be<sp/>done<sp/>after<sp/>compiling<sp/>and<sp/>fetching<sp/>prebuilt<sp/>binaries<sp/>(typically<sp/>in<sp/>CI).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Usage</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Use<sp/>[`prebuild`](https://github.com/prebuild/prebuild)<sp/>to<sp/>create<sp/>and<sp/>upload<sp/>prebuilt<sp/>binaries.<sp/>Then<sp/>change<sp/>your<sp/>package.json<sp/>install<sp/>script<sp/>to:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```json</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;scripts&quot;:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;install&quot;:<sp/>&quot;prebuild-install<sp/>||<sp/>node-gyp<sp/>rebuild&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>a<sp/>consumer<sp/>then<sp/>installs<sp/>your<sp/>package<sp/>with<sp/>npm<sp/>thus<sp/>triggering<sp/>the<sp/>above<sp/>install<sp/>script,<sp/>`prebuild-install`<sp/>will<sp/>download<sp/>a<sp/>suitable<sp/>prebuilt<sp/>binary,<sp/>or<sp/>exit<sp/>with<sp/>a<sp/>non-zero<sp/>exit<sp/>code<sp/>if<sp/>there<sp/>is<sp/>none,<sp/>which<sp/>triggers<sp/>`node-gyp<sp/>rebuild`<sp/>in<sp/>order<sp/>to<sp/>build<sp/>from<sp/>source.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Options<sp/>(see<sp/>below)<sp/>can<sp/>be<sp/>passed<sp/>to<sp/>`prebuild-install`<sp/>like<sp/>so:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```json</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&quot;scripts&quot;:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;install&quot;:<sp/>&quot;prebuild-install<sp/>-r<sp/>napi<sp/>||<sp/>node-gyp<sp/>rebuild&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Help</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">prebuild-install<sp/>[options]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--download<sp/><sp/><sp/><sp/>-d<sp/><sp/>[url]<sp/><sp/><sp/><sp/><sp/><sp/><sp/>(download<sp/>prebuilds,<sp/>no<sp/>url<sp/>means<sp/>github)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--target<sp/><sp/><sp/><sp/><sp/><sp/>-t<sp/><sp/>version<sp/><sp/><sp/><sp/><sp/>(version<sp/>to<sp/>install<sp/>for)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--runtime<sp/><sp/><sp/><sp/><sp/>-r<sp/><sp/>runtime<sp/><sp/><sp/><sp/><sp/>(Node<sp/>runtime<sp/>[node,<sp/>napi<sp/>or<sp/>electron]<sp/>to<sp/>build<sp/>or<sp/>install<sp/>for,<sp/>default<sp/>is<sp/>node)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--path<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-p<sp/><sp/>path<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(make<sp/>a<sp/>prebuild-install<sp/>here)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--token<sp/><sp/><sp/><sp/><sp/><sp/><sp/>-T<sp/><sp/>gh-token<sp/><sp/><sp/><sp/>(github<sp/>token<sp/>for<sp/>private<sp/>repos)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--arch<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>arch<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(target<sp/>CPU<sp/>architecture,<sp/>see<sp/>Node<sp/>OS<sp/>module<sp/>docs,<sp/>default<sp/>is<sp/>current<sp/>arch)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--platform<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>platform<sp/><sp/><sp/><sp/>(target<sp/>platform,<sp/>see<sp/>Node<sp/>OS<sp/>module<sp/>docs,<sp/>default<sp/>is<sp/>current<sp/>platform)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--tag-prefix<sp/>&lt;prefix&gt;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(github<sp/>tag<sp/>prefix,<sp/>default<sp/>is<sp/>&quot;v&quot;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--build-from-source<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(skip<sp/>prebuild<sp/>download)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--verbose<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(log<sp/>verbosely)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--libc<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(use<sp/>provided<sp/>libc<sp/>rather<sp/>than<sp/>system<sp/>default)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--debug<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(set<sp/>Debug<sp/>or<sp/>Release<sp/>configuration)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--version<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(print<sp/>prebuild-install<sp/>version<sp/>and<sp/>exit)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>`prebuild-install`<sp/>is<sp/>run<sp/>via<sp/>an<sp/>`npm`<sp/>script,<sp/>options<sp/>`--build-from-source`,<sp/>`--debug`,<sp/>`--download`,<sp/>`--target`,<sp/>`--runtime`,<sp/>`--arch`<sp/>`--platform`<sp/>and<sp/>`--libc`<sp/>may<sp/>be<sp/>passed<sp/>through<sp/>via<sp/>arguments<sp/>given<sp/>to<sp/>the<sp/>`npm`<sp/>command.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Alternatively<sp/>you<sp/>can<sp/>set<sp/>environment<sp/>variables<sp/>`npm_config_build_from_source=true`,<sp/>`npm_config_platform`,<sp/>`npm_config_arch`,<sp/>`npm_config_target`<sp/>`npm_config_runtime`<sp/>and<sp/>`npm_config_libc`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Libc</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">On<sp/>non-glibc<sp/>Linux<sp/>platforms,<sp/>the<sp/>Libc<sp/>name<sp/>is<sp/>appended<sp/>to<sp/>platform<sp/>name.<sp/>For<sp/>example,<sp/>musl-based<sp/>environments<sp/>are<sp/>called<sp/>`linuxmusl`.<sp/>If<sp/>`--libc=glibc`<sp/>is<sp/>passed<sp/>as<sp/>option,<sp/>glibc<sp/>is<sp/>discarded<sp/>and<sp/>platform<sp/>is<sp/>called<sp/>as<sp/>just<sp/>`linux`.<sp/>This<sp/>can<sp/>be<sp/>used<sp/>for<sp/>example<sp/>to<sp/>build<sp/>cross-platform<sp/>packages<sp/>on<sp/>Alpine<sp/>Linux.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Private<sp/>Repositories</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`prebuild-install`<sp/>supports<sp/>downloading<sp/>prebuilds<sp/>from<sp/>private<sp/>GitHub<sp/>repositories<sp/>using<sp/>the<sp/>`-T<sp/>&lt;github-token&gt;`:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>prebuild-install<sp/>-T<sp/>&lt;github-token&gt;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>don&apos;t<sp/>want<sp/>to<sp/>use<sp/>the<sp/>token<sp/>on<sp/>cli<sp/>you<sp/>can<sp/>put<sp/>it<sp/>in<sp/>`~/.prebuild-installrc`:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">token=&lt;github-token&gt;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Alternatively<sp/>you<sp/>can<sp/>specify<sp/>it<sp/>in<sp/>the<sp/>`prebuild-install_token`<sp/>environment<sp/>variable.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note<sp/>that<sp/>using<sp/>a<sp/>GitHub<sp/>token<sp/>uses<sp/>the<sp/>API<sp/>to<sp/>resolve<sp/>the<sp/>correct<sp/>release<sp/>meaning<sp/>that<sp/>you<sp/>are<sp/>subject<sp/>to<sp/>the<sp/>([GitHub<sp/>Rate<sp/>Limit](https://developer.github.com/v3/rate_limit/)).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Create<sp/>GitHub<sp/>Token</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>create<sp/>a<sp/>token:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>Go<sp/>to<sp/>[this<sp/>page](https://github.com/settings/tokens)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Click<sp/>the<sp/>`Generate<sp/>new<sp/>token`<sp/>button</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Give<sp/>the<sp/>token<sp/>a<sp/>name<sp/>and<sp/>click<sp/>the<sp/>`Generate<sp/>token`<sp/>button,<sp/>see<sp/>below</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">![prebuild-token](https://cloud.githubusercontent.com/assets/13285808/20844584/d0b85268-b8c0-11e6-8b08-2b19522165a9.png)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>default<sp/>scopes<sp/>should<sp/>be<sp/>fine.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Custom<sp/>binaries</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>end<sp/>user<sp/>can<sp/>override<sp/>binary<sp/>download<sp/>location<sp/>through<sp/>environment<sp/>variables<sp/>in<sp/>their<sp/>.npmrc<sp/>file.</highlight></codeline>
+<codeline><highlight class="normal">The<sp/>variable<sp/>needs<sp/>to<sp/>meet<sp/>the<sp/>mask<sp/>`%<sp/>your<sp/>package<sp/>name<sp/>%_binary_host`<sp/>or<sp/>`%<sp/>your<sp/>package<sp/>name<sp/>%_binary_host_mirror`.<sp/>For<sp/>example:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">leveldown_binary_host=http://overriden-host.com/overriden-path</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note<sp/>that<sp/>the<sp/>package<sp/>version<sp/>subpath<sp/>and<sp/>file<sp/>name<sp/>will<sp/>still<sp/>be<sp/>appended.</highlight></codeline>
+<codeline><highlight class="normal">So<sp/>if<sp/>you<sp/>are<sp/>installing<sp/>`leveldown@1.2.3`<sp/>the<sp/>resulting<sp/>url<sp/>will<sp/>be:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">http://overriden-host.com/overriden-path/v1.2.3/leveldown-v1.2.3-node-v57-win32-x64.tar.gz</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Local<sp/>prebuilds</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>want<sp/>to<sp/>use<sp/>prebuilds<sp/>from<sp/>your<sp/>local<sp/>filesystem,<sp/>you<sp/>can<sp/>use<sp/>the<sp/>`%<sp/>your<sp/>package<sp/>name<sp/>%_local_prebuilds`<sp/>.npmrc<sp/>variable<sp/>to<sp/>set<sp/>a<sp/>path<sp/>to<sp/>the<sp/>folder<sp/>containing<sp/>prebuilds.<sp/>For<sp/>example:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">leveldown_local_prebuilds=/path/to/prebuilds</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>option<sp/>will<sp/>look<sp/>directly<sp/>in<sp/>that<sp/>folder<sp/>for<sp/>bundles<sp/>created<sp/>with<sp/>`prebuild`,<sp/>for<sp/>example:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">/path/to/prebuilds/leveldown-v1.2.3-node-v57-win32-x64.tar.gz</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Non-absolute<sp/>paths<sp/>resolve<sp/>relative<sp/>to<sp/>the<sp/>directory<sp/>of<sp/>the<sp/>package<sp/>invoking<sp/>prebuild-install,<sp/>e.g.<sp/>for<sp/>nested<sp/>dependencies.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Cache</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">All<sp/>prebuilt<sp/>binaries<sp/>are<sp/>cached<sp/>to<sp/>minimize<sp/>traffic.<sp/>So<sp/>first<sp/>`prebuild-install`<sp/>picks<sp/>binaries<sp/>from<sp/>the<sp/>cache<sp/>and<sp/>if<sp/>no<sp/>binary<sp/>could<sp/>be<sp/>found,<sp/>it<sp/>will<sp/>be<sp/>downloaded.<sp/>Depending<sp/>on<sp/>the<sp/>environment,<sp/>the<sp/>cache<sp/>folder<sp/>is<sp/>determined<sp/>in<sp/>the<sp/>following<sp/>order:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>`${npm_config_cache}/_prebuilds`</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`${APP_DATA}/npm-cache/_prebuilds`</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`${HOME}/.npm/_prebuilds`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Install</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">With<sp/>[npm](https://npmjs.org)<sp/>do:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">npm<sp/>install<sp/>prebuild-install</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>License</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[MIT](./LICENSE)</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/prebuild-install/README.md"/>
+  </compounddef>
+</doxygen>

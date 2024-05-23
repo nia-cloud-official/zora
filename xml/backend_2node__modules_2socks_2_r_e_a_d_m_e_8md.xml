@@ -1,0 +1,699 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2socks_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>socks<sp/><sp/>[![Build<sp/>Status](https://travis-ci.org/JoshGlazebrook/socks.svg?branch=master)](https://travis-ci.org/JoshGlazebrook/socks)<sp/><sp/>[![Coverage<sp/>Status](https://coveralls.io/repos/github/JoshGlazebrook/socks/badge.svg?branch=master)](https://coveralls.io/github/JoshGlazebrook/socks?branch=v2)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Fully<sp/>featured<sp/>SOCKS<sp/>proxy<sp/>client<sp/>supporting<sp/>SOCKSv4,<sp/>SOCKSv4a,<sp/>and<sp/>SOCKSv5.<sp/>Includes<sp/>Bind<sp/>and<sp/>Associate<sp/>functionality.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&gt;<sp/>Looking<sp/>for<sp/>Node.js<sp/>agent?<sp/>Check<sp/>[node-socks-proxy-agent](https://github.com/TooTallNate/node-socks-proxy-agent).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Features</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>Supports<sp/>SOCKS<sp/>v4,<sp/>v4a,<sp/>v5,<sp/>and<sp/>v5h<sp/>protocols.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Supports<sp/>the<sp/>CONNECT,<sp/>BIND,<sp/>and<sp/>ASSOCIATE<sp/>commands.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Supports<sp/>callbacks,<sp/>promises,<sp/>and<sp/>events<sp/>for<sp/>proxy<sp/>connection<sp/>creation<sp/>async<sp/>flow<sp/>control.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Supports<sp/>proxy<sp/>chaining<sp/>(CONNECT<sp/>only).</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Supports<sp/>user/password<sp/>authentication.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Supports<sp/>custom<sp/>authentication.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Built<sp/>in<sp/>UDP<sp/>frame<sp/>creation<sp/>&amp;<sp/>parse<sp/>functions.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Created<sp/>with<sp/>TypeScript,<sp/>type<sp/>definitions<sp/>are<sp/>provided.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Requirements</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>Node.js<sp/>v10.0+<sp/><sp/>(Please<sp/>use<sp/>[v1](https://github.com/JoshGlazebrook/socks/tree/82d83923ad960693d8b774cafe17443ded7ed584)<sp/>for<sp/>older<sp/>versions<sp/>of<sp/>Node.js)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Looking<sp/>for<sp/>v1?</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Docs<sp/>for<sp/>v1<sp/>are<sp/>available<sp/>[here](https://github.com/JoshGlazebrook/socks/tree/82d83923ad960693d8b774cafe17443ded7ed584)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Installation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`yarn<sp/>add<sp/>socks`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">or</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`npm<sp/>install<sp/>--save<sp/>socks`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Usage</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```typescript</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>TypeScript</highlight></codeline>
+<codeline><highlight class="normal">import<sp/>{<sp/>SocksClient,<sp/>SocksClientOptions,<sp/>SocksClientChainOptions<sp/>}<sp/>from<sp/>&apos;socks&apos;;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>ES6<sp/>JavaScript</highlight></codeline>
+<codeline><highlight class="normal">import<sp/>{<sp/>SocksClient<sp/>}<sp/>from<sp/>&apos;socks&apos;;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Legacy<sp/>JavaScript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>SocksClient<sp/>=<sp/>require(&apos;socks&apos;).SocksClient;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Quick<sp/>Start<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Connect<sp/>to<sp/>github.com<sp/>(192.30.253.113)<sp/>on<sp/>port<sp/>80,<sp/>using<sp/>a<sp/>SOCKS<sp/>proxy.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>options<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>proxy:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;159.203.75.200&apos;,<sp/>//<sp/>ipv4<sp/>or<sp/>ipv6<sp/>or<sp/>hostname</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>1080,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>type:<sp/>5<sp/>//<sp/>Proxy<sp/>version<sp/>(4<sp/>or<sp/>5)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>command:<sp/>&apos;connect&apos;,<sp/>//<sp/>SOCKS<sp/>command<sp/>(createConnection<sp/>factory<sp/>function<sp/>only<sp/>supports<sp/>the<sp/>connect<sp/>command)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>destination:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;192.30.253.113&apos;,<sp/>//<sp/>github.com<sp/>(hostname<sp/>lookups<sp/>are<sp/>supported<sp/>with<sp/>SOCKS<sp/>v4a<sp/>and<sp/>5)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>80</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Async/Await</highlight></codeline>
+<codeline><highlight class="normal">try<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>const<sp/>info<sp/>=<sp/>await<sp/>SocksClient.createConnection(options);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(info.socket);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>&lt;Socket<sp/>...&gt;<sp/><sp/>(this<sp/>is<sp/>a<sp/>raw<sp/>net.Socket<sp/>that<sp/>is<sp/>established<sp/>to<sp/>the<sp/>destination<sp/>host<sp/>through<sp/>the<sp/>given<sp/>proxy<sp/>server)</highlight></codeline>
+<codeline><highlight class="normal">}<sp/>catch<sp/>(err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Handle<sp/>errors</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Promises</highlight></codeline>
+<codeline><highlight class="normal">SocksClient.createConnection(options)</highlight></codeline>
+<codeline><highlight class="normal">.then(info<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(info.socket);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>&lt;Socket<sp/>...&gt;<sp/><sp/>(this<sp/>is<sp/>a<sp/>raw<sp/>net.Socket<sp/>that<sp/>is<sp/>established<sp/>to<sp/>the<sp/>destination<sp/>host<sp/>through<sp/>the<sp/>given<sp/>proxy<sp/>server)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">.catch(err<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Handle<sp/>errors</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Callbacks</highlight></codeline>
+<codeline><highlight class="normal">SocksClient.createConnection(options,<sp/>(err,<sp/>info)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(!err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(info.socket);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>&lt;Socket<sp/>...&gt;<sp/><sp/>(this<sp/>is<sp/>a<sp/>raw<sp/>net.Socket<sp/>that<sp/>is<sp/>established<sp/>to<sp/>the<sp/>destination<sp/>host<sp/>through<sp/>the<sp/>given<sp/>proxy<sp/>server)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}<sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Handle<sp/>errors</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Chaining<sp/>Proxies</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Note:**<sp/>Chaining<sp/>is<sp/>only<sp/>supported<sp/>when<sp/>using<sp/>the<sp/>SOCKS<sp/>connect<sp/>command,<sp/>and<sp/>chaining<sp/>can<sp/>only<sp/>be<sp/>done<sp/>through<sp/>the<sp/>special<sp/>factory<sp/>chaining<sp/>function.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>example<sp/>makes<sp/>a<sp/>proxy<sp/>chain<sp/>through<sp/>two<sp/>SOCKS<sp/>proxies<sp/>to<sp/>ip-api.com.<sp/>Once<sp/>the<sp/>connection<sp/>to<sp/>the<sp/>destination<sp/>is<sp/>established<sp/>it<sp/>sends<sp/>an<sp/>HTTP<sp/>request<sp/>to<sp/>get<sp/>a<sp/>JSON<sp/>response<sp/>that<sp/>returns<sp/>ip<sp/>info<sp/>for<sp/>the<sp/>requesting<sp/>ip.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>options<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>destination:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;ip-api.com&apos;,<sp/>//<sp/>host<sp/>names<sp/>are<sp/>supported<sp/>with<sp/>SOCKS<sp/>v4a<sp/>and<sp/>SOCKS<sp/>v5.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>80</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>command:<sp/>&apos;connect&apos;,<sp/>//<sp/>Only<sp/>the<sp/>connect<sp/>command<sp/>is<sp/>supported<sp/>when<sp/>chaining<sp/>proxies.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>proxies:<sp/>[<sp/>//<sp/>The<sp/>chain<sp/>order<sp/>is<sp/>the<sp/>order<sp/>in<sp/>the<sp/>proxies<sp/>array,<sp/>meaning<sp/>the<sp/>last<sp/>proxy<sp/>will<sp/>establish<sp/>a<sp/>connection<sp/>to<sp/>the<sp/>destination.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>host:<sp/>&apos;159.203.75.235&apos;,<sp/>//<sp/>ipv4,<sp/>ipv6,<sp/>or<sp/>hostname</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>port:<sp/>1081,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>type:<sp/>5</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>host:<sp/>&apos;104.131.124.203&apos;,<sp/>//<sp/>ipv4,<sp/>ipv6,<sp/>or<sp/>hostname</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>port:<sp/>1081,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>type:<sp/>5</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>]</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Async/Await</highlight></codeline>
+<codeline><highlight class="normal">try<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>const<sp/>info<sp/>=<sp/>await<sp/>SocksClient.createConnectionChain(options);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(info.socket);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>&lt;Socket<sp/>...&gt;<sp/><sp/>(this<sp/>is<sp/>a<sp/>raw<sp/>net.Socket<sp/>that<sp/>is<sp/>established<sp/>to<sp/>the<sp/>destination<sp/>host<sp/>through<sp/>the<sp/>given<sp/>proxy<sp/>servers)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(info.socket.remoteAddress)<sp/>//<sp/>The<sp/>remote<sp/>address<sp/>of<sp/>the<sp/>returned<sp/>socket<sp/>is<sp/>the<sp/>first<sp/>proxy<sp/>in<sp/>the<sp/>chain.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>159.203.75.235</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>info.socket.write(&apos;GET<sp/>/json<sp/>HTTP/1.1\nHost:<sp/>ip-api.com\n\n&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>info.socket.on(&apos;data&apos;,<sp/>(data)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(data.toString());<sp/>//<sp/>ip-api.com<sp/>sees<sp/>that<sp/>the<sp/>last<sp/>proxy<sp/>in<sp/>the<sp/>chain<sp/>(104.131.124.203)<sp/>is<sp/>connected<sp/>to<sp/>it.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>/*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>HTTP/1.1<sp/>200<sp/>OK</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Access-Control-Allow-Origin:<sp/>*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Content-Type:<sp/>application/json;<sp/>charset=utf-8</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Date:<sp/>Sun,<sp/>24<sp/>Dec<sp/>2017<sp/>03:47:51<sp/>GMT</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Content-Length:<sp/>300</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;as&quot;:&quot;AS14061<sp/>Digital<sp/>Ocean,<sp/>Inc.&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;city&quot;:&quot;Clifton&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;country&quot;:&quot;United<sp/>States&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;countryCode&quot;:&quot;US&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;isp&quot;:&quot;Digital<sp/>Ocean&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;lat&quot;:40.8326,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;lon&quot;:-74.1307,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;org&quot;:&quot;Digital<sp/>Ocean&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;query&quot;:&quot;104.131.124.203&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;region&quot;:&quot;NJ&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;regionName&quot;:&quot;New<sp/>Jersey&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;status&quot;:&quot;success&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;timezone&quot;:&quot;America/New_York&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;zip&quot;:&quot;07014&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>});</highlight></codeline>
+<codeline><highlight class="normal">}<sp/>catch<sp/>(err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Handle<sp/>errors</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Promises</highlight></codeline>
+<codeline><highlight class="normal">SocksClient.createConnectionChain(options)</highlight></codeline>
+<codeline><highlight class="normal">.then(info<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(info.socket);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>&lt;Socket<sp/>...&gt;<sp/><sp/>(this<sp/>is<sp/>a<sp/>raw<sp/>net.Socket<sp/>that<sp/>is<sp/>established<sp/>to<sp/>the<sp/>destination<sp/>host<sp/>through<sp/>the<sp/>given<sp/>proxy<sp/>server)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(info.socket.remoteAddress)<sp/>//<sp/>The<sp/>remote<sp/>address<sp/>of<sp/>the<sp/>returned<sp/>socket<sp/>is<sp/>the<sp/>first<sp/>proxy<sp/>in<sp/>the<sp/>chain.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>159.203.75.235</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>info.socket.write(&apos;GET<sp/>/json<sp/>HTTP/1.1\nHost:<sp/>ip-api.com\n\n&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>info.socket.on(&apos;data&apos;,<sp/>(data)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(data.toString());<sp/>//<sp/>ip-api.com<sp/>sees<sp/>that<sp/>the<sp/>last<sp/>proxy<sp/>in<sp/>the<sp/>chain<sp/>(104.131.124.203)<sp/>is<sp/>connected<sp/>to<sp/>it.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>/*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>HTTP/1.1<sp/>200<sp/>OK</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Access-Control-Allow-Origin:<sp/>*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Content-Type:<sp/>application/json;<sp/>charset=utf-8</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Date:<sp/>Sun,<sp/>24<sp/>Dec<sp/>2017<sp/>03:47:51<sp/>GMT</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Content-Length:<sp/>300</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;as&quot;:&quot;AS14061<sp/>Digital<sp/>Ocean,<sp/>Inc.&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;city&quot;:&quot;Clifton&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;country&quot;:&quot;United<sp/>States&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;countryCode&quot;:&quot;US&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;isp&quot;:&quot;Digital<sp/>Ocean&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;lat&quot;:40.8326,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;lon&quot;:-74.1307,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;org&quot;:&quot;Digital<sp/>Ocean&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;query&quot;:&quot;104.131.124.203&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;region&quot;:&quot;NJ&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;regionName&quot;:&quot;New<sp/>Jersey&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;status&quot;:&quot;success&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;timezone&quot;:&quot;America/New_York&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;zip&quot;:&quot;07014&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>});</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">.catch(err<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Handle<sp/>errors</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Callbacks</highlight></codeline>
+<codeline><highlight class="normal">SocksClient.createConnectionChain(options,<sp/>(err,<sp/>info)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(!err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(info.socket);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>&lt;Socket<sp/>...&gt;<sp/><sp/>(this<sp/>is<sp/>a<sp/>raw<sp/>net.Socket<sp/>that<sp/>is<sp/>established<sp/>to<sp/>the<sp/>destination<sp/>host<sp/>through<sp/>the<sp/>given<sp/>proxy<sp/>server)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(info.socket.remoteAddress)<sp/>//<sp/>The<sp/>remote<sp/>address<sp/>of<sp/>the<sp/>returned<sp/>socket<sp/>is<sp/>the<sp/>first<sp/>proxy<sp/>in<sp/>the<sp/>chain.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>159.203.75.235</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>info.socket.write(&apos;GET<sp/>/json<sp/>HTTP/1.1\nHost:<sp/>ip-api.com\n\n&apos;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>info.socket.on(&apos;data&apos;,<sp/>(data)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(data.toString());<sp/>//<sp/>ip-api.com<sp/>sees<sp/>that<sp/>the<sp/>last<sp/>proxy<sp/>in<sp/>the<sp/>chain<sp/>(104.131.124.203)<sp/>is<sp/>connected<sp/>to<sp/>it.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>/*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>HTTP/1.1<sp/>200<sp/>OK</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Access-Control-Allow-Origin:<sp/>*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Content-Type:<sp/>application/json;<sp/>charset=utf-8</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Date:<sp/>Sun,<sp/>24<sp/>Dec<sp/>2017<sp/>03:47:51<sp/>GMT</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Content-Length:<sp/>300</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;as&quot;:&quot;AS14061<sp/>Digital<sp/>Ocean,<sp/>Inc.&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;city&quot;:&quot;Clifton&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;country&quot;:&quot;United<sp/>States&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;countryCode&quot;:&quot;US&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;isp&quot;:&quot;Digital<sp/>Ocean&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;lat&quot;:40.8326,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;lon&quot;:-74.1307,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;org&quot;:&quot;Digital<sp/>Ocean&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;query&quot;:&quot;104.131.124.203&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;region&quot;:&quot;NJ&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;regionName&quot;:&quot;New<sp/>Jersey&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;status&quot;:&quot;success&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;timezone&quot;:&quot;America/New_York&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;zip&quot;:&quot;07014&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>});</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}<sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Handle<sp/>errors</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Bind<sp/>Example<sp/>(TCP<sp/>Relay)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>the<sp/>bind<sp/>command<sp/>is<sp/>sent<sp/>to<sp/>a<sp/>SOCKS<sp/>v4/v5<sp/>proxy<sp/>server,<sp/>the<sp/>proxy<sp/>server<sp/>starts<sp/>listening<sp/>on<sp/>a<sp/>new<sp/>TCP<sp/>port<sp/>and<sp/>the<sp/>proxy<sp/>relays<sp/>then<sp/>remote<sp/>host<sp/>information<sp/>back<sp/>to<sp/>the<sp/>client.<sp/>When<sp/>another<sp/>remote<sp/>client<sp/>connects<sp/>to<sp/>the<sp/>proxy<sp/>server<sp/>on<sp/>this<sp/>port<sp/>the<sp/>SOCKS<sp/>proxy<sp/>sends<sp/>a<sp/>notification<sp/>that<sp/>an<sp/>incoming<sp/>connection<sp/>has<sp/>been<sp/>accepted<sp/>to<sp/>the<sp/>initial<sp/>client<sp/>and<sp/>a<sp/>full<sp/>duplex<sp/>stream<sp/>is<sp/>now<sp/>established<sp/>to<sp/>the<sp/>initial<sp/>client<sp/>and<sp/>the<sp/>client<sp/>that<sp/>connected<sp/>to<sp/>that<sp/>special<sp/>port.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>options<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>proxy:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;159.203.75.235&apos;,<sp/>//<sp/>ipv4,<sp/>ipv6,<sp/>or<sp/>hostname</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>1081,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>type:<sp/>5</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>command:<sp/>&apos;bind&apos;,</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>When<sp/>using<sp/>BIND,<sp/>the<sp/>destination<sp/>should<sp/>be<sp/>the<sp/>remote<sp/>client<sp/>that<sp/>is<sp/>expected<sp/>to<sp/>connect<sp/>to<sp/>the<sp/>SOCKS<sp/>proxy.<sp/>Using<sp/>0.0.0.0<sp/>makes<sp/>the<sp/>Proxy<sp/>accept<sp/>any<sp/>incoming<sp/>connection<sp/>on<sp/>that<sp/>port.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>destination:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;0.0.0.0&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Creates<sp/>a<sp/>new<sp/>SocksClient<sp/>instance.</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>client<sp/>=<sp/>new<sp/>SocksClient(options);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>When<sp/>the<sp/>SOCKS<sp/>proxy<sp/>has<sp/>bound<sp/>a<sp/>new<sp/>port<sp/>and<sp/>started<sp/>listening,<sp/>this<sp/>event<sp/>is<sp/>fired.</highlight></codeline>
+<codeline><highlight class="normal">client.on(&apos;bound&apos;,<sp/>info<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(info.remoteHost);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>/*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&quot;159.203.75.235&quot;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>57362</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>When<sp/>a<sp/>client<sp/>connects<sp/>to<sp/>the<sp/>newly<sp/>bound<sp/>port<sp/>on<sp/>the<sp/>SOCKS<sp/>proxy,<sp/>this<sp/>event<sp/>is<sp/>fired.</highlight></codeline>
+<codeline><highlight class="normal">client.on(&apos;established&apos;,<sp/>info<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>info.remoteHost<sp/>is<sp/>the<sp/>remote<sp/>address<sp/>of<sp/>the<sp/>client<sp/>that<sp/>connected<sp/>to<sp/>the<sp/>SOCKS<sp/>proxy.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(info.remoteHost);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>/*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>67.171.34.23,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>49823</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*/</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(info.socket);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>&lt;Socket<sp/>...&gt;<sp/><sp/>(This<sp/>is<sp/>a<sp/>raw<sp/>net.Socket<sp/>that<sp/>is<sp/>a<sp/>connection<sp/>between<sp/>the<sp/>initial<sp/>client<sp/>and<sp/>the<sp/>remote<sp/>client<sp/>that<sp/>connected<sp/>to<sp/>the<sp/>proxy)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Handle<sp/>received<sp/>data...</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>info.socket.on(&apos;data&apos;,<sp/>data<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(&apos;recv&apos;,<sp/>data);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>});</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>An<sp/>error<sp/>occurred<sp/>trying<sp/>to<sp/>establish<sp/>this<sp/>SOCKS<sp/>connection.</highlight></codeline>
+<codeline><highlight class="normal">client.on(&apos;error&apos;,<sp/>err<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.error(err);</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Start<sp/>connection<sp/>to<sp/>proxy</highlight></codeline>
+<codeline><highlight class="normal">client.connect();</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Associate<sp/>Example<sp/>(UDP<sp/>Relay)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>the<sp/>associate<sp/>command<sp/>is<sp/>sent<sp/>to<sp/>a<sp/>SOCKS<sp/>v5<sp/>proxy<sp/>server,<sp/>it<sp/>sets<sp/>up<sp/>a<sp/>UDP<sp/>relay<sp/>that<sp/>allows<sp/>the<sp/>client<sp/>to<sp/>send<sp/>UDP<sp/>packets<sp/>to<sp/>a<sp/>remote<sp/>host<sp/>through<sp/>the<sp/>proxy<sp/>server,<sp/>and<sp/>also<sp/>receive<sp/>UDP<sp/>packet<sp/>responses<sp/>back<sp/>through<sp/>the<sp/>proxy<sp/>server.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>options<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>proxy:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;159.203.75.235&apos;,<sp/>//<sp/>ipv4,<sp/>ipv6,<sp/>or<sp/>hostname</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>1081,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>type:<sp/>5</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>command:<sp/>&apos;associate&apos;,</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>When<sp/>using<sp/>associate,<sp/>the<sp/>destination<sp/>should<sp/>be<sp/>the<sp/>remote<sp/>client<sp/>that<sp/>is<sp/>expected<sp/>to<sp/>send<sp/>UDP<sp/>packets<sp/>to<sp/>the<sp/>proxy<sp/>server<sp/>to<sp/>be<sp/>forwarded.<sp/>This<sp/>should<sp/>be<sp/>your<sp/>local<sp/>ip,<sp/>or<sp/>optionally<sp/>the<sp/>wildcard<sp/>address<sp/>(0.0.0.0)<sp/><sp/>UDP<sp/>Client<sp/>&lt;-&gt;<sp/>Proxy<sp/>&lt;-&gt;<sp/>UDP<sp/>Client</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>destination:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;0.0.0.0&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Create<sp/>a<sp/>local<sp/>UDP<sp/>socket<sp/>for<sp/>sending<sp/>packets<sp/>to<sp/>the<sp/>proxy.</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>udpSocket<sp/>=<sp/>dgram.createSocket(&apos;udp4&apos;);</highlight></codeline>
+<codeline><highlight class="normal">udpSocket.bind();</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Listen<sp/>for<sp/>incoming<sp/>UDP<sp/>packets<sp/>from<sp/>the<sp/>proxy<sp/>server.</highlight></codeline>
+<codeline><highlight class="normal">udpSocket.on(&apos;message&apos;,<sp/>(message,<sp/>rinfo)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(SocksClient.parseUDPFrame(message));</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>/*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>{<sp/>frameNumber:<sp/>0,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>remoteHost:<sp/>{<sp/>host:<sp/>&apos;165.227.108.231&apos;,<sp/>port:<sp/>4444<sp/>},<sp/>//<sp/>The<sp/>remote<sp/>host<sp/>that<sp/>replied<sp/>with<sp/>a<sp/>UDP<sp/>packet</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>data:<sp/>&lt;Buffer<sp/>74<sp/>65<sp/>73<sp/>74<sp/>0a&gt;<sp/>//<sp/>The<sp/>data</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">let<sp/>client<sp/>=<sp/>new<sp/>SocksClient(associateOptions);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>When<sp/>the<sp/>UDP<sp/>relay<sp/>is<sp/>established,<sp/>this<sp/>event<sp/>is<sp/>fired<sp/>and<sp/>includes<sp/>the<sp/>UDP<sp/>relay<sp/>port<sp/>to<sp/>send<sp/>data<sp/>to<sp/>on<sp/>the<sp/>proxy<sp/>server.</highlight></codeline>
+<codeline><highlight class="normal">client.on(&apos;established&apos;,<sp/>info<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(info.remoteHost);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>/*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>host:<sp/>&apos;159.203.75.235&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>port:<sp/>44711</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*/</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Send<sp/>&apos;hello&apos;<sp/>to<sp/>165.227.108.231:4444</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>const<sp/>packet<sp/>=<sp/>SocksClient.createUDPFrame({</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>remoteHost:<sp/>{<sp/>host:<sp/>&apos;165.227.108.231&apos;,<sp/>port:<sp/>4444<sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>data:<sp/>Buffer.from(line)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>});</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>udpSocket.send(packet,<sp/>info.remoteHost.port,<sp/>info.remoteHost.host);</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Start<sp/>connection</highlight></codeline>
+<codeline><highlight class="normal">client.connect();</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Note:**<sp/>The<sp/>associate<sp/>TCP<sp/>connection<sp/>to<sp/>the<sp/>proxy<sp/>must<sp/>remain<sp/>open<sp/>for<sp/>the<sp/>UDP<sp/>relay<sp/>to<sp/>work.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Additional<sp/>Examples</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[Documentation](docs/index.md)</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Migrating<sp/>from<sp/>v1</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Looking<sp/>for<sp/>a<sp/>guide<sp/>to<sp/>migrate<sp/>from<sp/>v1?<sp/>Look<sp/>[here](docs/migratingFromV1.md)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Api<sp/>Reference:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Note:**<sp/>socks<sp/>includes<sp/>full<sp/>TypeScript<sp/>definitions.<sp/>These<sp/>can<sp/>even<sp/>be<sp/>used<sp/>without<sp/>using<sp/>TypeScript<sp/>as<sp/>most<sp/>IDEs<sp/>(such<sp/>as<sp/>VS<sp/>Code)<sp/>will<sp/>use<sp/>these<sp/>type<sp/>definition<sp/>files<sp/>for<sp/>auto<sp/>completion<sp/>intellisense<sp/>even<sp/>in<sp/>JavaScript<sp/>files.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>Class:<sp/>SocksClient</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>[new<sp/>SocksClient(options[,<sp/>callback])](#new-socksclientoptions)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>[Class<sp/>Method:<sp/>SocksClient.createConnection(options[,<sp/>callback])](#class-method-socksclientcreateconnectionoptions-callback)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>[Class<sp/>Method:<sp/>SocksClient.createConnectionChain(options[,<sp/>callback])](#class-method-socksclientcreateconnectionchainoptions-callback)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>[Class<sp/>Method:<sp/>SocksClient.createUDPFrame(options)](#class-method-socksclientcreateudpframedetails)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>[Class<sp/>Method:<sp/>SocksClient.parseUDPFrame(data)](#class-method-socksclientparseudpframedata)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>[Event:<sp/>&apos;error&apos;](#event-error)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>[Event:<sp/>&apos;bound&apos;](#event-bound)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>[Event:<sp/>&apos;established&apos;](#event-established)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>[client.connect()](#clientconnect)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>[client.socksClientOptions](#clientconnect)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>SocksClient</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">SocksClient<sp/>establishes<sp/>SOCKS<sp/>proxy<sp/>connections<sp/>to<sp/>remote<sp/>destination<sp/>hosts.<sp/>These<sp/>proxy<sp/>connections<sp/>are<sp/>fully<sp/>transparent<sp/>to<sp/>the<sp/>server<sp/>and<sp/>once<sp/>established<sp/>act<sp/>as<sp/>full<sp/>duplex<sp/>streams.<sp/>SOCKS<sp/>v4,<sp/>v4a,<sp/>v5,<sp/>and<sp/>v5h<sp/>are<sp/>supported,<sp/>as<sp/>well<sp/>as<sp/>the<sp/>connect,<sp/>bind,<sp/>and<sp/>associate<sp/>commands.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">SocksClient<sp/>supports<sp/>creating<sp/>connections<sp/>using<sp/>callbacks,<sp/>promises,<sp/>and<sp/>async/await<sp/>flow<sp/>control<sp/>using<sp/>two<sp/>static<sp/>factory<sp/>functions<sp/>createConnection<sp/>and<sp/>createConnectionChain.<sp/>It<sp/>also<sp/>internally<sp/>extends<sp/>EventEmitter<sp/>which<sp/>results<sp/>in<sp/>allowing<sp/>event<sp/>handling<sp/>based<sp/>async<sp/>flow<sp/>control.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**SOCKS<sp/>Compatibility<sp/>Table**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Note:<sp/>When<sp/>using<sp/>4a<sp/>please<sp/>specify<sp/>type:<sp/>4,<sp/>and<sp/>when<sp/>using<sp/>5h<sp/>please<sp/>specify<sp/>type<sp/>5.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">|<sp/>Socks<sp/>Version<sp/>|<sp/>TCP<sp/>|<sp/>UDP<sp/>|<sp/>IPv4<sp/>|<sp/>IPv6<sp/>|<sp/>Hostname<sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>---<sp/>|<sp/>:---:<sp/>|<sp/>:---:<sp/>|<sp/>:---:<sp/>|<sp/>:---:<sp/>|<sp/>:---:<sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>SOCKS<sp/>v4<sp/>|<sp/>✅<sp/>|<sp/>❌<sp/>|<sp/>✅<sp/>|<sp/>❌<sp/>|<sp/>❌<sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>SOCKS<sp/>v4a<sp/>|<sp/>✅<sp/>|<sp/>❌<sp/>|<sp/>✅<sp/>|<sp/>❌<sp/>|<sp/>✅<sp/>|</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>SOCKS<sp/>v5<sp/>(includes<sp/>v5h)<sp/>|<sp/>✅<sp/>|<sp/>✅<sp/>|<sp/>✅<sp/>|<sp/>✅<sp/>|<sp/>✅<sp/>|</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>new<sp/>SocksClient(options)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>```options```<sp/>{SocksClientOptions}<sp/>-<sp/>An<sp/>object<sp/>describing<sp/>the<sp/>SOCKS<sp/>proxy<sp/>to<sp/>use,<sp/>the<sp/>command<sp/>to<sp/>send<sp/>and<sp/>establish,<sp/>and<sp/>the<sp/>destination<sp/>host<sp/>to<sp/>connect<sp/>to.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>SocksClientOptions</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```typescript</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>proxy:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;159.203.75.200&apos;,<sp/>//<sp/>ipv4,<sp/>ipv6,<sp/>or<sp/>hostname</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>1080,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>type:<sp/>5,<sp/>//<sp/>Proxy<sp/>version<sp/>(4<sp/>or<sp/>5).<sp/>For<sp/>v4a<sp/>use<sp/>4,<sp/>for<sp/>v5h<sp/>use<sp/>5.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Optional<sp/>fields</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>userId:<sp/>&apos;some<sp/>username&apos;,<sp/>//<sp/>Used<sp/>for<sp/>SOCKS4<sp/>userId<sp/>auth,<sp/>and<sp/>SOCKS5<sp/>user/pass<sp/>auth<sp/>in<sp/>conjunction<sp/>with<sp/>password.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>password:<sp/>&apos;some<sp/>password&apos;,<sp/>//<sp/>Used<sp/>in<sp/>conjunction<sp/>with<sp/>userId<sp/>for<sp/>user/pass<sp/>auth<sp/>for<sp/>SOCKS5<sp/>proxies.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>custom_auth_method:<sp/>0x80,<sp/><sp/>//<sp/>If<sp/>using<sp/>a<sp/>custom<sp/>auth<sp/>method,<sp/>specify<sp/>the<sp/>type<sp/>here.<sp/>If<sp/>this<sp/>is<sp/>set,<sp/>ALL<sp/>other<sp/>custom_auth_***<sp/>options<sp/>must<sp/>be<sp/>set<sp/>as<sp/>well.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>custom_auth_request_handler:<sp/>async<sp/>()<sp/>=&gt;.<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>This<sp/>will<sp/>be<sp/>called<sp/>when<sp/>it&apos;s<sp/>time<sp/>to<sp/>send<sp/>the<sp/>custom<sp/>auth<sp/>handshake.<sp/>You<sp/>must<sp/>return<sp/>a<sp/>Buffer<sp/>containing<sp/>the<sp/>data<sp/>to<sp/>send<sp/>as<sp/>your<sp/>authentication.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>Buffer.from([0x01,0x02,0x03]);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>This<sp/>is<sp/>the<sp/>expected<sp/>size<sp/>(bytes)<sp/>of<sp/>the<sp/>custom<sp/>auth<sp/>response<sp/>from<sp/>the<sp/>proxy<sp/>server.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>custom_auth_response_size:<sp/>2,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>This<sp/>is<sp/>called<sp/>when<sp/>the<sp/>auth<sp/>response<sp/>is<sp/>received.<sp/>The<sp/>received<sp/>packet<sp/>is<sp/>passed<sp/>in<sp/>as<sp/>a<sp/>Buffer,<sp/>and<sp/>you<sp/>must<sp/>return<sp/>a<sp/>boolean<sp/>indicating<sp/>the<sp/>response<sp/>from<sp/>the<sp/>server<sp/>said<sp/>your<sp/>custom<sp/>auth<sp/>was<sp/>successful<sp/>or<sp/>failed.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>custom_auth_response_handler:<sp/>async<sp/>(data)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>data[1]<sp/>===<sp/>0x00;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>command:<sp/>&apos;connect&apos;,<sp/>//<sp/>connect,<sp/>bind,<sp/>associate</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>destination:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;192.30.253.113&apos;,<sp/>//<sp/>ipv4,<sp/>ipv6,<sp/>hostname.<sp/>Hostnames<sp/>work<sp/>with<sp/>v4a<sp/>and<sp/>v5.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>80</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Optional<sp/>fields</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>timeout:<sp/>30000,<sp/>//<sp/>How<sp/>long<sp/>to<sp/>wait<sp/>to<sp/>establish<sp/>a<sp/>proxy<sp/>connection.<sp/>(defaults<sp/>to<sp/>30<sp/>seconds)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>set_tcp_nodelay:<sp/>true<sp/>//<sp/>If<sp/>true,<sp/>will<sp/>turn<sp/>on<sp/>the<sp/>underlying<sp/>sockets<sp/>TCP_NODELAY<sp/>option.</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Class<sp/>Method:<sp/>SocksClient.createConnection(options[,<sp/>callback])</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>```options```<sp/>{<sp/>SocksClientOptions<sp/>}<sp/>-<sp/>An<sp/>object<sp/>describing<sp/>the<sp/>SOCKS<sp/>proxy<sp/>to<sp/>use,<sp/>the<sp/>command<sp/>to<sp/>send<sp/>and<sp/>establish,<sp/>and<sp/>the<sp/>destination<sp/>host<sp/>to<sp/>connect<sp/>to.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>```callback```<sp/>{<sp/>Function<sp/>}<sp/>-<sp/>Optional<sp/>callback<sp/>function<sp/>that<sp/>is<sp/>called<sp/>when<sp/>the<sp/>proxy<sp/>connection<sp/>is<sp/>established,<sp/>or<sp/>an<sp/>error<sp/>occurs.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>```returns```<sp/>{<sp/>Promise<sp/>}<sp/>-<sp/>A<sp/>Promise<sp/>is<sp/>returned<sp/>that<sp/>is<sp/>resolved<sp/>when<sp/>the<sp/>proxy<sp/>connection<sp/>is<sp/>established,<sp/>or<sp/>rejected<sp/>when<sp/>an<sp/>error<sp/>occurs.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Creates<sp/>a<sp/>new<sp/>proxy<sp/>connection<sp/>through<sp/>the<sp/>given<sp/>proxy<sp/>to<sp/>the<sp/>given<sp/>destination<sp/>host.<sp/>This<sp/>factory<sp/>function<sp/>supports<sp/>callbacks<sp/>and<sp/>promises<sp/>for<sp/>async<sp/>flow<sp/>control.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Note:**<sp/>If<sp/>a<sp/>callback<sp/>function<sp/>is<sp/>provided,<sp/>the<sp/>promise<sp/>will<sp/>always<sp/>resolve<sp/>regardless<sp/>of<sp/>an<sp/>error<sp/>occurring.<sp/>Please<sp/>be<sp/>sure<sp/>to<sp/>exclusively<sp/>use<sp/>either<sp/>promises<sp/>or<sp/>callbacks<sp/>when<sp/>using<sp/>this<sp/>factory<sp/>function.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```typescript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>options<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>proxy:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;159.203.75.200&apos;,<sp/>//<sp/>ipv4,<sp/>ipv6,<sp/>or<sp/>hostname</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>1080,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>type:<sp/>5<sp/>//<sp/>Proxy<sp/>version<sp/>(4<sp/>or<sp/>5)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>command:<sp/>&apos;connect&apos;,<sp/>//<sp/>connect,<sp/>bind,<sp/>associate</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>destination:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;192.30.253.113&apos;,<sp/>//<sp/>ipv4,<sp/>ipv6,<sp/>or<sp/>hostname</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>80</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Await/Async<sp/>(uses<sp/>a<sp/>Promise)</highlight></codeline>
+<codeline><highlight class="normal">try<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>const<sp/>info<sp/>=<sp/>await<sp/>SocksClient.createConnection(options);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(info);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>/*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>socket:<sp/>&lt;Socket<sp/>...&gt;,<sp/><sp/>//<sp/>Raw<sp/>net.Socket</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>/<sp/>&lt;Socket<sp/>...&gt;<sp/><sp/>(this<sp/>is<sp/>a<sp/>raw<sp/>net.Socket<sp/>that<sp/>is<sp/>established<sp/>to<sp/>the<sp/>destination<sp/>host<sp/>through<sp/>the<sp/>given<sp/>proxy<sp/>server)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">}<sp/>catch<sp/>(err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Handle<sp/>error...</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Promise</highlight></codeline>
+<codeline><highlight class="normal">SocksClient.createConnection(options)</highlight></codeline>
+<codeline><highlight class="normal">.then(info<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(info);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>/*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>socket:<sp/>&lt;Socket<sp/>...&gt;,<sp/><sp/>//<sp/>Raw<sp/>net.Socket</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">.catch(err<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>Handle<sp/>error...</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>Callback</highlight></codeline>
+<codeline><highlight class="normal">SocksClient.createConnection(options,<sp/>(err,<sp/>info)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(!err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>console.log(info);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>/*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>socket:<sp/>&lt;Socket<sp/>...&gt;,<sp/><sp/>//<sp/>Raw<sp/>net.Socket</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}<sp/>else<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>Handle<sp/>error...</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Class<sp/>Method:<sp/>SocksClient.createConnectionChain(options[,<sp/>callback])</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>```options```<sp/>{<sp/>SocksClientChainOptions<sp/>}<sp/>-<sp/>An<sp/>object<sp/>describing<sp/>a<sp/>list<sp/>of<sp/>SOCKS<sp/>proxies<sp/>to<sp/>use,<sp/>the<sp/>command<sp/>to<sp/>send<sp/>and<sp/>establish,<sp/>and<sp/>the<sp/>destination<sp/>host<sp/>to<sp/>connect<sp/>to.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>```callback```<sp/>{<sp/>Function<sp/>}<sp/>-<sp/>Optional<sp/>callback<sp/>function<sp/>that<sp/>is<sp/>called<sp/>when<sp/>the<sp/>proxy<sp/>connection<sp/>chain<sp/>is<sp/>established,<sp/>or<sp/>an<sp/>error<sp/>occurs.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>```returns```<sp/>{<sp/>Promise<sp/>}<sp/>-<sp/>A<sp/>Promise<sp/>is<sp/>returned<sp/>that<sp/>is<sp/>resolved<sp/>when<sp/>the<sp/>proxy<sp/>connection<sp/>chain<sp/>is<sp/>established,<sp/>or<sp/>rejected<sp/>when<sp/>an<sp/>error<sp/>occurs.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Creates<sp/>a<sp/>new<sp/>proxy<sp/>connection<sp/>chain<sp/>through<sp/>a<sp/>list<sp/>of<sp/>at<sp/>least<sp/>two<sp/>SOCKS<sp/>proxies<sp/>to<sp/>the<sp/>given<sp/>destination<sp/>host.<sp/>This<sp/>factory<sp/>method<sp/>supports<sp/>callbacks<sp/>and<sp/>promises<sp/>for<sp/>async<sp/>flow<sp/>control.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Note:**<sp/>If<sp/>a<sp/>callback<sp/>function<sp/>is<sp/>provided,<sp/>the<sp/>promise<sp/>will<sp/>always<sp/>resolve<sp/>regardless<sp/>of<sp/>an<sp/>error<sp/>occurring.<sp/>Please<sp/>be<sp/>sure<sp/>to<sp/>exclusively<sp/>use<sp/>either<sp/>promises<sp/>or<sp/>callbacks<sp/>when<sp/>using<sp/>this<sp/>factory<sp/>function.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Note:**<sp/>At<sp/>least<sp/>two<sp/>proxies<sp/>must<sp/>be<sp/>provided<sp/>for<sp/>the<sp/>chain<sp/>to<sp/>be<sp/>established.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```typescript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>options<sp/>=<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>proxies:<sp/>[<sp/>//<sp/>The<sp/>chain<sp/>order<sp/>is<sp/>the<sp/>order<sp/>in<sp/>the<sp/>proxies<sp/>array,<sp/>meaning<sp/>the<sp/>last<sp/>proxy<sp/>will<sp/>establish<sp/>a<sp/>connection<sp/>to<sp/>the<sp/>destination.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>host:<sp/>&apos;159.203.75.235&apos;,<sp/>//<sp/>ipv4,<sp/>ipv6,<sp/>or<sp/>hostname</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>port:<sp/>1081,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>type:<sp/>5</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>host:<sp/>&apos;104.131.124.203&apos;,<sp/>//<sp/>ipv4,<sp/>ipv6,<sp/>or<sp/>hostname</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>port:<sp/>1081,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>type:<sp/>5</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>command:<sp/>&apos;connect&apos;,<sp/>//<sp/>Only<sp/>connect<sp/>is<sp/>supported<sp/>in<sp/>chaining<sp/>mode.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>destination:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;192.30.253.113&apos;,<sp/>//<sp/>ipv4,<sp/>ipv6,<sp/>hostname</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>80</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Class<sp/>Method:<sp/>SocksClient.createUDPFrame(details)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>```details```<sp/>{<sp/>SocksUDPFrameDetails<sp/>}<sp/>-<sp/>An<sp/>object<sp/>containing<sp/>the<sp/>remote<sp/>host,<sp/>frame<sp/>number,<sp/>and<sp/>frame<sp/>data<sp/>to<sp/>use<sp/>when<sp/>creating<sp/>a<sp/>SOCKS<sp/>UDP<sp/>frame<sp/>packet.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>```returns```<sp/>{<sp/>Buffer<sp/>}<sp/>-<sp/>A<sp/>Buffer<sp/>containing<sp/>all<sp/>of<sp/>the<sp/>UDP<sp/>frame<sp/>data.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Creates<sp/>a<sp/>SOCKS<sp/>UDP<sp/>frame<sp/>relay<sp/>packet<sp/>that<sp/>is<sp/>sent<sp/>and<sp/>received<sp/>via<sp/>a<sp/>SOCKS<sp/>proxy<sp/>when<sp/>using<sp/>the<sp/>associate<sp/>command<sp/>for<sp/>UDP<sp/>packet<sp/>forwarding.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**SocksUDPFrameDetails**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```typescript</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>frameNumber:<sp/>0,<sp/>//<sp/>The<sp/>frame<sp/>number<sp/>(used<sp/>for<sp/>breaking<sp/>up<sp/>larger<sp/>packets)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>remoteHost:<sp/>{<sp/>//<sp/>The<sp/>remote<sp/>host<sp/>to<sp/>have<sp/>the<sp/>proxy<sp/>send<sp/>data<sp/>to,<sp/>or<sp/>the<sp/>remote<sp/>host<sp/>that<sp/>send<sp/>this<sp/>data.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;1.2.3.4&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>1234</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>data:<sp/>&lt;Buffer<sp/>01<sp/>02<sp/>03<sp/>04...&gt;<sp/>//<sp/>A<sp/>Buffer<sp/>instance<sp/>of<sp/>data<sp/>to<sp/>include<sp/>in<sp/>the<sp/>packet<sp/>(actual<sp/>data<sp/>sent<sp/>to<sp/>the<sp/>remote<sp/>host)</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">interface<sp/>SocksUDPFrameDetails<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>The<sp/>frame<sp/>number<sp/>of<sp/>the<sp/>packet.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>frameNumber?:<sp/>number;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>The<sp/>remote<sp/>host.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>remoteHost:<sp/>SocksRemoteHost;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>The<sp/>packet<sp/>data.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>data:<sp/>Buffer;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Class<sp/>Method:<sp/>SocksClient.parseUDPFrame(data)</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>```data```<sp/>{<sp/>Buffer<sp/>}<sp/>-<sp/>A<sp/>Buffer<sp/>instance<sp/>containing<sp/>SOCKS<sp/>UDP<sp/>frame<sp/>data<sp/>to<sp/>parse.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>```returns```<sp/>{<sp/>SocksUDPFrameDetails<sp/>}<sp/>-<sp/>An<sp/>object<sp/>containing<sp/>the<sp/>remote<sp/>host,<sp/>frame<sp/>number,<sp/>and<sp/>frame<sp/>data<sp/>of<sp/>the<sp/>SOCKS<sp/>UDP<sp/>frame.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```typescript</highlight></codeline>
+<codeline><highlight class="normal">const<sp/>frame<sp/>=<sp/>SocksClient.parseUDPFrame(data);</highlight></codeline>
+<codeline><highlight class="normal">console.log(frame);</highlight></codeline>
+<codeline><highlight class="normal">/*</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>frameNumber:<sp/>0,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>remoteHost:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;1.2.3.4&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>1234</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>data:<sp/>&lt;Buffer<sp/>01<sp/>02<sp/>03<sp/>04<sp/>...&gt;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">*/</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Parses<sp/>a<sp/>Buffer<sp/>instance<sp/>and<sp/>returns<sp/>the<sp/>parsed<sp/>SocksUDPFrameDetails<sp/>object.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Event:<sp/>&apos;error&apos;</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>```err```<sp/>{<sp/>SocksClientError<sp/>}<sp/>-<sp/>An<sp/>Error<sp/>object<sp/>containing<sp/>an<sp/>error<sp/>message<sp/>and<sp/>the<sp/>original<sp/>SocksClientOptions.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>event<sp/>is<sp/>emitted<sp/>if<sp/>an<sp/>error<sp/>occurs<sp/>when<sp/>trying<sp/>to<sp/>establish<sp/>the<sp/>proxy<sp/>connection.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Event:<sp/>&apos;bound&apos;</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>```info```<sp/>{<sp/>SocksClientBoundEvent<sp/>}<sp/>An<sp/>object<sp/>containing<sp/>a<sp/>Socket<sp/>and<sp/>SocksRemoteHost<sp/>info.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>event<sp/>is<sp/>emitted<sp/>when<sp/>using<sp/>the<sp/>BIND<sp/>command<sp/>on<sp/>a<sp/>remote<sp/>SOCKS<sp/>proxy<sp/>server.<sp/>This<sp/>event<sp/>indicates<sp/>the<sp/>proxy<sp/>server<sp/>is<sp/>now<sp/>listening<sp/>for<sp/>incoming<sp/>connections<sp/>on<sp/>a<sp/>specified<sp/>port.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**SocksClientBoundEvent**</highlight></codeline>
+<codeline><highlight class="normal">```typescript</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>socket:<sp/>net.Socket,<sp/>//<sp/>The<sp/>underlying<sp/>raw<sp/>Socket</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>remoteHost:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;1.2.3.4&apos;,<sp/>//<sp/>The<sp/>remote<sp/>host<sp/>that<sp/>is<sp/>listening<sp/>(usually<sp/>the<sp/>proxy<sp/>itself)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>4444<sp/>//<sp/>The<sp/>remote<sp/>port<sp/>the<sp/>proxy<sp/>is<sp/>listening<sp/>on<sp/>for<sp/>incoming<sp/>connections<sp/>(when<sp/>using<sp/>BIND).</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Event:<sp/>&apos;established&apos;</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>```info```<sp/>{<sp/>SocksClientEstablishedEvent<sp/>}<sp/>An<sp/>object<sp/>containing<sp/>a<sp/>Socket<sp/>and<sp/>SocksRemoteHost<sp/>info.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>event<sp/>is<sp/>emitted<sp/>when<sp/>the<sp/>following<sp/>conditions<sp/>are<sp/>met:</highlight></codeline>
+<codeline><highlight class="normal">1.<sp/>When<sp/>using<sp/>the<sp/>CONNECT<sp/>command,<sp/>and<sp/>a<sp/>proxy<sp/>connection<sp/>has<sp/>been<sp/>established<sp/>to<sp/>the<sp/>remote<sp/>host.</highlight></codeline>
+<codeline><highlight class="normal">2.<sp/>When<sp/>using<sp/>the<sp/>BIND<sp/>command,<sp/>and<sp/>an<sp/>incoming<sp/>connection<sp/>has<sp/>been<sp/>accepted<sp/>by<sp/>the<sp/>proxy<sp/>and<sp/>a<sp/>TCP<sp/>relay<sp/>has<sp/>been<sp/>established.</highlight></codeline>
+<codeline><highlight class="normal">3.<sp/>When<sp/>using<sp/>the<sp/>ASSOCIATE<sp/>command,<sp/>and<sp/>a<sp/>UDP<sp/>relay<sp/>has<sp/>been<sp/>established.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>using<sp/>BIND,<sp/>&apos;bound&apos;<sp/>is<sp/>first<sp/>emitted<sp/>to<sp/>indicate<sp/>the<sp/>SOCKS<sp/>server<sp/>is<sp/>waiting<sp/>for<sp/>an<sp/>incoming<sp/>connection,<sp/>and<sp/>provides<sp/>the<sp/>remote<sp/>port<sp/>the<sp/>SOCKS<sp/>server<sp/>is<sp/>listening<sp/>on.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>using<sp/>ASSOCIATE,<sp/>&apos;established&apos;<sp/>is<sp/>emitted<sp/>with<sp/>the<sp/>remote<sp/>UDP<sp/>port<sp/>the<sp/>SOCKS<sp/>server<sp/>is<sp/>accepting<sp/>UDP<sp/>frame<sp/>packets<sp/>on.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**SocksClientEstablishedEvent**</highlight></codeline>
+<codeline><highlight class="normal">```typescript</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>socket:<sp/>net.Socket,<sp/>//<sp/>The<sp/>underlying<sp/>raw<sp/>Socket</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>remoteHost:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>host:<sp/>&apos;1.2.3.4&apos;,<sp/>//<sp/>The<sp/>remote<sp/>host<sp/>that<sp/>is<sp/>listening<sp/>(usually<sp/>the<sp/>proxy<sp/>itself)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>port:<sp/>52738<sp/>//<sp/>The<sp/>remote<sp/>port<sp/>the<sp/>proxy<sp/>is<sp/>listening<sp/>on<sp/>for<sp/>incoming<sp/>connections<sp/>(when<sp/>using<sp/>BIND).</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>client.connect()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Starts<sp/>connecting<sp/>to<sp/>the<sp/>remote<sp/>SOCKS<sp/>proxy<sp/>server<sp/>to<sp/>establish<sp/>a<sp/>proxy<sp/>connection<sp/>to<sp/>the<sp/>destination<sp/>host.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>client.socksClientOptions</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>```returns```<sp/>{<sp/>SocksClientOptions<sp/>}<sp/>The<sp/>options<sp/>that<sp/>were<sp/>passed<sp/>to<sp/>the<sp/>SocksClient.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Gets<sp/>the<sp/>options<sp/>that<sp/>were<sp/>passed<sp/>to<sp/>the<sp/>SocksClient<sp/>when<sp/>it<sp/>was<sp/>created.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**SocksClientError**</highlight></codeline>
+<codeline><highlight class="normal">```typescript</highlight></codeline>
+<codeline><highlight class="normal">{<sp/>//<sp/>Subclassed<sp/>from<sp/>Error.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>message:<sp/>&apos;An<sp/>error<sp/>has<sp/>occurred&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>options:<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>SocksClientOptions</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Further<sp/>Reading:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Please<sp/>read<sp/>the<sp/>SOCKS<sp/>5<sp/>specifications<sp/>for<sp/>more<sp/>information<sp/>on<sp/>how<sp/>to<sp/>use<sp/>BIND<sp/>and<sp/>Associate.</highlight></codeline>
+<codeline><highlight class="normal">http://www.ietf.org/rfc/rfc1928.txt</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>License</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>work<sp/>is<sp/>licensed<sp/>under<sp/>the<sp/>[MIT<sp/>license](http://en.wikipedia.org/wiki/MIT_License).</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/socks/README.md"/>
+  </compounddef>
+</doxygen>

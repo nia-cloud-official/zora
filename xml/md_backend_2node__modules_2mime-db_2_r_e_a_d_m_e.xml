@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2mime-db_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2mime-db_2_r_e_a_d_m_e</compoundname>
+    <title>mime-db</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2mime-db_2_r_e_a_d_m_e_1autotoc_md1928"/> <ulink url="https://npmjs.org/package/mime-db"><image type="html" name="https://badgen.net/npm/v/mime-db" alt="NPM Version" inline="yes"></image>
+</ulink> <ulink url="https://npmjs.org/package/mime-db"><image type="html" name="https://badgen.net/npm/dm/mime-db" alt="NPM Downloads" inline="yes"></image>
+</ulink> <ulink url="https://nodejs.org/en/download"><image type="html" name="https://badgen.net/npm/node/mime-db" alt="Node.js Version" inline="yes"></image>
+</ulink> <ulink url="https://github.com/jshttp/mime-db/actions?query=workflow%3Aci"><image type="html" name="https://badgen.net/github/checks/jshttp/mime-db/master?label=ci" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/r/jshttp/mime-db?branch=master"><image type="html" name="https://badgen.net/coveralls/c/github/jshttp/mime-db/master" alt="Coverage Status" inline="yes"></image>
+</ulink></para>
+<para>This is a large database of mime types and information about them. It consists of a single, public JSON file and does not include any logic, allowing it to remain as un-opinionated as possible with an API. It aggregates data from the following sources:</para>
+<para><itemizedlist>
+<listitem><para><ulink url="http://www.iana.org/assignments/media-types/media-types.xhtml">http://www.iana.org/assignments/media-types/media-types.xhtml</ulink></para>
+</listitem><listitem><para><ulink url="http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types">http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types</ulink></para>
+</listitem><listitem><para><ulink url="http://hg.nginx.org/nginx/raw-file/default/conf/mime.types">http://hg.nginx.org/nginx/raw-file/default/conf/mime.types</ulink></para>
+</listitem></itemizedlist>
+</para>
+<sect1 id="md_backend_2node__modules_2mime-db_2_r_e_a_d_m_e_1autotoc_md1929">
+<title>Installation</title><para><programlisting filename=".bash"><codeline><highlight class="normal">npm<sp/>install<sp/>mime-db</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2mime-db_2_r_e_a_d_m_e_1autotoc_md1930">
+<title>Database Download</title><para>If you&apos;re crazy enough to use this in the browser, you can just grab the JSON file using <ulink url="https://www.jsdelivr.com/">jsDelivr</ulink>. It is recommended to replace <computeroutput>master</computeroutput> with <ulink url="https://github.com/jshttp/mime-db/tags">a release tag</ulink> as the JSON format may change in the future.</para>
+<para><programlisting><codeline><highlight class="normal">https://cdn.jsdelivr.net/gh/jshttp/mime-db@master/db.json</highlight></codeline>
+</programlisting></para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2mime-db_2_r_e_a_d_m_e_1autotoc_md1931">
+<title>Usage</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>db<sp/>=<sp/>require(&apos;mime-db&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>grab<sp/>data<sp/>on<sp/>.js<sp/>files</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>data<sp/>=<sp/>db[&apos;application/javascript&apos;]</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2mime-db_2_r_e_a_d_m_e_1autotoc_md1932">
+<title>Data Structure</title><para>The JSON file is a map lookup for lowercased mime types. Each mime type has the following properties:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>.source</computeroutput> - where the mime type is defined. If not set, it&apos;s probably a custom media type.<itemizedlist>
+<listitem><para><computeroutput>apache</computeroutput> - <ulink url="http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types">Apache common media types</ulink></para>
+</listitem><listitem><para><computeroutput>iana</computeroutput> - <ulink url="http://www.iana.org/assignments/media-types/media-types.xhtml">IANA-defined media types</ulink></para>
+</listitem><listitem><para><computeroutput>nginx</computeroutput> - <ulink url="http://hg.nginx.org/nginx/raw-file/default/conf/mime.types">nginx media types</ulink></para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>.extensions[]</computeroutput> - known extensions associated with this mime type.</para>
+</listitem><listitem><para><computeroutput>.compressible</computeroutput> - whether a file of this type can be gzipped.</para>
+</listitem><listitem><para><computeroutput>.charset</computeroutput> - the default charset associated with this type, if any.</para>
+</listitem></itemizedlist>
+</para>
+<para>If unknown, every property could be <computeroutput>undefined</computeroutput>.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2mime-db_2_r_e_a_d_m_e_1autotoc_md1933">
+<title>Contributing</title><para>To edit the database, only make PRs against <computeroutput>src/custom-types.json</computeroutput> or <computeroutput>src/custom-suffix.json</computeroutput>.</para>
+<para>The <computeroutput>src/custom-types.json</computeroutput> file is a JSON object with the MIME type as the keys and the values being an object with the following keys:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>compressible</computeroutput> - leave out if you don&apos;t know, otherwise <computeroutput>true</computeroutput>/<computeroutput>false</computeroutput> to indicate whether the data represented by the type is typically compressible.</para>
+</listitem><listitem><para><computeroutput>extensions</computeroutput> - include an array of file extensions that are associated with the type.</para>
+</listitem><listitem><para><computeroutput>notes</computeroutput> - human-readable notes about the type, typically what the type is.</para>
+</listitem><listitem><para><computeroutput>sources</computeroutput> - include an array of URLs of where the MIME type and the associated extensions are sourced from. This needs to be a <ulink url="https://en.wikipedia.org/wiki/Primary_source">primary source</ulink>; links to type aggregating sites and Wikipedia are <emphasis>not acceptable</emphasis>.</para>
+</listitem></itemizedlist>
+</para>
+<para>To update the build, run <computeroutput>npm run build</computeroutput>.</para>
+<sect2 id="md_backend_2node__modules_2mime-db_2_r_e_a_d_m_e_1autotoc_md1934">
+<title>Adding Custom Media Types</title><para>The best way to get new media types included in this library is to register them with the IANA. The community registration procedure is outlined in <ulink url="http://tools.ietf.org/html/rfc6838#section-5">RFC 6838 section 5</ulink>. Types registered with the IANA are automatically pulled into this library.</para>
+<para>If that is not possible / feasible, they can be added directly here as a &quot;custom&quot; type. To do this, it is required to have a primary source that definitively lists the media type. If an extension is going to be listed as associateed with this media type, the source must definitively link the media type and extension as well. </para>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/mime-db/README.md"/>
+  </compounddef>
+</doxygen>

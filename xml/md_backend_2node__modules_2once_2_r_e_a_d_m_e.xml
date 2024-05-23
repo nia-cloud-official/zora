@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2once_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2once_2_r_e_a_d_m_e</compoundname>
+    <title>once</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2once_2_r_e_a_d_m_e_1autotoc_md2638"/> Only call a function once.</para>
+<sect1 id="md_backend_2node__modules_2once_2_r_e_a_d_m_e_1autotoc_md2639">
+<title>usage</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>once<sp/>=<sp/>require(&apos;once&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>load<sp/>(file,<sp/>cb)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cb<sp/>=<sp/>once(cb)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>loader.load(&apos;file&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>loader.once(&apos;load&apos;,<sp/>cb)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>loader.once(&apos;error&apos;,<sp/>cb)</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+<para>Or add to the Function.prototype in a responsible way:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">//<sp/>only<sp/>has<sp/>to<sp/>be<sp/>done<sp/>once</highlight></codeline>
+<codeline><highlight class="normal">require(&apos;once&apos;).proto()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>load<sp/>(file,<sp/>cb)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cb<sp/>=<sp/>cb.once()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>loader.load(&apos;file&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>loader.once(&apos;load&apos;,<sp/>cb)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>loader.once(&apos;error&apos;,<sp/>cb)</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+<para>Ironically, the prototype feature makes this module twice as complicated as necessary.</para>
+<para>To check whether you function has been called, use <computeroutput>fn.called</computeroutput>. Once the function is called for the first time the return value of the original function is saved in <computeroutput>fn.value</computeroutput> and subsequent calls will continue to return this value.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>once<sp/>=<sp/>require(&apos;once&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>load<sp/>(cb)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cb<sp/>=<sp/>once(cb)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>stream<sp/>=<sp/>createStream()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>stream.once(&apos;data&apos;,<sp/>cb)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>stream.once(&apos;end&apos;,<sp/>function<sp/>()<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(!cb.called)<sp/>cb(new<sp/>Error(&apos;not<sp/>found&apos;))</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2once_2_r_e_a_d_m_e_1autotoc_md2640">
+<title><computeroutput>once.strict(func)</computeroutput></title><para>Throw an error if the function is called twice.</para>
+<para>Some functions are expected to be called only once. Using <computeroutput>once</computeroutput> for them would potentially hide logical errors.</para>
+<para>In the example below, the <computeroutput>greet</computeroutput> function has to call the callback only once:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">function<sp/>greet<sp/>(name,<sp/>cb)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>return<sp/>is<sp/>missing<sp/>from<sp/>the<sp/>if<sp/>statement</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>//<sp/>when<sp/>no<sp/>name<sp/>is<sp/>passed,<sp/>the<sp/>callback<sp/>is<sp/>called<sp/>twice</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>if<sp/>(!name)<sp/>cb(&apos;Hello<sp/>anonymous&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>cb(&apos;Hello<sp/>&apos;<sp/>+<sp/>name)</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>log<sp/>(msg)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.log(msg)</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>this<sp/>will<sp/>print<sp/>&apos;Hello<sp/>anonymous&apos;<sp/>but<sp/>the<sp/>logical<sp/>error<sp/>will<sp/>be<sp/>missed</highlight></codeline>
+<codeline><highlight class="normal">greet(null,<sp/>once(msg))</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>once.strict<sp/>will<sp/>print<sp/>&apos;Hello<sp/>anonymous&apos;<sp/>and<sp/>throw<sp/>an<sp/>error<sp/>when<sp/>the<sp/>callback<sp/>will<sp/>be<sp/>called<sp/>the<sp/>second<sp/>time</highlight></codeline>
+<codeline><highlight class="normal">greet(null,<sp/>once.strict(msg))</highlight></codeline>
+</programlisting> </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/once/README.md"/>
+  </compounddef>
+</doxygen>

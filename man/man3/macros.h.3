@@ -1,0 +1,423 @@
+.TH "backend/node_modules/sqlite3/src/macros.h" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+backend/node_modules/sqlite3/src/macros.h
+.SH SYNOPSIS
+.br
+.PP
+\fR#include <vector>\fP
+.br
+\fR#include <napi\&.h>\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBIS_FUNCTION\fP(cb)       !cb\&.IsUndefined() && cb\&.IsFunction()"
+.br
+.ti -1c
+.RI "#define \fBREQUIRE_ARGUMENTS\fP(n)"
+.br
+.ti -1c
+.RI "#define \fBREQUIRE_ARGUMENT_EXTERNAL\fP(i,  var)"
+.br
+.ti -1c
+.RI "#define \fBREQUIRE_ARGUMENT_FUNCTION\fP(i,  var)"
+.br
+.ti -1c
+.RI "#define \fBREQUIRE_ARGUMENT_STRING\fP(i,  var)"
+.br
+.ti -1c
+.RI "#define \fBREQUIRE_ARGUMENT_INTEGER\fP(i,  var)"
+.br
+.ti -1c
+.RI "#define \fBOPTIONAL_ARGUMENT_FUNCTION\fP(i,  var)"
+.br
+.ti -1c
+.RI "#define \fBOPTIONAL_ARGUMENT_INTEGER\fP(i,  var,  default)"
+.br
+.ti -1c
+.RI "#define \fBDEFINE_CONSTANT_INTEGER\fP(target,  constant,  name)"
+.br
+.ti -1c
+.RI "#define \fBDEFINE_CONSTANT_STRING\fP(target,  constant,  name)"
+.br
+.ti -1c
+.RI "#define \fBEXCEPTION\fP(msg,  errno,  name)"
+.br
+.ti -1c
+.RI "#define \fBEMIT_EVENT\fP(obj,  argc,  argv)"
+.br
+.ti -1c
+.RI "#define \fBTRY_CATCH_CALL\fP(context,  callback,  argc,  argv, \&.\&.\&.)"
+.br
+.ti -1c
+.RI "#define \fBWORK_DEFINITION\fP(name)"
+.br
+.ti -1c
+.RI "#define \fBASSERT_STATUS\fP()   (void)status;"
+.br
+.ti -1c
+.RI "#define \fBCREATE_WORK\fP(name,  workerFn,  afterFn)"
+.br
+.ti -1c
+.RI "#define \fBSTATEMENT_BEGIN\fP(type)"
+.br
+.ti -1c
+.RI "#define \fBSTATEMENT_INIT\fP(type)"
+.br
+.ti -1c
+.RI "#define \fBSTATEMENT_MUTEX\fP(name)"
+.br
+.ti -1c
+.RI "#define \fBSTATEMENT_END\fP()"
+.br
+.ti -1c
+.RI "#define \fBBACKUP_BEGIN\fP(type)"
+.br
+.ti -1c
+.RI "#define \fBBACKUP_INIT\fP(type)"
+.br
+.ti -1c
+.RI "#define \fBBACKUP_END\fP()"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "const char * \fBsqlite_code_string\fP (int code)"
+.br
+.ti -1c
+.RI "const char * \fBsqlite_authorizer_string\fP (int type)"
+.br
+.ti -1c
+.RI "\fBNapi::String\fP \fBStringConcat\fP (\fBNapi::Value\fP str1, \fBNapi::Value\fP str2)"
+.br
+.ti -1c
+.RI "bool \fBOtherIsInt\fP (\fBNapi::Number\fP source)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define ASSERT_STATUS()   (void)status;"
+
+.PP
+Definition at line \fB143\fP of file \fBmacros\&.h\fP\&.
+.SS "#define BACKUP_BEGIN( type)"
+\fBValue:\fP
+.nf
+    assert(baton);                                                             \\
+    assert(baton\->backup);                                                     \\
+    assert(!baton\->backup\->locked);                                            \\
+    assert(!baton\->backup\->finished);                                          \\
+    assert(baton\->backup\->inited);                                             \\
+    baton\->backup\->locked = true;                                              \\
+    baton\->backup\->db\->pending++;                                              \\
+    auto env = baton\->backup\->Env();                                           \\
+    CREATE_WORK("sqlite3\&.Backup\&."#type, Work_##type, Work_After##type);
+.PP
+.fi
+
+.PP
+Definition at line \fB184\fP of file \fBmacros\&.h\fP\&.
+.SS "#define BACKUP_END()"
+\fBValue:\fP
+.nf
+    assert(backup\->locked);                                                    \\
+    assert(backup\->db\->pending);                                               \\
+    backup\->locked = false;                                                    \\
+    backup\->db\->pending\-\-;                                                     \\
+    backup\->Process();                                                         \\
+    backup\->db\->Process();
+.PP
+.fi
+
+.PP
+Definition at line \fB199\fP of file \fBmacros\&.h\fP\&.
+.SS "#define BACKUP_INIT( type)"
+\fBValue:\fP
+.nf
+    type* baton = static_cast<type*>(data);                                    \\
+    Backup* backup = baton\->backup;
+.PP
+.fi
+
+.PP
+Definition at line \fB195\fP of file \fBmacros\&.h\fP\&.
+.SS "#define CREATE_WORK( name,  workerFn,  afterFn)"
+\fBValue:\fP
+.nf
+    int status = napi_create_async_work(env, NULL, Napi::String::New(env, name),\\
+                             workerFn, afterFn, baton, &baton\->request);        \\
+                                                                                \\
+    ASSERT_STATUS();                                                            \\
+    napi_queue_async_work(env, baton\->request);
+.PP
+.fi
+
+.PP
+Definition at line \fB146\fP of file \fBmacros\&.h\fP\&.
+.SS "#define DEFINE_CONSTANT_INTEGER( target,  constant,  name)"
+\fBValue:\fP
+.nf
+    Napi::PropertyDescriptor::Value(#name, Napi::Number::New(env, constant),   \\
+        static_cast<napi_property_attributes>(napi_enumerable | napi_configurable)),
+.PP
+.fi
+
+.PP
+Definition at line \fB93\fP of file \fBmacros\&.h\fP\&.
+.SS "#define DEFINE_CONSTANT_STRING( target,  constant,  name)"
+\fBValue:\fP
+.nf
+    Napi::PropertyDescriptor::Value(#name, Napi::String::New(env, constant),   \\
+        static_cast<napi_property_attributes>(napi_enumerable | napi_configurable)),
+.PP
+.fi
+
+.PP
+Definition at line \fB97\fP of file \fBmacros\&.h\fP\&.
+.SS "#define EMIT_EVENT( obj,  argc,  argv)"
+\fBValue:\fP
+.nf
+    TRY_CATCH_CALL((obj),                                                      \\
+        (obj)\&.Get("emit")\&.As<Napi::Function>(),\\
+        argc, argv                                                             \\
+    );
+.PP
+.fi
+
+.PP
+Definition at line \fB117\fP of file \fBmacros\&.h\fP\&.
+.SS "#define EXCEPTION( msg,  errno,  name)"
+\fBValue:\fP
+.nf
+    Napi::Value name = Napi::Error::New(env,                                   \\
+        StringConcat(                                                          \\
+            StringConcat(                                                      \\
+                Napi::String::New(env, sqlite_code_string(errno)),             \\
+                Napi::String::New(env, ": ")                                   \\
+            ),                                                                 \\
+            (msg)                                                              \\
+        )\&.Utf8Value()                                                          \\
+    )\&.Value();                                                                 \\
+    Napi::Object name ##_obj = name\&.As<Napi::Object>();                        \\
+    (name ##_obj)\&.Set( Napi::String::New(env, "errno"), Napi::Number::New(env, errno)); \\
+    (name ##_obj)\&.Set( Napi::String::New(env, "code"),                         \\
+        Napi::String::New(env, sqlite_code_string(errno)));
+.PP
+.fi
+
+.PP
+Definition at line \fB101\fP of file \fBmacros\&.h\fP\&.
+.SS "#define IS_FUNCTION( cb)       !cb\&.IsUndefined() && cb\&.IsFunction()"
+
+.PP
+Definition at line \fB26\fP of file \fBmacros\&.h\fP\&.
+.SS "#define OPTIONAL_ARGUMENT_FUNCTION( i,  var)"
+\fBValue:\fP
+.nf
+    Napi::Function var;                                                        \\
+    if (info\&.Length() > i && !info[i]\&.IsUndefined()) {                         \\
+        if (!info[i]\&.IsFunction()) {                                           \\
+            Napi::TypeError::New(env, "Argument " #i " must be a function")\&.ThrowAsJavaScriptException(); \\
+            return env\&.Null(); \\
+        }                                                                      \\
+        var = info[i]\&.As<Napi::Function>();                                    \\
+    }
+.PP
+.fi
+
+.PP
+Definition at line \fB66\fP of file \fBmacros\&.h\fP\&.
+.SS "#define OPTIONAL_ARGUMENT_INTEGER( i,  var,  default)"
+\fBValue:\fP
+.nf
+    int var;                                                                   \\
+    if (info\&.Length() <= (i)) {                                                \\
+        var = (default);                                                       \\
+    }                                                                          \\
+    else if (info[i]\&.IsNumber()) {                                             \\
+        if (OtherIsInt(info[i]\&.As<Number>())) {                                \\
+            var = info[i]\&.As<Napi::Number>()\&.Int32Value();                     \\
+        }                                                                      \\
+    }                                                                          \\
+    else {                                                                     \\
+        Napi::TypeError::New(env, "Argument " #i " must be an integer")\&.ThrowAsJavaScriptException(); \\
+        return env\&.Null(); \\
+    }
+.PP
+.fi
+
+.PP
+Definition at line \fB77\fP of file \fBmacros\&.h\fP\&.
+.SS "#define REQUIRE_ARGUMENT_EXTERNAL( i,  var)"
+\fBValue:\fP
+.nf
+    if (info\&.Length() <= (i) || !info[i]\&.IsExternal()) {                       \\
+        Napi::TypeError::New(env, "Argument " #i " invalid")\&.ThrowAsJavaScriptException(); \\
+        return env\&.Null(); \\
+    }                                                                          \\
+    Napi::External var = info[i]\&.As<Napi::External>();
+.PP
+.fi
+
+.PP
+Definition at line \fB36\fP of file \fBmacros\&.h\fP\&.
+.SS "#define REQUIRE_ARGUMENT_FUNCTION( i,  var)"
+\fBValue:\fP
+.nf
+    if (info\&.Length() <= (i) || !info[i]\&.IsFunction()) {                        \\
+        Napi::TypeError::New(env, "Argument " #i " must be a function")\&.ThrowAsJavaScriptException(); \\
+        return env\&.Null(); \\
+    }                                                                          \\
+    Napi::Function var = info[i]\&.As<Napi::Function>();
+.PP
+.fi
+
+.PP
+Definition at line \fB44\fP of file \fBmacros\&.h\fP\&.
+.SS "#define REQUIRE_ARGUMENT_INTEGER( i,  var)"
+\fBValue:\fP
+.nf
+    if (info\&.Length() <= (i) || !info[i]\&.IsNumber()) {                        \\
+        Napi::TypeError::New(env, "Argument " #i " must be an integer")\&.ThrowAsJavaScriptException(); \\
+        return env\&.Null();        \\
+    }                                                                          \\
+    int var(info[i]\&.As<Napi::Number>()\&.Int32Value());
+.PP
+.fi
+
+.PP
+Definition at line \fB59\fP of file \fBmacros\&.h\fP\&.
+.SS "#define REQUIRE_ARGUMENT_STRING( i,  var)"
+\fBValue:\fP
+.nf
+    if (info\&.Length() <= (i) || !info[i]\&.IsString()) {                         \\
+        Napi::TypeError::New(env, "Argument " #i " must be a string")\&.ThrowAsJavaScriptException(); \\
+        return env\&.Null(); \\
+    }                                                                          \\
+    std::string var = info[i]\&.As<Napi::String>();
+.PP
+.fi
+
+.PP
+Definition at line \fB52\fP of file \fBmacros\&.h\fP\&.
+.SS "#define REQUIRE_ARGUMENTS( n)"
+\fBValue:\fP
+.nf
+    if (info\&.Length() < (n)) {                                                 \\
+        Napi::TypeError::New(env, "Expected " #n "arguments")\&.ThrowAsJavaScriptException(); \\
+        return env\&.Null(); \\
+    }
+.PP
+.fi
+
+.PP
+Definition at line \fB29\fP of file \fBmacros\&.h\fP\&.
+.SS "#define STATEMENT_BEGIN( type)"
+\fBValue:\fP
+.nf
+    assert(baton);                                                             \\
+    assert(baton\->stmt);                                                       \\
+    assert(!baton\->stmt\->locked);                                              \\
+    assert(!baton\->stmt\->finalized);                                           \\
+    assert(baton\->stmt\->prepared);                                             \\
+    baton\->stmt\->locked = true;                                                \\
+    baton\->stmt\->db\->pending++;                                                \\
+    auto env = baton\->stmt\->Env();                                             \\
+    CREATE_WORK("sqlite3\&.Statement\&."#type, Work_##type, Work_After##type);
+.PP
+.fi
+
+.PP
+Definition at line \fB153\fP of file \fBmacros\&.h\fP\&.
+.SS "#define STATEMENT_END()"
+\fBValue:\fP
+.nf
+    assert(stmt\->locked);                                                      \\
+    assert(stmt\->db\->pending);                                                 \\
+    stmt\->locked = false;                                                      \\
+    stmt\->db\->pending\-\-;                                                       \\
+    stmt\->Process();                                                           \\
+    stmt\->db\->Process();
+.PP
+.fi
+
+.PP
+Definition at line \fB176\fP of file \fBmacros\&.h\fP\&.
+.SS "#define STATEMENT_INIT( type)"
+\fBValue:\fP
+.nf
+    type* baton = static_cast<type*>(data);                                    \\
+    Statement* stmt = baton\->stmt;
+.PP
+.fi
+
+.PP
+Definition at line \fB164\fP of file \fBmacros\&.h\fP\&.
+.SS "#define STATEMENT_MUTEX( name)"
+\fBValue:\fP
+.nf
+    if (!stmt\->db\->_handle) { \\
+        stmt\->status = SQLITE_MISUSE; \\
+        stmt\->message = "Database handle is closed"; \\
+        return; \\
+    } \\
+    sqlite3_mutex* name = sqlite3_db_mutex(stmt\->db\->_handle);
+.PP
+.fi
+
+.PP
+Definition at line \fB168\fP of file \fBmacros\&.h\fP\&.
+.SS "#define TRY_CATCH_CALL( context,  callback,  argc,  argv,  \&.\&.\&.)"
+\fBValue:\fP
+.nf
+    Napi::Value* passed_argv = argv;\\
+    std::vector<napi_value> args;\\
+    if ((argc != 0) && (passed_argv != NULL)) {\\
+      args\&.assign(passed_argv, passed_argv + argc);\\
+    }\\
+    Napi::Value res = (callback)\&.Call(Napi::Value(context), args);             \\
+    if (res\&.IsEmpty()) return __VA_ARGS__;
+.PP
+.fi
+
+.PP
+Definition at line \fB125\fP of file \fBmacros\&.h\fP\&.
+.SS "#define WORK_DEFINITION( name)"
+\fBValue:\fP
+.nf
+    Napi::Value name(const Napi::CallbackInfo& info);                          \\
+    static void Work_Begin##name(Baton* baton);                                \\
+    static void Work_##name(napi_env env, void* data);                         \\
+    static void Work_After##name(napi_env env, napi_status status, void* data);
+.PP
+.fi
+
+.PP
+Definition at line \fB134\fP of file \fBmacros\&.h\fP\&.
+.SH "Function Documentation"
+.PP 
+.SS "bool OtherIsInt (\fBNapi::Number\fP source)\fR [inline]\fP"
+
+.PP
+Definition at line \fB16\fP of file \fBmacros\&.h\fP\&.
+.SS "const char * sqlite_authorizer_string (int type)"
+
+.PP
+Definition at line \fB119\fP of file \fBnode_sqlite3\&.cc\fP\&.
+.SS "const char * sqlite_code_string (int code)"
+
+.PP
+Definition at line \fB84\fP of file \fBnode_sqlite3\&.cc\fP\&.
+.SS "\fBNapi::String\fP StringConcat (\fBNapi::Value\fP str1, \fBNapi::Value\fP str2)\fR [inline]\fP"
+
+.PP
+Definition at line \fB10\fP of file \fBmacros\&.h\fP\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

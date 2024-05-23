@@ -1,0 +1,61 @@
+\doxysection{flock\+\_\+tool.\+py}
+\hypertarget{flock__tool_8py_source}{}\label{flock__tool_8py_source}\index{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/flock\_tool.py@{backend/node\_modules/node-\/gyp/gyp/pylib/gyp/flock\_tool.py}}
+\mbox{\hyperlink{flock__tool_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00001}\mbox{\hyperlink{namespacegyp_1_1flock__tool}{00001}}\ \textcolor{comment}{\#!/usr/bin/env\ python3}}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00002}00002\ \textcolor{comment}{\#\ Copyright\ (c)\ 2011\ Google\ Inc.\ All\ rights\ reserved.}}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00003}00003\ \textcolor{comment}{\#\ Use\ of\ this\ source\ code\ is\ governed\ by\ a\ BSD-\/style\ license\ that\ can\ be}}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00004}00004\ \textcolor{comment}{\#\ found\ in\ the\ LICENSE\ file.}}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00006}00006\ \textcolor{stringliteral}{"{}"{}"{}These\ functions\ are\ executed\ via\ gyp-\/flock-\/tool\ when\ using\ the\ Makefile}}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00007}00007\ \textcolor{stringliteral}{generator.\ \ Used\ on\ systems\ that\ don't\ have\ a\ built-\/in\ flock."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00009}00009\ \textcolor{keyword}{import}\ fcntl}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00010}00010\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00011}00011\ \textcolor{keyword}{import}\ struct}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00012}00012\ \textcolor{keyword}{import}\ subprocess}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00013}00013\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00016}\mbox{\hyperlink{namespacegyp_1_1flock__tool_a90964771d6fc6bdfd95379431421ad13}{00016}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegyp_1_1flock__tool_a90964771d6fc6bdfd95379431421ad13}{main}}(args):}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00017}00017\ \ \ \ \ executor\ =\ \mbox{\hyperlink{classgyp_1_1flock__tool_1_1_flock_tool}{FlockTool}}()}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00018}00018\ \ \ \ \ executor.Dispatch(args)}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00021}\mbox{\hyperlink{classgyp_1_1flock__tool_1_1_flock_tool}{00021}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classgyp_1_1flock__tool_1_1_flock_tool}{FlockTool}}:}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00022}00022\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}This\ class\ emulates\ the\ 'flock'\ command."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00024}\mbox{\hyperlink{classgyp_1_1flock__tool_1_1_flock_tool_a1dbd5e7c90f3172d42e20d29fd92420e}{00024}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1flock__tool_1_1_flock_tool_a1dbd5e7c90f3172d42e20d29fd92420e}{Dispatch}}(self,\ args):}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00025}00025\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Dispatches\ a\ string\ command\ to\ a\ method."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00026}00026\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ len(args)\ <\ 1:}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00027}00027\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ Exception(\textcolor{stringliteral}{"{}Not\ enough\ arguments"{}})}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00029}00029\ \ \ \ \ \ \ \ \ method\ =\ \textcolor{stringliteral}{"{}Exec\%s"{}}\ \%\ self.\mbox{\hyperlink{classgyp_1_1flock__tool_1_1_flock_tool_ab3145340e2c63233dbac98493c1f37ce}{\_CommandifyName}}(args[0])}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00030}00030\ \ \ \ \ \ \ \ \ getattr(self,\ method)(*args[1:])}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00032}\mbox{\hyperlink{classgyp_1_1flock__tool_1_1_flock_tool_ab3145340e2c63233dbac98493c1f37ce}{00032}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1flock__tool_1_1_flock_tool_ab3145340e2c63233dbac98493c1f37ce}{\_CommandifyName}}(self,\ name\_string):}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00033}00033\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Transforms\ a\ tool\ name\ like\ copy-\/info-\/plist\ to\ CopyInfoPlist"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00034}00034\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ name\_string.title().replace(\textcolor{stringliteral}{"{}-\/"{}},\ \textcolor{stringliteral}{"{}"{}})}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00036}\mbox{\hyperlink{classgyp_1_1flock__tool_1_1_flock_tool_acd07e9f3b39e736c4cb84dd6135205c1}{00036}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgyp_1_1flock__tool_1_1_flock_tool_acd07e9f3b39e736c4cb84dd6135205c1}{ExecFlock}}(self,\ lockfile,\ *cmd\_list):}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00037}00037\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Emulates\ the\ most\ basic\ behavior\ of\ Linux's\ flock(1)."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00038}00038\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Rely\ on\ exception\ handling\ to\ report\ errors.}}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00039}00039\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Note\ that\ the\ stock\ python\ on\ SunOS\ has\ a\ bug}}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00040}00040\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ where\ fcntl.flock(fd,\ LOCK\_EX)\ always\ fails}}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ with\ EBADF,\ that's\ why\ we\ use\ this\ F\_SETLK}}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ hack\ instead.}}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ fd\ =\ os.open(lockfile,\ os.O\_WRONLY\ |\ os.O\_NOCTTY\ |\ os.O\_CREAT,\ 0o666)}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ sys.platform.startswith(\textcolor{stringliteral}{"{}aix"{}}):}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00045}00045\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Python\ on\ AIX\ is\ compiled\ with\ LARGEFILE\ support,\ which\ changes\ the}}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ struct\ size.}}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ op\ =\ struct.pack(\textcolor{stringliteral}{"{}hhIllqq"{}},\ fcntl.F\_WRLCK,\ 0,\ 0,\ 0,\ 0,\ 0,\ 0)}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ op\ =\ struct.pack(\textcolor{stringliteral}{"{}hhllhhl"{}},\ fcntl.F\_WRLCK,\ 0,\ 0,\ 0,\ 0,\ 0,\ 0)}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ fcntl.fcntl(fd,\ fcntl.F\_SETLK,\ op)}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00051}00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ subprocess.call(cmd\_list)}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00054}00054\ \textcolor{keywordflow}{if}\ \_\_name\_\_\ ==\ \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
+\DoxyCodeLine{\Hypertarget{flock__tool_8py_source_l00055}00055\ \ \ \ \ sys.exit(\mbox{\hyperlink{namespacegyp_1_1flock__tool_a90964771d6fc6bdfd95379431421ad13}{main}}(sys.argv[1:]))}
+
+\end{DoxyCode}

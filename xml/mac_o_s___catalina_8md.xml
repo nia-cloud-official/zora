@@ -1,0 +1,117 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="mac_o_s___catalina_8md" kind="file" language="Markdown">
+    <compoundname>macOS_Catalina.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>Installation<sp/>notes<sp/>for<sp/>macOS<sp/>Catalina<sp/>(v10.15)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">_This<sp/>document<sp/>specifically<sp/>refers<sp/>to<sp/>upgrades<sp/>from<sp/>previous<sp/>versions<sp/>of<sp/>macOS<sp/>to<sp/>Catalina<sp/>(10.15).<sp/>It<sp/>should<sp/>be<sp/>removed<sp/>from<sp/>the<sp/>source<sp/>repository<sp/>when<sp/>Catalina<sp/>ceases<sp/>to<sp/>be<sp/>the<sp/>latest<sp/>macOS<sp/>version<sp/>or<sp/>when<sp/>future<sp/>Catalina<sp/>versions<sp/>no<sp/>longer<sp/>raise<sp/>these<sp/>issues._</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Both<sp/>upgrading<sp/>to<sp/>macOS<sp/>Catalina<sp/>and<sp/>running<sp/>a<sp/>Software<sp/>Update<sp/>in<sp/>Catalina<sp/>may<sp/>cause<sp/>normal<sp/>`node-gyp`<sp/>installations<sp/>to<sp/>fail.<sp/>This<sp/>might<sp/>manifest<sp/>as<sp/>the<sp/>following<sp/>error<sp/>during<sp/>`npm<sp/>install`:**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```console</highlight></codeline>
+<codeline><highlight class="normal">gyp:<sp/>No<sp/>Xcode<sp/>or<sp/>CLT<sp/>version<sp/>detected!</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>node-gyp<sp/>v7</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>newest<sp/>release<sp/>of<sp/>`node-gyp`<sp/>should<sp/>solve<sp/>this<sp/>problem.<sp/>If<sp/>you<sp/>are<sp/>using<sp/>`node-gyp`<sp/>directly<sp/>then<sp/>you<sp/>should<sp/>be<sp/>able<sp/>to<sp/>install<sp/>v7<sp/>and<sp/>use<sp/>it<sp/>as-is.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>need<sp/>to<sp/>use<sp/>`node-gyp`<sp/>from<sp/>within<sp/>`npm`<sp/>(e.g.<sp/>through<sp/>`npm<sp/>install`),<sp/>you<sp/>will<sp/>have<sp/>to<sp/>install<sp/>`node-gyp`<sp/>(either<sp/>globally<sp/>with<sp/>`-g`<sp/>or<sp/>to<sp/>a<sp/>predictable<sp/>location)<sp/>and<sp/>tell<sp/>`npm`<sp/>where<sp/>the<sp/>new<sp/>version<sp/>is.<sp/>Either<sp/>use:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`npm<sp/>config<sp/>set<sp/>node_gyp<sp/>&lt;path<sp/>to<sp/>node-gyp&gt;`;<sp/>or</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>run<sp/>`npm`<sp/>with<sp/>an<sp/>environment<sp/>variable<sp/>prefix:<sp/>`npm_config_node_gyp=&lt;path<sp/>to<sp/>node-gyp&gt;<sp/>npm<sp/>install`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Where<sp/>&quot;path<sp/>to<sp/>node-gyp&quot;<sp/>is<sp/>to<sp/>the<sp/>`node-gyp`<sp/>executable<sp/>which<sp/>may<sp/>be<sp/>a<sp/>symlink<sp/>in<sp/>your<sp/>global<sp/>bin<sp/>directory<sp/>(e.g.<sp/>`/usr/local/bin/node-gyp`),<sp/>or<sp/>a<sp/>path<sp/>to<sp/>the<sp/>`node-gyp`<sp/>installation<sp/>directory<sp/>and<sp/>the<sp/>`bin/node-gyp.js`<sp/>file<sp/>within<sp/>it<sp/>(e.g.<sp/>`/usr/local/lib/node_modules/node-gyp/bin/node-gyp.js`).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**If<sp/>you<sp/>use<sp/>`npm<sp/>config<sp/>set`<sp/>to<sp/>change<sp/>your<sp/>global<sp/>`node_gyp`<sp/>you<sp/>are<sp/>responsible<sp/>for<sp/>keeping<sp/>it<sp/>up<sp/>to<sp/>date<sp/>and<sp/>can&apos;t<sp/>rely<sp/>on<sp/>`npm`<sp/>to<sp/>give<sp/>you<sp/>a<sp/>newer<sp/>version<sp/>when<sp/>available.**<sp/>Use<sp/>`npm<sp/>config<sp/>delete<sp/>node_gyp`<sp/>to<sp/>unset<sp/>this<sp/>configuration<sp/>option.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Fixing<sp/>Catalina<sp/>for<sp/>older<sp/>versions<sp/>of<sp/>`node-gyp`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Is<sp/>my<sp/>Mac<sp/>running<sp/>macOS<sp/>Catalina?</highlight></codeline>
+<codeline><highlight class="normal">Let&apos;s<sp/>first<sp/>make<sp/>sure<sp/>that<sp/>your<sp/>Mac<sp/>is<sp/>running<sp/>Catalina:</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">%<sp/>sw_vers</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>ProductName:<sp/><sp/><sp/><sp/>Mac<sp/>OS<sp/>X</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>ProductVersion:<sp/>10.15</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>BuildVersion:<sp/><sp/><sp/>19A602</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">If<sp/>`ProductVersion`<sp/>is<sp/>less<sp/>then<sp/>`10.15`<sp/>then<sp/>this<sp/>document<sp/>is<sp/>not<sp/>for<sp/>you.<sp/>Normal<sp/>install<sp/>docs<sp/>for<sp/>`node-gyp`<sp/>on<sp/>macOS<sp/>can<sp/>be<sp/>found<sp/>at<sp/>https://github.com/nodejs/node-gyp#on-macos</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>The<sp/>acid<sp/>test</highlight></codeline>
+<codeline><highlight class="normal">To<sp/>see<sp/>if<sp/>`Xcode<sp/>Command<sp/>Line<sp/>Tools`<sp/>is<sp/>installed<sp/>in<sp/>a<sp/>way<sp/>that<sp/>will<sp/>work<sp/>with<sp/>`node-gyp`,<sp/>run:</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">curl<sp/>-sL<sp/>https://github.com/nodejs/node-gyp/raw/master/macOS_Catalina_acid_test.sh<sp/>|<sp/>bash</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>test<sp/>succeeded,<sp/>_you<sp/>are<sp/>done_!<sp/>You<sp/>should<sp/>be<sp/>ready<sp/>to<sp/>[install](https://github.com/nodejs/node-gyp#installation)<sp/>`node-gyp`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>test<sp/>failed,<sp/>there<sp/>is<sp/>a<sp/>problem<sp/>with<sp/>your<sp/>Xcode<sp/>Command<sp/>Line<sp/>Tools<sp/>installation.<sp/>[Continue<sp/>to<sp/>Solutions](#Solutions).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Solutions</highlight></codeline>
+<codeline><highlight class="normal">There<sp/>are<sp/>three<sp/>ways<sp/>to<sp/>install<sp/>the<sp/>Xcode<sp/>libraries<sp/>`node-gyp`<sp/>needs<sp/>on<sp/>macOS.<sp/>People<sp/>running<sp/>Catalina<sp/>have<sp/>had<sp/>success<sp/>with<sp/>some<sp/>but<sp/>not<sp/>others<sp/>in<sp/>a<sp/>way<sp/>that<sp/>has<sp/>been<sp/>unpredictable.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">1.<sp/>With<sp/>the<sp/>full<sp/>Xcode<sp/>(~7.6<sp/>GB<sp/>download)<sp/>from<sp/>the<sp/>`App<sp/>Store`<sp/>app.</highlight></codeline>
+<codeline><highlight class="normal">2.<sp/>With<sp/>the<sp/>_much_<sp/>smaller<sp/>Xcode<sp/>Command<sp/>Line<sp/>Tools<sp/>via<sp/>`xcode-select<sp/>--install`</highlight></codeline>
+<codeline><highlight class="normal">3.<sp/>With<sp/>the<sp/>_much_<sp/>smaller<sp/>Xcode<sp/>Command<sp/>Line<sp/>Tools<sp/>via<sp/>manual<sp/>download.<sp/>**For<sp/>people<sp/>running<sp/>the<sp/>latest<sp/>version<sp/>of<sp/>Catalina<sp/>(10.15.2<sp/>at<sp/>the<sp/>time<sp/>of<sp/>this<sp/>writing),<sp/>this<sp/>has<sp/>worked<sp/>when<sp/>the<sp/>other<sp/>two<sp/>solutions<sp/>haven&apos;t.**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Installing<sp/>`node-gyp`<sp/>using<sp/>the<sp/>full<sp/>Xcode</highlight></codeline>
+<codeline><highlight class="normal">1.<sp/>`xcodebuild<sp/>-version`<sp/>should<sp/>show<sp/>`Xcode<sp/>11.1`<sp/>or<sp/>later.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>If<sp/>not,<sp/>then<sp/>install/upgrade<sp/>Xcode<sp/>from<sp/>the<sp/>App<sp/>Store<sp/>app.</highlight></codeline>
+<codeline><highlight class="normal">2.<sp/>Open<sp/>the<sp/>Xcode<sp/>app<sp/>and...</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>Under<sp/>__Preferences<sp/>&gt;<sp/>Locations__<sp/>select<sp/>the<sp/>tools<sp/>if<sp/>their<sp/>location<sp/>is<sp/>empty.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>Allow<sp/>Xcode<sp/>app<sp/>to<sp/>do<sp/>an<sp/>essential<sp/>install<sp/>of<sp/>the<sp/>most<sp/>recent<sp/>compiler<sp/>tools.</highlight></codeline>
+<codeline><highlight class="normal">3.<sp/>Once<sp/>all<sp/>installations<sp/>are<sp/>_complete_,<sp/>quit<sp/>out<sp/>of<sp/>Xcode.</highlight></codeline>
+<codeline><highlight class="normal">4.<sp/>`sudo<sp/>xcodebuild<sp/>-license<sp/>accept`<sp/><sp/>#<sp/>If<sp/>you<sp/>agree<sp/>with<sp/>the<sp/>licensing<sp/>terms.</highlight></codeline>
+<codeline><highlight class="normal">5.<sp/>`softwareupdate<sp/>-l`<sp/><sp/>#<sp/>No<sp/>listing<sp/>is<sp/>a<sp/>good<sp/>sign.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>If<sp/>Xcode<sp/>or<sp/>Tools<sp/>upgrades<sp/>are<sp/>listed,<sp/>use<sp/>&quot;Software<sp/>Upgrade&quot;<sp/>to<sp/>install<sp/>them.</highlight></codeline>
+<codeline><highlight class="normal">6.<sp/>`xcode-select<sp/>-version`<sp/><sp/>#<sp/>Should<sp/>return<sp/>`xcode-select<sp/>version<sp/>2370`<sp/>or<sp/>later.</highlight></codeline>
+<codeline><highlight class="normal">7.<sp/>`xcode-select<sp/>-print-path`<sp/><sp/>#<sp/>Should<sp/>return<sp/>`/Applications/Xcode.app/Contents/Developer`</highlight></codeline>
+<codeline><highlight class="normal">8.<sp/>Try<sp/>the<sp/>[_acid<sp/>test_<sp/>steps<sp/>above](#The-acid-test)<sp/>to<sp/>see<sp/>if<sp/>your<sp/>Mac<sp/>is<sp/>ready.</highlight></codeline>
+<codeline><highlight class="normal">9.<sp/>If<sp/>the<sp/>_acid<sp/>test_<sp/>does<sp/>_not_<sp/>pass<sp/>then...</highlight></codeline>
+<codeline><highlight class="normal">10.<sp/>`sudo<sp/>xcode-select<sp/>--reset`<sp/><sp/>#<sp/>Enter<sp/>root<sp/>password.<sp/><sp/>No<sp/>output<sp/>is<sp/>normal.</highlight></codeline>
+<codeline><highlight class="normal">11.<sp/>Repeat<sp/>step<sp/>7<sp/>above.<sp/><sp/>Is<sp/>the<sp/>path<sp/>different<sp/>this<sp/>time?<sp/><sp/>Repeat<sp/>the<sp/>_acid<sp/>test_.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Installing<sp/>`node-gyp`<sp/>using<sp/>the<sp/>Xcode<sp/>Command<sp/>Line<sp/>Tools<sp/>via<sp/>`xcode-select<sp/>--install`</highlight></codeline>
+<codeline><highlight class="normal">1.<sp/>If<sp/>the<sp/>_acid<sp/>test_<sp/>has<sp/>not<sp/>succeeded,<sp/>then<sp/>try<sp/>`xcode-select<sp/>--install`</highlight></codeline>
+<codeline><highlight class="normal">2.<sp/>If<sp/>the<sp/>installation<sp/>command<sp/>returns<sp/>`xcode-select:<sp/>error:<sp/>command<sp/>line<sp/>tools<sp/>are<sp/>already<sp/>installed,<sp/>use<sp/>&quot;Software<sp/>Update&quot;<sp/>to<sp/>install<sp/>updates`,<sp/>continue<sp/>to<sp/>[remove<sp/>and<sp/>reinstall](#i-did-all-that-and-the-acid-test-still-does-not-pass--)</highlight></codeline>
+<codeline><highlight class="normal">3.<sp/>Wait<sp/>until<sp/>the<sp/>install<sp/>process<sp/>is<sp/>_complete_.</highlight></codeline>
+<codeline><highlight class="normal">4.<sp/>`softwareupdate<sp/>-l`<sp/><sp/>#<sp/>No<sp/>listing<sp/>is<sp/>a<sp/>good<sp/>sign.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>If<sp/>Xcode<sp/>or<sp/>Tools<sp/>upgrades<sp/>are<sp/>listed,<sp/>use<sp/>&quot;Software<sp/>Update&quot;<sp/>to<sp/>install<sp/>them.</highlight></codeline>
+<codeline><highlight class="normal">5.<sp/>`xcode-select<sp/>-version`<sp/><sp/>#<sp/>Should<sp/>return<sp/>`xcode-select<sp/>version<sp/>2370`<sp/>or<sp/>later.</highlight></codeline>
+<codeline><highlight class="normal">6.<sp/>`xcode-select<sp/>-print-path`<sp/><sp/>#<sp/>Should<sp/>return<sp/>`/Library/Developer/CommandLineTools`</highlight></codeline>
+<codeline><highlight class="normal">7.<sp/>Try<sp/>the<sp/>[_acid<sp/>test_<sp/>steps<sp/>above](#The-acid-test)<sp/>to<sp/>see<sp/>if<sp/>your<sp/>Mac<sp/>is<sp/>ready.</highlight></codeline>
+<codeline><highlight class="normal">8.<sp/>If<sp/>the<sp/>_acid<sp/>test_<sp/>does<sp/>_not_<sp/>pass<sp/>then...</highlight></codeline>
+<codeline><highlight class="normal">9.<sp/>`sudo<sp/>xcode-select<sp/>--reset`<sp/><sp/>#<sp/>Enter<sp/>root<sp/>password.<sp/><sp/>No<sp/>output<sp/>is<sp/>normal.</highlight></codeline>
+<codeline><highlight class="normal">10.<sp/>Repeat<sp/>step<sp/>5<sp/>above.<sp/><sp/>Is<sp/>the<sp/>path<sp/>different<sp/>this<sp/>time?<sp/><sp/>Repeat<sp/>the<sp/>_acid<sp/>test_.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Installing<sp/>`node-gyp`<sp/>using<sp/>the<sp/>Xcode<sp/>Command<sp/>Line<sp/>Tools<sp/>via<sp/>manual<sp/>download</highlight></codeline>
+<codeline><highlight class="normal">1.<sp/>Download<sp/>the<sp/>appropriate<sp/>version<sp/>of<sp/>the<sp/>&quot;Command<sp/>Line<sp/>Tools<sp/>for<sp/>Xcode&quot;<sp/>for<sp/>your<sp/>version<sp/>of<sp/>Catalina<sp/>from<sp/>&lt;https://developer.apple.com/download/more/&gt;.<sp/>As<sp/>of<sp/>MacOS<sp/>10.15.5,<sp/>that&apos;s<sp/>[Command_Line_Tools_for_Xcode_11.5.dmg](https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.5/Command_Line_Tools_for_Xcode_11.5.dmg)</highlight></codeline>
+<codeline><highlight class="normal">2.<sp/>Install<sp/>the<sp/>package.</highlight></codeline>
+<codeline><highlight class="normal">3.<sp/>Run<sp/>the<sp/>[_acid<sp/>test_<sp/>steps<sp/>above](#The-acid-test).</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>I<sp/>did<sp/>all<sp/>that<sp/>and<sp/>the<sp/>acid<sp/>test<sp/>still<sp/>does<sp/>not<sp/>pass<sp/>:-(</highlight></codeline>
+<codeline><highlight class="normal">1.<sp/>`sudo<sp/>rm<sp/>-rf<sp/>$(xcode-select<sp/>-print-path)`<sp/><sp/>#<sp/>Enter<sp/>root<sp/>password.<sp/><sp/>No<sp/>output<sp/>is<sp/>normal.</highlight></codeline>
+<codeline><highlight class="normal">2.<sp/>`sudo<sp/>rm<sp/>-rf<sp/>/Library/Developer/CommandLineTools`<sp/><sp/>#<sp/>Enter<sp/>root<sp/>password.</highlight></codeline>
+<codeline><highlight class="normal">3.<sp/>`sudo<sp/>xcode-select<sp/>--reset`</highlight></codeline>
+<codeline><highlight class="normal">4.<sp/>`xcode-select<sp/>--install`</highlight></codeline>
+<codeline><highlight class="normal">5.<sp/>If<sp/>the<sp/>[_acid<sp/>test_<sp/>steps<sp/>above](#The-acid-test)<sp/>still<sp/>does<sp/>_not_<sp/>pass<sp/>then...</highlight></codeline>
+<codeline><highlight class="normal">6.<sp/>`npm<sp/>explore<sp/>npm<sp/>-g<sp/>--<sp/>npm<sp/>install<sp/>node-gyp@latest`</highlight></codeline>
+<codeline><highlight class="normal">7.<sp/>`npm<sp/>explore<sp/>npm<sp/>-g<sp/>--<sp/>npm<sp/>explore<sp/>npm-lifecycle<sp/>--<sp/>npm<sp/>install<sp/>node-gyp@latest`</highlight></codeline>
+<codeline><highlight class="normal">8.<sp/>If<sp/>the<sp/>_acid<sp/>test_<sp/>still<sp/>does<sp/>_not_<sp/>pass<sp/>then...</highlight></codeline>
+<codeline><highlight class="normal">9.<sp/>Add<sp/>a<sp/>comment<sp/>to<sp/>https://github.com/nodejs/node-gyp/issues/1927<sp/>so<sp/>we<sp/>can<sp/>improve.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Lessons<sp/>learned<sp/>from:</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>https://github.com/nodejs/node-gyp/issues/1779</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>https://github.com/nodejs/node-gyp/issues/1861</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>https://github.com/nodejs/node-gyp/issues/1927<sp/>and<sp/>elsewhere</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Thanks<sp/>to<sp/>@rrrix<sp/>for<sp/>discovering<sp/>Solution<sp/>3</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/node-gyp/macOS_Catalina.md"/>
+  </compounddef>
+</doxygen>

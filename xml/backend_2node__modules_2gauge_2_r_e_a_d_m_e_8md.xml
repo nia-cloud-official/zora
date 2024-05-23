@@ -1,0 +1,415 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2gauge_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">gauge</highlight></codeline>
+<codeline><highlight class="normal">=====</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>nearly<sp/>stateless<sp/>terminal<sp/>based<sp/>horizontal<sp/>gauge<sp/>/<sp/>progress<sp/>bar.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>Gauge<sp/>=<sp/>require(&quot;gauge&quot;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>gauge<sp/>=<sp/>new<sp/>Gauge()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">gauge.show(&quot;working…&quot;,<sp/>0)</highlight></codeline>
+<codeline><highlight class="normal">setTimeout(()<sp/>=&gt;<sp/>{<sp/>gauge.pulse();<sp/>gauge.show(&quot;working…&quot;,<sp/>0.25)<sp/>},<sp/>500)</highlight></codeline>
+<codeline><highlight class="normal">setTimeout(()<sp/>=&gt;<sp/>{<sp/>gauge.pulse();<sp/>gauge.show(&quot;working…&quot;,<sp/>0.50)<sp/>},<sp/>1000)</highlight></codeline>
+<codeline><highlight class="normal">setTimeout(()<sp/>=&gt;<sp/>{<sp/>gauge.pulse();<sp/>gauge.show(&quot;working…&quot;,<sp/>0.75)<sp/>},<sp/>1500)</highlight></codeline>
+<codeline><highlight class="normal">setTimeout(()<sp/>=&gt;<sp/>{<sp/>gauge.pulse();<sp/>gauge.show(&quot;working…&quot;,<sp/>0.99)<sp/>},<sp/>2000)</highlight></codeline>
+<codeline><highlight class="normal">setTimeout(()<sp/>=&gt;<sp/>gauge.hide(),<sp/>2300)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">See<sp/>also<sp/>the<sp/>[demos](docs/demo.js):</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">![](./docs/gauge-demo.gif)</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>CHANGES<sp/>FROM<sp/>1.x</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Gauge<sp/>2.x<sp/>is<sp/>breaking<sp/>release,<sp/>please<sp/>see<sp/>the<sp/>[changelog]<sp/>for<sp/>details<sp/>on</highlight></codeline>
+<codeline><highlight class="normal">what&apos;s<sp/>changed<sp/>if<sp/>you<sp/>were<sp/>previously<sp/>a<sp/>user<sp/>of<sp/>this<sp/>module.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[changelog]:<sp/>CHANGELOG.md</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>THE<sp/>GAUGE<sp/>CLASS</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>the<sp/>typical<sp/>interface<sp/>to<sp/>the<sp/>module–<sp/>it<sp/>provides<sp/>a<sp/>pretty</highlight></codeline>
+<codeline><highlight class="normal">fire-and-forget<sp/>interface<sp/>to<sp/>displaying<sp/>your<sp/>status<sp/>information.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>Gauge<sp/>=<sp/>require(&quot;gauge&quot;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>gauge<sp/>=<sp/>new<sp/>Gauge([stream],<sp/>[options])</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>**stream**<sp/>–<sp/>*(optional,<sp/>default<sp/>STDERR)*<sp/>A<sp/>stream<sp/>that<sp/>progress<sp/>bar</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>updates<sp/>are<sp/>to<sp/>be<sp/>written<sp/>to.<sp/><sp/>Gauge<sp/>honors<sp/>backpressure<sp/>and<sp/>will<sp/>pause</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>most<sp/>writing<sp/>if<sp/>it<sp/>is<sp/>indicated.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>**options**<sp/>–<sp/>*(optional)*<sp/>An<sp/>option<sp/>object.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Constructs<sp/>a<sp/>new<sp/>gauge.<sp/>Gauges<sp/>are<sp/>drawn<sp/>on<sp/>a<sp/>single<sp/>line,<sp/>and<sp/>are<sp/>not<sp/>drawn</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>**stream**<sp/>isn&apos;t<sp/>a<sp/>tty<sp/>and<sp/>a<sp/>tty<sp/>isn&apos;t<sp/>explicitly<sp/>provided.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>**stream**<sp/>is<sp/>a<sp/>terminal<sp/>or<sp/>if<sp/>you<sp/>pass<sp/>in<sp/>**tty**<sp/>to<sp/>**options**<sp/>then<sp/>we</highlight></codeline>
+<codeline><highlight class="normal">will<sp/>detect<sp/>terminal<sp/>resizes<sp/>and<sp/>redraw<sp/>to<sp/>fit.<sp/><sp/>We<sp/>do<sp/>this<sp/>by<sp/>watching<sp/>for</highlight></codeline>
+<codeline><highlight class="normal">`resize`<sp/>events<sp/>on<sp/>the<sp/>tty.<sp/><sp/>(To<sp/>work<sp/>around<sp/>a<sp/>bug<sp/>in<sp/>versions<sp/>of<sp/>Node<sp/>prior</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>2.5.0,<sp/>we<sp/>watch<sp/>for<sp/>them<sp/>on<sp/>stdout<sp/>if<sp/>the<sp/>tty<sp/>is<sp/>stderr.)<sp/>Resizes<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">larger<sp/>window<sp/>sizes<sp/>will<sp/>be<sp/>clean,<sp/>but<sp/>shrinking<sp/>the<sp/>window<sp/>will<sp/>always</highlight></codeline>
+<codeline><highlight class="normal">result<sp/>in<sp/>some<sp/>cruft.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**IMPORTANT:**<sp/>If<sp/>you<sp/>previously<sp/>were<sp/>passing<sp/>in<sp/>a<sp/>non-tty<sp/>stream<sp/>but<sp/>you<sp/>still</highlight></codeline>
+<codeline><highlight class="normal">want<sp/>output<sp/>(for<sp/>example,<sp/>a<sp/>stream<sp/>wrapped<sp/>by<sp/>the<sp/>`ansi`<sp/>module)<sp/>then<sp/>you</highlight></codeline>
+<codeline><highlight class="normal">need<sp/>to<sp/>pass<sp/>in<sp/>the<sp/>**tty**<sp/>option<sp/>below,<sp/>as<sp/>`gauge`<sp/>needs<sp/>access<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>underlying<sp/>tty<sp/>in<sp/>order<sp/>to<sp/>do<sp/>things<sp/>like<sp/>terminal<sp/>resizes<sp/>and<sp/>terminal</highlight></codeline>
+<codeline><highlight class="normal">width<sp/>detection.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>**options**<sp/>object<sp/>can<sp/>have<sp/>the<sp/>following<sp/>properties,<sp/>all<sp/>of<sp/>which<sp/>are</highlight></codeline>
+<codeline><highlight class="normal">optional:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>**updateInterval**:<sp/>How<sp/>often<sp/>gauge<sp/>updates<sp/>should<sp/>be<sp/>drawn,<sp/>in<sp/>milliseconds.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>**fixedFramerate**:<sp/>Defaults<sp/>to<sp/>false<sp/>on<sp/>node<sp/>0.8,<sp/>true<sp/>on<sp/>everything</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>else.<sp/><sp/>When<sp/>this<sp/>is<sp/>true<sp/>a<sp/>timer<sp/>is<sp/>created<sp/>to<sp/>trigger<sp/>once<sp/>every</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`updateInterval`<sp/>ms,<sp/>when<sp/>false,<sp/>updates<sp/>are<sp/>printed<sp/>as<sp/>soon<sp/>as<sp/>they<sp/>come</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>in<sp/>but<sp/>updates<sp/>more<sp/>often<sp/>than<sp/>`updateInterval`<sp/>are<sp/>ignored.<sp/><sp/>The<sp/>reason</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>0.8<sp/>doesn&apos;t<sp/>have<sp/>this<sp/>set<sp/>to<sp/>true<sp/>is<sp/>that<sp/>it<sp/>can&apos;t<sp/>`unref`<sp/>its<sp/>timer<sp/>and</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>so<sp/>it<sp/>would<sp/>stop<sp/>your<sp/>program<sp/>from<sp/>exiting–<sp/>if<sp/>you<sp/>want<sp/>to<sp/>use<sp/>this</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>feature<sp/>with<sp/>0.8<sp/>just<sp/>make<sp/>sure<sp/>you<sp/>call<sp/>`gauge.disable()`<sp/>before<sp/>you</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>expect<sp/>your<sp/>program<sp/>to<sp/>exit.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>**themes**:<sp/>A<sp/>themeset<sp/>to<sp/>use<sp/>when<sp/>selecting<sp/>the<sp/>theme<sp/>to<sp/>use.<sp/>Defaults</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>to<sp/>`gauge/themes`,<sp/>see<sp/>the<sp/>[themes]<sp/>documentation<sp/>for<sp/>details.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>**theme**:<sp/>Select<sp/>a<sp/>theme<sp/>for<sp/>use,<sp/>it<sp/>can<sp/>be<sp/>a:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>Theme<sp/>object,<sp/>in<sp/>which<sp/>case<sp/>the<sp/>**themes**<sp/>is<sp/>not<sp/>used.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>The<sp/>name<sp/>of<sp/>a<sp/>theme,<sp/>which<sp/>will<sp/>be<sp/>looked<sp/>up<sp/>in<sp/>the<sp/>current<sp/>*themes*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>object.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>A<sp/>configuration<sp/>object<sp/>with<sp/>any<sp/>of<sp/>`hasUnicode`,<sp/>`hasColor`<sp/>or</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>`platform`<sp/>keys,<sp/>which<sp/>if<sp/>will<sp/>be<sp/>used<sp/>to<sp/>override<sp/>our<sp/>guesses<sp/>when<sp/>making</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>a<sp/>default<sp/>theme<sp/>selection.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>If<sp/>no<sp/>theme<sp/>is<sp/>selected<sp/>then<sp/>a<sp/>default<sp/>is<sp/>picked<sp/>using<sp/>a<sp/>combination<sp/>of<sp/>our</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>best<sp/>guesses<sp/>at<sp/>your<sp/>OS,<sp/>color<sp/>support<sp/>and<sp/>unicode<sp/>support.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>**template**:<sp/>Describes<sp/>what<sp/>you<sp/>want<sp/>your<sp/>gauge<sp/>to<sp/>look<sp/>like.<sp/><sp/>The</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>default<sp/>is<sp/>what<sp/>npm<sp/>uses.<sp/><sp/>Detailed<sp/>[documentation]<sp/>is<sp/>later<sp/>in<sp/>this</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>document.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>**hideCursor**:<sp/>Defaults<sp/>to<sp/>true.<sp/><sp/>If<sp/>true,<sp/>then<sp/>the<sp/>cursor<sp/>will<sp/>be<sp/>hidden</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>while<sp/>the<sp/>gauge<sp/>is<sp/>displayed.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>**tty**:<sp/>The<sp/>tty<sp/>that<sp/>you&apos;re<sp/>ultimately<sp/>writing<sp/>to.<sp/><sp/>Defaults<sp/>to<sp/>the<sp/>same</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>as<sp/>**stream**.<sp/><sp/>This<sp/>is<sp/>used<sp/>for<sp/>detecting<sp/>the<sp/>width<sp/>of<sp/>the<sp/>terminal<sp/>and</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>resizes.<sp/>The<sp/>width<sp/>used<sp/>is<sp/>`tty.columns<sp/>-<sp/>1`.<sp/>If<sp/>no<sp/>tty<sp/>is<sp/>available<sp/>then</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>a<sp/>width<sp/>of<sp/>`79`<sp/>is<sp/>assumed.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>**enabled**:<sp/>Defaults<sp/>to<sp/>true<sp/>if<sp/>`tty`<sp/>is<sp/>a<sp/>TTY,<sp/>false<sp/>otherwise.<sp/><sp/>If<sp/>true</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>the<sp/>gauge<sp/>starts<sp/>enabled.<sp/><sp/>If<sp/>disabled<sp/>then<sp/>all<sp/>update<sp/>commands<sp/>are</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>ignored<sp/>and<sp/>no<sp/>gauge<sp/>will<sp/>be<sp/>printed<sp/>until<sp/>you<sp/>call<sp/>`.enable()`.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>**Plumbing**:<sp/>The<sp/>class<sp/>to<sp/>use<sp/>to<sp/>actually<sp/>generate<sp/>the<sp/>gauge<sp/>for</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>printing.<sp/><sp/>This<sp/>defaults<sp/>to<sp/>`require(&apos;gauge/plumbing&apos;)`<sp/>and<sp/>ordinarily<sp/>you</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>shouldn&apos;t<sp/>need<sp/>to<sp/>override<sp/>this.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>**cleanupOnExit**:<sp/>Defaults<sp/>to<sp/>true.<sp/>Ordinarily<sp/>we<sp/>register<sp/>an<sp/>exit</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>handler<sp/>to<sp/>make<sp/>sure<sp/>your<sp/>cursor<sp/>is<sp/>turned<sp/>back<sp/>on<sp/>and<sp/>the<sp/>progress<sp/>bar</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>erased<sp/>when<sp/>your<sp/>process<sp/>exits,<sp/>even<sp/>if<sp/>you<sp/>Ctrl-C<sp/>out<sp/>or<sp/>otherwise<sp/>exit</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>unexpectedly.<sp/>You<sp/>can<sp/>disable<sp/>this<sp/>and<sp/>it<sp/>won&apos;t<sp/>register<sp/>the<sp/>exit<sp/>handler.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[has-unicode]:<sp/>https://www.npmjs.com/package/has-unicode</highlight></codeline>
+<codeline><highlight class="normal">[themes]:<sp/>#themes</highlight></codeline>
+<codeline><highlight class="normal">[documentation]:<sp/>#templates</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>`gauge.show(section<sp/>|<sp/>status,<sp/>[completed])`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>first<sp/>argument<sp/>is<sp/>either<sp/>the<sp/>section,<sp/>the<sp/>name<sp/>of<sp/>the<sp/>current<sp/>thing</highlight></codeline>
+<codeline><highlight class="normal">contributing<sp/>to<sp/>progress,<sp/>or<sp/>an<sp/>object<sp/>with<sp/>keys<sp/>like<sp/>**section**,</highlight></codeline>
+<codeline><highlight class="normal">**subsection**<sp/>&amp;<sp/>**completed**<sp/>(or<sp/>any<sp/>others<sp/>you<sp/>have<sp/>types<sp/>for<sp/>in<sp/>a<sp/>custom</highlight></codeline>
+<codeline><highlight class="normal">template).<sp/><sp/>If<sp/>you<sp/>don&apos;t<sp/>want<sp/>to<sp/>update<sp/>or<sp/>set<sp/>any<sp/>of<sp/>these<sp/>you<sp/>can<sp/>pass</highlight></codeline>
+<codeline><highlight class="normal">`null`<sp/>and<sp/>it<sp/>will<sp/>be<sp/>ignored.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>second<sp/>argument<sp/>is<sp/>the<sp/>percent<sp/>completed<sp/>as<sp/>a<sp/>value<sp/>between<sp/>0<sp/>and<sp/>1.</highlight></codeline>
+<codeline><highlight class="normal">Without<sp/>it,<sp/>completion<sp/>is<sp/>just<sp/>not<sp/>updated.<sp/>You&apos;ll<sp/>also<sp/>note<sp/>that<sp/>completion</highlight></codeline>
+<codeline><highlight class="normal">can<sp/>be<sp/>passed<sp/>in<sp/>as<sp/>part<sp/>of<sp/>a<sp/>status<sp/>object<sp/>as<sp/>the<sp/>first<sp/>argument.<sp/>If<sp/>both</highlight></codeline>
+<codeline><highlight class="normal">it<sp/>and<sp/>the<sp/>completed<sp/>argument<sp/>are<sp/>passed<sp/>in,<sp/>the<sp/>completed<sp/>argument<sp/>wins.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>`gauge.hide([cb])`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Removes<sp/>the<sp/>gauge<sp/>from<sp/>the<sp/>terminal.<sp/><sp/>Optionally,<sp/>callback<sp/>`cb`<sp/>after<sp/>IO<sp/>has</highlight></codeline>
+<codeline><highlight class="normal">had<sp/>an<sp/>opportunity<sp/>to<sp/>happen<sp/>(currently<sp/>this<sp/>just<sp/>means<sp/>after<sp/>`setImmediate`</highlight></codeline>
+<codeline><highlight class="normal">has<sp/>called<sp/>back.)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">It<sp/>turns<sp/>out<sp/>this<sp/>is<sp/>important<sp/>when<sp/>you&apos;re<sp/>pausing<sp/>the<sp/>progress<sp/>bar<sp/>on<sp/>one</highlight></codeline>
+<codeline><highlight class="normal">filehandle<sp/>and<sp/>printing<sp/>to<sp/>another–<sp/>otherwise<sp/>(with<sp/>a<sp/>big<sp/>enough<sp/>print)<sp/>node</highlight></codeline>
+<codeline><highlight class="normal">can<sp/>end<sp/>up<sp/>printing<sp/>the<sp/>&quot;end<sp/>progress<sp/>bar&quot;<sp/>bits<sp/>to<sp/>the<sp/>progress<sp/>bar<sp/>filehandle</highlight></codeline>
+<codeline><highlight class="normal">while<sp/>other<sp/>stuff<sp/>is<sp/>printing<sp/>to<sp/>another<sp/>filehandle.<sp/>These<sp/>getting<sp/>interleaved</highlight></codeline>
+<codeline><highlight class="normal">can<sp/>cause<sp/>corruption<sp/>in<sp/>some<sp/>terminals.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>`gauge.pulse([subsection])`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>**subsection**<sp/>–<sp/>*(optional)*<sp/>The<sp/>specific<sp/>thing<sp/>that<sp/>triggered<sp/>this<sp/>pulse</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Spins<sp/>the<sp/>spinner<sp/>in<sp/>the<sp/>gauge<sp/>to<sp/>show<sp/>output.<sp/><sp/>If<sp/>**subsection**<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">included<sp/>then<sp/>it<sp/>will<sp/>be<sp/>combined<sp/>with<sp/>the<sp/>last<sp/>name<sp/>passed<sp/>to<sp/>`gauge.show`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>`gauge.disable()`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Hides<sp/>the<sp/>gauge<sp/>and<sp/>ignores<sp/>further<sp/>calls<sp/>to<sp/>`show`<sp/>or<sp/>`pulse`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>`gauge.enable()`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Shows<sp/>the<sp/>gauge<sp/>and<sp/>resumes<sp/>updating<sp/>when<sp/>`show`<sp/>or<sp/>`pulse`<sp/>is<sp/>called.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>`gauge.isEnabled()`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>true<sp/>if<sp/>the<sp/>gauge<sp/>is<sp/>enabled.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>`gauge.setThemeset(themes)`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Change<sp/>the<sp/>themeset<sp/>to<sp/>select<sp/>a<sp/>theme<sp/>from.<sp/>The<sp/>same<sp/>as<sp/>the<sp/>`themes`<sp/>option</highlight></codeline>
+<codeline><highlight class="normal">used<sp/>in<sp/>the<sp/>constructor.<sp/>The<sp/>theme<sp/>will<sp/>be<sp/>reselected<sp/>from<sp/>this<sp/>themeset.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>`gauge.setTheme(theme)`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Change<sp/>the<sp/>active<sp/>theme,<sp/>will<sp/>be<sp/>displayed<sp/>with<sp/>the<sp/>next<sp/>show<sp/>or<sp/>pulse.<sp/>This<sp/>can<sp/>be:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>Theme<sp/>object,<sp/>in<sp/>which<sp/>case<sp/>the<sp/>**themes**<sp/>is<sp/>not<sp/>used.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>The<sp/>name<sp/>of<sp/>a<sp/>theme,<sp/>which<sp/>will<sp/>be<sp/>looked<sp/>up<sp/>in<sp/>the<sp/>current<sp/>*themes*</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>object.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>A<sp/>configuration<sp/>object<sp/>with<sp/>any<sp/>of<sp/>`hasUnicode`,<sp/>`hasColor`<sp/>or</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`platform`<sp/>keys,<sp/>which<sp/>if<sp/>will<sp/>be<sp/>used<sp/>to<sp/>override<sp/>our<sp/>guesses<sp/>when<sp/>making</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>a<sp/>default<sp/>theme<sp/>selection.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>no<sp/>theme<sp/>is<sp/>selected<sp/>then<sp/>a<sp/>default<sp/>is<sp/>picked<sp/>using<sp/>a<sp/>combination<sp/>of<sp/>our</highlight></codeline>
+<codeline><highlight class="normal">best<sp/>guesses<sp/>at<sp/>your<sp/>OS,<sp/>color<sp/>support<sp/>and<sp/>unicode<sp/>support.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>`gauge.setTemplate(template)`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Change<sp/>the<sp/>active<sp/>template,<sp/>will<sp/>be<sp/>displayed<sp/>with<sp/>the<sp/>next<sp/>show<sp/>or<sp/>pulse</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Tracking<sp/>Completion</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>have<sp/>more<sp/>than<sp/>one<sp/>thing<sp/>going<sp/>on<sp/>that<sp/>you<sp/>want<sp/>to<sp/>track<sp/>completion</highlight></codeline>
+<codeline><highlight class="normal">of,<sp/>you<sp/>may<sp/>find<sp/>the<sp/>related<sp/>[are-we-there-yet]<sp/>helpful.<sp/><sp/>It&apos;s<sp/>`change`</highlight></codeline>
+<codeline><highlight class="normal">event<sp/>can<sp/>be<sp/>wired<sp/>up<sp/>to<sp/>the<sp/>`show`<sp/>method<sp/>to<sp/>get<sp/>a<sp/>more<sp/>traditional</highlight></codeline>
+<codeline><highlight class="normal">progress<sp/>bar<sp/>interface.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[are-we-there-yet]:<sp/>https://www.npmjs.com/package/are-we-there-yet</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>THEMES</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>themes<sp/>=<sp/>require(&apos;gauge/themes&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>fetch<sp/>the<sp/>default<sp/>color<sp/>unicode<sp/>theme<sp/>for<sp/>this<sp/>platform</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>ourTheme<sp/>=<sp/>themes({hasUnicode:<sp/>true,<sp/>hasColor:<sp/>true})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>fetch<sp/>the<sp/>default<sp/>non-color<sp/>unicode<sp/>theme<sp/>for<sp/>osx</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>ourTheme<sp/>=<sp/>themes({hasUnicode:<sp/>true,<sp/>hasColor:<sp/>false,<sp/>platform:<sp/>&apos;darwin&apos;})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>create<sp/>a<sp/>new<sp/>theme<sp/>based<sp/>on<sp/>the<sp/>color<sp/>ascii<sp/>theme<sp/>for<sp/>this<sp/>platform</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>that<sp/>brackets<sp/>the<sp/>progress<sp/>bar<sp/>with<sp/>arrows</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>ourTheme<sp/>=<sp/>themes.newTheme(themes({hasUnicode:<sp/>false,<sp/>hasColor:<sp/>true}),<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>preProgressbar:<sp/>&apos;→&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>postProgressbar:<sp/>&apos;←&apos;</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>object<sp/>returned<sp/>by<sp/>`gauge/themes`<sp/>is<sp/>an<sp/>instance<sp/>of<sp/>the<sp/>`ThemeSet`<sp/>class.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>ThemeSet<sp/>=<sp/>require(&apos;gauge/theme-set&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>themes<sp/>=<sp/>new<sp/>ThemeSet()</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>or</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>themes<sp/>=<sp/>require(&apos;gauge/themes&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>mythemes<sp/>=<sp/>themes.newThemeSet()<sp/>//<sp/>creates<sp/>a<sp/>new<sp/>themeset<sp/>based<sp/>on<sp/>the<sp/>default<sp/>themes</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>themes(opts)</highlight></codeline>
+<codeline><highlight class="normal">####<sp/>themes.getDefault(opts)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Theme<sp/>objects<sp/>are<sp/>a<sp/>function<sp/>that<sp/>fetches<sp/>the<sp/>default<sp/>theme<sp/>based<sp/>on</highlight></codeline>
+<codeline><highlight class="normal">platform,<sp/>unicode<sp/>and<sp/>color<sp/>support.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Options<sp/>is<sp/>an<sp/>object<sp/>with<sp/>the<sp/>following<sp/>properties:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>**hasUnicode**<sp/>-<sp/>If<sp/>true,<sp/>fetch<sp/>a<sp/>unicode<sp/>theme,<sp/>if<sp/>no<sp/>unicode<sp/>theme<sp/>is</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>available<sp/>then<sp/>a<sp/>non-unicode<sp/>theme<sp/>will<sp/>be<sp/>used.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>**hasColor**<sp/>-<sp/>If<sp/>true,<sp/>fetch<sp/>a<sp/>color<sp/>theme,<sp/>if<sp/>no<sp/>color<sp/>theme<sp/>is</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>available<sp/>a<sp/>non-color<sp/>theme<sp/>will<sp/>be<sp/>used.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>**platform**<sp/>(optional)<sp/>-<sp/>Defaults<sp/>to<sp/>`process.platform`.<sp/><sp/>If<sp/>no</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>platform<sp/>match<sp/>is<sp/>available<sp/>then<sp/>`fallback`<sp/>is<sp/>used<sp/>instead.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>no<sp/>compatible<sp/>theme<sp/>can<sp/>be<sp/>found<sp/>then<sp/>an<sp/>error<sp/>will<sp/>be<sp/>thrown<sp/>with<sp/>a</highlight></codeline>
+<codeline><highlight class="normal">`code`<sp/>of<sp/>`EMISSINGTHEME`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>themes.addTheme(themeName,<sp/>themeObj)</highlight></codeline>
+<codeline><highlight class="normal">####<sp/>themes.addTheme(themeName,<sp/>[parentTheme],<sp/>newTheme)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Adds<sp/>a<sp/>named<sp/>theme<sp/>to<sp/>the<sp/>themeset.<sp/><sp/>You<sp/>can<sp/>pass<sp/>in<sp/>either<sp/>a<sp/>theme<sp/>object,</highlight></codeline>
+<codeline><highlight class="normal">as<sp/>returned<sp/>by<sp/>`themes.newTheme`<sp/>or<sp/>the<sp/>arguments<sp/>you&apos;d<sp/>pass<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">`themes.newTheme`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>themes.getThemeNames()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Return<sp/>a<sp/>list<sp/>of<sp/>all<sp/>of<sp/>the<sp/>names<sp/>of<sp/>the<sp/>themes<sp/>in<sp/>this<sp/>themeset.<sp/>Suitable</highlight></codeline>
+<codeline><highlight class="normal">for<sp/>use<sp/>in<sp/>`themes.getTheme(…)`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>themes.getTheme(name)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Returns<sp/>the<sp/>theme<sp/>object<sp/>from<sp/>this<sp/>theme<sp/>set<sp/>named<sp/>`name`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>`name`<sp/>does<sp/>not<sp/>exist<sp/>in<sp/>this<sp/>themeset<sp/>an<sp/>error<sp/>will<sp/>be<sp/>thrown<sp/>with</highlight></codeline>
+<codeline><highlight class="normal">a<sp/>`code`<sp/>of<sp/>`EMISSINGTHEME`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>themes.setDefault([opts],<sp/>themeName)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`opts`<sp/>is<sp/>an<sp/>object<sp/>with<sp/>the<sp/>following<sp/>properties.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>**platform**<sp/>-<sp/>Defaults<sp/>to<sp/>`&apos;fallback&apos;`.<sp/><sp/>If<sp/>your<sp/>theme<sp/>is<sp/>platform</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>specific,<sp/>specify<sp/>that<sp/>here<sp/>with<sp/>the<sp/>platform<sp/>from<sp/>`process.platform`,<sp/>eg,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`win32`,<sp/>`darwin`,<sp/>etc.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>**hasUnicode**<sp/>-<sp/>Defaults<sp/>to<sp/>`false`.<sp/>If<sp/>your<sp/>theme<sp/>uses<sp/>unicode<sp/>you</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>should<sp/>set<sp/>this<sp/>to<sp/>true.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>**hasColor**<sp/>-<sp/>Defaults<sp/>to<sp/>`false`.<sp/><sp/>If<sp/>your<sp/>theme<sp/>uses<sp/>color<sp/>you<sp/>should</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>set<sp/>this<sp/>to<sp/>true.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`themeName`<sp/>is<sp/>the<sp/>name<sp/>of<sp/>the<sp/>theme<sp/>(as<sp/>given<sp/>to<sp/>`addTheme`)<sp/>to<sp/>use<sp/>for</highlight></codeline>
+<codeline><highlight class="normal">this<sp/>set<sp/>of<sp/>`opts`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>themes.newTheme([parentTheme,]<sp/>newTheme)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Create<sp/>a<sp/>new<sp/>theme<sp/>object<sp/>based<sp/>on<sp/>`parentTheme`.<sp/><sp/>If<sp/>no<sp/>`parentTheme`<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">provided<sp/>then<sp/>a<sp/>minimal<sp/>parentTheme<sp/>that<sp/>defines<sp/>functions<sp/>for<sp/>rendering<sp/>the</highlight></codeline>
+<codeline><highlight class="normal">activity<sp/>indicator<sp/>(spinner)<sp/>and<sp/>progress<sp/>bar<sp/>will<sp/>be<sp/>defined.<sp/>(This</highlight></codeline>
+<codeline><highlight class="normal">fallback<sp/>parent<sp/>is<sp/>defined<sp/>in<sp/>`gauge/base-theme`.)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">newTheme<sp/>should<sp/>be<sp/>a<sp/>bare<sp/>object–<sp/>we&apos;ll<sp/>start<sp/>by<sp/>discussing<sp/>the<sp/>properties</highlight></codeline>
+<codeline><highlight class="normal">defined<sp/>by<sp/>the<sp/>default<sp/>themes:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>**preProgressbar**<sp/>-<sp/>displayed<sp/>prior<sp/>to<sp/>the<sp/>progress<sp/>bar,<sp/>if<sp/>the<sp/>progress</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>bar<sp/>is<sp/>displayed.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>**postProgressbar**<sp/>-<sp/>displayed<sp/>after<sp/>the<sp/>progress<sp/>bar,<sp/>if<sp/>the<sp/>progress<sp/>bar</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>is<sp/>displayed.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>**progressBarTheme**<sp/>-<sp/>The<sp/>subtheme<sp/>passed<sp/>through<sp/>to<sp/>the<sp/>progress<sp/>bar</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>renderer,<sp/>it&apos;s<sp/>an<sp/>object<sp/>with<sp/>`complete`<sp/>and<sp/>`remaining`<sp/>properties</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>that<sp/>are<sp/>the<sp/>strings<sp/>you<sp/>want<sp/>repeated<sp/>for<sp/>those<sp/>sections<sp/>of<sp/>the<sp/>progress</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>bar.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>**activityIndicatorTheme**<sp/>-<sp/>The<sp/>theme<sp/>for<sp/>the<sp/>activity<sp/>indicator<sp/>(spinner),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>this<sp/>can<sp/>either<sp/>be<sp/>a<sp/>string,<sp/>in<sp/>which<sp/>each<sp/>character<sp/>is<sp/>a<sp/>different<sp/>step,<sp/>or</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>an<sp/>array<sp/>of<sp/>strings.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>**preSubsection**<sp/>-<sp/>Displayed<sp/>as<sp/>a<sp/>separator<sp/>between<sp/>the<sp/>`section`<sp/>and</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>`subsection`<sp/>when<sp/>the<sp/>latter<sp/>is<sp/>printed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">More<sp/>generally,<sp/>themes<sp/>can<sp/>have<sp/>any<sp/>value<sp/>that<sp/>would<sp/>be<sp/>a<sp/>valid<sp/>value<sp/>when<sp/>rendering</highlight></codeline>
+<codeline><highlight class="normal">templates.<sp/>The<sp/>properties<sp/>in<sp/>the<sp/>theme<sp/>are<sp/>used<sp/>when<sp/>their<sp/>name<sp/>matches<sp/>a<sp/>type<sp/>in</highlight></codeline>
+<codeline><highlight class="normal">the<sp/>template.<sp/>Their<sp/>values<sp/>can<sp/>be:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>**strings<sp/>&amp;<sp/>numbers**<sp/>-<sp/>They&apos;ll<sp/>be<sp/>included<sp/>as<sp/>is</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>**function<sp/>(values,<sp/>theme,<sp/>width)**<sp/>-<sp/>Should<sp/>return<sp/>what<sp/>you<sp/>want<sp/>in<sp/>your<sp/>output.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*values*<sp/>is<sp/>an<sp/>object<sp/>with<sp/>values<sp/>provided<sp/>via<sp/>`gauge.show`,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*theme*<sp/>is<sp/>the<sp/>theme<sp/>specific<sp/>to<sp/>this<sp/>item<sp/>(see<sp/>below)<sp/>or<sp/>this<sp/>theme<sp/>object,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>and<sp/>*width*<sp/>is<sp/>the<sp/>number<sp/>of<sp/>characters<sp/>wide<sp/>your<sp/>result<sp/>should<sp/>be.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">There<sp/>are<sp/>a<sp/>couple<sp/>of<sp/>special<sp/>prefixes:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>**pre**<sp/>-<sp/>Is<sp/>shown<sp/>prior<sp/>to<sp/>the<sp/>property,<sp/>if<sp/>its<sp/>displayed.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>**post**<sp/>-<sp/>Is<sp/>shown<sp/>after<sp/>the<sp/>property,<sp/>if<sp/>its<sp/>displayed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">And<sp/>one<sp/>special<sp/>suffix:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>**Theme**<sp/>-<sp/>Its<sp/>value<sp/>is<sp/>passed<sp/>to<sp/>a<sp/>function-type<sp/>item<sp/>as<sp/>the<sp/>theme.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>themes.addToAllThemes(theme)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>*mixes-in*<sp/>`theme`<sp/>into<sp/>all<sp/>themes<sp/>currently<sp/>defined.<sp/>It<sp/>also<sp/>adds<sp/>it</highlight></codeline>
+<codeline><highlight class="normal">to<sp/>the<sp/>default<sp/>parent<sp/>theme<sp/>for<sp/>this<sp/>themeset,<sp/>so<sp/>future<sp/>themes<sp/>added<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">this<sp/>themeset<sp/>will<sp/>get<sp/>the<sp/>values<sp/>from<sp/>`theme`<sp/>by<sp/>default.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>themes.newThemeSet()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Copy<sp/>the<sp/>current<sp/>themeset<sp/>into<sp/>a<sp/>new<sp/>one.<sp/><sp/>This<sp/>allows<sp/>you<sp/>to<sp/>easily<sp/>inherit</highlight></codeline>
+<codeline><highlight class="normal">one<sp/>themeset<sp/>from<sp/>another.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>TEMPLATES</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">A<sp/>template<sp/>is<sp/>an<sp/>array<sp/>of<sp/>objects<sp/>and<sp/>strings<sp/>that,<sp/>after<sp/>being<sp/>evaluated,</highlight></codeline>
+<codeline><highlight class="normal">will<sp/>be<sp/>turned<sp/>into<sp/>the<sp/>gauge<sp/>line.<sp/><sp/>The<sp/>default<sp/>template<sp/>is:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```javascript</highlight></codeline>
+<codeline><highlight class="normal">[</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{type:<sp/>&apos;progressbar&apos;,<sp/>length:<sp/>20},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{type:<sp/>&apos;activityIndicator&apos;,<sp/>kerning:<sp/>1,<sp/>length:<sp/>1},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{type:<sp/>&apos;section&apos;,<sp/>kerning:<sp/>1,<sp/>default:<sp/>&apos;&apos;},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{type:<sp/>&apos;subsection&apos;,<sp/>kerning:<sp/>1,<sp/>default:<sp/>&apos;&apos;}</highlight></codeline>
+<codeline><highlight class="normal">]</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>various<sp/>template<sp/>elements<sp/>can<sp/>either<sp/>be<sp/>**plain<sp/>strings**,<sp/>in<sp/>which<sp/>case<sp/>they<sp/>will</highlight></codeline>
+<codeline><highlight class="normal">be<sp/>be<sp/>included<sp/>verbatum<sp/>in<sp/>the<sp/>output,<sp/>or<sp/>objects<sp/>with<sp/>the<sp/>following<sp/>properties:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>*type*<sp/>can<sp/>be<sp/>any<sp/>of<sp/>the<sp/>following<sp/>plus<sp/>any<sp/>keys<sp/>you<sp/>pass<sp/>into<sp/>`gauge.show`<sp/>plus</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>any<sp/>keys<sp/>you<sp/>have<sp/>on<sp/>a<sp/>custom<sp/>theme.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`section`<sp/>–<sp/>What<sp/>big<sp/>thing<sp/>you&apos;re<sp/>working<sp/>on<sp/>now.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`subsection`<sp/>–<sp/>What<sp/>component<sp/>of<sp/>that<sp/>thing<sp/>is<sp/>currently<sp/>working.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`activityIndicator`<sp/>–<sp/>Shows<sp/>a<sp/>spinner<sp/>using<sp/>the<sp/>`activityIndicatorTheme`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>from<sp/>your<sp/>active<sp/>theme.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>`progressbar`<sp/>–<sp/>A<sp/>progress<sp/>bar<sp/>representing<sp/>your<sp/>current<sp/>`completed`</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>using<sp/>the<sp/>`progressbarTheme`<sp/>from<sp/>your<sp/>active<sp/>theme.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>*kerning*<sp/>–<sp/>Number<sp/>of<sp/>spaces<sp/>that<sp/>must<sp/>be<sp/>between<sp/>this<sp/>item<sp/>and<sp/>other</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>items,<sp/>if<sp/>this<sp/>item<sp/>is<sp/>displayed<sp/>at<sp/>all.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>*maxLength*<sp/>– The<sp/>maximum<sp/>length<sp/>for<sp/>this<sp/>element.<sp/>If<sp/>its<sp/>value<sp/>is<sp/>longer<sp/>it</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>will<sp/>be<sp/>truncated.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>*minLength*<sp/>–<sp/>The<sp/>minimum<sp/>length<sp/>for<sp/>this<sp/>element.<sp/>If<sp/>its<sp/>value<sp/>is<sp/>shorter<sp/>it</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>will<sp/>be<sp/>padded<sp/>according<sp/>to<sp/>the<sp/>*align*<sp/>value.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>*align*<sp/>–<sp/>(Default:<sp/>left)<sp/>Possible<sp/>values<sp/>&quot;left&quot;,<sp/>&quot;right&quot;<sp/>and<sp/>&quot;center&quot;.<sp/>Works</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>as<sp/>you&apos;d<sp/>expect<sp/>from<sp/>word<sp/>processors.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>*length*<sp/>–<sp/>Provides<sp/>a<sp/>single<sp/>value<sp/>for<sp/>both<sp/>*minLength*<sp/>and<sp/>*maxLength*.<sp/>If<sp/>both</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*length*<sp/>and<sp/>*minLength<sp/>or<sp/>*maxLength*<sp/>are<sp/>specified<sp/>then<sp/>the<sp/>latter<sp/>take<sp/>precedence.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>*value*<sp/>–<sp/>A<sp/>literal<sp/>value<sp/>to<sp/>use<sp/>for<sp/>this<sp/>template<sp/>item.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>*default*<sp/>–<sp/>A<sp/>default<sp/>value<sp/>to<sp/>use<sp/>for<sp/>this<sp/>template<sp/>item<sp/>if<sp/>a<sp/>value</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>wasn&apos;t<sp/>otherwise<sp/>passed<sp/>in.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>PLUMBING</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>is<sp/>the<sp/>super<sp/>simple,<sp/>assume<sp/>nothing,<sp/>do<sp/>no<sp/>magic<sp/>internals<sp/>used<sp/>by<sp/>gauge<sp/>to</highlight></codeline>
+<codeline><highlight class="normal">implement<sp/>its<sp/>ordinary<sp/>interface.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>Plumbing<sp/>=<sp/>require(&apos;gauge/plumbing&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>gauge<sp/>=<sp/>new<sp/>Plumbing(theme,<sp/>template,<sp/>width)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>**theme**:<sp/>The<sp/>theme<sp/>to<sp/>use.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>**template**:<sp/>The<sp/>template<sp/>to<sp/>use.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>**width**:<sp/>How<sp/>wide<sp/>your<sp/>gauge<sp/>should<sp/>be</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>`gauge.setTheme(theme)`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Change<sp/>the<sp/>active<sp/>theme.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>`gauge.setTemplate(template)`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Change<sp/>the<sp/>active<sp/>template.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>`gauge.setWidth(width)`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Change<sp/>the<sp/>width<sp/>to<sp/>render<sp/>at.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>`gauge.hide()`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Return<sp/>the<sp/>string<sp/>necessary<sp/>to<sp/>hide<sp/>the<sp/>progress<sp/>bar</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>`gauge.hideCursor()`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Return<sp/>a<sp/>string<sp/>to<sp/>hide<sp/>the<sp/>cursor.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>`gauge.showCursor()`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Return<sp/>a<sp/>string<sp/>to<sp/>show<sp/>the<sp/>cursor.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>`gauge.show(status)`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Using<sp/>`status`<sp/>for<sp/>values,<sp/>render<sp/>the<sp/>provided<sp/>template<sp/>with<sp/>the<sp/>theme<sp/>and<sp/>return</highlight></codeline>
+<codeline><highlight class="normal">a<sp/>string<sp/>that<sp/>is<sp/>suitable<sp/>for<sp/>printing<sp/>to<sp/>update<sp/>the<sp/>gauge.</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/gauge/README.md"/>
+  </compounddef>
+</doxygen>

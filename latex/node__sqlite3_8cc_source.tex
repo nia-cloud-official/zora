@@ -1,0 +1,134 @@
+\doxysection{node\+\_\+sqlite3.\+cc}
+\hypertarget{node__sqlite3_8cc_source}{}\label{node__sqlite3_8cc_source}\index{backend/node\_modules/sqlite3/src/node\_sqlite3.cc@{backend/node\_modules/sqlite3/src/node\_sqlite3.cc}}
+\mbox{\hyperlink{node__sqlite3_8cc}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00001}00001\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00002}00002\ \textcolor{preprocessor}{\#include\ <sstream>}}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00003}00003\ \textcolor{preprocessor}{\#include\ <cstring>}}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00004}00004\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00005}00005\ \textcolor{preprocessor}{\#include\ <sqlite3.h>}}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{macros_8h}{macros.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{backend_2node__modules_2sqlite3_2src_2database_8h}{database.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{statement_8h}{statement.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{backup_8h}{backup.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00012}00012\ \textcolor{keyword}{using\ namespace\ }\mbox{\hyperlink{namespacenode__sqlite3}{node\_sqlite3}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00014}00014\ \textcolor{keyword}{namespace\ }\{}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00016}00016\ \mbox{\hyperlink{class_napi_1_1_object}{Napi::Object}}\ \mbox{\hyperlink{namespace_napi_a5858c5e2c78b25d80e4d582820dda0a8}{RegisterModule}}(\mbox{\hyperlink{class_napi_1_1_env}{Napi::Env}}\ env,\ \mbox{\hyperlink{class_napi_1_1_object}{Napi::Object}}\ exports)\ \{}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00017}00017\ \ \ \ \ \mbox{\hyperlink{class_napi_1_1_handle_scope}{Napi::HandleScope}}\ scope(env);}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00019}00019\ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_database_a74347e00418fa1cfcb9e18c694c7a612}{Database::Init}}(env,\ exports);}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00020}00020\ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_statement_a167e7038d13728bab030a8206472b6ec}{Statement::Init}}(env,\ exports);}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00021}00021\ \ \ \ \ \mbox{\hyperlink{classnode__sqlite3_1_1_backup_ae511b656411586039109b41428e3b4f1}{Backup::Init}}(env,\ exports);}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00023}00023\ \ \ \ \ exports.\mbox{\hyperlink{class_napi_1_1_object_af41a3d792550c5996833a058c2370ea3}{DefineProperties}}(\{}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00024}00024\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_OPEN\_READONLY,\ OPEN\_READONLY)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00025}00025\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_OPEN\_READWRITE,\ OPEN\_READWRITE)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00026}00026\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_OPEN\_CREATE,\ OPEN\_CREATE)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00027}00027\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_OPEN\_FULLMUTEX,\ OPEN\_FULLMUTEX)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00028}00028\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_OPEN\_URI,\ OPEN\_URI)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00029}00029\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_OPEN\_SHAREDCACHE,\ OPEN\_SHAREDCACHE)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00030}00030\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_OPEN\_PRIVATECACHE,\ OPEN\_PRIVATECACHE)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00031}00031\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a7d4254679a1b466a4b9a5f3d082928ba}{DEFINE\_CONSTANT\_STRING}}(exports,\ SQLITE\_VERSION,\ VERSION)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00032}00032\ \textcolor{preprocessor}{\#ifdef\ SQLITE\_SOURCE\_ID}}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00033}00033\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a7d4254679a1b466a4b9a5f3d082928ba}{DEFINE\_CONSTANT\_STRING}}(exports,\ SQLITE\_SOURCE\_ID,\ SOURCE\_ID)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00034}00034\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00035}00035\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_VERSION\_NUMBER,\ VERSION\_NUMBER)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00037}00037\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_OK,\ OK)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00038}00038\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_ERROR,\ ERROR)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00039}00039\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_INTERNAL,\ INTERNAL)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00040}00040\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_PERM,\ PERM)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00041}00041\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_ABORT,\ ABORT)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00042}00042\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_BUSY,\ BUSY)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00043}00043\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_LOCKED,\ LOCKED)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00044}00044\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_NOMEM,\ NOMEM)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00045}00045\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_READONLY,\ READONLY)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00046}00046\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_INTERRUPT,\ INTERRUPT)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00047}00047\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_IOERR,\ IOERR)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00048}00048\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_CORRUPT,\ CORRUPT)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00049}00049\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_NOTFOUND,\ NOTFOUND)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00050}00050\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_FULL,\ FULL)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00051}00051\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_CANTOPEN,\ CANTOPEN)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00052}00052\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_PROTOCOL,\ PROTOCOL)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00053}00053\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_EMPTY,\ EMPTY)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00054}00054\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_SCHEMA,\ SCHEMA)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00055}00055\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_TOOBIG,\ TOOBIG)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00056}00056\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_CONSTRAINT,\ CONSTRAINT)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00057}00057\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_MISMATCH,\ MISMATCH)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00058}00058\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_MISUSE,\ MISUSE)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00059}00059\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_NOLFS,\ NOLFS)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00060}00060\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_AUTH,\ AUTH)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00061}00061\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_FORMAT,\ FORMAT)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00062}00062\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_RANGE,\ RANGE)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00063}00063\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_NOTADB,\ NOTADB)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00065}00065\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_LIMIT\_LENGTH,\ LIMIT\_LENGTH)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00066}00066\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_LIMIT\_SQL\_LENGTH,\ LIMIT\_SQL\_LENGTH)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00067}00067\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_LIMIT\_COLUMN,\ LIMIT\_COLUMN)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00068}00068\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_LIMIT\_EXPR\_DEPTH,\ LIMIT\_EXPR\_DEPTH)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00069}00069\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_LIMIT\_COMPOUND\_SELECT,\ LIMIT\_COMPOUND\_SELECT)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00070}00070\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_LIMIT\_VDBE\_OP,\ LIMIT\_VDBE\_OP)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00071}00071\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_LIMIT\_FUNCTION\_ARG,\ LIMIT\_FUNCTION\_ARG)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00072}00072\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_LIMIT\_ATTACHED,\ LIMIT\_ATTACHED)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00073}00073\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_LIMIT\_LIKE\_PATTERN\_LENGTH,\ LIMIT\_LIKE\_PATTERN\_LENGTH)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00074}00074\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_LIMIT\_VARIABLE\_NUMBER,\ LIMIT\_VARIABLE\_NUMBER)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00075}00075\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_LIMIT\_TRIGGER\_DEPTH,\ LIMIT\_TRIGGER\_DEPTH)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00076}00076\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{macros_8h_a9d22a470f0fcf2b1047177de2fff5f6d}{DEFINE\_CONSTANT\_INTEGER}}(exports,\ SQLITE\_LIMIT\_WORKER\_THREADS,\ LIMIT\_WORKER\_THREADS)}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00077}00077\ \ \ \ \ \});}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00079}00079\ \ \ \ \ \textcolor{keywordflow}{return}\ exports;}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00080}00080\ \}}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00082}00082\ \}}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00084}\mbox{\hyperlink{macros_8h_adde9d8ef14a06da1111c3c17a361a0d1}{00084}}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{node__sqlite3_8cc_adde9d8ef14a06da1111c3c17a361a0d1}{sqlite\_code\_string}}(\textcolor{keywordtype}{int}\ code)\ \{}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00085}00085\ \ \ \ \ \textcolor{keywordflow}{switch}\ (code)\ \{}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00086}00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_OK:\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_OK"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00087}00087\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_ERROR:\ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_ERROR"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00088}00088\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_INTERNAL:\ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_INTERNAL"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00089}00089\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_PERM:\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_PERM"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00090}00090\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_ABORT:\ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_ABORT"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00091}00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_BUSY:\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_BUSY"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00092}00092\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_LOCKED:\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_LOCKED"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00093}00093\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_NOMEM:\ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_NOMEM"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00094}00094\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_READONLY:\ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_READONLY"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00095}00095\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_INTERRUPT:\ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_INTERRUPT"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00096}00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_IOERR:\ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_IOERR"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00097}00097\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_CORRUPT:\ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_CORRUPT"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00098}00098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_NOTFOUND:\ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_NOTFOUND"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00099}00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_FULL:\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_FULL"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00100}00100\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_CANTOPEN:\ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_CANTOPEN"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00101}00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_PROTOCOL:\ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_PROTOCOL"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00102}00102\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_EMPTY:\ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_EMPTY"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00103}00103\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_SCHEMA:\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_SCHEMA"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00104}00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_TOOBIG:\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_TOOBIG"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00105}00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_CONSTRAINT:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_CONSTRAINT"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00106}00106\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_MISMATCH:\ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_MISMATCH"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00107}00107\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_MISUSE:\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_MISUSE"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00108}00108\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_NOLFS:\ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_NOLFS"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00109}00109\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_AUTH:\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_AUTH"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_FORMAT:\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_FORMAT"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00111}00111\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_RANGE:\ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_RANGE"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00112}00112\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_NOTADB:\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_NOTADB"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00113}00113\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_ROW:\ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_ROW"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00114}00114\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_DONE:\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}SQLITE\_DONE"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00115}00115\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}UNKNOWN"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00116}00116\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00117}00117\ \}}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00118}00118\ }
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00119}\mbox{\hyperlink{macros_8h_acc1810e5be51d9b43c9c6b560e33abef}{00119}}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{node__sqlite3_8cc_acc1810e5be51d9b43c9c6b560e33abef}{sqlite\_authorizer\_string}}(\textcolor{keywordtype}{int}\ type)\ \{}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00120}00120\ \ \ \ \ \textcolor{keywordflow}{switch}\ (type)\ \{}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00121}00121\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_INSERT:\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}insert"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00122}00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_UPDATE:\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}update"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00123}00123\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SQLITE\_DELETE:\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}delete"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00124}00124\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00125}00125\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00126}00126\ \}}
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00127}00127\ }
+\DoxyCodeLine{\Hypertarget{node__sqlite3_8cc_source_l00128}00128\ \mbox{\hyperlink{napi-inl_8h_a92ffc354ab88373c30d4d65f04b0c1b1}{NODE\_API\_MODULE}}(\mbox{\hyperlink{namespacenode__sqlite3}{node\_sqlite3}},\ \mbox{\hyperlink{namespace_napi_a5858c5e2c78b25d80e4d582820dda0a8}{RegisterModule}})}
+
+\end{DoxyCode}

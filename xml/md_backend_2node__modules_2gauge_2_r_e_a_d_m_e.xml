@@ -1,0 +1,263 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2gauge_2_r_e_a_d_m_e</compoundname>
+    <title>gauge</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>A nearly stateless terminal based horizontal gauge / progress bar.</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>Gauge<sp/>=<sp/>require(&quot;gauge&quot;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>gauge<sp/>=<sp/>new<sp/>Gauge()</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">gauge.show(&quot;working…&quot;,<sp/>0)</highlight></codeline>
+<codeline><highlight class="normal">setTimeout(()<sp/>=&gt;<sp/>{<sp/>gauge.pulse();<sp/>gauge.show(&quot;working…&quot;,<sp/>0.25)<sp/>},<sp/>500)</highlight></codeline>
+<codeline><highlight class="normal">setTimeout(()<sp/>=&gt;<sp/>{<sp/>gauge.pulse();<sp/>gauge.show(&quot;working…&quot;,<sp/>0.50)<sp/>},<sp/>1000)</highlight></codeline>
+<codeline><highlight class="normal">setTimeout(()<sp/>=&gt;<sp/>{<sp/>gauge.pulse();<sp/>gauge.show(&quot;working…&quot;,<sp/>0.75)<sp/>},<sp/>1500)</highlight></codeline>
+<codeline><highlight class="normal">setTimeout(()<sp/>=&gt;<sp/>{<sp/>gauge.pulse();<sp/>gauge.show(&quot;working…&quot;,<sp/>0.99)<sp/>},<sp/>2000)</highlight></codeline>
+<codeline><highlight class="normal">setTimeout(()<sp/>=&gt;<sp/>gauge.hide(),<sp/>2300)</highlight></codeline>
+</programlisting></para>
+<para>See also the <ulink url="docs/demo.js">demos</ulink>:</para>
+<para><image type="html" name="./docs/gauge-demo.gif" inline="yes"></image>
+</para>
+<sect2 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1345">
+<title>CHANGES FROM 1.x</title><para>Gauge 2.x is breaking release, please see the <ref refid="which_2_c_h_a_n_g_e_l_o_g_8md" kindref="compound">changelog</ref> for details on what&apos;s changed if you were previously a user of this module.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1346">
+<title>THE GAUGE CLASS</title><para>This is the typical interface to the module– it provides a pretty fire-and-forget interface to displaying your status information.</para>
+<para><programlisting><codeline><highlight class="normal">var<sp/>Gauge<sp/>=<sp/>require(&quot;gauge&quot;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>gauge<sp/>=<sp/>new<sp/>Gauge([stream],<sp/>[options])</highlight></codeline>
+</programlisting></para>
+<para><itemizedlist>
+<listitem><para><bold>stream</bold> – *(optional, default STDERR)* A stream that progress bar updates are to be written to. Gauge honors backpressure and will pause most writing if it is indicated.</para>
+</listitem><listitem><para><bold>options</bold> – *(optional)* An option object.</para>
+</listitem></itemizedlist>
+</para>
+<para>Constructs a new gauge. Gauges are drawn on a single line, and are not drawn if <bold>stream</bold> isn&apos;t a tty and a tty isn&apos;t explicitly provided.</para>
+<para>If <bold>stream</bold> is a terminal or if you pass in <bold>tty</bold> to <bold>options</bold> then we will detect terminal resizes and redraw to fit. We do this by watching for <computeroutput>resize</computeroutput> events on the tty. (To work around a bug in versions of Node prior to 2.5.0, we watch for them on stdout if the tty is stderr.) Resizes to larger window sizes will be clean, but shrinking the window will always result in some cruft.</para>
+<para><bold>IMPORTANT:</bold> If you previously were passing in a non-tty stream but you still want output (for example, a stream wrapped by the <computeroutput>ansi</computeroutput> module) then you need to pass in the <bold>tty</bold> option below, as <computeroutput>gauge</computeroutput> needs access to the underlying tty in order to do things like terminal resizes and terminal width detection.</para>
+<para>The <bold>options</bold> object can have the following properties, all of which are optional:</para>
+<para><itemizedlist>
+<listitem><para><bold>updateInterval</bold>: How often gauge updates should be drawn, in milliseconds.</para>
+</listitem><listitem><para><bold>fixedFramerate</bold>: Defaults to false on node 0.8, true on everything else. When this is true a timer is created to trigger once every <computeroutput>updateInterval</computeroutput> ms, when false, updates are printed as soon as they come in but updates more often than <computeroutput>updateInterval</computeroutput> are ignored. The reason 0.8 doesn&apos;t have this set to true is that it can&apos;t <computeroutput>unref</computeroutput> its timer and so it would stop your program from exiting– if you want to use this feature with 0.8 just make sure you call <computeroutput>gauge.disable()</computeroutput> before you expect your program to exit.</para>
+</listitem><listitem><para><bold>themes</bold>: A themeset to use when selecting the theme to use. Defaults to <computeroutput>gauge/themes</computeroutput>, see the themes documentation for details.</para>
+</listitem><listitem><para><bold>theme</bold>: Select a theme for use, it can be a:<itemizedlist>
+<listitem><para>Theme object, in which case the <bold>themes</bold> is not used.</para>
+</listitem><listitem><para>The name of a theme, which will be looked up in the current <emphasis>themes</emphasis> object.</para>
+</listitem><listitem><para>A configuration object with any of <computeroutput>hasUnicode</computeroutput>, <computeroutput>hasColor</computeroutput> or <computeroutput>platform</computeroutput> keys, which if will be used to override our guesses when making a default theme selection.</para>
+</listitem></itemizedlist>
+</para>
+<para>If no theme is selected then a default is picked using a combination of our best guesses at your OS, color support and unicode support.</para>
+</listitem><listitem><para><bold>template</bold>: Describes what you want your gauge to look like. The default is what npm uses. Detailed documentation is later in this document.</para>
+</listitem><listitem><para><bold>hideCursor</bold>: Defaults to true. If true, then the cursor will be hidden while the gauge is displayed.</para>
+</listitem><listitem><para><bold>tty</bold>: The tty that you&apos;re ultimately writing to. Defaults to the same as <bold>stream</bold>. This is used for detecting the width of the terminal and resizes. The width used is <computeroutput>tty.columns - 1</computeroutput>. If no tty is available then a width of <computeroutput>79</computeroutput> is assumed.</para>
+</listitem><listitem><para><bold>enabled</bold>: Defaults to true if <computeroutput>tty</computeroutput> is a TTY, false otherwise. If true the gauge starts enabled. If disabled then all update commands are ignored and no gauge will be printed until you call <computeroutput>.enable()</computeroutput>.</para>
+</listitem><listitem><para><bold>Plumbing</bold>: The class to use to actually generate the gauge for printing. This defaults to <lsquo/>require(&apos;gauge/plumbing<rsquo/>)` and ordinarily you shouldn&apos;t need to override this.</para>
+</listitem><listitem><para><bold>cleanupOnExit</bold>: Defaults to true. Ordinarily we register an exit handler to make sure your cursor is turned back on and the progress bar erased when your process exits, even if you Ctrl-C out or otherwise exit unexpectedly. You can disable this and it won&apos;t register the exit handler.</para>
+</listitem></itemizedlist>
+</para>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1347">
+<title><computeroutput>gauge.show(section | status, [completed])</computeroutput></title><para>The first argument is either the section, the name of the current thing contributing to progress, or an object with keys like <bold>section</bold>, <bold>subsection</bold> &amp; <bold>completed</bold> (or any others you have types for in a custom template). If you don&apos;t want to update or set any of these you can pass <computeroutput>null</computeroutput> and it will be ignored.</para>
+<para>The second argument is the percent completed as a value between 0 and 1. Without it, completion is just not updated. You&apos;ll also note that completion can be passed in as part of a status object as the first argument. If both it and the completed argument are passed in, the completed argument wins.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1348">
+<title><computeroutput>gauge.hide([cb])</computeroutput></title><para>Removes the gauge from the terminal. Optionally, callback <computeroutput>cb</computeroutput> after IO has had an opportunity to happen (currently this just means after <computeroutput>setImmediate</computeroutput> has called back.)</para>
+<para>It turns out this is important when you&apos;re pausing the progress bar on one filehandle and printing to another– otherwise (with a big enough print) node can end up printing the &quot;end progress bar&quot; bits to the progress bar filehandle while other stuff is printing to another filehandle. These getting interleaved can cause corruption in some terminals.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1349">
+<title><computeroutput>gauge.pulse([subsection])</computeroutput></title><para><itemizedlist>
+<listitem><para><bold>subsection</bold> – *(optional)* The specific thing that triggered this pulse</para>
+</listitem></itemizedlist>
+</para>
+<para>Spins the spinner in the gauge to show output. If <bold>subsection</bold> is included then it will be combined with the last name passed to <computeroutput>gauge.show</computeroutput>.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1350">
+<title><computeroutput>gauge.disable()</computeroutput></title><para>Hides the gauge and ignores further calls to <computeroutput>show</computeroutput> or <computeroutput>pulse</computeroutput>.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1351">
+<title><computeroutput>gauge.enable()</computeroutput></title><para>Shows the gauge and resumes updating when <computeroutput>show</computeroutput> or <computeroutput>pulse</computeroutput> is called.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1352">
+<title><computeroutput>gauge.isEnabled()</computeroutput></title><para>Returns true if the gauge is enabled.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1353">
+<title><computeroutput>gauge.setThemeset(themes)</computeroutput></title><para>Change the themeset to select a theme from. The same as the <computeroutput>themes</computeroutput> option used in the constructor. The theme will be reselected from this themeset.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1354">
+<title><computeroutput>gauge.setTheme(theme)</computeroutput></title><para>Change the active theme, will be displayed with the next show or pulse. This can be:</para>
+<para><itemizedlist>
+<listitem><para>Theme object, in which case the <bold>themes</bold> is not used.</para>
+</listitem><listitem><para>The name of a theme, which will be looked up in the current <emphasis>themes</emphasis> object.</para>
+</listitem><listitem><para>A configuration object with any of <computeroutput>hasUnicode</computeroutput>, <computeroutput>hasColor</computeroutput> or <computeroutput>platform</computeroutput> keys, which if will be used to override our guesses when making a default theme selection.</para>
+</listitem></itemizedlist>
+</para>
+<para>If no theme is selected then a default is picked using a combination of our best guesses at your OS, color support and unicode support.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1355">
+<title><computeroutput>gauge.setTemplate(template)</computeroutput></title><para>Change the active template, will be displayed with the next show or pulse</para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1356">
+<title>Tracking Completion</title><para>If you have more than one thing going on that you want to track completion of, you may find the related <ulink url="https://www.npmjs.com/package/are-we-there-yet">are-we-there-yet</ulink> helpful. It&apos;s <computeroutput>change</computeroutput> event can be wired up to the <computeroutput>show</computeroutput> method to get a more traditional progress bar interface.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1357">
+<title>THEMES</title><para><programlisting><codeline><highlight class="normal">var<sp/>themes<sp/>=<sp/>require(&apos;gauge/themes&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>fetch<sp/>the<sp/>default<sp/>color<sp/>unicode<sp/>theme<sp/>for<sp/>this<sp/>platform</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>ourTheme<sp/>=<sp/>themes({hasUnicode:<sp/>true,<sp/>hasColor:<sp/>true})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>fetch<sp/>the<sp/>default<sp/>non-color<sp/>unicode<sp/>theme<sp/>for<sp/>osx</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>ourTheme<sp/>=<sp/>themes({hasUnicode:<sp/>true,<sp/>hasColor:<sp/>false,<sp/>platform:<sp/>&apos;darwin&apos;})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>create<sp/>a<sp/>new<sp/>theme<sp/>based<sp/>on<sp/>the<sp/>color<sp/>ascii<sp/>theme<sp/>for<sp/>this<sp/>platform</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>that<sp/>brackets<sp/>the<sp/>progress<sp/>bar<sp/>with<sp/>arrows</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>ourTheme<sp/>=<sp/>themes.newTheme(themes({hasUnicode:<sp/>false,<sp/>hasColor:<sp/>true}),<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>preProgressbar:<sp/>&apos;→&apos;,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>postProgressbar:<sp/>&apos;←&apos;</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+</programlisting></para>
+<para>The object returned by <computeroutput>gauge/themes</computeroutput> is an instance of the <computeroutput>ThemeSet</computeroutput> class.</para>
+<para><programlisting><codeline><highlight class="normal">var<sp/>ThemeSet<sp/>=<sp/>require(&apos;gauge/theme-set&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>themes<sp/>=<sp/>new<sp/>ThemeSet()</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>or</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>themes<sp/>=<sp/>require(&apos;gauge/themes&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>mythemes<sp/>=<sp/>themes.newThemeSet()<sp/>//<sp/>creates<sp/>a<sp/>new<sp/>themeset<sp/>based<sp/>on<sp/>the<sp/>default<sp/>themes</highlight></codeline>
+</programlisting></para>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1358">
+<title>themes(opts)</title></sect3>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1359">
+<title>themes.getDefault(opts)</title><para>Theme objects are a function that fetches the default theme based on platform, unicode and color support.</para>
+<para>Options is an object with the following properties:</para>
+<para><itemizedlist>
+<listitem><para><bold>hasUnicode</bold> - If true, fetch a unicode theme, if no unicode theme is available then a non-unicode theme will be used.</para>
+</listitem><listitem><para><bold>hasColor</bold> - If true, fetch a color theme, if no color theme is available a non-color theme will be used.</para>
+</listitem><listitem><para><bold>platform</bold> (optional) - Defaults to <computeroutput>process.platform</computeroutput>. If no platform match is available then <computeroutput>fallback</computeroutput> is used instead.</para>
+</listitem></itemizedlist>
+</para>
+<para>If no compatible theme can be found then an error will be thrown with a <computeroutput>code</computeroutput> of <computeroutput>EMISSINGTHEME</computeroutput>.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1360">
+<title>themes.addTheme(themeName, themeObj)</title></sect3>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1361">
+<title>themes.addTheme(themeName, [parentTheme], newTheme)</title><para>Adds a named theme to the themeset. You can pass in either a theme object, as returned by <computeroutput>themes.newTheme</computeroutput> or the arguments you&apos;d pass to <computeroutput>themes.newTheme</computeroutput>.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1362">
+<title>themes.getThemeNames()</title><para>Return a list of all of the names of the themes in this themeset. Suitable for use in <computeroutput>themes.getTheme(…)</computeroutput>.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1363">
+<title>themes.getTheme(name)</title><para>Returns the theme object from this theme set named <computeroutput>name</computeroutput>.</para>
+<para>If <computeroutput>name</computeroutput> does not exist in this themeset an error will be thrown with a <computeroutput>code</computeroutput> of <computeroutput>EMISSINGTHEME</computeroutput>.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1364">
+<title>themes.setDefault([opts], themeName)</title><para><computeroutput>opts</computeroutput> is an object with the following properties.</para>
+<para><itemizedlist>
+<listitem><para><bold>platform</bold> - Defaults to <lsquo/>&apos;fallback<rsquo/><computeroutput>. If your theme is platform specific, specify that here with the platform from</computeroutput>process.platform<computeroutput>, eg, </computeroutput>win32<computeroutput>,</computeroutput>darwin<computeroutput>, etc.</computeroutput></para>
+</listitem><listitem><para><computeroutput>**hasUnicode** - Defaults to</computeroutput>false<computeroutput>. If your theme uses unicode you should set this to true.</computeroutput></para>
+</listitem><listitem><para><computeroutput>**hasColor** - Defaults to</computeroutput>false`. If your theme uses color you should set this to true.</para>
+</listitem></itemizedlist>
+</para>
+<para><computeroutput>themeName</computeroutput> is the name of the theme (as given to <computeroutput>addTheme</computeroutput>) to use for this set of <computeroutput>opts</computeroutput>.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1365">
+<title>themes.newTheme([parentTheme,] newTheme)</title><para>Create a new theme object based on <computeroutput>parentTheme</computeroutput>. If no <computeroutput>parentTheme</computeroutput> is provided then a minimal parentTheme that defines functions for rendering the activity indicator (spinner) and progress bar will be defined. (This fallback parent is defined in <computeroutput>gauge/base-theme</computeroutput>.)</para>
+<para>newTheme should be a bare object– we&apos;ll start by discussing the properties defined by the default themes:</para>
+<para><itemizedlist>
+<listitem><para><bold>preProgressbar</bold> - displayed prior to the progress bar, if the progress bar is displayed.</para>
+</listitem><listitem><para><bold>postProgressbar</bold> - displayed after the progress bar, if the progress bar is displayed.</para>
+</listitem><listitem><para><bold>progressBarTheme</bold> - The subtheme passed through to the progress bar renderer, it&apos;s an object with <computeroutput>complete</computeroutput> and <computeroutput>remaining</computeroutput> properties that are the strings you want repeated for those sections of the progress bar.</para>
+</listitem><listitem><para><bold>activityIndicatorTheme</bold> - The theme for the activity indicator (spinner), this can either be a string, in which each character is a different step, or an array of strings.</para>
+</listitem><listitem><para><bold>preSubsection</bold> - Displayed as a separator between the <computeroutput>section</computeroutput> and <computeroutput>subsection</computeroutput> when the latter is printed.</para>
+</listitem></itemizedlist>
+</para>
+<para>More generally, themes can have any value that would be a valid value when rendering templates. The properties in the theme are used when their name matches a type in the template. Their values can be:</para>
+<para><itemizedlist>
+<listitem><para><bold>strings &amp; numbers</bold> - They&apos;ll be included as is</para>
+</listitem><listitem><para><bold>function (values, theme, width)</bold> - Should return what you want in your output. <emphasis>values</emphasis> is an object with values provided via <computeroutput>gauge.show</computeroutput>, <emphasis>theme</emphasis> is the theme specific to this item (see below) or this theme object, and <emphasis>width</emphasis> is the number of characters wide your result should be.</para>
+</listitem></itemizedlist>
+</para>
+<para>There are a couple of special prefixes:</para>
+<para><itemizedlist>
+<listitem><para><bold>pre</bold> - Is shown prior to the property, if its displayed.</para>
+</listitem><listitem><para><bold>post</bold> - Is shown after the property, if its displayed.</para>
+</listitem></itemizedlist>
+</para>
+<para>And one special suffix:</para>
+<para><itemizedlist>
+<listitem><para><bold>Theme</bold> - Its value is passed to a function-type item as the theme.</para>
+</listitem></itemizedlist>
+</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1366">
+<title>themes.addToAllThemes(theme)</title><para>This <emphasis>mixes-in</emphasis> <computeroutput>theme</computeroutput> into all themes currently defined. It also adds it to the default parent theme for this themeset, so future themes added to this themeset will get the values from <computeroutput>theme</computeroutput> by default.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1367">
+<title>themes.newThemeSet()</title><para>Copy the current themeset into a new one. This allows you to easily inherit one themeset from another.</para>
+</sect3>
+</sect2>
+<sect2 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1368">
+<title>TEMPLATES</title><para>A template is an array of objects and strings that, after being evaluated, will be turned into the gauge line. The default template is:</para>
+<para><programlisting filename=".js"><codeline><highlight class="normal">[</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{type:<sp/>&apos;progressbar&apos;,<sp/>length:<sp/>20},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{type:<sp/>&apos;activityIndicator&apos;,<sp/>kerning:<sp/>1,<sp/>length:<sp/>1},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{type:<sp/>&apos;section&apos;,<sp/>kerning:<sp/>1,<sp/>default:<sp/>&apos;&apos;},</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{type:<sp/>&apos;subsection&apos;,<sp/>kerning:<sp/>1,<sp/>default:<sp/>&apos;&apos;}</highlight></codeline>
+<codeline><highlight class="normal">]</highlight></codeline>
+</programlisting></para>
+<para>The various template elements can either be <bold>plain strings</bold>, in which case they will be be included verbatum in the output, or objects with the following properties:</para>
+<para><itemizedlist>
+<listitem><para><emphasis>type</emphasis> can be any of the following plus any keys you pass into <computeroutput>gauge.show</computeroutput> plus any keys you have on a custom theme.<itemizedlist>
+<listitem><para><computeroutput>section</computeroutput> – What big thing you&apos;re working on now.</para>
+</listitem><listitem><para><computeroutput>subsection</computeroutput> – What component of that thing is currently working.</para>
+</listitem><listitem><para><computeroutput>activityIndicator</computeroutput> – Shows a spinner using the <computeroutput>activityIndicatorTheme</computeroutput> from your active theme.</para>
+</listitem><listitem><para><computeroutput>progressbar</computeroutput> – A progress bar representing your current <computeroutput>completed</computeroutput> using the <computeroutput>progressbarTheme</computeroutput> from your active theme.</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><emphasis>kerning</emphasis> – Number of spaces that must be between this item and other items, if this item is displayed at all.</para>
+</listitem><listitem><para><emphasis>maxLength</emphasis> – The maximum length for this element. If its value is longer it will be truncated.</para>
+</listitem><listitem><para><emphasis>minLength</emphasis> – The minimum length for this element. If its value is shorter it will be padded according to the <emphasis>align</emphasis> value.</para>
+</listitem><listitem><para><emphasis>align</emphasis> – (Default: left) Possible values &quot;left&quot;, &quot;right&quot; and &quot;center&quot;. Works as you&apos;d expect from word processors.</para>
+</listitem><listitem><para><emphasis>length</emphasis> – Provides a single value for both <emphasis>minLength</emphasis> and <emphasis>maxLength</emphasis>. If both <emphasis>length</emphasis> and <emphasis>minLength or *maxLength</emphasis> are specified then the latter take precedence.</para>
+</listitem><listitem><para><emphasis>value</emphasis> – A literal value to use for this template item.</para>
+</listitem><listitem><para><emphasis>default</emphasis> – A default value to use for this template item if a value wasn&apos;t otherwise passed in.</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1369">
+<title>PLUMBING</title><para>This is the super simple, assume nothing, do no magic internals used by gauge to implement its ordinary interface.</para>
+<para><programlisting><codeline><highlight class="normal">var<sp/>Plumbing<sp/>=<sp/>require(&apos;gauge/plumbing&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>gauge<sp/>=<sp/>new<sp/>Plumbing(theme,<sp/>template,<sp/>width)</highlight></codeline>
+</programlisting></para>
+<para><itemizedlist>
+<listitem><para><bold>theme</bold>: The theme to use.</para>
+</listitem><listitem><para><bold>template</bold>: The template to use.</para>
+</listitem><listitem><para><bold>width</bold>: How wide your gauge should be</para>
+</listitem></itemizedlist>
+</para>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1370">
+<title><computeroutput>gauge.setTheme(theme)</computeroutput></title><para>Change the active theme.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1371">
+<title><computeroutput>gauge.setTemplate(template)</computeroutput></title><para>Change the active template.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1372">
+<title><computeroutput>gauge.setWidth(width)</computeroutput></title><para>Change the width to render at.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1373">
+<title><computeroutput>gauge.hide()</computeroutput></title><para>Return the string necessary to hide the progress bar</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1374">
+<title><computeroutput>gauge.hideCursor()</computeroutput></title><para>Return a string to hide the cursor.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1375">
+<title><computeroutput>gauge.showCursor()</computeroutput></title><para>Return a string to show the cursor.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2gauge_2_r_e_a_d_m_e_1autotoc_md1376">
+<title><computeroutput>gauge.show(status)</computeroutput></title><para>Using <computeroutput>status</computeroutput> for values, render the provided template with the theme and return a string that is suitable for printing to update the gauge. </para>
+</sect3>
+</sect2>
+    </detaileddescription>
+    <location file="backend/node_modules/gauge/README.md"/>
+  </compounddef>
+</doxygen>

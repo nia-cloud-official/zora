@@ -1,0 +1,58 @@
+\chapter{@npmcli/fs}
+\hypertarget{md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e}{}\label{md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e}\index{"@npmcli/fs@{"@npmcli/fs}}
+\label{md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e_autotoc_md3}%
+\Hypertarget{md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e_autotoc_md3}%
+ polyfills, and extensions, of the core {\ttfamily fs} module.\hypertarget{md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e_autotoc_md4}{}\doxysection{\texorpdfstring{Features}{Features}}\label{md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e_autotoc_md4}
+
+\begin{DoxyItemize}
+\item all exposed functions return promises
+\item {\ttfamily fs.\+rm} polyfill for node versions \texorpdfstring{$<$}{<} 14.\+14.\+0
+\item {\ttfamily fs.\+mkdir} polyfill adding support for the {\ttfamily recursive} and {\ttfamily force} options in node versions \texorpdfstring{$<$}{<} 10.\+12.\+0
+\item {\ttfamily fs.\+copy\+File} extended to accept an {\ttfamily owner} option
+\item {\ttfamily fs.\+mkdir} extended to accept an {\ttfamily owner} option
+\item {\ttfamily fs.\+mkdtemp} extended to accept an {\ttfamily owner} option
+\item {\ttfamily fs.\+write\+File} extended to accept an {\ttfamily owner} option
+\item {\ttfamily fs.\+with\+Temp\+Dir} added
+\item {\ttfamily fs.\+cp} polyfill for node \texorpdfstring{$<$}{<} 16.\+7.\+0
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e_autotoc_md5}{}\doxysection{\texorpdfstring{The {\ttfamily owner} option}{The {\ttfamily owner} option}}\label{md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e_autotoc_md5}
+The {\ttfamily copy\+File}, {\ttfamily mkdir}, {\ttfamily mkdtemp}, {\ttfamily write\+File}, and {\ttfamily with\+Temp\+Dir} functions all accept a new {\ttfamily owner} property in their options. It can be used in two ways\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily \{ owner\+: \{ uid\+: 100, gid\+: 100 \} \}} -\/ set the {\ttfamily uid} and {\ttfamily gid} explicitly
+\item {\ttfamily \{ owner\+: 100 \}} -\/ use one value, will set both {\ttfamily uid} and {\ttfamily gid} the same
+\end{DoxyItemize}
+
+The special string `\textquotesingle{}inherit'{\ttfamily may be passed instead of a number, which will cause this module to automatically determine the correct}uid{\ttfamily and/or}gid\`{} from the nearest existing parent directory of the target.\hypertarget{md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e_autotoc_md6}{}\doxysection{\texorpdfstring{{\ttfamily fs.\+with\+Temp\+Dir(root, fn, options) -\/\texorpdfstring{$>$}{>} Promise}}{{\ttfamily fs.\+with\+Temp\+Dir(root, fn, options) -\/\texorpdfstring{$>$}{>} Promise}}}\label{md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e_autotoc_md6}
+\hypertarget{md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e_autotoc_md7}{}\doxysubsection{\texorpdfstring{Parameters}{Parameters}}\label{md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e_autotoc_md7}
+
+\begin{DoxyItemize}
+\item {\ttfamily root}\+: the directory in which to create the temporary directory
+\item {\ttfamily fn}\+: a function that will be called with the path to the temporary directory
+\item {\ttfamily options}
+\begin{DoxyItemize}
+\item {\ttfamily tmp\+Prefix}\+: a prefix to be used in the generated directory name
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e_autotoc_md8}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{md_backend_2node__modules_2_0dnpmcli_2fs_2_r_e_a_d_m_e_autotoc_md8}
+The {\ttfamily with\+Temp\+Dir} function creates a temporary directory, runs the provided function ({\ttfamily fn}), then removes the temporary directory and resolves or rejects based on the result of {\ttfamily fn}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{const\ fs\ =\ require('@npmcli/fs')}
+\DoxyCodeLine{const\ os\ =\ require('os')}
+\DoxyCodeLine{}
+\DoxyCodeLine{//\ this\ function\ will\ be\ called\ with\ the\ full\ path\ to\ the\ temporary\ directory}
+\DoxyCodeLine{//\ it\ is\ called\ with\ \`{}await`\ behind\ the\ scenes,\ so\ can\ be\ async\ if\ desired.}
+\DoxyCodeLine{const\ myFunction\ =\ async\ (tempPath)\ =>\ \{}
+\DoxyCodeLine{\ \ return\ 'done!'}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{const\ main\ =\ async\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ const\ result\ =\ await\ fs.withTempDir(os.tmpdir(),\ myFunction)}
+\DoxyCodeLine{\ \ //\ result\ ===\ 'done!'}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{main()}
+
+\end{DoxyCode}
+ 

@@ -1,0 +1,162 @@
+.TH "md_backend_2node__modules_2console-control-strings_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2console-control-strings_2_r_e_a_d_m_e \- Console Control Strings 
+.PP
+ A library of cross-platform tested terminal/console command strings for doing things like color and cursor positioning\&. This is a subset of both ansi and vt100\&. All control codes included work on both Windows & Unix-like OSes, except where noted\&.
+.SH "Usage"
+.PP
+.PP
+.nf
+var consoleControl = require('console\-control\-strings')
+
+console\&.log(consoleControl\&.color('blue','bgRed', 'bold') + 'hi there' + consoleControl\&.color('reset'))
+process\&.stdout\&.write(consoleControl\&.goto(75, 10))
+.fi
+.PP
+.SH "Why Another?"
+.PP
+There are tons of libraries similar to this one\&. I wanted one that was:
+.PP
+.IP "1." 4
+Very clear about compatibility goals\&.
+.IP "2." 4
+Could emit, for instance, a start color code without an end one\&.
+.IP "3." 4
+Returned strings w/o writing to streams\&.
+.IP "4." 4
+Was not weighed down with other unrelated baggage\&.
+.PP
+.SH "Functions"
+.PP
+.SS "var code = consoleControl\&.up(\fInum = 1\fP)"
+Returns the escape sequence to move \fInum\fP lines up\&.
+.SS "var code = consoleControl\&.down(\fInum = 1\fP)"
+Returns the escape sequence to move \fInum\fP lines down\&.
+.SS "var code = consoleControl\&.forward(\fInum = 1\fP)"
+Returns the escape sequence to move \fInum\fP lines righ\&.
+.SS "var code = consoleControl\&.back(\fInum = 1\fP)"
+Returns the escape sequence to move \fInum\fP lines left\&.
+.SS "var code = consoleControl\&.nextLine(\fInum = 1\fP)"
+Returns the escape sequence to move \fInum\fP lines down and to the beginning of the line\&.
+.SS "var code = consoleControl\&.previousLine(\fInum = 1\fP)"
+Returns the escape sequence to move \fInum\fP lines up and to the beginning of the line\&.
+.SS "var code = consoleControl\&.eraseData()"
+Returns the escape sequence to erase everything from the current cursor position to the bottom right of the screen\&. This is line based, so it erases the remainder of the current line and all following lines\&.
+.SS "var code = consoleControl\&.eraseLine()"
+Returns the escape sequence to erase to the end of the current line\&.
+.SS "var code = consoleControl\&.goto(\fIx\fP, \fIy\fP)"
+Returns the escape sequence to move the cursor to the designated position\&. Note that the origin is \fI1, 1\fP not \fI0, 0\fP\&.
+.SS "var code = consoleControl\&.gotoSOL()"
+Returns the escape sequence to move the cursor to the beginning of the current line\&. (That is, it returns a carriage return, \fR\\r\fP\&.)
+.SS "var code = consoleControl\&.beep()"
+Returns the escape sequence to cause the termianl to beep\&. (That is, it returns unicode character \fR\\x0007\fP, a Control-G\&.)
+.SS "var code = consoleControl\&.hideCursor()"
+Returns the escape sequence to hide the cursor\&.
+.SS "var code = consoleControl\&.showCursor()"
+Returns the escape sequence to show the cursor\&.
+.SS "var code = consoleControl\&.color(\fIcolors = []\fP)"
+.SS "var code = consoleControl\&.color(\fIcolor1\fP, \fIcolor2\fP, \fI…\fP, \fIcolorn\fP)"
+Returns the escape sequence to set the current terminal display attributes (mostly colors)\&. Arguments can either be a list of attributes or an array of attributes\&. The difference between passing in an array or list of colors and calling \fR\&.color\fP separately for each one, is that in the former case a single escape sequence will be produced where as in the latter each change will have its own distinct escape sequence\&. Each attribute can be one of:
+.PP
+.IP "\(bu" 2
+Reset:
+.IP "  \(bu" 4
+\fBreset\fP – Reset all attributes to the terminal default\&.
+.PP
+
+.IP "\(bu" 2
+Styles:
+.IP "  \(bu" 4
+\fBbold\fP – Display text as bold\&. In some terminals this means using a bold font, in others this means changing the color\&. In some it means both\&.
+.IP "  \(bu" 4
+\fBitalic\fP – Display text as italic\&. This is not available in most Windows terminals\&.
+.IP "  \(bu" 4
+\fBunderline\fP – Underline text\&. This is not available in most Windows Terminals\&.
+.IP "  \(bu" 4
+\fBinverse\fP – Invert the foreground and background colors\&.
+.IP "  \(bu" 4
+\fBstopBold\fP – Do not display text as bold\&.
+.IP "  \(bu" 4
+\fBstopItalic\fP – Do not display text as italic\&.
+.IP "  \(bu" 4
+\fBstopUnderline\fP – Do not underline text\&.
+.IP "  \(bu" 4
+\fBstopInverse\fP – Do not invert foreground and background\&.
+.PP
+
+.IP "\(bu" 2
+Colors:
+.IP "  \(bu" 4
+\fBwhite\fP
+.IP "  \(bu" 4
+\fBblack\fP
+.IP "  \(bu" 4
+\fBblue\fP
+.IP "  \(bu" 4
+\fBcyan\fP
+.IP "  \(bu" 4
+\fBgreen\fP
+.IP "  \(bu" 4
+\fBmagenta\fP
+.IP "  \(bu" 4
+\fBred\fP
+.IP "  \(bu" 4
+\fByellow\fP
+.IP "  \(bu" 4
+\fBgrey\fP / \fBbrightBlack\fP
+.IP "  \(bu" 4
+\fBbrightRed\fP
+.IP "  \(bu" 4
+\fBbrightGreen\fP
+.IP "  \(bu" 4
+\fBbrightYellow\fP
+.IP "  \(bu" 4
+\fBbrightBlue\fP
+.IP "  \(bu" 4
+\fBbrightMagenta\fP
+.IP "  \(bu" 4
+\fBbrightCyan\fP
+.IP "  \(bu" 4
+\fBbrightWhite\fP
+.PP
+
+.IP "\(bu" 2
+Background Colors:
+.IP "  \(bu" 4
+\fBbgWhite\fP
+.IP "  \(bu" 4
+\fBbgBlack\fP
+.IP "  \(bu" 4
+\fBbgBlue\fP
+.IP "  \(bu" 4
+\fBbgCyan\fP
+.IP "  \(bu" 4
+\fBbgGreen\fP
+.IP "  \(bu" 4
+\fBbgMagenta\fP
+.IP "  \(bu" 4
+\fBbgRed\fP
+.IP "  \(bu" 4
+\fBbgYellow\fP
+.IP "  \(bu" 4
+\fBbgGrey\fP / \fBbgBrightBlack\fP
+.IP "  \(bu" 4
+\fBbgBrightRed\fP
+.IP "  \(bu" 4
+\fBbgBrightGreen\fP
+.IP "  \(bu" 4
+\fBbgBrightYellow\fP
+.IP "  \(bu" 4
+\fBbgBrightBlue\fP
+.IP "  \(bu" 4
+\fBbgBrightMagenta\fP
+.IP "  \(bu" 4
+\fBbgBrightCyan\fP
+.IP "  \(bu" 4
+\fBbgBrightWhite\fP 
+.PP
+
+.PP
+

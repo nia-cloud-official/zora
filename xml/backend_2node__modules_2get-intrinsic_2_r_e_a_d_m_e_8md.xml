@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="backend_2node__modules_2get-intrinsic_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>get-intrinsic<sp/>&lt;sup&gt;[![Version<sp/>Badge][npm-version-svg]][package-url]&lt;/sup&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![github<sp/>actions][actions-image]][actions-url]</highlight></codeline>
+<codeline><highlight class="normal">[![coverage][codecov-image]][codecov-url]</highlight></codeline>
+<codeline><highlight class="normal">[![dependency<sp/>status][deps-svg]][deps-url]</highlight></codeline>
+<codeline><highlight class="normal">[![dev<sp/>dependency<sp/>status][dev-deps-svg]][dev-deps-url]</highlight></codeline>
+<codeline><highlight class="normal">[![License][license-image]][license-url]</highlight></codeline>
+<codeline><highlight class="normal">[![Downloads][downloads-image]][downloads-url]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![npm<sp/>badge][npm-badge-png]][package-url]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Get<sp/>and<sp/>robustly<sp/>cache<sp/>all<sp/>JS<sp/>language-level<sp/>intrinsics<sp/>at<sp/>first<sp/>require<sp/>time.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">See<sp/>the<sp/>syntax<sp/>described<sp/>[in<sp/>the<sp/>JS<sp/>spec](https://tc39.es/ecma262/#sec-well-known-intrinsic-objects)<sp/>for<sp/>reference.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```js</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>GetIntrinsic<sp/>=<sp/>require(&apos;get-intrinsic&apos;);</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>assert<sp/>=<sp/>require(&apos;assert&apos;);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>static<sp/>methods</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(GetIntrinsic(&apos;%Math.pow%&apos;),<sp/>Math.pow);</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(Math.pow(2,<sp/>3),<sp/>8);</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(GetIntrinsic(&apos;%Math.pow%&apos;)(2,<sp/>3),<sp/>8);</highlight></codeline>
+<codeline><highlight class="normal">delete<sp/>Math.pow;</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(GetIntrinsic(&apos;%Math.pow%&apos;)(2,<sp/>3),<sp/>8);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>instance<sp/>methods</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>arr<sp/>=<sp/>[1];</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(GetIntrinsic(&apos;%Array.prototype.push%&apos;),<sp/>Array.prototype.push);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(arr,<sp/>[1]);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">arr.push(2);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(arr,<sp/>[1,<sp/>2]);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">GetIntrinsic(&apos;%Array.prototype.push%&apos;).call(arr,<sp/>3);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(arr,<sp/>[1,<sp/>2,<sp/>3]);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">delete<sp/>Array.prototype.push;</highlight></codeline>
+<codeline><highlight class="normal">GetIntrinsic(&apos;%Array.prototype.push%&apos;).call(arr,<sp/>4);</highlight></codeline>
+<codeline><highlight class="normal">assert.deepEqual(arr,<sp/>[1,<sp/>2,<sp/>3,<sp/>4]);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">//<sp/>missing<sp/>features</highlight></codeline>
+<codeline><highlight class="normal">delete<sp/>JSON.parse;<sp/>//<sp/>to<sp/>simulate<sp/>a<sp/>real<sp/>intrinsic<sp/>that<sp/>is<sp/>missing<sp/>in<sp/>the<sp/>environment</highlight></codeline>
+<codeline><highlight class="normal">assert.throws(()<sp/>=&gt;<sp/>GetIntrinsic(&apos;%JSON.parse%&apos;));</highlight></codeline>
+<codeline><highlight class="normal">assert.equal(undefined,<sp/>GetIntrinsic(&apos;%JSON.parse%&apos;,<sp/>true));</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Tests</highlight></codeline>
+<codeline><highlight class="normal">Simply<sp/>clone<sp/>the<sp/>repo,<sp/>`npm<sp/>install`,<sp/>and<sp/>run<sp/>`npm<sp/>test`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Security</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Please<sp/>email<sp/>[@ljharb](https://github.com/ljharb)<sp/>or<sp/>see<sp/>https://tidelift.com/security<sp/>if<sp/>you<sp/>have<sp/>a<sp/>potential<sp/>security<sp/>vulnerability<sp/>to<sp/>report.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[package-url]:<sp/>https://npmjs.org/package/get-intrinsic</highlight></codeline>
+<codeline><highlight class="normal">[npm-version-svg]:<sp/>https://versionbadg.es/ljharb/get-intrinsic.svg</highlight></codeline>
+<codeline><highlight class="normal">[deps-svg]:<sp/>https://david-dm.org/ljharb/get-intrinsic.svg</highlight></codeline>
+<codeline><highlight class="normal">[deps-url]:<sp/>https://david-dm.org/ljharb/get-intrinsic</highlight></codeline>
+<codeline><highlight class="normal">[dev-deps-svg]:<sp/>https://david-dm.org/ljharb/get-intrinsic/dev-status.svg</highlight></codeline>
+<codeline><highlight class="normal">[dev-deps-url]:<sp/>https://david-dm.org/ljharb/get-intrinsic#info=devDependencies</highlight></codeline>
+<codeline><highlight class="normal">[npm-badge-png]:<sp/>https://nodei.co/npm/get-intrinsic.png?downloads=true&amp;stars=true</highlight></codeline>
+<codeline><highlight class="normal">[license-image]:<sp/>https://img.shields.io/npm/l/get-intrinsic.svg</highlight></codeline>
+<codeline><highlight class="normal">[license-url]:<sp/>LICENSE</highlight></codeline>
+<codeline><highlight class="normal">[downloads-image]:<sp/>https://img.shields.io/npm/dm/get-intrinsic.svg</highlight></codeline>
+<codeline><highlight class="normal">[downloads-url]:<sp/>https://npm-stat.com/charts.html?package=get-intrinsic</highlight></codeline>
+<codeline><highlight class="normal">[codecov-image]:<sp/>https://codecov.io/gh/ljharb/get-intrinsic/branch/main/graphs/badge.svg</highlight></codeline>
+<codeline><highlight class="normal">[codecov-url]:<sp/>https://app.codecov.io/gh/ljharb/get-intrinsic/</highlight></codeline>
+<codeline><highlight class="normal">[actions-image]:<sp/>https://img.shields.io/endpoint?url=https://github-actions-badge-u3jn4tfpocch.runkit.sh/ljharb/get-intrinsic</highlight></codeline>
+<codeline><highlight class="normal">[actions-url]:<sp/>https://github.com/ljharb/get-intrinsic/actions</highlight></codeline>
+    </programlisting>
+    <location file="backend/node_modules/get-intrinsic/README.md"/>
+  </compounddef>
+</doxygen>

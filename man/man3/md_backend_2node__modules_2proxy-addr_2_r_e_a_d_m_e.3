@@ -1,0 +1,120 @@
+.TH "md_backend_2node__modules_2proxy-addr_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2proxy-addr_2_r_e_a_d_m_e \- proxy-addr 
+.PP
+ \fR\fP \fR\fP \fR\fP \fR\fP \fR\fP
+.PP
+Determine address of proxied request
+.SH "Install"
+.PP
+This is a \fRNode\&.js\fP module available through the \fRnpm registry\fP\&. Installation is done using the \fR\fRnpm install\fP command\fP:
+.PP
+.PP
+.nf
+$ npm install proxy\-addr
+.fi
+.PP
+.SH "API"
+.PP
+.PP
+.nf
+var proxyaddr = require('proxy\-addr')
+.fi
+.PP
+.SS "proxyaddr(req, trust)"
+Return the address of the request, using the given \fRtrust\fP parameter\&.
+.PP
+The \fRtrust\fP argument is a function that returns \fRtrue\fP if you trust the address, \fRfalse\fP if you don't\&. The closest untrusted address is returned\&.
+.PP
+.PP
+.nf
+proxyaddr(req, function (addr) { return addr === '127\&.0\&.0\&.1' })
+proxyaddr(req, function (addr, i) { return i < 1 })
+.fi
+.PP
+.PP
+The \fRtrust\fP arugment may also be a single IP address string or an array of trusted addresses, as plain IP addresses, CIDR-formatted strings, or IP/netmask strings\&.
+.PP
+.PP
+.nf
+proxyaddr(req, '127\&.0\&.0\&.1')
+proxyaddr(req, ['127\&.0\&.0\&.0/8', '10\&.0\&.0\&.0/8'])
+proxyaddr(req, ['127\&.0\&.0\&.0/255\&.0\&.0\&.0', '192\&.168\&.0\&.0/255\&.255\&.0\&.0'])
+.fi
+.PP
+.PP
+This module also supports IPv6\&. Your IPv6 addresses will be normalized automatically (i\&.e\&. \fRfe80::00ed:1\fP equals \fRfe80:0:0:0:0:0:ed:1\fP)\&.
+.PP
+.PP
+.nf
+proxyaddr(req, '::1')
+proxyaddr(req, ['::1/128', 'fe80::/10'])
+.fi
+.PP
+.PP
+This module will automatically work with IPv4-mapped IPv6 addresses as well to support node\&.js in IPv6-only mode\&. This means that you do not have to specify both \fRffff:a00:1\fP and \fR10\&.0\&.0\&.1\fP\&.
+.PP
+As a convenience, this module also takes certain pre-defined names in addition to IP addresses, which expand into IP addresses:
+.PP
+.PP
+.nf
+proxyaddr(req, 'loopback')
+proxyaddr(req, ['loopback', 'fc00:ac:1ab5:fff::1/64'])
+.fi
+.PP
+.PP
+.IP "\(bu" 2
+\fRloopback\fP: IPv4 and IPv6 loopback addresses (like \fR::1\fP and \fR127\&.0\&.0\&.1\fP)\&.
+.IP "\(bu" 2
+\fRlinklocal\fP: IPv4 and IPv6 link-local addresses (like \fRfe80::1:1:1:1\fP and \fR169\&.254\&.0\&.1\fP)\&.
+.IP "\(bu" 2
+\fRuniquelocal\fP: IPv4 private addresses and IPv6 unique-local addresses (like \fRfc00:ac:1ab5:fff::1\fP and \fR192\&.168\&.0\&.1\fP)\&.
+.PP
+.PP
+When \fRtrust\fP is specified as a function, it will be called for each address to determine if it is a trusted address\&. The function is given two arguments: \fRaddr\fP and \fRi\fP, where \fRaddr\fP is a string of the address to check and \fRi\fP is a number that represents the distance from the socket address\&.
+.SS "proxyaddr\&.all(req, [trust])"
+Return all the addresses of the request, optionally stopping at the first untrusted\&. This array is ordered from closest to furthest (i\&.e\&. \fRarr[0] === req\&.connection\&.remoteAddress\fP)\&.
+.PP
+.PP
+.nf
+proxyaddr\&.all(req)
+.fi
+.PP
+.PP
+The optional \fRtrust\fP argument takes the same arguments as \fRtrust\fP does in \fRproxyaddr(req, trust)\fP\&.
+.PP
+.PP
+.nf
+proxyaddr\&.all(req, 'loopback')
+.fi
+.PP
+.SS "proxyaddr\&.compile(val)"
+Compiles argument \fRval\fP into a \fRtrust\fP function\&. This function takes the same arguments as \fRtrust\fP does in \fRproxyaddr(req, trust)\fP and returns a function suitable for \fRproxyaddr(req, trust)\fP\&.
+.PP
+.PP
+.nf
+var trust = proxyaddr\&.compile('loopback')
+var addr = proxyaddr(req, trust)
+.fi
+.PP
+.PP
+This function is meant to be optimized for use against every request\&. It is recommend to compile a trust function up-front for the trusted configuration and pass that to \fRproxyaddr(req, trust)\fP for each request\&.
+.SH "Testing"
+.PP
+.PP
+.nf
+$ npm test
+.fi
+.PP
+.SH "Benchmarks"
+.PP
+.PP
+.nf
+$ npm run\-script bench
+.fi
+.PP
+.SH "License"
+.PP
+[MIT](LICENSE) 

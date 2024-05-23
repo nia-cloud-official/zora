@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2node-gyp_2mac_o_s___catalina" kind="page">
+    <compoundname>md_backend_2node__modules_2node-gyp_2mac_o_s___catalina</compoundname>
+    <title>Installation notes for macOS Catalina (v10.15)</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_1autotoc_md2454"/> <emphasis>This document specifically refers to upgrades from previous versions of macOS to Catalina (10.15). It should be removed from the source repository when Catalina ceases to be the latest macOS version or when future Catalina versions no longer raise these issues.</emphasis></para>
+<para><bold>Both upgrading to macOS Catalina and running a Software Update in Catalina may cause normal <computeroutput>node-gyp</computeroutput> installations to fail. This might manifest as the following error during <computeroutput>npm install</computeroutput>:</bold></para>
+<para><programlisting filename=".console"><codeline><highlight class="normal">gyp:<sp/>No<sp/>Xcode<sp/>or<sp/>CLT<sp/>version<sp/>detected!</highlight></codeline>
+</programlisting></para>
+<sect1 id="md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_1autotoc_md2455">
+<title>node-gyp v7</title><para>The newest release of <computeroutput>node-gyp</computeroutput> should solve this problem. If you are using <computeroutput>node-gyp</computeroutput> directly then you should be able to install v7 and use it as-is.</para>
+<para>If you need to use <computeroutput>node-gyp</computeroutput> from within <computeroutput>npm</computeroutput> (e.g. through <computeroutput>npm install</computeroutput>), you will have to install <computeroutput>node-gyp</computeroutput> (either globally with <computeroutput>-g</computeroutput> or to a predictable location) and tell <computeroutput>npm</computeroutput> where the new version is. Either use:</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>npm config set node_gyp &lt;path to node-gyp&gt;</computeroutput>; or</para>
+</listitem><listitem><para>run <computeroutput>npm</computeroutput> with an environment variable prefix: <computeroutput>npm_config_node_gyp=&lt;path to node-gyp&gt; npm install</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+<para>Where &quot;path to node-gyp&quot; is to the <computeroutput>node-gyp</computeroutput> executable which may be a symlink in your global bin directory (e.g. <computeroutput>/usr/local/bin/node-gyp</computeroutput>), or a path to the <computeroutput>node-gyp</computeroutput> installation directory and the <computeroutput>bin/node-gyp.js</computeroutput> file within it (e.g. <computeroutput>/usr/local/lib/node_modules/node-gyp/bin/node-gyp.js</computeroutput>).</para>
+<para><bold>If you use <computeroutput>npm config set</computeroutput> to change your global <computeroutput>node_gyp</computeroutput> you are responsible for keeping it up to date and can&apos;t rely on <computeroutput>npm</computeroutput> to give you a newer version when available.</bold> Use <computeroutput>npm config delete node_gyp</computeroutput> to unset this configuration option.</para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_1autotoc_md2456">
+<title>Fixing Catalina for older versions of <computeroutput>node-gyp</computeroutput></title><sect2 id="md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_1autotoc_md2457">
+<title>Is my Mac running macOS Catalina?</title><para>Let&apos;s first make sure that your Mac is running Catalina: <programlisting><codeline><highlight class="normal">%<sp/>sw_vers</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>ProductName:<sp/><sp/><sp/><sp/>Mac<sp/>OS<sp/>X</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>ProductVersion:<sp/>10.15</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>BuildVersion:<sp/><sp/><sp/>19A602</highlight></codeline>
+</programlisting> If <computeroutput>ProductVersion</computeroutput> is less then <computeroutput>10.15</computeroutput> then this document is not for you. Normal install docs for <computeroutput>node-gyp</computeroutput> on macOS can be found at <ulink url="https://github.com/nodejs/node-gyp#on-macos">https://github.com/nodejs/node-gyp#on-macos</ulink></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_1autotoc_md2458">
+<title>The acid test</title><para>To see if <computeroutput>Xcode Command Line Tools</computeroutput> is installed in a way that will work with <computeroutput>node-gyp</computeroutput>, run: <programlisting><codeline><highlight class="normal">curl<sp/>-sL<sp/>https://github.com/nodejs/node-gyp/raw/master/macOS_Catalina_acid_test.sh<sp/>|<sp/>bash</highlight></codeline>
+</programlisting></para>
+<para>If test succeeded, <emphasis>you are done</emphasis>! You should be ready to <ulink url="https://github.com/nodejs/node-gyp#installation">install</ulink> <computeroutput>node-gyp</computeroutput>.</para>
+<para>If test failed, there is a problem with your Xcode Command Line Tools installation. Continue to Solutions.</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_1autotoc_md2459">
+<title>Solutions</title><para>There are three ways to install the Xcode libraries <computeroutput>node-gyp</computeroutput> needs on macOS. People running Catalina have had success with some but not others in a way that has been unpredictable.</para>
+<para><orderedlist>
+<listitem><para>With the full Xcode (~7.6 GB download) from the <computeroutput>App Store</computeroutput> app.</para>
+</listitem><listitem><para>With the <emphasis>much</emphasis> smaller Xcode Command Line Tools via <computeroutput>xcode-select --install</computeroutput></para>
+</listitem><listitem><para>With the <emphasis>much</emphasis> smaller Xcode Command Line Tools via manual download. <bold>For people running the latest version of Catalina (10.15.2 at the time of this writing), this has worked when the other two solutions haven&apos;t.</bold></para>
+</listitem></orderedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_1autotoc_md2460">
+<title>Installing <computeroutput>node-gyp</computeroutput> using the full Xcode</title><para><orderedlist>
+<listitem><para><computeroutput>xcodebuild -version</computeroutput> should show <computeroutput>Xcode 11.1</computeroutput> or later.<itemizedlist>
+<listitem><para>If not, then install/upgrade Xcode from the App Store app.</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para>Open the Xcode app and...<itemizedlist>
+<listitem><para>Under <bold>Preferences &gt; Locations</bold> select the tools if their location is empty.</para>
+</listitem><listitem><para>Allow Xcode app to do an essential install of the most recent compiler tools.</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para>Once all installations are <emphasis>complete</emphasis>, quit out of Xcode.</para>
+</listitem><listitem><para><computeroutput>sudo xcodebuild -license accept</computeroutput> # If you agree with the licensing terms.</para>
+</listitem><listitem><para><computeroutput>softwareupdate -l</computeroutput> # No listing is a good sign.<itemizedlist>
+<listitem><para>If Xcode or Tools upgrades are listed, use &quot;Software Upgrade&quot; to install them.</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>xcode-select -version</computeroutput> # Should return <computeroutput>xcode-select version 2370</computeroutput> or later.</para>
+</listitem><listitem><para><computeroutput>xcode-select -print-path</computeroutput> # Should return <computeroutput>/Applications/Xcode.app/Contents/Developer</computeroutput></para>
+</listitem><listitem><para>Try the _acid test_ steps above to see if your Mac is ready.</para>
+</listitem><listitem><para>If the <emphasis>acid test</emphasis> does <emphasis>not</emphasis> pass then...</para>
+</listitem><listitem><para><computeroutput>sudo xcode-select --reset</computeroutput> # Enter root password. No output is normal.</para>
+</listitem><listitem><para>Repeat step 7 above. Is the path different this time? Repeat the <emphasis>acid test</emphasis>.</para>
+</listitem></orderedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_1autotoc_md2461">
+<title>Installing <computeroutput>node-gyp</computeroutput> using the Xcode Command Line Tools via <computeroutput>xcode-select --install</computeroutput></title><para><orderedlist>
+<listitem><para>If the <emphasis>acid test</emphasis> has not succeeded, then try <computeroutput>xcode-select --install</computeroutput></para>
+</listitem><listitem><para>If the installation command returns <computeroutput>xcode-select: error: command line tools are already installed, use &quot;Software Update&quot; to install updates</computeroutput>, continue to remove and reinstall</para>
+</listitem><listitem><para>Wait until the install process is <emphasis>complete</emphasis>.</para>
+</listitem><listitem><para><computeroutput>softwareupdate -l</computeroutput> # No listing is a good sign.<itemizedlist>
+<listitem><para>If Xcode or Tools upgrades are listed, use &quot;Software Update&quot; to install them.</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>xcode-select -version</computeroutput> # Should return <computeroutput>xcode-select version 2370</computeroutput> or later.</para>
+</listitem><listitem><para><computeroutput>xcode-select -print-path</computeroutput> # Should return <computeroutput>/Library/Developer/CommandLineTools</computeroutput></para>
+</listitem><listitem><para>Try the _acid test_ steps above to see if your Mac is ready.</para>
+</listitem><listitem><para>If the <emphasis>acid test</emphasis> does <emphasis>not</emphasis> pass then...</para>
+</listitem><listitem><para><computeroutput>sudo xcode-select --reset</computeroutput> # Enter root password. No output is normal.</para>
+</listitem><listitem><para>Repeat step 5 above. Is the path different this time? Repeat the <emphasis>acid test</emphasis>.</para>
+</listitem></orderedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_1autotoc_md2462">
+<title>Installing <computeroutput>node-gyp</computeroutput> using the Xcode Command Line Tools via manual download</title><para><orderedlist>
+<listitem><para>Download the appropriate version of the &quot;Command Line Tools for Xcode&quot; for your version of Catalina from <ulink url="https://developer.apple.com/download/more/">https://developer.apple.com/download/more/</ulink>. As of MacOS 10.15.5, that&apos;s <ulink url="https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.5/Command_Line_Tools_for_Xcode_11.5.dmg">Command_Line_Tools_for_Xcode_11.5.dmg</ulink></para>
+</listitem><listitem><para>Install the package.</para>
+</listitem><listitem><para>Run the _acid test_ steps above.</para>
+</listitem></orderedlist>
+</para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2node-gyp_2mac_o_s___catalina_1autotoc_md2463">
+<title>I did all that and the acid test still does not pass :-(</title><para><orderedlist>
+<listitem><para><computeroutput>sudo rm -rf $(xcode-select -print-path)</computeroutput> # Enter root password. No output is normal.</para>
+</listitem><listitem><para><computeroutput>sudo rm -rf /Library/Developer/CommandLineTools</computeroutput> # Enter root password.</para>
+</listitem><listitem><para><computeroutput>sudo xcode-select --reset</computeroutput></para>
+</listitem><listitem><para><computeroutput>xcode-select --install</computeroutput></para>
+</listitem><listitem><para>If the _acid test_ steps above still does <emphasis>not</emphasis> pass then...</para>
+</listitem><listitem><para><computeroutput>npm explore npm -g -- npm install node-gyp@latest</computeroutput></para>
+</listitem><listitem><para><computeroutput>npm explore npm -g -- npm explore npm-lifecycle -- npm install node-gyp@latest</computeroutput></para>
+</listitem><listitem><para>If the <emphasis>acid test</emphasis> still does <emphasis>not</emphasis> pass then...</para>
+</listitem><listitem><para>Add a comment to <ulink url="https://github.com/nodejs/node-gyp/issues/1927">https://github.com/nodejs/node-gyp/issues/1927</ulink> so we can improve.</para>
+</listitem></orderedlist>
+</para>
+<para>Lessons learned from:<itemizedlist>
+<listitem><para><ulink url="https://github.com/nodejs/node-gyp/issues/1779">https://github.com/nodejs/node-gyp/issues/1779</ulink></para>
+</listitem><listitem><para><ulink url="https://github.com/nodejs/node-gyp/issues/1861">https://github.com/nodejs/node-gyp/issues/1861</ulink></para>
+</listitem><listitem><para><ulink url="https://github.com/nodejs/node-gyp/issues/1927">https://github.com/nodejs/node-gyp/issues/1927</ulink> and elsewhere</para>
+</listitem><listitem><para>Thanks to @rrrix for discovering Solution 3 </para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/node-gyp/macOS_Catalina.md"/>
+  </compounddef>
+</doxygen>

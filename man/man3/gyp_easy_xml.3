@@ -1,0 +1,152 @@
+.TH "gyp.easy_xml" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gyp.easy_xml
+.SH SYNOPSIS
+.br
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBXmlToString\fP (content, encoding='utf\-8', pretty=False)"
+.br
+.ti -1c
+.RI "\fB_ConstructContentList\fP (xml_parts, specification, pretty, level=0)"
+.br
+.ti -1c
+.RI "\fBWriteXmlIfChanged\fP (content, path, encoding='utf\-8', pretty=False, win32=(sys\&.platform=='win32'))"
+.br
+.ti -1c
+.RI "\fB_XmlEscape\fP (value, attr=False)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "dict \fB_xml_escape_map\fP"
+.br
+.ti -1c
+.RI "\fB_xml_escape_re\fP = re\&.compile('(%s)' % '|'\&.join(map(re\&.escape, _xml_escape_map\&.keys())))"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "gyp\&.easy_xml\&._ConstructContentList ( xml_parts,  specification,  pretty,  level = \fR0\fP)\fR [protected]\fP"
+
+.PP
+.nf
+ Appends the XML parts corresponding to the specification\&.
+
+Args:
+xml_parts: A list of XML parts to be appended to\&.
+specification:  The specification of the element\&.  See EasyXml docs\&.
+pretty: True if we want pretty printing with indents and new lines\&.
+level: Indentation level\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB60\fP of file \fBeasy_xml\&.py\fP\&.
+.SS "gyp\&.easy_xml\&._XmlEscape ( value,  attr = \fRFalse\fP)\fR [protected]\fP"
+
+.PP
+.nf
+ Escape a string for inclusion in XML\&.
+.fi
+.PP
+ 
+.PP
+Definition at line \fB155\fP of file \fBeasy_xml\&.py\fP\&.
+.SS "gyp\&.easy_xml\&.WriteXmlIfChanged ( content,  path,  encoding = \fR'utf\-8'\fP,  pretty = \fRFalse\fP,  win32 = \fR(sys\&.platform == 'win32')\fP)"
+
+.PP
+.nf
+ Writes the XML content to disk, touching the file only if it has changed\&.
+
+Args:
+content:  The structured content to be written\&.
+path: Location of the file\&.
+encoding: The encoding to report on the first line of the XML file\&.
+pretty: True if we want pretty printing with indents and new lines\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB110\fP of file \fBeasy_xml\&.py\fP\&.
+.SS "gyp\&.easy_xml\&.XmlToString ( content,  encoding = \fR'utf\-8'\fP,  pretty = \fRFalse\fP)"
+
+.PP
+.nf
+ Writes the XML content to disk, touching the file only if it has changed\&.
+
+Visual Studio files have a lot of pre-defined structures\&.  This function makes
+it easy to represent these structures as Python data structures, instead of
+having to create a lot of function calls\&.
+
+Each XML element of the content is represented as a list composed of:
+1\&. The name of the element, a string,
+2\&. The attributes of the element, a dictionary (optional), and
+3+\&. The content of the element, if any\&.  Strings are simple text nodes and
+  lists are child elements\&.
+
+Example 1:
+  <test/>
+becomes
+  ['test']
+
+Example 2:
+  <myelement a='value1' b='value2'>
+     <childtype>This is</childtype>
+     <childtype>it!</childtype>
+  </myelement>
+
+becomes
+  ['myelement', {'a':'value1', 'b':'value2'},
+     ['childtype', 'This is'],
+     ['childtype', 'it!'],
+  ]
+
+Args:
+content:  The structured content to be converted\&.
+encoding: The encoding to report on the first XML line\&.
+pretty: True if we want pretty printing with indents and new lines\&.
+
+Returns:
+The XML content as a string\&.
+
+.fi
+.PP
+ 
+.PP
+Definition at line \fB12\fP of file \fBeasy_xml\&.py\fP\&.
+.SH "Variable Documentation"
+.PP 
+.SS "dict gyp\&.easy_xml\&._xml_escape_map\fR [protected]\fP"
+\fBInitial value:\fP
+.nf
+1 =  {
+2     '"': "&quot;",
+3     "'": "&apos;",
+4     "<": "&lt;",
+5     ">": "&gt;",
+6     "&": "&amp;",
+7     "\\n": "&#xA;",
+8     "\\r": "&#xD;",
+9 }
+.PP
+.fi
+
+.PP
+Definition at line \fB141\fP of file \fBeasy_xml\&.py\fP\&.
+.SS "gyp\&.easy_xml\&._xml_escape_re = re\&.compile('(%s)' % '|'\&.join(map(re\&.escape, _xml_escape_map\&.keys())))\fR [protected]\fP"
+
+.PP
+Definition at line \fB152\fP of file \fBeasy_xml\&.py\fP\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

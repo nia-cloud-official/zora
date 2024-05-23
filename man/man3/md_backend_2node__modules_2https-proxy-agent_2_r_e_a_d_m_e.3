@@ -1,0 +1,118 @@
+.TH "md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e" 3 "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_backend_2node__modules_2https-proxy-agent_2_r_e_a_d_m_e \- https-proxy-agent 
+.PP
+
+.SS "An HTTP(s) proxy \fRhttp\&.Agent\fP implementation for HTTPS"
+\fR\fP.PP
+This module provides an \fRhttp\&.Agent\fP implementation that connects to a specified HTTP or HTTPS proxy server, and can be used with the built-in \fRhttps\fP module\&.
+.PP
+Specifically, this \fRAgent\fP implementation connects to an intermediary 'proxy' server and issues the \fRCONNECT HTTP method\fP, which tells the proxy to open a direct TCP connection to the destination server\&.
+.PP
+Since this agent implements the CONNECT HTTP method, it also works with other protocols that use this method when connecting over proxies (i\&.e\&. WebSockets)\&. See the 'Examples' section below for more\&.
+.SH "Installation"
+.PP
+Install with \fRnpm\fP:
+.PP
+.PP
+.nf
+ bash
+$ npm install https\-proxy\-agent
+.fi
+.PP
+.SH "Examples"
+.PP
+.SS "\fRhttps\fP module example"
+.PP
+.nf
+ js
+var url = require('url');
+var https = require('https');
+var HttpsProxyAgent = require('https\-proxy\-agent');
+
+// HTTP/HTTPS proxy to connect to
+var proxy = process\&.env\&.http_proxy || 'http://168\&.63\&.76\&.32:3128';
+console\&.log('using proxy server %j', proxy);
+
+// HTTPS endpoint for the proxy to connect to
+var endpoint = process\&.argv[2] || 'https://graph\&.facebook\&.com/tootallnate';
+console\&.log('attempting to GET %j', endpoint);
+var options = url\&.parse(endpoint);
+
+// create an instance of the `HttpsProxyAgent` class with the proxy server information
+var agent = new HttpsProxyAgent(proxy);
+options\&.agent = agent;
+
+https\&.get(options, function (res) {
+  console\&.log('"response" event!', res\&.headers);
+  res\&.pipe(process\&.stdout);
+});
+.fi
+.PP
+.SS "\fRws\fP WebSocket connection example"
+.PP
+.nf
+ js
+var url = require('url');
+var WebSocket = require('ws');
+var HttpsProxyAgent = require('https\-proxy\-agent');
+
+// HTTP/HTTPS proxy to connect to
+var proxy = process\&.env\&.http_proxy || 'http://168\&.63\&.76\&.32:3128';
+console\&.log('using proxy server %j', proxy);
+
+// WebSocket endpoint for the proxy to connect to
+var endpoint = process\&.argv[2] || 'ws://echo\&.websocket\&.org';
+var parsed = url\&.parse(endpoint);
+console\&.log('attempting to connect to WebSocket %j', endpoint);
+
+// create an instance of the `HttpsProxyAgent` class with the proxy server information
+var options = url\&.parse(proxy);
+
+var agent = new HttpsProxyAgent(options);
+
+// finally, initiate the WebSocket connection
+var socket = new WebSocket(endpoint, { agent: agent });
+
+socket\&.on('open', function () {
+  console\&.log('"open" event!');
+  socket\&.send('hello world');
+});
+
+socket\&.on('message', function (data, flags) {
+  console\&.log('"message" event! %j %j', data, flags);
+  socket\&.close();
+});
+.fi
+.PP
+.SH "API"
+.PP
+.SS "new HttpsProxyAgent(Object options)"
+The \fRHttpsProxyAgent\fP class implements an \fRhttp\&.Agent\fP subclass that connects to the specified 'HTTP(s) proxy server' in order to proxy HTTPS and/or WebSocket requests\&. This is achieved by using the \fRHTTP \fRCONNECT\fP method\fP\&.
+.PP
+The \fRoptions\fP argument may either be a string URI of the proxy server to use, or an 'options' object with more specific properties:
+.PP
+.IP "\(bu" 2
+\fRhost\fP - String - Proxy host to connect to (may use \fRhostname\fP as well)\&. Required\&.
+.IP "\(bu" 2
+\fRport\fP - Number - Proxy port to connect to\&. Required\&.
+.IP "\(bu" 2
+\fRprotocol\fP - String - If \fRhttps:\fP, then use TLS to connect to the proxy\&.
+.IP "\(bu" 2
+\fRheaders\fP - Object - Additional HTTP headers to be sent on the HTTP CONNECT method\&.
+.IP "\(bu" 2
+Any other options given are passed to the \fRnet\&.connect()\fP/\fRtls\&.connect()\fP functions\&.
+.PP
+.SH "License"
+.PP
+(The MIT License)
+.PP
+Copyright (c) 2013 Nathan Rajlich <nathan@tootallnate.net>
+.PP
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+.PP
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software\&.
+.PP
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT\&. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE\&. 

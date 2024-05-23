@@ -1,0 +1,118 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.11.0" xml:lang="en-US">
+  <compounddef id="md_backend_2node__modules_2finalhandler_2_r_e_a_d_m_e" kind="page">
+    <compoundname>md_backend_2node__modules_2finalhandler_2_r_e_a_d_m_e</compoundname>
+    <title>finalhandler</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="md_backend_2node__modules_2finalhandler_2_r_e_a_d_m_e_1autotoc_md1272"/> <ulink url="https://npmjs.org/package/finalhandler"><image type="html" name="https://img.shields.io/npm/v/finalhandler.svg" alt="NPM Version" inline="yes"></image>
+</ulink> <ulink url="https://npmjs.org/package/finalhandler"><image type="html" name="https://img.shields.io/npm/dm/finalhandler.svg" alt="NPM Downloads" inline="yes"></image>
+</ulink> <ulink url="https://nodejs.org/en/download"><image type="html" name="https://img.shields.io/node/v/finalhandler.svg" alt="Node.js Version" inline="yes"></image>
+</ulink> <ulink url="https://github.com/jshttp/pillarjs/finalhandler?query=workflow%3Aci"><image type="html" name="https://img.shields.io/github/workflow/status/pillarjs/finalhandler/ci/master?label=ci" alt="Build Status" inline="yes"></image>
+</ulink> <ulink url="https://coveralls.io/r/pillarjs/finalhandler?branch=master"><image type="html" name="https://img.shields.io/coveralls/pillarjs/finalhandler.svg" alt="Test Coverage" inline="yes"></image>
+</ulink></para>
+<para>Node.js function to invoke as the final step to respond to HTTP request.</para>
+<sect1 id="md_backend_2node__modules_2finalhandler_2_r_e_a_d_m_e_1autotoc_md1273">
+<title>Installation</title><para>This is a <ulink url="https://nodejs.org/en/">Node.js</ulink> module available through the <ulink url="https://www.npmjs.com/">npm registry</ulink>. Installation is done using the <ulink url="https://docs.npmjs.com/getting-started/installing-npm-packages-locally"><computeroutput>npm install</computeroutput> command</ulink>:</para>
+<para><programlisting filename=".sh"><codeline><highlight class="normal">$<sp/>npm<sp/>install<sp/>finalhandler</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_backend_2node__modules_2finalhandler_2_r_e_a_d_m_e_1autotoc_md1274">
+<title>API</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>finalhandler<sp/>=<sp/>require(&apos;finalhandler&apos;)</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_backend_2node__modules_2finalhandler_2_r_e_a_d_m_e_1autotoc_md1275">
+<title>finalhandler(req, res, [options])</title><para>Returns function to be invoked as the final step for the given <computeroutput>req</computeroutput> and <computeroutput>res</computeroutput>. This function is to be invoked as <computeroutput>fn(err)</computeroutput>. If <computeroutput>err</computeroutput> is falsy, the handler will write out a 404 response to the <computeroutput>res</computeroutput>. If it is truthy, an error response will be written out to the <computeroutput>res</computeroutput> or <computeroutput>res</computeroutput> will be terminated if a response has already started.</para>
+<para>When an error is written, the following information is added to the response:</para>
+<para><itemizedlist>
+<listitem><para>The <computeroutput>res.statusCode</computeroutput> is set from <computeroutput>err.status</computeroutput> (or <computeroutput>err.statusCode</computeroutput>). If this value is outside the 4xx or 5xx range, it will be set to 500.</para>
+</listitem><listitem><para>The <computeroutput>res.statusMessage</computeroutput> is set according to the status code.</para>
+</listitem><listitem><para>The body will be the HTML of the status code message if <computeroutput>env</computeroutput> is <lsquo/>&apos;production<rsquo/><computeroutput>, otherwise will be</computeroutput>err.stack<computeroutput>.</computeroutput></para>
+</listitem><listitem><para><computeroutput>Any headers specified in an</computeroutput>err.headers` object.</para>
+</listitem></itemizedlist>
+</para>
+<para>The final handler will also unpipe anything from <computeroutput>req</computeroutput> when it is invoked.</para>
+<sect3 id="md_backend_2node__modules_2finalhandler_2_r_e_a_d_m_e_1autotoc_md1276">
+<title>options.env</title><para>By default, the environment is determined by <computeroutput>NODE_ENV</computeroutput> variable, but it can be overridden by this option.</para>
+</sect3>
+<sect3 id="md_backend_2node__modules_2finalhandler_2_r_e_a_d_m_e_1autotoc_md1277">
+<title>options.onerror</title><para>Provide a function to be called with the <computeroutput>err</computeroutput> when it exists. Can be used for writing errors to a central location without excessive function generation. Called as <computeroutput>onerror(err, req, res)</computeroutput>.</para>
+</sect3>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2finalhandler_2_r_e_a_d_m_e_1autotoc_md1278">
+<title>Examples</title><sect2 id="md_backend_2node__modules_2finalhandler_2_r_e_a_d_m_e_1autotoc_md1279">
+<title>always 404</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>finalhandler<sp/>=<sp/>require(&apos;finalhandler&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>server<sp/>=<sp/>http.createServer(function<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>done<sp/>=<sp/>finalhandler(req,<sp/>res)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>done()</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">server.listen(3000)</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2finalhandler_2_r_e_a_d_m_e_1autotoc_md1280">
+<title>perform simple action</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>finalhandler<sp/>=<sp/>require(&apos;finalhandler&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>fs<sp/>=<sp/>require(&apos;fs&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>server<sp/>=<sp/>http.createServer(function<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>done<sp/>=<sp/>finalhandler(req,<sp/>res)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fs.readFile(&apos;index.html&apos;,<sp/>function<sp/>(err,<sp/>buf)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(err)<sp/>return<sp/>done(err)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.setHeader(&apos;Content-Type&apos;,<sp/>&apos;text/html&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.end(buf)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">server.listen(3000)</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2finalhandler_2_r_e_a_d_m_e_1autotoc_md1281">
+<title>use with middleware-style functions</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>finalhandler<sp/>=<sp/>require(&apos;finalhandler&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>serveStatic<sp/>=<sp/>require(&apos;serve-static&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>serve<sp/>=<sp/>serveStatic(&apos;public&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>server<sp/>=<sp/>http.createServer(function<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>done<sp/>=<sp/>finalhandler(req,<sp/>res)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>serve(req,<sp/>res,<sp/>done)</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">server.listen(3000)</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_backend_2node__modules_2finalhandler_2_r_e_a_d_m_e_1autotoc_md1282">
+<title>keep log of all errors</title><para><programlisting filename=".js"><codeline><highlight class="normal">var<sp/>finalhandler<sp/>=<sp/>require(&apos;finalhandler&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>fs<sp/>=<sp/>require(&apos;fs&apos;)</highlight></codeline>
+<codeline><highlight class="normal">var<sp/>http<sp/>=<sp/>require(&apos;http&apos;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">var<sp/>server<sp/>=<sp/>http.createServer(function<sp/>(req,<sp/>res)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>var<sp/>done<sp/>=<sp/>finalhandler(req,<sp/>res,<sp/>{<sp/>onerror:<sp/>logerror<sp/>})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fs.readFile(&apos;index.html&apos;,<sp/>function<sp/>(err,<sp/>buf)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>if<sp/>(err)<sp/>return<sp/>done(err)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.setHeader(&apos;Content-Type&apos;,<sp/>&apos;text/html&apos;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>res.end(buf)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>})</highlight></codeline>
+<codeline><highlight class="normal">})</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">server.listen(3000)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">function<sp/>logerror<sp/>(err)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>console.error(err.stack<sp/>||<sp/>err.toString())</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+</sect2>
+</sect1>
+<sect1 id="md_backend_2node__modules_2finalhandler_2_r_e_a_d_m_e_1autotoc_md1283">
+<title>License</title><para>[MIT](LICENSE) </para>
+</sect1>
+    </detaileddescription>
+    <location file="backend/node_modules/finalhandler/README.md"/>
+  </compounddef>
+</doxygen>
