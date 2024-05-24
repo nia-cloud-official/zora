@@ -143,3 +143,9 @@ function runServer($name){
 }
 }
 runServer("smoke_6");
+
+# ................
+function exportProject($name){
+    return 0;
+}
+# ................
