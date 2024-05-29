@@ -107,6 +107,20 @@ echo $config['database_username']; // Outputs: root
 echo $config['autoSave']; // Outputs: password
 }
 
+function checkVersion(){
+    $appConfigFile = file_get_contents("./build.zora");
+    $status = $appConfigFile;
+    $current_version = file_get_contents("./release.zora");
+    if ($status == $current_version){
+        echo "System version is up to date";
+        echo $status;
+    }else{
+        echo "A new version is available click here:" .  " " . "<a href='https://www.zora.com/release/latest'>https://www.zora.com/release/latest</a>";
+        echo "<br/>";
+        echo "Your are using Zora version" . " ".  "<b>" . $status."<b/>" ."". ".0.0";
+    }
+    return $status;
+}
 
 function writeSystemFiles($name){
     $server_frame = file_get_contents("./_ser.zora");
@@ -142,7 +156,8 @@ function runServer($name){
     }
 }
 }
-runServer("smoke_6");
+
+checkVersion();
 
 # ................
 function exportProject($name){
