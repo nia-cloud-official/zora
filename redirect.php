@@ -7,10 +7,10 @@ $url = "./login.php";
 
 // Set the delay time in seconds
 $delay = 180;
-
 // Display the message
 echo $message;
 
 // Use the header function to redirect after the delay
 header("Location: $url");
 ?>
+

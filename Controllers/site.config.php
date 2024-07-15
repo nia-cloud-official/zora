@@ -6,7 +6,7 @@
  * Github: https://github.com/nia-cloud-official
  */
 
-define("SITENAME", "Akuma");
+define("SITENAME", "Zora");
 define("SITE_DESCRIPTION", "A fully featured data tool for data visualization , editing and more!");
 define("Company", "Odyssey");
 define("URL", "http://localhost/akuma/");
@@ -15,8 +15,8 @@ define("Github", "https://www.github.com/nia-cloud-official");
 define("Tel", "+263715212928");
 define("Developer", "Milton Vafana");
 define("SERVER", "localhost");
-define("USER", "root");
-define("PASS", "123");
+define("USER", "milto");
+define("PASS", "lola");
 define("DBNAME", "akuma");
 
 try {

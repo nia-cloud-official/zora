@@ -4,7 +4,7 @@ session_start();
 $DATABASE_HOST = 'localhost';
 $DATABASE_USER = 'root';
 $DATABASE_PASS = '';
-$DATABASE_NAME = 'academy';
+$DATABASE_NAME = 'zora';
 $usernae = $_POST['username'];
 
 error_reporting(1000);

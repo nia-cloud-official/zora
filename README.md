@@ -16,7 +16,9 @@ Are you new to zora? If so, here are some useful documents you can use to get st
 - **Query Wizardry**: Complex queries? No problem! Zora's advanced querying capabilities make data manipulation and analysis a breeze.
 - **Scale Beyond Limits**: Zora grows with you! Whether it's gigabytes or petabytes, Zora scales effortlessly to meet your evolving data needs.
 - **Performance on Steroids**: Need speed? Zora's optimized performance ensures data access and processing at warp speed, even under the heaviest workloads.
-- **Fortress-Level Security**: Your data is precious, and Zora knows it! With robust security measures, Zora shields your data from prying eyes.
+
+* **Fortress-Level Security**: Your data is precious, and Zora knows it! With robust security measures, Zora shields your data from prying eyes.
+
 - **Flexibility Unleashed**: From structured to unstructured data, Zora handles it all with finesse, providing unmatched flexibility.
 - **Real-time Insights**: See the future with Zora! Real-time analytics capabilities let you uncover insights from your data as it flows in.
 - **Auto-Sharding Magic**: Zora's auto-sharding distributes your data seamlessly across nodes, enhancing scalability and resilience.

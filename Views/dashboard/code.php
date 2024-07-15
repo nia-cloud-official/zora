@@ -8,7 +8,6 @@ session_start();
 $username = $_SESSION['name'];
 $name = $_SESSION['fullname'];
 $email = $_SESSION['email'];
-
 include './../../Controllers/site.config.php';
 ?>
 <head>
@@ -121,7 +120,7 @@ include './../../Controllers/site.config.php';
               <a href="#" class="nav-link">
                 <div class="nav-profile-image">
                   <img src="../../assets/images/faces/face1.jpg" alt="profile">
-                  <span class="login-status online"></span>
+                  <span class="login-status offline"></span>
                   <!--change to offline or busy as needed-->
                 </div>
                 <div class="nav-profile-text d-flex flex-column">
@@ -198,7 +197,7 @@ include './../../Controllers/site.config.php';
 <dialog class="dialog"  id="exportFile">
 
   <?php
-if (isset($_POST['name'])) {
+  if (isset($_POST['name'])) {
     $extention = $_POST['ext'];
     $content = $_POST['content'];
     $file = $_POST['name'] . $extention;

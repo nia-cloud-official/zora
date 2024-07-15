@@ -27,7 +27,7 @@ include './../Controllers/site.config.php';
             <div class="col-lg-7 mx-auto text-white">
               <div class="row align-items-center d-flex flex-row">
                 <h1 style="font-size: 5rem;">
-                  Login
+                  Register
                 </h1>
                 <p>Hey there! Welcome back, Lets get down to business.</p>
                 <center>

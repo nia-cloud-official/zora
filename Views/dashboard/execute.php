@@ -9,7 +9,7 @@ $sql = $data->sql;
 // Replace with your actual database credentials
 $servername = "localhost";
 $username = "root";
-$password = "123";
+$password = "";
 $dbname = "akuma";
 
 // Connect to the database
@@ -37,4 +37,6 @@ $conn->close();
 
 // Return the response as JSON
 header("Content-Type: application/json");
+
+// JSON_ENCODE($response);
 echo json_encode($response);
