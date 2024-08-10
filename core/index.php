@@ -6,7 +6,7 @@ define("ROOT","system/");
 
 class zoraController { 
 
-    # [Create Databae Properties];
+    # [Create Database Properties];
     private $salt;
     public $name;
 
